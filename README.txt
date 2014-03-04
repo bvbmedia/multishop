@@ -1,0 +1,1 @@
+For the latest updates open http://www.typo3multishop.com/roadmap/

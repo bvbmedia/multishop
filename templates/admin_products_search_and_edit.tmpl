@@ -1,0 +1,305 @@
+<!-- ###TEMPLATE### begin -->
+###POST_MESSAGE###
+<table width="100%" cellpadding="2" cellspacing="2" id="msAdminSearchAndEditProductsForm">
+	<form name="search" method="get" action="index.php">	
+	<input name="id" type="hidden" value="###SHOP_PID###" />
+	<input name="type" type="hidden" value="2003" />
+	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit" />	
+    <input type="hidden" name="search" class="msadmin_button" value="1" />
+	<tr>
+		<td><div class="main-heading"><h1>###PAGE_HEADER###</h1></div></td>
+		<td colspan="8" align="right">
+		<div id="pricelist_search_form">		
+			<div class="form-field">
+				<label>###LABEL_SEARCH_KEYWORD###</label>
+				<input type="text" class="skeyword" name="keyword" value="###VALUE_SEARCH_KEYWORD###" />
+			</div>
+			<div class="form-field">
+				<label>###LABEL_SEARCH_BY###</label>					
+				###SEARCH_BY_SELECTBOX###
+			</div>
+			<div class="form-field">
+				<label>###LABEL_SEARCH_IN###</label>								
+				###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
+			</div>
+			<div class="form-field">
+				<label>###LABEL_SEARCH_LIMIT###</label>
+				###SEARCH_LIMIT###
+			</div>
+			<div class="form-field">
+				<input type="submit" name="submit" class="msadmin_button" value="###LABEL_SEARCH###" />
+			</div>
+		</div>		
+		</td>
+	</tr>	
+</form>
+<!-- ###RESULTS### begin -->
+<form action="###FORM_ACTION_PRICE_UPDATE_URL###" method="post" name="price_update">
+<tr>
+<td colspan="8">
+<table width="100%" cellpadding="2" cellspacing="2" id="product_import_table" class="msZebraTable msadmin_orders_listing">
+	<tr>
+		<td align="center" width="17">
+			<label for="check_all_1"></label>
+			<input type="checkbox" class="PrettyInput" id="check_all_1">
+		</td>
+		<th>###LABEL_HEADER_CELL_NUMBER###</th>
+		<th><a href="###HEADER_SORTBY_PRODUCT_LINK###">###LABEL_HEADER_PRODUCT###</a></th>
+		<th><a href="###HEADER_SORTBY_MODEL_LINK###">###LABEL_HEADER_MODEL###</a></th>	
+		<th><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
+		<th><a href="###HEADER_SORTBY_CATEGORY_LINK###">###LABEL_HEADER_CATEGORY###</a></th>
+		<th><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
+		<th><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
+		<th><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
+		<th><a href="###HEADER_SORTBY_WEIGHT_LINK###">###LABEL_HEADER_WEIGHT###</a></th>
+		<th width="60">###LABEL_HEADER_ACTION###</th>
+	</tr>	
+	
+	<!-- ###PRODUCTS_ITEM### begin -->
+	<tr class="###ROW_TYPE###">	
+		<td nowrap class="msAdminProductsSearchCellCheckbox">
+			<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
+			<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" class="PrettyInput" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
+		</td>
+		<td class="column_name msAdminProductsSearchCellNumber" align="right" nowrap>###CELL_NUMBER###</td>
+		<td nowrap class="msAdminProductsSearchCellProductsName">
+			<a href="###EDIT_PRODUCT_LINK0###" onclick="return hs.htmlExpand(this, { objectType: 'iframe', width: 910, height: 500} )">###PRODUCT_NAME###</a>
+			###PRODUCT_CATEGORIES_CRUMBAR###
+		</td>
+		<td nowrap class="msAdminProductsSearchCellProductsModel">###PRODUCT_MODEL###</td>
+		<td class="msAdminProductsSearchCellStatus" align="center">
+			###PRODUCT_STATUS###
+		</td>
+		<td nowrap class="msAdminProductsSearchCellCategory">
+			<a href="###LINK_EDIT_CAT###" onclick="return hs.htmlExpand(this, { objectType: 'iframe', width: 910, height: 500} )">###CATEGORY_NAME###</a>
+		</td>
+				
+		<td nowrap class="msAdminProductsSearchCellProductsPrice">
+			<input type="hidden" id="product_tax_id_###PID1###" value="###VALUE_TAX_ID###" />
+			<div class="msAttributesField">###CURRENCY0### <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><label for="display_name">Excl. VAT</label></div>
+			<div class="msAttributesField">###CURRENCY1### <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><label for="display_name">Incl. VAT</label></div>
+			<div class="msAttributesField hidden"><input type="hidden" name="up[regular_price][###PID5###]" value="###VALUE_ORIGINAL_PRICE###" size="10px" style="text-align:right;" /></div>
+		</td>
+			
+		<td nowrap class="msAdminProductsSearchCellProductsSpecialsPrice">
+			<div class="msAttributesField">###CURRENCY2### <input type="text" id="display_name" name="display_name" class="msSpecialsPriceExcludingVat" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><label for="display_name">Excl. VAT</label></div>
+			<div class="msAttributesField">###CURRENCY3### <input type="text" name="display_name" id="display_name" class="msSpecialsPriceIncludingVat" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><label for="display_name">Incl. VAT</label></div>
+			<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
+		</td>
+		
+		<td align="right" class="msAdminProductsSearchCellQuantity" nowrap><input type="text" name="up[stock][###PID7###]" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" size="10px" /></td>
+		<td align="right" class="msAdminProductsSearchCellWeight" nowrap><input type="text" name="up[weight][###PID8###]" value="###VALUE_PRODUCT_WEIGHT###" style="text-align:right;" size="4px" /></td>
+		<td nowrap align="center" class="msAdminProductsSearchCellActionIcons">
+			<ul>
+				<li><a href="###EDIT_PRODUCT_LINK1###" onclick="return hs.htmlExpand(this, { objectType: 'iframe', width: 910, height: 500} )" class="admin_menu_edit" alt="Edit">edit</a></li>
+				<li><a href="###PRODUCT_DETAIL_LINK###" class="admin_menu_view" target="_blank">view</a></li>
+				<li><a href="###DELETE_PRODUCT_LINK###" onclick="return hs.htmlExpand(this, { objectType: 'iframe', width: 910, height: 140} )" class="admin_menu_remove" alt="Remove"></a></li>
+			</ul>
+		</td>						
+	</tr>
+	<!-- ###PRODUCTS_ITEM### end -->
+	<tr>
+		<th>&nbsp;</th>
+		<th>###LABEL_FOOTER_CELL_NUMBER###</th>
+		<th><a href="###FOOTER_SORTBY_PRODUCT_LINK###">###LABEL_FOOTER_PRODUCT###</a></th>
+		<th><a href="###FOOTER_SORTBY_MODEL_LINK###">###LABEL_FOOTER_MODEL###</a></th>	
+		<th><a href="###FOOTER_SORTBY_VISIBLE_LINK###">###LABEL_FOOTER_VISIBLE###</a></th>
+		<th><a href="###FOOTER_SORTBY_CATEGORY_LINK###">###LABEL_FOOTER_CATEGORY###</a></th>
+		<th><a href="###FOOTER_SORTBY_PRICE_LINK###">###LABEL_FOOTER_PRICE###</a></th>
+		<th><a href="###FOOTER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_FOOTER_SPECIAL_PRICE###</a></th>
+		<th><a href="###FOOTER_SORTBY_STOCK_LINK###">###LABEL_FOOTER_STOCK###</a></th>
+		<th><a href="###FOOTER_SORTBY_WEIGHT_LINK###">###LABEL_FOOTER_WEIGHT###</a></th>
+		<th width="60">###LABEL_FOOTER_ACTION###</th>
+	</tr>
+
+	</table>
+	<script type="text/javascript">
+	jQuery(function($){
+		$('#check_all_1').click(function(){			
+			checkAllPrettyCheckboxes(this,$('.msadmin_orders_listing'));
+		});	
+	});	
+	</script>	
+	</tr>
+	<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
+	<tr>
+	<td>
+		<div class="form-field">
+		###INPUT_ACTION_SELECTBOX###
+		</div>
+		<div class="form-field">
+		###INPUT_CATEGORIES_SELECTBOX###
+		</div>
+		<div class="form-field">
+			<input class="msadmin_button" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" ></input>
+		</div>
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {		
+			$('#products_search_action').change(function() {
+				if ($(this).val()=='move') {
+					$("#target_categories_id").show();
+				} else if ($(this).val()=='duplicate') {
+					$("#target_categories_id").show();
+				} else {
+					$("#target_categories_id").hide();
+				}
+			});
+			$("#target_categories_id").hide();
+		});
+		</script>	
+		</td>
+		<td align="right">
+			<input type="button" name="download" class="link_block" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" />
+			<input type="submit" class="msadmin_button" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" />
+		</td>
+	</tr>
+</form>
+
+<form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload">
+	<input type="hidden" name="cid" value="###CATEGORY_ID2###" />
+	<tr>
+		<td colspan="9">
+				<br />
+				###PRODUCTS_PAGINATION###
+				<div class="hr">
+			</div>
+			###LABEL_UPLOAD_EXCEL_FILE###<input type="file" name="datafile" />
+			<input type="submit" name="Submit" class="msadmin_button" value="###LABEL_ADMIN_UPLOAD###" />
+			<br />
+			<br />
+			<p class="extra_padding_bottom align_center">
+				<a class="msadmin_button" href="###BACK_TO_CATALOG_LINK###">###LABEL_BACK_TO_CATALOG###</a>
+			</p>
+		</td>
+	</tr>
+</form>
+
+<script type="text/javascript">	
+jQuery(document).ready(function($) {		
+	$(document).on("click", ".update_product_status", function(e) {		
+		e.preventDefault();		
+		var products_id=$(this).attr("rel");
+		var enabled_label='###LABEL_ADMIN_YES###';
+		var disabled_label='###LABEL_ADMIN_NO###';
+		var tthis=$(this).parent();
+		$.ajax({ 
+			type:   "POST",
+			url:    "###AJAX_UPDATE_PRODUCT_STATUS_URL###",
+			dataType: 'json',
+			data:   "products_id="+products_id, 
+			success: function(msg) { 	
+				if (msg.html==0) {						
+					return_string='<span class="admin_status_red" alt="Disable"></span><a href="#" class="update_product_status" rel="'+products_id+'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				} else if (msg.html==1) {
+					return_string='<a href="#" class="update_product_status" rel="'+products_id+'"><span class="admin_status_red_disable" alt="Disabled"></span></a><span class="admin_status_green" alt="Enable"></span>';
+				}
+				tthis.html(return_string);
+			}
+		}); 
+	});			
+	function productPrice(to_include_vat, o, type) {
+		var original_val	= o.val();
+		var current_value 	= parseFloat(o.val());
+		var tax_id_holder 	= "#product_tax_id_" + o.attr("rel");
+		var tax_id 			= $(tax_id_holder).val();
+				
+		if (current_value > 0) {
+			if (to_include_vat) {
+				$.getJSON("###AJAX_GET_TAX_RULESET_URL0###", { current_price: original_val, to_tax_include: true, tax_group_id: $(tax_id_holder).val() }, function(json) {
+    				if (json && json.price_including_tax) {
+						var incl_tax_crop = decimalCrop(json.price_including_tax);
+									
+						o.parent().next().first().children().val(incl_tax_crop);
+					} else {
+						o.parent().next().first().children().val(original_val);
+					}
+    			});
+							
+				// update the hidden excl vat
+				o.parent().next().next().first().children().val(original_val);
+						
+			} else {
+				$.getJSON("###AJAX_GET_TAX_RULESET_URL1###", { current_price: original_val, to_tax_include: false, tax_group_id: $(tax_id_holder).val() }, function(json) {
+    				if (json && json.price_excluding_tax) {
+						var excl_tax_crop = decimalCrop(json.price_excluding_tax);
+									
+						// update the excl. vat
+						o.parent().prev().first().children().val(excl_tax_crop);
+									
+						// update the hidden excl vat
+						o.parent().next().first().children().val(json.price_excluding_tax);
+									
+					} else {
+						// update the excl. vat
+						o.parent().prev().first().children().val(original_val);
+									
+						// update the hidden excl vat
+						o.parent().next().first().children().val(original_val);
+					}
+    			});
+			}
+					
+		} else {
+			if (to_include_vat) {
+				// update the incl. vat
+				o.parent().next().first().children().val(0);
+				
+				// update the hidden excl vat
+				o.parent().next().next().first().children().val(0);
+			
+			} else {
+				// update the excl. vat
+				o.parent().prev().first().children().val(0);
+				
+				// update the hidden excl vat
+				o.parent().next().first().children().val(0);
+			}
+		}
+	}
+				
+	function decimalCrop(float) {
+		var numbers = float.toString().split(".");
+		var prime 	= numbers[0];
+		if (numbers[1] > 0 && numbers[1] != "undefined") {
+			var decimal = new String(numbers[1]);
+		} else {
+			var decimal = "00";			
+		}
+		var number = prime + "." + decimal.substr(0, 2);
+		return number;
+	}
+									
+	$(".msProductsPriceExcludingVat").keyup(function() {
+		productPrice(true, $(this));
+	});
+		
+	$(".msProductsPriceIncludingVat").keyup(function() {
+		productPrice(false, $(this));
+	});
+						
+	$(".msSpecialsPriceExcludingVat").keyup(function() {
+		productPrice(true, $(this));
+	});
+		
+	$(".msSpecialsPriceIncludingVat").keyup(function() {
+		productPrice(false, $(this));
+	});
+});	
+</script>
+
+<!-- ###RESULTS### end -->
+<!-- ###NORESULTS### begin -->	
+	<tr>
+		<td colspan="8">###LABEL_NO_RESULT###</td>
+	</tr>
+	<tr>
+		<td colspan="8">
+			<p class="extra_padding_bottom align_center">
+				<a class="msadmin_button" href="###BACK_TO_CATALOG_LINK###">###LABEL_BACK_TO_CATALOG###</a>
+			</p>
+		</td>
+	</tr>
+<!-- ###NORESULTS### end -->
+
+</table>
+<!-- ###TEMPLATE### end -->

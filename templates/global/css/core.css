@@ -1,0 +1,407 @@
+/* ---- global ---- */
+.ui-state-default, .ui-widget-content .ui-state-default { background-image:none; }
+img { border:none; }
+.align-left,
+.align_left { text-align:left; }
+.align-right,
+.align_right { text-align:right; }
+.align-center,
+.align_center { text-align:center; }
+.hr { clear:both; border-bottom:1px solid #cdcdcd; margin:0 0 10px; padding:0 0 10px; }
+.extra_padding_bottom { overflow:hidden; padding:0 0 20px; }
+
+#tx_multishop_pi1_core .bold { font-weight:700; }
+#tx_multishop_pi1_core .hide { display:none; }
+#tx_multishop_pi1_core .float_right { float:right; }
+#tx_multishop_pi1_core .strong { font-weight:bold; }		
+#tx_multishop_pi1_core hr { display:none; }
+#tx_multishop_pi1_core table td, #tx_multishop_pi1_core table th { font-size:12px; }
+#tx_multishop_pi1_core .align_center { text-align:center; }
+.msZebraTable .odd td { background:#f6f6f6; }
+.msZebraTable .even td { background:#fff; }
+.msZebraTable .odd td .even td { background-color:#fff; }
+.msZebraTable .even .odd td { background-color:#f6f6f6; }
+#tx_multishop_pi1_core .float-right-bold  { float:right; }
+#tx_multishop_pi1_core .error-yes {
+display:block;
+float:left;
+width:26px;
+height:16px;
+background:url(../images/icon_yes.gif) left top no-repeat;
+}
+#tx_multishop_pi1_core .error-no {
+display:block;
+float:left;
+width:26px;
+height:16px;
+background:url(../images/icon_no.gif) left top no-repeat;
+}
+#tx_multishop_pi1_core .error-space {
+display:block;
+float:left;
+width:26px;
+height:16px;
+}
+.error_msg  {
+min-height:90px;
+height:auto;
+border:1px solid #f00;
+background:#ffcfcf url(../images/warning-icon.gif) 10px 10px no-repeat;
+margin:0 0 10px;
+padding:5px 10px 5px 100px;
+}
+#tx_multishop_pi1_core .no_image  {
+width:100%;
+height:78px;
+background:url(../images/no-image-icon.png) center top no-repeat;
+text-align:center;
+}
+#tx_multishop_pi1_core .no_image_50 {
+display:block;
+width:50px;
+height:50px;
+background:url(../images/no-image-icon-small.png) center top no-repeat;
+}
+/* ---- eof global ---- */
+
+/* --- step 2 --- */
+#tx_multishop_pi1_core ul#multishop_payment_method, #tx_multishop_pi1_core ul#multishop_shipping_method {
+list-style:none;
+margin:0;
+padding:0 0 10px;
+}
+#tx_multishop_pi1_core ul#multishop_payment_method li, #tx_multishop_pi1_core ul#multishop_shipping_method li {
+overflow:hidden;
+width:100%;
+border-bottom:1px solid #fff;
+background:#fff;
+line-height:100%;
+margin:0;
+padding:10px 0;
+list-style:none;
+}
+#tx_multishop_pi1_core ul#multishop_payment_method li:hover, #tx_multishop_pi1_core ul#multishop_shipping_method li:hover {
+background:url("../images/autofill_shade.gif") left bottom repeat-x;
+border-bottom:1px solid #DFDFDF;
+}
+#tx_multishop_pi1_core #multishop_payment_method li input, #tx_multishop_pi1_core #multishop_payment_method li .name,
+#tx_multishop_pi1_core ul#multishop_shipping_method li input, #tx_multishop_pi1_core ul#multishop_shipping_method li .name {
+float:left;
+}
+#tx_multishop_pi1_core ul#multishop_payment_method li input, #tx_multishop_pi1_core ul#multishop_shipping_method input {
+margin:0 5px 0 10px
+}
+#tx_multishop_pi1_core ul#multishop_payment_method li .shipping_price, #tx_multishop_pi1_core ul#multishop_shipping_method li .shipping_price {
+padding:0 10px 0 0;
+}
+#tx_multishop_pi1_core ul#multishop_payment_method li .description, #tx_multishop_pi1_core ul#multishop_shipping_method li .description {
+clear:both;
+font-size:11px;
+color:#666666;
+padding:5px 10px 0;
+}
+/* --- end of step 2 --- */
+
+/* --- step 3 --- */
+#tx_multishop_pi1_core #checkout .checkout_products_name {
+text-align:left;
+}
+#tx_multishop_pi1_core #checkout .checkout_products_price_excluding_vat {
+text-align:right;
+white-space:nowrap;
+}
+#tx_multishop_pi1_core #checkout #bottomColumnRight .values {
+white-space:nowrap;
+}
+/* --- end of step 3 --- */
+
+/* ---- border global tables ---- */
+#tx_multishop_pi1_core .border { width:100%; border-collapse:collapse; border:1px solid #dfdfdf; /* empty-cells:show; */ }
+#tx_multishop_pi1_core .border td,
+#tx_multishop_pi1_core .border th { border:1px solid #dfdfdf; color:#000; padding:4px 4px; /* word-wrap:break-word; */ vertical-align:top; }
+#tx_multishop_pi1_core .border th { border-top:1px solid #cdcdcd; border-bottom:1px solid #cccccc; background:#ededed; font:bold 10px Verdana, Arial, sans-serif; color:#000; white-space:nowrap; }
+#tx_multishop_pi1_core .border td[align=right] { font-weight:bold; }
+#tx_multishop_pi1_core .fullwidth_div .border td { white-space: nowrap; }
+/* ---- eof border global tables ---- */
+
+#tx_multishop_pi1_core #tx_multishop_footer_menu {
+border-top:1px solid #CDCDCD;
+overflow:hidden;
+padding-top:10px;
+width:100%;
+}
+#tx_multishop_pi1_core #tx_multishop_footer_menu ul {
+list-style:none outside none;
+margin:0 0 10px;
+}
+#tx_multishop_pi1_core #tx_multishop_footer_menu ul li {
+background:none repeat scroll 0 0 transparent;
+border-left:1px solid #CCCCCC;
+float:left;
+margin:0;
+padding:0 20px;
+list-style:none;
+}
+#tx_multishop_pi1_core #tx_multishop_footer_menu ul li:first-child {
+border:medium none;
+padding-left:0;
+}
+
+/* --- highslide overwrite --- */
+a.highslide img {
+margin-bottom:0;
+padding:0;
+}
+/* --- end highslide overwrite --- */
+
+#tx_multishop_pi1_core .news-single-item {
+overflow:hidden;
+width:100%;
+margin:0;
+padding:0;
+}
+#tx_multishop_pi1_core .news-single-img {
+float:right;
+border:1px solid #cdcdcd;
+margin:0;
+padding:2px;
+}
+#tx_multishop_pi1_core .news-single-img img {
+margin:0;
+padding:0;
+}
+#tx_multishop_pi1_core .news-single-img p {
+padding:5px 0 0;
+font-weight:bold;
+text-align:center;
+}
+#tx_multishop_pi1_core .news-single-links {
+clear:both;
+}
+
+#pagenav_container {
+width:100%;
+border:none;
+margin:0;
+padding:0;
+}
+#pagenav_container td {
+width:25%;
+text-align:center;
+}
+#pagenav_container table {
+width:auto;
+margin:0 auto;
+}
+#pagenav_container table td {
+text-align:center;
+width:100%;
+}
+#tx_multishop_pi1_core #shoppingcart_listing {
+margin:0 0 10px;
+}
+#tx_multishop_pi1_core #shoppingcart_listing .shoppingcart-qty input {
+border:1px solid #c0c0c0;
+padding:1px 4px;
+font:12px Arial, Helvetica, sans-serif;
+}
+#tx_multishop_pi1_core #shoppingcart_listing .shoppingcart-coupons input#coupons_code {
+border:1px solid #c0c0c0;
+padding:1px 4px;
+font:11px Arial, Helvetica, sans-serif;
+}
+
+#tx_multishop_pi1_core table#product_relatives.border td[align="right"] {
+white-space:nowrap;
+}
+.fullwidth_div #admin_modules_listing .module_heading { background:#F00; color:#FFF; font-weight:bold; }
+
+
+#customer_comments
+{
+	width:100%;
+	height:65px;
+}
+
+
+#tx_multishop_pi1_core ul#multishop_payment_method li input[type="radio"],
+#tx_multishop_pi1_core ul#multishop_shipping_method li input[type="radio"] { float:none; display:inline-block; margin:0 5px; }
+
+#tx_multishop_pi1_core ul#multishop_payment_method li label.name,
+#tx_multishop_pi1_core ul#multishop_shipping_method li label.name { float:none; }
+
+#tx_multishop_pi1_core ul#multishop_payment_method li strong,
+#tx_multishop_pi1_core ul#multishop_shipping_method li strong { float:none; display:inline-block; margin:0; padding:0; }
+
+#tx_multishop_pi1_core ul#multishop_payment_method li .description,
+#tx_multishop_pi1_core ul#multishop_shipping_method li .description { display:inline-block; }
+
+#tx_multishop_pi1_core ul#multishop_payment_method li .description p,
+#tx_multishop_pi1_core ul#multishop_shipping_method li .description p { display:inline-block; margin:0; }
+
+#tx_multishop_pi1_core ul#multishop_payment_method li .description p img,
+#tx_multishop_pi1_core ul#multishop_shipping_method li .description p img { vertical-align:middle; }
+
+
+form#checkout .account-field input[type="radio"] { float:left; }
+form#checkout .account-field label[for="tx_multishop_newsletter"],
+form#checkout .account-field label[for="checkboxdifferent_delivery_address"] { width:auto; }
+
+.td_relative_item label
+{
+	padding-left:15px;
+}
+
+#products_detail .opties-field-input { overflow:hidden; width:100%; }
+
+#tx_multishop_pi1_core ul.bulletless { margin:0; padding:0; }
+#tx_multishop_pi1_core ul.bulletless li { background:none; margin:0; padding:0; }
+
+#products_detail .opties-field-checkbox { overflow:hidden; width:100%; }
+#products_detail .opties-field-checkbox #attribute_item_wrapper { display:inline-block; }
+#products_detail .opties-field-checkbox #attribute_item_wrapper label { width:auto !important; font-weight:normal; padding:0 3px 0 0; }
+#products_detail .opties-field-checkbox #attribute_item_wrapper .attribute_item { overflow:hidden; width:100%; }
+#products_detail .opties-field-checkbox #attribute_item_wrapper .attribute_item .attribute_item_price { display:inline-block; padding:0; }
+#products_detail .opties-field-divider { overflow:hidden; width:100%; padding:0 0 10px; }
+
+
+#account_orders_history_listing { width:100%; }
+
+form.msadmin_form .account-field { overflow:hidden; width:100%; padding:0 0 10px; }
+form.msadmin_form .account-field label { float:left; display:block; width:130px; font-size:12px; text-align:right; padding:3px 10px 0 0; }
+form.msadmin_form .account-field input[type="text"],
+form.msadmin_form .account-field input[type="password"],
+form.msadmin_form .account-field textarea,
+form.msadmin_form .account-field select { float:left; border:1px solid #cdcdcd; background:#fafafa; font:12px Arial, Helvetica, sans-serif; padding:2px 4px; }
+form.msadmin_form .account-field select { padding:2px; }
+form.msadmin_form .account-field option { padding:0 10px 0 0; }
+form.msadmin_form .account-field input[type="checkbox"],
+form.msadmin_form .account-field input[type="radio"] { margin:3px 0 0; }
+form.msadmin_form .account-field input[type="submit"] { border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; text-transform:uppercase; margin:0; padding:2px 6px; cursor:pointer; }
+form.msadmin_form .account-field input[type="submit"]:hover { background:#e2e2e2; }
+
+.positive_icon { display:inline-block; overflow:hidden; width:14px; height:0; background:url(../images/icons_thumb_up.png) left top no-repeat; padding:14px 0 0; }
+.negative_icon { display:inline-block; overflow:hidden; width:14px; height:0; background:url(../images/icons_thumb_down.png) left top no-repeat; padding:14px 0 0; }
+
+.disabled { display:none; }
+
+.account-field .mce-tinymce.mce-container.mce-panel,
+.form-fieldset .mce-tinymce.mce-container.mce-panel { float:left; }
+.mce-btn button { height:28px; }
+
+.msBackendButton,
+.ui-dialog-buttonpane .msBackendButton {
+display:inline-block !important;
+cursor: pointer !important;
+font:bold 12px/21px Arial, Helvetica, sans-serif !important;
+border-radius:4px !important;
+color:#fff !important;
+text-align:center !important;
+margin:2px 0 22px 0 !important;
+padding:0 !important;
+border:1px solid rgba(0,0,0,.1) !important;
+border-bottom:1px solid rgba(0,0,0,.2) !important;
+box-shadow         :0 1px 2px rgba(0,0,0,0.3), inset 0 1px 0 0 rgba(255,255,255,.4) !important;
+background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Firefox+ */
+background-image   :-webkit-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Chrome+, Safari+ */
+background-image   :-o-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Opera+ */
+background-image   :-ms-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* IE10 */
+filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#19FFFFFF', EndColorStr='#19000000'); /* IE+ */
+text-shadow: rgba(0, 0, 0, 0.4) 1px 1px 0px !important;
+}
+.msBackendButton:hover,
+.ui-dialog-buttonpane .msBackendButton:hover { 
+background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* Firefox+ */
+background-image   :-webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* Chrome+, Safari+ */
+background-image   :-o-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* Opera+ */
+background-image   :-ms-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* IE10 */
+filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#33FFFFFF', EndColorStr='#19FFFFFF') !important; /* IE+ */
+text-decoration:none !important;
+}
+.msBackendButton span,
+.msBackendButton b,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton span,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton b { display:inline-block !important; min-width:63px !important; width:auto !important; min-height:24px !important; height:auto !important; color:#fff !important; margin:0  !important; text-align:left; padding:3px 30px 0 !important; line-height:21px !important}
+.msBackendButton input,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton input { display:inline-block !important; min-width:125px !important; width:auto !important; min-height:27px !important; height:auto !important; border:none !important; background:none !important; font:bold 12px/21px Arial, Helvetica, sans-serif !important; color:#fff !important; margin:0  !important; padding:0 30px !important; text-shadow:rgba(0, 0, 0, 0.4) 1px 1px 0px !important; box-shadow:none  !important; border-radius:0  !important;  cursor:pointer !important; }
+.msBackendButton.arrowLeft span,
+.msBackendButton.arrowLeft b,
+.msBackendButton.arrowLeft input,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowLeft span,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowLeft b,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowLeft input { background:url(../images/btn_arrow_left.png) left center no-repeat !important; }
+.msBackendButton.arrowRight span,
+.msBackendButton.arrowRight b,
+.msBackendButton.arrowRight input,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowRight span,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowRight b,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowRight input { background:url(../images/btn_arrow_right.png) right center no-repeat !important; }
+.msBackendButton.arrowDown span,
+.msBackendButton.arrowDown b,
+.msBackendButton.arrowDown input,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowDown span,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowDown b,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowDown input { background:url(../images/btn_arrow_down.png) left center no-repeat !important; }
+.msBackendButton.arrowUp span,
+.msBackendButton.arrowUp b,
+.msBackendButton.arrowUp input,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowUp span,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowUp b,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowUp input { background:url(../images/btn_arrow_up.png) left center no-repeat !important; }
+.msBackendButton.arrowPosLeft span,
+.msBackendButton.arrowPosLeft b,
+.msBackendButton.arrowPosLeft input,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowPosLeft span,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowPosLeft b,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowPosLeft input { background-position:left center !important; }
+.msBackendButton.arrowPosRight span,
+.msBackendButton.arrowPosRight b,
+.msBackendButton.arrowPosRight input,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowPosRight span,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowPosRight b,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.arrowPosRight input { background-position:right center !important; }
+
+.msBackendButton.backState,
+.msBackendButton.prevState,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.backState,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.prevState { background-color:red !important;}
+.msBackendButton.continueState,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.continueState { background-color:green !important;}
+.msBackendButton.miscState,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.miscState { background-color:purple !important;}
+.msBackendButton.updateState,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.updateState { background-color:orange !important;}
+.msBackendButton.searchState,
+.ui-dialog.ui-dialog-buttonpane .msBackendButton.searchState { background-color:dodgerblue !important; }
+
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #enabledServicesWrapper.account-field ul { margin:0; padding:0 0 0 200px; list-style:none; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #enabledServicesWrapper.account-field ul li { overflow:hidden; width:400px; background:none; margin:0; padding:0 0 3px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #enabledServicesWrapper.account-field ul li .checkboxWithLabel { float:left; width:50%; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #enabledServicesWrapper.account-field ul li input[type="checkbox"] { float:left; margin:3px 5px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #enabledServicesWrapper.account-field ul li label { clear:none; float:left; display:block; width:150px; padding:3px 0 0; text-align:left; }
+
+.ui-widget-content { border-color:#cdcdcd; box-shadow:0 0 20px #999; }
+.ui-dialog-titlebar.ui-widget-header { font:bold 12px/14px Arial, Helvetica, sans-serif; color:#fff; text-align:left; padding:0 0 10px;
+background-color   :#333;
+background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Firefox+ */
+background-image   :-webkit-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Chrome+, Safari+ */
+background-image   :-o-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Opera+ */
+background-image   :-ms-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* IE10 */
+filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#19FFFFFF', EndColorStr='#19000000'); /* IE+ */
+}
+.ui-dialog .ui-dialog-titlebar-close:hover { border-color:#666; background:#333; }
+.ui-dialog-titlebar.ui-widget-header .ui-icon { background-image:url(/typo3conf/ext/multishop/templates/global/images/ui-icons_222222_256x240_white.png); }
+.ui-dialog-content.ui-widget-content { font:12px Arial, Helvetica, sans-serif; text-align:left; box-shadow:none; }
+.ui-dialog-content.ui-widget-content h1 { font-size:14px; margin:0 0 10px; padding:0; }
+.ui-dialog-content.ui-widget-content strong { display:block; margin:0 0 10px; }
+.ui-dialog-content.ui-widget-content ul { margin:0; padding:0; list-style:none; }
+.ui-dialog-content.ui-widget-content ul li { margin:0; padding:0; }
+.ui-dialog-content.ui-widget-content ul li span { float:left; display:block; width:150px; text-align:left; padding:2px 0 0 0; }
+.ui-dialog-content.ui-widget-content ul li textarea { float:left; width:316px; border:1px solid #cdcdcd; font:12px Arial, Helvetica, sans-serif; padding:2px 4px; }
+.ui-dialog-content.ui-widget-content ul.threeCols { overflow:hidden; width:100%; margin:0 0 10px; }
+.ui-dialog-content.ui-widget-content ul.threeCols li { float:left; width:258px; line-height:19px; padding:0 0 4px 0; }
+.ui-dialog-content.ui-widget-content ul.threeCols li.bulletRed { width:234px; background:url(../images/bullet-red.png) -7px -7px no-repeat; padding:0 0 4px 24px; }
+.ui-dialog-content.ui-widget-content ul.threeCols li.bulletGreen { width:234px; background:url(../images/bullet-green.png) -7px -7px no-repeat; padding:0 0 4px 24px; }
+.ui-dialog-content.ui-widget-content ul.threeCols li.bulletBlack { width:234px; background:url(../images/bullet-black.png) -7px -7px no-repeat; padding:0 0 4px 24px; }
+.ui-dialog.ui-widget .ui-dialog-buttonpane { border:none; margin:0; padding:0 0 10px; text-align:center; box-shadow:none; }
+.ui-dialog.ui-widget .ui-dialog-buttonpane button { float:none !important; background-image:none; margin-left:5px !important; margin-right:5px !important; min-width:100px !important; }

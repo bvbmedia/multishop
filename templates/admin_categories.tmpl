@@ -1,0 +1,35 @@
+<!-- ###TEMPLATE### begin -->
+###ADMIN_CATEGORIES_HEADER###
+<form name="movecats" action="###FORM_ACTION_LINK###" method="post">
+	<div id="sidetree">
+		<div class="treeheader">&nbsp;</div>
+		<div id="sidetreecontrol">
+			<a href="#">Collapse All</a> | <a href="#">Expand All</a>
+		</div>
+		<ul id="msAdmin_category_listing_ul">
+			<!-- ###CATEGORIES### begin -->
+			<li class="item_###COUNTER### ###EXTRA_CLASS###">
+				<input type="checkbox" class="movecats" name="movecats[]" value="###CATEGORY_ID###" id="cb-cat_###CATEGORY_ID###" rel="###CATEGORY_ID###">&nbsp;
+				<strong>
+					<a href="###CATEGORY_EDIT_LINK###" onclick="return hs.htmlExpand(this, { objectType: 'iframe', width: 910, height: 500} )">###CATEGORY_NAME### ###CATEGORY_STATUS###</a>
+					###CATEGORY_ACTION_ICON###	
+				</strong>
+				###SUB_CATEGORY_LIST###	
+			</li>
+			<!-- ###CATEGORIES### end -->
+		</ul>
+	</div>
+	<div id="cat-selectbox">
+		<label for="move_to_cat">Move selected categories to</label>
+		###TARGET_CATEGORIES_TREE###
+		<input type="submit" name="move_selected_categories" value="move" />
+	</div>
+	<div id="cat-selectbox">
+		<br/>
+		<br/>
+		<pre>- OR -</pre>
+		<br/>
+		<input type="submit" name="delete_selected_categories" id="delete_selected_categories" value="Delete selected categories" />
+	</div>
+</form>	
+<!-- ###TEMPLATE### end -->

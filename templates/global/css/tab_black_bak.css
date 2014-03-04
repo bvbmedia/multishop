@@ -1,0 +1,83 @@
+body { background-color:#000; }
+
+.main-heading h1 { background:#555; color:#fff; }
+
+form#admin_categories_edit_ .account-field { border-bottom-color:#777; background:#555; color:#fff; }
+form#admin_categories_edit_ .account-field label { color:#fff; }
+form#admin_categories_edit_ .account-field input[type="text"],
+form#admin_categories_edit_ .account-field textarea { background:#f5f5f5; }
+form#admin_categories_edit_ .account-field select { background:#f5f5f5; }
+form#admin_categories_edit_ .account-field table th,
+form#admin_categories_edit_ .account-field table td { color:#fff; }
+form#admin_categories_edit_ .account-field table tr:hover td { background-color:transparent; }
+form#admin_categories_edit_ .account-field table.msadmin_border tr:hover td { background-color:#bbb; }
+
+#tx_multishop_pi1_core form#edit_customer .account-field { border-bottom-color:#777; background:#555; color:#fff; }
+#tx_multishop_pi1_core form#edit_customer .account-field label { color:#fff; }
+#tx_multishop_pi1_core form#edit_customer .account-field input[type="text"],
+#tx_multishop_pi1_core form#edit_customer .account-field textarea { background:#f5f5f5; }
+#tx_multishop_pi1_core form#edit_customer .account-field select { background:#f5f5f5; }
+
+#tx_multishop_pi1_core #tab-container ul.tabs { background-image:url(../images/content_ultab_black.gif); }
+#tx_multishop_pi1_core #tab-container ul.tabs li { background-image:url(../images/tab_r_black.gif); } 
+#tx_multishop_pi1_core #tab-container ul.tabs li a { background-image:url(../images/tab_l_black.gif); color:#777;  }
+#tx_multishop_pi1_core #tab-container ul.tabs li a:hover { color:#cdcdcd; text-decoration:none; }
+#tx_multishop_pi1_core #tab-container ul.tabs li.active { background-image:url(../images/tab_a_r_black.gif); }
+#tx_multishop_pi1_core #tab-container ul.tabs li.active a { background-image:url(../images/tab_a_l_black.gif); color:#fff; }
+
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content { background:#555; border-color:#666; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content h1 { background:#555; color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field { border-bottom-color:#777; background:#555; color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field label { color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content input[type="text"],
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content textarea { background:#f5f5f5; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content select { background:#f5f5f5; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table th,
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table td { color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table td a { color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table tr:hover td { background-color:transparent; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table.msadmin_border tr:hover td { background-color:#bbb; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .save_block { background:#555; }
+.save_block { background:#000; }
+
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content fieldset,
+#tx_multishop_pi1_core form#admin_product_edit_ fieldset { border-color:#777; background:#666; color:#fff; }
+
+#tx_multishop_pi1_core form#admin_product_edit_ fieldset table th,
+#tx_multishop_pi1_core form#admin_product_edit_ fieldset table td { color:#fff; }
+
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border { border-color:#888; }
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border th,
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border th,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border td { border-color:#888; }
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border th,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border th { background:#777; }
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border td { background-color:#aaa; color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border tr.odd td,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border tr.odd td { background-color:#999; }
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border tr:hover td,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border tr:hover td { background-color:#bbb; }
+#tx_multishop_pi1_core #tab-container .tab_container form#admin_product_edit_ table.msadmin_border tr:hover td { background-color:#bbb; }
+
+#tx_multishop_pi1_core form#edit_customer .account-field { border-bottom-color:#777; background:#555; color:#fff; }
+#tx_multishop_pi1_core form#edit_customer .account-field label { color:#fff; }
+#tx_multishop_pi1_core form#edit_customer .account-field input[type="text"],
+#tx_multishop_pi1_core form#edit_customer .account-field textarea { background:#f5f5f5; }
+#tx_multishop_pi1_core form#edit_customer .account-field select { background:#f5f5f5; }
+
+#ms_edit_group .main-heading h2 { background:#555; color:#fff; }
+#ms_edit_group .account-field { border-bottom-color:#777; background:#555; color:#fff; }
+#ms_edit_group .account-field label { color:#fff; }
+#ms_edit_group .account-field label strong { color:#fff; }
+#ms_edit_group .account-field input[type="text"],
+#ms_edit_group .account-field textarea { background:#f5f5f5; }
+#ms_edit_group .account-field select { background:#f5f5f5; }
+
+.qq-upload-spinner { background:url(../images/loading_black_bg.gif); }
+
+#tx_multishop_pi1_core #tab-container .tab_container #cms_details.tab_content .account-field div ul li { background-image:url(../images/bullet_white.gif); }
+
+#tx_multishop_pi1_core .error_msg { border-bottom:1px dotted #777; background:#555; }

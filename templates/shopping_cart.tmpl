@@ -1,0 +1,95 @@
+<!-- ###TEMPLATE### begin -->
+<div class="main-heading"><h2>###SHOPPING_CART_HEADER###</h2></div>
+<form action="###SHOPPING_CART_FORM_ACTION_URL###" method="post" id="shopping_cart_form" name="shopping_cart">
+	<table width="100%" border="0" align="center" class="border" id="shoppingcart_listing">
+		<tr>
+			<th class="shoppingcart-img">&nbsp;</th>
+			<th class="shoppingcart-product">###COL_HEADER_SHOPPING_CART_PRODUCT###</th>
+			<th class="shoppingcart-qty">###COL_HEADER_SHOPPING_CART_QTY###</th>
+			<th class="shoppingcart-button">&nbsp;</th>
+			<th class="shoppingcart-subtotal">###COL_HEADER_SHOPPING_CART_TOTAL###</th>
+		</tr>
+		<!-- ###ITEM### begin -->
+		<tr class="###PRODUCT_ROW_TYPE###">
+			<td class="shoppingcart-img">
+				<div class="checkout_listing_image"><a href="###PRODUCT_LINK###">###PRODUCT_IMAGE###</a></div>
+			</td>
+			
+			<td valign="top" class="shoppingcart-product">
+				<span class="bold"><a href="###PRODUCT_LINK###">###PRODUCT_NAME###</a></span>
+				###PRODUCT_ATTRIBUTES###
+			</td>
+			<td valign="top" class="shoppingcart-qty">###PRODUCT_QTY###</td>	
+			<td valign="top" class="shoppingcart-button">
+				<a href="###PRODUCT_LINK_DELETE###"><div class="ms_remove_product_button">###LABEL_REMOVE_PRODUCT###</div></a>
+			</td>
+			<td align="right" valign="top" class="shoppingcart-subtotal">###PRODUCT_FINAL_PRICE###</td>
+		</tr>
+		<!-- ###ITEM### end -->
+		<!-- ###CART_FOOTER### begin -->		
+		<tr>
+			<td colspan="###SHOPPING_CART_COLSPAN###" align="right" class="shoppingcart-subtotaal">
+				<div>
+					<span class="shoppingcart-subtotaal-txt">###LABEL_SHOPPING_CART_SUBTOTAL###: </span>
+					<span class="shoppingcart-subtotaal-price">###SHOPPING_CART_SUBTOTAL###</span>
+				</div>
+			</td>
+		</tr>
+		<!-- ###DISCOUNT_MODULE_WRAPPER### begin -->
+		<tr>
+			<td colspan="3" align="right" class="shoppingcart-coupons">
+				<span class="shoppingcart-subtotaal-txt">###LABEL_COUPON_CODE###: </span>
+				<input type="text" name="coupons_code" id="coupons_code" value="###COUPON_CODE###" /> 
+				<input type="hidden" name="korting" id="korting" value="###COUPON_CODE_VALUE###" /> 
+			</td>
+			<td align="right">###LABEL_DISCOUNT###: </td>
+			<td align="right"><span id="span_discount">###DISCOUNT_VALUE###</span></td>
+		</tr>
+		<!-- ###DISCOUNT_MODULE_WRAPPER### end -->		
+		<tr>
+			<td colspan="###SHOPPING_CART_COLSPAN###" align="right" class="shoppingcart-proceed-to-checkout-wrapper">
+				<span class="msFrontButton updateState arrowUp arrowPosLeft"><input type="submit" value="###LABEL_UPDATE_SHOPPING_CART###" class="proceed_to_checkout_button_en" /></span>
+			</td>
+		</tr>
+		<!-- ###CART_FOOTER### end -->		
+	</table>
+</form>
+
+<div id="bottom-navigation"><a href="###GOTO_CATALOG_LINK###" class="msFrontButton prevState arrowLeft arrowPosLeft proceed_to_shop"><span>###LABEL_GOTO_CATALOG###</span></a>
+	<div class="cart">
+		<a href="###CHECKOUT_LINK###" class="msFrontButton continueState arrowRight arrowPosLeft proceed_to_checkout_button_en"><span>###LABEL_CHECKOUT###</span></a>
+	</div>
+</div>
+
+<script type="text/javascript">
+jQuery(document).ready(function($){
+	$("#shopping_cart_form input").change(function(){
+		if ($(this).attr("id") !='coupons_code')
+		{
+			$("#shopping_cart_form").submit();
+		}
+	});
+	
+	$(".qty_minus").click(function() {
+		var qty_id = "#" + $(this).attr("rel");
+		var qty = parseInt($(qty_id).val());
+		
+		if (qty > 1) {
+			var new_val = parseInt(qty - 1);
+			$(qty_id).val(new_val);
+		}
+		
+		$("#shopping_cart_form").submit();		
+	});
+	
+	$(".qty_plus").click(function() {
+		var qty_id = "#" + $(this).attr("rel");
+		var qty = parseInt($(qty_id).val());
+		var new_val = parseInt(qty + 1);
+		$(qty_id).val(new_val);
+		
+		$("#shopping_cart_form").submit();
+	});
+});	
+</script>
+<!-- ###TEMPLATE### end -->

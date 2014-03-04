@@ -1,0 +1,548 @@
+	<T3DataStructure>
+	<meta>
+	<langDisable>1</langDisable>
+	<!--  <langChildren>1</langChildren>!-->
+	</meta>
+	<sheets>
+		<sDEFAULT>
+		<ROOT>
+			<TCEforms>
+				<sheetTitle>Module</sheetTitle>
+				<cshFile>LLL:EXT:multishop/pi1/locallang_csh_flexform.xml</cshFile>
+			</TCEforms>
+			<type>array</type>
+			<el>
+				<method>
+					<TCEforms>
+						<label>Choose section</label>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">Core Shop</numIndex>
+									<numIndex index="1">coreshop</numIndex>
+								</numIndex>
+								<numIndex index="1" type="array">
+									<numIndex index="0">Basket</numIndex>
+									<numIndex index="1">basket</numIndex>
+								</numIndex>
+								<numIndex index="2" type="array">
+									<numIndex index="0">Categories</numIndex>
+									<numIndex index="1">categories</numIndex>
+								</numIndex>
+								<numIndex index="12" type="array">
+									<numIndex index="0">Products</numIndex>
+									<numIndex index="1">products</numIndex>
+								</numIndex>
+								<numIndex index="4" type="array">
+									<numIndex index="0">Search</numIndex>
+									<numIndex index="1">search</numIndex>
+								</numIndex>														
+								<numIndex index="3" type="array">
+									<numIndex index="0">Specials</numIndex>
+									<numIndex index="1">specials</numIndex>
+								</numIndex>
+								<numIndex index="7" type="array">
+									<numIndex index="0">Manufacturers</numIndex>
+									<numIndex index="1">manufacturers</numIndex>
+								</numIndex>
+								<numIndex index="5" type="array">
+										<numIndex index="0">Miscellaneous</numIndex>
+										<numIndex index="1">misc</numIndex>
+								</numIndex>																							
+							</items>
+							<maxitems>1</maxitems>
+							<size>15</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</method>
+				<page_uid>
+					<TCEforms>
+					<exclude>1</exclude>
+					<label>Multishop Core Page  (use this only when you want to link this shop to other shop)</label>
+					<config>
+						<type>group</type>
+						<internal_type>db</internal_type>
+						<allowed>pages</allowed>
+						<size>1</size>
+						<maxitems>1</maxitems>
+						<minitems>0</minitems>
+						<show_thumbs>1</show_thumbs>
+					</config>
+					</TCEforms>
+				</page_uid>
+				<addBox>
+					<TCEforms>
+						 <label>Add Box</label>
+						 <config>
+						  <type>check</type>
+						 </config>
+					</TCEforms>
+				</addBox>
+				<hideHeader>
+					<TCEforms>
+						 <label>Hide Multishops internal CE header (so only the header of the current content element gets be printed)</label>
+						 <config>
+						  <type>check</type>
+						 </config>
+					</TCEforms>
+				</hideHeader>
+				<productsLimit>
+					<TCEforms>
+					<label>Limit number of products</label>
+					<config>
+						<type>input</type>
+						<eval>num</eval>
+						<size>10</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</productsLimit>
+				<hideIfNoResults>
+					<TCEforms>
+					<label>Hide content box when database returns zero results</label>
+					<config>
+						<type>check</type>
+					</config>
+					</TCEforms>
+				</hideIfNoResults>														
+				<hidePagination>
+					<TCEforms>
+						 <label>Hide pagination</label>
+						 <config>
+						  <type>check</type>
+						 </config>
+					</TCEforms>
+				</hidePagination>		
+			</el>
+		</ROOT>
+		</sDEFAULT>
+		<s_listing>
+		<ROOT>
+			<TCEforms>
+				<sheetTitle>Categories</sheetTitle>
+			</TCEforms>
+			<type>array</type>
+			<el>
+				
+				<showIfsub>
+						<TCEforms>
+						<label>Showifsub</label>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</showIfsub>			
+				<parentID>
+					<TCEforms>
+						<label>Parent categories ID</label>
+						<config>
+							<type>input</type>
+							<eval>text</eval>
+							<size>10</size>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</parentID>
+				<maxDEPTH>
+					<TCEforms>
+						<label>Maximum number of sublevels (sub-categories)</label>
+						<config>
+							<type>input</type>
+							<eval>text</eval>
+							<size>10</size>
+							<default>0</default>
+						</config>
+					</TCEforms>
+				</maxDEPTH>	
+				<maxDELIMITED>
+					<TCEforms>
+						<label>Delimited (alpha: for multirow tab navigation menu). Example 3 rows tabbermenu with 9 items, 11 items, 12 items: 9,11,12</label>
+						<config>
+							<type>input</type>
+							<eval>text</eval>
+							<size>25</size>
+							<default></default>
+						</config>
+					</TCEforms>
+				</maxDELIMITED>						
+			</el>
+		</ROOT>
+		</s_listing>
+		<s_products_listing>
+		<ROOT>
+			<TCEforms>
+				<sheetTitle>Products</sheetTitle>
+			</TCEforms>
+			<type>array</type>
+			<el>			
+				<contentType>
+					<TCEforms>
+						<label>Content type</label>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">Latest products</numIndex>
+									<numIndex index="1">products_new</numIndex>
+								</numIndex>	
+								<numIndex index="1" type="array">
+									<numIndex index="0">Modified products</numIndex>
+									<numIndex index="1">products_modified</numIndex>
+								</numIndex>																			
+								<numIndex index="2" type="array">
+									<numIndex index="0">Upcoming products</numIndex>
+									<numIndex index="1">products_upcoming</numIndex>
+								</numIndex>		
+								<numIndex index="3" type="array">
+									<numIndex index="0">Hot products</numIndex>
+									<numIndex index="1">products_hot</numIndex>
+								</numIndex>																										
+								<numIndex index="4" type="array">
+									<numIndex index="0">Last visited products</numIndex>
+									<numIndex index="1">products_last_visited</numIndex>
+								</numIndex>	
+								<numIndex index="5" type="array">
+									<numIndex index="0">Products detail</numIndex>
+									<numIndex index="1">products_detail</numIndex>
+								</numIndex>
+								<numIndex index="6" type="array">
+									<numIndex index="0">Products listing</numIndex>
+									<numIndex index="1">products_listing</numIndex>
+								</numIndex>								
+							</items>
+							<maxitems>1</maxitems>
+							<size>10</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</contentType>					
+			</el>
+		</ROOT>
+		</s_products_listing>	
+		<s_search>
+		<ROOT>
+			<TCEforms>
+				<sheetTitle>Search</sheetTitle>
+			</TCEforms>
+			<type>array</type>
+			<el>
+				<contentType>
+					<TCEforms>
+						<label>Content Type</label>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">Default searchform</numIndex>
+									<numIndex index="1">default</numIndex>
+								</numIndex>																		
+								<numIndex index="1" type="array">
+									<numIndex index="0">Searchform with keyword and category dropdown menu</numIndex>
+									<numIndex index="1">searchform_with_keyword_and_category_dropdown_menu</numIndex>
+								</numIndex>
+								<numIndex index="2" type="array">
+									<numIndex index="0">Searchform with manufacturers dropdown menu</numIndex>
+									<numIndex index="1">searchform_with_manufacturers_dropdown_menu</numIndex>
+								</numIndex>
+								<numIndex index="3" type="array">
+									<numIndex index="0">Price filter navigation box</numIndex>
+									<numIndex index="1">price_filter_navigation_box</numIndex>
+								</numIndex>
+								<numIndex index="4" type="array">
+									<numIndex index="0">Manufacturers dropdown menu</numIndex>
+									<numIndex index="1">manufacturers_dropdown_menu</numIndex>
+								</numIndex>								
+								<numIndex index="5" type="array">
+									<numIndex index="0">Ultrasearch</numIndex>
+									<numIndex index="1">ultrasearch</numIndex>
+								</numIndex>																			
+							</items>
+							<maxitems>1</maxitems>
+							<size>10</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</contentType>
+				<ultrasearch_fields>
+					<TCEforms>
+						<label>Ultrasearch Fields (to show all fields in the searchbox fill in: all. If you just want to show a couple of fields you can define them as follow: 1:list;2:radio;3:checkbox;price_filter:0-1000)</label>
+						<config>
+							<type>input</type>
+							<eval>text</eval>
+							<size>50</size>
+							<default>all</default>
+						</config>
+					</TCEforms>
+				</ultrasearch_fields>	
+				<ultrasearch_filtered_by_current_category>
+					<TCEforms>
+						 <label>Enable Ultrasearch filtering by current (sub)category</label>
+						 <config>
+						  <type>check</type>
+						 </config>
+					</TCEforms>
+				</ultrasearch_filtered_by_current_category>	
+				<ultrasearch_target_element>
+					<TCEforms>
+					<label>Ultrasearch Target Element (example: #tx_multishop_pi1_core)</label>
+					<config>
+						<type>input</type>
+						<eval>text</eval>
+						<size>25</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</ultrasearch_target_element>	
+				<ultrasearch_javascript_client_file>
+					<TCEforms>
+					<label>Ultrasearch JavaScript client file (default: default.js)</label>
+					<config>
+						<type>input</type>
+						<eval>text</eval>
+						<size>25</size>
+						<default>default.js</default>
+					</config>
+					</TCEforms>
+				</ultrasearch_javascript_client_file>														
+			</el>
+		</ROOT>
+		</s_search>	
+		<s_specials>
+		<ROOT>
+			<TCEforms>
+				<sheetTitle>Specials</sheetTitle>
+			</TCEforms>
+			<type>array</type>
+			<el>			
+				<contentType>
+					<TCEforms>
+						<label>Content type</label>
+						<config>
+							<type>select</type>
+							<items type="array">
+								<numIndex index="0" type="array">
+									<numIndex index="0">Specials box</numIndex>
+									<numIndex index="1">specials_box</numIndex>
+								</numIndex>
+								<numIndex index="1" type="array">
+									<numIndex index="0">Specials listing Page</numIndex>
+									<numIndex index="1">specials_listing_page</numIndex>
+								</numIndex>
+								<numIndex index="2" type="array">
+									<numIndex index="0">Specials section</numIndex>
+									<numIndex index="1">specials_section</numIndex>
+								</numIndex>							
+							</items>
+							<maxitems>1</maxitems>
+							<size>10</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</contentType>				
+				<speciallimit>
+					<TCEforms>
+					<label>Limit special items</label>
+					<config>
+						<type>input</type>
+						<eval>num</eval>
+						<size>10</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</speciallimit>
+				<imageWidth>
+					<TCEforms>
+						<label>Image width</label>
+						<config>
+						<type>select</type>
+						<items type="array">
+						  <numIndex index="4" type="array">
+							<numIndex index="0">not defined</numIndex>
+							<numIndex index="1"></numIndex>
+						  </numIndex>    						
+						  <numIndex index="0" type="array">
+							<numIndex index="0">50</numIndex>
+							<numIndex index="1">50</numIndex>
+						  </numIndex>          
+						  <numIndex index="1" type="array">
+							<numIndex index="0">100</numIndex>
+							<numIndex index="1">100</numIndex>
+						  </numIndex>
+						  <numIndex index="2" type="array">
+							<numIndex index="0">200</numIndex>
+							<numIndex index="1">200</numIndex>
+						  </numIndex>
+						  <numIndex index="3" type="array">
+							<numIndex index="0">300</numIndex>
+							<numIndex index="1">300</numIndex>
+						  </numIndex>
+						</items>
+						<minitems>0</minitems>
+						<maxitems>1</maxitems>
+						<size>1</size>
+						</config>
+					</TCEforms>
+				</imageWidth>				
+				<section_code>
+					<TCEforms>
+					<label>Section code</label>
+					<config>
+						<type>input</type>
+						<eval>text</eval>
+						<size>15</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</section_code>			
+			</el>
+		</ROOT>
+		</s_specials>
+		<s_misc>
+		<ROOT>
+			<TCEforms>
+				<sheetTitle>Miscellaneous</sheetTitle>
+			</TCEforms>
+			<type>array</type>
+			<el>			
+				<contentType>
+					<TCEforms>
+						<label>Content type</label>
+						<config>
+							<type>select</type>
+							<itemsProcFunc>tx_multishop_addMiscFieldsToFlexForm->addMiscFields</itemsProcFunc>
+							<maxitems>1</maxitems>
+							<size>10</size>
+							<selectedListStyle>width:150px</selectedListStyle>
+							<itemListStyle>width:150px</itemListStyle>
+						</config>
+					</TCEforms>
+				</contentType>
+				<custom_script>
+					<TCEforms>
+					<label>Custom script path</label>
+					<config>
+						<type>input</type>
+						<eval>text</eval>
+						<size>25</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</custom_script>										
+			</el>
+		</ROOT>
+		</s_misc>
+		<s_advanced>
+		<ROOT>
+			<TCEforms>
+				<sheetTitle>Advanced settings</sheetTitle>
+			</TCEforms>
+			<type>array</type>
+			<el>			
+				<customSettings>
+					<TCEforms>
+					<label>Multishop custom configuration (overwrites Multishop defined variables)</label>
+					<config>
+						<type>text</type>
+						<eval>text</eval>
+						<rows>50</rows>
+						<default></default>
+					</config>
+					</TCEforms>
+				</customSettings>						
+				<categoriesStartingPoint>
+					<TCEforms>
+					<label>Categories Starting Point (default 0)</label>
+					<config>
+						<type>input</type>
+						<eval>num</eval>
+						<size>11</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</categoriesStartingPoint>	
+				<categoriesID>
+					<TCEforms>
+					<label>Categories ID</label>
+					<config>
+						<type>input</type>
+						<eval>num</eval>
+						<size>11</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</categoriesID>				
+				<productsID>
+					<TCEforms>
+					<label>Products ID</label>
+					<config>
+						<type>input</type>
+						<eval>num</eval>
+						<size>11</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</productsID>							
+				<searchKeywordListing>
+					<TCEforms>
+					<label>Search Keyword Listing</label>
+					<config>
+						<type>text</type>
+						<eval>text</eval>
+						<size>50</size>
+						<default></default>
+					</config>
+					</TCEforms>
+				</searchKeywordListing>				
+				<showCatalogFromPage>
+					<TCEforms>
+					<exclude>1</exclude>
+					<label>Show Catalog from Page</label>
+					<config>
+						<type>group</type>
+						<internal_type>db</internal_type>
+						<allowed>pages</allowed>
+						<size>1</size>
+						<maxitems>1</maxitems>
+						<minitems>0</minitems>
+						<show_thumbs>1</show_thumbs>
+					</config>
+					</TCEforms>
+				</showCatalogFromPage>
+				<masterShop>
+						<TCEforms>
+						<label>Master shop</label>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</masterShop>
+				<cacheLifeTime>
+						<TCEforms>
+						<label>Cache Lifetime</label>
+						<config>
+							<type>input</type>
+							<eval>num</eval>
+							<size>11</size>
+							<default></default>
+						</config>
+					</TCEforms>
+				</cacheLifeTime>
+				<disableMetatags>
+						<TCEforms>
+						<label>Disable inclusion of internal meta tags</label>
+						<config>
+							<type>check</type>
+						</config>
+					</TCEforms>
+				</disableMetatags>											
+			</el>
+		</ROOT>
+		</s_advanced>			
+	</sheets>
+</T3DataStructure>

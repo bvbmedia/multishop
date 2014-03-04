@@ -1,0 +1,114 @@
+<!-- ###TEMPLATE### begin -->
+<script type="text/javascript"> 
+jQuery(document).ready(function($) { 
+	jQuery(".tab_content").hide(); 
+	jQuery("ul.tabs li:first").addClass("active").show();
+	jQuery(".tab_content:first").show();
+	jQuery("ul.tabs li").click(function() {
+		jQuery("ul.tabs li").removeClass("active");
+		jQuery(this).addClass("active"); 
+		jQuery(".tab_content").hide();
+		var activeTab = jQuery(this).find("a").attr("href");
+		jQuery(activeTab).fadeIn(0);
+		return false;
+	});
+ 
+});
+</script>
+<form class="admin_category_edit" name="admin_categories_edit_###CATEGORIES_ID0###" id="admin_categories_edit_###CATEGORIES_ID1###" method="post" action="###FORM_POST_URL###" enctype="multipart/form-data">
+	<div id="tab-container">
+		<ul class="tabs" id="admin_orders">	
+	        <li class="active" style=""><a href="#category_main">DETAILS</a></li>
+			<li class=""><a href="#category_content">CONTENT</a></li>
+			<li class=""><a href="#category_meta">META</a></li>
+			<li class=""><a href="#category_advanced">ADVANCED</a></li>
+		</ul>
+		<div class="tab_container">
+			<div style="display: block;" id="category_main" class="tab_content">
+				<div style="float:right;">
+					<div class="save_block">
+						<input name="cancel" type="button" value="###LABEL_BUTTON_CANCEL###" onClick="parent.window.hs.close();" class="submit" />
+						<input name="Submit" type="submit" value="###LABEL_BUTTON_SAVE###" class="submit" />
+					</div>
+				</div>
+				###HEADING_PAGE###
+				###INPUT_CATEGORY_NAME_BLOCK###
+				###SELECTBOX_CATEGORY_TREE###
+				<div class="account-field" id="msEditCategoryInputVisibility">
+					<label for="status">###LABEL_VISIBILITY###</label>	
+					<input name="status" type="radio" value="1" ###CATEGORY_STATUS_YES### /> ###LABEL_STATUS_YES### <input name="status" type="radio" value="0" ###CATEGORY_STATUS_NO### /> ###LABEL_STATUS_NO### 
+				</div>
+				<div class="account-field" id="msEditCategoryInputImage">
+					<label for="categories_image">###LABEL_IMAGE###</label>
+					<div id="categories_image">		
+						<noscript>				
+							<input name="categories_image" type="file" />
+						</noscript>         
+					</div>		
+					<input name="ajax_categories_image" id="ajax_categories_image" type="hidden" value="" />
+					###CATEGORIES_IMAGE###
+				</div>
+				
+			    <script type="text/javascript">	
+					jQuery(document).ready(function($) {
+						var categories_name=$("#categories_name_0").val();								   
+			            var uploader = new qq.FileUploader({
+			                element: document.getElementById('categories_image'),
+			                action: '###UPLOAD_IMAGE_URL###',
+							params: {
+								categories_name: categories_name,
+								file_type: 'categories_image'
+							},	
+							template: '<div class="qq-uploader">' + 
+				                '<div class="qq-upload-drop-area"><span>Drop files here to upload</span></div>' +
+			    	            '<div class="qq-upload-button">###LABEL_CHOOSE_IMAGE###</div>' +
+			        	        '<ul class="qq-upload-list"></ul>' + 
+			            		'</div>',
+							onComplete: function(id, fileName, responseJSON){
+								var filenameServer = responseJSON['filename'];
+								$("#ajax_categories_image").val(filenameServer);
+						    },
+			                debug: false				
+			            });   
+						$('#categories_name_0').change(function() {
+						var categories_name=$("#categories_name_0").val();
+							uploader.setParams({
+							   categories_name: categories_name,
+							   file_type: 'categories_image'
+							});		
+						});			
+					});		
+			    </script>
+				<div class="account-field" id="msEditCategoryInputExternalUrl">
+					<label for="categories_url">###LABEL_CATEGORIES_EXTERNAL_URL###</label>
+					<input type="text" class="text" name="categories_url" id="categories_url" value="###VALUE_CATEGORIES_EXTERNAL_URL###">
+				</div>
+				###EXTRA_DETAILS_FIELDS###
+			</div>
+			
+			<div style="display: block;" id="category_content" class="tab_content">
+				###CATEGORIES_CONTENT_BLOCK###
+			</div>
+			
+			<div style="display: block;" id="category_meta" class="tab_content">
+				###CATEGORIES_META_BLOCK###
+			</div>
+			
+			<div style="display: block;" id="category_advanced" class="tab_content">
+				<div class="account-field" id="msEditCategoryInputCustomSettings">
+					<label for="custom_settings">###LABEL_ADVANCED_SETTINGS###</label>
+					<textarea name="custom_settings" class="expand20-200" cols="" rows="15">###VALUE_ADVANCED_SETTINGS###</textarea>
+				</div>
+			</div>
+			<div class="save_block">
+				<input name="cancel" type="button" value="###LABEL_BUTTON_CANCEL_FOOTER###" onClick="parent.window.hs.close();" class="submit" />
+				<input name="Submit" type="submit" value="###LABEL_BUTTON_SAVE_FOOTER###" class="submit" />
+			</div>
+		</div>
+	</div>
+	
+	<input name="cid" type="hidden" value="###CATEGORIES_ID_FOOTER0###" />
+	<input name="action" type="hidden" value="###PAGE_ACTION###" />
+</form>		
+<div id="ajax_message_###CATEGORIES_ID_FOOTER1###" class="ajax_message"></div>
+<!-- ###TEMPLATE### end -->

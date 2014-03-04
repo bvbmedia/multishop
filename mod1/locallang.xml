@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for module &quot;web_txmultishopM1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="title">Multishop</label>
+			<label index="function1">Welcome to Multishop</label>
+			<label index="function2">Administration</label>
+			<label index="function3">Help</label>
+		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="title">Multishop</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="title">Multishop</label>
+			<label index="function1">Willkommen zu Multishop</label>
+			<label index="function2">Administration</label>
+			<label index="function3">Hilfe</label>
+		</languageKey>		
+	</data>
+</T3locallang>

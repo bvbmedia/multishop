@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+  <meta type="array">
+    <description>CSH labels for FlexForm fields</description>
+    <type>CSH</type>
+    <csh_table></csh_table>
+    <fileId>EXT:your_extkey/pi1/locallang_csh_flexform.xml</fileId>
+    <labelContext type="array"></labelContext>
+  </meta>
+  <data type="array">
+    <languageKey index="default" type="array">
+      <label index="method.alttitle">Explanation</label>
+      <label index="method.description">Here you can choose what type of content object you are going to place.</label>
+      <label index="method.details">&lt;strong&gt;&lt;em&gt;Content Type: Core&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt; 
+This object is the heart of the webshop and must be added on a page. Adviced to put it in the middle content column of the page.&lt;br /&gt;
+&lt;br /&gt;
+&lt;strong&gt;&lt;em&gt;Content Type: Basket&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt; 
+This object is to show the shoppingcart basket. Adviced to put it in the right content column of the page.&lt;br /&gt;
+&lt;br /&gt;
+&lt;strong&gt;&lt;em&gt;Content Type: Category Listing&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt;
+This object is to show the catalog menu. Adviced to put it in the left content column of the page.&lt;br /&gt;
+&lt;br /&gt;
+&lt;strong&gt;&lt;em&gt;Content Type: Specials&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt;
+This object is to show some specials.&lt;BR /&gt;
+&lt;BR /&gt;</label>
+      <label index="params.alttitle">Explanation</label>
+	  <label index="params.description">Some content objects allow additional parameters.</label>
+	  <label index="params.details">&lt;strong&gt;&lt;em&gt;Content Type: Core&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt;
+Here are no parameters available.&lt;br /&gt;
+&lt;br /&gt;
+&lt;strong&gt;&lt;em&gt;Content Type: Basket&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt;
+Here are no parameters available.&lt;br /&gt;
+&lt;br /&gt;
+&lt;strong&gt;&lt;em&gt;Content Type: Specials&lt;/em&gt;&lt;/strong&gt;&lt;br /&gt;
+Here you can specify additional parameters to configure the Specials Box.&lt;br /&gt;
+&lt;br /&gt;
+&lt;strong&gt;Limit&lt;/strong&gt;&lt;br /&gt;
+This parameter will limit the results. Example: limit=5&lt;strong&gt;&lt;br /&gt;
+&lt;br /&gt;
+Random&lt;/strong&gt;&lt;br /&gt;
+This parameter will randomize the results. Example: random=1&lt;BR /&gt;&lt;BR /&gt;</label>
+  <label index="page_uid.alttitle">Explanation</label>
+	  <label index="page_uid.description">Some content objects expect a relation to the core shop page.</label>
+	  <label index="page_uid.details">Some content objects expect a relation to the core shop page.</label>
+    </languageKey>
+  </data>
+</T3locallang>

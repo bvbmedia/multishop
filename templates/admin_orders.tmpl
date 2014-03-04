@@ -1,0 +1,157 @@
+<!-- ###TEMPLATE### begin -->
+<script type="text/javascript">
+function submitToHighslide(form) {
+	// identify the submit button to start the animation from
+	var anchor;
+	for (var i = 0; i < form.elements.length; i++) {
+		if (form.elements[i].type == "submit") {
+			anchor = form.elements[i];
+			break;
+		}
+	}
+	// open an expander and submit our form when the iframe is ready
+	hs.overrides.push("onAfterExpand");
+	hs.htmlExpand(anchor, {
+         objectType: "iframe",
+         src: "###AJAX_ADMIN_EDIT_ORDER_URL###",
+         width: 380,
+         height: 90,
+         onAfterExpand: function(expander) {
+            form.target = expander.iframe.name;
+            form.submit();
+         }
+	});
+	// return false to delay the sumbit until the iframe is ready
+	return false;
+}
+jQuery(document).ready(function($) {
+	jQuery(".tab_content").hide(); 
+	jQuery("ul.tabs li:first").addClass("active").show();
+	jQuery(".tab_content:first").show();
+	jQuery("ul.tabs li").click(function() {
+		jQuery("ul.tabs li").removeClass("active");
+		jQuery(this).addClass("active"); 
+		jQuery(".tab_content").hide();
+		var activeTab = jQuery(this).find("a").attr("href");
+		jQuery(activeTab).fadeIn(0);
+		return false;
+	});
+    jQuery('#order_date_from').datetimepicker({
+    	dateFormat: 'dd/mm/yy',
+        showSecond: true,
+		timeFormat: 'HH:mm:ss'         		
+    });
+	jQuery('#order_date_till').datetimepicker({
+    	dateFormat: 'dd/mm/yy',
+        showSecond: true,
+		timeFormat: 'HH:mm:ss'
+    });
+ 
+});
+</script>
+
+<div id="tab-container">
+    <ul class="tabs" id="admin_orders">
+		<li class="active"><a href="#Orders_By_Date">Orders</a></li>
+    </ul>
+	<div class="tab_container">
+		<form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="post">
+			<div id="search-orders">
+				<input name="id" type="hidden" value="###SHOP_PID###" />
+				<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />	
+				<table width="100%">
+					<tr>
+						<td valign="top">
+						<div class="formfield-container-wrapper">
+							<div class="formfield-wrapper">
+								<label>###LABEL_KEYWORD###</label>
+								<input type="text" name="skeyword" value="###VALUE_KEYWORD###">
+								###OPTION_ITEM_SELECTBOX###
+								###ORDERS_STATUS_LIST_SELECTBOX###
+								<input type="submit" name="Search" value="###VALUE_SEARCH###"></input>					
+							</div>
+							<div class="formfield-wrapper">
+								<label for="order_date_from">###LABEL_DATE_FROM###:</label><input type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###"><label for="order_date_till">###LABEL_DATE_TO###:</label><input type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
+								<label for="search_by_status_last_modified">###LABEL_FILTER_LAST_MODIFIED###</label>
+								<input type="checkbox" class="PrettyInput" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1"###FILTER_BY_LAST_MODIFIED_CHECKED### >										
+							</div>
+							<div class="formfield-wrapper">
+								###PAYMENT_STATUS_SELECTBOX###				
+							</div>
+						</div>
+						</td>
+						<td nowrap valign="top" align="right" class="searchLimit">
+							<div style="float:right;">
+								<label>###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+								###RESULTS_LIMIT_SELECTBOX###
+							</div>			
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div style="display: block;" id="Orders_By_Date" class="tab_content">
+				<!-- ###RESULTS### begin -->
+				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
+					<tr>
+						<td align="center" width="17">
+							<label for="check_all_1"></label>
+							<input type="checkbox" class="PrettyInput" id="check_all_1">
+						</td>
+						<th width="50" class="cell_orders_id"><a href="###HEADER_SORTBY_LINK_ORDER_ID###">###LABEL_HEADER_ORDER_ID###</a></th>
+						###HEADER_MASTER_SHOP###
+						<th class="cell_customer">###LABEL_HEADER_CUSTOMER###</th>
+						<th width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_ORDER_DATE###">###LABEL_HEADER_ORDER_DATE###</a></th>
+						<th width="50" class="cell_amount"><a href="###HEADER_SORTBY_LINK_AMOUNT###">###LABEL_HEADER_AMOUNT###</a></th>
+						<th width="50" class="cell_shipping_method"><a href="###HEADER_SORTBY_LINK_SHIPPING_METHOD###">###LABEL_HEADER_SHIPPING_METHOD###</a></th>
+						<th width="50" class="cell_payment_method"><a href="###HEADER_SORTBY_LINK_PAYMENT_METHOD###">###LABEL_HEADER_PAYMENT_METHOD###</a></th>
+						<th class="cell_status">###LABEL_HEADER_STATUS###</th>
+						<th width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_MODIFIED###">###LABEL_HEADER_MODIFIED###</a></th>
+						<th width="50" class="cell_paid">###LABEL_HEADER_PAID###</th>
+						###EXTRA_RIGHT_HEADER###
+					</tr>
+					<!-- ###ORDERS_LISTING### begin -->
+					<tr class="###ROW_TYPE###">
+						<td nowrap><label for="checkbox_###ORDER_ID###"></label><input type="checkbox" name="selected_orders[]" class="PrettyInput" id="checkbox_###ORDER_ID###" value="###ORDER_ID###"></td>
+						<th align="right" nowrap><a href="###ORDER_EDIT_URL###" onclick="return hs.htmlExpand(this, { objectType: 'iframe', width: ###EDIT_ORDER_POPUP_WIDTH###, height: browser_height} )" title="###LABEL_LOADING###" class="tooltip" rel="###ORDER_ID###">###ORDER_ID###</a></th>
+						###MASTER_SHOP###
+						<td align="left" nowrap><a href="###ORDER_EDIT_URL###" onclick="return hs.htmlExpand(this, { objectType: 'iframe', width: ###EDIT_ORDER_POPUP_WIDTH###, height: browser_height} )" title="###LABEL_LOADING###" class="tooltip" rel="###ORDER_ID###">###ORDER_CUSTOMER_NAME###</a></td>	
+						<td align="right" nowrap>###ORDER_CREATE_DATE###</td>
+						<td align="right" nowrap id="order_amount_###ORDER_ID###">###ORDER_GRAND_TOTAL###</td>	
+						<td align="center" nowrap id="shipping_method_###ORDER_ID###">###ORDER_SHIPPING_METHOD###</td>
+						<td align="center" nowrap id="payment_method_###ORDER_ID###">###ORDER_PAYMENT_METHOD###</td>
+						<td align="center" nowrap>###ORDER_STATUS###</td>
+						<td align="right" nowrap>###ORDER_LAST_MODIFIED###</td>
+						<td align="center" nowrap>###ORDER_PAID_STATUS###</td>		
+						###PRINT_ORDER_LIST_BUTTON###
+					</tr>
+					<!-- ###ORDERS_LISTING### end -->
+					<tr>
+						<th>&nbsp;</th>
+						<th width="50" class="cell_orders_id"><a href="###FOOTER_SORTBY_LINK_ORDER_ID###">###LABEL_FOOTER_ORDER_ID###</a></th>
+						###FOOTER_MASTER_SHOP###
+						<th class="cell_customer">###LABEL_FOOTER_CUSTOMER###</th>
+						<th width="110" class="cell_date"><a href="###FOOTER_SORTBY_LINK_ORDER_DATE###">###LABEL_FOOTER_ORDER_DATE###</a></th>
+						<th width="50" class="cell_amount"><a href="###FOOTER_SORTBY_LINK_AMOUNT###">###LABEL_FOOTER_AMOUNT###</a></th>
+						<th width="50" class="cell_shipping_method"><a href="###FOOTER_SORTBY_LINK_SHIPPING_METHOD###">###LABEL_FOOTER_SHIPPING_METHOD###</a></th>
+						<th width="50" class="cell_payment_method"><a href="###FOOTER_SORTBY_LINK_PAYMENT_METHOD###">###LABEL_FOOTER_PAYMENT_METHOD###</a></th>
+						<th class="cell_status">###LABEL_FOOTER_STATUS###</th>
+						<th width="110" class="cell_date"><a href="###FOOTER_SORTBY_LINK_MODIFIED###">###LABEL_FOOTER_MODIFIED###</a></th>
+						<th width="50" class="cell_paid">###LABEL_FOOTER_PAID###</th>
+						###EXTRA_RIGHT_FOOTER###
+					</tr>
+				</table>
+				<div id="msAdminOrdersListingActionForm">
+					###FORM_FIELDS_LISTING_ACTION_BLOCK###	
+				</div>
+				###PAGINATION###
+				<!-- ###RESULTS### end -->
+				
+				<!-- ###NORESULTS### begin -->
+					###LABEL_NO_RESULTS###
+				<!-- ###NORESULTS### end -->
+			</div>	
+		</form>	
+	</div>
+</div>
+<!-- ###TEMPLATE### end -->

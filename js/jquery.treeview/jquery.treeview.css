@@ -1,0 +1,109 @@
+#msAdmin_msAdmin_category_listing_ul.treeview,
+#msAdmin_msAdmin_category_listing_ul.treeview ul { 
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+#msAdmin_category_listing_ul.treeview ul {
+	background-color: white;
+	margin-top: 4px;
+}
+
+#msAdmin_category_listing_ul.treeview .hitarea {
+	background: url(images/treeview-default.gif) -64px -25px no-repeat;
+	height: 16px;
+	width: 16px;
+	margin-left: -16px;
+	float: left;
+	cursor: pointer;
+}
+/* fix for IE6 */
+* html .hitarea {
+	display: inline;
+	float:none;
+}
+
+#msAdmin_category_listing_ul.treeview li { 
+	margin: 0;
+	padding: 3px 0pt 3px 16px;
+}
+
+#msAdmin_category_listing_ul.treeview a.selected {
+	background-color: #eee;
+}
+
+#treecontrol { margin: 1em 0; display: none; }
+
+#msAdmin_category_listing_ul.treeview .hover { color: red; cursor: pointer; }
+
+#msAdmin_category_listing_ul.treeview { margin:0 0 20px; }
+#msAdmin_category_listing_ul.treeview li { background: url(images/treeview-default-line.gif) 0 0 no-repeat; }
+#msAdmin_category_listing_ul.treeview li.collapsable,
+#msAdmin_category_listing_ul.treeview li.expandable { background-position: 0 -176px; }
+
+#msAdmin_category_listing_ul.treeview li input { display:inline-block; margin:0 !important; }
+
+#msAdmin_category_listing_ul.treeview li strong { display:inline-block; margin:0 !important; vertical-align:top; }
+
+#msAdmin_category_listing_ul.treeview li a { display:inline-block; margin:0; vertical-align:top; }
+
+#msAdmin_category_listing_ul.treeview .expandable-hitarea { background-position: -80px -3px; }
+
+#msAdmin_category_listing_ul.treeview li.last { background-position: 0 -3766px }
+#msAdmin_category_listing_ul.treeview li.lastCollapsable,
+#msAdmin_category_listing_ul.treeview li.lastExpandable { background-image: url(images/treeview-default.gif); }  
+#msAdmin_category_listing_ul.treeview li.lastCollapsable { background-position: 0 -111px }
+#msAdmin_category_listing_ul.treeview li.lastExpandable { background-position: -32px -67px }
+
+#msAdmin_category_listing_ul.treeview div.lastCollapsable-hitarea,
+#msAdmin_category_listing_ul.treeview div.lastExpandable-hitarea { background-position: 0; }
+
+.treeview-red li { background-image: url(images/treeview-red-line.gif); }
+.treeview-red .hitarea,
+.treeview-red li.lastCollapsable,
+.treeview-red li.lastExpandable { background-image: url(images/treeview-red.gif); } 
+
+.treeview-black li { background-image: url(images/treeview-black-line.gif); }
+.treeview-black .hitarea,
+.treeview-black li.lastCollapsable,
+.treeview-black li.lastExpandable { background-image: url(images/treeview-black.gif); }  
+
+.treeview-gray li { background-image: url(images/treeview-gray-line.gif); }
+.treeview-gray .hitarea,
+.treeview-gray li.lastCollapsable,
+.treeview-gray li.lastExpandable { background-image: url(images/treeview-gray.gif); } 
+
+.treeview-famfamfam li { background-image: url(images/treeview-famfamfam-line.gif); }
+.treeview-famfamfam .hitarea, .treeview-famfamfam li.lastCollapsable,
+.treeview-famfamfam li.lastExpandable { background-image: url(images/treeview-famfamfam.gif); } 
+
+#msAdmin_category_listing_ul.treeview .placeholder {
+	background: url(images/ajax-loader.gif) 0 0 no-repeat;
+	height: 16px;
+	width: 16px;
+	display: block;
+}
+
+.filetree li { padding: 3px 0 2px 16px; }
+.filetree span.folder,
+.filetree span.file { padding: 1px 0 1px 16px; display: block; }
+.filetree span.folder { background: url(images/folder.gif) 0 0 no-repeat; }
+.filetree li.expandable span.folder { background: url(images/folder-closed.gif) 0 0 no-repeat; }
+.filetree span.file { background: url(images/file.gif) 0 0 no-repeat; }
+
+#msAdmin_category_listing_ul.treeview li.disabled { display:block; color:#999; }
+#msAdmin_category_listing_ul.treeview li.disabled a { font-style:italic; color:#999 !important; }
+
+#msAdmin_category_listing_ul.treeview .msadmin_cat_edit_icons { display:inline-block; padding:0 0 0 10px; }
+#msAdmin_category_listing_ul.treeview .msadmin_cat_edit_icons a { color:#f00; }
+
+#msAdmin_category_listing_ul.treeview .action_icons { display:inline-block; padding-left:10px; vertical-align:top; }
+#msAdmin_category_listing_ul.treeview .action_icons .msadmin_edit_icon { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../../templates/global/images/icon_edit_s.png) left top no-repeat; color:#f00; margin:0 5px 0 0; padding:16px 0 0; }
+#msAdmin_category_listing_ul.treeview .action_icons .msadmin_delete_icon { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../../templates/global/images/icon_delete_s.png) left top no-repeat; color:#f00; margin:0 5px 0 0; padding:16px 0 0; }
+#msAdmin_category_listing_ul.treeview .action_icons .msadmin_view { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../../templates/global/images/icons_zoom.png) left top no-repeat; color:#f00; margin:0 5px 0 0; padding:16px 0 0; }
+
+#cat-selectbox label { float:left; padding:3px 10px 0 0; }
+#cat-selectbox select { float:left; margin:0 10px 0 0; }
+#cat-selectbox input[type="submit"] { float:left; height:23px; border:1px solid #7c7c7c; background:#d5d5d5 url(../../templates/global/images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; padding:2px 6px; cursor:pointer; }
+#cat-selectbox input[type="submit"]:hover { background:#d5d5d5; }

@@ -1,0 +1,24 @@
+* { margin:0; padding:0; }
+
+.align-center,
+.align_center { text-align:center; }
+.align-left,
+.align_left { text-align:left; }
+.align-right,
+.align_right { text-align:right; }
+
+body {margin:0; padding:0; line-height: 1.4em; word-spacing:1px; letter-spacing:0.2px; font: 13px Arial, Helvetica,"Lucida Grande", serif; color: #000;}
+
+#tx_multishop_pi1_core { width:100%; }
+#tx_multishop_pi1_core #msadmin_tools_nav { display:none; }
+#tx_multishop_pi1_core form#admin_product_edit_ fieldset { width:auto; border:1px solid #000; padding:10px; margin:0 0 10px; }
+#tx_multishop_pi1_core form#admin_product_edit_ legend { background:#999; font-weight:bold; padding:5px 10px;  }
+
+#tx_multishop_pi1_core form#admin_product_edit_ table { border-collapse:collapse; }
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border { border:1px solid #333; }
+#tx_multishop_pi1_core form#admin_product_edit_ table th { font:12px Arial, Helvetica, sans-serif; padding:4px; }
+#tx_multishop_pi1_core form#admin_product_edit_ table td { font:12px Arial, Helvetica, sans-serif; padding:4px; }
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border th,
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border td { border:1px solid #333; }
+
+#tx_multishop_pi1_core form#admin_product_edit_ table.msadmin_border th.cell_products_name { width:90%; }

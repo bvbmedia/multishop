@@ -1,0 +1,32 @@
+div#outerWrap .tx-multishop-pi1 .jcarousel-skin-ie7 .jcarousel-container-horizontal { width:356px; height:200px; margin:0; padding:0 31px 0 30px; list-style:none; }
+div#outerWrap .tx-multishop-pi1 .jcarousel-skin-ie7 .jcarousel-container-horizontal li { text-align:center; margin:0; padding:0; }
+
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-item { width:178px; height:200px; text-align:center; }
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-item .carousel_image { display:table-cell; width:178px; height:123px; vertical-align:middle; text-align:center; }
+*:first-child+html div#outerWrap .jcarousel-skin-ie7 .jcarousel-item .carousel_image { display:inline-block; font-size:88px; }
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-item .carousel_image img { vertical-align:middle; }
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-item .carousel_title { overflow:hidden; width:178px; height:28px; font:bold 12px Arial,Helvetica,sans-serif; text-align:center; padding:5px 0 0; } 
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-item .carousel_price { color:#666; text-align:center; text-decoration:line-through; }
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-item .carousel_specials_price { font-weight:bold; text-align:center; }
+
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-next-horizontal { position:absolute; right:0; top:73px; width:31px; height:31px; background:transparent url(next-horizontal.gif) no-repeat 0 0; cursor:pointer; }
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-next-horizontal:hover { background-position:0 -30px; }
+
+/*.jcarousel-skin-ie7 .jcarousel-next-horizontal:active {
+background-position: -64px 0;
+}*/
+
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-next-disabled-horizontal,
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-next-disabled-horizontal:hover,
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-next-disabled-horizontal:active { cursor:default; background-position:-96px 0; }
+
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-prev-horizontal { position:absolute; left:0; top:73px; width:31px; height:31px; background:transparent url(prev-horizontal.gif) no-repeat 0 0; cursor:pointer; }
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-prev-horizontal:hover { background-position:0 -30px; }
+
+/*.jcarousel-skin-ie7 .jcarousel-prev-horizontal:active {
+background-position: -64px 0;
+}*/
+
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-prev-disabled-horizontal,
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-prev-disabled-horizontal:hover,
+div#outerWrap .jcarousel-skin-ie7 .jcarousel-prev-disabled-horizontal:active { cursor:default; background-position:-96px 0; }

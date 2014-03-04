@@ -1,0 +1,27 @@
+* { margin:0; padding:0; list-style:none; }
+body { background:#000 url(msadmin_dash_bg.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-align:center; }
+#masterhead { text-align:left; padding:20px 40px; }
+#masterhead.fixedWidth { width:990px; margin:0 auto; padding:20px 0;  }
+#masterhead #logo { padding:0 0 10px; }
+#masterhead h3 { font:bold 30px Arial, Helvetica, sans-serif; color:#fff; }
+#msadmin_wrapper { padding:0 40px; }
+#msadmin_section { width:100%; min-height:800px; background:#fff; text-align:left; margin:0 auto; border-radius:13px 13px 0 0; }
+#msadmin_leftsection { float:left; width:200px; padding:20px; }
+#msadmin_content { padding:20px 20px 20px 240px; }
+#msadmin_wrapper.fixedWidth #msadmin_section { width:990px; }
+
+#msadmin_footer { height:21px; border-top:1px solid #3e3e3e; background:#2a2a2a; color:#888; padding:5px 40px 0; }
+#footer_copyright{ overflow:hidden; width:100%; font-size:11px; color:#888; margin:0 auto; line-height:14px; }
+#footer_copyright a { color:#888; text-decoration:none; }
+#footer_copyright a:hover { color:#fff; }
+#footer_copyright #copyright p { float:left; display:block; border-right:1px solid #555; margin:0 1px 0 0; padding:0 8px 0 0; line-height:14px; }
+#footer_copyright #copyright #subpart_footernavbox ul{ float:left; margin:0; padding:0; list-style:none; }
+#footer_copyright #copyright #subpart_footernavbox ul li { float:left; border-left:1px solid #555; margin:0; padding:0 9px; line-height:14px; }
+#footer_copyright #copyright #subpart_footernavbox ul li:first-child { border:none; background:none; padding-left:5px; }
+#footer_copyright #copyright #subpart_footernavbox ul li a { display:block; color:#888; text-decoration:none; }
+#footer_copyright #copyright #subpart_footernavbox ul li a:hover,
+#footer_copyright #copyright #subpart_footernavbox ul li.active a { color:#fff; }
+#footer_copyright #alle { float:right; width:300px; text-align:right; line-height:14px; }
+
+
+

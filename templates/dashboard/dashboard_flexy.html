@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Multishop Admin Panel</title>
+<link type="text/css" rel="stylesheet" href="dashboard.css" media="screen" />
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+</head>
+
+<body>
+<div id="masterhead"> 
+	<div id="logo"><img src="logo.png" alt="" title="" width="195" height="54" /></div>
+    <h3>Dashboard</h3>
+</div>
+<div id="msadmin_wrapper">
+	<div id="msadmin_section">
+    	<div id="msadmin_leftsection">
+        	menu
+        </div>
+		<div id="msadmin_content">
+<table width="100%" border="0">
+
+  <tr height="250">
+    <td colspan="2">
+<script type='text/javascript'>
+      google.load('visualization', '1', {packages:['table']});
+      google.setOnLoadCallback(drawTable);
+      function drawTable() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Test');
+        data.addColumn('number', 'Amount');
+        data.addColumn('boolean', 'Day of the week');
+        data.addRows([
+          ['30-06-2012',  {v: 10000, f: '600'}, true],
+          ['29-06-2012',   {v:8000,   f: '100'},  false],
+          ['28-06-2012', {v: 12500, f: '500'}, true],
+          ['27-06-2012',   {v: 7000,  f: '100'},  true]
+        ]);
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+        table.draw(data, {showRowNumber: true});
+      }
+    </script>    
+    <div id='table_div'></div>
+    </td>
+    <td width="500">
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Sales', 'Expenses'],
+          ['2004',  1000,      400],
+          ['2005',  1170,      460],
+          ['2006',  660,       1120],
+          ['2007',  1030,      540]
+        ]);
+
+        var options = {
+          title: 'Company Performance',
+          hAxis: {title: 'Year', titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>    
+<div id="chart_div" style="width: 500px; height: 400px;"></div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">
+    <script type="text/javascript">    
+google.load('visualization', '1', {packages: ['orgchart']});
+function drawVisualization() {
+  // Create and populate the data table.
+  var data = google.visualization.arrayToDataTable([
+    ['Name',                                                                 'Manager', 'Tooltip'],
+    ['Mike',                                                                 null,      'The President'],
+    [{v: 'Jim', f: 'Jim<br/><font color="red"><i>Vice President<i></font>'}, 'Mike',    null],
+    ['Alice',                                                                'Mike',    null],
+    ['Bob',                                                                  'Jim',     'Bob Sponge'],
+    ['Carol',                                                                'Bob',     null]
+  ]);
+
+  // Create and draw the visualization.
+  new google.visualization.OrgChart(document.getElementById('visualization')).
+      draw(data, {allowHtml: true});
+}
+ google.setOnLoadCallback(drawVisualization);
+</script>
+<div id="visualization" style="width: 100%; height: 400px;"></div>
+    </td>
+    </tr></table>    
+    	</div>
+	</div>
+</div>
+<div id="msadmin_footer">
+			<div id="footer_content_cols">
+				<div id="footer_content1">
+				</div>
+				<div id="footer_content2"></div>
+				<div id="footer_content3"></div>
+			</div>
+			<div id="msadmin_copyright_wrapper">
+				<div id="footer_copyright">
+					<div id="copyright">
+						<p>&copy; <a href="https://www.typo3multishop.com" target="_blank" title="TYPO3 Multishop">TYPO3 Multishop</a></p>
+						<div id="subpart_footernavbox">
+							<ul>
+								<li><a href="https://www.typo3multishop.com/forum" title="" >Forum</a></li>
+								<li><a href="https://www.typo3multishop.com/documentation/" title="" >Documentation</a></li>
+								<li><a href="https://www.typo3multishop.com/help" title="" >Help</a></li>
+							</ul>
+						</div>
+					</div>
+					<div id="alle">&nbsp;</div>
+				</div>
+			</div>
+        </div>
+</body>
+</html>

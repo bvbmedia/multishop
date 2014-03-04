@@ -1,0 +1,29 @@
+<!-- ###TEMPLATE### begin -->
+<h1>###CURRENT_CATEGORIES_NAME###</h1>
+<div class="categories_top_description">###CURRENT_CATEGORIES_TOP_DESCRIPTION###</div>
+<div class="products_listing_wrapper">
+	<!-- ###LISTING_SORTING### begin -->
+	<div class="sorting_form">
+		<form name="sorting_products_listing" id="sorting_products_listing" method="get" action="###PRODUCTS_LISTING_FILTER_FORM_URL###">
+			###PRODUCTS_LISTING_FORM_CONTENT###
+		</form>
+	</div>
+	<!-- ###LISTING_SORTING### end -->
+	<ul id="product_listing">
+		<!-- ###ITEM### begin -->
+		<li id="productlisting_###PRODUCTS_ID###" class="###ITEM_CLASS###">
+			<h3><a href="###PRODUCTS_DETAIL_PAGE_LINK###" class="ajax_link">###PRODUCTS_NAME###</a>###ADMIN_ICONS###</h3>
+			<div class="image">
+				<a href="###PRODUCTS_DETAIL_PAGE_LINK###" title="###PRODUCTS_NAME###" class="ajax_link">###PRODUCTS_IMAGE###</a>
+			</div>
+			<div class="category">
+				<a href="###CATEGORIES_NAME_PAGE_LINK###" class="ajax_link">###CATEGORIES_NAME###</a>
+			</div>	
+			<div class="products_price">
+				###PRODUCTS_PRICE###
+			</div>		
+		</li>
+		<!-- ###ITEM### end -->
+	</ul>
+</div>
+<!-- ###TEMPLATE### end -->

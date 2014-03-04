@@ -1,0 +1,5 @@
+config.noPageTitle = 2
+# clear metatags plugin, so Multishop can provide inner meta tags
+page.headerData.999 >
+# clear tqseo plugin, so Multishop can provide inner meta tags
+page.headerData.84113002 >

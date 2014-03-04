@@ -1,0 +1,5 @@
+plugin.multishop { 
+	# TMENU SETTINGS
+	# cat=plugin.multishop - tmenu; type=int+; label= attachMultishopCategoriesOnPid: attachMultishopCategoriesOnPid.
+	attachMultishopCategoriesOnPid =   
+}

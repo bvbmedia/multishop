@@ -1,0 +1,29 @@
+<!-- ###TEMPLATE### begin -->
+<div id="ms_edit_group">
+	<div class="main-heading"><h2>###LABEL_HEADING###</h2></div>
+	<form id="form1" name="form1" method="post" action="###FORM_ACTION###" enctype="multipart/form-data">	
+		<input name="customer_group_id" type="hidden" value="###CUSTOMER_GROUP_ID###" />
+		<input name="action" type="hidden" value="###FORM_INPUT_ACTION###" />
+		<div class="account-field">
+			<label>###LABEL_NAME###</label>
+			<input type="text" name="group_name" id="group_name" value="###VALUE_GROUP_NAME###" />
+		</div>
+		<div class="account-field">
+			<label>###LABEL_DISCOUN###</label>
+			<input type="text" name="discount" size="2" id="discount" value="###VALUE_DISCOUNT###" />
+		</div>
+		<div class="account-field">
+			<label>###LABEL_MEMBERS###</label>
+			<select id="users" class="multiselect" multiple="multiple" name="tx_multishop_pi1[users][]">
+			<!-- ###MEMBERS_OPTION### begin -->
+			<option value="###LABEL_MEMBERS_USERID###"###MEMBERS_SELECTED###>###LABEL_MEMBERS_NAME### (###LABEL_MEMBERS_USERNAME###)</option>
+			<!-- ###MEMBERS_OPTION### end -->
+			</select>
+		</div>
+		<div class="account-field">
+			<label>&nbsp;</label>
+			<input type="submit" name="Submit" class="msadmin_button" value="###LABEL_BUTTON_SAVE###" />
+		</div>
+	</form>
+</div>
+<!-- ###TEMPLATE### end -->

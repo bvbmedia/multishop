@@ -1,0 +1,140 @@
+#ajax_ultrasearch{
+width:100%;
+margin:0;
+padding:0;
+font:normal 11px Arial, Helvetica, sans-serif;
+color:#000;
+}
+
+#check_category{
+height:84px;
+overflow:auto;
+margin-bottom:10px;
+border:1px solid #e5e5e5;
+border-top:none;
+padding:5px 10px 0px;
+}
+
+#checkall{
+margin-right:3px;
+}
+
+#ajax_ultrasearch #for_category_listing{
+padding:0;
+margin:0;
+}
+
+#ajax_ultrasearch  #for_category_listing li{
+list-style:none;
+background:none;
+margin:1px 0;
+padding:0;
+}
+
+.options_attributes, #price_slider{
+display:block;
+text-align:center;
+padding:0 0 10px 0;
+border:1px solid #e5e5e5;
+margin-bottom:10px;
+overflow:hidden;
+}
+
+.options_attributes>label, #price_slider>label, #ajax_ultrasearch>label{
+display:block;
+text-align:left;
+padding:3px 10px;
+background:url(bg-label.gif) left top repeat-x;
+border-bottom:1px solid #e5e5e5;
+margin-bottom:10px;
+font-weight:bold;
+}
+
+#ajax_ultrasearch>label{
+margin-bottom:0;
+border:1px solid #e5e5e5;
+}
+
+.options_attributes select{
+width:160px;
+font-size:11px;
+}
+
+#ajax_ultrasearch #price_slider #slider_range{
+width:88%;
+margin-left:12px;
+height:2px;
+border-top:1px solid #BF4C00;
+border-bottom:1px solid #FF954F
+}
+
+#ajax_ultrasearch #price_slider #slider_range .ui-slider-range{
+background:#FF6400;
+}
+
+#ajax_ultrasearch #price_slider #slider_range .ui-slider-handle{
+outline:none;
+width:12px;
+height:15px;
+
+border:none;
+background:transparent url(slider_handle.png)left top no-repeat;
+}
+
+#slider_min, #slider_max{
+width:66px;
+margin-top:10px;
+height:40px;
+background:url(bg-price.gif) center top no-repeat;
+}
+
+#slider_min{
+float:left;
+margin-left:6px;
+}
+
+#slider_max{
+float:right;
+margin-right:6px;
+}
+
+#slider_min input, #slider_max input{
+width:50px;
+font-weight:bold;
+border:none;
+color:#FF6400;
+text-align:center;
+background:transparent;
+margin-top:2px;
+}
+
+#ajax_ultrasearch input[type=button]{
+background:url(bg-riset.gif) center top no-repeat;
+text-align:center;
+border:none;
+width:80px;
+height:23px;
+font-size:normal;
+font-weight:bold;
+color:#333;
+font-family:arial;
+margin-left:50px;
+}
+
+#content #content_products #pagging_products ul li{
+list-style:none;
+}
+
+
+#content_products #pagging_products li{
+list-style:none;
+background:none;
+float:left;
+padding:0;
+}
+
+
+#pagging_products a, #pagging_products b{
+padding:1px 3px;
+margin:0 3px;
+}
