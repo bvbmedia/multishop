@@ -361,14 +361,17 @@ switch ($_REQUEST['action'])
 			}
 			$files=$this->zipUnpack($source_file);	
 			$import_files=array();
-			if (in_array('bvbshop.txt',$files)) 	$mode='bvbshop';
-			else									$mode='multishop';
-			foreach ($files as $path)
-			{
+			if (in_array('bvbshop.txt',$files)) {
+				$mode='bvbshop';
+			} else {
+				$mode='multishop';
+			}
+			foreach ($files as $path) {
 				$paths=explode('/',$path);
-				if ($paths[1] == 'data.sql') 	$restore_files['data']=$fullpath.'/'.$path;	
-				if (!$this->post['skip_images'])
-				{
+				if ($paths[1] == 'data.sql') {
+					$restore_files['data']=$fullpath.'/'.$path;	
+				}
+				if (!$this->post['skip_images']) {
 //					if (strstr($path,'chinese'))
 //					{
 					if ($paths[1] == 'images' 		&& 	$paths[2] == 'products' 				&& $paths[3])	$restore_files['products'][$paths[3]]=$fullpath.'/'.$path;
@@ -398,37 +401,33 @@ switch ($_REQUEST['action'])
 			$format=explode("x",$this->ms['MODULES']['PRODUCT_IMAGE_SIZE_ENLARGED']);
 			$this->ms['product_image_formats']['enlarged']['width']	=$format[0];
 			$this->ms['product_image_formats']['enlarged']['height']	=$format[1];			
-			if (count($restore_files['products']) > 0)
-			{
-				foreach ($restore_files['products'] as $filename => $path)
-				{
+			if (count($restore_files['products']) > 0) {
+				foreach ($restore_files['products'] as $filename => $path) {
 					// backup original
 					$folder=mslib_befe::getImagePrefixFolder($filename);
-					if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder))
-					{
+					if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
 						t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 					}					
 					$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$filename;										
-					if (copy($path,$target))
-					{					
-						$tmp=mslib_befe::resizeProductImage($target,$filename,$this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'));
+					if (copy($path,$target)) {
+						if ($this->post['resize_images']) {			
+							$tmp=mslib_befe::resizeProductImage($target,$filename,$this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'));
+						}
 					}
 				}
 			}
-			if (count($restore_files['categories']) > 0)
-			{
-				foreach ($restore_files['categories'] as $filename => $path)
-				{
+			if (count($restore_files['categories']) > 0) {
+				foreach ($restore_files['categories'] as $filename => $path) {
 					// backup original
 					$folder=mslib_befe::getImagePrefixFolder($filename);
-					if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder))
-					{
+					if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
 						t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 					}					
 					$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$filename;	
-					if (copy($path,$target))
-					{
-						$tmp=mslib_befe::resizeCategoryImage($target,$filename,$this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'));
+					if (copy($path,$target)) {
+						if ($this->post['resize_images']) {
+							$tmp=mslib_befe::resizeCategoryImage($target,$filename,$this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'));
+						}
 					}
 				}				
 			}			
@@ -436,8 +435,7 @@ switch ($_REQUEST['action'])
 		$GLOBALS['TYPO3_DB']->connectDB();
 		// unzip first eof
 		$content.='<fieldset><h2>Log</h2>';
-		if ($restore_files['data'])
-		{
+		if ($restore_files['data']) {
 			$database=unserialize(mslib_fe::file_get_contents($restore_files['data']));
 			if ($mode=='bvbshop') {
 				if (is_array($database['orders_status']) and count($database['orders_status'])) {
@@ -1569,6 +1567,7 @@ $content.='
 							<input name="restore_file" type="file" /> <input name="Submit" type="submit" value="RESTORE" />
 							<BR>
 							<input name="skip_images" type="checkbox" value="1" /> Skip images<BR>
+							<input name="resize_images" type="checkbox" value="1" /> Resize images (if unchecked the images are restored, but you have to run the resize thumbnails command afterwards.<BR>
 							<input name="full_restore" type="checkbox" value="1" /> Full Restore (careful, cause it will erase all Multishop data on this TYPO3 installation and imports the backup)
 							<input name="action" type="hidden" value="restore" />
 							<input name="page_uid" type="hidden" value="'.$content_object['pid'].'" />

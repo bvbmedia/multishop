@@ -1272,7 +1272,7 @@ elseif ((is_numeric($this->get['job_id']) and $this->get['action']=='run_job') o
 									$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
 									$this->ms['sqls'][]=$query;
 									$stats['categories_added']++;
-								}
+								}								
 								if ($this->ms['target-cid']) {
 									$updateArray=array();
 									if (isset($item['categories_content'.$x])) {
@@ -1853,8 +1853,8 @@ elseif ((is_numeric($this->get['job_id']) and $this->get['action']=='run_job') o
 										$res = $GLOBALS['TYPO3_DB']->sql_query($query);																			
 									}
 									$updateArray=array();
-									$updateArray['products_id']						=$item['updated_products_id'];									
-									$updateArray['categories_id']					=$this->ms['target-cid'];
+									$updateArray['products_id'] = $item['updated_products_id'];									
+									$updateArray['categories_id'] = $this->ms['target-cid'];
 									if (isset($item['products_sort_order'])) {
 										$updateArray['sort_order']=$item['products_sort_order'];
 									} else {

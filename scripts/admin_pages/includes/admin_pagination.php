@@ -64,5 +64,7 @@ if((($p+1)*$this->ms['MODULES']['PAGESET_LIMIT']) < $pageset['total_rows']) {
 	$tmp .= '<span class="pagination_button msBackendButton continueState arrowRight arrowPosLeft disabled"><span>'.$this->pi_getLL('last').'</span></span>';
 }
 $tmp.='</li>';
-$tmp.='</ul>';
+$tmp.='</ul>
+</div>
+';
 ?>

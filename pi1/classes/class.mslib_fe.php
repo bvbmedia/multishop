@@ -3194,7 +3194,7 @@ class mslib_fe
 		$query_elements=array();	
 		if (!$include_disabled_products) {
 			$query_elements['select'][]='count(1) as total';
-			$query_elements['from'][]='tx_multishop_products p, tx_multishop_products_to_categories p2';
+			$query_elements['from'][]='tx_multishop_products p, tx_multishop_products_to_categories p2c';
 			$query_elements['filter'][]="p2c.categories_id IN (".implode(',',$categories_ids).") and p.products_status=1";
 			$query_elements['where'][]='p.products_id=p2c.products_id';
 		} else {
@@ -3220,7 +3220,6 @@ class mslib_fe
 			'',    // ORDER BY...
 			''            // LIMIT ...
 		); 
-		//error_log($str);	
 		$res = $GLOBALS['TYPO3_DB']->sql_query($str);		
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);		
 		if ($row['total']>0) {

@@ -387,13 +387,13 @@ if ($this->get['feed_hash']) {
 					break;
 					case 'categories_content_top':
 						if ($row['content']) {
-							$string=strip_tags(preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row['content']));
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row['content']);
 							$tmpcontent .= $string;
 						}
 					break;
 					case 'categories_content_bottom':
 						if ($row['content_footer']) {
-							$string=strip_tags(preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row['content_footer']));
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row['content_footer']);
 							$tmpcontent .= $string;
 						}
 					break;
