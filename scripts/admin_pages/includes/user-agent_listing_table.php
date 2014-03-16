@@ -1,6 +1,7 @@
 <?php
-if (!defined('TYPO3_MODE')) die ('Access denied.');
-
+if (!defined('TYPO3_MODE')) {
+	die('Access denied.');
+}
 if ($this->get['tx_multishop_pi1']['is_proposal']) {
 	$page_type='proposals';
 } else {
@@ -23,7 +24,6 @@ foreach ($tmporders as $order) {
 			$edit_order_popup_width += 70;
 		}
 	}
-	
 	//	$order=mslib_fe::getOrder($order_row['orders_id']);
 	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
@@ -38,21 +38,17 @@ foreach ($tmporders as $order) {
 	} else {
 		$customer_name=$order['billing_name'];
 	}
-	
 	$markerArray=array();
-	$markerArray['ROW_TYPE'] 				= $tr_type;
-	$markerArray['CUSTOMER_NAME'] 	= $customer_name;
-	$markerArray['IPADDRESS'] 		= $order['ip_address'];
-	$markerArray['USERAGENTS'] 		= $order['user_agent'];
+	$markerArray['ROW_TYPE'] = $tr_type;
+	$markerArray['CUSTOMER_NAME'] = $customer_name;
+	$markerArray['IPADDRESS'] = $order['ip_address'];
+	$markerArray['USERAGENTS'] = $order['user_agent'];
 	// custom page hook that can be controlled by third-party plugin eof	
 	$orderItem .= $this->cObj->substituteMarkerArray($subparts['useragents_listing'], $markerArray,'###|###');
 }
-
 $actions=array();
 $formFields=array();
-
 $query_string=mslib_fe::tep_get_all_get_params(array('tx_multishop_pi1[action]','tx_multishop_pi1[order_by]','tx_multishop_pi1[order]','p','Submit','weergave','clearcache'));
-
 $subpartArray = array();
 $subpartArray['###LABEL_HEADER_CUSTOMER###'] 	= $this->pi_getLL('customer');
 $subpartArray['###LABEL_HEADER_IPADDRESS###'] 	= $this->pi_getLL('ip_address');

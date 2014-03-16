@@ -1,72 +1,62 @@
 <?php
-if (!defined('TYPO3_MODE')) die ('Access denied.');
-
+if (!defined('TYPO3_MODE')) {
+	die('Access denied.');
+}
 if (!$this->post['tx_multishop_pi1']['action'] && $this->get['tx_multishop_pi1']['action']) {
 	$this->post['tx_multishop_pi1']['action'] = $this->get['tx_multishop_pi1']['action'];
 }
-
 if ($this->post) {
 	foreach ($this->post as $post_idx => $post_val) {
 		$this->get[$post_idx] = $post_val;
 	}
 }
-
 if ($this->get) {
 	foreach ($this->get as $get_idx => $get_val) {
 		$this->post[$get_idx] = $get_val;
 	}
 }
-
 // now parse all the objects in the tmpl file
 if ($this->conf['admin_useragents_tmpl_path']) {
 	$template = $this->cObj->fileResource($this->conf['admin_useragents_tmpl_path']);
 } else {
 	$template = $this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_useragents.tmpl');
 }
-
 // Extract the subparts from the template
 $subparts=array();
 $subparts['template'] 			= $this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['useragents_results'] 	= $this->cObj->getSubpart($subparts['template'], '###RESULTS###');
 $subparts['useragents_listing'] 	= $this->cObj->getSubpart($subparts['useragents_results'], '###ORDERS_LISTING###');
 $subparts['useragents_noresults'] 	= $this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
-
-
 if ($this->post['limit'] != $this->cookie['limit']) {	
 	$this->cookie['limit'] = $this->post['limit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-
 if ($this->cookie['limit']) {
 	$this->post['limit']=$this->cookie['limit'];
 } else {
 	$this->post['limit']=10;
 }
-
 $this->ms['MODULES']['ORDERS_LISTING_LIMIT']=$this->post['limit'];
 $option_search = array(
-			"orders_id" => 			$this->pi_getLL('admin_order_id'),
-			"invoice" => 			$this->pi_getLL('admin_invoice_number'),
-			"customer_id" => 		$this->pi_getLL('admin_customer_id'),
-			"billing_email" => 		$this->pi_getLL('admin_customer_email'),
-			"delivery_name" => 		$this->pi_getLL('admin_customer_name'),
-			//"crdate" =>				$this->pi_getLL('admin_order_date'),
-			"billing_zip" => 		$this->pi_getLL('admin_zip'),
-			"billing_city" => 		$this->pi_getLL('admin_city'),
-			"billing_address" => 	$this->pi_getLL('admin_address'),
-			"billing_company" => 	$this->pi_getLL('admin_company'),
-			"shipping_method" => 	$this->pi_getLL('admin_shipping_method'),
-			"payment_method" => 	$this->pi_getLL('admin_payment_method')
-			
-		);
+	"orders_id" => $this->pi_getLL('admin_order_id'),
+	"invoice" => $this->pi_getLL('admin_invoice_number'),
+	"customer_id" => $this->pi_getLL('admin_customer_id'),
+	"billing_email" => $this->pi_getLL('admin_customer_email'),
+	"delivery_name" => $this->pi_getLL('admin_customer_name'),
+	//"crdate" => $this->pi_getLL('admin_order_date'),
+	"billing_zip" => $this->pi_getLL('admin_zip'),
+	"billing_city" => $this->pi_getLL('admin_city'),
+	"billing_address" => $this->pi_getLL('admin_address'),
+	"billing_company" => $this->pi_getLL('admin_company'),
+	"shipping_method" => $this->pi_getLL('admin_shipping_method'),
+	"payment_method" => $this->pi_getLL('admin_payment_method')
+);
 asort($option_search);
-$type_search 	= $this->post['type_search'];
-
+$type_search = $this->post['type_search'];
 if (is_numeric($this->post['p'])) {
 	$p = $this->post['p'];
 }
-
 if ($p >0) {
 	$offset=(((($p)*$this->ms['MODULES']['ORDERS_LISTING_LIMIT'])));
 } else {

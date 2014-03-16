@@ -421,8 +421,12 @@ class tx_mslib_order extends tslib_pibase {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			if($page[0]['content']) $page[0]['content']=str_replace($array1,$array2,$page[0]['content']);
-			if($page[0]['name']) 	$page[0]['name']=str_replace($array1,$array2,$page[0]['name']);				
+			if($page[0]['content']) {
+				$page[0]['content']=str_replace($array1,$array2,$page[0]['content']);
+			}
+			if($page[0]['name']) {
+				$page[0]['name']=str_replace($array1,$array2,$page[0]['name']);
+			}
 			// replacing the variables with dynamic values eof
 			$user=array();
 			$user['name']	= $full_customer_name;

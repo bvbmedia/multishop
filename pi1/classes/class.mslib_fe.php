@@ -2266,7 +2266,7 @@ class mslib_fe
 				$limit_clause            // LIMIT ...
 			);
 			//echo $str.'<br>';
-			error_log($str);
+			//error_log($str);
 			//die();
 			if ($this->msDebug) {
 				$this->msDebugInfo.=$str."\n\n";
