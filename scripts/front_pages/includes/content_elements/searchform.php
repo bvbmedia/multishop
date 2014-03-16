@@ -94,7 +94,7 @@ if ($this->conf['includejAutocomplete'])
 						jQuery("#page").val(0);
 						return false;
 					}	
-				}).data(\'autocomplete\')._renderItem = function (ul, item) {
+				}).data(\'ui-autocomplete\')._renderItem = function (ul, item) {
 					return jQuery("<li></li>").data("item.autocomplete", item).append(jQuery("<a></a>").html(item.label)).appendTo(ul);
 					};
 			  });

@@ -35,18 +35,18 @@
  * @subpackage	tx_multishop
  */
 class tx_multishop_pi1 extends tslib_pibase {
-	var $cObj;    // reference to the calling object. 
-	var $prefixId      = 'tx_multishop_pi1';		// Same as class name
+	var $cObj; // reference to the calling object. 
+	var $prefixId = 'tx_multishop_pi1';		// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_multishop_pi1.php';	// Path to this script relative to the extension dir.
-	var $extKey        = 'multishop';	// The extension key.
+	var $extKey = 'multishop';	// The extension key.
 	var $pi_checkCHash = false;
 	
 	// var to hold user/shop info loaded from tt_address table
-	var $tta_user_info 		= array();
-	var $tta_shop_info 		= array();
-	var $ms 				= array();
-	var $server				= array();
-	var $cookie				= array();
+	var $tta_user_info = array();
+	var $tta_shop_info = array();
+	var $ms = array();
+	var $server = array();
+	var $cookie = array();
 	/**
 	 * The main method of the PlugIn
 	 *
@@ -83,18 +83,19 @@ class tx_multishop_pi1 extends tslib_pibase {
 		$this->get = t3lib_div::_GET();
 		$this->post = t3lib_div::_POST();
 		$this->server=array();
-		$this->server['HTTP_ACCEPT_LANGUAGE'] 	= t3lib_div::getIndpEnv('HTTP_ACCEPT_LANGUAGE');
-		$this->server['HTTP_USER_AGENT'] 		= t3lib_div::getIndpEnv('HTTP_USER_AGENT');
-		$this->server['HTTP_REFERER']			= t3lib_div::getIndpEnv('HTTP_REFERER');
-
-		if (!$this->server['HTTP_ACCEPT_LANGUAGE']) $this->server['HTTP_ACCEPT_LANGUAGE']='en';
-		$this->server['DOCUMENT_ROOT'] 			= $this->DOCUMENT_ROOT;
-		$this->server['REQUEST_URI'] 			= t3lib_div::getIndpEnv('REQUEST_URI');
-		$this->server['REDIRECT_URL'] 			= t3lib_div::getIndpEnv('REDIRECT_URL');
-		$this->server['QUERY_STRING'] 			= t3lib_div::getIndpEnv('QUERY_STRING');
-		$this->server['REMOTE_ADDR'] 			= t3lib_div::getIndpEnv('REMOTE_ADDR');
+		$this->server['HTTP_ACCEPT_LANGUAGE'] = t3lib_div::getIndpEnv('HTTP_ACCEPT_LANGUAGE');
+		$this->server['HTTP_USER_AGENT'] = t3lib_div::getIndpEnv('HTTP_USER_AGENT');
+		$this->server['HTTP_REFERER'] = t3lib_div::getIndpEnv('HTTP_REFERER');
+		if (!$this->server['HTTP_ACCEPT_LANGUAGE']) {
+			$this->server['HTTP_ACCEPT_LANGUAGE']='en';
+		}
+		$this->server['DOCUMENT_ROOT'] = $this->DOCUMENT_ROOT;
+		$this->server['REQUEST_URI'] = t3lib_div::getIndpEnv('REQUEST_URI');
+		$this->server['REDIRECT_URL'] = t3lib_div::getIndpEnv('REDIRECT_URL');
+		$this->server['QUERY_STRING'] = t3lib_div::getIndpEnv('QUERY_STRING');
+		$this->server['REMOTE_ADDR'] = t3lib_div::getIndpEnv('REMOTE_ADDR');
 		$this->REMOTE_ADDR = t3lib_div::getIndpEnv('REMOTE_ADDR');
-		$this->server['HTTP_HOST']				= t3lib_div::strtolower(t3lib_div::getIndpEnv('TYPO3_HOST_ONLY'));		
+		$this->server['HTTP_HOST'] = t3lib_div::strtolower(t3lib_div::getIndpEnv('TYPO3_HOST_ONLY'));		
 		$tmp=explode("?",$this->server['REQUEST_URI']);
 		$this->server['REQUEST_URI']=$tmp[0];
 		$this->server['REQUEST_URI']=preg_replace("/^\//is",'',$this->server['REQUEST_URI']);			
@@ -102,7 +103,9 @@ class tx_multishop_pi1 extends tslib_pibase {
 		$this->cookie = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_cookie');		
 //		if (!isset($this->cookie['multishop_admin_language']) and !isset($this->post['multishop_admin_language'])) $this->post['multishop_admin_language']='';
 		if (isset($this->post['multishop_admin_language']) and ($this->post['multishop_admin_language'] != $this->cookie['multishop_admin_language'])) {
-			if ($this->post['multishop_admin_language']=='default')  $this->post['multishop_admin_language'] = '';
+			if ($this->post['multishop_admin_language']=='default') {
+				$this->post['multishop_admin_language'] = '';
+			}
 			$this->cookie['multishop_admin_language'] = $this->post['multishop_admin_language'];
 			$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 			$GLOBALS['TSFE']->storeSessionData();
@@ -111,7 +114,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 			$host=@parse_url($this->server['HTTP_REFERER']);
 			if (is_array($host) and t3lib_div::strtolower($host['host']) != $this->server['HTTP_HOST']) {
 				$this->cookie['HTTP_REFERER']=$this->server['HTTP_REFERER'];
-				$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+				$GLOBALS['TSFE']->fe_user->setKey('ses','tx_multishop_cookie',$this->cookie);
 				$GLOBALS['TSFE']->storeSessionData();
 			}
 		}

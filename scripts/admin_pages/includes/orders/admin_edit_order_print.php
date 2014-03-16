@@ -282,10 +282,10 @@ $tmpcontent.='
 		$tmpcontent.='</table>';
 		$tmpcontent.='
 		</fieldset>
-		'.($order['opmerkingen']?'
+		'.($order['customer_comments']?'
 		<fieldset>
 					<legend>'.$this->pi_getLL('comments').'</legend>
-					'.$order['opmerkingen'].'
+					'.$order['customer_comments'].'
 				</fieldset>
 		':'').'
 		</div></form>';		

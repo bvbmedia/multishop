@@ -190,7 +190,7 @@ if (!$product['products_id']) {
 	</div>
 	';
 	$output['back_button']='
-	<div onClick="history.back()" class="back_button">'.$this->pi_getLL('back').'</div>
+	<div onClick="history.back();return false;" class="back_button">'.$this->pi_getLL('back').'</div>
 	';	
 	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN'] != 'no') {
 		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {

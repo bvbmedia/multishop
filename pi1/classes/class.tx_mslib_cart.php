@@ -1317,6 +1317,9 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray['http_referer']				=	$this->cookie['HTTP_REFERER'];
 			$insertArray['ip_address']					=	$this->server['REMOTE_ADDR'];
 			$insertArray['user_agent']					=	$this->server['HTTP_USER_AGENT'];
+			if (isset($address['expected_delivery_date'])) {
+				$insertArray['expected_delivery_date']=$address['expected_delivery_date'];
+			}
 			//$insertArray['orders_tax_data']			=	serialize($orders_tax);			
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
 				// hook

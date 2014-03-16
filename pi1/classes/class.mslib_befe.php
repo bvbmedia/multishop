@@ -773,7 +773,7 @@ class mslib_befe {
 			}		
 		}
 	}
-	public function deleteCategory ($categories_id) {
+	public function deleteCategory($categories_id) {
 		if (!is_numeric($categories_id)) {
 			return false;
 		}		

@@ -28,7 +28,13 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	if ($categories_id) {	
 		$output['label_you_are_currently_here'] = $this->pi_getLL('you_are_currently_here');
 		$output['homepage_link'] 	= mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=home');
-		$output['homepage_title'] 	= $GLOBALS['TSFE']->page['title'];	
+		if ($this->conf['crumbar_rootline_title']) {
+			$output['homepage_title'] 	= $this->conf['crumbar_rootline_title'];	
+		} else {
+			$record=mslib_befe::getRecord($this->shop_pid,'pages','uid');
+			$GLOBALS['TSFE']->sys_page->getRecordOverlay('pages', $record, $this->lang);
+			$output['homepage_title'] 	= $record['title'];	
+		}
 		if ($GLOBALS['TYPO3_CONF_VARS']['tx_multishop_data']['user_crumbar']) {
 			$cats=$GLOBALS['TYPO3_CONF_VARS']['tx_multishop_data']['user_crumbar'];
 		} else {

@@ -485,9 +485,9 @@ if (is_numeric($this->get['orders_id'])) {
 	if ($orders['orders_id']) {
 		if ($this->post) {
 			$updateArray=array();		
-			if ($this->post['expected_delivery_date']) 	{
-				$updateArray['expected_delivery_date'] =	strtotime($this->post['expected_delivery_date']);
-			}		
+			if ($this->post['expected_delivery_date']) {
+				$updateArray['expected_delivery_date'] = strtotime($this->post['expected_delivery_date']);
+			}
 			if ($this->post['track_and_trace_code']) {
 				$updateArray['track_and_trace_code'] =	$this->post['track_and_trace_code'];		
 			}
@@ -1726,7 +1726,7 @@ $tmpcontent.='
 						return false;
 					}
 										
-				}).data(\'autocomplete\')._renderItem = function (ul, item) {
+				}).data(\'ui-autocomplete\')._renderItem = function (ul, item) {
 				
 					return jQuery("<li></li>").data("item.autocomplete", item).append(jQuery("<a></a>").html(item.label)).appendTo(ul);
 				
@@ -2021,7 +2021,7 @@ $tmpcontent.='
 						return false;
 					}
 										
-				}).data(\'autocomplete\')._renderItem = function (ul, item) {
+				}).data(\'ui-autocomplete\')._renderItem = function (ul, item) {
 				
 					return jQuery("<li></li>").data("item.autocomplete", item).append(jQuery("<a></a>").html(item.label)).appendTo(ul);
 				
@@ -2102,15 +2102,16 @@ $tmpcontent.='
 	';	
 $GLOBALS['TSFE']->additionalHeaderData[] = '
 	<script type="text/javascript">
-		jQuery().ready(function($){
+		jQuery(document).ready(function($) {
 			$("#expected_delivery_date_local").datepicker({
-			dateFormat: "dd-mm-yy",
-			altField: "#expected_delivery_date",
-			altFormat: "yy-mm-dd",												
-			changeMonth: true,
-			changeYear: true,
-			showOtherMonths: true,  
-			yearRange: "'.(date("Y")).':'.(date("Y")+2).'" 
+				dateFormat: "dd-mm-yy",
+				minDate: 0,
+				altField: "#expected_delivery_date",
+				altFormat: "yy-mm-dd",												
+				changeMonth: true,
+				changeYear: true,
+				showOtherMonths: true,  
+				yearRange: "'.(date("Y")).':'.(date("Y")+2).'" 
 			});
 		});			
 	 </script>

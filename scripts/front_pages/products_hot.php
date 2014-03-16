@@ -40,7 +40,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 		$filter		= array();
 		$having		= array();		
 		$match		= array();
-		$orderby	= array();
 		$where		= array();
 		$orderby	= array();
 		$select		= array();
@@ -51,7 +50,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 			$tbl='p2c.';		
 		}
 		$from[]='tx_multishop_orders_products mop';	
-		$filter[]	=$tbl."products_id=mop.products_id";
+		$filter[]=$tbl."products_id=mop.products_id";
+		$having[]="total_quantity > 1";
+		$select[]='COUNT('.$tbl.'products_id) as total_quantity';
+		$orderby[]='total_quantity desc';
 		$categoriesStartingPoint = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'categoriesStartingPoint', 's_advanced');
 		if (!$categoriesStartingPoint and is_numeric($this->conf['categoriesStartingPoint'])) {
 			$categoriesStartingPoint=$this->conf['categoriesStartingPoint'];

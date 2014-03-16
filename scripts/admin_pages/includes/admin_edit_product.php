@@ -719,6 +719,10 @@ if ($this->post) {
 			$markerArray['LABEL_PRODUCT_NAME'] 					= $this->pi_getLL('admin_name');
 			$markerArray['VALUE_PRODUCT_NAME'] 					= htmlspecialchars($lngproduct[$language['uid']]['products_name']);
 			$markerArray['LABEL_SHORT_DESCRIPTION'] 			= $this->pi_getLL('admin_short_description');
+			$markerArray['TEXTAREA_SHORT_DESCRIPTION_PARAMS']='';
+			if (!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']) {
+				$markerArray['TEXTAREA_SHORT_DESCRIPTION_PARAMS']='onKeyDown="limitText(this,255);" onKeyUp="limitText(this,255);"';
+			}
 			$markerArray['TEXTAREA_SHORT_DESCRIPTION_CLASS'] 	= ($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']?' class="mceEditor" ':' class="text expand20-100" ');
 			$markerArray['VALUE_SHORT_DESCRIPTION'] 			= htmlspecialchars($lngproduct[$language['uid']]['products_shortdescription']);
 			$markerArray['LABEL_PRODUCT_DESCRIPTION'] 			= $this->pi_getLL('admin_full_description');

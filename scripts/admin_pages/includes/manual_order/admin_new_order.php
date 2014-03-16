@@ -28,9 +28,9 @@ if (count($products) < 0) {
 		foreach ($customers as $customer) {
 			if ($customer['email']) {
 				if ($customer['company']) {
-					$content.='<option value="'.$customer['uid'].'">' . $customer['company'] . ' - '.htmlspecialchars($customer['name'].' ('.$customer['email'].')').'</option>';
+					$content.='<option value="'.$customer['uid'].'">' . $customer['company'] . ' - '.htmlspecialchars($customer['name'].' ('.$customer['email'].', '.$customer['uid'].')').'</option>';
 				} else {
-					$content.='<option value="'.$customer['uid'].'">'.htmlspecialchars($customer['name'].' ('.$customer['email'].')').'</option>';
+					$content.='<option value="'.$customer['uid'].'">'.htmlspecialchars($customer['name'].' ('.$customer['email'].', '.$customer['uid'].')').'</option>';
 				}
 			}
 		}

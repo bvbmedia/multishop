@@ -456,7 +456,7 @@ if ($this->get['feed_hash']) {
 							$filter[]='language_id='.$GLOBALS['TSFE']->sys_language_uid;
 							$row2=mslib_befe::getRecord($row['categories_crum'][($level-1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
 							if ($row2['content']) {
-								$string=strip_tags(preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row2['content']));
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row2['content']);
 								$tmpcontent .= $string;
 							}
 						}
@@ -472,7 +472,7 @@ if ($this->get['feed_hash']) {
 							$filter[]='language_id='.$GLOBALS['TSFE']->sys_language_uid;
 							$row2=mslib_befe::getRecord($row['categories_crum'][($level-1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
 							if ($row2['categories_name']) {
-								$string=strip_tags(preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row2['categories_name']));
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row2['categories_name']);
 								$tmpcontent .= $string;
 							}
 						}
@@ -507,7 +507,7 @@ if ($this->get['feed_hash']) {
 							$filter[]='language_id='.$GLOBALS['TSFE']->sys_language_uid;
 							$row2=mslib_befe::getRecord($row['categories_crum'][($level-1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
 							if ($row2['content_footer']) {
-								$string=strip_tags(preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row2['content_footer']));
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row2['content_footer']);
 								$tmpcontent .= $string;
 							}
 						}
@@ -621,7 +621,7 @@ if ($this->get['feed_hash']) {
 						$tmpcontent .= $row['delivery_time'];
 					break;						
 					case 'products_shortdescription':
-						$string = strip_tags(preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row['products_shortdescription']));
+						$string = preg_replace("/\r\n|\n|".$feed['delimiter']."/"," ",$row['products_shortdescription']);
 						if ($string) {
 							$string = preg_replace('/\s+/', ' ', $string);
 							$tmpcontent .= $string;

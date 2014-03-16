@@ -1225,8 +1225,12 @@ elseif ((is_numeric($this->get['job_id']) and $this->get['action']=='run_job') o
 					// custom hook that can be controlled by third-party plugin eof											
 					if (!$item['products_name'] or $item['products_name']) {
 						$hashed_id='';
-						if (!$this->ms['target-cid']) $this->ms['target-cid']=0;
-						if ($this->ms['target-cid']) $hashed_id=$this->ms['target-cid'];
+						if (!$this->ms['target-cid']) {
+							$this->ms['target-cid']=0;
+						}
+						if ($this->ms['target-cid']) {
+							$hashed_id=$this->ms['target-cid'];
+						}
 						for ($x=1;$x<=$max_category_level;$x++) {
 							if ($item['categories_name'.$x]) {
 								if ($hashed_id) {
@@ -1292,11 +1296,12 @@ elseif ((is_numeric($this->get['job_id']) and $this->get['action']=='run_job') o
 							if ($item['categories_image'.$x]) {
 								$categories_name=$item['categories_name'.$x];
 								$image=$item['categories_image'.$x];
-								$strchk="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where cd.categories_name='".addslashes($item['categories_name'.$x])."' and c.categories_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$language_id."' and c.categories_id=cd.categories_id";
+								//$strchk="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where cd.categories_name='".addslashes($item['categories_name'.$x])."' and c.categories_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$language_id."' and c.categories_id=cd.categories_id";
+								$strchk="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$language_id."' and c.categories_id=cd.categories_id";
 								$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 								if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
-									$rowchk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);								
-									if (!$rowchk['categories_image']) {
+									$rowchk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);			
+									if (!$rowchk['categories_image'] or ($rowchk['categories_image'] and !file_exists(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.mslib_befe::getImagePrefixFolder($rowchk['categories_image']).'/'.$rowchk['categories_image']))) {
 										// download image
 										$data=mslib_fe::file_get_contents($image);
 										if ($data) {
@@ -1682,9 +1687,10 @@ elseif ((is_numeric($this->get['job_id']) and $this->get['action']=='run_job') o
 									// custom hook that can be controlled by third-party plugin
 									if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductPreHook'])) {
 										$params = array (
-											'updateArray' 			=> &$updateArray,
-											'item' 					=> &$item,											
-											'prefix_source_name'	=> $this->post['prefix_source_name']
+											'updateArray' => &$updateArray,
+											'item' => &$item,											
+											'prefix_source_name' => $this->post['prefix_source_name'],
+											'old_product' => &$old_product
 										);
 										foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductPreHook'] as $funcRef) {
 											t3lib_div::callUserFunction($funcRef, $params, $this);

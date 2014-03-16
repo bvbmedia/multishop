@@ -75,11 +75,11 @@ foreach ($zones as $zone) {
 				$counter++;
 			}
 			$content.='</ul>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back()" class="msadmin_button" /><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+			<input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="msadmin_button" /><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
 			</form>
 			';		
 		} else {
-			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="cancel" onclick="history.back()" class="msadmin_button" />';
+			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="cancel" onclick="history.back();return false;" class="msadmin_button" />';
 		}
 	} else {
 		if ($rows > 0) {		

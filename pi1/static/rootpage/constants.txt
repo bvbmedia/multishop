@@ -233,4 +233,7 @@ plugin.multishop {
 	
 	order_details_table_ajaxProductsToBasket_tmpl_path=
 	order_details_table_ajaxGetMethodCosts_tmpl_path=
+
+	# cat=plugin.multishop - advanced; type=string; label= Title of the rootline page. Title of the rootline page. Ie: Home.
+	crumbar_rootline_title =	
 }
