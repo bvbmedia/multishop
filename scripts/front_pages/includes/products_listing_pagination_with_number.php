@@ -6,20 +6,20 @@ $tmp.='<div id="pagenav_container_list_wrapper">
 <ul id="pagenav_container_list">
 <li class="pagenav_first"><div class="dyna_button">';
 if($p > 0) {
-	$tmp .= '<a class="ajax_link pagination_button msFrontButton prevState arrowLeft arrowPosLeft" href="'.mslib_fe::typolink('',''.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('first').'</span></a>';
+	$tmp .= '<a class="ajax_link pagination_button" href="'.mslib_fe::typolink('',''.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('first').'</span></a>';
 } else {
-	$tmp .= '<span class="pagination_button msFrontButton prevState arrowLeft arrowPosLeft disabled"><span>'.$this->pi_getLL('first').'</span></span>';
+	$tmp .= '<span class="pagination_button disabled"><span>'.$this->pi_getLL('first').'</span></span>';
 }
 $tmp.='</div></li>';
 $tmp .= '<li class="pagenav_previous"><div class="dyna_button">';
 if($p > 0) {
 	if (($p-1) > 0) {
-		$tmp .= '<a class="ajax_link pagination_button msFrontButton prevState arrowLeft arrowPosLeft" href="'.mslib_fe::typolink('','p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('previous').'</span></a>';
+		$tmp .= '<a class="ajax_link pagination_button" href="'.mslib_fe::typolink('','p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('previous').'</span></a>';
 	} else {
-		$tmp .= '<a class="ajax_link pagination_button msFrontButton prevState arrowLeft arrowPosLeft" href="'.mslib_fe::typolink('','p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('previous').'</span></a>';
+		$tmp .= '<a class="ajax_link pagination_button" href="'.mslib_fe::typolink('','p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('previous').'</span></a>';
 	}
 } else {
-	$tmp .= '<span class="pagination_button msFrontButton prevState arrowLeft arrowPosLeft disabled"><span>'.$this->pi_getLL('previous').'</span></span>';
+	$tmp .= '<span class="pagination_button disabled"><span>'.$this->pi_getLL('previous').'</span></span>';
 }
 $tmp .= '</div></li>';
 if ($p == 0 || $p < 9) {
@@ -49,9 +49,9 @@ $tmp.='</ul>
 </li>';
 $tmp .= '<li class="pagenav_next"><div class="dyna_button">';
 if((($p+1)*$limit_per_page) < $pageset['total_rows']) {
-	$tmp .= '<a class="ajax_link pagination_button msFrontButton continueState arrowRight arrowPosLeft" href="'.mslib_fe::typolink('','p='.($p+1).'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('next').'</span></a>'; 	
+	$tmp .= '<a class="ajax_link pagination_button" href="'.mslib_fe::typolink('','p='.($p+1).'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('next').'</span></a>'; 	
 } else {
-	$tmp .= '<span class="pagination_button msFrontButton continueState arrowRight arrowPosLeft disabled"><span>'.$this->pi_getLL('next').'</span></span>';
+	$tmp .= '<span class="pagination_button disabled"><span>'.$this->pi_getLL('next').'</span></span>';
 }
 $tmp .= '</div></li>';
 $tmp .= '<li class="pagenav_last"><div class="dyna_button">';
@@ -61,9 +61,9 @@ if((($p+1)*$limit_per_page) < $pageset['total_rows']) {
 	if ($lastpage==$times) {
 		$lastpage--;
 	}	
-	$tmp .= '<a class="ajax_link pagination_button msFrontButton continueState arrowRight arrowPosLeft" href="'.mslib_fe::typolink('','p='.$lastpage.'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('last').'</span></a>';
+	$tmp .= '<a class="ajax_link pagination_button" href="'.mslib_fe::typolink('','p='.$lastpage.'&'.mslib_fe::tep_get_all_get_params(array('p','Submit','page','mini_foto','clearcache'))).'"><span>'.$this->pi_getLL('last').'</span></a>';
 } else{
-	$tmp .= '<span class="pagination_button msFrontButton continueState arrowRight arrowPosLeft disabled"><span>'.$this->pi_getLL('last').'</span></span>';
+	$tmp .= '<span class="pagination_button disabled"><span>'.$this->pi_getLL('last').'</span></span>';
 }
 $tmp.='</div></li>';
 $tmp .= '</ul>
