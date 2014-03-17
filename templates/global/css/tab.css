@@ -179,6 +179,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 /* #tx_multishop_pi1_core #tab-container .tab_container .tab_content input[type="text"].text { width:610px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content textarea { width:610px; } */
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content textarea.mceEditor { width:300px; border:none; padding:0; overflow:hidden; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor_box textarea.mceEditor { overflow:auto; width:100%; border:none; background:none; font-size:13px; font-family:Menlo, Monaco, monospace, sans-serif; color:#333; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content input.small_input { width:100px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content select { border:1px solid #999; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; padding:2px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content option { padding:0 10px 0 0; }
