@@ -141,9 +141,11 @@ function getSpecialsSections(products_id) {
 		dataType: 'html',
 		success: function (j){
 			if (j) {
-				$("#specials_sections").hide();
-				$("#specials_sections").html(j);
-				$("#specials_sections").slideDown("fast");
+				if (parseFloat(jQuery('#specials_new_products_price_excl_vat').val()) > 0 || parseFloat(jQuery('#specials_new_products_price_incl_vat').val()) > 0) {
+					$("#specials_sections").hide();
+					$("#specials_sections").html(j);
+					$("#specials_sections").slideDown("fast");
+				}
 			}
 		}
 	});
@@ -190,7 +192,7 @@ jQuery(document).ready(function($) {
 				clearTimeout(this.timer);
 			}
 			this.timer = setTimeout(function () {
-				if (value != '') {
+				if (value != '' && parseFloat(value) > 0) {
 					getSpecialsSections(###AJAX_PID###);
 				} else {
 					jQuery("#specials_sections").slideUp("fast");
@@ -206,7 +208,7 @@ jQuery(document).ready(function($) {
 				clearTimeout(this.timer);
 			}
 			this.timer = setTimeout(function () {
-				if (value != '') {
+				if (value != '' && parseFloat(value) > 0) {
 					getSpecialsSections(###AJAX_PID###);
 				} else {
 					jQuery("#specials_sections").slideUp("fast");
@@ -444,7 +446,7 @@ jQuery(document).ready(function($) {
 						<label for="products_price">###LABEL_SPECIAL_PRICE###</label>
 						<div class="msAttributesField">###LABEL_CURRENCY2### <input type="text" name="specials_new_products_price_excl_vat" class="price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_excl_vat">Excl. VAT</label></div>
 						<div class="msAttributesField">###LABEL_CURRENCY3### <input type="text" name="specials_new_products_price_incl_vat" class="price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_incl_vat">Incl. VAT</label></div>
-						<div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
+						<div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
 						<div class="special_price_timer">
 							<label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
 							<input type="text" name="specials_price_start_visitor" class="price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###">
