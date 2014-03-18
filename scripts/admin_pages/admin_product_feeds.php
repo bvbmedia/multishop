@@ -69,9 +69,10 @@ $array['custom_field'] ='Custom field with value';
 $str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";					
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-	$array['attribute_option_name_'.$row['products_options_id']]='Attribute option name: '.$row['products_options_name'];		
+	$array['attribute_option_name_'.$row['products_options_id']]='Attribute option name: '.$row['products_options_name'].' (values without price)';		
+	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']='Attribute option name: '.$row['products_options_name'].' (values with price)';
+	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']='Attribute option name: '.$row['products_options_name'].' (values with price incl. VAT)';
 }
-
 asort($array);
 if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	if ($this->post) {
@@ -316,11 +317,13 @@ if ($this->ms['show_main']) {
 			<th>'.htmlspecialchars($this->pi_getLL('name')).'</th>
 			<th width="100" nowrap>'.htmlspecialchars($this->pi_getLL('created')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>		
+			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>		
 			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>		
 		</tr>			
 		';
 		foreach ($feeds as $feed) {
 			$feed['feed_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'];
+			$feed['feed_link_excel']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'].'&format=excel';
 			// custom page hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'])) {
 				$params = array (
@@ -346,9 +349,13 @@ if ($this->ms['show_main']) {
 				$content.='<span class="admin_status_green" alt="Enable"></span>';					
 			}
 			$content.='</td>
-				<td  width="50">
+			<td width="150">
+				<a href="'.$feed['feed_link'].'" class="admin_menu">Download feed</a><br />
+				<a href="'.$feed['feed_link_excel'].'" class="admin_menu">Download Excel feed</a>
+			</td>			
+			<td width="50">
 				<a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="admin_menu_edit">edit</a>			
-			<a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';
+				<a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';
 			$content.='
 			</td>
 			</tr>

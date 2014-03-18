@@ -27,6 +27,8 @@ if ($this->get['feed_hash']) {
 		$qry = $GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 			$attributes['attribute_option_name_'.$row['products_options_id']] = $row['products_options_name'];		
+			$attributes['attribute_option_name_'.$row['products_options_id'].'_including_prices'] = $row['products_options_name'];		
+			$attributes['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat'] = $row['products_options_name'];		
 		}
 		// preload attibute option names eof
 		if ($feed['feed_type']) {
@@ -48,97 +50,106 @@ if ($this->get['feed_hash']) {
 		if ($feed['include_header']) {
 			$total = count($fields);
 			$rowCount = 0;
+			if ($this->get['format']=='excel') {			
+				$excelHeaderCols=array();
+			}			
 			foreach ($fields as $counter => $field) {
-				$rowCount++;
-				if ($this->get['format']=='csv') {				
-					$content.= '"';
-				}
+				$tmpContent='';
+				$rowCount++;				
 				if ($this->get['target']=='google_shopping') {
 					switch ($field) {
 						case 'products_ean':
-							$content.='gtin';
+							$tmpContent.='gtin';
 						break;							
 						case 'products_sku':
-							$content.='mpn';
+							$tmpContent.='mpn';
 						break;							
 						case 'categories_name':
-							$content.='product_type';
+							$tmpContent.='product_type';
 						break;							
 						case 'category_crum_path':
-							$content.='product_type';
+							$tmpContent.='product_type';
 						break;
 						case 'products_condition':
-							$content.='condition';
+							$tmpContent.='condition';
 						break;						
 						case 'products_id':
-							$content.='id';
+							$tmpContent.='id';
 						break;
 						case 'custom_field':
-							$content.=$fields_headers[$counter];
+							$tmpContent.=$fields_headers[$counter];
 						break;
 						case 'products_name':
-							$content.='title';
+							$tmpContent.='title';
 						break;
 						case 'products_status':
-							$content.='status';
+							$tmpContent.='status';
 						break;
 						case 'products_description':
 						case 'products_shortdescription':
-							$content.='description';
+							$tmpContent.='description';
 						break;	
 						case 'products_external_url':
-							$content.='external_url';
+							$tmpContent.='external_url';
 						break;												
                         case 'products_image_50':
                         case 'products_image_100':
                         case 'products_image_200':
                         case 'products_image_normal':						
-							$content.='image_link';
+							$tmpContent.='image_link';
 						break;
 						case 'manufacturers_name':
-							$content.='brand';
+							$tmpContent.='brand';
 						break;						
 						case 'product_capital_price':
-							$content.='capital price';
+							$tmpContent.='capital price';
 						break;
 						case 'products_price':
-							$content.='price';
+							$tmpContent.='price';
 						break;
 						case 'products_price_excluding_vat':
-							$content.='price excluding vat';
+							$tmpContent.='price excluding vat';
 						break;						
 						case 'products_vat_rate':
-							$content.=$row['tax_rate'];
+							$tmpContent.=$row['tax_rate'];
 						break;						
 						case 'products_url':
-							$content.='link';
+							$tmpContent.='link';
 						break;
 						default:
 							// if key name is attribute option, print the option name. else print key name
 							if ($attributes[$field]) {
-								$content.=$attributes[$field];
+								$tmpContent.=$attributes[$field];
 							} else {
-								$content.=$field;
+								$tmpContent.=$field;
 							}
 						break;
 					}
 				} else {
 					switch ($field)	{
 						case 'custom_field':
-							$content.=$fields_headers[$counter];						
+							$tmpContent.=$fields_headers[$counter];						
 						break;
 						default:
 							// if key name is attribute option, print the option name. else print key name
 							if ($attributes[$field]) {
-								$content.=$attributes[$field];
+								$tmpContent.=$attributes[$field];
 							} else {
-								$content.=$field;
+								$tmpContent.=$field;
 							}
 						break;
 					}
 				}
-				if ($this->get['format']=='csv') {				
-					$content.= '"';
+				if ($this->get['format']=='excel') {			
+					$excelHeaderCols[]=$tmpContent;
+				} else {
+					if ($this->get['format']=='csv') {				
+						$content.= '"';
+					}
+					$content.=$tmpContent;
+					if ($this->get['format']=='csv') {				
+						$content.= '"';
+					}					
 				}
 				if ($rowCount<$total) {
 					if ($this->get['format']=='csv') {
@@ -308,14 +319,57 @@ if ($this->get['feed_hash']) {
 						if ($product['products_id']) {
 							if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 								// fetch the attributes manually
-								$attributes_data = array();
-								$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
-								$qry_attributes = $GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
-								while ($row_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
-									$attributes_data['attribute_option_name_' . $row_attributes['options_id']][] = $row_attributes['products_options_values_name'];
-								}								
-								foreach ($attributes_data as $attribute_key => $attribute_val) {
-									$row[$attribute_key] = implode(', ', $attributes_data[$attribute_key]);
+								$loadAttributeValues=0;
+								foreach($fields as $field) {
+									if (strstr($field,'attribute_option_name')) {
+										$loadAttributeValues=1;
+									}
+								}
+								if ($loadAttributeValues) {
+									$attributes_data = array();
+									//$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
+									$sql_attributes = "select * from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
+									$qry_attributes = $GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
+									while ($row_attributes = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
+										$attributes_data['attribute_option_name_' . $row_attributes['options_id']]['values'][] = $row_attributes['products_options_values_name'];
+										$attributes_data['attribute_option_name_' . $row_attributes['options_id']]['array'][] = $row_attributes;
+									}
+									foreach ($attributes_data as $attribute_key => $attribute_val) {
+										$row[$attribute_key] = implode(', ', $attributes_data[$attribute_key]['values']);
+										// now with prices
+										$itemsWithPrice=array();
+										$itemsWithPriceIncludingVat=array();
+										foreach ($attributes_data[$attribute_key]['array'] as $valueArray) {
+											// excluding vat
+											$final_price=number_format($valueArray['options_values_price'],2);
+											// store value with corresponding price, divided with double ;
+											$itemsWithPrice[]=$valueArray['products_options_values_name'].'::'.$final_price;
+											// including vat
+											if ($row['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
+												$final_price=$valueArray['options_values_price'];
+												// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
+												if ($row['country_tax_rate'] && $row['region_tax_rate']) {
+													$country_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['country_tax_rate']));
+													$region_tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['region_tax_rate']));
+													$final_price = $final_price + ($country_tax_rate + $region_tax_rate);
+												} else {
+													$tax_rate = mslib_fe::taxDecimalCrop($final_price * ($row['tax_rate']));
+													$final_price = $final_price + $tax_rate;
+												}
+											}
+											$final_price=number_format($final_price,2);
+											// store value with corresponding price, divided with double ;
+											$itemsWithPriceIncludingVat[]=$valueArray['products_options_values_name'].'::'.$final_price;
+										}
+										if (count($itemsWithPrice)) {
+											// add all values with prices excluding VAT as one big string, divided with double pipe
+											$row[$attribute_key.'_including_prices']=implode('||',$itemsWithPrice);
+										}
+										if (count($itemsWithPriceIncludingVat)) {
+											// add all values with prices including VAT as one big string, divided with double pipe
+											$row[$attribute_key.'_including_prices_including_vat']=implode('||',$itemsWithPriceIncludingVat);											
+										}
+									}
 								}
 							}							
 							$cats = mslib_fe::Crumbar($product['categories_id']);
@@ -368,8 +422,17 @@ if ($this->get['feed_hash']) {
 				}			
 			break;			
 		}
-        // load all products'
+        // load all products
+		if ($this->get['format']=='excel') {			
+			$excelRows=array();
+			if ($excelHeaderCols) {
+				$excelRows[]=$excelHeaderCols;
+			}
+		}		
 		foreach ($records as $row) {			
+			if ($this->get['format']=='excel') {			
+				$excelCols=array();
+			}		
 			$total=count($fields);
 			$count=0;	
 			foreach ($fields as $counter => $field) {
@@ -772,7 +835,7 @@ if ($this->get['feed_hash']) {
 				}
 				// test extra delimiter strip
 				if ($feed['delimiter']) {
-					$tmpcontent=str_replace($feed['delimiter'],"",$tmpcontent);
+					$tmpcontent=str_replace($feed['delimiter'],'',$tmpcontent);
 					$tmpcontent=str_replace("\r","",$tmpcontent);
 					$tmpcontent=str_replace("\n","",$tmpcontent);
 					//$tmpcontent=str_replace('"',"\"",$tmpcontent);
@@ -780,6 +843,9 @@ if ($this->get['feed_hash']) {
 				$content.=$tmpcontent;
 				if ($this->get['format']=='csv') {
 					$content.= '"';
+				}					
+				if ($this->get['format']=='excel') {
+					$excelCols[]=$tmpcontent;
 				}					
 				if ($count < $total) {
 					if ($this->get['format']=='csv') {
@@ -802,7 +868,21 @@ if ($this->get['feed_hash']) {
 			}
 			// new line
 			$content.= "\r\n";
+			if ($this->get['format']=='excel') {			
+				$excelRows[]=$excelCols;
+			}
 		}
+		if ($this->get['format']=='excel') {			
+			require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
+			$objPHPExcel = new PHPExcel();
+			$objPHPExcel->getSheet(0)->setTitle('Productfeed');
+			$objPHPExcel->getActiveSheet()->fromArray($excelRows);
+			$ExcelWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+			header('Content-type: application/vnd.ms-excel');
+			header('Content-Disposition: attachment; filename="productfeed.xlsx"');
+			$ExcelWriter->save('php://output');		
+			exit();				
+		}		
         $Cache_Lite->save($content);			
     }
 	header("Content-Type: text/plain");
