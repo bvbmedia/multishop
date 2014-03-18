@@ -54,99 +54,99 @@ if ($this->get['feed_hash']) {
 				$excelHeaderCols=array();
 			}			
 			foreach ($fields as $counter => $field) {
-				$tmpContent='';
+				$tmpcontent='';
 				$rowCount++;				
 				if ($this->get['target']=='google_shopping') {
 					switch ($field) {
 						case 'products_ean':
-							$tmpContent.='gtin';
+							$tmpcontent.='gtin';
 						break;							
 						case 'products_sku':
-							$tmpContent.='mpn';
+							$tmpcontent.='mpn';
 						break;							
 						case 'categories_name':
-							$tmpContent.='product_type';
+							$tmpcontent.='product_type';
 						break;							
 						case 'category_crum_path':
-							$tmpContent.='product_type';
+							$tmpcontent.='product_type';
 						break;
 						case 'products_condition':
-							$tmpContent.='condition';
+							$tmpcontent.='condition';
 						break;						
 						case 'products_id':
-							$tmpContent.='id';
+							$tmpcontent.='id';
 						break;
 						case 'custom_field':
-							$tmpContent.=$fields_headers[$counter];
+							$tmpcontent.=$fields_headers[$counter];
 						break;
 						case 'products_name':
-							$tmpContent.='title';
+							$tmpcontent.='title';
 						break;
 						case 'products_status':
-							$tmpContent.='status';
+							$tmpcontent.='status';
 						break;
 						case 'products_description':
 						case 'products_shortdescription':
-							$tmpContent.='description';
+							$tmpcontent.='description';
 						break;	
 						case 'products_external_url':
-							$tmpContent.='external_url';
+							$tmpcontent.='external_url';
 						break;												
                         case 'products_image_50':
                         case 'products_image_100':
                         case 'products_image_200':
                         case 'products_image_normal':						
-							$tmpContent.='image_link';
+							$tmpcontent.='image_link';
 						break;
 						case 'manufacturers_name':
-							$tmpContent.='brand';
+							$tmpcontent.='brand';
 						break;						
 						case 'product_capital_price':
-							$tmpContent.='capital price';
+							$tmpcontent.='capital price';
 						break;
 						case 'products_price':
-							$tmpContent.='price';
+							$tmpcontent.='price';
 						break;
 						case 'products_price_excluding_vat':
-							$tmpContent.='price excluding vat';
+							$tmpcontent.='price excluding vat';
 						break;						
 						case 'products_vat_rate':
-							$tmpContent.=($row['tax_rate']*100);
+							$tmpcontent.=($row['tax_rate']*100);
 						break;						
 						case 'products_url':
-							$tmpContent.='link';
+							$tmpcontent.='link';
 						break;
 						default:
 							// if key name is attribute option, print the option name. else print key name
 							if ($attributes[$field]) {
-								$tmpContent.=$attributes[$field];
+								$tmpcontent.=$attributes[$field];
 							} else {
-								$tmpContent.=$field;
+								$tmpcontent.=$field;
 							}
 						break;
 					}
 				} else {
 					switch ($field)	{
 						case 'custom_field':
-							$tmpContent.=$fields_headers[$counter];						
+							$tmpcontent.=$fields_headers[$counter];						
 						break;
 						default:
 							// if key name is attribute option, print the option name. else print key name
 							if ($attributes[$field]) {
-								$tmpContent.=$attributes[$field];
+								$tmpcontent.=$attributes[$field];
 							} else {
-								$tmpContent.=$field;
+								$tmpcontent.=$field;
 							}
 						break;
 					}
 				}
 				if ($this->get['format']=='excel') {			
-					$excelHeaderCols[]=$tmpContent;
+					$excelHeaderCols[]=$tmpcontent;
 				} else {
 					if ($this->get['format']=='csv') {				
 						$content.= '"';
 					}
-					$content.=$tmpContent;
+					$content.=$tmpcontent;
 					if ($this->get['format']=='csv') {				
 						$content.= '"';
 					}					
@@ -461,7 +461,7 @@ if ($this->get['feed_hash']) {
 						}
 					break;
 					case 'products_vat_rate':
-						$tmpContent.=($row['tax_rate']*100);
+						$tmpcontent.=($row['tax_rate']*100);
 					break;						
 					case 'categories_meta_title':
 						$tmpcontent .= $row['meta_title'];
