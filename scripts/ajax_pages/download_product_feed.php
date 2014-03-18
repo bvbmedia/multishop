@@ -111,7 +111,7 @@ if ($this->get['feed_hash']) {
 							$tmpContent.='price excluding vat';
 						break;						
 						case 'products_vat_rate':
-							$tmpContent.=$row['tax_rate'];
+							$tmpContent.=($row['tax_rate']*100);
 						break;						
 						case 'products_url':
 							$tmpContent.='link';
@@ -460,6 +460,9 @@ if ($this->get['feed_hash']) {
 							$tmpcontent .= $string;
 						}
 					break;
+					case 'products_vat_rate':
+						$tmpContent.=($row['tax_rate']*100);
+					break;						
 					case 'categories_meta_title':
 						$tmpcontent .= $row['meta_title'];
 					break;										
