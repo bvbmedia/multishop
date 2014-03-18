@@ -42,7 +42,7 @@ foreach ($payment_methods as $payment_name => $payment_data) {
 
 // make sure the sort_order of payment method is maintained
 ksort($data);
-$json = json_encode($data);
+$json = json_encode($data, ENT_NOQUOTES);
 echo $json;
 exit();
 ?>

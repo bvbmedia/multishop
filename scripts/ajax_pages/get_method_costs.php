@@ -137,7 +137,7 @@ $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart = $mslib_cart->getCart();
 
 $data['htmlCartContents']=$mslib_cart->getHtmlCartContents('ajaxGetMethodCosts');
-$json = json_encode($data);
+$json = json_encode($data, ENT_NOQUOTES);
 echo $json;
 exit();
 ?>

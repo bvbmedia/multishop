@@ -51,7 +51,7 @@ if ($this->ADMIN_USER) {
 		
 		$content = $option_data;
 		
-		$content=json_encode($content);
+		$content=json_encode($content, ENT_NOQUOTES);
 		if ($this->ms['MODULES']['CACHE_FRONT_END'])	$Cache_Lite->save($content);	
 	}
 	echo $content;

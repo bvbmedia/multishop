@@ -128,6 +128,6 @@ if($price > 0) {
 	$data['qty_correction'] = 0;
 }
 
-echo json_encode($data);
+echo json_encode($data, ENT_NOQUOTES);
 exit();
 ?>

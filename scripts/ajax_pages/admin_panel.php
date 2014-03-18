@@ -10,7 +10,7 @@ if ($this->ADMIN_USER) {
 	$this->get['categories_id']=$this->get['tx_multishop_pi1']['categories_id'];
 	$this->get['products_id']=$this->get['tx_multishop_pi1']['products_id'];
 	$data = mslib_fe::jQueryAdminMenu(); 
-	echo json_encode($data);
+	echo json_encode($data, ENT_NOQUOTES);
 	exit();
 }
 ?>

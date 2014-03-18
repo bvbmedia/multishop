@@ -143,7 +143,7 @@ $libaryWidgets[$key]['content']='
       google.setOnLoadCallback(drawChart'.$key.');
       function drawChart'.$key.'() {
         var data = google.visualization.arrayToDataTable(
-		'.json_encode($data).'
+		'.json_encode($data, ENT_NOQUOTES).'
 		);
         var options = {			
 			title: \'\',
@@ -198,7 +198,7 @@ $libaryWidgets[$key]['content']='
       google.setOnLoadCallback(drawChart'.$key.');
       function drawChart'.$key.'() {
         var data = google.visualization.arrayToDataTable(
-		'.json_encode($data).'
+		'.json_encode($data, ENT_NOQUOTES).'
 		);
         var options = {
           title: \'\',
@@ -254,7 +254,7 @@ $libaryWidgets[$key]['content']='
       google.setOnLoadCallback(drawChart'.$key.');
       function drawChart'.$key.'() {
         var data = google.visualization.arrayToDataTable(
-		'.json_encode($data).'
+		'.json_encode($data, ENT_NOQUOTES).'
 		);
         var options = {
           title: \'\',

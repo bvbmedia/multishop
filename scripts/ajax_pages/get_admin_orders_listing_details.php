@@ -197,6 +197,6 @@ $jsonData['html'].='
 			$jsonData['html']='No data.';
 		}
 	}
-	echo json_encode($jsonData);
+	echo json_encode($jsonData, ENT_NOQUOTES);
 }
 ?>

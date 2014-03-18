@@ -39,7 +39,7 @@ if (strpos($current_price, ':') !== false) {
 	$data['price_excluding_tax'] = str_replace(',', '', $data['price_excluding_tax']);
 }
 
-$json_data = json_encode($data);
+$json_data = json_encode($data, ENT_NOQUOTES);
 echo $json_data;
 exit();
 ?>

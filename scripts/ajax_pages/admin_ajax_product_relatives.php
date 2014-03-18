@@ -299,7 +299,7 @@ if ($this->post['req'] == 'init') {
 	}
 }
 
-$data = json_encode($json_data);
+$data = json_encode($json_data, ENT_NOQUOTES);
 echo $data;
 exit();
 ?>

@@ -382,7 +382,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$results['pagination']['nextText'] = t3lib_div::strtoupper($this->pi_getLL('next'));
 		$results['pagination']['last'] = t3lib_div::strtoupper($this->pi_getLL('last'));
 	}	
-	$content=json_encode($results);
+	$content=json_encode($results, ENT_NOQUOTES);
 	if ($this->ms['MODULES']['CACHE_FRONT_END'])	$Cache_Lite->save($content);	
 }
 header('Content-Type: application/json');

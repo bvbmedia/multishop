@@ -65,7 +65,7 @@ switch ($this->ms['page']) {
 				$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_notification', 'id='.$row['id'],array('unread'=>'0'));
 				$res = $GLOBALS['TYPO3_DB']->sql_query($query);				
 			}					
-			echo json_encode($messages);
+			echo json_encode($messages, ENT_NOQUOTES);
 		}
 		exit();
 	break;

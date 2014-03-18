@@ -850,7 +850,7 @@ if ($this->ADMIN_USER) {
 		
 		// end products		
 		$content = array("products"=>$data);
-		$content=json_encode($content);
+		$content=json_encode($content, ENT_NOQUOTES);
 		// now build up the listing eof
 	}
 	echo $content;
