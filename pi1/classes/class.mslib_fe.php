@@ -460,8 +460,7 @@ class mslib_fe
 						 $current[$tag] = $result;
 	
 					} else { //If taken, put all things inside a list(array)
-						 if((is_array($current[$tag]) and $get_attributes == 0)//If it is already an array...
-									or (isset($current[$tag][0]) and is_array($current[$tag][0]) and $get_attributes == 1)) {
+						 if((is_array($current[$tag]) and $get_attributes == 0)	or (isset($current[$tag][0]) and is_array($current[$tag][0]) and $get_attributes == 1)) {
 							  array_push($current[$tag],$result); // ...push the new element into that array.
 						 } else { //If it is not an array...
 							  $current[$tag] = array($current[$tag],$result); //...Make it an array using using the existing value and the new value
