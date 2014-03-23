@@ -1130,6 +1130,7 @@
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/plugins/Uploaded/Uploaded.php" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/plugins/Uploaded/Uploaded.php" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/filemanager/plugins/WordpressAuthenticator/WordpressAuthenticator.php" afterPath="Z:/js/tiny_mce-old/plugins/filemanager/plugins/WordpressAuthenticator/WordpressAuthenticator.php" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/plugins/WordpressAuthenticator/WordpressAuthenticator.php" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/plugins/WordpressAuthenticator/WordpressAuthenticator.php" />
+      <change type="MODIFICATION" beforePath="Z:/.idea/Z.iml" afterPath="Z:/.idea/Z.iml" />
       <change type="MODIFICATION" beforePath="Z:/res/dompdf/lib/fonts/ZapfDingbats.afm" afterPath="Z:/res/dompdf/lib/fonts/ZapfDingbats.afm" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/filemanager/classes/FileManager/Utils/ZipFile.class.php" afterPath="Z:/js/tiny_mce-old/plugins/filemanager/classes/FileManager/Utils/ZipFile.class.php" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/filemanager/classes/FileManager/FileSystems/ZipFileImpl.php" afterPath="Z:/js/tiny_mce-old/plugins/filemanager/classes/FileManager/FileSystems/ZipFileImpl.php" />
@@ -1605,6 +1606,7 @@
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/xhtmlxtras/langs/en_dlg.js" afterPath="Z:/js/tiny_mce-old/plugins/xhtmlxtras/langs/en_dlg.js" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/themes/advanced/langs/en_dlg.js" afterPath="Z:/js/tiny_mce-old/themes/advanced/langs/en_dlg.js" />
       <change type="MODIFICATION" beforePath="Z:/res/dompdf/lib/php-font-lib/classes/encoding_map.cls.php" afterPath="Z:/res/dompdf/lib/php-font-lib/classes/encoding_map.cls.php" />
+      <change type="MODIFICATION" beforePath="Z:/.idea/encodings.xml" afterPath="Z:/.idea/encodings.xml" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/filemanager/logs/error.log" afterPath="Z:/js/tiny_mce-old/plugins/filemanager/logs/error.log" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/logs/error.log" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/logs/error.log" />
       <change type="MODIFICATION" beforePath="Z:/js/js-webshim/shims/i18n/errormessages-ar.js" afterPath="Z:/js/js-webshim/shims/i18n/errormessages-ar.js" />
@@ -2024,7 +2026,9 @@
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/filemanager/mime.types" afterPath="Z:/js/tiny_mce-old/plugins/filemanager/mime.types" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/mime.types" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/mime.types" />
       <change type="MODIFICATION" beforePath="Z:/js/admin/misc.js" afterPath="Z:/js/admin/misc.js" />
+      <change type="MODIFICATION" beforePath="Z:/.idea/misc.xml" afterPath="Z:/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="Z:/js/js-webshim/extras/modernizr-custom.js" afterPath="Z:/js/js-webshim/extras/modernizr-custom.js" />
+      <change type="MODIFICATION" beforePath="Z:/.idea/modules.xml" afterPath="Z:/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/filemanager/plugins/MoozCMSIntegration/css/moozblack_fm.css" afterPath="Z:/js/tiny_mce-old/plugins/filemanager/plugins/MoozCMSIntegration/css/moozblack_fm.css" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/plugins/MoozCMSIntegration/css/moozblack_fm.css" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/plugins/MoozCMSIntegration/css/moozblack_fm.css" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/filemanager/plugins/MoozCMSIntegration/css/moozblack_im.css" afterPath="Z:/js/tiny_mce-old/plugins/filemanager/plugins/MoozCMSIntegration/css/moozblack_im.css" />
@@ -2225,6 +2229,7 @@
       <change type="MODIFICATION" beforePath="Z:/js/js-webshim/shims/FlashCanvas/save.php" afterPath="Z:/js/js-webshim/shims/FlashCanvas/save.php" />
       <change type="MODIFICATION" beforePath="Z:/js/js-webshim/shims/FlashCanvasPro/save.php" afterPath="Z:/js/js-webshim/shims/FlashCanvasPro/save.php" />
       <change type="MODIFICATION" beforePath="Z:/js/redactor/demo/scripts/save.php" afterPath="Z:/js/redactor/demo/scripts/save.php" />
+      <change type="MODIFICATION" beforePath="Z:/.idea/scopes/scope_settings.xml" afterPath="Z:/.idea/scopes/scope_settings.xml" />
       <change type="MODIFICATION" beforePath="Z:/js/jquery.treeview/demo/screen.css" afterPath="Z:/js/jquery.treeview/demo/screen.css" />
       <change type="MODIFICATION" beforePath="Z:/scripts/admin_pages/includes/admin_home/searchKeywordsToplist.php" afterPath="Z:/scripts/admin_pages/includes/admin_home/searchKeywordsToplist.php" />
       <change type="MODIFICATION" beforePath="Z:/js/jquery-hashchange-master/docs/javascript/searchdata.js" afterPath="Z:/js/jquery-hashchange-master/docs/javascript/searchdata.js" />
@@ -2442,6 +2447,7 @@
       <change type="MODIFICATION" beforePath="Z:/v1_ext_tables_static+adt.sql" afterPath="Z:/v1_ext_tables_static+adt.sql" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/utils/validate.js" afterPath="Z:/js/tiny_mce-old/utils/validate.js" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce/plugins/compat3x/validate.js" afterPath="Z:/js/tiny_mce/plugins/compat3x/validate.js" />
+      <change type="MODIFICATION" beforePath="Z:/.idea/vcs.xml" afterPath="Z:/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="Z:/js/multiselect/version.txt" afterPath="Z:/js/multiselect/version.txt" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/pages/im/css/view.css" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/pages/im/css/view.css" />
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/pages/im/view.html" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/pages/im/view.html" />
@@ -2455,6 +2461,7 @@
       <change type="MODIFICATION" beforePath="Z:/js/tiny_mce-old/plugins/imagemanager/pages/im/css/window_clearlooks2.css" afterPath="Z:/js/tiny_mce-old/plugins/imagemanager/pages/im/css/window_clearlooks2.css" />
       <change type="MODIFICATION" beforePath="Z:/doc/wizard_form.dat" afterPath="Z:/doc/wizard_form.dat" />
       <change type="MODIFICATION" beforePath="Z:/doc/wizard_form.html" afterPath="Z:/doc/wizard_form.html" />
+      <change type="MODIFICATION" beforePath="Z:/.idea/workspace.xml" afterPath="Z:/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="Z:/scripts/front_pages/includes/js/shipping/xajax.js" afterPath="Z:/scripts/front_pages/includes/js/shipping/xajax.js" />
       <change type="MODIFICATION" beforePath="Z:/scripts/front_pages/includes/js/shipping/xajax.js_zzzz" afterPath="Z:/scripts/front_pages/includes/js/shipping/xajax.js_zzzz" />
       <change type="MODIFICATION" beforePath="Z:/res/fpdf17/font/zapfdingbats.php" afterPath="Z:/res/fpdf17/font/zapfdingbats.php" />
@@ -2483,7 +2490,32 @@
     <favorites_list name="" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="turn_over_per_month.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://Z:/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="211" column="77" selection-start="8138" selection-end="8138" vertical-scroll-proportion="-16.346153" vertical-offset="3162" max-vertical-offset="5287">
+              <folding>
+                <marker date="1395333635379" expanded="true" signature="693:778" placeholder="select crdat..tx_multishop_orders..." />
+                <marker date="1395333635379" expanded="false" signature="1709:1720" placeholder="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="admin_products_search_and_edit.tmpl" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://Z:/templates/admin_products_search_and_edit.tmpl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5270">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+            <state />
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -2539,13 +2571,13 @@
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="" />
+              <option name="myItemId" value="Z" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="" />
+              <option name="myItemId" value="Z" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -2555,7 +2587,7 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="" />
+              <option name="myItemId" value="Z" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -2563,13 +2595,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="pi1" />
+              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="" />
+              <option name="myItemId" value="Z" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -2577,11 +2609,73 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="pi1" />
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Z" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Z:" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="classes" />
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin_pages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Z" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Z:" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin_pages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Z" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Z:" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin_pages" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="includes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="admin_stats_orders" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2593,6 +2687,7 @@
   <component name="PropertiesComponent">
     <property name="options.lastSelected" value="preferences.sourceCode.PHP" />
     <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="FullScreen" value="false" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
@@ -2623,25 +2718,25 @@
     <frame x="-8" y="-8" width="1936" height="972" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973376" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Remote Host" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2550586" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -2661,38 +2756,51 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://Z:/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5287">
+          <folding>
+            <marker date="1395333635379" expanded="true" signature="693:778" placeholder="select crdat..tx_multishop_orders..." />
+            <marker date="1395333635379" expanded="false" signature="1709:1720" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://Z:/pi1/classes/class.mslib_fe.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="463" column="80" selection-start="17387" selection-end="17387" vertical-scroll-proportion="0.31096774" vertical-offset="7630" max-vertical-offset="115226">
-          <folding>
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="SELECT c2z.i..tx_multishop_shipping_methods..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="SELECT * fro..tx_multishop_shipping_methods..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="SELECT c2z.i..tx_multishop_payment_methods..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="SELECT * fro..tx_multishop_payment_methods..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="SELECT * fro..tx_multishop_zones..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="select count..tx_multishop_products_to_categories..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="SELECT count..fe_sessions..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="select * fro..sys_language..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="select pa.op..tx_multishop_products_attributes..." />
-            <marker date="1395334677869" expanded="true" signature="-1:-1" placeholder="SELECT * fro..static_countries..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://Z:/class.tx_multishop_realurl.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="0.021573603" vertical-offset="0" max-vertical-offset="3094">
-          <folding />
-        </state>
+        <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="0.021573603" vertical-offset="0" max-vertical-offset="3094" />
       </provider>
     </entry>
     <entry file="file://Z:/class.tx_multishop_addMiscFieldsToFlexForm.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="0.021573603" vertical-offset="0" max-vertical-offset="788">
+        <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="0.021573603" vertical-offset="0" max-vertical-offset="788" />
+      </provider>
+    </entry>
+    <entry file="file://Z:/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_month.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="211" column="77" selection-start="8138" selection-end="8138" vertical-scroll-proportion="-16.346153" vertical-offset="3162" max-vertical-offset="5287">
+          <folding>
+            <marker date="1395333635379" expanded="true" signature="693:778" placeholder="select crdat..tx_multishop_orders..." />
+            <marker date="1395333635379" expanded="false" signature="1709:1720" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/templates/admin_products_search_and_edit.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5270">
           <folding />
         </state>
+      </provider>
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
       </provider>
     </entry>
   </component>
