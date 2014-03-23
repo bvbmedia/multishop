@@ -1,9 +1,9 @@
 <?php
-if (!defined('TYPO3_MODE')) die ('Access denied.');
-
-$active_shop = mslib_fe::getActiveShop();
-
-$GLOBALS['TSFE']->additionalHeaderData[] ='
+if(!defined('TYPO3_MODE')) {
+	die ('Access denied.');
+}
+$active_shop=mslib_fe::getActiveShop();
+$GLOBALS['TSFE']->additionalHeaderData[]='
 <script language="javascript" type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/tiny_mce/tinymce.min.js"></script>
 <script language="javascript" type="text/javascript">
 tinyMCE.init({
@@ -37,104 +37,103 @@ jQuery(document).ready(function($){
 </script>
 ';
 $shipping_methods=mslib_fe::loadAllShippingMethods();
-if ($_REQUEST['sub']=='update_shipping_method' and $_REQUEST['shipping_method_id']) {
+if($_REQUEST['sub'] == 'update_shipping_method' and $_REQUEST['shipping_method_id']) {
 	// update shipping method
-	$row=mslib_fe::getShippingMethod($_REQUEST['shipping_method_id'],'s.id');
-	if ($row['id']) {	
+	$row=mslib_fe::getShippingMethod($_REQUEST['shipping_method_id'], 's.id');
+	if($row['id']) {
 		$data=unserialize($row['vars']);
-		foreach ($this->post as $key => $value) {
+		foreach($this->post as $key=>$value) {
 			$data[$key]=$this->post[$key];
 		}
 		// now update the baby
 		$updateArray=array();
-		$updateArray['page_uid']	=	$this->post['related_shop_pid'];
-		$updateArray['handling_costs']	=	$this->post['handling_costs'];
-		$updateArray['tax_id']	=	$this->post['tax_id'];
-		$updateArray['vars']	 =	serialize($data);
-		$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$_REQUEST['shipping_method_id'].'\'',$updateArray);
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);		
-		foreach ($this->post['name']	as $key => $value) {
+		$updateArray['page_uid']=$this->post['related_shop_pid'];
+		$updateArray['handling_costs']=$this->post['handling_costs'];
+		$updateArray['tax_id']=$this->post['tax_id'];
+		$updateArray['vars']=serialize($data);
+		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$_REQUEST['shipping_method_id'].'\'', $updateArray);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		foreach($this->post['name'] as $key=>$value) {
 			$updateArray=array();
-			$updateArray['name']						=$this->post['name'][$key];	
-			$updateArray['description']					=$this->post['description'][$key];	
+			$updateArray['name']=$this->post['name'][$key];
+			$updateArray['description']=$this->post['description'][$key];
 			$str="select 1 from tx_multishop_shipping_methods_description where id='".$row['id']."' and language_id='".$key."'";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);		
-			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0)
-			{
-				$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_description', 'id=\''.$row['id'].'\' and language_id=\''.$key.'\'', $updateArray);
-				$res = $GLOBALS['TYPO3_DB']->sql_query($query);			
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_description', 'id=\''.$row['id'].'\' and language_id=\''.$key.'\'', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			} else {
+				$updateArray['id']=$row['id'];
+				$updateArray['language_id']=$key;
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_description', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
-			else
-			{
-				$updateArray['id']				=$row['id'];	
-				$updateArray['language_id']				=$key;					
-				$query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_description', $updateArray);
-				$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
-			}
-		}				
+		}
 		$this->ms['show_main']=1;
 	}
 }
-if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code']) {
-	if ($this->post) {
-		$erno=array();		
-		$check=mslib_fe::getShippingMethod($this->post['custom_code'],'s.code');
-		if ($check['id']) {
+if($_REQUEST['sub'] == 'add_shipping_method' and $_REQUEST['shipping_method_code']) {
+	if($this->post) {
+		$erno=array();
+		$check=mslib_fe::getShippingMethod($this->post['custom_code'], 's.code');
+		if($check['id']) {
 			$erno[]='<li>Code already in use</li>';
 		}
-		if (is_array($erno) and count($erno) > 0) {
+		if(is_array($erno) and count($erno) > 0) {
 			$content.='<div class="error_msg">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach ($erno as $item) {
+			foreach($erno as $item) {
 				$content.='<li>'.$item.'</li>';
 			}
 			$content.='</ul>';
 			$content.='</div>';
-		} else {	
+		} else {
 			// save shipping method
-			$insertArray=array();	
-			$insertArray['code']			=	$this->post['custom_code'];
-			$insertArray['handling_costs']	=	$this->post['handling_costs'];
-			$insertArray['tax_id']			=	$this->post['tax_id'];
-			$insertArray['date']			=	time();
-			$insertArray['status']			=	1;
-			$insertArray['page_uid']		=	$this->post['related_shop_pid'];
-			$insertArray['provider']		=	$_REQUEST['shipping_method_code'];
-			$insertArray['vars']			=	serialize($this->post);
-			$insertArray['handling_costs']	=	$this->post['handling_costs'];
-			$query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
-			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
-			if ($res) {
+			$insertArray=array();
+			$insertArray['code']=$this->post['custom_code'];
+			$insertArray['handling_costs']=$this->post['handling_costs'];
+			$insertArray['tax_id']=$this->post['tax_id'];
+			$insertArray['date']=time();
+			$insertArray['status']=1;
+			$insertArray['page_uid']=$this->post['related_shop_pid'];
+			$insertArray['provider']=$_REQUEST['shipping_method_code'];
+			$insertArray['vars']=serialize($this->post);
+			$insertArray['handling_costs']=$this->post['handling_costs'];
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if($res) {
 				$id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-				foreach ($this->post['name']	as $key => $value) {
+				foreach($this->post['name'] as $key=>$value) {
 					$updateArray=array();
-					$updateArray['name']						=$this->post['name'][$key];	
-					$updateArray['description']					=$this->post['description'][$key];	
+					$updateArray['name']=$this->post['name'][$key];
+					$updateArray['description']=$this->post['description'][$key];
 					$str="select 1 from tx_multishop_shipping_methods_description where id='".$id."' and language_id='".$key."'";
-					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);		
-					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
-						$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_description', 'id=\''.$id.'\' and language_id=\''.$key.'\'', $updateArray);
-						$res = $GLOBALS['TYPO3_DB']->sql_query($query);			
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_description', 'id=\''.$id.'\' and language_id=\''.$key.'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					} else {
-						$updateArray['id']				=$id;	
-						$updateArray['language_id']		=$key;					
-						$query = $GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_description', $updateArray);
-						$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
+						$updateArray['id']=$id;
+						$updateArray['language_id']=$key;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_description', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
-				}				
+				}
 				$this->ms['show_main']=1;
-			}	
+			}
 		}
 	}
-	if ($erno or !$this->post) {
+	if($erno or !$this->post) {
 		$shipping_method=$shipping_methods[$_REQUEST['shipping_method_code']];
-		$tmpcontent.='<form id="add_payment_form" action="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
-		foreach ($this->languages as $key => $language) {
+		$tmpcontent.='<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
+		foreach($this->languages as $key=>$language) {
 			$tmpcontent.='
 				<div class="account-field">
 				<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
-				if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) $tmpcontent	.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-				$tmpcontent	.=''.$language['title'].'
+			if($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
+				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
+			}
+			$tmpcontent.=''.$language['title'].'
 				</div>	
 				<div class="account-field">
 					<label for="name">'.$this->pi_getLL('admin_name').'</label>
@@ -144,30 +143,26 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 					<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
 					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>			
 				</div>		
-				';		
-		}		
-		$tmpcontent .='
+				';
+		}
+		$tmpcontent.='
 		<div class="account-field">
 			<label for="custom_code">'.$this->pi_getLL('code').'</label>
 			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($_REQUEST['custom_code']).'" />
 		</div>';
-		
-		if (count($active_shop) > 1) {
+		if(count($active_shop) > 1) {
 			$tmpcontent.='
 					<div class="account-field">
 						<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 						<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked"/>&nbsp;'.$this->pi_getLL('relate_shipping_to_all_shop', 'All shop').'</span>';
-						
-						foreach ($active_shop as $pageinfo) {
-							$tmpcontent .= '<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($this->shop_pid==$pageinfo['puid']) ? ' checked="checked"' : '').' />&nbsp;'.$pageinfo['title'].'</span>';
-						}
-						
-					$tmpcontent .= '
+			foreach($active_shop as $pageinfo) {
+				$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($this->shop_pid == $pageinfo['puid']) ? ' checked="checked"' : '').' />&nbsp;'.$pageinfo['title'].'</span>';
+			}
+			$tmpcontent.='
 					</div>';
 		} else {
 			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
 		}
-		
 		$tmpcontent.='
 		<div class="account-field">
 			<label>'.$this->pi_getLL('handling_costs').'</label>
@@ -180,18 +175,15 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 		<div class="account-field">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
 		<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
-	
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	
-		while(($tax_group = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id'])?'selected':'').'>'.htmlspecialchars($tax_group['name']).'</option>';
+		while(($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id'] == $row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 		}
-	
-		$tmpcontent.='	
+		$tmpcontent.='
 		</select>
 		</div>';
-		$tmpcontent.=mslib_fe::parseShippingMethodEditForm($shipping_method,$this->post);
+		$tmpcontent.=mslib_fe::parseShippingMethodEditForm($shipping_method, $this->post);
 		$tmpcontent.='
 		<div class="account-field">
 			<label>&nbsp;</label>
@@ -208,7 +200,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 				
 				if (current_value > 0) {
 					if (to_include_vat) {
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid . ',2002','&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
+						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     						if (json && json.price_including_tax) {
 								var incl_tax_crop = decimalCrop(json.price_including_tax);
 								
@@ -222,7 +214,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 						o.parent().next().next().first().children().val(original_val);
 						
 					} else {
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid . ',2002','&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
+						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     						if (json && json.price_excluding_tax) {
 								var excl_tax_crop = decimalCrop(json.price_excluding_tax);
 								
@@ -305,29 +297,31 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 				 });							
 			});
 		</script>';
-		$content.=mslib_fe::returnBoxedHTML($shipping_method['name'],$tmpcontent);
+		$content.=mslib_fe::returnBoxedHTML($shipping_method['name'], $tmpcontent);
 		$tmpcontent='';
 	}
-} elseif ($this->get['edit']) {
-	$row=mslib_fe::getShippingMethod($_REQUEST['shipping_method_id'],'s.id');	
+} elseif($this->get['edit']) {
+	$row=mslib_fe::getShippingMethod($_REQUEST['shipping_method_id'], 's.id');
 	$str="SELECT * from tx_multishop_shipping_methods_description where id='".$row['id']."'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$lngproduct=array();
-	while (($tmprow=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while(($tmprow=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 		$lngproduct[$tmprow['language_id']]=$tmprow;
-	}		
+	}
 	$psp=$shipping_methods[$row['provider']];
-	$inner_content=mslib_fe::parseShippingMethodEditForm($psp,unserialize($row['vars']),1);
+	$inner_content=mslib_fe::parseShippingMethodEditForm($psp, unserialize($row['vars']), 1);
 	$tmpcontent.='
-	<form id="add_payment_form" action="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+	<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 	<input name="sub" type="hidden" value="update_shipping_method" />
 	<input name="shipping_method_id" type="hidden" value="'.$row['id'].'" />';
-	foreach ($this->languages as $key => $language) {
+	foreach($this->languages as $key=>$language) {
 		$tmpcontent.='
 			<div class="account-field">
 			<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) $tmpcontent	.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			$tmpcontent	.=''.$language['title'].'	
+		if($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
+			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
+		}
+		$tmpcontent.=''.$language['title'].'
 			</div>	
 			<div class="account-field">
 				<label for="name">'.$this->pi_getLL('admin_name').'</label>
@@ -336,37 +330,31 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 			<div class="account-field">
 				<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
 				<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>			
-			</div>';		
+			</div>';
 	}
-
-	$cost_tax_rate = 0;
-	$data = mslib_fe::getTaxRuleSet($row['tax_id'], $row['handling_costs']);
-	$cost_tax_rate = $data['total_tax_rate'];
-	
-	$cost_tax 			= mslib_fe::taxDecimalCrop(($row['handling_costs']*$cost_tax_rate)/100);
-	
-	$cost_excl_vat_display = mslib_fe::taxDecimalCrop($row['handling_costs'], 2, false);
-	$cost_incl_vat_display = mslib_fe::taxDecimalCrop($row['handling_costs'] + $cost_tax, 2, false);
-
+	$cost_tax_rate=0;
+	$data=mslib_fe::getTaxRuleSet($row['tax_id'], $row['handling_costs']);
+	$cost_tax_rate=$data['total_tax_rate'];
+	$cost_tax=mslib_fe::taxDecimalCrop(($row['handling_costs']*$cost_tax_rate)/100);
+	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($row['handling_costs'], 2, false);
+	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($row['handling_costs']+$cost_tax, 2, false);
 	$tmpcontent.='
 	<div class="account-field">
 		<label>'.$this->pi_getLL('code').'</label>
 		'.$row['code'].'
 	</div>';
-
-	if (count($active_shop) > 1) {
+	if(count($active_shop) > 1) {
 		$tmpcontent.='
 		<div class="account-field">
 		<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
-		<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_shipping_to_all_shop', 'All shop').'</span>';
-		foreach ($active_shop as $pageinfo) {	
-			$tmpcontent .= '<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($row['page_uid']==$pageinfo['puid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
-		}	
-		$tmpcontent .= '</div>';
+		<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid'] == 0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_shipping_to_all_shop', 'All shop').'</span>';
+		foreach($active_shop as $pageinfo) {
+			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($row['page_uid'] == $pageinfo['puid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
+		}
+		$tmpcontent.='</div>';
 	} else {
 		$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
 	}
-
 	$tmpcontent.='
 	<div class="account-field">
 		<label>'.$this->pi_getLL('handling_costs').'</label>
@@ -379,15 +367,12 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 	<div class="account-field">
 	<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
 	<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
-
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-
-	while(($tax_group = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-		$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id'])?'selected':'').'>'.htmlspecialchars($tax_group['name']).'</option>';
+	while(($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+		$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id'] == $row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 	}
-
-	$tmpcontent.='	
+	$tmpcontent.='
 	</select>
 	</div>							
 	'.$inner_content.'
@@ -405,7 +390,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 		
 			if (current_value > 0) {
 				if (to_include_vat) {
-					jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid . ',2002','&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
+					jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     					if (json && json.price_including_tax) {
 							var incl_tax_crop = decimalCrop(json.price_including_tax);
 		
@@ -417,7 +402,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 					// update the hidden excl vat
 					o.parent().next().next().first().children().val(original_val);
 				} else {
-					jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid . ',2002','&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
+					jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     					if (json && json.price_excluding_tax) {
 							var excl_tax_crop = decimalCrop(json.price_excluding_tax);
 		
@@ -480,76 +465,76 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 			});
 		});
 	</script>';
-	$content .= $tmpcontent;
+	$content.=$tmpcontent;
 } else {
-	$this->ms['show_main'] = 1;
+	$this->ms['show_main']=1;
 }
-if ($this->ms['show_main']) {
-	if (is_numeric($this->get['status']) and is_numeric($this->get['shipping_method_id'])) {
+if($this->ms['show_main']) {
+	if(is_numeric($this->get['status']) and is_numeric($this->get['shipping_method_id'])) {
 		$updateArray=array();
-		$updateArray['status']	 =$this->get['status'];
-		$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$this->get['shipping_method_id'].'\'',$updateArray);
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
-	} else if (is_numeric($this->get['status']) and is_numeric($this->get['shipping_method_id'])) {
-		$updateArray=array();
-		$updateArray['status']	 =$this->get['status'];
-		$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$this->get['shipping_method_id'].'\'',$updateArray);
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
+		$updateArray['status']=$this->get['status'];
+		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$this->get['shipping_method_id'].'\'', $updateArray);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+	} else {
+		if(is_numeric($this->get['status']) and is_numeric($this->get['shipping_method_id'])) {
+			$updateArray=array();
+			$updateArray['status']=$this->get['status'];
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$this->get['shipping_method_id'].'\'', $updateArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		}
 	}
-	if (is_numeric($this->get['delete']) and is_numeric($this->get['shipping_method_id'])) {
-		$query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_shipping_methods', 'id=\''.$this->get['shipping_method_id'].'\'');
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
-		$query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_shipping_mappings', 'shipping_method=\''.$this->get['shipping_method_id'].'\'');
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
-		$query = $GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_method_mappings', 'type=\'shipping\' and method_id=\''.$this->get['shipping_method_id'].'\'');
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);	
+	if(is_numeric($this->get['delete']) and is_numeric($this->get['shipping_method_id'])) {
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_shipping_methods', 'id=\''.$this->get['shipping_method_id'].'\'');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_shipping_mappings', 'shipping_method=\''.$this->get['shipping_method_id'].'\'');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_method_mappings', 'type=\'shipping\' and method_id=\''.$this->get['shipping_method_id'].'\'');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 	// shipping method admin system
 	$colspan=4;
-	$str="SELECT *,d.name from tx_multishop_shipping_methods p, tx_multishop_shipping_methods_description d where d.language_id='".$this->sys_language_uid."' and (p.page_uid = '". $this->shop_pid ."' or p.page_uid = '0') and p.id=d.id order by p.sort_order";	
+	$str="SELECT *,d.name from tx_multishop_shipping_methods p, tx_multishop_shipping_methods_description d where d.language_id='".$this->sys_language_uid."' and (p.page_uid = '".$this->shop_pid."' or p.page_uid = '0') and p.id=d.id order by p.sort_order";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$tr_type='even';
-	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+	if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
 		$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
 		$tmpcontent.='<tr>';
-		if (count($active_shop) > 1) {
+		if(count($active_shop) > 1) {
 			$tmpcontent.='<th>'.$this->pi_getLL('shop', 'Shop').'</th>';
 		}
 		$tmpcontent.='<th>'.$this->pi_getLL('shipping_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th></tr>
 		<tbody class="sortable_content">
 		';
-		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+		while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
 			//		$tmpcontent.='<h3>'.$cat['name'].'</h3>';
-			if (!$tr_type or $tr_type=='even') {
+			if(!$tr_type or $tr_type == 'even') {
 				$tr_type='odd';
 			} else {
-				$tr_type='even';		
+				$tr_type='even';
 			}
 			$tmpcontent.='<tr class="'.$tr_type.'" id="multishop_shipping_method_'.$row['id'].'">';
-			
-			if (count($active_shop) > 1) {
-				if ($row['page_uid'] > 0) {
+			if(count($active_shop) > 1) {
+				if($row['page_uid'] > 0) {
 					$tmpcontent.='<td><strong>'.mslib_fe::getShopNameByPageUid($row['page_uid']).'</strong></td>';
 				} else {
 					$tmpcontent.='<td><strong>All</strong></td>';
 				}
 			}
-			
-			$tmpcontent.='<td><strong><a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>				
+			$tmpcontent.='<td><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
 			</strong></td>
 			<td>'.$row['provider'].'</td>
-			<td>'.date("Y-m-d",$row['date']).'</td>
+			<td>'.date("Y-m-d", $row['date']).'</td>
 			<td align="center">';
-			if (!$row['status']) {
-				$tmpcontent.='<span class="admin_status_red" alt="Disable"></span>';								
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';					
+			if(!$row['status']) {
+				$tmpcontent.='<span class="admin_status_red" alt="Disable"></span>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
 			} else {
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';								
-				$tmpcontent.='<span class="admin_status_green" alt="Enable"></span>';					
+				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$tmpcontent.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$tmpcontent.='</td>
 			<td align="center">
-			<a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>
+			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>
 			</td>
 			</tr>';
 		}
@@ -565,7 +550,7 @@ if ($this->ms['show_main']) {
 				cursor:     "move", 
 			//axis:       "y", 
 			update: function(e, ui) { 
-				href = "'.mslib_fe::typolink(',2002','&tx_multishop_pi1[page_section]=method_sortables').'"; 
+				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
 				jQuery(this).sortable("refresh"); 
 				sorted = jQuery(this).sortable("serialize", "id"); 
 				jQuery.ajax({ 
@@ -582,32 +567,32 @@ if ($this->ms['show_main']) {
 	});
 	</script>';
 	$tmpcontent.='<div id="flexible_container"><ul id="admin_shipping_methods_list" style="display:none;">';
-	$innercount=0;	
-	$count=0;	
-	foreach ($shipping_methods as $code => $item) {
+	$innercount=0;
+	$count=0;
+	foreach($shipping_methods as $code=>$item) {
 		$innercount++;
-		$count++;	
-		$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li"><a href="'.mslib_fe::typolink(',2003','&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">';
-		if ($item['image']) {
+		$count++;
+		$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">';
+		if($item['image']) {
 			$tmpcontent.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/shipping/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
 			$tmpcontent.=$item['name'];
 		}
 		$tmpcontent.='</a></div></li>';
-		if ($innercount==3) {
-			$innercount=0;		
+		if($innercount == 3) {
+			$innercount=0;
 		}
 	}
-	if ($innercount > 0) {
-		for ($i=3;$i>$innercount;$i--) {
-			$count++;	
+	if($innercount > 0) {
+		for($i=3; $i > $innercount; $i--) {
+			$count++;
 			$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li">';
-			$tmpcontent.='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->conf['admin_development_company_logo_gray_path'].'" border="0"></span></span><span class="multishop_psp_add"></span></a>';			
-			$tmpcontent.='</div></li>';			
+			$tmpcontent.='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->conf['admin_development_company_logo_gray_path'].'" border="0"></span></span><span class="multishop_psp_add"></span></a>';
+			$tmpcontent.='</div></li>';
 		}
-	}	
+	}
 	$tmpcontent.='</ul></div>';
-	$content.=mslib_fe::returnBoxedHTML(ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_shipping_methods'))),$tmpcontent);
+	$content.=mslib_fe::returnBoxedHTML(ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent);
 	$tmpcontent='';
 	// shipping method admin system eof
 }

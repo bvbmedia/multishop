@@ -1,186 +1,185 @@
 <?php
-if (!defined('TYPO3_MODE')) die ('Access denied.');
-if (!mslib_fe::loggedin()) {
+if(!defined('TYPO3_MODE')) {
+	die ('Access denied.');
+}
+if(!mslib_fe::loggedin()) {
 	exit();
 }
 // load enabled countries to array
 $str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 $qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 $enabled_countries=array();
-while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
+while(($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
 	$enabled_countries[]=$row2;
 }
 // load enabled countries to array eof
-if($this->post){
+if($this->post) {
 	// billing details
-	$user['email']					=$this->post['email'];
-	$user['company']				=$this->post['company'];
-	$user['first_name']				=$this->post['first_name'];
-	$user['middle_name']			=$this->post['middle_name'];
-	$user['last_name']				=$this->post['last_name'];
-	$user['name']					=preg_replace('/\s+/', ' ', $user['first_name'].' '.$user['middle_name'].' '.$user['last_name']);
-	
-	$user['birthday']				=$this->post['birthday'];
-	$user['phone']					=$this->post['telephone'];
-	$user['mobile']					=$this->post['mobile'];			
+	$user['email']=$this->post['email'];
+	$user['company']=$this->post['company'];
+	$user['first_name']=$this->post['first_name'];
+	$user['middle_name']=$this->post['middle_name'];
+	$user['last_name']=$this->post['last_name'];
+	$user['name']=preg_replace('/\s+/', ' ', $user['first_name'].' '.$user['middle_name'].' '.$user['last_name']);
+	$user['birthday']=$this->post['birthday'];
+	$user['phone']=$this->post['telephone'];
+	$user['mobile']=$this->post['mobile'];
 	// fe user table holds integer as value: 0 is male, 1 is female
 	// but in tt_address its varchar: m is male, f is female
-	switch ($this->post['gender']) {
+	switch($this->post['gender']) {
 		case '0':
 		case 'm':
 			$user['gender']='0';
-		break;
+			break;
 		case '1':
 		case 'f':
 			$user['gender']='1';
-		break;
+			break;
 		case '2':
 		case 'c':
 			$user['gender']='2';
-		break;
+			break;
 	}
-	$user['street_name'] = $this->post['street_name'];
-	$user['address_number'] = $this->post['address_number'];
-	$user['address_ext'] = $this->post['address_ext'];
-	$user['address'] = $user['street_name'].' '.$user['address_number'];
-	if ($user['address_ext']) {
+	$user['street_name']=$this->post['street_name'];
+	$user['address_number']=$this->post['address_number'];
+	$user['address_ext']=$this->post['address_ext'];
+	$user['address']=$user['street_name'].' '.$user['address_number'];
+	if($user['address_ext']) {
 		$user['address'].='-'.$user['address_ext'];
 	}
-	$user['zip'] = $this->post['zip'];
-	$user['city'] = $this->post['city'];
-	$user['country'] = $this->post['country'];
-	$user['email'] = $this->post['email'];
-	$user['telephone'] = $this->post['telephone'];
-	$date_of_birth = explode("-",$user['birthday']);
+	$user['zip']=$this->post['zip'];
+	$user['city']=$this->post['city'];
+	$user['country']=$this->post['country'];
+	$user['email']=$this->post['email'];
+	$user['telephone']=$this->post['telephone'];
+	$date_of_birth=explode("-", $user['birthday']);
 	// billing details eof	
 	// delivery details	
-	if ($this->post['delivery_first_name']) {
+	if($this->post['delivery_first_name']) {
 		$this->post['different_delivery_address']=1;
 	}
-	if (!$this->post['different_delivery_address']) {
-		$user['delivery_email'] = $this->post['email'];
-		$user['delivery_company'] = $this->post['company'];
-		$user['delivery_first_name'] = $this->post['first_name'];
-		$user['delivery_middle_name'] = $this->post['middle_name'];
-		$user['delivery_last_name'] = $this->post['last_name'];
-		$user['delivery_name'] = $user['delivery_first_name'].' '.$user['delivery_middle_name'].' '.$user['delivery_last_name'];
-		$user['delivery_name'] = preg_replace('/\s+/', ' ', $user['delivery_name']);			
-		$user['delivery_telephone'] = $this->post['telephone'];
-		$user['delivery_mobile'] = $this->post['mobile'];			
-		$user['delivery_gender'] = $this->post['gender'];
+	if(!$this->post['different_delivery_address']) {
+		$user['delivery_email']=$this->post['email'];
+		$user['delivery_company']=$this->post['company'];
+		$user['delivery_first_name']=$this->post['first_name'];
+		$user['delivery_middle_name']=$this->post['middle_name'];
+		$user['delivery_last_name']=$this->post['last_name'];
+		$user['delivery_name']=$user['delivery_first_name'].' '.$user['delivery_middle_name'].' '.$user['delivery_last_name'];
+		$user['delivery_name']=preg_replace('/\s+/', ' ', $user['delivery_name']);
+		$user['delivery_telephone']=$this->post['telephone'];
+		$user['delivery_mobile']=$this->post['mobile'];
+		$user['delivery_gender']=$this->post['gender'];
 		// fe user table holds integer as value: 0 is male, 1 is female
 		// but in tt_address its varchar: m is male, f is female
-		switch ($user['delivery_gender']) {
+		switch($user['delivery_gender']) {
 			case '0':
 			case 'm':
 				$user['delivery_gender']='m';
-			break;
+				break;
 			case '1':
 			case 'f':
 				$user['delivery_gender']='f';
-			break;
+				break;
 			case '2':
 			case 'c':
 				$user['delivery_gender']='c';
-			break;
-		}		
-		$user['delivery_street_name'] = $this->post['street_name'];
-		$user['delivery_address_number'] = $this->post['address_number'];
-		$user['delivery_address_ext'] = $this->post['address_ext'];
-		$user['delivery_address'] = $user['delivery_street_name'].' '.$user['delivery_address_number'];
-		if ($user['delivery_address_ext']) {
-			$user['delivery_address'] .= '-'.$user['address_ext'];
-		}	
-		$user['delivery_zip'] = $this->post['zip'];
-		$user['delivery_city'] = $this->post['city'];
-		$user['delivery_country'] = $this->post['country'];
-	} else {
-		$user['delivery_email'] = $this->post['delivery_email'];
-		$user['delivery_company'] = $this->post['delivery_company'];
-		$user['delivery_first_name'] = $this->post['delivery_first_name'];
-		$user['delivery_middle_name'] = $this->post['delivery_middle_name'];
-		$user['delivery_last_name'] = $this->post['delivery_last_name'];
-		$user['delivery_name'] = $user['delivery_first_name'].' '.$user['delivery_middle_name'].' '.$user['delivery_last_name'];
-		$user['delivery_name'] = preg_replace('/\s+/', ' ', $user['delivery_name']);		
-		$user['delivery_telephone'] = $this->post['delivery_telephone'];
-		$user['delivery_mobile'] = $this->post['delivery_mobile'];			
-		$user['delivery_gender'] = $this->post['delivery_gender'];
-		// fe user table holds integer as value: 0 is male, 1 is female
-		// but in tt_address its varchar: m is male, f is female
-		switch ($user['delivery_gender']) {
-			case '0':
-			case 'm':
-				$user['delivery_gender']='m';
-			break;
-			case '1':
-			case 'f':
-				$user['delivery_gender']='f';
-			break;
-			case '2':
-			case 'c':
-				$user['delivery_gender']='c';
-			break;
-		}			
-		$user['delivery_street_name'] = $this->post['delivery_street_name'];
-		$user['delivery_address_number'] = $this->post['delivery_address_number'];
-		$user['delivery_address_ext'] = $this->post['delivery_address_ext'];
-		$user['delivery_address'] = $user['delivery_street_name'].' '.$user['delivery_address_number'];
-		if ($user['delivery_address_ext']) {
-			$user['delivery_address'].='-'.$user['address_ext'];
-		}		
-		
-		$user['delivery_zip'] = $this->post['delivery_zip'];
-		$user['delivery_city'] = $this->post['delivery_city'];
-		$user['delivery_country'] = $this->post['delivery_country'];
-	}
-	if($this->post){
-//		$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
-		$address = $user;
-		$insertArray=array();	
-		$insertArray['company'] = $address['company'];
-		$insertArray['name'] = $address['name'];
-		$insertArray['first_name'] = $address['first_name'];
-		$insertArray['middle_name'] = $address['middle_name'];
-		$insertArray['last_name'] = $address['last_name'];
-		$insertArray['email'] = $address['email'];
-		$insertArray['street_name'] = $address['street_name'];
-		$insertArray['address_number'] = $address['address_number'];
-		$insertArray['address_ext'] = $address['address_ext'];
-		$insertArray['address'] = preg_replace('/\s+/', ' ', $insertArray['street_name'].' '.$insertArray['address_number'].' '.$insertArray['address_ext']);		
-		$insertArray['mobile'] = $address['mobile'];
-		$insertArray['zip'] = $address['zip'];
-		$insertArray['telephone'] = $address['telephone'];
-		$insertArray['city'] = $address['city'];
-		$insertArray['country'] = $address['country'];
-		if ($this->post['password'] and ($this->post['repassword']==$this->post['repassword'])) {
-			$insertArray['password']  		=	mslib_befe::getHashedPassword($this->post['password']);
+				break;
 		}
-		$insertArray['gender'] = $address['gender'];	
-		$insertArray['date_of_birth'] = $timestamp = strtotime($date_of_birth[2] .'-'.$date_of_birth[1].'-'.$date_of_birth[0]);	
-		$query = $GLOBALS['TYPO3_DB']->UPDATEquery('fe_users','uid = ' . $GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
-		$res = $GLOBALS['TYPO3_DB']->sql_query($query);
-		
+		$user['delivery_street_name']=$this->post['street_name'];
+		$user['delivery_address_number']=$this->post['address_number'];
+		$user['delivery_address_ext']=$this->post['address_ext'];
+		$user['delivery_address']=$user['delivery_street_name'].' '.$user['delivery_address_number'];
+		if($user['delivery_address_ext']) {
+			$user['delivery_address'].='-'.$user['address_ext'];
+		}
+		$user['delivery_zip']=$this->post['zip'];
+		$user['delivery_city']=$this->post['city'];
+		$user['delivery_country']=$this->post['country'];
+	} else {
+		$user['delivery_email']=$this->post['delivery_email'];
+		$user['delivery_company']=$this->post['delivery_company'];
+		$user['delivery_first_name']=$this->post['delivery_first_name'];
+		$user['delivery_middle_name']=$this->post['delivery_middle_name'];
+		$user['delivery_last_name']=$this->post['delivery_last_name'];
+		$user['delivery_name']=$user['delivery_first_name'].' '.$user['delivery_middle_name'].' '.$user['delivery_last_name'];
+		$user['delivery_name']=preg_replace('/\s+/', ' ', $user['delivery_name']);
+		$user['delivery_telephone']=$this->post['delivery_telephone'];
+		$user['delivery_mobile']=$this->post['delivery_mobile'];
+		$user['delivery_gender']=$this->post['delivery_gender'];
+		// fe user table holds integer as value: 0 is male, 1 is female
+		// but in tt_address its varchar: m is male, f is female
+		switch($user['delivery_gender']) {
+			case '0':
+			case 'm':
+				$user['delivery_gender']='m';
+				break;
+			case '1':
+			case 'f':
+				$user['delivery_gender']='f';
+				break;
+			case '2':
+			case 'c':
+				$user['delivery_gender']='c';
+				break;
+		}
+		$user['delivery_street_name']=$this->post['delivery_street_name'];
+		$user['delivery_address_number']=$this->post['delivery_address_number'];
+		$user['delivery_address_ext']=$this->post['delivery_address_ext'];
+		$user['delivery_address']=$user['delivery_street_name'].' '.$user['delivery_address_number'];
+		if($user['delivery_address_ext']) {
+			$user['delivery_address'].='-'.$user['address_ext'];
+		}
+		$user['delivery_zip']=$this->post['delivery_zip'];
+		$user['delivery_city']=$this->post['delivery_city'];
+		$user['delivery_country']=$this->post['delivery_country'];
+	}
+	if($this->post) {
+//		$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
+		$address=$user;
+		$insertArray=array();
+		$insertArray['company']=$address['company'];
+		$insertArray['name']=$address['name'];
+		$insertArray['first_name']=$address['first_name'];
+		$insertArray['middle_name']=$address['middle_name'];
+		$insertArray['last_name']=$address['last_name'];
+		$insertArray['email']=$address['email'];
+		$insertArray['street_name']=$address['street_name'];
+		$insertArray['address_number']=$address['address_number'];
+		$insertArray['address_ext']=$address['address_ext'];
+		$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['street_name'].' '.$insertArray['address_number'].' '.$insertArray['address_ext']);
+		$insertArray['mobile']=$address['mobile'];
+		$insertArray['zip']=$address['zip'];
+		$insertArray['telephone']=$address['telephone'];
+		$insertArray['city']=$address['city'];
+		$insertArray['country']=$address['country'];
+		if($this->post['password'] and ($this->post['repassword'] == $this->post['repassword'])) {
+			$insertArray['password']=mslib_befe::getHashedPassword($this->post['password']);
+		}
+		$insertArray['gender']=$address['gender'];
+		$insertArray['date_of_birth']=$timestamp=strtotime($date_of_birth[2].'-'.$date_of_birth[1].'-'.$date_of_birth[0]);
+		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid = '.$GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// add / update billing tt_address
 		$insertTTArray=array();
-		$insertTTArray['company']=$address['company'];		
+		$insertTTArray['company']=$address['company'];
 		$insertTTArray['name']=$address['name'];
 		$insertTTArray['gender']=$address['gender'];
 		// fe user table holds integer as value: 0 is male, 1 is female
 		// but in tt_address its varchar: m is male, f is female
-		switch ($insertTTArray['gender']) {
+		switch($insertTTArray['gender']) {
 			case '0':
 			case 'm':
 				$insertTTArray['gender']='m';
-			break;
+				break;
 			case '1':
 			case 'f':
 				$insertTTArray['gender']='f';
-			break;
+				break;
 			case '2':
 			case 'c':
 				$insertTTArray['gender']='c';
-			break;
-		}				
+				break;
+		}
 		$insertTTArray['first_name']=$address['first_name'];
 		$insertTTArray['middle_name']=$address['middle_name'];
 		$insertTTArray['last_name']=$address['last_name'];
@@ -195,24 +194,23 @@ if($this->post){
 		$insertTTArray['address']=$address['address'];
 		$insertTTArray['address_number']=$address['address_number'];
 		$insertTTArray['address_ext']=$address['address_ext'];
-		
-		$sql_tt_address 	= "select uid from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='billing' and deleted=0";
-		$qry_tt_address 	= $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
-		$rows_tt_address	= $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
-		if ($rows_tt_address) {
-			$row_tt_address	= $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);		
+		$sql_tt_address="select uid from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='billing' and deleted=0";
+		$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
+		$rows_tt_address=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
+		if($rows_tt_address) {
+			$row_tt_address=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
 			$tt_address_id=$row_tt_address['uid'];
-			$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address','uid = ' . $tt_address_id, $insertTTArray);
-			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
-		} else {			
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid = '.$tt_address_id, $insertTTArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		} else {
 			$insertTTArray['tstamp']=time();
-			$insertTTArray['tx_multishop_customer_id']=$GLOBALS["TSFE"]->fe_user->user['uid'];			
+			$insertTTArray['tx_multishop_customer_id']=$GLOBALS["TSFE"]->fe_user->user['uid'];
 			$insertTTArray['pid']=$this->conf['fe_customer_pid'];
-			$insertTTArray['page_uid']=$this->shop_pid;			
-			$insertTTArray['tx_multishop_default']='1';			
+			$insertTTArray['page_uid']=$this->shop_pid;
+			$insertTTArray['tx_multishop_default']='1';
 			$insertTTArray['tx_multishop_address_type']='billing';
-			$query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address',$insertTTArray);
-			$res = $GLOBALS['TYPO3_DB']->sql_query($query);			
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertTTArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 		// add / update billing tt_address eof
 		// add / update delivery tt_address
@@ -222,20 +220,20 @@ if($this->post){
 		$insertTTArray['gender']=$address['delivery_gender'];
 		// fe user table holds integer as value: 0 is male, 1 is female
 		// but in tt_address its varchar: m is male, f is female
-		switch ($insertTTArray['gender']) {
+		switch($insertTTArray['gender']) {
 			case '0':
 			case 'm':
 				$insertTTArray['gender']='m';
-			break;
+				break;
 			case '1':
 			case 'f':
 				$insertTTArray['gender']='f';
-			break;
+				break;
 			case '2':
 			case 'c':
 				$insertTTArray['gender']='c';
-			break;
-		}				
+				break;
+		}
 		$insertTTArray['first_name']=$address['delivery_first_name'];
 		$insertTTArray['middle_name']=$address['delivery_middle_name'];
 		$insertTTArray['last_name']=$address['delivery_last_name'];
@@ -250,23 +248,22 @@ if($this->post){
 		$insertTTArray['address']=$address['delivery_address'];
 		$insertTTArray['address_number']=$address['delivery_address_number'];
 		$insertTTArray['address_ext']=$address['delivery_address_ext'];
-
-		$sql_tt_address 	= "select uid from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='delivery' and deleted=0";
-		$qry_tt_address 	= $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
-		$rows_tt_address	= $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
-		if ($rows_tt_address) {
-			$row_tt_address	= $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);		
+		$sql_tt_address="select uid from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='delivery' and deleted=0";
+		$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
+		$rows_tt_address=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
+		if($rows_tt_address) {
+			$row_tt_address=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
 			$tt_address_id=$row_tt_address['uid'];
-			$query = $GLOBALS['TYPO3_DB']->UPDATEquery('tt_address','uid = ' . $tt_address_id, $insertTTArray);
-			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'uid = '.$tt_address_id, $insertTTArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		} else {
-			$insertTTArray['tstamp']=time();			
-			$insertTTArray['tx_multishop_customer_id']=$GLOBALS["TSFE"]->fe_user->user['uid'];			
+			$insertTTArray['tstamp']=time();
+			$insertTTArray['tx_multishop_customer_id']=$GLOBALS["TSFE"]->fe_user->user['uid'];
 			$insertTTArray['pid']=$this->conf['fe_customer_pid'];
 			$insertTTArray['page_uid']=$this->shop_pid;
 			$insertTTArray['tx_multishop_address_type']='delivery';
-			$query = $GLOBALS['TYPO3_DB']->INSERTquery('tt_address',$insertTTArray);
-			$res = $GLOBALS['TYPO3_DB']->sql_query($query);			
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertTTArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 		// add / update delivery tt_address eof
 		$content.=$this->pi_getLL('your_details_has_been_saved').'.';
@@ -275,67 +272,66 @@ if($this->post){
 } else {
 	// begin form
 	// load enabled countries to array
-	if (mslib_fe::loggedin()) {
-		$user = array();
-		foreach ($GLOBALS["TSFE"]->fe_user->user as $key=>$val) {
-			$user[$key] = $val;
+	if(mslib_fe::loggedin()) {
+		$user=array();
+		foreach($GLOBALS["TSFE"]->fe_user->user as $key=>$val) {
+			$user[$key]=$val;
 		}
-		$user['date_of_birth'] = strftime("%x %X",  $user['date_of_birth']);
-		$user['gender'] = $user['gender'] == 0 ? 'm' : 'f';
-	
-		// load delivery details	
-		$sql_tt_address 	= "select * from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='delivery' and deleted=0 order by uid desc limit 1";
-		$qry_tt_address 	= $GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
-		$rows_tt_address	= $GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
-		if ($rows_tt_address) {
-			$row_tt_address	= $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);		
-			$user['delivery_email']					=$row_tt_address['email'];
-			$user['delivery_company']				=$row_tt_address['company'];
-			$user['delivery_first_name']			=$row_tt_address['first_name'];
-			$user['delivery_middle_name']			=$row_tt_address['middle_name'];
-			$user['delivery_last_name']				=$row_tt_address['last_name'];
-			$user['delivery_name']					=$row_tt_address['name'];
-			$user['delivery_telephone']				=$row_tt_address['phone'];
-			$user['delivery_mobile']				=$row_tt_address['mobile'];			
-			$user['delivery_gender']				=$row_tt_address['gender'];
-			$user['delivery_street_name']			=$row_tt_address['street_name'];
-			$user['delivery_address']				=$row_tt_address['address'];
-			$user['delivery_address_number']		=$row_tt_address['address_number'];
-			$user['delivery_address_ext']			=$row_tt_address['address_ext'];
-			$user['delivery_zip']					=$row_tt_address['zip'];
-			$user['delivery_city']					=$row_tt_address['city'];
-			$user['delivery_country']				=$row_tt_address['country'];
+		$user['date_of_birth']=strftime("%x %X", $user['date_of_birth']);
+		$user['gender']=$user['gender'] == 0 ? 'm' : 'f';
+		// load delivery details
+		$sql_tt_address="select * from tt_address where tx_multishop_customer_id='".$GLOBALS["TSFE"]->fe_user->user['uid']."' and tx_multishop_address_type='delivery' and deleted=0 order by uid desc limit 1";
+		$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
+		$rows_tt_address=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address);
+		if($rows_tt_address) {
+			$row_tt_address=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
+			$user['delivery_email']=$row_tt_address['email'];
+			$user['delivery_company']=$row_tt_address['company'];
+			$user['delivery_first_name']=$row_tt_address['first_name'];
+			$user['delivery_middle_name']=$row_tt_address['middle_name'];
+			$user['delivery_last_name']=$row_tt_address['last_name'];
+			$user['delivery_name']=$row_tt_address['name'];
+			$user['delivery_telephone']=$row_tt_address['phone'];
+			$user['delivery_mobile']=$row_tt_address['mobile'];
+			$user['delivery_gender']=$row_tt_address['gender'];
+			$user['delivery_street_name']=$row_tt_address['street_name'];
+			$user['delivery_address']=$row_tt_address['address'];
+			$user['delivery_address_number']=$row_tt_address['address_number'];
+			$user['delivery_address_ext']=$row_tt_address['address_ext'];
+			$user['delivery_zip']=$row_tt_address['zip'];
+			$user['delivery_city']=$row_tt_address['city'];
+			$user['delivery_country']=$row_tt_address['country'];
 		} else {
 			// add default
-			$user['delivery_email']					=$user['email'];
-			$user['delivery_company']				=$user['company'];
-			$user['delivery_first_name']			=$user['first_name'];
-			$user['delivery_middle_name']			=$user['middle_name'];
-			$user['delivery_last_name']				=$user['last_name'];
-			$user['delivery_name']					=$user['name'];
-			$user['delivery_telephone']				=$user['telephone'];
-			$user['delivery_mobile']				=$user['mobile'];			
-			$user['delivery_gender']				=$user['gender'];
-			$user['delivery_street_name']			=$user['street_name'];
-			$user['delivery_address']				=$user['address'];
-			$user['delivery_address_number']		=$user['address_number'];
-			$user['delivery_address_ext']			=$user['address_ext'];
-			$user['delivery_zip']					=$user['zip'];
-			$user['delivery_city']					=$user['city'];
-			$user['delivery_country']				=$user['country'];		
+			$user['delivery_email']=$user['email'];
+			$user['delivery_company']=$user['company'];
+			$user['delivery_first_name']=$user['first_name'];
+			$user['delivery_middle_name']=$user['middle_name'];
+			$user['delivery_last_name']=$user['last_name'];
+			$user['delivery_name']=$user['name'];
+			$user['delivery_telephone']=$user['telephone'];
+			$user['delivery_mobile']=$user['mobile'];
+			$user['delivery_gender']=$user['gender'];
+			$user['delivery_street_name']=$user['street_name'];
+			$user['delivery_address']=$user['address'];
+			$user['delivery_address_number']=$user['address_number'];
+			$user['delivery_address_ext']=$user['address_ext'];
+			$user['delivery_zip']=$user['zip'];
+			$user['delivery_city']=$user['city'];
+			$user['delivery_country']=$user['country'];
 		}
 	}
 	//print_r($user);
 	// load enabled countries to array eof
-	$regex = "/^[^\\\W][a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\@[a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\.[a-zA-Z]{2,4}$/";
-	$regex_for_character = "/[^0-9]$/";
-	$validate_password = '';
-	$GLOBALS['TSFE']->additionalHeaderData[] = '
+	$regex="/^[^\\\W][a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\@[a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\.[a-zA-Z]{2,4}$/";
+	$regex_for_character="/[^0-9]$/";
+	$validate_password='';
+	$GLOBALS['TSFE']->additionalHeaderData[]='
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
 				jQuery(\'#checkout\').h5Validate();
 			
-				'.($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']?'
+				'.($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY'] ? '
 				jQuery("#birthday_visitor").datepicker({ 
 					dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
 					altField: "#birthday",
@@ -353,7 +349,7 @@ if($this->post){
 					changeYear: true,
 					showOtherMonths: true,  
 					yearRange: "'.(date("Y")-100).':'.date("Y").'"
-				});':'').'
+				});' : '').'
 			}); //end of first load
 		</script>';
 	$content.='<div class="error_msg" style="display:none">';
@@ -369,13 +365,13 @@ if($this->post){
 	<div id="input-gender" class="account-field">
 		<span id="ValidRadio" class="InputGroup">
 			<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).'*</label>
-			<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio" '.(($user['gender']=='m')?'checked':'').' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'">
+			<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio" '.(($user['gender'] == 'm') ? 'checked' : '').' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'">
 			<label class="account-male">'.ucfirst($this->pi_getLL('mr')).'</label>
-			<input type="radio" name="gender" value="f" class="InputGroup" id="radio2" '.(($user['gender']=='f')?'checked':'').'>
+			<input type="radio" name="gender" value="f" class="InputGroup" id="radio2" '.(($user['gender'] == 'f') ? 'checked' : '').'>
 			<label class="account-female">'.ucfirst($this->pi_getLL('mrs')).'</label>
 			<div id="invalid-gender" class="error-space" style="display:none"></div>
 		</span>';
-	if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {	
+	if($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
 		$content.='<label for="birthday" id="account-birthday">'.ucfirst($this->pi_getLL('birthday')).'*</label>
 			<input type="text" name="birthday_visitor" class="birthday" id="birthday_visitor" value="'.htmlspecialchars($user['date_of_birth']).'" >
 			<input type="hidden" name="birthday" class="birthday" id="birthday" value="'.htmlspecialchars($user['date_of_birth']).'" >';
@@ -417,44 +413,40 @@ if($this->post){
 		<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
 		<input type="text" name="city" id="city" class="city" value="'.htmlspecialchars($user['city']).'" required="required" data-h5-errorid="invalid-city" title="'.$this->pi_getLL('city_is_required').'"><div id="invalid-city" class="error-space" style="display:none"></div>
 	</div>';
-	
 	// load countries
-	if (count($enabled_countries) == 1) {
+	if(count($enabled_countries) == 1) {
 		$row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
 		$content.='<input name="country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 		$content.='<input name="delivery_country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 	} else {
-		foreach ($enabled_countries as $country) {
-			$tmpcontent_con.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['country'])==t3lib_div::strtolower($country['cn_short_en']))?'selected':'').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang,$country['cn_short_en'])).'</option>';
-			$tmpcontent_con_delivery.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['delivery_country'])==t3lib_div::strtolower($country['cn_short_en']))?'selected':'').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang,$country['cn_short_en'])).'</option>';
+		foreach($enabled_countries as $country) {
+			$tmpcontent_con.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['country']) == t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			$tmpcontent_con_delivery.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['delivery_country']) == t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 		}
-		if ($tmpcontent_con) {
+		if($tmpcontent_con) {
 			$content.='
 			<div id="input-country" class="account-field">
 			<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
-			<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="' . $this->pi_getLL('country_is_required') . '">
+			<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 			<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 			'.$tmpcontent_con.'
 			</select>
 			<div id="invalid-country" class="error-space" style="display:none"></div>
 			</div>';
-		}			
-	}
-	// country eof
-	
-	$telephone_validation 	= '';
-	$mobile_validation 		= '';
-	if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
-		if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
-			$telephone_validation 	= ' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'"';
-			$mobile_validation 		= ' required="required" data-h5-errorid="invalid-mobile" title="'.$this->pi_getLL('mobile_must_be_x_digits_long').'"';
-	
-		} else {
-			$telephone_validation 	= ' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'" pattern=".{' . $this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER'] . '}"';
-			$mobile_validation 		= ' required="required" data-h5-errorid="invalid-mobile" title="'.$this->pi_getLL('mobile_must_be_x_digits_long').'"';
 		}
 	}
-	
+	// country eof
+	$telephone_validation='';
+	$mobile_validation='';
+	if($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
+		if(!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
+			$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'"';
+			$mobile_validation=' required="required" data-h5-errorid="invalid-mobile" title="'.$this->pi_getLL('mobile_must_be_x_digits_long').'"';
+		} else {
+			$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'" pattern=".{'.$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER'].'}"';
+			$mobile_validation=' required="required" data-h5-errorid="invalid-mobile" title="'.$this->pi_getLL('mobile_must_be_x_digits_long').'"';
+		}
+	}
 	$content.='
 	<div id="input-email" class="account-field">
 		<label for="email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'*</label>
@@ -471,14 +463,14 @@ if($this->post){
 	<div class="mb10" style="clear:both"></div>
 	</div>
 	</div>';
-	$tmpcontent .='
+	$tmpcontent.='
 	<div class="msFrontDeliveryDetails"> 
 	<div id="input-dgender" class="account-field">
 		<span id="delivery_ValidRadio" class="delivery_InputGroup">
 			<label for="delivery_gender" id="account-gender">'.ucfirst($this->pi_getLL('title')).'*</label>
-			<input type="radio" class="delivery_InputGroup" name="delivery_gender" value="m" class="account-gender-radio" id="delivery_radio" '.(($user['delivery_gender']=='m')?'checked':'').'>
+			<input type="radio" class="delivery_InputGroup" name="delivery_gender" value="m" class="account-gender-radio" id="delivery_radio" '.(($user['delivery_gender'] == 'm') ? 'checked' : '').'>
 			<label class="account-male">'.ucfirst($this->pi_getLL('mr')).'</label>
-			<input type="radio" name="delivery_gender" value="f" class="delivery_InputGroup" id="radio2" '.(($user['delivery_gender']=='f')?'checked':'').'>
+			<input type="radio" name="delivery_gender" value="f" class="delivery_InputGroup" id="radio2" '.(($user['delivery_gender'] == 'f') ? 'checked' : '').'>
 			<label class="account-female">'.ucfirst($this->pi_getLL('mrs')).'</label>
 		</span>
 		<div id="invalid-delivery_gender" class="error-space" style="display:none"></div>
@@ -519,9 +511,9 @@ if($this->post){
 		<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'*</label>
 		<input type="text" name="delivery_city" id="delivery_city" class="delivery_city" value="'.htmlspecialchars($user['delivery_city']).'" ><div id="invalid-delivery_city" class="error-space" style="display:none"></div>
 	</div>
-	';	
-	if ($tmpcontent_con) {
-		$tmpcontent .='
+	';
+	if($tmpcontent_con) {
+		$tmpcontent.='
 		<div id="input-dcountry" class="account-field">
 		<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 		<select name="delivery_country" id="delivery_country" class="delivery_country">
@@ -531,7 +523,7 @@ if($this->post){
 		<div id="invalid-delivery_country" class="error-space" style="display:none"></div>
 		</div>';
 	}
-	$tmpcontent .='		
+	$tmpcontent.='
 	<div id="input-demail" class="account-field">
 		<label for="delivery_email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'*</label>
 		<input type="text" name="delivery_email" id="delivery_email" class="delivery_email" value="'.htmlspecialchars($user['delivery_email']).'"/>
@@ -552,39 +544,39 @@ if($this->post){
 			// set the h5validate attributes for required delivery data
 			$(\'#delivery_radio\').attr(\'required\', \'required\');
 			$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-			$(\'#delivery_radio\').attr(\'title\', \'' . $this->pi_getLL('gender_is_required', 'Title is required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_radio\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_first_name\').attr(\'required\', \'required\');
 			$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-			$(\'#delivery_first_name\').attr(\'title\', \'' . $this->pi_getLL('first_name_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_last_name\').attr(\'required\', \'required\');
 			$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-			$(\'#delivery_last_name\').attr(\'title\', \'' . $this->pi_getLL('surname_is_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_address\').attr(\'required\', \'required\');
 			$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-			$(\'#delivery_address\').attr(\'title\', \'' . $this->pi_getLL('street_address_is_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_address_number\').attr(\'required\', \'required\');
 			$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-			$(\'#delivery_address_number\').attr(\'title\', \'' . $this->pi_getLL('street_number_is_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_zip\').attr(\'required\', \'required\');
 			$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-			$(\'#delivery_zip\').attr(\'title\', \'' . $this->pi_getLL('zip_is_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_city\').attr(\'required\', \'required\');
 			$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-			$(\'#delivery_city\').attr(\'title\', \'' . $this->pi_getLL('city_is_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_country\').attr(\'required\', \'required\');
 			$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
-			$(\'#delivery_country\').attr(\'title\', \'' . $this->pi_getLL('country_is_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 			
 			$(\'#delivery_telephone\').attr(\'required\', \'required\');
 			$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-			$(\'#delivery_telephone\').attr(\'title\', \'' . $this->pi_getLL('telephone_is_required') . ' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+			$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
 		});
 	</script>
 	</div>
@@ -596,18 +588,18 @@ if($this->post){
 			<input type="text" name="username" class="username" id="username" value="'.htmlspecialchars($user['username']).'" readonly />
 		</div>
 		<div id="input-password" class="account-field">
-			<label for="password" id="account-password">'. ucfirst($this->pi_getLL('password')).'</label>
+			<label for="password" id="account-password">'.ucfirst($this->pi_getLL('password')).'</label>
 			<input type="password" name="password" class="password" id="password" value="" />	
 		</div>
 		<div id="input-password" class="account-field">
-			<label for="repassword" id="account-password">'. ucfirst($this->pi_getLL('repassword')).'</label>
+			<label for="repassword" id="account-password">'.ucfirst($this->pi_getLL('repassword')).'</label>
 			<input type="password" name="repassword" class="repassword" id="repassword" value="" />	
 		</div>	
 	</div>
 	<div id="bottom-navigation">
 		<div id="navigation"> 							
 			<input type="hidden" id="user_id" value="'.$user['ses_userid'].'" name="user_id"/>
-			<span class="msFrontButton continueState arrowRight arrowPosLeft floatRight"><input type="submit" id="submit" value="'.  ($this->contentMisc == 'edit_account' ? ucfirst($this->pi_getLL('update_account')) : ucfirst($this->pi_getLL('register'))) .'"/></span>
+			<span class="msFrontButton continueState arrowRight arrowPosLeft floatRight"><input type="submit" id="submit" value="'.($this->contentMisc == 'edit_account' ? ucfirst($this->pi_getLL('update_account')) : ucfirst($this->pi_getLL('register'))).'"/></span>
 		</div>
 	</div>
 	</form>

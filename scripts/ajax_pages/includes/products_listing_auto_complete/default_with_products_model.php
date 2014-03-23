@@ -1,69 +1,66 @@
 <?php
-if (!defined('TYPO3_MODE')) die ('Access denied.');
-
-$prod = array();
-foreach ($products as $product) {
-	if (!$tr_type or $tr_type=='even') {
+if(!defined('TYPO3_MODE')) {
+	die ('Access denied.');
+}
+$prod=array();
+foreach($products as $product) {
+	if(!$tr_type or $tr_type == 'even') {
 		$tr_type='odd';
 	} else {
 		$tr_type='even';
 	}
-	if ($product['categories_id']) {
+	if($product['categories_id']) {
 		// get all cats to generate multilevel fake url
 		$level=0;
 		$cats=mslib_fe::Crumbar($product['categories_id']);
 		$cats=array_reverse($cats);
 		$where='';
-		if (count($cats) > 0) {
-			foreach ($cats as $cat)
-			{
+		if(count($cats) > 0) {
+			foreach($cats as $cat) {
 				$where.="categories_id[".$level."]=".$cat['id']."&";
 				$level++;
 			}
-			$where=substr($where,0,(strlen($where)-1));
+			$where=substr($where, 0, (strlen($where)-1));
 			$where.='&';
 		}
 		// get all cats to generate multilevel fake url eof
 	}
-	$link=mslib_fe::typolink($this->conf['products_detail_page_pid'],'&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail&skeywords='.urlencode($this->get['q']));
-	
-	$prod['Link'] = $link;
-	if ($product['products_image']){
-		$prod['Image'] = '<div class="ajax_products_image">'. '<img src="'. mslib_befe::getImagePath($product['products_image'],'products','50')  .'">' . '</div>';
+	$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail&skeywords='.urlencode($this->get['q']));
+	$prod['Link']=$link;
+	if($product['products_image']) {
+		$prod['Image']='<div class="ajax_products_image">'.'<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">'.'</div>';
 	} else {
-		$prod['Image'] = '<div class="ajax_products_image"><div class="no_image_50"></div></div>';
+		$prod['Image']='<div class="ajax_products_image"><div class="no_image_50"></div></div>';
 	}
-		
-	$prod['Title'] = '<div class="ajax_products_name">'. substr($product['products_name'],0,50) .'</div><div class="ajax_products_model">'. substr($product['products_model'],0,50) .'</div>' ;
-	$prod['Title']  = $prod['Title'];
-	$prod['Desc']  = '<div class="ajax_products_shortdescription">'. addslashes(mslib_befe::str_highlight(substr($product['products_shortdescription'],0,75),$this->get['q'])) .'</div>';
-		
-	if ($product['products_price'] <> $product['final_price']) {
-		$prod['Price'] = '<div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price']).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price']).'</div>';
+	$prod['Title']='<div class="ajax_products_name">'.substr($product['products_name'], 0, 50).'</div><div class="ajax_products_model">'.substr($product['products_model'], 0, 50).'</div>';
+	$prod['Title']=$prod['Title'];
+	$prod['Desc']='<div class="ajax_products_shortdescription">'.addslashes(mslib_befe::str_highlight(substr($product['products_shortdescription'], 0, 75), $this->get['q'])).'</div>';
+	if($product['products_price'] <> $product['final_price']) {
+		$prod['Price']='<div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price']).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price']).'</div>';
 	} else {
-		$prod['Price'] = '<div class="ajax_products_price">'.mslib_fe::amount2Cents($product['products_price']).'</div>';
+		$prod['Price']='<div class="ajax_products_price">'.mslib_fe::amount2Cents($product['products_price']).'</div>';
 	}
-	$prod['Name'] = substr($product['products_name'],0,50);
-	$prod['skeyword'] = $this->get['q'];
-	$prod['Page'] = $pages;
-	$prod['Product'] = true;
-	$data[] = $prod;
-}	
-if (isset($this->get['page'])) {
-	if ($totpage > 1) {
+	$prod['Name']=substr($product['products_name'], 0, 50);
+	$prod['skeyword']=$this->get['q'];
+	$prod['Page']=$pages;
+	$prod['Product']=true;
+	$data[]=$prod;
+}
+if(isset($this->get['page'])) {
+	if($totpage > 1) {
 		//echo $totpage;
-		if ($pages != $totpage){
-		   	$prod = array();
-		   	$prod['Name'] = $this->pi_getLL('more_results');
-			$prod['Title'] = '<span id="more-results">'.htmlspecialchars($this->pi_getLL('more_results')).' >></span>';
-			$prod['Link'] = mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=products_search&skeyword='.urlencode($this->get['q']));
-		    $prod['skeyword'] = $this->get['q'];
-		    $prod['Page'] = $pages;
-		    $prod['Product'] = false;
-			$data[] = $prod;
+		if($pages != $totpage) {
+			$prod=array();
+			$prod['Name']=$this->pi_getLL('more_results');
+			$prod['Title']='<span id="more-results">'.htmlspecialchars($this->pi_getLL('more_results')).' >></span>';
+			$prod['Link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=products_search&skeyword='.urlencode($this->get['q']));
+			$prod['skeyword']=$this->get['q'];
+			$prod['Page']=$pages;
+			$prod['Product']=false;
+			$data[]=$prod;
 		}
 	}
-} 
-$content = array("products"=>$data);
+}
+$content=array("products"=>$data);
 //print_r($alldata);
 ?>

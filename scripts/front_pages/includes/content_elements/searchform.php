@@ -1,18 +1,20 @@
 <?php
-if (!defined('TYPO3_MODE')) die ('Access denied.');
-
-$output = array();
-
+if(!defined('TYPO3_MODE')) {
+	die ('Access denied.');
+}
+$output=array();
 // now parse all the objects in the tmpl file
-if ($this->conf['searchform_tmpl_path'])  	$template = $this->cObj->fileResource($this->conf['searchform_tmpl_path']);
-elseif ($this->conf['searchform_tmpl'])  	$template = $this->cObj->fileResource($this->conf['searchform_tmpl']);
-else										$template = $this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/searchform.tmpl');
+if($this->conf['searchform_tmpl_path']) {
+	$template=$this->cObj->fileResource($this->conf['searchform_tmpl_path']);
+} elseif($this->conf['searchform_tmpl']) {
+	$template=$this->cObj->fileResource($this->conf['searchform_tmpl']);
+} else {
+	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/searchform.tmpl');
+}
 // Extract the subparts from the template
 $subparts=array();
-$subparts['template'] 	= $this->cObj->getSubpart($template, '###TEMPLATE###');
-
-if ($this->conf['includejAutocomplete'])
-{						
+$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
+if($this->conf['includejAutocomplete']) {
 	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript">
 			  jQuery(document).ready(function($) {
 				var sendData;														  
@@ -36,7 +38,7 @@ if ($this->conf['includejAutocomplete'])
 					source: function( request, response ) {
 							if (sendData){		
 							jQuery.ajax({
-								url: "'. mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=ajax_products_search') .'",
+								url: "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_search').'",
 								dataType : "json",
 								timeout : 10000,
 								data: {
@@ -100,13 +102,11 @@ if ($this->conf['includejAutocomplete'])
 			  });
 		</script>';
 }
-
 // fill the row marker with the expanded rows
-$subpartArray['###SEARCH_PAGE_PID###'] 		= $this->conf['search_page_pid'];
-$subpartArray['###LABEL_KEYWORD###'] 			= $this->pi_getLL('keyword');
-$subpartArray['###KEYWORD_VALUE###'] = htmlspecialchars(mslib_fe::RemoveXSS($this->get['skeyword']));
-$subpartArray['###LABEL_SUBMIT_BUTTON###'] = htmlspecialchars($this->pi_getLL('search'));
+$subpartArray['###SEARCH_PAGE_PID###']=$this->conf['search_page_pid'];
+$subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
+$subpartArray['###KEYWORD_VALUE###']=htmlspecialchars(mslib_fe::RemoveXSS($this->get['skeyword']));
+$subpartArray['###LABEL_SUBMIT_BUTTON###']=htmlspecialchars($this->pi_getLL('search'));
 // completed the template expansion by replacing the "item" marker in the template
-
-$content = $this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
+$content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 ?>
