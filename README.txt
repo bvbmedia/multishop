@@ -13,7 +13,7 @@ git clone https://basvanbeek@bitbucket.org/bvbmedia/rzcolorbox_jquery2.git
 git clone https://basvanbeek@bitbucket.org/bvbmedia/t3jquery_jquery2.git
 
 ln -s /sources/rzcolorbox_jquery2 /var/www/yourdomain.nl/web/typo3conf/ext/rzcolorbox
-ln -s /sources/t3jquery_jquery2 /var/www/yourdomain.nl/web/typo3conf/ext/t3jquery
+ln -s /sources/t3jquery_jquery2/t3jquery /var/www/yourdomain.nl/web/typo3conf/ext/t3jquery
 ln -s /sources/t3jquery_jquery2/uploads /var/www/yourdomain.nl/web/uploads/tx_t3jquery
 
 Now login to TYPO3 backend:
