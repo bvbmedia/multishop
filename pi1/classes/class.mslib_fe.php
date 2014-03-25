@@ -1517,6 +1517,8 @@ class mslib_fe
 					}
 					// now get the values
 					$str="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '" . (int) $products_id . "' and pa.options_id = '" . $options['products_options_id'] . "' and pov.language_id = '" . $this->sys_language_uid. "' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='" . $options['products_options_id'] . "' and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
+					//echo $str;
+					//die();
 					$products_options = $GLOBALS['TYPO3_DB']->sql_query($str);
 					$total_values=$GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
 					if (!$readonly) {
