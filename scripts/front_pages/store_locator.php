@@ -1,8 +1,8 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if($_REQUEST['skeyword']) {
+if ($_REQUEST['skeyword']) {
 	$this->get['tx_multishop_pi1']['zip']=$_REQUEST['skeyword'];
 	$this->get['tx_multishop_pi1']['zip']=trim($this->get['tx_multishop_pi1']['zip']);
 	$this->get['tx_multishop_pi1']['zip']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['tx_multishop_pi1']['zip'], $GLOBALS['TSFE']->metaCharset);
@@ -22,13 +22,13 @@ $content.='
 $default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
 $str3="SELECT sc.cn_iso_2, sc.cn_short_local from tx_multishop_stores mss, static_countries sc where mss.country=sc.cn_iso_2 group by sc.cn_iso_2";
 $qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
-while($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) {
-	if(!$this->get['tx_multishop_pi1']['country']) {
-		if($default_country['cn_iso_2'] == $row3['cn_iso_2']) {
+while ($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) {
+	if (!$this->get['tx_multishop_pi1']['country']) {
+		if ($default_country['cn_iso_2']==$row3['cn_iso_2']) {
 			$this->get['tx_multishop_pi1']['country']=$row3['cn_iso_2'];
 		}
 	}
-	$content.='<option value="'.t3lib_div::strtolower($row3['cn_iso_2']).'" '.((t3lib_div::strtolower($this->get['tx_multishop_pi1']['country']) == t3lib_div::strtolower($row3['cn_iso_2'])) ? 'selected' : '').'>'.htmlspecialchars($row3['cn_short_local']).'</option>'."\n";
+	$content.='<option value="'.t3lib_div::strtolower($row3['cn_iso_2']).'" '.((t3lib_div::strtolower($this->get['tx_multishop_pi1']['country'])==t3lib_div::strtolower($row3['cn_iso_2'])) ? 'selected' : '').'>'.htmlspecialchars($row3['cn_short_local']).'</option>'."\n";
 }
 $content.='</select>
 </div>
@@ -66,40 +66,41 @@ $("#stores_searchform").submit(function(e) {
 });
 </script>
 '."\n";
-if(is_numeric($this->get['p'])) {
+if (is_numeric($this->get['p'])) {
 	$p=$this->get['p'];
 }
-if($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) {
+if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) {
 	$this->ms['MODULES']['CACHE_FRONT_END']=0;
 }
-if($this->ms['MODULES']['CACHE_FRONT_END']) {
+if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	$options=array(
 		'caching'=>true,
 		'cacheDir'=>$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/cache/',
-		'lifeTime'=>$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']);
+		'lifeTime'=>$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']
+	);
 	$Cache_Lite=new Cache_Lite($options);
 	$string=md5($this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING']);
 }
-if(!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
-	if($p > 0) {
+if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
+	if ($p>0) {
 		$extrameta=' (page '.$p.')';
 	} else {
 		$extrameta='';
 	}
-	if(!$this->conf['disableMetatags']) {
+	if (!$this->conf['disableMetatags']) {
 		$GLOBALS['TSFE']->additionalHeaderData['title']='<title>Store Locator :: '.$this->ms['MODULES']['STORE_NAME'].'</title>';
 		$GLOBALS['TSFE']->additionalHeaderData['description']='<meta name="description" content="Store Locator." />';
 	}
-	if($p > 0) {
+	if ($p>0) {
 		$offset=(((($p)*$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'])));
 	} else {
 		$p=0;
 		$offset=0;
 	}
-	if($this->get['tx_multishop_pi1']['zip']) {
+	if ($this->get['tx_multishop_pi1']['zip']) {
 		$do_search=1;
 	}
-	if($do_search) {
+	if ($do_search) {
 		// store search
 		$filter=array();
 		$having=array();
@@ -112,10 +113,10 @@ if(!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRON
 //		$Ycoor=str_replace(",",".",$GLOBALS['TSFE']->fe_user->user['tx_datingsite_current_lng']);	
 		$Xcoor=str_replace(",", ".", $this->get['tx_multishop_pi1']['lat']);
 		$Ycoor=str_replace(",", ".", $this->get['tx_multishop_pi1']['lng']);
-		if(!$_GET['distance']) {
+		if (!$_GET['distance']) {
 			$_GET['distance']=1000;
 		}
-		if($Xcoor and $Ycoor and $_GET['distance']) {
+		if ($Xcoor and $Ycoor and $_GET['distance']) {
 			$select[]="ROUND( DEGREES( ACOS( SIN( RADIANS( ".$Xcoor." )  )  * SIN( RADIANS( mss.lat )  )  + COS( RADIANS( ".$Xcoor." )  )  * COS( RADIANS( mss.lat )  )  * COS( RADIANS( ".$Ycoor." - mss.lng )  )  )  ) / 360 * 40041 ) AS distance";
 			$having[]='distance < '.$_GET['distance'];
 		}
@@ -123,21 +124,21 @@ if(!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRON
 		$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=2;
 		$pageset=mslib_fe::getStoresPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where);
 		$stores=$pageset['stores'];
-		if($pageset['total_rows'] > 0) {
-			if(strstr($this->ms['MODULES']['STORES_LISTING_TYPE'], "..")) {
+		if ($pageset['total_rows']>0) {
+			if (strstr($this->ms['MODULES']['STORES_LISTING_TYPE'], "..")) {
 				die('error in STORES_LISTING_TYPE value');
 			} else {
-				if(!$this->ms['MODULES']['STORES_LISTING_TYPE']) {
+				if (!$this->ms['MODULES']['STORES_LISTING_TYPE']) {
 					$this->ms['MODULES']['STORES_LISTING_TYPE']='default';
 				}
-				if(strstr($this->ms['MODULES']['STORES_LISTING_TYPE'], "/")) {
+				if (strstr($this->ms['MODULES']['STORES_LISTING_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['STORES_LISTING_TYPE'].'.php');
 				} else {
 					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/stores_listing/'.$this->ms['MODULES']['STORES_LISTING_TYPE'].'.php');
 				}
 			}
 			// pagination
-			if(!$this->hidePagination and $pageset['total_rows'] > $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']) {
+			if (!$this->hidePagination and $pageset['total_rows']>$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']) {
 //				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');	
 			}
 			// pagination eof
@@ -146,7 +147,7 @@ if(!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRON
 			$content.='<p>'.$this->pi_getLL('no_stores_found_description').'</p>'."\n";
 		}
 	}
-	if($this->ms['MODULES']['CACHE_FRONT_END']) {
+	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$Cache_Lite->save($content);
 	}
 }

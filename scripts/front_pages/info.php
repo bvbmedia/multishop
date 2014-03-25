@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // cms info page
@@ -12,14 +12,14 @@ $query=$GLOBALS['TYPO3_DB']->SELECTquery('cd.content, cd.name', // SELECT ...
 	'' // LIMIT ...
 );
 $res=$GLOBALS['TYPO3_DB']->sql_query($query);
-if($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-	if($row['name']) {
+	if ($row['name']) {
 		$this->ms['title']=$row['name'];
 	}
-	if(!$this->conf['disableMetatags']) {
+	if (!$this->conf['disableMetatags']) {
 		$output_array['meta']['title']='<title>'.htmlspecialchars($this->ms['title']).$this->ms['MODULES']['PAGE_TITLE_DELIMETER'].$this->ms['MODULES']['STORE_NAME'].'</title>';
-		if(is_array($output_array['meta']) and count($output_array['meta'])) {
+		if (is_array($output_array['meta']) and count($output_array['meta'])) {
 			$GLOBALS['TSFE']->additionalHeaderData=array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
 		}
 	}

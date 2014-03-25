@@ -1,30 +1,30 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
-if(!$this->imageWidth) {
+if (!$this->imageWidth) {
 	$this->imageWidth='100';
 }
 $teller=0;
 $specials_items='';
-if(!$this->hideHeader) {
+if (!$this->hideHeader) {
 	$content.='<div class="main-heading"><h2>'.$this->pi_getLL('specials').'</h2></div>';
 }
-foreach($products as $product) {
-	if($product['products_image']) {
+foreach ($products as $product) {
+	if ($product['products_image']) {
 		$image=mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth);
 	} else {
 		$image='';
 	}
 	$teller++;
-	if($product['categories_id']) {
+	if ($product['categories_id']) {
 		// get all cats to generate multilevel fake url
 		$level=0;
 		$cats=mslib_fe::Crumbar($product['categories_id']);
 		$cats=array_reverse($cats);
 		$where='';
-		if(count($cats) > 0) {
-			foreach($cats as $cat) {
+		if (count($cats)>0) {
+			foreach ($cats as $cat) {
 				$where.="categories_id[".$level."]=".$cat['id']."&";
 				$level++;
 			}
@@ -35,31 +35,31 @@ foreach($products as $product) {
 	}
 	$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 	$tel++;
-	if($this->conf['disableFeFromCalculatingVatPrices'] == '1') {
+	if ($this->conf['disableFeFromCalculatingVatPrices']=='1') {
 		$final_price=$product['final_price'];
 		$old_price=$product['products_price'];
 	} else {
 		$final_price=mslib_fe::final_products_price($product);
-		if(!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
 			$old_price=$product['products_price']*(1+$product['tax_rate']);
 		} else {
 			$old_price=$product['products_price'];
 		}
 	}
-	if(!$this->ajax_content) {
-		if($old_price) {
+	if (!$this->ajax_content) {
+		if ($old_price) {
 			$old_price_label=mslib_fe::amount2Cents($old_price);
 		} else {
 			$old_price_label='';
 		}
 		// jcarousel
 		$specials_items.='{url: \''.$link.'\', image: \''.$image.'\', title: \''.htmlspecialchars(addslashes($product['products_name'])).'\', price: \''.$old_price_label.'\', specials_price: \''.mslib_fe::amount2Cents($final_price).'\'}';
-		if($teller < $total) {
+		if ($teller<$total) {
 			$specials_items.=',';
 		}
 		$specials_items.="\n";
 	} else {
-		if($product['products_image']) {
+		if ($product['products_image']) {
 			$image='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'" alt="'.htmlspecialchars($product['products_name']).'" />';
 		} else {
 			$image='<div class="no_image"></div>';
@@ -70,11 +70,11 @@ foreach($products as $product) {
 		<div class="image"><a href="'.$link.'" title="'.htmlspecialchars($product['products_name']).'" class="ajax_link">'.$image.'</a></div>	
 		';
 		$final_price=mslib_fe::final_products_price($product);
-		if($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+		if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
 			$specials_items.='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($product['final_price']).'</div>';
 		}
-		if($product['products_price'] <> $product['final_price']) {
-			if($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+		if ($product['products_price']<>$product['final_price']) {
+			if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$old_price=$product['products_price']*(1+$product['tax_rate']);
 			} else {
 				$old_price=$product['products_price'];
@@ -83,7 +83,7 @@ foreach($products as $product) {
 		} else {
 			$specials_items.='<div class="final_price">'.mslib_fe::amount2Cents($final_price).'</div>';
 		}
-		if($this->ADMIN_USER) {
+		if ($this->ADMIN_USER) {
 			$specials_items.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$product['products_id']).'&action=edit_product" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="admin_menu_edit"></a> <a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$product['products_id']).'&action=delete_product" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )" class="admin_menu_remove" title="Remove"></a></div>';
 		}
 		$specials_items.='
@@ -93,7 +93,7 @@ foreach($products as $product) {
 			</div>
 			<div class="button_bestel">
 				';
-		if(!strstr($product['products_url'], 'http://') and !strstr($product['products_url'], 'http://')) {
+		if (!strstr($product['products_url'], 'http://') and !strstr($product['products_url'], 'http://')) {
 			$product['products_url']='http://'.$product['products_url'];
 		}
 		$specials_items.='
@@ -104,10 +104,10 @@ foreach($products as $product) {
 		$specials_items.='</li>';
 	}
 }
-if($specials_items and $this->ajax_content) {
+if ($specials_items and $this->ajax_content) {
 	// ajax so lets show the normal grid layout
 	$content.='<ul id="product_listing">'.$specials_items.'</ul>';
-} elseif($specials_items and !$this->ajax_content) {
+} elseif ($specials_items and !$this->ajax_content) {
 	$content.='
 	<script type="text/javascript"> 
 	var mycarousel_itemList_'.$content_uid.' = [

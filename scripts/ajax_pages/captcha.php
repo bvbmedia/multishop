@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $randomnr=rand(100000, 900000);

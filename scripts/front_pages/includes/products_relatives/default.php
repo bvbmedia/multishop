@@ -1,14 +1,14 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $rel_products=$pageset['products'];
-if(!$this->imageWidth) {
+if (!$this->imageWidth) {
 	$this->imageWidth='100';
 }
 $subpartArray=array();
 // now parse all the objects in the tmpl file
-if($this->conf['products_relatives_tmpl_path']) {
+if ($this->conf['products_relatives_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['products_relatives_tmpl_path']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/products_relatives.tmpl');
@@ -35,41 +35,41 @@ $subpartArray['###HEADER###']=$this->cObj->substituteMarkerArray($subparts['head
 $contentItem='';
 $i=0;
 $tr_type='even';
-foreach($rel_products as $rel_rs) {
-	if(!$tr_type or $tr_type == 'even') {
+foreach ($rel_products as $rel_rs) {
+	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
 	} else {
 		$tr_type='even';
 	}
 	$products_attributes=$GLOBALS['TYPO3_DB']->sql_query("select popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$product['products_id']."' and patrib.options_id = popt.products_options_id and popt.language_id = '".$languages_id."' order by popt.products_options_id");
 	//$products_attributes = tep_db_query();
-	if($GLOBALS['TYPO3_DB']->sql_num_rows($products_attributes)) {
+	if ($GLOBALS['TYPO3_DB']->sql_num_rows($products_attributes)) {
 		$products_attributes='1';
 	} else {
 		$products_attributes='0';
 	}
-	if($products_attributes) {
+	if ($products_attributes) {
 		$opt_sql="select distinct popt.products_options_id, popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$product['products_id']."' and patrib.options_id = popt.products_options_id and popt.language_id = '".$languages_id."'";
 		$products_options_name=$GLOBALS['TYPO3_DB']->sql_query($opt_sql);
-		while($products_options_name_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options_name)) {
+		while ($products_options_name_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options_name)) {
 			$selected=0;
 			$products_options=$GLOBALS['TYPO3_DB']->sql_query("select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.products_id = '".$product['products_id']."' and pa.options_id = '".$products_options_name_values['products_options_id']."' and pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$languages_id."' order by pa.options_values_price,pov.products_options_values_id, pov.products_options_values_name");
-			while($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
-				if($products_options_values['options_values_price'] == 0 && $selected == 0) {
+			while ($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
+				if ($products_options_values['options_values_price']==0 && $selected==0) {
 					$rel_rs['hidden_fields'].='<input type="hidden" name="relation_id['.$i.']['.$products_options_name_values['products_options_id'].']" value="'.$products_options_values['products_options_values_id'].'" />';
 					$selected=1;
 				}
 			}
 		}
 	}
-	if($rel_rs['categories_id']) {
+	if ($rel_rs['categories_id']) {
 		// get all cats to generate multilevel fake url
 		$level=0;
 		$cats=mslib_fe::Crumbar($rel_rs['categories_id']);
 		$cats=array_reverse($cats);
 		$where='';
-		if(count($cats) > 0) {
-			foreach($cats as $cat) {
+		if (count($cats)>0) {
+			foreach ($cats as $cat) {
 				$where.="categories_id[".$level."]=".$cat['id']."&";
 				$level++;
 			}
@@ -79,17 +79,17 @@ foreach($rel_products as $rel_rs) {
 		// get all cats to generate multilevel fake url eof
 	}
 	$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$rel_rs['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-	if($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN'] != 'no') {
-		switch($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
+	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
+		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
 			case 'yes_with_image':
-				if($rel_rs['products_quantity']) {
+				if ($rel_rs['products_quantity']) {
 					$rel_rs['products_quantity']='<img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" />';
 				} else {
 					$rel_rs['products_quantity']='<img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" />';
 				}
 				break;
 			case 'yes_without_image':
-				if($rel_rs['products_quantity']) {
+				if ($rel_rs['products_quantity']) {
 					$rel_rs['products_quantity']=$this->pi_getLL('admin_yes');
 				} else {
 					$rel_rs['products_quantity']=$this->pi_getLL('admin_no');
@@ -97,7 +97,7 @@ foreach($rel_products as $rel_rs) {
 				break;
 		}
 	}
-	if($rel_rs['products_image']) {
+	if ($rel_rs['products_image']) {
 		$image='<img src="'.mslib_befe::getImagePath($rel_rs['products_image'], 'products', '50').'" alt="'.htmlspecialchars($rel_rs['products_name']).'" />';
 	} else {
 		$image='<div class="no_image_50"></div>';
@@ -118,13 +118,14 @@ foreach($rel_products as $rel_rs) {
 	$markerArray['ITEM_PRODUCTS_EAN']=$rel_rs['ean_code'];
 	$i++;
 	// custom hook that can be controlled by third-party plugin
-	if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'])) {
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'])) {
 		$params=array(
 			'markerArray'=>&$markerArray,
 			'product'=>&$current_product,
 			'output'=>&$output,
-			'products_compare'=>&$products_compare);
-		foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'] as $funcRef) {
+			'products_compare'=>&$products_compare
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
@@ -135,11 +136,12 @@ foreach($rel_products as $rel_rs) {
 $subpartArray['###ITEM###']=$contentItem;
 // completed the template expansion by replacing the "item" marker in the template
 // custom hook that can be controlled by third-party plugin
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingPagePostHook'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingPagePostHook'])) {
 	$params=array(
 		'subpartArray'=>&$subpartArray,
-		'current'=>&$current);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingPagePostHook'] as $funcRef) {
+		'current'=>&$current
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingPagePostHook'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }

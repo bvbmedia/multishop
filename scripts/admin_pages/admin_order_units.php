@@ -1,11 +1,11 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if($this->get['tx_multishop_pi1']['action']) {
-	switch($this->get['tx_multishop_pi1']['action']) {
+if ($this->get['tx_multishop_pi1']['action']) {
+	switch ($this->get['tx_multishop_pi1']['action']) {
 		case 'delete':
-			if(intval($this->get['tx_multishop_pi1']['order_unit_id'])) {
+			if (intval($this->get['tx_multishop_pi1']['order_unit_id'])) {
 				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_order_units', 'id=\''.$this->get['tx_multishop_pi1']['order_unit_id'].'\'');
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_order_units_description', 'id=\''.$this->get['tx_multishop_pi1']['order_unit_id'].'\'');
@@ -14,10 +14,10 @@ if($this->get['tx_multishop_pi1']['action']) {
 			break;
 	}
 }
-if($this->post) {
+if ($this->post) {
 	// add new order status eof
-	if(count($this->post['tx_multishop_pi1']['order_unit_name'])) {
-		if($this->post['tx_multishop_pi1']['order_unit_name'][0]) {
+	if (count($this->post['tx_multishop_pi1']['order_unit_name'])) {
+		if ($this->post['tx_multishop_pi1']['order_unit_name'][0]) {
 			$insertArray=array();
 			$insertArray['code']=$this->post['tx_multishop_pi1']['order_unit_code'];
 			$insertArray['page_uid']=$this->shop_pid;
@@ -25,8 +25,8 @@ if($this->post) {
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_order_units', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-			if($id) {
-				foreach($this->post['tx_multishop_pi1']['order_unit_name'] as $key=>$value) {
+			if ($id) {
+				foreach ($this->post['tx_multishop_pi1']['order_unit_name'] as $key=>$value) {
 					$insertArray=array();
 					$insertArray['name']=$value;
 					$insertArray['language_id']=$key;
@@ -44,13 +44,13 @@ $content.='
 <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <fieldset><legend>'.$this->pi_getLL('add').'</legend>
 ';
-foreach($this->languages as $key=>$language) {
+foreach ($this->languages as $key=>$language) {
 	$flag_path='';
-	if($language['flag']) {
+	if ($language['flag']) {
 		$flag_path='sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif';
 	}
 	$language_lable='';
-	if($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.$flag_path)) {
+	if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.$flag_path)) {
 		$language_lable.='<img src="'.$this->FULL_HTTP_URL_TYPO3.$flag_path.'"> ';
 	}
 	$language_lable.=''.$language['title'];
@@ -82,17 +82,17 @@ $content.=$tmpcontent.'
 $str="SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='".$this->shop_pid."' and o.id=od.order_unit_id and od.language_id='0' order by o.id desc";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $zones=array();
-while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$order_units[]=$row;
 }
-if(count($order_units)) {
+if (count($order_units)) {
 	$content.='<table class="msZebraTable msadmin_border" width="100%">
 		<th>&nbsp;</th>
 		<th>'.$this->pi_getLL('code').'</th>
 		<th>'.$this->pi_getLL('name').'</th>
 		<th>'.$this->pi_getLL('action').'</th>';
-	foreach($order_units as $status) {
-		if(!$tr_type or $tr_type == 'even') {
+	foreach ($order_units as $status) {
+		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';

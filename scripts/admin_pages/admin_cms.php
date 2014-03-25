@@ -1,9 +1,9 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // now parse all the objects in the tmpl file
-if($this->conf['admin_cms_tmpl_path']) {
+if ($this->conf['admin_cms_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_cms_tmpl_path']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_cms.tmpl');
@@ -15,33 +15,33 @@ $subparts['results']=$this->cObj->getSubpart($subparts['template'], '###RESULTS#
 $subparts['cms_list']=$this->cObj->getSubpart($subparts['results'], '###CMS_LIST###');
 $subparts['noresults']=$this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
 //$tmpcontent.='<div class="main-heading"><h2>'.htmlspecialchars(ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_cms')))).'</h2></div>';
-if(is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
+if (is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
 	$updateArray=array();
 	$updateArray['status']=$this->get['status'];
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms', 'id=\''.$this->get['cms_id'].'\'', $updateArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-} elseif(is_numeric($this->get['delete']) and is_numeric($this->get['cms_id'])) {
+} elseif (is_numeric($this->get['delete']) and is_numeric($this->get['cms_id'])) {
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_cms', 'id=\''.$this->get['cms_id'].'\'');
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_cms_description', 'id=\''.$this->get['cms_id'].'\'');
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 }
-if($this->get['Search'] and ($this->get['limit'] != $this->cookie['limit'])) {
+if ($this->get['Search'] and ($this->get['limit']!=$this->cookie['limit'])) {
 	$this->cookie['limit']=$this->get['limit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if($this->cookie['limit']) {
+if ($this->cookie['limit']) {
 	$this->get['limit']=$this->cookie['limit'];
 } else {
 	$this->get['limit']=10;
 }
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->get['limit'];
-if(is_numeric($this->get['p'])) {
+if (is_numeric($this->get['p'])) {
 	$p=$this->get['p'];
 }
 $this->searchKeywords=array();
-if($this->get['tx_multishop_pi1']['keyword']) {
+if ($this->get['tx_multishop_pi1']['keyword']) {
 	//  using $_REQUEST cause TYPO3 converts "Command & Conquer" to "Conquer" (the & sign sucks ass)
 	$this->get['tx_multishop_pi1']['keyword']=trim($this->get['tx_multishop_pi1']['keyword']);
 	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['tx_multishop_pi1']['keyword'], $GLOBALS['TSFE']->metaCharset);
@@ -68,17 +68,17 @@ $limits[]='350';
 $limits[]='400';
 $limits[]='450';
 $limits[]='500';
-foreach($limits as $limit) {
-	$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit == $this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
+foreach ($limits as $limit) {
+	$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
 $limit_search_result_selectbox.='</select>';
 $queryData=array();
 $queryData['where']=array();
-if(count($this->searchKeywords)) {
+if (count($this->searchKeywords)) {
 	$keywordOr=array();
-	foreach($this->searchKeywords as $searchKeyword) {
-		if($searchKeyword) {
-			switch($this->searchMode) {
+	foreach ($this->searchKeywords as $searchKeyword) {
+		if ($searchKeyword) {
+			switch ($this->searchMode) {
 				case 'keyword%':
 					$this->sqlKeyword=addslashes($searchKeyword).'%';
 					break;
@@ -94,7 +94,7 @@ if(count($this->searchKeywords)) {
 	}
 	$queryData['where'][]="(".implode(" OR ", $keywordOr).")";
 }
-switch($this->get['tx_multishop_pi1']['order_by']) {
+switch ($this->get['tx_multishop_pi1']['order_by']) {
 	case 'name':
 		$order_by='cd.name';
 		break;
@@ -109,7 +109,7 @@ switch($this->get['tx_multishop_pi1']['order_by']) {
 		$order_by='c.id';
 		break;
 }
-switch($this->get['tx_multishop_pi1']['order']) {
+switch ($this->get['tx_multishop_pi1']['order']) {
 	case 'a':
 		$order='asc';
 		$order_link='d';
@@ -126,34 +126,34 @@ $queryData['select'][]='*';
 $queryData['from'][]='tx_multishop_cms c, tx_multishop_cms_description cd';
 $queryData['order_by']=$orderby;
 $queryData['limit']=$this->ms['MODULES']['PAGESET_LIMIT'];
-if(is_numeric($this->get['p'])) {
+if (is_numeric($this->get['p'])) {
 	$p=$this->get['p'];
 }
-if($p > 0) {
+if ($p>0) {
 	$queryData['offset']=(((($p)*$this->ms['MODULES']['PAGESET_LIMIT'])));
 } else {
 	$p=0;
 	$queryData['offset']=0;
 }
 $pageset=mslib_fe::getRecordsPageSet($queryData);
-if(!count($pageset['dataset'])) {
+if (!count($pageset['dataset'])) {
 	$subpartArray=array();
 	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_records_found', 'No records found.');
 	$no_results=$this->cObj->substituteMarkerArrayCached($subparts['noresults'], array(), $subpartArray);
 } else {
 	$tr_type='even';
 	$contentItem='';
-	foreach($pageset['dataset'] as $row) {
-		if(!$tr_type or $tr_type == 'even') {
+	foreach ($pageset['dataset'] as $row) {
+		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
 		}
-		if(!$row['name']) {
+		if (!$row['name']) {
 			$row['name']='No title';
 		}
 		$status_html='';
-		if(!$row['status']) {
+		if (!$row['status']) {
 			$status_html.='<span class="admin_status_red" alt="Disable"></span>';
 			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
 		} else {
@@ -178,9 +178,10 @@ if(!count($pageset['dataset'])) {
 		'p',
 		'Submit',
 		'weergave',
-		'clearcache'));
+		'clearcache'
+	));
 	$key='id';
-	if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
@@ -190,7 +191,7 @@ if(!count($pageset['dataset'])) {
 	$subpartArray['###FOOTER_SORTBY_LINK_ID###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###LABEL_FOOTER_CMS_ID###']=htmlspecialchars($this->pi_getLL('id'));
 	$key='name';
-	if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
@@ -200,7 +201,7 @@ if(!count($pageset['dataset'])) {
 	$subpartArray['###FOOTER_SORTBY_LINK_TITLE###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###LABEL_FOOTER_CMS_TITLE###']=htmlspecialchars($this->pi_getLL('name'));
 	$key='type';
-	if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
@@ -208,7 +209,7 @@ if(!count($pageset['dataset'])) {
 	$subpartArray['###HEADER_SORTBY_LINK_TYPE###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###FOOTER_SORTBY_LINK_TYPE###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='crdate';
-	if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
@@ -224,7 +225,7 @@ if(!count($pageset['dataset'])) {
 	$subpartArray['###CMS_LIST###']=$contentItem;
 	$results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 	// pagination
-	if(!$this->ms['nopagenav'] and $pageset['total_rows'] > $this->ms['MODULES']['PAGESET_LIMIT']) {
+	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
 		$content='';
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$results.=$tmp;

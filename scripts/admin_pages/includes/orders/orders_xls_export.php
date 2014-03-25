@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
@@ -15,7 +15,8 @@ $option_search=array(
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-	"payment_method"=>$this->pi_getLL('admin_payment_method'));
+	"payment_method"=>$this->pi_getLL('admin_payment_method')
+);
 asort($option_search);
 $filter=array();
 $from=array();
@@ -25,8 +26,8 @@ $orderby=array();
 $where=array();
 $orderby=array();
 $select=array();
-if($this->post['skeyword']) {
-	switch($this->post['type_search']) {
+if ($this->post['skeyword']) {
+	switch ($this->post['type_search']) {
 		case 'all':
 			$option_fields=$option_search;
 			unset($option_fields['all']);
@@ -35,7 +36,7 @@ if($this->post['skeyword']) {
 			unset($option_fields['delivery_name']);
 			//print_r($option_fields);
 			$items=array();
-			foreach($option_fields as $fields=>$label) {
+			foreach ($option_fields as $fields=>$label) {
 				$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
@@ -76,41 +77,41 @@ if($this->post['skeyword']) {
 			break;
 	}
 }
-if(!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
+if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->post['order_date_from']);
 	list($fd, $fm, $fy)=explode('/', $from_date);
 	list($till_date, $till_time)=explode(" ", $this->post['order_date_till']);
 	list($td, $tm, $ty)=explode('/', $till_date);
 	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
 	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
-	if($this->post['search_by_status_last_modified']) {
+	if ($this->post['search_by_status_last_modified']) {
 		$column='o.status_last_modified';
 	} else {
 		$column='o.crdate';
 	}
 	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
 }
-if($this->post['orders_status_search'] > 0) {
+if ($this->post['orders_status_search']>0) {
 	$filter[]="(o.status='".$this->post['orders_status_search']."')";
 }
-if($this->post['paid_orders_only']) {
+if ($this->post['paid_orders_only']) {
 	$filter[]="(o.paid='1')";
 }
-if(!$this->masterShop) {
+if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
 //$orderby[]='orders_id desc';	
 $select[]='o.*, osd.name as orders_status';
 $orderby[]='o.orders_id desc';
-if($this->post['tx_multishop_pi1']['by_phone']) {
+if ($this->post['tx_multishop_pi1']['by_phone']) {
 	$filter[]='o.by_phone=1';
 }
-if($this->post['tx_multishop_pi1']['is_proposal']) {
+if ($this->post['tx_multishop_pi1']['is_proposal']) {
 	$filter[]='o.is_proposal=1';
 } else {
 	$filter[]='o.is_proposal=0';
 }
-if(isset($this->post['selected_orders'])) {
+if (isset($this->post['selected_orders'])) {
 	$selected_orders='(o.orders_id='.implode(" or o.orders_id=", $this->post['selected_orders']).')';
 	$filter[]=$selected_orders;
 }
@@ -139,13 +140,13 @@ $sheet_header[]=$this->pi_getLL('admin_paid');
 $row_count=1;
 $col_count=0;
 $colwidth=array();
-foreach($sheet_header as $key=>$val) {
+foreach ($sheet_header as $key=>$val) {
 	$colwidth[$col_count]=strlen($val)+2;
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col_count, $row_count, $val);
 	$col_count++;
 }
 $row_count++;
-foreach($tmporders as $order) {
+foreach ($tmporders as $order) {
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_count, $order['orders_id']);
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(1, $row_count, mslib_fe::getShopNameByPageUid($order['page_uid']));
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(2, $row_count, $order['billing_name']);
@@ -154,16 +155,16 @@ foreach($tmporders as $order) {
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(5, $row_count, $order['shipping_method_label']);
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(6, $row_count, $order['payment_method_label']);
 	$order_status='';
-	if(is_array($all_orders_status)) {
-		foreach($all_orders_status as $item) {
-			if($item['id'] == $order['status']) {
+	if (is_array($all_orders_status)) {
+		foreach ($all_orders_status as $item) {
+			if ($item['id']==$order['status']) {
 				$order_status=$item['name'];
 			}
 		}
 	}
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(7, $row_count, $order_status);
 	$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(8, $row_count, ($order['status_last_modified'] ? strftime("%x %X", $order['status_last_modified']) : ''));
-	if(!$order['paid']) {
+	if (!$order['paid']) {
 		$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row_count, "No");
 	} else {
 		$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(9, $row_count, "Yes");
@@ -174,7 +175,7 @@ foreach($tmporders as $order) {
 $last_col=$phpexcel->getActiveSheet()->getHighestColumn();
 $phpexcel->getActiveSheet()->getStyle('A1:'.$last_col.'1')->applyFromArray($header_style);
 $col_id='A';
-foreach($colwidth as $col_key=>$col_val) {
+foreach ($colwidth as $col_key=>$col_val) {
 	$phpexcel->getActiveSheet()->getColumnDimension($col_id)->setWidth($col_val);
 	$col_id++;
 }

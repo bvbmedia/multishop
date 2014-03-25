@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 /* old not working anymore
@@ -26,9 +26,9 @@ $s=0;
 $rows=array();
 $offset=$arrOutput['m4n']['data']['record'];
 $table_cols=array();
-foreach($offset as $item) {
-	foreach($item as $key=>$col) {
-		if($i == 0) {
+foreach ($offset as $item) {
+	foreach ($item as $key=>$col) {
+		if ($i==0) {
 			$table_cols[$s]=$key;
 		}
 		$rows[$i][$s]=$col;

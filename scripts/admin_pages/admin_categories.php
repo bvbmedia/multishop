@@ -1,9 +1,9 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // now parse all the objects in the tmpl file
-if($this->conf['admin_categories_tmpl_path']) {
+if ($this->conf['admin_categories_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_categories_tmpl_path']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_categories.tmpl');
@@ -104,9 +104,9 @@ $counter=0;
 $categories=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint, 1);
 $cat_selectbox='';
 $contentItem='';
-foreach($categories as $category) {
+foreach ($categories as $category) {
 	$counter++;
-	if($category['categories_image']) {
+	if ($category['categories_image']) {
 		$image='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'" alt="'.htmlspecialchars($category['categories_name']).'">';
 	} else {
 		$image='<div class="no_image"></div>';
@@ -116,8 +116,8 @@ foreach($categories as $category) {
 	$cats=mslib_fe::Crumbar($category['categories_id']);
 	$cats=array_reverse($cats);
 	$where='';
-	if(count($cats) > 0) {
-		foreach($cats as $item) {
+	if (count($cats)>0) {
+		foreach ($cats as $item) {
 			$where.="categories_id[".$level."]=".$item['id']."&";
 			$level++;
 		}
@@ -126,7 +126,7 @@ foreach($categories as $category) {
 	}
 	$where.='categories_id['.$level.']='.$category['categories_id'];
 	// get all cats to generate multilevel fake url eof
-	if($category['categories_url']) {
+	if ($category['categories_url']) {
 		$target=' target="_blank"';
 		$link=$category['categories_url'];
 	} else {
@@ -138,8 +138,8 @@ foreach($categories as $category) {
 	$cats=mslib_fe::Crumbar($category['categories_id']);
 	$cats=array_reverse($cats);
 	$where='';
-	if(count($cats) > 0) {
-		foreach($cats as $tmp) {
+	if (count($cats)>0) {
+		foreach ($cats as $tmp) {
 			$where.="categories_id[".$level."]=".$tmp['id']."&";
 			$level++;
 		}
@@ -154,9 +154,9 @@ foreach($categories as $category) {
 	</div>';
 	$subcat_list='';
 	$dataArray=mslib_fe::getSitemap($category['categories_id'], array(), 1, 0);
-	if(count($dataArray)) {
+	if (count($dataArray)) {
 		$sub_content=mslib_fe::displayAdminCategories($dataArray, false, 0, $category['categories_id']);
-		if($sub_content) {
+		if ($sub_content) {
 			$subcat_list.='<ul>';
 			$subcat_list.=$sub_content;
 			$subcat_list.='</ul>';

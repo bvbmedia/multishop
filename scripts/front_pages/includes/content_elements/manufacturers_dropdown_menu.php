@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content.='
@@ -13,13 +13,13 @@ $content.='
 $str="SELECT * from tx_multishop_manufacturers m, tx_multishop_manufacturers_info mi where m.manufacturers_id=mi.manufacturers_id and m.status=1 order by m.sort_order,m.manufacturers_name";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $manufacturers=array();
-while($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$manufacturers[]=$row;
 }
-if(count($manufacturers) > 0) {
-	foreach($manufacturers as $manufacturer) {
+if (count($manufacturers)>0) {
+	foreach ($manufacturers as $manufacturer) {
 		$link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=manufacturers_products_listing&manufacturers_id='.$manufacturer['manufacturers_id']);
-		$content.='<option value="'.$link.'"'.($this->get['manufacturers_id'] == $manufacturer['manufacturers_id'] ? ' selected' : '').'>'.htmlspecialchars($manufacturer['manufacturers_name']).'</option>'."\n";
+		$content.='<option value="'.$link.'"'.($this->get['manufacturers_id']==$manufacturer['manufacturers_id'] ? ' selected' : '').'>'.htmlspecialchars($manufacturer['manufacturers_name']).'</option>'."\n";
 	}
 }
 $content.='</select>						

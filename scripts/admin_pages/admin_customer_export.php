@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 set_time_limit(0);
@@ -28,22 +28,23 @@ $fields['mobile']='mobile';
 $fields['tx_multishop_newsletter']='newsletter';
 $fields['tx_multishop_discount']='discount';
 //hook to let other plugins add more columns
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_export.php']['msCustomersExportFieldsHook'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_export.php']['msCustomersExportFieldsHook'])) {
 	$params=array(
-		'fields'=>&$fields);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_export.php']['msCustomersExportFieldsHook'] as $funcRef) {
+		'fields'=>&$fields
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_export.php']['msCustomersExportFieldsHook'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
 $field_keys=array_flip($fields);
 $filter=array();
-if(!$this->masterShop) {
+if (!$this->masterShop) {
 	$filter[]='page_uid=\''.$this->shop_pid.'\'';
 }
 $limit='';
-if(isset($this->get['tx_multishop_pi1']['limit']) and strstr($this->get['tx_multishop_pi1']['limit'], ',')) {
+if (isset($this->get['tx_multishop_pi1']['limit']) and strstr($this->get['tx_multishop_pi1']['limit'], ',')) {
 	$tmpArray=explode(',', $this->get['tx_multishop_pi1']['limit']);
-	if(is_numeric($tmpArray[0]) and is_numeric($tmpArray[1])) {
+	if (is_numeric($tmpArray[0]) and is_numeric($tmpArray[1])) {
 		$limit=$tmpArray[0].','.$tmpArray[1];
 	}
 }
@@ -57,7 +58,7 @@ $str=$GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $field_keys), // SELECT ...
 );
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=array();
-while($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$rows[]=$row;
 }
 $dir=$this->DOCUMENT_ROOT;
@@ -72,16 +73,16 @@ $header_style['font']=array('bold'=>true);
 $row_count=1;
 $col_count=0;
 $colwidth=array();
-foreach($rows[0] as $key=>$val) {
+foreach ($rows[0] as $key=>$val) {
 	$colwidth[$col_count]=strlen($fields[$key])+1;
 	$cell=$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col_count, $row_count, $fields[$key]);
 	$col_count++;
 }
 $row_count++;
-foreach($rows as $item) {
+foreach ($rows as $item) {
 	$col_count=0;
-	foreach($item as $key=>$val) {
-		if(strlen($val)+5 > $colwidth[$col_count]) {
+	foreach ($item as $key=>$val) {
+		if (strlen($val)+5>$colwidth[$col_count]) {
 			$colwidth[$col_count]=strlen($val)+5;
 		}
 		//$val = iconv('ASCII', 'UTF-8//IGNORE', $val);
@@ -94,7 +95,7 @@ foreach($rows as $item) {
 $last_col=$phpexcel->getActiveSheet()->getHighestColumn();
 $phpexcel->getActiveSheet()->getStyle('A1:'.$last_col.'1')->applyFromArray($header_style);
 $col_id='A';
-foreach($colwidth as $col_key=>$col_val) {
+foreach ($colwidth as $col_key=>$col_val) {
 	$phpexcel->getActiveSheet()->getColumnDimension($col_id)->setWidth($col_val);
 	$col_id++;
 }

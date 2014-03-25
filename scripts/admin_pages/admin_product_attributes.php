@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 mslib_befe::loadLanguages();
@@ -13,9 +13,9 @@ $selects['textarea']='Textarea';
 $selects['hidden_field']='Hidden field';
 $selects['file']='File input';
 $selects['divider']='Divider';
-if(is_array($this->post['option_names']) and count($this->post['option_names'])) {
-	foreach($this->post['option_names'] as $products_options_id=>$array) {
-		foreach($array as $language_id=>$value) {
+if (is_array($this->post['option_names']) and count($this->post['option_names'])) {
+	foreach ($this->post['option_names'] as $products_options_id=>$array) {
+		foreach ($array as $language_id=>$value) {
 			$updateArray=array();
 			$updateArray['language_id']=$language_id;
 			$updateArray['products_options_id']=$products_options_id;
@@ -25,7 +25,7 @@ if(is_array($this->post['option_names']) and count($this->post['option_names']))
 			$updateArray['hide_in_cart']=$this->post['hide_in_cart'][$products_options_id];
 			$str="select 1 from tx_multishop_products_options where products_options_id='".$products_options_id."' and language_id='".$language_id."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\''.$products_options_id.'\' and language_id=\''.$language_id.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -35,16 +35,16 @@ if(is_array($this->post['option_names']) and count($this->post['option_names']))
 		}
 	}
 }
-if(is_array($this->post['option_values']) and count($this->post['option_values'])) {
-	foreach($this->post['option_values'] as $products_options_values_id=>$array) {
-		foreach($array as $language_id=>$value) {
+if (is_array($this->post['option_values']) and count($this->post['option_values'])) {
+	foreach ($this->post['option_values'] as $products_options_values_id=>$array) {
+		foreach ($array as $language_id=>$value) {
 			$updateArray=array();
 			$updateArray['language_id']=$language_id;
 			$updateArray['products_options_values_id']=$products_options_values_id;
 			$updateArray['products_options_values_name']=$value;
 			$str="select 1 from tx_multishop_products_options_values where products_options_values_id='".$products_options_values_id."' and language_id='".$language_id."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values', 'products_options_values_id=\''.$products_options_values_id.'\' and language_id=\''.$language_id.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -57,19 +57,19 @@ if(is_array($this->post['option_values']) and count($this->post['option_values']
 $str="select * from tx_multishop_products_options where language_id='0' order by sort_order";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
-if($rows) {
+if ($rows) {
 	$content.='
 	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" name="admin_product_attributes">
 	<ul class="attribute_options_sortable">';
-	while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$content.='
 		<li id="options_'.$row['products_options_id'].'">
 		<h2><span class="option_id">Option ID: '.$row['products_options_id'].'</span>
 		<span class="listing_type">
 		listing type: 
 		<select name="listtype['.$row['products_options_id'].']">';
-		foreach($selects as $key=>$value) {
-			$content.='<option value="'.$key.'"'.($key == $row['listtype'] ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
+		foreach ($selects as $key=>$value) {
+			$content.='<option value="'.$key.'"'.($key==$row['listtype'] ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
 		}
 		$content.='</select>
 		</span>
@@ -82,12 +82,12 @@ if($rows) {
 		</h2>
 		<h3>Option name <input name="option_names['.$row['products_options_id'].'][0]" type="text" value="'.htmlspecialchars($row['products_options_name']).'"  />';
 		$value=htmlspecialchars($row2['products_options_values_name']);
-		foreach($this->languages as $key=>$language) {
-			if($key > 0) {
+		foreach ($this->languages as $key=>$language) {
+			if ($key>0) {
 				$str3="select products_options_name from tx_multishop_products_options where products_options_id='".$row['products_options_id']."' and language_id='".$key."'";
 				$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
-				while(($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) != false) {
-					if($row3['products_options_name']) {
+				while (($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3))!=false) {
+					if ($row3['products_options_name']) {
 						$value=htmlspecialchars($row3['products_options_name']);
 					}
 				}

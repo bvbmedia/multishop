@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
@@ -29,22 +29,22 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 		});
 		</script>
 		';
-if($this->post) {
-	if(!$this->post['s_date']) {
+if ($this->post) {
+	if (!$this->post['s_date']) {
 		$this->post['s_date']=date("Y-m-d");
 	}
-	if(!$this->post['e_date']) {
+	if (!$this->post['e_date']) {
 		$this->post['e_date']=date("2020-m-d");
 	}
-	if(is_numeric($this->post['s_hours']) and is_numeric($this->post['s_minutes'])) {
+	if (is_numeric($this->post['s_hours']) and is_numeric($this->post['s_minutes'])) {
 		$this->post['s_date'].=' '.$this->post['s_hours'].':'.$this->post['s_minutes'].':00';
 	}
-	if(is_numeric($this->post['e_hours']) and is_numeric($this->post['e_minutes'])) {
+	if (is_numeric($this->post['e_hours']) and is_numeric($this->post['e_minutes'])) {
 		$this->post['e_date'].=' '.$this->post['e_hours'].':'.$this->post['e_minutes'].':00';
 	}
 	$s_time=strtotime($this->post['s_date']);
 	$e_time=strtotime($this->post['e_date']);
-	if($this->post['discount_type'] == 'price' and strstr($this->post['discount'], ',')) {
+	if ($this->post['discount_type']=='price' and strstr($this->post['discount'], ',')) {
 		$this->post['discount']=str_replace(",", ".", $this->post['discount']);
 	}
 	$updateArray=array(
@@ -54,8 +54,9 @@ if($this->post) {
 		'discount_type'=>$this->post['discount_type'],
 		'max_usage'=>$this->post['max_usage'],
 		'startdate'=>$s_time,
-		'enddate'=>$e_time);
-	if($this->post['coupons_id']) {
+		'enddate'=>$e_time
+	);
+	if ($this->post['coupons_id']) {
 		// edit
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_coupons', 'id='.$this->post['coupons_id'], $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -66,17 +67,18 @@ if($this->post) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 }
-if(is_numeric($this->get['status'])) {
+if (is_numeric($this->get['status'])) {
 	$updateArray=array(
-		'status'=>$status);
+		'status'=>$status
+	);
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_coupons', 'id='.$this->get['coupons_id'], $updateArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 }
-if($this->get['delete']) {
+if ($this->get['delete']) {
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_coupons', 'id='.$this->get['coupons_id']);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	$this->get['coupons_id']='';
-} elseif(is_numeric($this->get['coupons_id'])) {
+} elseif (is_numeric($this->get['coupons_id'])) {
 	$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 		'tx_multishop_coupons', // FROM ...
 		'id='.$this->get['coupons_id'], // WHERE.
@@ -93,7 +95,7 @@ if($this->get['delete']) {
 	$e_hours=date("H", $edit_row['enddate']);
 	$e_minutes=date("i", $edit_row['enddate']);
 }
-if($this->get['coupons_id']) {
+if ($this->get['coupons_id']) {
 	$title=$this->pi_getLL('edit');
 } else {
 	$title=$this->pi_getLL('add');
@@ -110,8 +112,8 @@ $content.='
 <div class="account-field">
 	<label>'.$this->pi_getLL('discount').'</label><input type="text" name="discount" value="'.$edit_row['discount'].'" />
 	<select name="discount_type">
-		<option value="percentage"'.($edit_row['discount_type'] == 'percentage' ? ' selected' : '').'>'.$this->pi_getLL('percentage').'</option>
-		<option value="price"'.($edit_row['discount_type'] == 'price' ? ' selected' : '').'>'.$this->pi_getLL('price').'</option>
+		<option value="percentage"'.($edit_row['discount_type']=='percentage' ? ' selected' : '').'>'.$this->pi_getLL('percentage').'</option>
+		<option value="price"'.($edit_row['discount_type']=='price' ? ' selected' : '').'>'.$this->pi_getLL('price').'</option>
 	</select>		
 </div>
 <div class="account-field">
@@ -120,15 +122,15 @@ $content.='
 	<input type="hidden" name="s_date" id="s_date" class="dateok" value="'.$s_date.'" />
 ';
 $content.='<select name="s_hours">';
-for($i=0; $i < 24; $i++) {
+for ($i=0; $i<24; $i++) {
 	$hour=str_pad($i, 2, "0", STR_PAD_LEFT);
-	$content.='<option value="'.$hour.'"'.($s_hours == $hour ? ' selected' : '').'>'.$hour.'</option>';
+	$content.='<option value="'.$hour.'"'.($s_hours==$hour ? ' selected' : '').'>'.$hour.'</option>';
 }
 $content.='</select> : ';
 $content.='<select name="s_minutes">';
-for($i=0; $i < 61; $i++) {
+for ($i=0; $i<61; $i++) {
 	$minute=str_pad($i, 2, "0", STR_PAD_LEFT);
-	$content.='<option value="'.$minute.'"'.($s_minutes == $minute ? ' selected' : '').'>'.$minute.'</option>';
+	$content.='<option value="'.$minute.'"'.($s_minutes==$minute ? ' selected' : '').'>'.$minute.'</option>';
 }
 $content.='</select>
 </div>
@@ -138,15 +140,15 @@ $content.='</select>
 	<input type="hidden" name="e_date" id="e_date" value="'.$e_date.'" />
 ';
 $content.='<select name="e_hours">';
-for($i=0; $i < 24; $i++) {
+for ($i=0; $i<24; $i++) {
 	$hour=str_pad($i, 2, "0", STR_PAD_LEFT);
-	$content.='<option value="'.$hour.'"'.($e_hours == $hour ? ' selected' : '').'>'.$hour.'</option>';
+	$content.='<option value="'.$hour.'"'.($e_hours==$hour ? ' selected' : '').'>'.$hour.'</option>';
 }
 $content.='</select> : ';
 $content.='<select name="e_minutes">';
-for($i=0; $i < 61; $i++) {
+for ($i=0; $i<61; $i++) {
 	$minute=str_pad($i, 2, "0", STR_PAD_LEFT);
-	$content.='<option value="'.$minute.'"'.($e_minutes == $minute ? ' selected' : '').'>'.$minute.'</option>';
+	$content.='<option value="'.$minute.'"'.($e_minutes==$minute ? ' selected' : '').'>'.$minute.'</option>';
 }
 $content.='</select>
 </div>
@@ -164,10 +166,10 @@ $content.='</select>
 $str="SELECT * from tx_multishop_coupons order by discount";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $coupons_options=array();
-while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$coupons_options[]=$row;
 }
-if(count($coupons_options) > 0) {
+if (count($coupons_options)>0) {
 	$content.='<fieldset class="multishop_fieldset">';
 	$content.='<legend>'.$this->pi_getLL('coupon_codes').'</legend>';
 	$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_orders_listing" id="product_import_table">';
@@ -181,13 +183,13 @@ if(count($coupons_options) > 0) {
 				<th width="60" nowrap>'.$this->pi_getLL('status').'</th>
 				<th width="60" nowrap>'.$this->pi_getLL('action').'</th>
 			</tr>';
-	foreach($coupons_options as $option) {
-		if(!$tr_type or $tr_type == 'even') {
+	foreach ($coupons_options as $option) {
+		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
 		}
-		if(!$option['max_usage']) {
+		if (!$option['max_usage']) {
 			$option['max_usage']=$this->pi_getLL('unlimited');
 		}
 		$content.='<tr class="'.$tr_type.'">
@@ -195,7 +197,7 @@ if(count($coupons_options) > 0) {
 		<strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&edit=1').'">'.$option['code'].'</a></strong>
 		</td>
 		<td align="right">';
-		switch($option['discount_type']) {
+		switch ($option['discount_type']) {
 			case 'percentage':
 				$content.=number_format($option['discount']).'%';
 				break;
@@ -210,7 +212,7 @@ if(count($coupons_options) > 0) {
 		<td align="center">'.$option['max_usage'].'</td>
 		<td align="center">'.$option['times_used'].'</td>
 		<td align="center">';
-		if(!$option['status']) {
+		if (!$option['status']) {
 			$content.='<span class="admin_status_red" alt="Disable"></span>';
 			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
 		} else {

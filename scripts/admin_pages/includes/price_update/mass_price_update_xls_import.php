@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 function getOptionID($optname) {
@@ -7,7 +7,7 @@ function getOptionID($optname) {
 	$qry_opt=$GLOBALS['TYPO3_DB']->sql_query($sql_opt) or die($sql_opt."<br/>".$GLOBALS['TYPO3_DB']->sql_error());
 	$rs_opt=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opt);
 	$option_id=$rs_opt['products_options_id'];
-	if(empty($option_id) || $option_id == 0) {
+	if (empty($option_id) || $option_id==0) {
 		return false;
 	} else {
 		return $option_id;
@@ -19,7 +19,7 @@ function getOptionValueID($optval) {
 	$qry_opt=$GLOBALS['TYPO3_DB']->sql_query($sql_opt) or die($sql_opt."<br/>".$GLOBALS['TYPO3_DB']->sql_error());
 	$rs_opt=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opt);
 	$option_val_id=$rs_opt['products_options_values_id'];
-	if(empty($option_val_id) || $option_val_id == 0) {
+	if (empty($option_val_id) || $option_val_id==0) {
 		return false;
 	} else {
 		return $option_val_id;
@@ -76,7 +76,7 @@ function getProductAttributeID($pid, $optid, $optvalid) {
 	$qry_opt=$GLOBALS['TYPO3_DB']->sql_query($sql_opt) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_opt);
 	$rs_opt=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opt);
 	$pa_id=$rs_opt['products_attributes_id'];
-	if(empty($pa_id) || $pa_id == 0) {
+	if (empty($pa_id) || $pa_id==0) {
 		return false;
 	} else {
 		return $pa_id;
@@ -90,7 +90,7 @@ function getCategoryID($catname, $language_id, $parent_id=0) {
 	$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 	$catid=$rs['categories_id'];
 	$GLOBALS['TYPO3_DB']->sql_free_result($qry);
-	if(!empty($catid) && $catid > 0) {
+	if (!empty($catid) && $catid>0) {
 		return $catid;
 	} else {
 		return false;
@@ -118,7 +118,7 @@ function insertProduct($name, $model, $price) {
 function productToCategories($pid, $cid, $update=false) {
 	$sql_check="select * from tx_multishop_products_to_categories where products_id = ".$pid." and categories_id = ".$cid;
 	$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-	if($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check) > 0) {
+	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)>0) {
 		$sql="update `tx_multishop_products_to_categories` set categories_id = ".$cid." where products_id = ".$pid;
 		$GLOBALS['TYPO3_DB']->sql_query($sql);
 	} else {
@@ -133,7 +133,7 @@ function checkMultiCat($pid) {
 	echo $sql."<br />";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($sql) or die($sql.' --- '.$GLOBALS['TYPO3_DB']->sql_error());
 	$multicats=array();
-	while($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+	while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$multicats[]=$rs['categories_id'];
 	}
 	$GLOBALS['TYPO3_DB']->sql_free_result($qry);
@@ -150,7 +150,7 @@ function getOptionValueExtraID($optval) {
 	$qry_opt=$GLOBALS['TYPO3_DB']->sql_query($sql_opt) or die($sql_opt."<br/>".$GLOBALS['TYPO3_DB']->sql_error());
 	$rs_opt=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opt);
 	$option_val_id=$rs_opt['products_options_values_extra_id'];
-	if(empty($option_val_id) || $option_val_id == 0) {
+	if (empty($option_val_id) || $option_val_id==0) {
 		return false;
 	} else {
 		return $option_val_id;
@@ -169,7 +169,7 @@ function getProductAttributeExtraID($pid, $optvalid) {
 	$qry_opt=$GLOBALS['TYPO3_DB']->sql_query($sql_opt) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_opt);
 	$rs_opt=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opt);
 	$pa_id=$rs_opt['products_attributes_extra_id'];
-	if(empty($pa_id) || $pa_id == 0) {
+	if (empty($pa_id) || $pa_id==0) {
 		return false;
 	} else {
 		return $pa_id;
@@ -191,22 +191,22 @@ function removeProductAttributeExtra($pid, $paid) {
 	$GLOBALS['TYPO3_DB']->sql_query($sql) or die($sql.' --- '.$GLOBALS['TYPO3_DB']->sql_error());
 }
 
-if(!empty($filename)) {
+if (!empty($filename)) {
 	// +--------------------------------------------------------------------------------------------------------------------+	
 	require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 	$phpexcel=PHPExcel_IOFactory::load($dest);
-	foreach($phpexcel->getWorksheetIterator() as $worksheet) {
+	foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 		$colname=array();
 		$colcontent=array();
 		$row_counter=0;
-		foreach($worksheet->getRowIterator() as $row) {
+		foreach ($worksheet->getRowIterator() as $row) {
 			$cellIterator=$row->getCellIterator();
 			$cellIterator->setIterateOnlyExistingCells(false);
 			$col_counter=0;
-			foreach($cellIterator as $cell) {
+			foreach ($cellIterator as $cell) {
 				$clean_products_data=ltrim(rtrim($cell->getCalculatedValue(), " ,"), " ,");
 				$clean_products_data=trim($clean_products_data);
-				if($row->getRowIndex() > 1) {
+				if ($row->getRowIndex()>1) {
 					$colcontent[$row_counter][$col_counter]=$clean_products_data;
 				} else {
 					$colname[$col_counter]=t3lib_div::strtolower($clean_products_data);
@@ -216,7 +216,7 @@ if(!empty($filename)) {
 			$row_counter++;
 		}
 	}
-	foreach($colcontent as $row_key=>$row_val) {
+	foreach ($colcontent as $row_key=>$row_val) {
 		$pid='';
 		$product_name='';
 		$model='';
@@ -242,8 +242,8 @@ if(!empty($filename)) {
 		$extra_attributes='';
 		$option=array();
 		$optstat=array();
-		foreach($row_val as $col_key=>$col_val) {
-			switch($col_key) {
+		foreach ($row_val as $col_key=>$col_val) {
+			switch ($col_key) {
 				case 0 :
 					$pid=(int)$col_val;
 					break;
@@ -278,40 +278,40 @@ if(!empty($filename)) {
 					$productfeed=$col_val;
 					break;
 				default :
-					if($colname[$col_key] == 'capital price') {
+					if ($colname[$col_key]=='capital price') {
 						$cprice=$col_val;
 					} else {
-						if($colname[$col_key] == 'dealer price') {
+						if ($colname[$col_key]=='dealer price') {
 							$dprice=$col_val;
 						} else {
-							if($colname[$col_key] == 'minimum order') {
+							if ($colname[$col_key]=='minimum order') {
 								$morder=$col_val;
 							} else {
-								if($colname[$col_key] == 'ean') {
+								if ($colname[$col_key]=='ean') {
 									$eancode=$col_val;
 								} else {
-									if($colname[$col_key] == 'relation') {
+									if ($colname[$col_key]=='relation') {
 										$relation=$col_val;
 									} else {
-										if($colname[$col_key] == 'status') {
+										if ($colname[$col_key]=='status') {
 											$status=$col_val;
 										} else {
-											if($colname[$col_key] == 'neg. keywords') {
+											if ($colname[$col_key]=='neg. keywords') {
 												$neg_keyword=$col_val;
 											} else {
-												if($colname[$col_key] == 'promotext') {
+												if ($colname[$col_key]=='promotext') {
 													$promotext=$col_val;
 												} else {
-													if($colname[$col_key] == 'leveranciers') {
+													if ($colname[$col_key]=='leveranciers') {
 														$leverancier=$col_val;
 													} else {
-														if($colname[$col_key] == 'image url') {
+														if ($colname[$col_key]=='image url') {
 															$image_url=$col_val;
 														} else {
-															if($colname[$col_key] == 'extra attributes') {
+															if ($colname[$col_key]=='extra attributes') {
 																$extra_attributes=$col_val;
 															} else {
-																if(substr($colname[$col_key], 0, 2) == 'a:') {
+																if (substr($colname[$col_key], 0, 2)=='a:') {
 																	$tmp=explode(':', $colname[$col_key]);
 																	$option[$tmp[1]]=$col_val;
 																	$optstat[$tmp[1]]=$tmp[2];
@@ -331,8 +331,8 @@ if(!empty($filename)) {
 			}
 		}
 		// product information extracted from excel file
-		if(!empty($pid) && $pid > 0) {
-			if(empty($product_name) && empty($price)) {
+		if (!empty($pid) && $pid>0) {
+			if (empty($product_name) && empty($price)) {
 				$sql_delete="delete from tx_multishop_products where products_id = ".$pid;
 				$GLOBALS['TYPO3_DB']->sql_query($sql_delete) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_delete);
 				$sql_delete="delete from tx_multishop_products_description where products_id = ".$pid;
@@ -348,17 +348,17 @@ if(!empty($filename)) {
 				$referred_cid=array(); // hold the refereed cid
 				$multicats=checkMultiCat($pid);
 				$category2=explode(';', $category);
-				for($c=0; $c < count($category2); $c++) {
+				for ($c=0; $c<count($category2); $c++) {
 					$catdata=explode('||', $category2[$c]);
 					$catdata_id=array();
-					for($s=0; $s < count($catdata); $s++) {
-						if($s > 0) {
+					for ($s=0; $s<count($catdata); $s++) {
+						if ($s>0) {
 							$cid=getCategoryID($catdata[$s], $this->sys_language_uid, $catdata_id[$s-1]);
 						} else {
 							$cid=getCategoryID($catdata[$s], $this->sys_language_uid);
 						}
-						if(!$cid) {
-							if($s > 0) {
+						if (!$cid) {
+							if ($s>0) {
 								$cid=insertCategory($catdata[$s], $this->shop_pid, $this->sys_language_uid, $catdata_id[$s-1]);
 							} else {
 								$cid=insertCategory($catdata[$s], $this->shop_pid, $this->sys_language_uid, 0);
@@ -366,14 +366,14 @@ if(!empty($filename)) {
 						}
 						$catdata_id[$s]=$cid;
 					}
-					if(count($category2) > 1) {
+					if (count($category2)>1) {
 						echo '1 -- '.productToCategories($pid, $catdata_id[count($catdata_id)-1]);
 						$referred_cid[]=$catdata_id[count($catdata_id)-1];
 					} else {
 						print_r($multicats);
-						if(count($multicats) > 0) {
-							foreach($multicats as $multicat) {
-								if($multicat == $catdata_id[count($catdata_id)-1]) {
+						if (count($multicats)>0) {
+							foreach ($multicats as $multicat) {
+								if ($multicat==$catdata_id[count($catdata_id)-1]) {
 									echo '2 -- '.productToCategories($pid, $catdata_id[count($catdata_id)-1], true);
 								} else {
 									echo 'removing cat ref '.$multicat." -- I<br />";
@@ -386,22 +386,22 @@ if(!empty($filename)) {
 						}
 					}
 				}
-				if(count($category2) > 1) {
-					foreach($multicats as $multicat) {
-						if(!in_array($multicat, $referred_cid)) {
+				if (count($category2)>1) {
+					foreach ($multicats as $multicat) {
+						if (!in_array($multicat, $referred_cid)) {
 							echo 'removing cat ref '.$multicat." -- II<br />";
 							removeCatReference($pid, $multicat);
 						}
 					}
 				}
-				if(!empty($price) && $price > 0) {
+				if (!empty($price) && $price>0) {
 					$sql="update tx_multishop_products set products_price = '".$price."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql);
 				}
-				if(!empty($sprice) && $sprice > 0) {
+				if (!empty($sprice) && $sprice>0) {
 					$sql_check="select products_id from tx_multishop_specials where products_id = ".$pid;
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-					if($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check) > 0) {
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)>0) {
 						$sql_update="update tx_multishop_specials set specials_new_products_price = '".$sprice."' where products_id = ".$pid;
 						$GLOBALS['TYPO3_DB']->sql_query($sql_update) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_update);
 					} else {
@@ -412,65 +412,65 @@ if(!empty($filename)) {
 				} else {
 					$sql_check="select products_id from tx_multishop_specials where products_id = ".$pid;
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-					if($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check) > 0) {
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)>0) {
 						$sql_delete="delete from tx_multishop_specials where products_id = ".$pid;
 						$GLOBALS['TYPO3_DB']->sql_query($sql_delete) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_delete);
 					}
 					$GLOBALS['TYPO3_DB']->sql_free_result($qry_check);
 				}
-				if(!empty($weight)) {
+				if (!empty($weight)) {
 					$sql_upd="update tx_multishop_products set products_weight = '".$weight."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($product_name)) {
+				if (!empty($product_name)) {
 					$sql_upd="update tx_multishop_products_description set products_name = '".addslashes($product_name)."' where products_id = ".$pid." and language_id = 0";
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($model)) {
+				if (!empty($model)) {
 					$sql_upd="update tx_multishop_products set products_model = '".addslashes($model)."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				} else {
 					$sql_upd="update tx_multishop_products set products_model = '' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($stock)) {
+				if (!empty($stock)) {
 					$sql_upd="update tx_multishop_products set products_quantity = '".$stock."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($short_desc)) {
+				if (!empty($short_desc)) {
 					$sql_upd="update tx_multishop_products_description set products_shortdescription = '".addslashes($short_desc)."' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				} else {
 					$sql_upd="update tx_multishop_products_description set products_shortdescription = '' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($keyword)) {
+				if (!empty($keyword)) {
 					$sql_upd="update tx_multishop_products_description set products_meta_keywords = '".addslashes($keyword)."' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				} else {
 					$sql_upd="update tx_multishop_products_description set products_meta_keywords = '' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if($productfeed == 1 || $productfeed == 0) {
+				if ($productfeed==1 || $productfeed==0) {
 					$sql_upd="update tx_multishop_products set productfeed = '".$productfeed."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($relation)) {
+				if (!empty($relation)) {
 					$sql1="DELETE FROM tx_multishop_products_to_relative_products where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql1) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql);
 					$sql="insert into tx_multishop_products_to_relative_products(products_to_relative_product_id, products_id, relative_product_id) values ";
 					$values='';
 					$relate_id=explode(';', $relation);
-					for($y=0; $y < count($relate_id); $y++) {
-						if(!empty($relate_id[$y])) {
-							if(empty($values)) {
+					for ($y=0; $y<count($relate_id); $y++) {
+						if (!empty($relate_id[$y])) {
+							if (empty($values)) {
 								$values.="('', ".$pid.", ".$relate_id[$y].")";
 							} else {
 								$values.=",('', ".$pid.", ".$relate_id[$y].")";
 							}
 						}
 					}
-					if(!empty($values)) {
+					if (!empty($values)) {
 						$sql.=$values;
 						$GLOBALS['TYPO3_DB']->sql_query($sql) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql);
 					}
@@ -478,14 +478,14 @@ if(!empty($filename)) {
 					$sql1="DELETE FROM tx_multishop_products_to_relative_products where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql1) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql1);
 				}
-				if(!empty($eancode)) {
+				if (!empty($eancode)) {
 					$sql_upd="update tx_multishop_products set extid = '".addslashes($eancode)."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($leverancier)) {
+				if (!empty($leverancier)) {
 					$sql_man="select manufacturers_id from tx_multishop_manufacturers where manufacturers_name = '".addslashes($leverancier)."'";
 					$qry_man=$GLOBALS['TYPO3_DB']->sql_query($sql_man);
-					if($GLOBALS['TYPO3_DB']->sql_num_rows($qry_man)) {
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_man)) {
 						$rs_man=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_man);
 						$manufacturer_id=$rs_man['manufacturers_id'];
 					} else {
@@ -496,57 +496,57 @@ if(!empty($filename)) {
 					$sql_upd="update tx_multishop_products set manufacturers_id = '".$manufacturer_id."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(count($option) > 0) {
-					foreach($option as $optname=>$optval) {
+				if (count($option)>0) {
+					foreach ($option as $optname=>$optval) {
 						$hide=0;
-						if($optstat[$optname] == 'hide') {
+						if ($optstat[$optname]=='hide') {
 							$hide=1;
 						}
 						$optname=ucwords($optname);
-						if(!empty($optname)) {
+						if (!empty($optname)) {
 							$optid=getOptionID($optname);
-							if(!$optid) {
+							if (!$optid) {
 								$optid=insertOption($optname, $hide);
 							} else {
 								updateOption($optid, $hide);
 							}
 							removeProductAttribute($pid, $optid);
-							if(!empty($optval)) {
+							if (!empty($optval)) {
 								$value_tmp=explode(';;', $optval);
-								foreach($value_tmp as $optval2) {
+								foreach ($value_tmp as $optval2) {
 									$valstat=0;
 									$price=0;
 									list($optval3, $optvalprice)=explode('||', $optval2);
-									if(substr($optvalprice, 0, 1) == '+') {
+									if (substr($optvalprice, 0, 1)=='+') {
 										$optvalprice=str_replace('+', '', $optvalprice);
 										$pprefix='+';
 									} else {
-										if(substr($optvalprice, 0, 1) == '-') {
+										if (substr($optvalprice, 0, 1)=='-') {
 											$optvalprice=str_replace('-', '', $optvalprice);
 											$pprefix='-';
 										} else {
-											if($optvalprice != 0) {
+											if ($optvalprice!=0) {
 												$pprefix='+';
 											}
 										}
 									}
-									if(!empty($optvalprice) && $optvalprice > 0) {
+									if (!empty($optvalprice) && $optvalprice>0) {
 										$price=$optvalprice;
 									} else {
 										$pprefix='';
 									}
-									if(strpos($optval3, ':hide') !== FALSE) {
+									if (strpos($optval3, ':hide')!==FALSE) {
 										$valstat=1;
 										$optval3=str_replace(':hide', '', $optval3);
 									} else {
-										if(strpos($optval3, ':unhide') !== FALSE) {
+										if (strpos($optval3, ':unhide')!==FALSE) {
 											$optval3=str_replace(':unhide', '', $optval3);
 										}
 									}
-									if(!$optvalid=getOptionValueID($optval3)) {
+									if (!$optvalid=getOptionValueID($optval3)) {
 										$optvalid=insertOptionValue($optid, $optval3);
 									}
-									if(!$paid=getProductAttributeID($pid, $optid, $optvalid)) {
+									if (!$paid=getProductAttributeID($pid, $optid, $optvalid)) {
 										insertProductAttribute($pid, $optid, $optvalid, $price, $valstat, $pprefix);
 									} else {
 										updateProductAttribute($pid, $paid, $optvalid, $price, $valstat, $pprefix);
@@ -558,37 +558,37 @@ if(!empty($filename)) {
 						}
 					}
 				}
-				if(!empty($extra_attributes)) {
+				if (!empty($extra_attributes)) {
 					$optval=$extra_attributes;
 					removeProductAttributeExtra($pid);
-					if(!empty($optval)) {
+					if (!empty($optval)) {
 						$value_tmp=explode(';;', $optval);
-						foreach($value_tmp as $optval2) {
+						foreach ($value_tmp as $optval2) {
 							$valstat=0;
 							$price=0;
 							list($optval3, $optvalprice)=explode('||', $optval2);
-							if(substr($optvalprice, 0, 1) == '+') {
+							if (substr($optvalprice, 0, 1)=='+') {
 								$optvalprice=str_replace('+', '', $optvalprice);
 								$pprefix='+';
 							} else {
-								if(substr($optvalprice, 0, 1) == '-') {
+								if (substr($optvalprice, 0, 1)=='-') {
 									$optvalprice=str_replace('-', '', $optvalprice);
 									$pprefix='-';
 								} else {
-									if($optvalprice != 0) {
+									if ($optvalprice!=0) {
 										$pprefix='+';
 									}
 								}
 							}
-							if(!empty($optvalprice) && $optvalprice > 0) {
+							if (!empty($optvalprice) && $optvalprice>0) {
 								$price=$optvalprice;
 							} else {
 								$pprefix='';
 							}
-							if(!$optvalid=getOptionValueExtraID($optval3)) {
+							if (!$optvalid=getOptionValueExtraID($optval3)) {
 								$optvalid=insertOptionExtraValue($optid, $optval3);
 							}
-							if(!$paid=getProductAttributeExtraID($pid, $optvalid)) {
+							if (!$paid=getProductAttributeExtraID($pid, $optvalid)) {
 								insertProductAttributeExtra($pid, $optvalid, $price, $valstat, $pprefix);
 							} else {
 								updateProductAttributeExtra($pid, $paid, $optvalid, $price, $valstat, $pprefix);
@@ -600,23 +600,23 @@ if(!empty($filename)) {
 				}
 			}
 		} else {
-			if($product_name) {
+			if ($product_name) {
 				// if products name is defined add it
 				$pid=insertProduct($product_name, $model, $price);
 				$referred_cid=array(); // hold the refereed cid
 				$multicats=checkMultiCat($pid);
 				$category2=explode(';', $category);
-				for($c=0; $c < count($category2); $c++) {
+				for ($c=0; $c<count($category2); $c++) {
 					$catdata=explode('||', $category2[$c]);
 					$catdata_id=array();
-					for($s=0; $s < count($catdata); $s++) {
-						if($s > 0) {
+					for ($s=0; $s<count($catdata); $s++) {
+						if ($s>0) {
 							$cid=getCategoryID($catdata[$s], $this->sys_language_uid, $catdata_id[$s-1]);
 						} else {
 							$cid=getCategoryID($catdata[$s], $this->sys_language_uid);
 						}
-						if(!$cid) {
-							if($s > 0) {
+						if (!$cid) {
+							if ($s>0) {
 								$cid=insertCategory($catdata[$s], $this->shop_pid, $this->sys_language_uid, $catdata_id[$s-1]);
 							} else {
 								$cid=insertCategory($catdata[$s], $this->shop_pid, $this->sys_language_uid, 0);
@@ -624,7 +624,7 @@ if(!empty($filename)) {
 						}
 						$catdata_id[$s]=$cid;
 					}
-					if(count($category2) > 1) {
+					if (count($category2)>1) {
 						productToCategories($pid, $catdata_id[count($catdata_id)-1]);
 						$referred_cid[]=$catdata_id[count($catdata_id)-1];
 					} else {
@@ -632,141 +632,141 @@ if(!empty($filename)) {
 						$referred_cid[]=$catdata_id[count($catdata_id)-1];
 					}
 				}
-				if(!empty($relation)) {
+				if (!empty($relation)) {
 					$sql="insert into tx_multishop_products_to_relative_products(products_to_relative_product_id, products_id, relative_product_id) values ";
 					$values='';
 					$relate_id=explode(';', $relation);
-					for($y=0; $y < count($relate_id); $y++) {
-						if(!empty($relate_id[$y])) {
-							if(empty($values)) {
+					for ($y=0; $y<count($relate_id); $y++) {
+						if (!empty($relate_id[$y])) {
+							if (empty($values)) {
 								$values.="('', ".$pid.", ".$relate_id[$y].")";
 							} else {
 								$values.=",('', ".$pid.", ".$relate_id[$y].")";
 							}
 						}
 					}
-					if(!empty($values)) {
+					if (!empty($values)) {
 						$sql.=$values;
 						$GLOBALS['TYPO3_DB']->sql_query($sql) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql);
 					}
 				}
-				if(!empty($sprice) && $sprice > 0) {
+				if (!empty($sprice) && $sprice>0) {
 					$sql_insert="insert into tx_multishop_specials(products_id, specials_new_products_price, status, home_item) values(".$pid.", '".$sprice."', 1, 1)";
 					$GLOBALS['TYPO3_DB']->sql_query($sql_insert) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_insert);
 				}
-				if(!empty($weight)) {
+				if (!empty($weight)) {
 					$sql_upd="update tx_multishop_products set products_weight = '".$weight."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($stock)) {
+				if (!empty($stock)) {
 					$sql_upd="update tx_multishop_products set products_quantity = '".$stock."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($short_desc)) {
+				if (!empty($short_desc)) {
 					$sql_upd="update tx_multishop_products_description set products_shortdescription = '".addslashes($short_desc)."' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				} else {
 					$sql_upd="update tx_multishop_products_description set products_shortdescription = '' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($keyword)) {
+				if (!empty($keyword)) {
 					$sql_upd="update tx_multishop_products_description set products_meta_keywords = '".addslashes($keyword)."' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				} else {
 					$sql_upd="update tx_multishop_products_description set products_meta_keywords = '' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if($productfeed == 1 || $productfeed == 0) {
+				if ($productfeed==1 || $productfeed==0) {
 					$sql_upd="update tx_multishop_products set productfeed = '".$productfeed."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($cprice)) {
+				if (!empty($cprice)) {
 					$sql_upd="update tx_multishop_products set product_capital_price = '".$cprice."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if($status != '') {
-					if($status == 0) {
+				if ($status!='') {
+					if ($status==0) {
 						$sql_upd="update tx_multishop_products set products_status = 0 where products_id = ".$pid;
 						$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 					} else {
-						if($status == 1) {
+						if ($status==1) {
 							$sql_upd="update tx_multishop_products set products_status = 1 where products_id = ".$pid;
 							$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 						}
 					}
 				}
-				if(!empty($morder)) {
+				if (!empty($morder)) {
 					$sql_upd="update tx_multishop_products set minimum_order = '".$morder."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($eancode)) {
+				if (!empty($eancode)) {
 					$sql_upd="update tx_multishop_products set extid = '".$eancode."' where products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($neg_keyword)) {
+				if (!empty($neg_keyword)) {
 					$sql_upd="update tx_multishop_products_description set products_negative_keywords = '".addslashes($neg_keyword)."' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				} else {
 					$sql_upd="update tx_multishop_products_description set products_negative_keywords = '' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(!empty($promotext)) {
+				if (!empty($promotext)) {
 					$sql_upd="update tx_multishop_products_description set promotext = '".addslashes($promotext)."' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				} else {
 					$sql_upd="update tx_multishop_products_description set promotext = '' where language_id = 0 and products_id = ".$pid;
 					$GLOBALS['TYPO3_DB']->sql_query($sql_upd) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_upd);
 				}
-				if(count($option) > 0) {
-					foreach($option as $optname=>$optval) {
+				if (count($option)>0) {
+					foreach ($option as $optname=>$optval) {
 						$hide=0;
-						if($optstat[$optname] == 'hide') {
+						if ($optstat[$optname]=='hide') {
 							$hide=1;
 						}
 						$optname=ucwords($optname);
-						if(!empty($optname)) {
+						if (!empty($optname)) {
 							$optid=getOptionID($optname);
-							if(!$optid) {
+							if (!$optid) {
 								$optid=insertOption($optname, $hide);
 							} else {
 								updateOption($optid, $hide);
 							}
-							if(!empty($optval)) {
+							if (!empty($optval)) {
 								$value_tmp=explode(';;', $optval);
-								foreach($value_tmp as $optval2) {
+								foreach ($value_tmp as $optval2) {
 									$valstat=0;
 									$price=0;
 									list($optval3, $optvalprice)=explode('||', $optval2);
-									if(substr($optvalprice, 0, 1) == '+') {
+									if (substr($optvalprice, 0, 1)=='+') {
 										$optvalprice=str_replace('+', '', $optvalprice);
 										$pprefix='+';
 									} else {
-										if(substr($optvalprice, 0, 1) == '-') {
+										if (substr($optvalprice, 0, 1)=='-') {
 											$optvalprice=str_replace('-', '', $optvalprice);
 											$pprefix='-';
 										} else {
-											if($optvalprice != 0) {
+											if ($optvalprice!=0) {
 												$pprefix='+';
 											}
 										}
 									}
-									if(!empty($optvalprice) && $optvalprice > 0) {
+									if (!empty($optvalprice) && $optvalprice>0) {
 										$price=$optvalprice;
 									} else {
 										$pprefix='';
 									}
-									if(strpos($optval3, ':hide') !== FALSE) {
+									if (strpos($optval3, ':hide')!==FALSE) {
 										$valstat=1;
 										$optval3=str_replace(':hide', '', $optval3);
 									} else {
-										if(strpos($optval3, ':unhide') !== FALSE) {
+										if (strpos($optval3, ':unhide')!==FALSE) {
 											$optval3=str_replace(':unhide', '', $optval3);
 										}
 									}
-									if(!$optvalid=getOptionValueID($optval3)) {
+									if (!$optvalid=getOptionValueID($optval3)) {
 										$optvalid=insertOptionValue($optid, $optval3);
 									}
-									if(!$paid=getProductAttributeID($pid, $optid, $optvalid)) {
+									if (!$paid=getProductAttributeID($pid, $optid, $optvalid)) {
 										insertProductAttribute($pid, $optid, $optvalid, $price, $valstat, $pprefix);
 									} else {
 										updateProductAttribute($pid, $paid, $optvalid, $price, $valstat, $pprefix);

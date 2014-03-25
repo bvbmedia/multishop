@@ -1,22 +1,22 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
-if(!$this->post['tx_multishop_pi1']['action'] && $this->get['tx_multishop_pi1']['action']) {
+if (!$this->post['tx_multishop_pi1']['action'] && $this->get['tx_multishop_pi1']['action']) {
 	$this->post['tx_multishop_pi1']['action']=$this->get['tx_multishop_pi1']['action'];
 }
-if($this->post) {
-	foreach($this->post as $post_idx=>$post_val) {
+if ($this->post) {
+	foreach ($this->post as $post_idx=>$post_val) {
 		$this->get[$post_idx]=$post_val;
 	}
 }
-if($this->get) {
-	foreach($this->get as $get_idx=>$get_val) {
+if ($this->get) {
+	foreach ($this->get as $get_idx=>$get_val) {
 		$this->post[$get_idx]=$get_val;
 	}
 }
 // now parse all the objects in the tmpl file
-if($this->conf['admin_useragents_tmpl_path']) {
+if ($this->conf['admin_useragents_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_useragents_tmpl_path']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_useragents.tmpl');
@@ -27,12 +27,12 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['useragents_results']=$this->cObj->getSubpart($subparts['template'], '###RESULTS###');
 $subparts['useragents_listing']=$this->cObj->getSubpart($subparts['useragents_results'], '###ORDERS_LISTING###');
 $subparts['useragents_noresults']=$this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
-if($this->post['limit'] != $this->cookie['limit']) {
+if ($this->post['limit']!=$this->cookie['limit']) {
 	$this->cookie['limit']=$this->post['limit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if($this->cookie['limit']) {
+if ($this->cookie['limit']) {
 	$this->post['limit']=$this->cookie['limit'];
 } else {
 	$this->post['limit']=10;
@@ -50,13 +50,14 @@ $option_search=array(
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-	"payment_method"=>$this->pi_getLL('admin_payment_method'));
+	"payment_method"=>$this->pi_getLL('admin_payment_method')
+);
 asort($option_search);
 $type_search=$this->post['type_search'];
-if(is_numeric($this->post['p'])) {
+if (is_numeric($this->post['p'])) {
 	$p=$this->post['p'];
 }
-if($p > 0) {
+if ($p>0) {
 	$offset=(((($p)*$this->ms['MODULES']['ORDERS_LISTING_LIMIT'])));
 } else {
 	$p=0;
@@ -82,8 +83,8 @@ $limits[]='350';
 $limits[]='400';
 $limits[]='450';
 $limits[]='500';
-foreach($limits as $limit) {
-	$limit_selectbox.='<option value="'.$limit.'"'.($limit == $this->post['limit'] ? ' selected' : '').'>'.$limit.'</option>';
+foreach ($limits as $limit) {
+	$limit_selectbox.='<option value="'.$limit.'"'.($limit==$this->post['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
 $limit_selectbox.='</select>';
 $filter=array();
@@ -94,8 +95,8 @@ $orderby=array();
 $where=array();
 $orderby=array();
 $select=array();
-if($this->post['skeyword']) {
-	switch($type_search) {
+if ($this->post['skeyword']) {
+	switch ($type_search) {
 		case 'all':
 			$option_fields=$option_search;
 			unset($option_fields['all']);
@@ -104,7 +105,7 @@ if($this->post['skeyword']) {
 			unset($option_fields['delivery_name']);
 			//print_r($option_fields);
 			$items=array();
-			foreach($option_fields as $fields=>$label) {
+			foreach ($option_fields as $fields=>$label) {
 				$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
@@ -145,14 +146,14 @@ if($this->post['skeyword']) {
 			break;
 	}
 }
-if(!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
+if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->post['order_date_from']);
 	list($fd, $fm, $fy)=explode('/', $from_date);
 	list($till_date, $till_time)=explode(" ", $this->post['order_date_till']);
 	list($td, $tm, $ty)=explode('/', $till_date);
 	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
 	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
-	if($this->post['search_by_status_last_modified']) {
+	if ($this->post['search_by_status_last_modified']) {
 		$column='o.status_last_modified';
 	} else {
 		$column='o.crdate';
@@ -162,19 +163,19 @@ if(!empty($this->post['order_date_from']) && !empty($this->post['order_date_till
 //print_r($filter);
 //print_r($this->post);
 //die();
-if($this->post['orders_status_search'] > 0) {
+if ($this->post['orders_status_search']>0) {
 	$filter[]="(o.status='".$this->post['orders_status_search']."')";
 }
-if($this->cookie['paid_orders_only']) {
+if ($this->cookie['paid_orders_only']) {
 	$filter[]="(o.paid='1')";
 }
-if(!$this->masterShop) {
+if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
 //$orderby[]='orders_id desc';	
 $select[]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
-switch($this->get['tx_multishop_pi1']['order_by']) {
+switch ($this->get['tx_multishop_pi1']['order_by']) {
 	case 'billing_name':
 		$order_by='o.billing_name';
 		break;
@@ -198,7 +199,7 @@ switch($this->get['tx_multishop_pi1']['order_by']) {
 		$order_by='o.orders_id';
 		break;
 }
-switch($this->get['tx_multishop_pi1']['order']) {
+switch ($this->get['tx_multishop_pi1']['order']) {
 	case 'a':
 		$order='asc';
 		$order_link='d';
@@ -212,7 +213,7 @@ switch($this->get['tx_multishop_pi1']['order']) {
 $orderby[]=$order_by.' '.$order;
 $pageset=mslib_fe::getOrdersPageSet($filter, $offset, $this->post['limit'], $orderby, $having, $select, $where, $from);
 $tmporders=$pageset['orders'];
-if($pageset['total_rows'] > 0) {
+if ($pageset['total_rows']>0) {
 	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/user-agent_listing_table.php');
 } else {
 	$subpartArray=array();

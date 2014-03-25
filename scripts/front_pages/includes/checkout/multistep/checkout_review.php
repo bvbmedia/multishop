@@ -1,37 +1,37 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
-if(count($cart['products']) < 1) {
+if (count($cart['products'])<1) {
 	$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 } else {
-	if($posted_page == current($stepCodes)) {
-		if(!$this->post['accept_general_conditions']) {
+	if ($posted_page==current($stepCodes)) {
+		if (!$this->post['accept_general_conditions']) {
 			$erno[]=$this->pi_getLL('you_havent_accepted_the_general_conditions').'.';
 		}
-		if(!count($erno)) {
+		if (!count($erno)) {
 			// good, proceed with the next step
 			require('checkout_process.php');
 		}
 	} else {
 		$show_review=1;
 	}
-	if($erno or $show_review) {
+	if ($erno or $show_review) {
 		$content.=CheckoutStepping($stepCodes, current($stepCodes), $this);
 		$back_button_link=mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[previous_checkout_section]='.prev($stepCodes));
 		next($stepCodes);
 		$products=$cart['products'];
-		if(count($products) < 1) {
+		if (count($products)<1) {
 			$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 		} else {
-			if(is_array($erno) and count($erno) > 0) {
+			if (is_array($erno) and count($erno)>0) {
 				$content.='<div class="error_msg">';
 				$content.=$this->pi_getLL('the_following_errors_occurred').': <ul>';
-				foreach($erno as $item) {
+				foreach ($erno as $item) {
 					$content.='<li>'.$item.'</li>';
 				}
 				$content.='</ul>';
@@ -64,7 +64,7 @@ if(count($cart['products']) < 1) {
 					<input name="accept_general_conditions" id="accept_general_conditions" type="checkbox" value="1" />
 					<label for="accept_general_conditions">'.$this->pi_getLL('click_here_if_you_agree_the_general_conditions');
 			$page=mslib_fe::getCMScontent('general_conditions', $GLOBALS['TSFE']->sys_language_uid);
-			if($page[0]['content']) {
+			if ($page[0]['content']) {
 				$content.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_general_conditions').'</a>)';
 			}
 			$content.='

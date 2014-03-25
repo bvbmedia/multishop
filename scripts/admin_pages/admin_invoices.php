@@ -1,14 +1,14 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-switch($this->get['tx_multishop_pi1']['action']) {
+switch ($this->get['tx_multishop_pi1']['action']) {
 	case 'mail_invoices':
 		// send invoices by mail
-		if($this->get['tx_multishop_pi1']['mailto'] and is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
+		if ($this->get['tx_multishop_pi1']['mailto'] and is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
 			$attachments=array();
-			foreach($this->get['selected_invoices'] as $invoice) {
-				if(is_numeric($invoice)) {
+			foreach ($this->get['selected_invoices'] as $invoice) {
+				if (is_numeric($invoice)) {
 					$invoice=mslib_fe::getInvoice($invoice, 'invoice_id');
 					// invoice as attachment
 					$invoice_path=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$invoice['invoice_id'].'.pdf';
@@ -18,25 +18,25 @@ switch($this->get['tx_multishop_pi1']['action']) {
 					$attachments[]=$invoice_path;
 				}
 			}
-			if(count($attachments)) {
+			if (count($attachments)) {
 				// send mail
 				$user=array();
 				$user['name']=$this->ms['MODULES']['STORE_NAME'];
 				$user['email']=$this->get['tx_multishop_pi1']['mailto'];
 				mslib_fe::mailUser($user, $this->ms['MODULES']['STORE_NAME'].' invoices', $this->ms['MODULES']['STORE_NAME'].' invoices', $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $attachments);
 				// delete temporary invoice from disk
-				foreach($attachments as $attachment) {
+				foreach ($attachments as $attachment) {
 					unlink($attachment);
 				}
 			}
 		}
 		break;
 	case 'create_reversal_invoice':
-		if(is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
-			foreach($this->get['selected_invoices'] as $invoice) {
-				if(is_numeric($invoice)) {
+		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
+			foreach ($this->get['selected_invoices'] as $invoice) {
+				if (is_numeric($invoice)) {
 					$invoice=mslib_fe::getInvoice($invoice, 'invoice_id');
-					if($invoice['id'] and $invoice['reversal_invoice'] == 0) {
+					if ($invoice['id'] and $invoice['reversal_invoice']==0) {
 						mslib_fe::generateReversalInvoice($invoice['id']);
 					}
 				}
@@ -45,14 +45,14 @@ switch($this->get['tx_multishop_pi1']['action']) {
 		break;
 	case 'update_selected_invoices_to_paid':
 	case 'update_selected_invoices_to_not_paid':
-		if(is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
-			foreach($this->get['selected_invoices'] as $invoice) {
-				if(is_numeric($invoice)) {
+		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
+			foreach ($this->get['selected_invoices'] as $invoice) {
+				if (is_numeric($invoice)) {
 					$invoice=mslib_fe::getInvoice($invoice, 'invoice_id');
-					if($invoice['id']) {
+					if ($invoice['id']) {
 						$order=mslib_fe::getOrder($invoice['orders_id']);
-						if($order['orders_id']) {
-							if($this->get['tx_multishop_pi1']['action'] == 'update_selected_invoices_to_paid') {
+						if ($order['orders_id']) {
+							if ($this->get['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
 								mslib_fe::updateOrderStatusToPaid($order['orders_id']);
 							} else {
 								$updateArray=array('paid'=>0);
@@ -64,7 +64,7 @@ switch($this->get['tx_multishop_pi1']['action']) {
 							}
 						} else {
 							// this invoice has no belonging order. This could be true in specific cases so just update the invoice to not paid.
-							if($this->get['tx_multishop_pi1']['action'] == 'update_selected_invoices_to_paid') {
+							if ($this->get['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
 								$updateArray=array('paid'=>1);
 							} else {
 								$updateArray=array('paid'=>0);
@@ -78,17 +78,17 @@ switch($this->get['tx_multishop_pi1']['action']) {
 		}
 		break;
 }
-if($this->get['Search'] and ($this->get['paid_invoices_only'] != $this->cookie['paid_invoices_only'])) {
+if ($this->get['Search'] and ($this->get['paid_invoices_only']!=$this->cookie['paid_invoices_only'])) {
 	$this->cookie['paid_invoices_only']=$this->get['paid_invoices_only'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if($this->get['Search'] and ($this->get['limit'] != $this->cookie['limit'])) {
+if ($this->get['Search'] and ($this->get['limit']!=$this->cookie['limit'])) {
 	$this->cookie['limit']=$this->get['limit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if($this->cookie['limit']) {
+if ($this->cookie['limit']) {
 	$this->get['limit']=$this->cookie['limit'];
 } else {
 	$this->get['limit']=15;
@@ -106,10 +106,11 @@ $option_search=array(
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-	"payment_method"=>$this->pi_getLL('admin_payment_method'));
+	"payment_method"=>$this->pi_getLL('admin_payment_method')
+);
 asort($option_search);
 $type_search=$this->get['type_search'];
-if($_REQUEST['skeyword']) {
+if ($_REQUEST['skeyword']) {
 	//  using $_REQUEST cause TYPO3 converts "Command & Conquer" to "Conquer" (the & sign sucks ass)
 	$this->get['skeyword']=$_REQUEST['skeyword'];
 	$this->get['skeyword']=trim($this->get['skeyword']);
@@ -117,18 +118,18 @@ if($_REQUEST['skeyword']) {
 	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], TRUE);
 	$this->get['skeyword']=mslib_fe::RemoveXSS($this->get['skeyword']);
 }
-if(is_numeric($this->get['p'])) {
+if (is_numeric($this->get['p'])) {
 	$p=$this->get['p'];
 }
-if($p > 0) {
+if ($p>0) {
 	$offset=(((($p)*$this->ms['MODULES']['ORDERS_LISTING_LIMIT'])));
 } else {
 	$p=0;
 	$offset=0;
 }
 // orders search
-foreach($option_search as $key=>$val) {
-	$option_item.='<option value="'.$key.'" '.($this->get['type_search'] == $key ? "selected" : "").'>'.$val.'</option>';
+foreach ($option_search as $key=>$val) {
+	$option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
 $form_orders_search='<div id="search-orders">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
@@ -149,8 +150,8 @@ $limits[]='40';
 $limits[]='50';
 $limits[]='100';
 $limits[]='150';
-foreach($limits as $limit) {
-	$form_orders_search.='<option value="'.$limit.'"'.($limit == $this->get['limit'] ? ' selected' : '').'>'.$limit.'</option>';
+foreach ($limits as $limit) {
+	$form_orders_search.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
 $form_orders_search.='
 					</select>
@@ -175,8 +176,8 @@ $orderby=array();
 $where=array();
 $orderby=array();
 $select=array();
-if($this->get['skeyword']) {
-	switch($type_search) {
+if ($this->get['skeyword']) {
+	switch ($type_search) {
 		case 'all':
 			$option_fields=$option_search;
 			unset($option_fields['all']);
@@ -185,7 +186,7 @@ if($this->get['skeyword']) {
 			unset($option_fields['delivery_name']);
 			//print_r($option_fields);
 			$items=array();
-			foreach($option_fields as $fields=>$label) {
+			foreach ($option_fields as $fields=>$label) {
 				$items[]=$fields." LIKE '%".addslashes($this->get['skeyword'])."%'";
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
@@ -232,10 +233,10 @@ if($this->get['skeyword']) {
 			break;
 	}
 }
-if($this->cookie['paid_invoices_only']) {
+if ($this->cookie['paid_invoices_only']) {
 	$filter[]="(i.paid='1')";
 }
-if(!$this->masterShop) {
+if (!$this->masterShop) {
 	$filter[]='i.page_uid='.$this->showCatalogFromPage;
 }
 //$orderby[]='orders_id desc';	
@@ -243,11 +244,11 @@ $select[]='*, i.hash';
 $orderby[]='i.id desc';
 $pageset=mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
 $invoices=$pageset['invoices'];
-if($pageset['total_rows'] > 0) {
+if ($pageset['total_rows']>0) {
 	$this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/invoices/invoices_listing_table.php');
 	// pagination
-	if(!$this->ms['nopagenav'] and $pageset['total_rows'] > $this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
+	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
 		//require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/invoices/pagination.php');
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$content.=$tmp;
@@ -259,7 +260,8 @@ if($pageset['total_rows'] > 0) {
 $tabs=array();
 $tabs['Invoices_By_Date']=array(
 	$this->pi_getLL('admin_invoices'),
-	$tmp);
+	$tmp
+);
 $tmp='';
 $content.='
 <script type="text/javascript"> 
@@ -308,9 +310,9 @@ jQuery(document).ready(function($) {
     <ul class="tabs" id="admin_invoices">	
 ';
 $count=0;
-foreach($tabs as $key=>$value) {
+foreach ($tabs as $key=>$value) {
 	$count++;
-	$content.='<li'.(($count == 1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 }
 $content.='        
     </ul>
@@ -318,7 +320,7 @@ $content.='
 	<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices').'" method="get">
 	'.$form_orders_search;
 $count=0;
-foreach($tabs as $key=>$value) {
+foreach ($tabs as $key=>$value) {
 	$count++;
 	$content.='
         <div style="display: block;" id="'.$key.'" class="tab_content">

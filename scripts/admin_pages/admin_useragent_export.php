@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 set_time_limit(0);
@@ -36,16 +36,16 @@ $header_style['font']=array('bold'=>true);
 $row_count=1;
 $col_count=0;
 $colwidth=array();
-foreach($fields as $key=>$val) {
+foreach ($fields as $key=>$val) {
 	$colwidth[$col_count]=strlen($val)+1;
 	$cell=$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col_count, $row_count, $val);
 	$col_count++;
 }
 $row_count++;
-foreach($tmporders as $item) {
+foreach ($tmporders as $item) {
 	$col_count=0;
-	foreach($item as $key=>$val) {
-		if(strlen($val)+5 > $colwidth[$col_count]) {
+	foreach ($item as $key=>$val) {
+		if (strlen($val)+5>$colwidth[$col_count]) {
 			$colwidth[$col_count]=strlen($val)+5;
 		}
 		//$val = iconv('ASCII', 'UTF-8//IGNORE', $val);
@@ -58,7 +58,7 @@ foreach($tmporders as $item) {
 $last_col=$phpexcel->getActiveSheet()->getHighestColumn();
 $phpexcel->getActiveSheet()->getStyle('A1:'.$last_col.'1')->applyFromArray($header_style);
 $col_id='A';
-foreach($colwidth as $col_key=>$col_val) {
+foreach ($colwidth as $col_key=>$col_val) {
 	$phpexcel->getActiveSheet()->getColumnDimension($col_id)->setWidth($col_val);
 	$col_id++;
 }

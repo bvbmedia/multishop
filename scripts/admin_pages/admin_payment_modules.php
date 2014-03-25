@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $active_shop=mslib_fe::getActiveShop();
@@ -41,17 +41,17 @@ $mslib_payment=t3lib_div::makeInstance('mslib_payment');
 $mslib_payment->init($this);
 $payment_methods=array();
 $payment_methods=$mslib_payment->getInstalledPaymentMethods($this);
-if(count($payment_methods) > 0) {
+if (count($payment_methods)>0) {
 	// merge default and installed payment
 	$payment_methods=array_merge($default_payment_methods, $payment_methods);
 } else {
 	$payment_methods=$default_payment_methods;
 }
 //$content.=mslib_befe::print_r($payment_methods);
-if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id']) {
+if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']) {
 	// update payment method
 	$row=mslib_fe::getPaymentMethod($_REQUEST['payment_method_id'], 'p.id');
-	if($row['id']) {
+	if ($row['id']) {
 		/* $data=unserialize($row['vars']);
 		foreach ($this->post as $key => $value)
 		{
@@ -67,13 +67,13 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 		$updateArray['vars']=serialize($this->post);
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\''.$row['id'].'\'', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		foreach($this->post['name'] as $key=>$value) {
+		foreach ($this->post['name'] as $key=>$value) {
 			$updateArray=array();
 			$updateArray['name']=$this->post['name'][$key];
 			$updateArray['description']=$this->post['description'][$key];
 			$str="select 1 from tx_multishop_payment_methods_description where id='".$row['id']."' and language_id='".$key."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\''.$row['id'].'\' and language_id=\''.$key.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -85,12 +85,12 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 		}
 		$this->ms['show_main']=1;
 	}
-} elseif($this->get['edit']) {
+} elseif ($this->get['edit']) {
 	$row=mslib_fe::getPaymentMethod($_REQUEST['payment_method_id'], 'p.id');
 	$str="SELECT * from tx_multishop_payment_methods_description where id='".$row['id']."'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$lngproduct=array();
-	while(($tmprow=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($tmprow=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$lngproduct[$tmprow['language_id']]=$tmprow;
 	}
 	$psp=$payment_methods[$row['provider']];
@@ -100,11 +100,11 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 		<input name="sub" type="hidden" value="update_payment_method" />
 		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />
 ';
-	foreach($this->languages as $key=>$language) {
+	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
 		<div class="account-field">
 		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
-		if($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
+		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
 		$tmpcontent.=''.$language['title'].'
@@ -131,13 +131,13 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 			<label>'.$this->pi_getLL('code').'</label>
 			'.$row['code'].'
 		</div>';
-	if(count($active_shop) > 1) {
+	if (count($active_shop)>1) {
 		$tmpcontent.='
 						<div class="account-field">
 							<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
-							<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid'] == 0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
-		foreach($active_shop as $pageinfo) {
-			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($row['page_uid'] == $pageinfo['puid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
+							<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
+		foreach ($active_shop as $pageinfo) {
+			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($row['page_uid']==$pageinfo['puid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
 		}
 		$tmpcontent.='
 						</div>';
@@ -158,8 +158,8 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 		<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while(($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-		$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id'] == $row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 	}
 	$tmpcontent.='
 		</select>
@@ -270,17 +270,17 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 		</script>
 		';
 	$content.=$tmpcontent;
-} elseif($_REQUEST['sub'] == 'add_payment_method' and $_REQUEST['payment_method_code']) {
-	if($this->post) {
+} elseif ($_REQUEST['sub']=='add_payment_method' and $_REQUEST['payment_method_code']) {
+	if ($this->post) {
 		$erno=array();
 		$check=mslib_fe::getPaymentMethod($this->post['custom_code'], 'p.code');
-		if($check['id']) {
+		if ($check['id']) {
 			$erno[]='<li>Code already in use</li>';
 		}
-		if(is_array($erno) and count($erno) > 0) {
+		if (is_array($erno) and count($erno)>0) {
 			$content.='<div class="error_msg">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach($erno as $item) {
+			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';
 			}
 			$content.='</ul>';
@@ -302,15 +302,15 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 			$insertArray['vars']=serialize($this->post);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			if($res) {
+			if ($res) {
 				$id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-				foreach($this->post['name'] as $key=>$value) {
+				foreach ($this->post['name'] as $key=>$value) {
 					$updateArray=array();
 					$updateArray['name']=$this->post['name'][$key];
 					$updateArray['description']=$this->post['description'][$key];
 					$str="select 1 from tx_multishop_payment_methods_description where id='".$id."' and language_id='".$key."'";
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-					if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\''.$id.'\' and language_id=\''.$key.'\'', $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					} else {
@@ -324,14 +324,14 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 			}
 		}
 	}
-	if($erno or !$this->post) {
+	if ($erno or !$this->post) {
 		$psp=$payment_methods[$_REQUEST['payment_method_code']];
 		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
-		foreach($this->languages as $key=>$language) {
+		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='
 		<div class="account-field">
 		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
-			if($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
+			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$tmpcontent.=''.$language['title'].'
@@ -351,13 +351,13 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 			<label for="custom_code">'.$this->pi_getLL('code').'</label>
 			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($_REQUEST['custom_code']).'" />
 		</div>';
-		if(count($active_shop) > 1) {
+		if (count($active_shop)>1) {
 			$tmpcontent.='
 					<div class="account-field">
 						<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 						<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked"/>&nbsp;'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
-			foreach($active_shop as $pageinfo) {
-				$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($this->shop_pid == $pageinfo['puid']) ? ' checked="checked"' : '').' />&nbsp;'.$pageinfo['title'].'</span>';
+			foreach ($active_shop as $pageinfo) {
+				$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($this->shop_pid==$pageinfo['puid']) ? ' checked="checked"' : '').' />&nbsp;'.$pageinfo['title'].'</span>';
 			}
 			$tmpcontent.='
 					</div>';
@@ -378,8 +378,8 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 		<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		while(($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id'] == $row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+		while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 		}
 		$tmpcontent.='
 		</select>
@@ -506,19 +506,19 @@ if($_REQUEST['sub'] == 'update_payment_method' and $_REQUEST['payment_method_id'
 } else {
 	$this->ms['show_main']=1;
 }
-if($this->ms['show_main']) {
-	if(is_numeric($this->get['status']) and is_numeric($this->get['payment_method_id'])) {
+if ($this->ms['show_main']) {
+	if (is_numeric($this->get['status']) and is_numeric($this->get['payment_method_id'])) {
 		$updateArray=array();
 		$updateArray['status']=$this->get['status'];
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\''.$this->get['payment_method_id'].'\'', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-	} elseif(is_numeric($this->get['status']) and is_numeric($this->get['shipping_method_id'])) {
+	} elseif (is_numeric($this->get['status']) and is_numeric($this->get['shipping_method_id'])) {
 		$updateArray=array();
 		$updateArray['status']=$this->get['status'];
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$this->get['shipping_method_id'].'\'', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
-	if(is_numeric($this->get['delete']) and is_numeric($this->get['payment_method_id'])) {
+	if (is_numeric($this->get['delete']) and is_numeric($this->get['payment_method_id'])) {
 		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods', 'id=\''.$this->get['payment_method_id'].'\'');
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_shipping_mappings', 'payment_method=\''.$this->get['payment_method_id'].'\'');
@@ -531,25 +531,25 @@ if($this->ms['show_main']) {
 	$str="SELECT *,d.name from tx_multishop_payment_methods p, tx_multishop_payment_methods_description d where d.language_id='".$this->sys_language_uid."' and (p.page_uid = '".$this->shop_pid."' or p.page_uid = '0') and p.id=d.id order by p.sort_order";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$tr_type='even';
-	if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 		$tmpcontent.='<table class="msZebraTable msadmin_border" id="admin_modules_listing">';
 		$tmpcontent.='<tr>';
-		if(count($active_shop) > 1) {
+		if (count($active_shop)>1) {
 			$tmpcontent.='<th>'.$this->pi_getLL('shop', 'Shop').'</th>';
 		}
 		$tmpcontent.='<th>'.$this->pi_getLL('payment_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th></tr>
 		<tbody class="sortable_content">
 		';
-		while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			//		$tmpcontent.='<h3>'.$cat['name'].'</h3>';
-			if(!$tr_type or $tr_type == 'even') {
+			if (!$tr_type or $tr_type=='even') {
 				$tr_type='odd';
 			} else {
 				$tr_type='even';
 			}
 			$tmpcontent.='<tr class="'.$tr_type.'" id="multishop_payment_method_'.$row['id'].'">';
-			if(count($active_shop) > 1) {
-				if($row['page_uid'] > 0) {
+			if (count($active_shop)>1) {
+				if ($row['page_uid']>0) {
 					$tmpcontent.='<td><strong>'.mslib_fe::getShopNameByPageUid($row['page_uid']).'</strong></td>';
 				} else {
 					$tmpcontent.='<td><strong>All</strong></td>';
@@ -560,7 +560,7 @@ if($this->ms['show_main']) {
 			<td>'.$row['provider'].'</td>
 			<td>'.date("Y-m-d", $row['date']).'</td>
 			<td align="center">';
-			if(!$row['status']) {
+			if (!$row['status']) {
 				$tmpcontent.='<span class="admin_status_red" alt="Disable"></span>';
 				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
 			} else {
@@ -608,26 +608,26 @@ if($this->ms['show_main']) {
 	$tmpcontent.='<div id="flexible_container"><ul id="admin_payment_methods_list" class="hide">';
 	$innercount=0;
 	$count=0;
-	foreach($payment_methods as $code=>$item) {
+	foreach ($payment_methods as $code=>$item) {
 		$innercount++;
 		$count++;
 		$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'">';
-		if($item['image']) {
+		if ($item['image']) {
 			$tmpcontent.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/psp/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
 			$tmpcontent.='<span class="multishop_psp_name">'.$item['name'].'</span>';
 		}
 		$tmpcontent.='<span class="multishop_psp_add">add '.$item['name'].'</span></a>';
-		if($item['more_info_link']) {
+		if ($item['more_info_link']) {
 			$tmpcontent.='<span class="multishop_psp_register"><a href="'.$item['more_info_link'].'" target="_blank">register account</a></span>';
 		}
 		$tmpcontent.='</div></li>';
-		if($innercount == 3) {
+		if ($innercount==3) {
 			$innercount=0;
 		}
 	}
-	if($innercount > 0) {
-		for($i=3; $i > $innercount; $i--) {
+	if ($innercount>0) {
+		for ($i=3; $i>$innercount; $i--) {
 			$count++;
 			$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li">';
 			$tmpcontent.='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->conf['admin_development_company_logo_gray_path'].'" border="0"></span></span><span class="multishop_psp_add"></span></a>';

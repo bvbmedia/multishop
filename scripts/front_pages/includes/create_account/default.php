@@ -1,13 +1,13 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if(mslib_fe::loggedin()) {
+if (mslib_fe::loggedin()) {
 	// user is already signed in
 	$content.=$this->pi_getLL('you_are_already_signed_in');
 } else {
 	$erno=array();
-	if($this->post) {
+	if ($this->post) {
 		$mslib_user=t3lib_div::makeInstance('tx_mslib_user');
 		$mslib_user->init($this);
 		$mslib_user->setUsername($this->post['email']);
@@ -33,16 +33,16 @@ if(mslib_fe::loggedin()) {
 		$mslib_user->setCaptcha_code($this->post['tx_multishop_pi1']['captcha_code']);
 		$mslib_user->setBirthday($this->post['birthday']);
 		$erno=$mslib_user->checkUserData();
-		if(!count($erno)) {
+		if (!count($erno)) {
 			$customer_id=$mslib_user->saveUserData();
-			if($customer_id) {
+			if ($customer_id) {
 				$newCustomer=mslib_fe::getUser($customer_id);
 				// save as billing address and default address, later on
 				// customer can edit the profile
 				$res=$mslib_user->saveUserBillingAddress($customer_id);
-				if($res) {
+				if ($res) {
 					$page=mslib_fe::getCMScontent('email_create_account_confirmation', $GLOBALS['TSFE']->sys_language_uid);
-					if($page[0]['content']) {
+					if ($page[0]['content']) {
 						// loading the email confirmation letter eof
 						// replacing the variables with dynamic values
 						$array1=array();
@@ -57,7 +57,7 @@ if(mslib_fe::loggedin()) {
 						$array2[]=$newCustomer['first_name'];
 						$array1[]='###BILLING_LAST_NAME###';
 						$last_name=$newCustomer['last_name'];
-						if($newCustomer['middle_name']) {
+						if ($newCustomer['middle_name']) {
 							$last_name=$newCustomer['middle_name'].' '.$last_name;
 						}
 						$array2[]=$last_name;
@@ -86,10 +86,10 @@ if(mslib_fe::loggedin()) {
 						$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
 						$array1[]='###CONFIRMATION_LINK###';
 						$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
-						if($page[0]['content']) {
+						if ($page[0]['content']) {
 							$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
 						}
-						if($page[0]['name']) {
+						if ($page[0]['name']) {
 							$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
 						}
 						$user=array();
@@ -103,7 +103,7 @@ if(mslib_fe::loggedin()) {
 						mslib_fe::mailUser($merchant, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
 						// display the thank you page
 						$page=mslib_fe::getCMScontent('create_account_thank_you_page', $GLOBALS['TSFE']->sys_language_uid);
-						if($page[0]['content']) {
+						if ($page[0]['content']) {
 							// loading the email confirmation letter eof
 							// replacing the variables with dynamic values
 							$array1=array();
@@ -118,7 +118,7 @@ if(mslib_fe::loggedin()) {
 							$array2[]=$newCustomer['first_name'];
 							$array1[]='###BILLING_LAST_NAME###';
 							$last_name=$newCustomer['last_name'];
-							if($newCustomer['middle_name']) {
+							if ($newCustomer['middle_name']) {
 								$last_name=$newCustomer['middle_name'].' '.$last_name;
 							}
 							$array2[]=$last_name;
@@ -142,11 +142,11 @@ if(mslib_fe::loggedin()) {
 							$array2[]=$this->ms['MODULES']['STORE_NAME'];
 							$array1[]='###CUSTOMER_ID###';
 							$array2[]=$customer_id;
-							if($page[0]['name']) {
+							if ($page[0]['name']) {
 								$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
 								$content.='<div class="main-heading"><h3>'.$page[0]['name'].'</h3></div>';
 							}
-							if($page[0]['content']) {
+							if ($page[0]['content']) {
 								$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
 								$content.=$page[0]['content'];
 							}
@@ -156,11 +156,11 @@ if(mslib_fe::loggedin()) {
 			}
 		}
 	}
-	if(!$this->post or count($erno)) {
-		if(count($erno) > 0) {
+	if (!$this->post or count($erno)) {
+		if (count($erno)>0) {
 			$content.='<div class="error_msg">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach($erno as $item) {
+			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';
 			}
 			$content.='</ul>';
@@ -178,9 +178,9 @@ if(mslib_fe::loggedin()) {
 			  </div>
 			  <div class="account-field" id="input-gender"> <span id="ValidRadio" class="InputGroup">
 				<label for="gender_mr" id="account-gender">'.ucfirst($this->pi_getLL('title')).'*</label>
-				<input type="radio" class="InputGroup" name="gender" value="m" id="gender_mr"'.($this->post['gender'] == 'm' ? ' checked="checked"' : '').' />
+				<input type="radio" class="InputGroup" name="gender" value="m" id="gender_mr"'.($this->post['gender']=='m' ? ' checked="checked"' : '').' />
 				<label class="account-male" for="gender_mr">'.$this->pi_getLL('mr').'</label>
-				<input type="radio" name="gender" value="f" class="InputGroup" id="gender_mrs"'.($this->post['gender'] == 'f' ? ' checked="checked"' : '').' />
+				<input type="radio" name="gender" value="f" class="InputGroup" id="gender_mrs"'.($this->post['gender']=='f' ? ' checked="checked"' : '').' />
 				<label class="account-female" for="gender_mrs">'.$this->pi_getLL('mrs').'</label>
 				</span> <span class="error-space"></span></div>
 			  <div class="account-field" id="input-firstname">
@@ -204,11 +204,11 @@ if(mslib_fe::loggedin()) {
 		$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 		$enabled_countries=array();
-		while($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
+		while ($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
 			$enabled_countries[]=$row2;
 		}
 		// load enabled countries to array eof
-		if(count($enabled_countries) == 1) {
+		if (count($enabled_countries)==1) {
 			$content.='<input name="country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 		} else {
 			$content.='
@@ -216,13 +216,13 @@ if(mslib_fe::loggedin()) {
 						<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label> 						
 					';
 			$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
-			if(!$this->post) {
+			if (!$this->post) {
 				$this->post['country']=$default_country['cn_short_en'];
 			}
-			foreach($enabled_countries as $country) {
-				$tmpcontent.='<option value="'.t3lib_div::strtoupper($country['cn_short_en']).'" '.((t3lib_div::strtolower($this->post['country']) == t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			foreach ($enabled_countries as $country) {
+				$tmpcontent.='<option value="'.t3lib_div::strtoupper($country['cn_short_en']).'" '.((t3lib_div::strtolower($this->post['country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 			}
-			if($tmpcontent) {
+			if ($tmpcontent) {
 				$content.='
 						<select name="country" class="country">
 							<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>

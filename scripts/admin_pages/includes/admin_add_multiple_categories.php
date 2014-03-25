@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
@@ -12,14 +12,14 @@ window.onload = function(){
 </script>
 ';
 // hidden filename that is retrieved from the ajax upload
-if($this->post) {
+if ($this->post) {
 	$categories_name=explode("\n", $this->post['categories_name']);
-	foreach($categories_name as $category_name) {
+	foreach ($categories_name as $category_name) {
 		$category_name=str_replace("\r", "", $category_name);
-		if($category_name) {
+		if ($category_name) {
 			$category_name=trim($category_name);
 		}
-		if(!empty($category_name)) {
+		if (!empty($category_name)) {
 			$query3=$GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name, c.categories_id, c.parent_id', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 				'c.parent_id ='.$this->post['parent_id'].' and cd.categories_name=\''.addslashes($category_name).'\' and c.categories_id=cd.categories_id', // WHERE...
@@ -28,7 +28,7 @@ if($this->post) {
 				'' // LIMIT ...
 			);
 			$res3=$GLOBALS['TYPO3_DB']->sql_query($query3);
-			if(!$GLOBALS['TYPO3_DB']->sql_num_rows($res3) > 0) {
+			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($res3)>0) {
 				// sometimes the categories startingpoint is not zero. To protect merchants configure a category that is member of itself we reset the parent_id to zero
 				$updateArray=array();
 				$updateArray['custom_settings']='';
@@ -40,10 +40,10 @@ if($this->post) {
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				$catid=$GLOBALS['TYPO3_DB']->sql_insert_id();
-				if($catid) {
+				if ($catid) {
 					$str="select 1 from tx_multishop_categories_description where categories_id='".$catid."' and language_id='0'";
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-					if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 						$updateArray=array();
 						$updateArray['categories_name']=$category_name;
 						$updateArray['meta_title']='';
@@ -77,7 +77,7 @@ if($this->post) {
 		</script>
 	';
 } else {
-	if(!$category['parent_id']) {
+	if (!$category['parent_id']) {
 		$category['parent_id']=$this->get['cid'];
 	}
 	$save_block='
@@ -106,7 +106,8 @@ if($this->post) {
 	</div>';
 	$tabs['category_main']=array(
 		'DETAILS',
-		$tmpcontent);
+		$tmpcontent
+	);
 	// tabber
 	$content.='
 <script type="text/javascript">
@@ -130,9 +131,9 @@ jQuery(document).ready(function($) {
     <ul class="tabs" id="admin_orders">
 ';
 	$count=0;
-	foreach($tabs as $key=>$value) {
+	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='<li'.(($count == 1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 	}
 	$content.='
     </ul>
@@ -140,7 +141,7 @@ jQuery(document).ready(function($) {
 	
 	';
 	$count=0;
-	foreach($tabs as $key=>$value) {
+	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
         <div style="display: block;" id="'.$key.'" class="tab_content">

@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $str3="SELECT * from static_countries where cn_short_en='".addslashes($this->post['cc'])."' ";
@@ -9,13 +9,13 @@ $countries_id=$row3['cn_iso_nr'];
 $payment_methods=mslib_fe::loadPaymentMethods(0, $countries_id);
 $data=array();
 $k=0;
-foreach($payment_methods as $payment_name=>$payment_data) {
-	if(!$tr_type or $tr_type == 'even') {
+foreach ($payment_methods as $payment_name=>$payment_data) {
+	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
 	} else {
 		$tr_type='even';
 	}
-	if(!$payment_data['sort_order']) {
+	if (!$payment_data['sort_order']) {
 		$payment_data['sort_order']=$k;
 	}
 	// refine the payment data, only sent what it's need to rebuild the <li> on the client side
@@ -24,11 +24,12 @@ foreach($payment_methods as $payment_name=>$payment_data) {
 	$data[$payment_data['sort_order']]['payment_description']=$payment_data['description'];
 	$data[$payment_data['sort_order']]['li_class']=$tr_type;
 	$data[$payment_data['sort_order']]['radio_class']='regular-payment';
-	if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'])) {
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'])) {
 		$params=array(
 			'data'=>&$data,
-			'payment_data'=>&$payment_data);
-		foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'] as $funcRef) {
+			'payment_data'=>&$payment_data
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}

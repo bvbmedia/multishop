@@ -1,21 +1,21 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if($this->ADMIN_USER) {
+if ($this->ADMIN_USER) {
 	$jsonData=array();
-	if(is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
+	if (is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
 		$order=mslib_fe::getOrder($this->post['tx_multishop_pi1']['orders_id']);
-		if($order['orders_id']) {
+		if ($order['orders_id']) {
 			$jsonData['html']='';
-			if(count($order['products'])) {
+			if (count($order['products'])) {
 				// address details:
 				$jsonData['html'].='
 				<div class="msAdminTooltipOrderDetailsAddressWrapper">
 					<div class="msAdminTooltipBillingAddressDetails">
 						<h3>'.$this->pi_getLL('billing_details').'</h3>
 ';
-				if($order['billing_company']) {
+				if ($order['billing_company']) {
 					$jsonData['html'].=$order['billing_company'].'<br />';
 				}
 				$jsonData['html'].=$order['billing_name'].'<br />
@@ -23,16 +23,16 @@ if($this->ADMIN_USER) {
 '.$order['billing_zip'].' '.$order['billing_city'].' <br />
 '.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br /><br />
 ';
-				if($order['billing_email']) {
+				if ($order['billing_email']) {
 					$jsonData['html'].=$this->pi_getLL('email').': <a href="mailto:'.$order['billing_email'].'">'.$order['billing_email'].'</a><br />';
 				}
-				if($order['billing_telephone']) {
+				if ($order['billing_telephone']) {
 					$jsonData['html'].=$this->pi_getLL('telephone').': '.$order['billing_telephone'].'<br />';
 				}
-				if($order['billing_mobile']) {
+				if ($order['billing_mobile']) {
 					$jsonData['html'].=$this->pi_getLL('mobile').': '.$order['billing_mobile'].'<br />';
 				}
-				if($order['billing_fax']) {
+				if ($order['billing_fax']) {
 					$jsonData['html'].=$this->pi_getLL('fax').': '.$order['billing_fax'].'<br />';
 				}
 				$jsonData['html'].='
@@ -40,7 +40,7 @@ if($this->ADMIN_USER) {
 					<div class="msAdminTooltipDeliveryAddressDetails">
 						<h3>'.$this->pi_getLL('delivery_details').'</h3>
 ';
-				if($order['delivery_company']) {
+				if ($order['delivery_company']) {
 					$jsonData['html'].=$order['delivery_company'].'<br />';
 				}
 				$jsonData['html'].=$order['delivery_name'].'<br />
@@ -48,16 +48,16 @@ if($this->ADMIN_USER) {
 						'.$order['delivery_zip'].' '.$order['delivery_city'].' <br />
 						'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']).'<br /><br />
 ';
-				if($order['delivery_email']) {
+				if ($order['delivery_email']) {
 					$jsonData['html'].=$this->pi_getLL('email').': <a href="mailto:'.$order['delivery_email'].'">'.$order['delivery_email'].'</a><br />';
 				}
-				if($order['delivery_telephone']) {
+				if ($order['delivery_telephone']) {
 					$jsonData['html'].=$this->pi_getLL('telephone').': '.$order['delivery_telephone'].'<br />';
 				}
-				if($order['delivery_mobile']) {
+				if ($order['delivery_mobile']) {
 					$jsonData['html'].=$this->pi_getLL('mobile').': '.$order['delivery_mobile'].'<br />';
 				}
-				if($order['delivery_fax']) {
+				if ($order['delivery_fax']) {
 					$jsonData['html'].=$this->pi_getLL('fax').': '.$order['delivery_fax'].'<br />';
 				}
 				$jsonData['html'].='
@@ -71,26 +71,26 @@ if($this->ADMIN_USER) {
 				<th>'.$this->pi_getLL('products_name').'</th>
 				<th>'.$this->pi_getLL('price').'</th>
 				</tr>';
-				foreach($order['products'] as $product) {
-					if(!$tr_subtype or $tr_subtype == 'even') {
+				foreach ($order['products'] as $product) {
+					if (!$tr_subtype or $tr_subtype=='even') {
 						$tr_subtype='odd';
 					} else {
 						$tr_subtype='even';
 					}
 					$where='';
-					if(!$product['categories_id']) {
+					if (!$product['categories_id']) {
 						// fix fold old orders that did not have categories id in orders_products table
 						$tmpProduct=mslib_fe::getProduct($product['products_id']);
 						$product['categories_id']=$tmpProduct;
 					}
-					if($product['categories_id']) {
+					if ($product['categories_id']) {
 						// get all cats to generate multilevel fake url
 						$level=0;
 						$cats=mslib_fe::Crumbar($product['categories_id']);
 						$cats=array_reverse($cats);
 						$where='';
-						if(count($cats) > 0) {
-							foreach($cats as $cat) {
+						if (count($cats)>0) {
+							foreach ($cats as $cat) {
 								$where.="categories_id[".$level."]=".$cat['id']."&";
 								$level++;
 							}
@@ -107,13 +107,13 @@ if($this->ADMIN_USER) {
 					<td><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>
 					<td class="align_right">'.mslib_fe::amount2Cents($product['final_price']).'</td>
 					</tr>';
-					if(count($product['attributes'])) {
-						foreach($product['attributes'] as $attributes) {
+					if (count($product['attributes'])) {
+						foreach ($product['attributes'] as $attributes) {
 							$jsonData['html'].='<tr class="'.$tr_subtype.'">
 							<td class="align_right">&nbsp;</td>
 							<td class="align_right">&nbsp;</td>
 							<td>'.$attributes['products_options'].': '.$attributes['products_options_values'].'</td>
-							<td class="align_right">'.($attributes['price_prefix'] == '-' ? '- ' : '').mslib_fe::amount2Cents($attributes['options_values_price']).'</td>
+							<td class="align_right">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($attributes['options_values_price']).'</td>
 							</tr>';
 						}
 					}
@@ -127,7 +127,7 @@ if($this->ADMIN_USER) {
 					<td class="align_right">'.mslib_fe::amount2Cents($order['subtotal_amount']).'</td>
 				</tr>							
 				';
-				if($order['shipping_method_label']) {
+				if ($order['shipping_method_label']) {
 					$jsonData['html'].='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="3" class="align_right">'.htmlspecialchars($order['shipping_method_label']).'</td>
@@ -135,7 +135,7 @@ if($this->ADMIN_USER) {
 					</tr>		
 					';
 				}
-				if($order['payment_method_label']) {
+				if ($order['payment_method_label']) {
 					$jsonData['html'].='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="3" class="align_right">'.htmlspecialchars($order['payment_method_label']).'</td>
@@ -149,7 +149,7 @@ if($this->ADMIN_USER) {
 					<td class="align_right">'.mslib_fe::amount2Cents($order['subtotal_tax']).'</td>
 				</tr>		
 				';
-				if($order['discount'] > 0) {
+				if ($order['discount']>0) {
 					$jsonData['html'].='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="3" class="align_right">'.htmlspecialchars($this->pi_getLL('discount')).'</td>
@@ -168,23 +168,23 @@ if($this->ADMIN_USER) {
 				</tr>
 				</table>';
 				$extraDetails=array();
-				if($order['cruser_id']) {
+				if ($order['cruser_id']) {
 					$user=mslib_fe::getUser($order['cruser_id']);
-					if($user['username']) {
+					if ($user['username']) {
 						$customer_edit_link=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$user['uid'].'&action=edit_customer');
 						$extraDetails['right'][]=$this->pi_getLL('ordered_by').': <strong><a href="'.$customer_edit_link.'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 950, height: 600})">'.$user['username'].'</a></strong><br />';
 					}
 				}
-				if($order['ip_address']) {
+				if ($order['ip_address']) {
 					$extraDetails['right'][]=$this->pi_getLL('ip_address', 'IP address').': <strong>'.$order['ip_address'].'</strong><br />';
 				}
-				if($order['http_referer']) {
+				if ($order['http_referer']) {
 					$domain=parse_url($order['http_referer']);
-					if($domain['host']) {
+					if ($domain['host']) {
 						$extraDetails['left'][]=$this->pi_getLL('referrer', 'Referrer').': <strong><a href="'.$order['http_referer'].'" target="_blank" rel="noreferrer">'.$domain['host'].'</a></strong>';
 					}
 				}
-				if(count($extraDetails)) {
+				if (count($extraDetails)) {
 					$jsonData['html'].='<div class="hr"></div>';
 					$jsonData['html'].='<div id="adminOrderDetailsFooter">';
 					$jsonData['html'].='<div class="left">';

@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // defining the types
@@ -11,7 +11,7 @@ $array['categories_id']='Categories id';
 $array['categories_meta_title']='Categories META title (product category level)';
 $array['categories_meta_keywords']='Categories META keywords (product category level)';
 $array['categories_meta_description']='Categories META description (product category level)';
-for($i=1; $i < 6; $i++) {
+for ($i=1; $i<6; $i++) {
 	$array['categories_meta_title_'.$i]='Categories META title (level: '.$i.')';
 	$array['categories_meta_keywords_'.$i]='Categories META keywords (level: '.$i.')';
 	$array['categories_meta_description_'.$i]='Categories META description (level: '.$i.')';
@@ -63,26 +63,26 @@ $array['custom_field']='Custom field with value';
 // attributes
 $str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$array['attribute_option_name_'.$row['products_options_id']]='Attribute option name: '.$row['products_options_name'].' (values without price)';
 	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']='Attribute option name: '.$row['products_options_name'].' (values with price)';
 	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']='Attribute option name: '.$row['products_options_name'].' (values with price incl. VAT)';
 }
 asort($array);
-if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
-	if($this->post) {
+if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
+	if ($this->post) {
 		$erno=array();
-		if(!$this->post['name']) {
+		if (!$this->post['name']) {
 			$erno[]='Name is required';
 		} else {
-			if(!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
+			if (!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
 				$erno[]='No fields defined';
 			}
 		}
-		if(is_array($erno) and count($erno) > 0) {
+		if (is_array($erno) and count($erno)>0) {
 			$content.='<div class="error_msg">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach($erno as $item) {
+			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';
 			}
 			$content.='</ul>';
@@ -103,7 +103,7 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			$updateArray['feed_type']=$this->post['feed_type'];
 			$updateArray['fields']=serialize($this->post['fields']);
 			$updateArray['post_data']=serialize($this->post);
-			if(is_numeric($this->post['feed_id'])) {
+			if (is_numeric($this->post['feed_id'])) {
 				// edit
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_feeds', 'id=\''.$this->post['feed_id'].'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -118,11 +118,11 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			$this->ms['show_main']=1;
 		}
 	} else {
-		if($_REQUEST['section'] == 'edit' and is_numeric($this->get['feed_id'])) {
+		if ($_REQUEST['section']=='edit' and is_numeric($this->get['feed_id'])) {
 			$str="SELECT * from tx_multishop_product_feeds where id='".$this->get['feed_id']."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$feeds=array();
-			while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 				$this->post=$row;
 				$this->post['fields']=unserialize($row['fields']);
 				// now also unserialize for the custom field
@@ -132,7 +132,7 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			}
 		}
 	}
-	if(!$this->ms['show_main']) {
+	if (!$this->ms['show_main']) {
 		$content.='
 		<div class="main-heading"><h2>Product feed Generator</h2></div>
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form">
@@ -156,15 +156,16 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			</div>';
 		$feed_types=array();
 		// custom page hook that can be controlled by third-party plugin
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'])) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'])) {
 			$params=array(
-				'feed_types'=>&$feed_types);
-			foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'] as $funcRef) {
+				'feed_types'=>&$feed_types
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'] as $funcRef) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
-		if(count($feed_types)) {
+		if (count($feed_types)) {
 			$content.='
 				<div class="account-field">
 						<label>Feed Type</label>
@@ -172,8 +173,8 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 						<option value="">'.htmlspecialchars('Custom').'</option>
 				';
 			natsort($feed_types);
-			foreach($feed_types as $key=>$label) {
-				$content.='<option value="'.$key.'"'.(($this->post['feed_type'] == $key) ? ' selected' : '').'>'.htmlspecialchars($label).'</option>'."\n";
+			foreach ($feed_types as $key=>$label) {
+				$content.='<option value="'.$key.'"'.(($this->post['feed_type']==$key) ? ' selected' : '').'>'.htmlspecialchars($label).'</option>'."\n";
 			}
 			$content.='
 				</select>
@@ -185,16 +186,16 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 				<label>'.htmlspecialchars($this->pi_getLL('delimiter')).'</label>
 				<select name="delimiter">
 					<option value="">'.htmlspecialchars($this->pi_getLL('choose')).'</option>
-					<option value="dash"'.(($this->post['delimiter'] == 'dash') ? ' selected' : '').'>dash</option>
-					<option value="dotcomma"'.(($this->post['delimiter'] == 'dotcomma') ? ' selected' : '').'>dotcomma</option>
-					<option value="tab"'.(($this->post['delimiter'] == 'tab') ? ' selected' : '').'>tab</option>
+					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>dash</option>
+					<option value="dotcomma"'.(($this->post['delimiter']=='dotcomma') ? ' selected' : '').'>dotcomma</option>
+					<option value="tab"'.(($this->post['delimiter']=='tab') ? ' selected' : '').'>tab</option>
 				</select>
 		</div>
 		<div class="account-field hide_pf">
 				<label>'.htmlspecialchars($this->pi_getLL('include_header')).'</label>
 				<select name="include_header">
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
-					<option value="1"'.(($this->post['include_header'] == '1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
+					<option value="1"'.(($this->post['include_header']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 				</select>
 		</div>		
 		<div class="account-field">
@@ -206,7 +207,7 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			<label>'.htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')).'</label>
 			<select name="plain_text">
 				<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
-				<option value="1"'.(($this->post['plain_text'] == '1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
+				<option value="1"'.(($this->post['plain_text']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 			</select>
 		</div>				
 		<div class="account-field hide_pf">
@@ -218,16 +219,16 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 		</div>
 		<div id="product_feed_fields">';
 		$counter=0;
-		if(is_array($this->post['fields']) and count($this->post['fields'])) {
-			foreach($this->post['fields'] as $field) {
+		if (is_array($this->post['fields']) and count($this->post['fields'])) {
+			foreach ($this->post['fields'] as $field) {
 				$counter++;
 				$content.='<div><div class="account-field"><label>'.htmlspecialchars($this->pi_getLL('type')).'</label><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
-				foreach($array as $key=>$option) {
-					$content.='<option value="'.$key.'"'.($field == $key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
+				foreach ($array as $key=>$option) {
+					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
 				$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
 				// custom field
-				if($field == 'custom_field') {
+				if ($field=='custom_field') {
 					$content.='<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
 				}
 				$content.='
@@ -261,7 +262,7 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 			$("#add_field").click(function(event) {
 				counter++;
 				var item=\'<div><div class="account-field"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
-		foreach($array as $key=>$option) {
+		foreach ($array as $key=>$option) {
 			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
 		}
 		$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
@@ -284,14 +285,14 @@ if($_REQUEST['section'] == 'edit' or $_REQUEST['section'] == 'add') {
 } else {
 	$this->ms['show_main']=1;
 }
-if($this->ms['show_main']) {
-	if(is_numeric($this->get['status']) and is_numeric($this->get['feed_id'])) {
+if ($this->ms['show_main']) {
+	if (is_numeric($this->get['status']) and is_numeric($this->get['feed_id'])) {
 		$updateArray=array();
 		$updateArray['status']=$this->get['status'];
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_feeds', 'id=\''.$this->get['feed_id'].'\'', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
-	if(is_numeric($this->get['delete']) and is_numeric($this->get['feed_id'])) {
+	if (is_numeric($this->get['delete']) and is_numeric($this->get['feed_id'])) {
 		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_product_feeds', 'id=\''.$this->get['feed_id'].'\'');
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
@@ -299,10 +300,10 @@ if($this->ms['show_main']) {
 	$str="SELECT * from tx_multishop_product_feeds order by id desc";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$feeds=array();
-	while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$feeds[]=$row;
 	}
-	if(is_array($feeds) and count($feeds)) {
+	if (is_array($feeds) and count($feeds)) {
 		$content.='<div class="main-heading"><h2>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h2></div>
 		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
 		<tr>
@@ -314,14 +315,15 @@ if($this->ms['show_main']) {
 			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>		
 		</tr>			
 		';
-		foreach($feeds as $feed) {
+		foreach ($feeds as $feed) {
 			$feed['feed_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'];
 			$feed['feed_link_excel']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'].'&format=excel';
 			// custom page hook that can be controlled by third-party plugin
-			if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'])) {
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'])) {
 				$params=array(
-					'feed'=>&$feed);
-				foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'] as $funcRef) {
+					'feed'=>&$feed
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'] as $funcRef) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
@@ -333,7 +335,7 @@ if($this->ms['show_main']) {
 				<td width="100" align="center" nowrap>'.date("Y-m-d", $feed['crdate']).'</td>
 				<td width="50">				
 				';
-			if(!$feed['status']) {
+			if (!$feed['status']) {
 				$content.='<span class="admin_status_red" alt="Disable"></span>';
 				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
 			} else {

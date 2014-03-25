@@ -1,8 +1,8 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if($this->get['Search'] and ($this->get['negative_keywords_only'] != $this->cookie['negative_keywords_only'])) {
+if ($this->get['Search'] and ($this->get['negative_keywords_only']!=$this->cookie['negative_keywords_only'])) {
 	$this->cookie['negative_keywords_only']=$this->get['negative_keywords_only'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
@@ -29,24 +29,24 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 ';
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('month')).'</h2>';
-for($i=1; $i < 13; $i++) {
+for ($i=1; $i<13; $i++) {
 	$time=strtotime(date("Y-".$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
 $content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">';
 $content.='<tr class="odd">';
-foreach($dates as $key=>$value) {
+foreach ($dates as $key=>$value) {
 	$content.='<td align="center">'.ucfirst($key).'</td>';
 }
 $content.='<tr class="even">';
 $total=0;
 $keywords_data=array();
-foreach($dates as $key=>$value) {
+foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-31 23:59:59");
 	$where=array();
-	if($this->cookie['negative_keywords_only']) {
+	if ($this->cookie['negative_keywords_only']) {
 		$where[]='(s.negative_results=1)';
 	} else {
 		$where[]='(s.negative_results=0 or s.negative_results=1)';
@@ -55,8 +55,8 @@ foreach($dates as $key=>$value) {
 	$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">';
 	$str="SELECT s.keyword, count(s.keyword) as total, s.negative_results FROM tx_multishop_products_search_log s WHERE (".implode(" AND ", $where).") and (s.crdate BETWEEN ".$start_time." and ".$end_time.") group by s.keyword order by total desc limit 10";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-		if(!$tr_type or $tr_type == 'even') {
+	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
@@ -64,7 +64,7 @@ foreach($dates as $key=>$value) {
 		$content.='<tr class="'.$tr_type.'">
 		<td class="text_right" nowrap width="40">'.$row['total'].'</td>
 		<td width="10">';
-		if($row['negative_results']) {
+		if ($row['negative_results']) {
 			$content.='<span class="negative_icon">x</span>';
 		} else {
 			$content.='<span class="positive_icon">+</span>';
@@ -78,7 +78,7 @@ foreach($dates as $key=>$value) {
 }
 $tr_type=false;
 $content.='</tr>';
-if(!$tr_type or $tr_type == 'even') {
+if (!$tr_type or $tr_type=='even') {
 	$tr_type='odd';
 } else {
 	$tr_type='even';
@@ -89,7 +89,7 @@ $content.='
 $tr_type='even';
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('day')).'</h2>';
-for($i=0; $i < 31; $i++) {
+for ($i=0; $i<31; $i++) {
 	$time=strtotime("-".$i." day");
 	$dates[strftime("%x", $time)]=$time;
 }
@@ -99,8 +99,8 @@ $content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class=
 	<th>'.htmlspecialchars($this->pi_getLL('keyword')).'</th>	
 </tr>
 ';
-foreach($dates as $key=>$value) {
-	if(!$tr_type or $tr_type == 'even') {
+foreach ($dates as $key=>$value) {
+	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
 	} else {
 		$tr_type='even';
@@ -112,7 +112,7 @@ foreach($dates as $key=>$value) {
 	$start_time=strtotime($system_date." 00:00:00");
 	$end_time=strtotime($system_date." 23:59:59");
 	$where=array();
-	if($this->cookie['negative_keywords_only']) {
+	if ($this->cookie['negative_keywords_only']) {
 		$where[]='(s.negative_results=1)';
 	} else {
 		$where[]='(s.negative_results=0 or s.negative_results=1)';
@@ -120,7 +120,7 @@ foreach($dates as $key=>$value) {
 	$str="SELECT s.keyword, count(s.keyword) as total, s.negative_results FROM  tx_multishop_products_search_log s WHERE (".implode(" AND ", $where).") and (s.crdate BETWEEN ".$start_time." and ".$end_time.") group by s.keyword order by total desc limit 5";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$key_data=array();
-	while($rows=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+	while ($rows=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$key_data[]=$rows;
 	}
 	/*
@@ -134,8 +134,8 @@ foreach($dates as $key=>$value) {
 	*/
 	$content.='<td>';
 	$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
-	foreach($key_data as $idx=>$row) {
-		if(!$tr_type or $tr_type == 'even') {
+	foreach ($key_data as $idx=>$row) {
+		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
@@ -143,7 +143,7 @@ foreach($dates as $key=>$value) {
 		$content.='<tr class="'.$tr_type.'">
 		<td class="text_right" nowrap width="40">'.$row['total'].'</td>
 		<td width="10">';
-		if($row['negative_results']) {
+		if ($row['negative_results']) {
 			$content.='<span class="negative_icon">x</span>';
 		} else {
 			$content.='<span class="positive_icon">+</span>';

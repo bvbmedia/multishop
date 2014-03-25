@@ -1,15 +1,15 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 set_time_limit(86400);
 ignore_user_abort(true);
-if($this->get['delete'] and is_numeric($this->get['job_id'])) {
+if ($this->get['delete'] and is_numeric($this->get['job_id'])) {
 	// delete job
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_import_jobs', 'id='.$this->get['job_id'].' and type=\'customers\'');
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 }
-if(is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
+if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	// update the status of a job
 	$updateArray=array();
 	$updateArray['status']=$this->get['status'];
@@ -54,21 +54,22 @@ $coltypes['username']='username';
 $coltypes['title']='job title';
 $coltypes['tx_multishop_source_id']='customer id(external id for reference)';
 // hook to let other plugins add more columns
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
 	$params=array(
-		'coltypes'=>&$coltypes);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'] as $funcRef) {
+		'coltypes'=>&$coltypes
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
 natsort($coltypes);
 // define the different columns eof
-if($this->post['job_id']) {
+if ($this->post['job_id']) {
 	$this->get['job_id']=$this->post['job_id'];
 }
-if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get['job_id']) and $_REQUEST['action'] == 'edit_job')) {
+if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['job_id']) and $_REQUEST['action']=='edit_job')) {
 	// preview
-	if(is_numeric($this->get['job_id'])) {
+	if (is_numeric($this->get['job_id'])) {
 		$this->ms['mode']='edit';
 		// load the job
 		$str="SELECT * from tx_multishop_import_jobs where id='".$this->get['job_id']."' and type='customers'";
@@ -80,7 +81,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		$this->post=$data[1];
 		$this->post['cid']=$row['categories_id'];
 		// enable file logging
-		if($this->get['relaxed_import']) {
+		if ($this->get['relaxed_import']) {
 			$this->post['relaxed_import']=$this->get['relaxed_import'];
 		}
 		// update the last run time
@@ -90,48 +91,48 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// update the last run time eof
 	}
-	if($this->post['database_name']) {
+	if ($this->post['database_name']) {
 		$file_location=$this->post['database_name'];
-	} elseif($this->post['file_url']) {
-		if(strstr($this->post['file_url'], "../")) {
+	} elseif ($this->post['file_url']) {
+		if (strstr($this->post['file_url'], "../")) {
 			die();
 		}
 		$filename=time();
 		$file_location=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename;
 		$file_content=mslib_fe::file_get_contents($this->post['file_url']);
-		if(!$file_content or !mslib_fe::file_put_contents($file_location, $file_content)) {
+		if (!$file_content or !mslib_fe::file_put_contents($file_location, $file_content)) {
 			die('cannot save the file or the file is empty');
 		}
-	} elseif($this->ms['mode'] == 'edit') {
+	} elseif ($this->ms['mode']=='edit') {
 		$filename=$this->post['filename'];
 		$file_location=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename;
 	}
-	if($_FILES['file']['tmp_name']) {
+	if ($_FILES['file']['tmp_name']) {
 		$file=$_FILES['file']['tmp_name'];
 		$filename=time().'.import';
 		$file_location=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename;
 		$this->post['filename']=$filename;
 		move_uploaded_file($file, $file_location);
-		if(preg_match("/\.gz$/", $_FILES['file']['name'])) {
+		if (preg_match("/\.gz$/", $_FILES['file']['name'])) {
 			// lets uncompress realtime
 			$str=mslib_fe::file_get_contents($file_location, 1);
 			file_put_contents($file_location, $str);
 		}
 	}
-	if((file_exists($file_location) or $this->post['database_name'])) {
-		if(!$this->post['database_name']) {
+	if ((file_exists($file_location) or $this->post['database_name'])) {
+		if (!$this->post['database_name']) {
 			$str=mslib_fe::file_get_contents($file_location);
 		}
-		if($this->post['parser_template']) {
-			if(strstr($this->post['parser_template'], "..")) {
+		if ($this->post['parser_template']) {
+			if (strstr($this->post['parser_template'], "..")) {
 				die();
 			}
 			// include a pre-defined xml to php array converter
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
 			// include a pre-defined xml to php array converter eof
 		} else {
-			if($this->post['database_name']) {
-				if($this->ms['mode'] == 'edit') {
+			if ($this->post['database_name']) {
+				if ($this->ms['mode']=='edit') {
 					$limit=10;
 				} else {
 					$limit='10';
@@ -139,9 +140,9 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 				$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $this->post['database_name'], '', '', '', $limit);
 				$i=0;
 				$table_cols=array();
-				foreach($datarows as $datarow) {
+				foreach ($datarows as $datarow) {
 					$s=0;
-					foreach($datarow as $colname=>$datacol) {
+					foreach ($datarow as $colname=>$datacol) {
 						$table_cols[$s]=$colname;
 						$rows[$i][$s]=$datacol;
 						$s++;
@@ -149,14 +150,14 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 					$i++;
 				}
 			} else {
-				if($this->post['format'] == 'excel') {
+				if ($this->post['format']=='excel') {
 					// try the generic way
-					if(!$this->ms['mode'] == 'edit') {
+					if (!$this->ms['mode']=='edit') {
 						$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$this->post['cid'].'-'.time().'.txt';
-						if(!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
+						if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 							exit();
 						}
-						if(fwrite($handle, $str) === FALSE) {
+						if (fwrite($handle, $str)===FALSE) {
 							exit();
 						}
 						fclose($handle);
@@ -164,15 +165,15 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 					// excel
 					require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 					$phpexcel=PHPExcel_IOFactory::load($file_location);
-					foreach($phpexcel->getWorksheetIterator() as $worksheet) {
+					foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 						$counter=0;
-						foreach($worksheet->getRowIterator() as $row) {
+						foreach ($worksheet->getRowIterator() as $row) {
 							$cellIterator=$row->getCellIterator();
 							$cellIterator->setIterateOnlyExistingCells(false);
-							foreach($cellIterator as $cell) {
+							foreach ($cellIterator as $cell) {
 								$clean_products_data=ltrim(rtrim($cell->getCalculatedValue(), " ,"), " ,");
 								$clean_products_data=trim($clean_products_data);
-								if($row->getRowIndex() > 1) {
+								if ($row->getRowIndex()>1) {
 									$rows[$counter-1][]=$clean_products_data;
 								} else {
 									$table_cols[]=t3lib_div::strtolower($clean_products_data);
@@ -183,14 +184,14 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 					}
 					// excel eof
 				} else {
-					if($this->post['format'] == 'xml') {
+					if ($this->post['format']=='xml') {
 						// try the generic way
-						if(!$this->ms['mode'] == 'edit') {
+						if (!$this->ms['mode']=='edit') {
 							$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$this->post['cid'].'-'.time().'.txt';
-							if(!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
+							if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 								exit();
 							}
-							if(fwrite($handle, $str) === FALSE) {
+							if (fwrite($handle, $str)===FALSE) {
 								exit();
 							}
 							fclose($handle);
@@ -201,8 +202,8 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						$i=0;
 						$s=0;
 						$rows=array();
-						foreach($arrOutput[0]['children'] as $item) {
-							foreach($item['children'] as $internalitem) {
+						foreach ($arrOutput[0]['children'] as $item) {
+							foreach ($item['children'] as $internalitem) {
 								$rows[$i][$s]=$internalitem['tagData'];
 								$s++;
 							}
@@ -210,22 +211,22 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 							$s=0;
 						}
 					} else {
-						if($this->post['os'] == 'linux') {
+						if ($this->post['os']=='linux') {
 							$splitter="\n";
 						} else {
 							$splitter="\r\n";
 						}
 						// csv
-						if($this->post['delimiter'] == "tab") {
+						if ($this->post['delimiter']=="tab") {
 							$delimiter="\t";
 						} else {
-							if($this->post['delimiter'] == "dash") {
+							if ($this->post['delimiter']=="dash") {
 								$delimiter="|";
 							} else {
-								if($this->post['delimiter'] == "dotcomma") {
+								if ($this->post['delimiter']=="dotcomma") {
 									$delimiter=";";
 								} else {
-									if($this->post['delimiter'] == "comma") {
+									if ($this->post['delimiter']=="comma") {
 										$delimiter=",";
 									} else {
 										$delimiter="\t";
@@ -233,19 +234,19 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 								}
 							}
 						}
-						if($this->post['backquotes']) {
+						if ($this->post['backquotes']) {
 							$backquotes='"';
 						} else {
 							$backquotes='"';
 						}
-						if($this->post['format'] == 'txt') {
+						if ($this->post['format']=='txt') {
 							$row=1;
 							$rows=array();
-							if(($handle=fopen($file_location, "r")) !== FALSE) {
+							if (($handle=fopen($file_location, "r"))!==FALSE) {
 								$counter=0;
-								while(($data=fgetcsv($handle, '', $delimiter, $backquotes)) !== FALSE) {
-									if($this->post['escape_first_line']) {
-										if($counter == 0) {
+								while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+									if ($this->post['escape_first_line']) {
+										if ($counter==0) {
 											$table_cols=$data;
 										} else {
 											$rows[]=$data;
@@ -277,24 +278,24 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		<input name="filename" type="hidden" value="'.$filename.'" />
 		<input name="file_url" type="hidden" value="'.$this->post['file_url'].'" />
 		';
-		if($this->ms['mode'] == 'edit' or $this->post['preProcExistingTask']) {
+		if ($this->ms['mode']=='edit' or $this->post['preProcExistingTask']) {
 			// if the existing import task is rerunned indicate it so we dont save the task double
 			$tmpcontent.='<input name="preProcExistingTask" type="hidden" value="1" />';
 		}
-		if(!$rows) {
+		if (!$rows) {
 			$tmpcontent.='<h1>No customers available.</h1>';
 		} else {
 			$tmpcontent.='<table id="product_import_table" class="msZebraTable" cellpadding="0" cellspacing="0" border="0">';
 			$header='<tr><th>'.$this->pi_getLL('target_column').'</th><th>'.$this->pi_getLL('source_column').'</th>';
-			for($x=1; $x < 6; $x++) {
+			for ($x=1; $x<6; $x++) {
 				$header.='<th>'.$this->pi_getLL('row').' '.$x.'</th>';
 			}
 			$header.='</tr>';
 			$tmpcontent.=$header;
 			$cols=count($rows[0]);
 			$preview_listing=array();
-			for($i=0; $i < $cols; $i++) {
-				if($switch == 'odd') {
+			for ($i=0; $i<$cols; $i++) {
+				if ($switch=='odd') {
 					$switch='even';
 				} else {
 					$switch='odd';
@@ -305,8 +306,8 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 					<select name="select['.$i.']" id="select['.$i.']">
 						<option value="">'.$this->pi_getLL('skip').'</option>
 						';
-				foreach($coltypes as $key=>$value) {
-					$tmpcontent.='<option value="'.$key.'" '.($this->post['select'][$i] != '' && $this->post['select'][$i] == $key ? 'selected' : '').'>'.htmlspecialchars($value).'</option>';
+				foreach ($coltypes as $key=>$value) {
+					$tmpcontent.='<option value="'.$key.'" '.($this->post['select'][$i]!='' && $this->post['select'][$i]==$key ? 'selected' : '').'>'.htmlspecialchars($value).'</option>';
 				}
 				$tmpcontent.='
 					</select>
@@ -322,28 +323,28 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 				';
 				// now 5 customers
 				$teller=0;
-				foreach($rows as $row) {
-					foreach($row as $key=>$col) {
-						if(!mb_detect_encoding($col, 'UTF-8', true)) {
+				foreach ($rows as $row) {
+					foreach ($row as $key=>$col) {
+						if (!mb_detect_encoding($col, 'UTF-8', true)) {
 							$row[$key]=mslib_befe::convToUtf8($col);
 						}
 					}
 					$teller++;
 					$tmpitem=$row;
 					$cols=count($tmpitem);
-					if($this->post['backquotes']) {
+					if ($this->post['backquotes']) {
 						$tmpitem[$i]=trim($tmpitem[$i], "\"");
 					}
-					if(strlen($tmpitem[$i]) > 100) {
+					if (strlen($tmpitem[$i])>100) {
 						$tmpitem[$i]=substr($tmpitem[$i], 0, 100).'...';
 					}
 					$tmpcontent.='<td class="product_'.$teller.'">'.htmlspecialchars($tmpitem[$i]).'</td>';
-					if($teller == 5 or $teller == count($rows)) {
+					if ($teller==5 or $teller==count($rows)) {
 						break;
 					}
 				}
-				if($teller < 5) {
-					for($x=$teller; $x < 5; $x++) {
+				if ($teller<5) {
+					for ($x=$teller; $x<5; $x++) {
 						$tmpcontent.='<td class="product_'.$x.'">&nbsp;</td>';
 					}
 				}
@@ -397,7 +398,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						<input name="cron_name" type="text" value="'.htmlspecialchars($this->post['cron_name']).'" />
 					</div>
 ';
-		if($this->get['action'] == 'edit_job') {
+		if ($this->get['action']=='edit_job') {
 			$tmpcontent.='
 							<div class="account-field">					
 								<label for="duplicate">'.$this->pi_getLL('duplicate').'</label>
@@ -413,9 +414,9 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		<label for="cron_period">'.$this->pi_getLL('schedule').'</label>
 		<select name="cron_period" id="cron_period">
 		<option value="" '.(!$this->post['cron_period'] ? 'selected' : '').'>'.$this->pi_getLL('manual').'</option>
-		<option value="'.(3600*24).'" '.($this->post['cron_period'] == (3600*24) ? 'selected' : '').'>'.$this->pi_getLL('daily').'</option>
-		<option value="'.(3600*24*7).'" '.($this->post['cron_period'] == (3600*24*7) ? 'selected' : '').'>'.$this->pi_getLL('weekly').'</option>
-		<option value="'.(3600*24*30).'" '.($this->post['cron_period'] == (3600*24*30) ? 'selected' : '').'>'.$this->pi_getLL('monthly').'</option>
+		<option value="'.(3600*24).'" '.($this->post['cron_period']==(3600*24) ? 'selected' : '').'>'.$this->pi_getLL('daily').'</option>
+		<option value="'.(3600*24*7).'" '.($this->post['cron_period']==(3600*24*7) ? 'selected' : '').'>'.$this->pi_getLL('weekly').'</option>
+		<option value="'.(3600*24*30).'" '.($this->post['cron_period']==(3600*24*30) ? 'selected' : '').'>'.$this->pi_getLL('monthly').'</option>
 		</select>
 		</div>
 		<div class="account-field">					
@@ -427,7 +428,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		</fieldset>
 		<table cellspacing="0" id="nositenav" width="100%">
 		<tr>
-		<td align="right" ><input type="submit" class="submit_block" id="cl_submit" name="AdSubmit" value="'.($this->get['action'] == 'edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'"></td>
+		<td align="right" ><input type="submit" class="submit_block" id="cl_submit" name="AdSubmit" value="'.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'"></td>
 		</tr>
 		</table>
 		<p class="extra_padding_bottom"></p>
@@ -439,8 +440,8 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		// class="fullwidth_div">'.mslib_fe::shadowBox($tmpcontent).'</div>';
 	}
 	// preview eof
-} elseif((is_numeric($this->get['job_id']) and $this->get['action'] == 'run_job') or ($this->post['action'] == 'customer-import' and (($this->post['filename'] and file_exists($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$this->post['filename'])) or $this->post['database_name']))) {
-	if((!$this->post['preProcExistingTask'] and $this->post['cron_name'] and !$this->post['skip_import']) or ($this->post['skip_import'] and $this->post['duplicate'])) {
+} elseif ((is_numeric($this->get['job_id']) and $this->get['action']=='run_job') or ($this->post['action']=='customer-import' and (($this->post['filename'] and file_exists($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$this->post['filename'])) or $this->post['database_name']))) {
+	if ((!$this->post['preProcExistingTask'] and $this->post['cron_name'] and !$this->post['skip_import']) or ($this->post['skip_import'] and $this->post['duplicate'])) {
 		// we have to save the import job
 		$updateArray=array();
 		$updateArray['name']=$this->post['cron_name'];
@@ -461,7 +462,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// we have to save the import job eof
 		$this->ms['show_default_form']=1;
-	} elseif($this->post['skip_import']) {
+	} elseif ($this->post['skip_import']) {
 		// we have to update the import job
 		$updateArray=array();
 		$updateArray['name']=$this->post['cron_name'];
@@ -481,8 +482,8 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 		// we have to update the import job eof
 		$this->ms['show_default_form']=1;
 	}
-	if(!$this->post['skip_import']) {
-		if(is_numeric($this->get['job_id'])) {
+	if (!$this->post['skip_import']) {
+		if (is_numeric($this->get['job_id'])) {
 			// load the job
 			$str="SELECT * from tx_multishop_import_jobs where id='".$this->get['job_id']."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -491,7 +492,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 			// copy the previous post data to the current post so it can run the
 			// job again
 			$this->post=$data[1];
-			if($row['categories_id']) {
+			if ($row['categories_id']) {
 				$this->post['cid']=$row['categories_id'];
 			}
 			// update the last run time
@@ -500,49 +501,52 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$row['id'], $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			// update the last run time eof
-			if($log_file) {
+			if ($log_file) {
 				file_put_contents($log_file, $this->FULL_HTTP_URL.' - cron job settings loaded.('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
 			}
 		}
-		if($this->post['file_url']) {
-			if(strstr($this->post['file_url'], "../")) {
+		if ($this->post['file_url']) {
+			if (strstr($this->post['file_url'], "../")) {
 				die();
 			}
 			$filename=time();
 			$file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename;
 			file_put_contents($file, mslib_fe::file_get_contents($this->post['file_url']));
 		}
-		if($this->post['filename']) {
+		if ($this->post['filename']) {
 			$file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$this->post['filename'];
 		}
-		if(($this->post['database_name'] or $file)) {
-			if($file) {
+		if (($this->post['database_name'] or $file)) {
+			if ($file) {
 				$str=mslib_fe::file_get_contents($file);
 			}
-			if($this->post['parser_template']) {
+			if ($this->post['parser_template']) {
 				// include a pre-defined xml to php array way
 				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
 				// include a pre-defined xml to php array way eof
 			} else {
-				if($this->post['database_name']) {
-					if($log_file) {
+				if ($this->post['database_name']) {
+					if ($log_file) {
 						file_put_contents($log_file, $this->FULL_HTTP_URL.' - loading random products.('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
 					}
-					if(is_numeric($this->get['limit'])) {
+					if (is_numeric($this->get['limit'])) {
 						$limit=$this->get['limit'];
 					} else {
 						$limit=2000;
 					}
 					$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $this->post['database_name'], '', '', '', $limit);
 					$total_datarows=count($datarows);
-					if($log_file) {
-						if($total_datarows) file_put_contents($log_file, $this->FULL_HTTP_URL.' - random products loaded, now starting the import.('.date("Y-m-d G:i:s").")\n", FILE_APPEND); else
+					if ($log_file) {
+						if ($total_datarows) {
+							file_put_contents($log_file, $this->FULL_HTTP_URL.' - random products loaded, now starting the import.('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+						} else {
 							file_put_contents($log_file, $this->FULL_HTTP_URL.' - no products needed to be imported'."\n", FILE_APPEND);
+						}
 					}
 					$i=0;
-					foreach($datarows as $datarow) {
+					foreach ($datarows as $datarow) {
 						$s=0;
-						foreach($datarow as $datacol) {
+						foreach ($datarow as $datacol) {
 							$rows[$i][$s]=$datacol;
 							$s++;
 						}
@@ -552,18 +556,18 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						$i++;
 					}
-				} else if($this->post['format'] == 'excel') {
+				} else if ($this->post['format']=='excel') {
 					require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 					$phpexcel=PHPExcel_IOFactory::load($file);
-					foreach($phpexcel->getWorksheetIterator() as $worksheet) {
+					foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 						$counter=0;
-						foreach($worksheet->getRowIterator() as $row) {
+						foreach ($worksheet->getRowIterator() as $row) {
 							$cellIterator=$row->getCellIterator();
 							$cellIterator->setIterateOnlyExistingCells(false);
-							foreach($cellIterator as $cell) {
+							foreach ($cellIterator as $cell) {
 								$clean_products_data=ltrim(rtrim($cell->getCalculatedValue(), " ,"), " ,");
 								$clean_products_data=trim($clean_products_data);
-								if($row->getRowIndex() > 1) {
+								if ($row->getRowIndex()>1) {
 									$rows[$counter-1][]=$clean_products_data;
 								} else {
 									$table_cols[]=t3lib_div::strtolower($clean_products_data);
@@ -573,19 +577,19 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						}
 					}
 					// excel eof
-				} else if($this->post['format'] == 'xml') {
+				} else if ($this->post['format']=='xml') {
 					$objXML=new xml2Array();
 					$arrOutput=$objXML->parse($str);
 					$i=0;
 					$s=0;
 					$rows=array();
-					foreach($arrOutput[0]['children'] as $item) {
+					foreach ($arrOutput[0]['children'] as $item) {
 						// image
-						foreach($item['children'] as $internalitem) {
+						foreach ($item['children'] as $internalitem) {
 							$rows[$i][$s]=$internalitem['tagData'];
 							$s++;
 						}
-						foreach($item['attrs'] as $key=>$value) {
+						foreach ($item['attrs'] as $key=>$value) {
 							$rows[$i][$s]=$value;
 							$s++;
 						}
@@ -593,42 +597,45 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						$s=0;
 					}
 				} else {
-					if($this->post['os'] == 'linux') {
+					if ($this->post['os']=='linux') {
 						$splitter="\n";
 					} else {
 						$splitter="\r\n";
 					}
 					$str=trim($str, $splitter);
-					if($this->post['escape_first_line']) {
+					if ($this->post['escape_first_line']) {
 						$pos=strpos($str, $splitter);
 						$str=substr($str, ($pos+strlen($splitter)));
 					}
 					// csv
-					if($this->post['delimiter'] == "tab") {
+					if ($this->post['delimiter']=="tab") {
 						$delimiter="\t";
-					} else if($this->post['delimiter'] == "dash") {
+					} else if ($this->post['delimiter']=="dash") {
 						$delimiter="|";
-					} else if($this->post['delimiter'] == "dotcomma") {
+					} else if ($this->post['delimiter']=="dotcomma") {
 						$delimiter=";";
-					} else if($this->post['delimiter'] == "comma") {
+					} else if ($this->post['delimiter']=="comma") {
 						$delimiter=",";
 					} else {
 						$delimiter="\t";
 					}
-					if($this->post['backquotes']) {
+					if ($this->post['backquotes']) {
 						$backquotes='"';
 					} else {
 						$backquotes='"';
 					}
-					if($this->post['format'] == 'txt') {
+					if ($this->post['format']=='txt') {
 						$row=1;
 						$rows=array();
-						if(($handle=fopen($file, "r")) !== FALSE) {
+						if (($handle=fopen($file, "r"))!==FALSE) {
 							$counter=0;
-							while(($data=fgetcsv($handle, '', $delimiter, $backquotes)) !== FALSE) {
-								if($this->post['escape_first_line']) {
-									if($counter == 0) $table_cols=$data; else
+							while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+								if ($this->post['escape_first_line']) {
+									if ($counter==0) {
+										$table_cols=$data;
+									} else {
 										$rows[]=$data;
+									}
 								} else {
 									$rows[]=$data;
 								}
@@ -643,10 +650,10 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 			$teller=0;
 			$inserteditems=array();
 			// $global_start_time = microtime();
-			foreach($rows as $row) {
-				foreach($row as $key=>$col) {
-					if(!mb_detect_encoding($col, 'UTF-8', true)) {
-						if($col == 'NULL' || $col == 'null') {
+			foreach ($rows as $row) {
+				foreach ($row as $key=>$col) {
+					if (!mb_detect_encoding($col, 'UTF-8', true)) {
+						if ($col=='NULL' || $col=='null') {
 							$col='';
 						}
 						$row[$key]=mslib_befe::convToUtf8($col);
@@ -654,7 +661,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 				}
 				$this->ms['target-cid']=$this->post['cid'];
 				$teller++;
-				if(($this->post['escape_first_line'] and $teller > 1) or !$this->post['escape_first_line']) {
+				if (($this->post['escape_first_line'] and $teller>1) or !$this->post['escape_first_line']) {
 					$tmpitem=$row;
 					$cols=count($tmpitem);
 					$flipped_select=array_flip($this->post['select']);
@@ -663,66 +670,67 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 					$item=array();
 					// if the source is a database table name add the unique id
 					// so we can delete it after the import
-					if($this->post['database_name']) {
+					if ($this->post['database_name']) {
 						$item['table_unique_id']=$row[0];
 					}
 					// aux
 					$input=array();
 					// name
-					for($i=0; $i < $cols; $i++) {
+					for ($i=0; $i<$cols; $i++) {
 						$tmpitem[$i]=trim($tmpitem[$i]);
 						$char='';
 						$item[$this->post['select'][$i]]=$tmpitem[$i];
-						if($item[$this->post['select'][$i]] == $char and $char) {
+						if ($item[$this->post['select'][$i]]==$char and $char) {
 							$item[$this->post['select'][$i]]='';
 						}
 						$input[$this->post['select'][$i]]=$this->post['input'][$i];
 					}
-					if($item['uid']) {
+					if ($item['uid']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['uid']);
 					} else {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['email']);
 					}
 					// custom hook that can be controlled by third-party plugin
-					if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterItemIterateProc'])) {
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterItemIterateProc'])) {
 						$params=array(
 							'row'=>&$row,
 							'item'=>&$item,
-							'prefix_source_name'=>$this->post['prefix_source_name']);
-						foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterItemIterateProc'] as $funcRef) {
+							'prefix_source_name'=>$this->post['prefix_source_name']
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterItemIterateProc'] as $funcRef) {
 							t3lib_div::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin
 					// eof
-					if($item['email']) {
+					if ($item['email']) {
 						// first combine the values to 1 array
-						if(!$item['username']) {
+						if (!$item['username']) {
 							$item['username']=$item['email'];
 						}
 						$usergroups=array();
 						$usergroups[]=$this->conf['fe_customer_usergroup'];
-						if($item['usergroup']) {
+						if ($item['usergroup']) {
 							// sometimes excel changes comma to dot
-							if($input['usergroup']) {
+							if ($input['usergroup']) {
 								// use aux
 								$item['usergroup']=str_replace($input['usergroup'], ',', $item['usergroup']);
-							} elseif(strstr($item['usergroup'], '.')) {
+							} elseif (strstr($item['usergroup'], '.')) {
 								$item['usergroup']=str_replace('.', ',', $item['usergroup']);
 							}
-							if(!strstr($item['usergroup'], ",") and !is_numeric($item['usergroup'])) {
+							if (!strstr($item['usergroup'], ",") and !is_numeric($item['usergroup'])) {
 								$groups=array();
 								$groups[]=$item['usergroup'];
 							} else {
 								$groups=explode(',', $item['usergroup']);
 							}
-							foreach($groups as $group) {
-								if(is_numeric($group)) {
+							foreach ($groups as $group) {
+								if (is_numeric($group)) {
 									$usergroups[]=$group;
 								} else {
 									$str="SELECT * from fe_groups where pid='".$this->conf['fe_customer_pid']."' and title='".addslashes($group)."'";
 									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-									if($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+									if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 										$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 										$usergroups[]=$row['uid'];
 									} else {
@@ -739,7 +747,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 							}
 						}
 						$user=array();
-						if($item['uid']) {
+						if ($item['uid']) {
 							$user['uid']=$item['uid'];
 						}
 						$user['username']=$item['username'];
@@ -749,18 +757,18 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						$user['last_name']=$item['last_name'];
 						$item['first_name']=preg_replace('/\s+/', ' ', $item['first_name']);
 						$item['last_name']=preg_replace('/\s+/', ' ', $item['last_name']);
-						if(!$item['full_name']) {
+						if (!$item['full_name']) {
 							$fullname=array();
-							if($item['first_name'] != '') {
+							if ($item['first_name']!='') {
 								$fullname[]=$item['first_name'];
 							}
-							if($item['middle_name'] != '') {
+							if ($item['middle_name']!='') {
 								$fullname[]=$item['middle_name'];
 							}
-							if($item['last_name'] != '') {
+							if ($item['last_name']!='') {
 								$fullname[]=$item['last_name'];
 							}
-							if(count($fullname)) {
+							if (count($fullname)) {
 								$item['full_name']=implode(' ', $fullname);
 //								$item['full_name'] = preg_replace('/\s+/', ' ', $item['full_name']);
 							}
@@ -770,13 +778,13 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						$user['tx_multishop_newsletter']=$item['newsletter'];
 						$user['status']='1';
 						$user['disable']='0';
-						if(isset($item['disable'])) {
+						if (isset($item['disable'])) {
 							$user['disable']=$item['disable'];
 						}
-						if(isset($item['deleted'])) {
+						if (isset($item['deleted'])) {
 							$user['deleted']=$item['deleted'];
 						}
-						if(isset($item['tx_multishop_discount'])) {
+						if (isset($item['tx_multishop_discount'])) {
 							$user['tx_multishop_discount']=$item['discount'];
 						}
 						$user['gender']=$item['gender'];
@@ -784,9 +792,9 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						$user['title']=$item['title'];
 						$user['zip']=$item['zip'];
 						$user['city']=$item['city'];
-						if(isset($item['country'])) {
+						if (isset($item['country'])) {
 							$englishCountryName=mslib_fe::getEnglishCountryNameByTranslatedName($this->lang, $item['country']);
-							if($englishCountryName and $englishCountryName != $user['country']) {
+							if ($englishCountryName and $englishCountryName!=$user['country']) {
 								$user['country']=$englishCountryName;
 							} else {
 								$user['country']=$item['country'];
@@ -797,35 +805,37 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						$user['address_number']=$item['address_number'];
 						$user['address_ext']=$item['address_ext'];
 						$user['address']=$item['address'];
-						if(!$user['address'] and ($user['street_name'] and $user['address_number'])) {
+						if (!$user['address'] and ($user['street_name'] and $user['address_number'])) {
 							$user['address']=$user['street_name'].' '.$user['address_number'];
-							if($user['address_ext']) {
+							if ($user['address_ext']) {
 								$user['address'].='-'.$user['address_ext'];
 							}
 						}
 						$user['telephone']=$item['telephone'];
 						$user['fax']=$item['fax'];
 						$user['email']=$item['email'];
-						if($item['tx_multishop_source_id']) $user['tx_multishop_source_id']=$item['tx_multishop_source_id'];
-						if($item['password_hashed']) {
+						if ($item['tx_multishop_source_id']) {
+							$user['tx_multishop_source_id']=$item['tx_multishop_source_id'];
+						}
+						if ($item['password_hashed']) {
 							$user['password']=$item['password_hashed'];
-						} elseif($item['password']) {
+						} elseif ($item['password']) {
 							$item['password']=mslib_befe::getHashedPassword($item['password']);
 						}
 						$update=0;
 						$user_check=array();
-						if($user['uid']) {
+						if ($user['uid']) {
 							$user_check=mslib_fe::getUser($user['uid'], "uid");
 						}
-						if(!$user_check['uid'] and $user['tx_multishop_source_id']) {
+						if (!$user_check['uid'] and $user['tx_multishop_source_id']) {
 							$user_check=mslib_fe::getUser($user['tx_multishop_source_id'], "tx_multishop_source_id");
 						}
-						if(!$user_check['uid'] and $user['username']) {
+						if (!$user_check['uid'] and $user['username']) {
 							$user_check=mslib_fe::getUser($user['username'], "username");
 						}
-						if(!$user_check['uid']) {
+						if (!$user_check['uid']) {
 							$user_check=mslib_fe::getUser($user['email'], "email");
-							if($user_check['uid']) {
+							if ($user_check['uid']) {
 								$update=1;
 							}
 						} else {
@@ -833,33 +843,35 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						}
 						// custom hook that can be controlled by third-party
 						// plugin
-						if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'])) {
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'])) {
 							$params=array(
 								'user'=>&$user,
 								'item'=>&$item,
 								'user_check'=>&$user_check,
 								'prefix_source_name'=>$this->post['prefix_source_name'],
-								'update'=>&$update);
-							foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'] as $funcRef) {
+								'update'=>&$update
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'] as $funcRef) {
 								t3lib_div::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						// custom hook that can be controlled by third-party
 						// plugin eof
 						$uid='';
-						if($update) {
-							if(!$user['country']) {
+						if ($update) {
+							if (!$user['country']) {
 								$user['country']=$default_country['cn_short_en'];
 							}
 							// custom hook that can be controlled by third-party
 							// plugin
-							if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'])) {
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'])) {
 								$params=array(
 									'user'=>&$user,
 									'item'=>&$item,
 									'user_check'=>&$user_check,
-									'prefix_source_name'=>$this->post['prefix_source_name']);
-								foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'] as $funcRef) {
+									'prefix_source_name'=>$this->post['prefix_source_name']
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'] as $funcRef) {
 									t3lib_div::callUserFunction($funcRef, $params, $this);
 								}
 							}
@@ -868,19 +880,19 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$user_check['uid'], $user);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$name=array();
-							if($user['company'] != '') {
+							if ($user['company']!='') {
 								$name[]=$user['company'];
 							}
-							if($user['name'] != '' and !in_array($user['name'], $name)) {
+							if ($user['name']!='' and !in_array($user['name'], $name)) {
 								$name[]=$user['name'];
 							}
-							if($user['email'] != '' and !in_array($user['email'], $name)) {
+							if ($user['email']!='' and !in_array($user['email'], $name)) {
 								$name[]='email: '.$user['email'];
 							}
 							$content.=implode(" / ", $name).' has been updated.<br />';
 							$uid=$user_check['uid'];
 						} else {
-							if(!$user['password'] or $user['password'] == 'NULL') {
+							if (!$user['password'] or $user['password']=='NULL') {
 								// generate our own random password
 								$user['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10, $user['username']));
 							}
@@ -890,44 +902,45 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 							$user['pid']=$this->conf['fe_customer_pid'];
 							$user['page_uid']=$this->shop_pid;
 							$user['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
-							if(!$user['country']) {
+							if (!$user['country']) {
 								$user['country']=$default_country['cn_short_en'];
 							}
 							// custom hook that can be controlled by third-party
 							// plugin
-							if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'])) {
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'])) {
 								$params=array(
 									'user'=>&$user,
 									'item'=>&$item,
 									'user_check'=>&$user_check,
-									'prefix_source_name'=>$this->post['prefix_source_name']);
-								foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'] as $funcRef) {
+									'prefix_source_name'=>$this->post['prefix_source_name']
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'] as $funcRef) {
 									t3lib_div::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party
 							// plugin eof
-							if(!$user['gender']) {
+							if (!$user['gender']) {
 								$user['gender']=0;
 							}
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
-							if($uid) {
+							if ($uid) {
 								$name=array();
-								if($user['company'] != '') {
+								if ($user['company']!='') {
 									$name[]=$user['company'];
 								}
-								if($user['name'] != '' and !in_array($user['name'], $name)) {
+								if ($user['name']!='' and !in_array($user['name'], $name)) {
 									$name[]=$user['name'];
 								}
-								if($user['email'] != '' and !in_array($user['email'], $name)) {
+								if ($user['email']!='' and !in_array($user['email'], $name)) {
 									$name[]='email: '.$user['email'];
 								}
 								$content.=implode(" / ", $name).' has been added.<br />';
 							}
 						}
-						if($uid) {
+						if ($uid) {
 							$address=array();
 							$address['tstamp']=time();
 							$address['tx_multishop_customer_id']=$uid;
@@ -955,13 +968,13 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 							$address['fax']=$user['fax'];
 							$address['deleted']=0;
 							$address['page_uid']=$this->shop_pid;
-							if($item['deleted'] != '') {
+							if ($item['deleted']!='') {
 								$address['deleted']=$item['deleted'];
 							}
 							$address['addressgroup']='';
 							$str="SELECT tx_multishop_customer_id from tt_address where tx_multishop_customer_id='".$uid."'";
 							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-							if($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id='.$uid, $address);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							} else {
@@ -974,7 +987,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 						}
 					}
 				}
-				if($log_file) {
+				if ($log_file) {
 					$content='';
 				}
 				// end foreach
@@ -987,7 +1000,7 @@ if($this->post['action'] == 'customer-import-preview' or (is_numeric($this->get[
 } else {
 	$this->ms['show_default_form']=1;
 }
-if($this->ms['show_default_form']) {
+if ($this->ms['show_default_form']) {
 	$this->ms['upload_customerfeed_form']='<div id="upload_customerfeed_form">';
 	$this->ms['upload_customerfeed_form'].='
 	<fieldset>
@@ -1042,10 +1055,10 @@ if($this->ms['show_default_form']) {
 	$str="SELECT * from tx_multishop_import_jobs where page_uid='".$this->shop_pid."' and type='customers' order by prefix_source_name asc, id desc";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$jobs=array();
-	while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$jobs[]=$row;
 	}
-	if(count($jobs) > 0) {
+	if (count($jobs)>0) {
 		$schedule_content.='
 		<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_tasks').'</legend>
 		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
@@ -1059,16 +1072,24 @@ if($this->ms['show_default_form']) {
 		<th>'.$this->pi_getLL('upload_file').'</th>
 		';
 		$switch='';
-		foreach($jobs as $job) {
-			if($switch == 'odd') $switch='even'; else $switch='odd';
+		foreach ($jobs as $job) {
+			if ($switch=='odd') {
+				$switch='even';
+			} else {
+				$switch='odd';
+			}
 			$schedule_content.='<tr class="'.$switch.'">';
 			$schedule_content.='<td>'.$job['prefix_source_name'].'</td>
 			<td><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id']).'&action=edit_job">'.$job['name'].'</a></td>
 			';
 			$schedule_content.='<td nowrap align="right">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
-			if(!$job['period']) $schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="msadmin_button" onClick="return CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$this->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" ><i>'.$this->pi_getLL('run_by_crontab').'</i></a></td>'; else                    $schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
+			if (!$job['period']) {
+				$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="msadmin_button" onClick="return CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$this->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" ><i>'.$this->pi_getLL('run_by_crontab').'</i></a></td>';
+			} else {
+				$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
+			}
 			$schedule_content.='<td class="status_field" align="center">';
-			if(!$job['status']) {
+			if (!$job['status']) {
 				$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
 				$schedule_content.='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
 			} else {
@@ -1082,9 +1103,9 @@ if($this->ms['show_default_form']) {
 			<td align="center">
 				';
 			$data=unserialize($job['data']);
-			if($data[1]['filename']) {
+			if ($data[1]['filename']) {
 				$file_location=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$data[1]['filename'];
-				if(file_exists($file_location)) {
+				if (file_exists($file_location)) {
 					$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 				} else {
 					$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';

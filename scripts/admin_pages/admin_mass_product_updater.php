@@ -1,17 +1,17 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content='<div class="main-heading"><h2>Mass Product Update</h2></div>';
-if($this->post) {
+if ($this->post) {
 	// update tax rate
-	if(isset($this->post['rules_group_id'])) {
+	if (isset($this->post['rules_group_id'])) {
 		$str="update tx_multishop_products set tax_id='".$this->post['rules_group_id']."' where page_uid='".$this->showCatalogFromPage."'";
 		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$content.='<strong>For '.$GLOBALS['TYPO3_DB']->sql_affected_rows().' product(s) the TAX rules group has been changed.</strong><br />';
 	}
 	// update prices
-	if($this->post['percentage']) {
+	if ($this->post['percentage']) {
 		$multiply=(100+$this->post['percentage'])/100;
 		$str="update tx_multishop_products set products_price=(products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -19,7 +19,7 @@ if($this->post) {
 		$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
-	if($this->ms['MODULES']['FLAT_DATABASE']) {
+	if ($this->ms['MODULES']['FLAT_DATABASE']) {
 		mslib_befe::rebuildFlatDatabase();
 	}
 } else {
@@ -40,7 +40,7 @@ if($this->post) {
 		';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$content.='<option value="'.$row['rules_group_id'].'">'.htmlspecialchars($row['name']).'</option>';
 	}
 	$content.='

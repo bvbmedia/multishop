@@ -1,26 +1,27 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $output=array();
 // now parse all the objects in the tmpl file
-if($this->conf['admin_edit_customer_group_tmpl_path']) {
+if ($this->conf['admin_edit_customer_group_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_group_tmpl_path']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_edit_customer_group.tmpl');
 }
 // Extract the subparts from the template
-if($this->post) {
+if ($this->post) {
 	$insertArray=array();
 	$insertArray['title']=$this->post['group_name'];
 	$insertArray['pid']=$this->conf['fe_customer_pid'];
 	$insertArray['tx_multishop_discount']=$this->post['discount'];
 	// custom page hook that can be controlled by third-party plugin
-	if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminUpdateCustomerGroupPreProc'])) {
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminUpdateCustomerGroupPreProc'])) {
 		$params=array(
 			'insertArray'=>&$insertArray,
-			'customer_group_id'=>&$this->post['customer_group_id']);
-		foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminUpdateCustomerGroupPreProc'] as $funcRef) {
+			'customer_group_id'=>&$this->post['customer_group_id']
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminUpdateCustomerGroupPreProc'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
@@ -28,9 +29,9 @@ if($this->post) {
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_groups', 'uid='.$this->post['customer_group_id'], $insertArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	$users=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
-	foreach($users as $user) {
+	foreach ($users as $user) {
 		// check if the user should be member or not
-		if(in_array($user['uid'], $this->post['tx_multishop_pi1']['users'])) {
+		if (in_array($user['uid'], $this->post['tx_multishop_pi1']['users'])) {
 			$add_array=array();
 			$remove_array=array();
 			$add_array[]=$this->post['customer_group_id'];
@@ -56,15 +57,15 @@ $subparts['members_option']=$this->cObj->getSubpart($subparts['template'], '###M
 // now lets load the users 
 $users=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
 $contentItem='';
-foreach($users as $user) {
-	if(!$user['name']) {
+foreach ($users as $user) {
+	if (!$user['name']) {
 		$user['name']=$user['username'];
 	}
 	$markerArray=array();
 	$markerArray['LABEL_MEMBERS_USERID']=$user['uid'];
 	$markerArray['LABEL_MEMBERS_NAME']=$user['name'];
 	$markerArray['LABEL_MEMBERS_USERNAME']=$user['username'];
-	if(mslib_fe::inUserGroup($this->get['customer_group_id'], $user['usergroup'])) {
+	if (mslib_fe::inUserGroup($this->get['customer_group_id'], $user['usergroup'])) {
 		$markerArray['MEMBERS_SELECTED']=' selected="selected"';
 	} else {
 		$markerArray['MEMBERS_SELECTED']='';
@@ -85,11 +86,12 @@ $subpartArray['###LABEL_MEMBERS###']='MEMBERS';
 $subpartArray['###MEMBERS_OPTION###']=$contentItem;
 $subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');
 // custom page hook that can be controlled by third-party plugin
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'])) {
 	$params=array(
 		'subpartArray'=>&$subpartArray,
-		'group'=>&$group);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'] as $funcRef) {
+		'group'=>&$group
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }

@@ -1,9 +1,9 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // now parse all the objects in the tmpl file
-if($this->conf['admin_home_tmpl_path']) {
+if ($this->conf['admin_home_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_home_tmpl_path']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_home.tmpl');
@@ -116,12 +116,13 @@ $dates=array();
 $data=array();
 $data[]=array(
 	'Datum',
-	'Bestellingen');
-for($i=12; $i >= 0; $i--) {
+	'Bestellingen'
+);
+for ($i=12; $i>=0; $i--) {
 	$time=strtotime(date('Y-m-01').' -'.$i.' MONTH');
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-foreach($dates as $key=>$value) {
+foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-31 23:59:59");
 	$where=array();
@@ -131,7 +132,8 @@ foreach($dates as $key=>$value) {
 	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 	$data[]=array(
 		date("m-Y", $start_time),
-		(int)$row['total']);
+		(int)$row['total']
+	);
 }
 $key='google_chart_orders';
 $libaryWidgets[$key]['key']='google_chart';
@@ -174,12 +176,13 @@ $dates=array();
 $data=array();
 $data[]=array(
 	'Datum',
-	'Gebruikers');
-for($i=12; $i >= 0; $i--) {
+	'Gebruikers'
+);
+for ($i=12; $i>=0; $i--) {
 	$time=strtotime(date('Y-m-01').' -'.$i.' MONTH');
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-foreach($dates as $key=>$value) {
+foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-31 23:59:59");
 	$where=array();
@@ -189,7 +192,8 @@ foreach($dates as $key=>$value) {
 	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 	$data[]=array(
 		date("m-Y", $start_time),
-		(int)$row['total']);
+		(int)$row['total']
+	);
 }
 $key='google_chart_customers';
 $libaryWidgets[$key]['key']='google_chart';
@@ -232,12 +236,13 @@ $dates=array();
 $data=array();
 $data[]=array(
 	'Datum',
-	'Winkelwagens');
-for($i=12; $i >= 0; $i--) {
+	'Winkelwagens'
+);
+for ($i=12; $i>=0; $i--) {
 	$time=strtotime(date('Y-m-01').' -'.$i.' MONTH');
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-foreach($dates as $key=>$value) {
+foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-31 23:59:59");
 	$where=array();
@@ -247,7 +252,8 @@ foreach($dates as $key=>$value) {
 	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 	$data[]=array(
 		date("m-Y", $start_time),
-		(int)$row['total']);
+		(int)$row['total']
+	);
 }
 $key='google_chart_carts';
 $libaryWidgets[$key]['key']='google_chart';
@@ -328,9 +334,9 @@ $enabledWidgets['searchKeywordsToplist']=1;
 $enabledWidgets['ordersLatest']=1;
 // COMPILING
 $compiledWidgets=array();
-foreach($enabledWidgets as $widgetKey=>$enabled) {
-	if($enabled) {
-		if($libaryWidgets[$widgetKey]['additionalHeaderData']['content']) {
+foreach ($enabledWidgets as $widgetKey=>$enabled) {
+	if ($enabled) {
+		if ($libaryWidgets[$widgetKey]['additionalHeaderData']['content']) {
 			$GLOBALS['TSFE']->additionalHeaderData[$libaryWidgets[$widgetKey]['additionalHeaderData']['key']]=$libaryWidgets[$widgetKey]['additionalHeaderData']['content'];
 		}
 		//$compiledWidgets[$libaryWidgets[$widgetKey]['defaultCol']][]=$libaryWidgets[$widgetKey];
@@ -432,7 +438,7 @@ jQuery(document).ready(function($) {
 		switch(rowType)
         {
 			';
-foreach($layouts as $layout=>$cols) {
+foreach ($layouts as $layout=>$cols) {
 	$headerData.='
 				case "'.$layout.'": var cols=\''.$cols.'\'; for (i=0;i<cols;i++) { html+=\'<div class="column columnCol\'+(i+1)+\'">dummy</div>\'; }
 				break;				
@@ -453,15 +459,15 @@ $headerData.='
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 $headerData='';
 $pageLayout=array();
-if(isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
+if (isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
 	$cookie_json_decode=json_decode($_COOKIE['widget_position']);
-	foreach($cookie_json_decode as $row_index=>$rows) {
+	foreach ($cookie_json_decode as $row_index=>$rows) {
 		$pageLayout[$row_index]['class']=$rows->rclass;
-		if(count($rows->column) > 0) {
-			foreach($rows->column as $column_index=>$columns) {
+		if (count($rows->column)>0) {
+			foreach ($rows->column as $column_index=>$columns) {
 				$widgets=array();
-				if(count($columns->widget_key) > 0) {
-					foreach($columns->widget_key as $wkey) {
+				if (count($columns->widget_key)>0) {
+					foreach ($columns->widget_key as $wkey) {
 						$widgets[]=$wkey;
 					}
 				}
@@ -477,7 +483,10 @@ if(isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
 			1=>array(
 				'google_chart_orders',
 				'google_chart_customers',
-				'google_chart_carts')));
+				'google_chart_carts'
+			)
+		)
+	);
 //'searchKeywordsToplist','referrerToplist'
 	/*
 		$pageLayout[]=array('class'=>'layout3cols','cols' => array(
@@ -492,11 +501,15 @@ if(isset($_COOKIE['widget_position']) && !empty($_COOKIE['widget_position'])) {
 		'cols'=>array(
 			0=>array(
 				'searchKeywordsToplist',
-				'referrerToplist'),
+				'referrerToplist'
+			),
 			1=>array(
 				'turnoverPerMonth',
 				'ordersPerMonth',
-				'customersPerMonth')));
+				'customersPerMonth'
+			)
+		)
+	);
 }
 /*
 $pageLayout[]=array('class'=>'layout1big1small','enabledWidgets' => array('ordersPerMonth','google_chart_orders'));
@@ -524,24 +537,24 @@ $enabledWidgets['searchKeywordsToplist']=1;
 */
 $content.='<div class="column-wrapper">';
 //shuffle($layouts);
-foreach($pageLayout as $rowNr=>$cols) {
+foreach ($pageLayout as $rowNr=>$cols) {
 	$content.='<div class="widgetRow '.$cols['class'].'" id="'.$cols['class'].'_'.$rowNr.'">';
 	$colNr=0;
-	foreach($cols['cols'] as $col) {
+	foreach ($cols['cols'] as $col) {
 		$colNr++;
 		$content.='<div class="column columnCol'.($colNr).'" id="'.$cols['class'].'_'.$rowNr.'_'.($colNr-1).'">';
 		//for ($col=0;$col<$cols;$col++) {
 		//foreach ($compiledWidgets as $col => $items) {			
 		//$content.='<div class="column columnCol'.($col+1).'">';
-		foreach($col as $widget_key) {
+		foreach ($col as $widget_key) {
 			$intCounter++;
-			if($intCounter == 1) {
+			if ($intCounter==1) {
 				//$idName='intro';
 				$idName='widget'.$intCounter;
 			} else {
 				$idName='widget'.$intCounter;
 			}
-			if($compiledWidgets[$widget_key]['content']) {
+			if ($compiledWidgets[$widget_key]['content']) {
 				$widget=$compiledWidgets[$widget_key];
 				$content.='<div class="portlet'.($widget['class'] ? ' '.$widget['class'] : '').'" rel="'.$intCounter.'" id="'.$widget_key.'">';
 				$content.='

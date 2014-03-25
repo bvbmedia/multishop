@@ -1,8 +1,8 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if($this->get['tx_multishop_pi1']['is_proposal']) {
+if ($this->get['tx_multishop_pi1']['is_proposal']) {
 	$page_type='proposals';
 } else {
 	$page_type='orders';
@@ -11,28 +11,28 @@ $counter=0;
 $tr_type='even';
 $cb_ctr=0;
 $orderItem='';
-foreach($tmporders as $order) {
+foreach ($tmporders as $order) {
 	$edit_order_popup_width=980;
-	if($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] > 0) {
+	if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 		$edit_order_popup_width+=70;
 	}
-	if($this->ms['MODULES']['ORDER_EDIT'] && !$order['is_locked']) {
-		if($edit_order_popup_width > 980) {
+	if ($this->ms['MODULES']['ORDER_EDIT'] && !$order['is_locked']) {
+		if ($edit_order_popup_width>980) {
 			$edit_order_popup_width+=155;
 		} else {
 			$edit_order_popup_width+=70;
 		}
 	}
 	//	$order=mslib_fe::getOrder($order_row['orders_id']);
-	if(!$tr_type or $tr_type == 'even') {
+	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
 	} else {
 		$tr_type='even';
 	}
-	if($this->masterShop) {
+	if ($this->masterShop) {
 		$master_shop_col='<td align="left" nowrap>'.mslib_fe::getShopNameByPageUid($order['page_uid']).'</td>';
 	}
-	if($order['billing_company']) {
+	if ($order['billing_company']) {
 		$customer_name=$order['billing_company'];
 	} else {
 		$customer_name=$order['billing_name'];
@@ -40,14 +40,14 @@ foreach($tmporders as $order) {
 	//<div class="orders_status_button_gray" title="'.htmlspecialchars($order['orders_status']).'">'.$order['orders_status'].'</div>
 	$order_status_selectbox='<select name="orders_status" class="change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'">
 		<option value="">'.$this->pi_getLL('choose').'</option>';
-	if(is_array($all_orders_status)) {
-		foreach($all_orders_status as $item) {
-			$order_status_selectbox.='<option value="'.$item['id'].'"'.($item['id'] == $order['status'] ? ' selected' : '').'>'.$item['name'].'</option>'."\n";
+	if (is_array($all_orders_status)) {
+		foreach ($all_orders_status as $item) {
+			$order_status_selectbox.='<option value="'.$item['id'].'"'.($item['id']==$order['status'] ? ' selected' : '').'>'.$item['name'].'</option>'."\n";
 		}
 	}
 	$order_status_selectbox.='</select>';
 	$paid_status='';
-	if(!$order['paid']) {
+	if (!$order['paid']) {
 		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
 		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\'Are you sure that order '.$order['orders_id'].' has been paid?\')"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
@@ -55,19 +55,19 @@ foreach($tmporders as $order) {
 		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	$print_order_list_button=false;
-	switch($page_type) {
+	switch ($page_type) {
 		case 'proposals':
 			$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order').'" rel="email" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: \'910\', height: browser_height} )" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
 			$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
 			$print_order_list_button=true;
 			break;
 		case 'orders':
-			if($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
-				if($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+				if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: \'910\', height: browser_height} )" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
 					$print_order_list_button=true;
 				}
-				if($this->ms['MODULES']['PACKING_LIST_PRINT']) {
+				if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
 					$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: \'910\', height: browser_height} )" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 					$print_order_list_button=true;
 				}
@@ -75,16 +75,17 @@ foreach($tmporders as $order) {
 			break;
 	}
 	// extra input jquery
-	if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingButton'])) {
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingButton'])) {
 		$params=array(
 			'orderlist_buttons'=>&$orderlist_buttons,
-			'order'=>&$order);
-		foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingButton'] as $funcRef) {
+			'order'=>&$order
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingButton'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$order_list_button_extra='';
-	if($print_order_list_button) {
+	if ($print_order_list_button) {
 		//button area
 		$order_list_button_extra.='<td align="center" nowrap>';
 		$order_list_button_extra.=implode("&nbsp;", $orderlist_buttons);
@@ -107,11 +108,12 @@ foreach($tmporders as $order) {
 	$markerArray['PRINT_ORDER_LIST_BUTTON']=$order_list_button_extra;
 	$markerArray['MASTER_SHOP']=$master_shop_col;
 	// custom page hook that can be controlled by third-party plugin
-	if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplIteratorPreProc'])) {
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplIteratorPreProc'])) {
 		$params=array(
 			'markerArray'=>&$markerArray,
-			'order'=>&$order);
-		foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplIteratorPreProc'] as $funcRef) {
+			'order'=>&$order
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplIteratorPreProc'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
@@ -128,9 +130,9 @@ $actions['mail_selected_orders_to_merchant']=$this->pi_getLL('mail_selected_orde
 $actions['export_selected_order_to_xls']=$this->pi_getLL('export_selected_order_to_xls', 'Export selected orders to Excel');
 $actions['mail_selected_orders_for_payment_reminder']=$this->pi_getLL('mail_selected_orders_for_payment_reminder', 'Mail selected orders for payment reminder');
 // extra action
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionSelectboxProc'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionSelectboxProc'])) {
 	$params=array('actions'=>&$actions);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionSelectboxProc'] as $funcRef) {
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionSelectboxProc'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
@@ -138,28 +140,28 @@ $formFields=array();
 $formFields['orders_list_action']='
 <select name="tx_multishop_pi1[action]" id="selected_orders_action">
 <option value="">'.$this->pi_getLL('choose_action').'</option>';
-foreach($actions as $key=>$value) {
+foreach ($actions as $key=>$value) {
 	//$tmp.='<option value="'.$key.'"'. ($this->get['tx_multishop_pi1']['action']==$key?' selected':'').'>'.$value.'</option>';
 	$formFields['orders_list_action'].='<option value="'.$key.'">'.$value.'</option>';
 }
 $formFields['orders_list_action'].='</select>';
 $formFields['update_to_order_status']='<select name="tx_multishop_pi1[update_to_order_status]" id="msadmin_order_status_select"><option value="">'.$this->pi_getLL('choose').'</option>';
-if(is_array($all_orders_status)) {
-	foreach($all_orders_status as $row) {
-		$formFields['update_to_order_status'].='<option value="'.$row['id'].'" '.(($order['status'] == $row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
+if (is_array($all_orders_status)) {
+	foreach ($all_orders_status as $row) {
+		$formFields['update_to_order_status'].='<option value="'.$row['id'].'" '.(($order['status']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
 	}
 }
 $formFields['update_to_order_status'].='</select>';
 // extra input
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputProc'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputProc'])) {
 	$params=array('formFields'=>&$formFields);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputProc'] as $funcRef) {
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputProc'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
 $formFields['submit_button']='<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
 $form_fields_block='<div id="msAdminOrdersListingActionForm">';
-foreach($formFields as $key=>$formField) {
+foreach ($formFields as $key=>$formField) {
 	$form_fields_block.='<div class="msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'">'.$formField.'</div>';
 }
 $form_fields_block.='</div>';
@@ -170,10 +172,11 @@ $query_string=mslib_fe::tep_get_all_get_params(array(
 	'p',
 	'Submit',
 	'weergave',
-	'clearcache'));
+	'clearcache'
+));
 $subpartArray=array();
 $key='orders_id';
-if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
@@ -183,7 +186,7 @@ $subpartArray['###LABEL_HEADER_ORDER_ID###']=$this->pi_getLL('orders_id');
 $subpartArray['###FOOTER_SORTBY_LINK_ORDER_ID###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_ORDER_ID###']=$this->pi_getLL('orders_id');
 $master_shop_header='';
-if($this->masterShop) {
+if ($this->masterShop) {
 	$master_shop_header='<th width="75" class="cell_store">'.$this->pi_getLL('store').'</th>';
 }
 $subpartArray['###HEADER_MASTER_SHOP###']=$master_shop_header;
@@ -191,7 +194,7 @@ $subpartArray['###FOOTER_MASTER_SHOP###']=$master_shop_header;
 $subpartArray['###LABEL_HEADER_CUSTOMER###']=$this->pi_getLL('customer');
 $subpartArray['###LABEL_FOOTER_CUSTOMER###']=$this->pi_getLL('customer');
 $key='crdate';
-if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
@@ -201,7 +204,7 @@ $subpartArray['###LABEL_HEADER_ORDER_DATE###']=$this->pi_getLL('order_date');
 $subpartArray['###FOOTER_SORTBY_LINK_ORDER_DATE###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_ORDER_DATE###']=$this->pi_getLL('order_date');
 $key='grand_total';
-if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
@@ -211,7 +214,7 @@ $subpartArray['###LABEL_HEADER_AMOUNT###']=$this->pi_getLL('amount');
 $subpartArray['###FOOTER_SORTBY_LINK_AMOUNT###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_AMOUNT###']=$this->pi_getLL('amount');
 $key='shipping_method_label';
-if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
@@ -221,7 +224,7 @@ $subpartArray['###LABEL_HEADER_SHIPPING_METHOD###']=$this->pi_getLL('shipping_me
 $subpartArray['###FOOTER_SORTBY_LINK_SHIPPING_METHOD###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
 $key='payment_method_label';
-if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
@@ -233,7 +236,7 @@ $subpartArray['###LABEL_FOOTER_PAYMENT_METHOD###']=$this->pi_getLL('payment_meth
 $subpartArray['###LABEL_HEADER_STATUS###']=$this->pi_getLL('order_status');
 $subpartArray['###LABEL_FOOTER_STATUS###']=$this->pi_getLL('order_status');
 $key='status_last_modified';
-if($this->get['tx_multishop_pi1']['order_by'] == $key) {
+if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
@@ -245,7 +248,7 @@ $subpartArray['###LABEL_FOOTER_MODIFIED###']=$this->pi_getLL('modified_on', 'Mod
 $subpartArray['###LABEL_HEADER_PAID###']=$this->pi_getLL('admin_paid');
 $subpartArray['###LABEL_FOOTER_PAID###']=$this->pi_getLL('admin_paid');
 $extra_header='';
-if($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT'] || $page_type == 'proposals') {
+if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT'] || $page_type=='proposals') {
 	$extra_header='<th width="50">&nbsp;</th>';
 }
 $subpartArray['###EXTRA_RIGHT_HEADER###']=$extra_header;
@@ -254,7 +257,7 @@ $subpartArray['###FORM_FIELDS_LISTING_ACTION_BLOCK###']=$form_fields_block;
 $pagination_listing='';
 // pagination
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
-if(!$this->ms['nopagenav'] and $pageset['total_rows'] > $this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
+if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
 	$tmp='';
 	//require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/orders/pagination.php');
 	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
@@ -264,11 +267,12 @@ if(!$this->ms['nopagenav'] and $pageset['total_rows'] > $this->ms['MODULES']['OR
 $subpartArray['###PAGINATION###']=$pagination_listing;
 $subpartArray['###ORDERS_LISTING###']=$orderItem;
 // custom page hook that can be controlled by third-party plugin
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplPreProc'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplPreProc'])) {
 	$params=array(
 		'subpartArray'=>&$subpartArray,
-		'order'=>&$order);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplPreProc'] as $funcRef) {
+		'order'=>&$order
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplPreProc'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
@@ -299,14 +303,14 @@ $headerData.='
 				$("#msadmin_order_status_select").hide();
 			}';
 // extra input jquery
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputJQueryProc'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputJQueryProc'])) {
 	$params=array('tmp'=>&$headerData);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputJQueryProc'] as $funcRef) {
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputJQueryProc'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
 $headerData.='});
-		'.($this->get['tx_multishop_pi1']['action'] != 'change_order_status_for_selected_orders' ? '$("#msadmin_order_status_select").hide();' : '').'
+		'.($this->get['tx_multishop_pi1']['action']!='change_order_status_for_selected_orders' ? '$("#msadmin_order_status_select").hide();' : '').'
 		$(".tooltip").tooltip({position: "bottom",
 			onBeforeShow: function() {
 				var that=this;

@@ -1,13 +1,13 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
 $disable_checkout=false;
 $output=array();
 // now parse all the objects in the tmpl file
-if($this->conf['shopping_cart_tmpl_path']) {
+if ($this->conf['shopping_cart_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['shopping_cart_tmpl_path']);
-} elseif($this->conf['shopping_cart_tmpl']) {
+} elseif ($this->conf['shopping_cart_tmpl']) {
 	$template=$this->cObj->fileResource($this->conf['shopping_cart_tmpl']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/shopping_cart.tmpl');
@@ -17,7 +17,7 @@ $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
 $subparts['footer']=$this->cObj->getSubpart($subparts['template'], '###CART_FOOTER###');
-if(!$this->ms['MODULES']['COUPONS']) {
+if (!$this->ms['MODULES']['COUPONS']) {
 	// clear coupon html
 	// because the DISCOUNT_MODULE_WRAPPER is inside the CART_FOOTER wrapper we have to substitute it on the footer
 	$subFooterparts=array();
@@ -27,7 +27,7 @@ if(!$this->ms['MODULES']['COUPONS']) {
 	$subparts['footer']=$this->cObj->substituteMarkerArrayCached($subparts['footer'], array(), $subpartFooterArray);
 }
 //JS
-if($this->ms['MODULES']['COUPONS']) {
+if ($this->ms['MODULES']['COUPONS']) {
 	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript">
 	function postCoupon(value) {
 		jQuery.ajax({
@@ -57,25 +57,25 @@ if($this->ms['MODULES']['COUPONS']) {
 $output['shopping_cart_colspan']=5;
 $output['shopping_cart_header']=ucfirst($this->pi_getLL('basket'));
 $cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-if(count($cart['products']) > 0) {
+if (count($cart['products'])>0) {
 	$output['shopping_cart_form_action_url']=mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart');
 	$output['col_header_shopping_cart_product']=ucfirst($this->pi_getLL('product'));
 	$output['col_header_shopping_cart_qty']=ucfirst($this->pi_getLL('qty'));
 	$output['col_header_shopping_cart_total']=ucfirst($this->pi_getLL('total'));
 	$contentItem='';
-	foreach($cart['products'] as $shopping_cart_item=>$value) {
-		if(is_numeric($value['products_id'])) {
+	foreach ($cart['products'] as $shopping_cart_item=>$value) {
+		if (is_numeric($value['products_id'])) {
 			$ordered_qty=$value['qty'];
 			$product_info=mslib_fe::getProduct($value['products_id']);
 			$products_id=$value['products_id'];
 			$product=$value;
-			if(!$output['product_row_type'] || $output['product_row_type'] == 'even') {
+			if (!$output['product_row_type'] || $output['product_row_type']=='even') {
 				$output['product_row_type']='odd';
 			} else {
 				$output['product_row_type']='even';
 			}
-			if($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				if($value['country_tax_rate'] && $value['region_tax_rate']) {
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				if ($value['country_tax_rate'] && $value['region_tax_rate']) {
 					$country_tax_rate=mslib_fe::taxDecimalCrop($value['final_price']*($value['country_tax_rate']));
 					$region_tax_rate=mslib_fe::taxDecimalCrop($value['final_price']*($value['region_tax_rate']));
 					$tax_rate=$country_tax_rate+$region_tax_rate;
@@ -86,7 +86,7 @@ if(count($cart['products']) > 0) {
 			}
 			$final_price=($value['qty']*$value['final_price']);
 			$price=($value['qty']*$value['final_price']);
-			if(!$product['products_image']) {
+			if (!$product['products_image']) {
 				$output['product_image']='<div class="no_image_50"></div>';
 			} else {
 				$output['product_image']='<img src="'.$product['products_image'].'">';
@@ -94,35 +94,35 @@ if(count($cart['products']) > 0) {
 			$output['product_link']=$value['link'];
 			$output['product_name']=$product['products_name'].($product['products_model'] ? '  <span class="checkout_listing_products_model">('.$product['products_model'].')</span>' : '').'</a></span>';
 			$output['product_attributes']='';
-			if(is_array($value['attributes'])) {
+			if (is_array($value['attributes'])) {
 				// loading the attributes
-				foreach($value['attributes'] as $attribute_key=>$attribute_values) {
+				foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
 					$continue=0;
-					if(is_numeric($attribute_key)) {
+					if (is_numeric($attribute_key)) {
 						$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 					}
-					switch($row['listtype']) {
+					switch ($row['listtype']) {
 						case 'checkbox':
 							$output['product_attributes'].='<br />'.$row['products_options_name'].': ';
 							$continue=0;
 							$total=count($attribute_values);
 							$counter=0;
-							foreach($attribute_values as $item) {
+							foreach ($attribute_values as $item) {
 								$counter++;
-								if($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 									$item['options_values_price']=round($item['options_values_price']*(1+$product['tax_rate']), 2);
 								} else {
 									$item['options_values_price']=round($item['options_values_price'], 2);
 								}
 								$output['product_attributes'].=trim($item['products_options_values_name']);
 								$price=$price+($value['qty']*($item['price_prefix'].$item['options_values_price']));
-								if($item['options_values_price'] > 0) {
+								if ($item['options_values_price']>0) {
 									$subprices.=mslib_fe::amount2Cents(($value['qty']*($item['price_prefix'].$item['options_values_price'])));
 								}
 								$subprices.='<br />';
-								if($counter < $total) {
+								if ($counter<$total) {
 									$output['product_attributes'].=', ';
 								}
 							}
@@ -137,11 +137,11 @@ if(count($cart['products']) > 0) {
 							$continue=1;
 							break;
 					}
-					if($continue) {
+					if ($continue) {
 						$array=array($attribute_values);
-						foreach($array as $item) {
-							if($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								if($value['country_tax_rate'] && $value['region_tax_rate']) {
+						foreach ($array as $item) {
+							if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								if ($value['country_tax_rate'] && $value['region_tax_rate']) {
 									$country_tax_rate=mslib_fe::taxDecimalCrop($item['options_values_price']*($value['country_tax_rate']));
 									$region_tax_rate=mslib_fe::taxDecimalCrop($item['options_values_price']*($value['region_tax_rate']));
 									$item_tax_rate=$country_tax_rate+$region_tax_rate;
@@ -152,7 +152,7 @@ if(count($cart['products']) > 0) {
 							} else {
 								$item['options_values_price']=round($item['options_values_price'], 2);
 							}
-							if($item['options_values_price'] > 0) {
+							if ($item['options_values_price']>0) {
 								$subprices.=mslib_fe::amount2Cents(($value['qty']*($item['price_prefix'].$item['options_values_price'])));
 							}
 							$subprices.='<br />';
@@ -165,46 +165,46 @@ if(count($cart['products']) > 0) {
 			}
 			// show selectbox by products multiplication or show default input
 			$quantity_html='';
-			if($product['maximum_quantity'] > 0 || (is_numeric($product['products_multiplication']) && $product['products_multiplication'] > 0)) {
+			if ($product['maximum_quantity']>0 || (is_numeric($product['products_multiplication']) && $product['products_multiplication']>0)) {
 				$start_number='';
 				$ending_number='';
 				$item='';
-				if($product['maximum_quantity'] > 0) {
+				if ($product['maximum_quantity']>0) {
 					$ending_number=$product['maximum_quantity'];
 				}
-				if($product['minimum_quantity'] > 0) {
+				if ($product['minimum_quantity']>0) {
 					$start_number=$product['minimum_quantity'];
 				} else {
-					if($product['products_multiplication']) {
+					if ($product['products_multiplication']) {
 						$start_number=$product['products_multiplication'];
 					}
 				}
-				if(!$start_number) {
+				if (!$start_number) {
 					$start_number=1;
 				}
 				$quantity_html.='<select name="qty['.$shopping_cart_item.']">';
 				$count=0;
 				$steps=10;
-				if($product['maximum_quantity'] && $product['products_multiplication']) {
+				if ($product['maximum_quantity'] && $product['products_multiplication']) {
 					$steps=floor($product['maximum_quantity']/$product['products_multiplication']);
 				} else {
-					if($product['maximum_quantity'] && !$product['products_multiplication']) {
+					if ($product['maximum_quantity'] && !$product['products_multiplication']) {
 						$steps=($ending_number-$start_number)+1;
 					}
 				}
 				$count=$start_number;
-				if($ending_number && $value['qty'] > $ending_number) {
+				if ($ending_number && $value['qty']>$ending_number) {
 					$value['qty']=$ending_number;
 				}
-				for($i=0; $i < $steps; $i++) {
-					if($product['products_multiplication']) {
+				for ($i=0; $i<$steps; $i++) {
+					if ($product['products_multiplication']) {
 						$item=$product['products_multiplication'];
 					} else {
-						if($i) {
+						if ($i) {
 							$item=1;
 						}
 					}
-					$quantity_html.='<option value="'.$count.'"'.($value['qty'] == $count ? ' selected' : '').'>'.$count.'</option>';
+					$quantity_html.='<option value="'.$count.'"'.($value['qty']==$count ? ' selected' : '').'>'.$count.'</option>';
 					$count=($count+$item);
 				}
 				$quantity_html.='</select>';
@@ -212,12 +212,12 @@ if(count($cart['products']) > 0) {
 				$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus" rel="qty_'.$shopping_cart_item.'"><input class="qty_input" name="qty['.$shopping_cart_item.']" type="text" id="qty_'.$shopping_cart_item.'" value="'.$value['qty'].'" size="4" maxlength="4" /><input type="button" value="+" class="qty_plus" rel="qty_'.$shopping_cart_item.'">';
 			}
 			// show selectbox by products multiplication or show default input eof
-			if(!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-				if($value['qty'] > $product_info['products_quantity']) {
+			if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+				if ($value['qty']>$product_info['products_quantity']) {
 					$disable_checkout=true;
 				}
 			}
-			if($subprices) {
+			if ($subprices) {
 				$subprices='<div class="attribute_prices">'.$subprices.'</div>';
 			}
 			$output['product_qty']=$quantity_html;
@@ -227,10 +227,10 @@ if(count($cart['products']) > 0) {
 			$subprices='';
 			$subtotal=($subtotal+$price);
 		}
-		if($disable_checkout) {
-			if(!$this->ms['MODULES']['DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE']) {
-				if($product_info['products_quantity'] > 0) {
-					if($ordered_qty > $product_info['products_quantity']) {
+		if ($disable_checkout) {
+			if (!$this->ms['MODULES']['DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE']) {
+				if ($product_info['products_quantity']>0) {
+					if ($ordered_qty>$product_info['products_quantity']) {
 						$output['product_attributes'].='<br/><span class="out-of-stock-warning"><strong>'.sprintf($this->pi_getLL('ordered_product_qty_exceed_maximum_stock', 'the quantity you request for this product are exceeding the stock we have, at this moment the maximum quantity you may order for this product is: %s<br/>please update the order quantity for this product, and continue the checkout'), $product_info['products_quantity']).'</strong></span>';
 					}
 				} else {
@@ -238,8 +238,8 @@ if(count($cart['products']) > 0) {
 				}
 			}
 		} else {
-			if(!$this->ms['MODULES']['DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE']) {
-				if($product_info['products_quantity'] < 0 || ($value['qty'] > $product_info['products_quantity'])) {
+			if (!$this->ms['MODULES']['DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE']) {
+				if ($product_info['products_quantity']<0 || ($value['qty']>$product_info['products_quantity'])) {
 					$output['product_attributes'].='<br/><span class="out-of-stock-warning"><strong>'.$this->pi_getLL('ordered_product_stock_not_available_waiting_for_restock', 'due to the quantity you order for this product are exceeding the stock we have, we will process the order for this product after the re-stock. you can continue the checkout.').'</strong></span>';
 				}
 			}
@@ -256,7 +256,7 @@ if(count($cart['products']) > 0) {
 		$markerArray['PRODUCT_FINAL_PRICE']=$output['product_final_price'];
 		$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 	}
-	if(!$output['product_row_type'] || $output['product_row_type'] == 'even') {
+	if (!$output['product_row_type'] || $output['product_row_type']=='even') {
 		$output['product_row_type']='odd';
 	} else {
 		$output['product_row_type']='even';
@@ -264,8 +264,8 @@ if(count($cart['products']) > 0) {
 	$output['label_shopping_cart_subtotal']=$this->pi_getLL('subtotal');
 	$output['shopping_cart_subtotal']=mslib_fe::amount2Cents($subtotal);
 	//coupons code
-	if($this->ms['MODULES']['COUPONS']) {
-		if(!$tr_type || $tr_type == 'even') {
+	if ($this->ms['MODULES']['COUPONS']) {
+		if (!$tr_type || $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
@@ -274,8 +274,8 @@ if(count($cart['products']) > 0) {
 		$output['coupon_code']=($cart['coupon_code'] ? $cart['coupon_code'] : '');
 		$output['coupon_code_value']=($cart['coupon_discount'] ? $cart['coupon_discount'] : 0);
 		$output['label_discount']=$this->pi_getLL('discount');
-		if($cart['coupon_discount']) {
-			switch($cart['coupon_discount_type']) {
+		if ($cart['coupon_discount']) {
+			switch ($cart['coupon_discount_type']) {
 				case 'percentage':
 					$output['discount_value']=number_format($cart['coupon_discount']).'%';
 					break;
@@ -288,7 +288,7 @@ if(count($cart['products']) > 0) {
 		}
 	}
 	//coupons code eof
-	if(!$output['product_row_type'] || $output['product_row_type'] == 'even') {
+	if (!$output['product_row_type'] || $output['product_row_type']=='even') {
 		$output['product_row_type2']='odd';
 	} else {
 		$output['product_row_type2']='even';
@@ -296,7 +296,7 @@ if(count($cart['products']) > 0) {
 	$output['label_update_shopping_cart']=$this->pi_getLL('update_shopping_cart');
 	$output['goto_catalog_link']=mslib_fe::typolink($this->shop_pid, '');
 	$output['label_goto_catalog']=$this->pi_getLL('go_to_catalog');
-	if($disable_checkout) {
+	if ($disable_checkout) {
 		$output['checkout_link']='javascript:void(0)';
 	} else {
 		$output['checkout_link']=mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]=checkout');

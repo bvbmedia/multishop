@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
@@ -11,7 +11,7 @@ window.onload = function(){
 }
 </script>
 ';
-if($_REQUEST['action'] == 'edit_module') {
+if ($_REQUEST['action']=='edit_module') {
 	$str="SELECT * from tx_multishop_configuration where id='".$_REQUEST['module_id']."'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$configuration=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
@@ -19,11 +19,11 @@ if($_REQUEST['action'] == 'edit_module') {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$configuration_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 }
-if($this->post and $_REQUEST['action'] == 'edit_module') {
+if ($this->post and $_REQUEST['action']=='edit_module') {
 	$array=array();
 	$row=mslib_befe::doesExist("tx_multishop_configuration_values", 'configuration_key', addslashes($this->post['configuration_key']), "and page_uid='".$this->shop_pid."'");
-	if(isset($this->post['configuration']['local'])) {
-		if($row['configuration_key']) {
+	if (isset($this->post['configuration']['local'])) {
+		if ($row['configuration_key']) {
 			$array['configuration_value']=$this->post['configuration']['local'];
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_configuration_values', 'configuration_key=\''.addslashes($this->post['configuration_key']).'\' and page_uid=\''.$this->shop_pid.'\'', $array);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -35,14 +35,14 @@ if($this->post and $_REQUEST['action'] == 'edit_module') {
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 	}
-	if(isset($this->post['configuration']['global'])) {
+	if (isset($this->post['configuration']['global'])) {
 		$array=array();
 		$array['configuration_value']=$this->post['configuration']['global'];
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_configuration', 'configuration_key=\''.addslashes($this->post['configuration_key']).'\'', $array);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
-	if($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {
-		if($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..')) {
+	if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {
+		if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..')) {
 			$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
 			exec($command);
 			$content.='<br /><p><strong>Multishop cache has been cleared.</strong></p>';
@@ -50,7 +50,7 @@ if($this->post and $_REQUEST['action'] == 'edit_module') {
 			$content.='<br /><p><strong>Cache not cleared. Something is wrong with your configuration (DOCUMENT_ROOT is not set correctly).</strong></p>';
 		}
 	}
-	if($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END']) {
+	if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END']) {
 		mslib_befe::cacheLite('clear_all', 'delete');
 	}
 	$string='loadConfiguration_'.$this->shop_pid;
@@ -61,7 +61,7 @@ if($this->post and $_REQUEST['action'] == 'edit_module') {
 	';
 	die();
 }
-if($configuration['id'] or $_REQUEST['action'] == 'edit_module') {
+if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$configuration['parent_id']=$this->get['cid'];
 	$save_block='
 		<div class="save_block">
@@ -90,7 +90,7 @@ if($configuration['id'] or $_REQUEST['action'] == 'edit_module') {
 		<div class="account-field configuration_modules">
 			<label for="value">Default value</label>	
 ';
-	if($configuration['set_function']) {
+	if ($configuration['set_function']) {
 		eval('$value_field = mslib_fe::'.$configuration['set_function'].'\''.addslashes(htmlspecialchars($this->ms['MODULES']['GLOBAL_MODULES'][$configuration['configuration_key']])).'\',\'global\');');
 	} else {
 		$value_field=mslib_fe::tep_draw_input_field('configuration[global]', $this->ms['MODULES']['GLOBAL_MODULES'][$configuration['configuration_key']]);
@@ -102,7 +102,7 @@ if($configuration['id'] or $_REQUEST['action'] == 'edit_module') {
 		<div class="account-field configuration_modules">
 			<label for="value">Current value</label>	
 ';
-	if($configuration['set_function']) {
+	if ($configuration['set_function']) {
 		eval('$value_field = mslib_fe::'.$configuration['set_function'].'\''.addslashes(htmlspecialchars($this->ms['MODULES'][$configuration['configuration_key']])).'\',\'local\');');
 	} else {
 		$value_field=mslib_fe::tep_draw_input_field('configuration[local]', $this->ms['MODULES'][$configuration['configuration_key']]);

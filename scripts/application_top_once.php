@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
 /*
@@ -8,12 +8,12 @@ if(!defined('TYPO3_MODE')) {
 */
 // explanation: loading globals
 // checking if the required extensions are loaded
-if(!t3lib_extMgm::isLoaded('static_info_tables', 0) or !t3lib_extMgm::isLoaded('static_info_tables_taxes', 0)) {
+if (!t3lib_extMgm::isLoaded('static_info_tables', 0) or !t3lib_extMgm::isLoaded('static_info_tables_taxes', 0)) {
 	echo '<div class="main-heading"><h2>Please install the following extension:</h2></div>';
-	if(!t3lib_extMgm::isLoaded('static_info_tables', 0)) {
+	if (!t3lib_extMgm::isLoaded('static_info_tables', 0)) {
 		echo 'static_info_tables<BR />';
 	}
-	if(!t3lib_extMgm::isLoaded('static_info_tables_taxes', 0)) {
+	if (!t3lib_extMgm::isLoaded('static_info_tables_taxes', 0)) {
 		echo 'static_info_tables_taxes<BR />';
 	}
 	exit();
@@ -44,8 +44,8 @@ $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/manufacturers';
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/manufacturers/normal';
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/manufacturers/original';
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/order_resources';
-foreach($paths as $path) {
-	if(!is_dir($path)) {
+foreach ($paths as $path) {
+	if (!is_dir($path)) {
 		t3lib_div::mkdir($path);
 	}
 }

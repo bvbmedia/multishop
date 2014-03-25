@@ -1,37 +1,38 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if($GLOBALS['categories_id_array']) {
+if ($GLOBALS['categories_id_array']) {
 	$categories_id=$GLOBALS['categories_id_array'][0];
-} elseif(is_numeric($this->get['categories_id'])) {
+} elseif (is_numeric($this->get['categories_id'])) {
 	$categories_id=$this->get['categories_id'];
 }
-if($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU']) {
+if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU']) {
 	$this->ms['MODULES']['CACHE_FRONT_END']=0;
 }
-if($this->ms['MODULES']['CACHE_FRONT_END']) {
+if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	$this->cacheLifeTime=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'cacheLifeTime', 's_advanced');
-	if(!$this->cacheLifeTime) {
+	if (!$this->cacheLifeTime) {
 		$this->cacheLifeTime=$this->ms['MODULES']['CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU'];
 	}
 	$options=array(
 		'caching'=>true,
 		'cacheDir'=>$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/cache/',
-		'lifeTime'=>$this->cacheLifeTime);
+		'lifeTime'=>$this->cacheLifeTime
+	);
 	$Cache_Lite=new Cache_Lite($options);
 //	$string='search_by_category_'.$categories_id;
 	$string=serialize($GLOBALS['TYPO3_CONF_VARS']['tx_multishop_data']['user_crumbar']).$this->cObj->data['uid'];
 }
-if(!$this->ms['MODULES']['CACHE_FRONT_END'] or !$categories=$Cache_Lite->get($string)) {
+if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$categories=$Cache_Lite->get($string)) {
 	$categories='';
 	$cats=mslib_fe::getSubcatsOnly(0);
-	foreach($cats as $cat) {
-		if(!$cat['categories_url']) {
-			$categories.='<option value="'.$cat['categories_id'].'" '.($cat['categories_id'] == $categories_id ? 'selected' : '').'>'.$cat['categories_name'].'</option>';
+	foreach ($cats as $cat) {
+		if (!$cat['categories_url']) {
+			$categories.='<option value="'.$cat['categories_id'].'" '.($cat['categories_id']==$categories_id ? 'selected' : '').'>'.$cat['categories_name'].'</option>';
 		}
 	}
-	if($this->ms['MODULES']['CACHE_FRONT_END']) {
+	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$Cache_Lite->save($categories);
 	}
 }

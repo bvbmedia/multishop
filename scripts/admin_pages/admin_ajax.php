@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
@@ -62,12 +62,12 @@ jQuery().ready(function($){
 /*
 <script type="text/javascript" src="'.$this->FULL_HTTP_URL_MS.'js/jquery.textarea-expander.js"></script> 
 */
-if(strstr($this->conf['admin_template_folder'], "/")) {
+if (strstr($this->conf['admin_template_folder'], "/")) {
 	$prefixed_url=$this->FULL_HTTP_URL;
 } else {
 	$prefixed_url=$this->FULL_HTTP_URL_MS.'templates/';
 }
-if($this->conf['highslide_folder'] == 'highslide') {
+if ($this->conf['highslide_folder']=='highslide') {
 	// this shop uses highslide with black outlines. lets include black tab css to change the css
 	$GLOBALS['TSFE']->additionalHeaderData[]='<link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/tab_black.css" media="screen" />';
 }
@@ -75,16 +75,16 @@ $GLOBALS['TSFE']->additionalHeaderData[]=mslib_fe::jQueryBlockUI();
 $content.='
 <div id="tx_multishop_pi1_core" class="msAdminHighslidePopup">
 ';
-switch($_REQUEST['action']) {
+switch ($_REQUEST['action']) {
 	case 'edit_customer_group':
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_customer_group.php');
 		break;
 	case 'add_product':
 	case 'edit_product':
-		if(strstr($this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'], "..")) {
+		if (strstr($this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'], "..")) {
 			die('error in ADMIN_PRODUCTS_EDIT_TYPE value');
 		} else {
-			if(strstr($this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'], "/")) {
+			if (strstr($this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'], "/")) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'].'.php');
 			} else {
@@ -97,10 +97,10 @@ switch($_REQUEST['action']) {
 		break;
 	case 'add_category':
 	case 'edit_category':
-		if(strstr($this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'], "..")) {
+		if (strstr($this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'], "..")) {
 			die('error in ADMIN_CATEGORIES_EDIT_TYPE value');
 		} else {
-			if(strstr($this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'], "/")) {
+			if (strstr($this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'], "/")) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'].'.php');
 			} else {
@@ -115,7 +115,7 @@ switch($_REQUEST['action']) {
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_delete_category.php');
 		break;
 	case 'mail_order':
-		if($this->post['orders_id'] and $this->post['tx_multishop_pi1']['email']) {
+		if ($this->post['orders_id'] and $this->post['tx_multishop_pi1']['email']) {
 			mslib_fe::mailOrder($this->post['orders_id'], 1, $this->post['tx_multishop_pi1']['email']);
 			$content.='
 			<script type="text/javascript">
@@ -123,9 +123,9 @@ switch($_REQUEST['action']) {
 			</script>
 		';
 		} else {
-			if($this->get['orders_id']) {
+			if ($this->get['orders_id']) {
 				$order=mslib_fe::getOrder($this->get['orders_id']);
-				if($order['orders_id']) {
+				if ($order['orders_id']) {
 					$content.='
 			<div id="mini-form-field">
 				<form method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order').'">
@@ -143,21 +143,21 @@ switch($_REQUEST['action']) {
 		}
 		break;
 	case 'edit_order':
-		if(isset($_GET['print'])) {
-			if(strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'], "..")) {
+		if (isset($_GET['print'])) {
+			if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'], "..")) {
 				die('error in ADMIN_EDIT_ORDER_PRINT_TYPE value');
 			} else {
-				if(strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'], "/")) {
+				if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'].'.php');
 				} else {
 					require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order_print.php');
 				}
 			}
 		} else {
-			if(strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'], "..")) {
+			if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'], "..")) {
 				die('error in ADMIN_EDIT_ORDER_TYPE value');
 			} else {
-				if(strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'], "/")) {
+				if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'].'.php');
 				} else {
 					require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order.php');
@@ -173,10 +173,10 @@ switch($_REQUEST['action']) {
 		break;
 	case 'add_manufacturer':
 	case 'edit_manufacturer':
-		if(strstr($this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'], "..")) {
+		if (strstr($this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'], "..")) {
 			die('error in ADMIN_MANUFACTURERS_EDIT_TYPE value');
 		} else {
-			if(strstr($this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'], "/")) {
+			if (strstr($this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'], "/")) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'].'.php');
 			} else {
@@ -186,10 +186,10 @@ switch($_REQUEST['action']) {
 		break;
 	case 'add_customer':
 	case 'edit_customer':
-		if(strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'], "..")) {
+		if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'], "..")) {
 			die('error in ADMIN_CUSTOMERS_EDIT_TYPE value');
 		} else {
-			if(strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'], "/")) {
+			if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'], "/")) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'].'.php');
 			} else {
@@ -199,13 +199,14 @@ switch($_REQUEST['action']) {
 		break;
 	case 'custom_page':
 		// custom page hook that can be controlled by third-party plugin
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_ajax.php']['customAdminAjaxPage'])) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_ajax.php']['customAdminAjaxPage'])) {
 			$params=array(
 				'status'=>$status,
 				'table'=>$table,
 				'id'=>$id,
-				'content'=>&$content);
-			foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_ajax.php']['customAdminAjaxPage'] as $funcRef) {
+				'content'=>&$content
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_ajax.php']['customAdminAjaxPage'] as $funcRef) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}

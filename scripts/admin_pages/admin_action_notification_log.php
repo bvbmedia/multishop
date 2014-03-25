@@ -1,9 +1,9 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $this->searchKeywords=array();
-if($this->get['tx_multishop_pi1']['keyword']) {
+if ($this->get['tx_multishop_pi1']['keyword']) {
 	//  using $_REQUEST cause TYPO3 converts "Command & Conquer" to "Conquer" (the & sign sucks ass)
 	$this->get['tx_multishop_pi1']['keyword']=trim($this->get['tx_multishop_pi1']['keyword']);
 	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['tx_multishop_pi1']['keyword'], $GLOBALS['TSFE']->metaCharset);
@@ -12,12 +12,12 @@ if($this->get['tx_multishop_pi1']['keyword']) {
 	$this->searchKeywords[]=$this->get['tx_multishop_pi1']['keyword'];
 	$this->searchMode='%keyword%';
 }
-if($this->get['Search'] and ($this->get['limit'] != $this->cookie['limit'])) {
+if ($this->get['Search'] and ($this->get['limit']!=$this->cookie['limit'])) {
 	$this->cookie['limit']=$this->get['limit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if($this->cookie['limit']) {
+if ($this->cookie['limit']) {
 	$this->get['limit']=$this->cookie['limit'];
 } else {
 	$this->get['limit']=10;
@@ -60,8 +60,8 @@ $limits[]='350';
 $limits[]='400';
 $limits[]='450';
 $limits[]='500';
-foreach($limits as $limit) {
-	$formTopSearch.='<option value="'.$limit.'"'.($limit == $this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
+foreach ($limits as $limit) {
+	$formTopSearch.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
 $formTopSearch.='
 					</select>
@@ -74,11 +74,11 @@ $formTopSearch.='
 ';
 $queryData=array();
 $queryData['where']=array();
-if(count($this->searchKeywords)) {
+if (count($this->searchKeywords)) {
 	$keywordOr=array();
-	foreach($this->searchKeywords as $searchKeyword) {
-		if($searchKeyword) {
-			switch($this->searchMode) {
+	foreach ($this->searchKeywords as $searchKeyword) {
+		if ($searchKeyword) {
+			switch ($this->searchMode) {
 				case 'keyword%':
 					$this->sqlKeyword=addslashes($searchKeyword).'%';
 					break;
@@ -98,17 +98,17 @@ $queryData['select'][]='n.title, n.message, n.message_type, n.crdate, f.name, f.
 $queryData['from'][]='tx_multishop_notification n left join fe_users f on n.customer_id=f.uid';
 $queryData['order_by'][]='id desc';
 $queryData['limit']=$this->ms['MODULES']['PAGESET_LIMIT'];
-if(is_numeric($this->get['p'])) {
+if (is_numeric($this->get['p'])) {
 	$p=$this->get['p'];
 }
-if($p > 0) {
+if ($p>0) {
 	$queryData['offset']=(((($p)*$this->ms['MODULES']['PAGESET_LIMIT'])));
 } else {
 	$p=0;
 	$queryData['offset']=0;
 }
 $pageset=mslib_fe::getRecordsPageSet($queryData);
-if(!count($pageset['dataset'])) {
+if (!count($pageset['dataset'])) {
 	$content.=$this->pi_getLL('no_records_found', 'No records found.').'.<br />';
 } else {
 	$tr_type='even';
@@ -119,8 +119,8 @@ if(!count($pageset['dataset'])) {
 	<th>'.$this->pi_getLL('content').'</th>
 	';
 	$content.='<table class="msZebraTable msadmin_orders_listing" id="product_import_table"><tr>'.$headercol.'</tr>';
-	foreach($pageset['dataset'] as $row) {
-		if(!$tr_type or $tr_type == 'even') {
+	foreach ($pageset['dataset'] as $row) {
+		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
@@ -142,7 +142,7 @@ if(!count($pageset['dataset'])) {
 	}
 	$content.='<tr>'.$headercol.'</tr></table>';
 	// pagination
-	if(!$this->ms['nopagenav'] and $pageset['total_rows'] > $this->ms['MODULES']['PAGESET_LIMIT']) {
+	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$content.=$tmp;
 	}
@@ -153,7 +153,8 @@ $content='';
 $tabs=array();
 $tabs['actionNotificationLogListing']=array(
 	htmlspecialchars($this->pi_getLL('admin_action_notification_log', 'Action notification log')),
-	$tmp);
+	$tmp
+);
 $tmp='';
 $content.='
 <script type="text/javascript">      
@@ -187,9 +188,9 @@ jQuery(document).ready(function($) {
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">';
 $count=0;
-foreach($tabs as $key=>$value) {
+foreach ($tabs as $key=>$value) {
 	$count++;
-	$content.='<li'.(($count == 1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 }
 $content.='
     </ul>
@@ -199,7 +200,7 @@ $content.='
 	</form>
 	';
 $count=0;
-foreach($tabs as $key=>$value) {
+foreach ($tabs as $key=>$value) {
 	$count++;
 	$content.='
         <div style="display: block;" id="'.$key.'" class="tab_content">

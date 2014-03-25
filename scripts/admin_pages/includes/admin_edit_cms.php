@@ -1,20 +1,20 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $tabs=array();
-if($_REQUEST['action'] == 'edit_cms') {
+if ($_REQUEST['action']=='edit_cms') {
 	$str="SELECT * from tx_multishop_cms c, tx_multishop_cms_description cd where c.id='".$_REQUEST['cms_id']."' and cd.id=c.id";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$cms[$row['language_id']]=$row;
 	}
 }
-if($this->post and $_REQUEST['action'] == 'edit_cms') {
-	if($this->post['cms_id']) {
+if ($this->post and $_REQUEST['action']=='edit_cms') {
+	if ($this->post['cms_id']) {
 		// update
 		$array=array();
-		if(!$this->post['tx_multishop_pi1']['type'] and $this->post['tx_multishop_pi1']['custom_type']) {
+		if (!$this->post['tx_multishop_pi1']['type'] and $this->post['tx_multishop_pi1']['custom_type']) {
 			$array['type']=$this->post['tx_multishop_pi1']['custom_type'];
 		} else {
 			$array['type']=$this->post['tx_multishop_pi1']['type'];
@@ -27,7 +27,7 @@ if($this->post and $_REQUEST['action'] == 'edit_cms') {
 		$array=array();
 		$array['status']=1;
 		$array['page_uid']=$this->shop_pid;
-		if(!$this->post['tx_multishop_pi1']['type'] and $this->post['tx_multishop_pi1']['custom_type']) {
+		if (!$this->post['tx_multishop_pi1']['type'] and $this->post['tx_multishop_pi1']['custom_type']) {
 			$array['type']=$this->post['tx_multishop_pi1']['custom_type'];
 		} else {
 			$array['type']=$this->post['tx_multishop_pi1']['type'];
@@ -38,11 +38,11 @@ if($this->post and $_REQUEST['action'] == 'edit_cms') {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$cms_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 	}
-	if(is_array($this->post['cms_name'])) {
-		foreach($this->post['cms_name'] as $key=>$value) {
+	if (is_array($this->post['cms_name'])) {
+		foreach ($this->post['cms_name'] as $key=>$value) {
 			$str="select 1 from tx_multishop_cms_description where id='".$cms_id."' and language_id='".$key."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			if($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 				$array=array();
 				$array['name']=$value;
 				$array['content']=$this->post['cms_content'][$key];
@@ -65,7 +65,7 @@ if($this->post and $_REQUEST['action'] == 'edit_cms') {
 	</script>';
 	exit();
 }
-if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
+if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$save_block='
 		<div class="save_block">
 			<input name="cancel" type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" onClick="parent.window.hs.close();" class="submit" />
@@ -85,35 +85,35 @@ if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	// psp pages eof	
 	$types['email_order_proposal']=htmlspecialchars($this->pi_getLL('email_order_proposal_letter'));
 	$types['email_order_confirmation']=htmlspecialchars($this->pi_getLL('email_order_confirmation_letter'));
-	if(is_array($payment_methods)) {
-		foreach($payment_methods as $key=>$value) {
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
 			$types['email_order_confirmation_'.$key]=htmlspecialchars($this->pi_getLL('email_order_confirmation_letter')).' ('.$key.')';
 		}
 	}
 	$types['email_order_paid_letter']=htmlspecialchars($this->pi_getLL('email_order_paid_letter'));
-	if(is_array($payment_methods)) {
-		foreach($payment_methods as $key=>$value) {
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
 			$types['email_order_paid_letter_'.$key]=htmlspecialchars($this->pi_getLL('email_order_paid_letter')).' ('.$key.')';
 		}
 	}
 	$types['email_order_status_changed']=htmlspecialchars($this->pi_getLL('email_order_status_changed_letter'));
 	$types['email_order_status_changed']=$this->pi_getLL('email_order_status_changed_letter').' (Default)';
 	$orders_status=mslib_fe::getAllOrderStatus(0);
-	if(is_array($orders_status) and count($orders_status)) {
-		foreach($orders_status as $item) {
+	if (is_array($orders_status) and count($orders_status)) {
+		foreach ($orders_status as $item) {
 			$types['email_order_status_changed_'.t3lib_div::strtolower($item['name'])]=$this->pi_getLL('email_order_status_changed_letter').' ('.$item['name'].')';
 		}
 	}
 	$types['order_received_thank_you_page']=htmlspecialchars($this->pi_getLL('checkout_finished_page'));
-	if(is_array($payment_methods)) {
-		foreach($payment_methods as $key=>$value) {
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
 			$types['order_received_thank_you_page_'.$key]=htmlspecialchars($this->pi_getLL('checkout_finished_page')).' ('.$key.')';
 		}
 	}
 	// payment reminder email templates
 	$types['payment_reminder_email_templates']=htmlspecialchars($this->pi_getLL('payment_reminder_email_templates', 'Payment reminder email templates'));
-	if(is_array($payment_methods)) {
-		foreach($payment_methods as $key=>$value) {
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
 			$types['payment_reminder_email_templates_'.$key]=htmlspecialchars($this->pi_getLL('payment_reminder_email_templates', 'Payment reminder email templates')).' ('.$key.')';
 		}
 	}
@@ -123,9 +123,9 @@ if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	$types['create_account_thank_you_page']=$this->pi_getLL('create_account_thank_you_page');
 	$types['email_alert_quantity_threshold_letter']=$this->pi_getLL('email_alert_quantity_threshold_letter', 'Alert quantity threshold e-mail content');
 	// extra cms type
-	if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
 		$params=array('types'=>&$types);
-		foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'] as $funcRef) {
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
@@ -137,8 +137,8 @@ if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 			</label>
 			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
-	foreach($types as $key=>$value) {
-		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type'] == $key) ? 'selected' : '').'>'.htmlspecialchars($value).'</option>'."\n";
+	foreach ($types as $key=>$value) {
+		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars($value).'</option>'."\n";
 	}
 	$tmpcontent.='</select>
 		</div>
@@ -192,7 +192,7 @@ if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	$markers['SHIPPING_METHOD']='Shipping method';
 	$markers['PAYMENT_METHOD']='Payment method';
 	$markers['ORDER_DETAILS']='Order details';
-	if($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 		$markers['INVOICE_LINK']='Invoice link';
 		$markers['INVOICE_NUMBER']='Invoice number';
 	}
@@ -209,25 +209,26 @@ if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	$markers['CUSTOMER_COMMENTS']='Customer comments';
 	$markers['PAYMENT_PAGE_LINK']='Payment link (for payment reminder mail template)';
 	//hook to let other plugins further manipulate the markers
-	if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin/admin_edit_cms.php']['CmsMarkersPostProc'])) {
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin/admin_edit_cms.php']['CmsMarkersPostProc'])) {
 		$params=array(
-			'markers'=>&$markers);
-		foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin/admin_edit_cms.php']['CmsMarkersPostProc'] as $funcRef) {
+			'markers'=>&$markers
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin/admin_edit_cms.php']['CmsMarkersPostProc'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	ksort($markers);
-	foreach($markers as $key=>$label) {
+	foreach ($markers as $key=>$label) {
 		$tmpcontent.='<li><span class="marker_description">'.htmlspecialchars($label).':</span><span class="marker_key">###'.$key.'###</span></li>'."\n";
 	}
 	$tmpcontent.='</ul>
 				</div>			
 			</div>';
-	foreach($this->languages as $key=>$language) {
+	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
 		<div class="account-field">
 		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
-		if($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
+		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
 		$tmpcontent.=''.$language['title'].'
@@ -243,7 +244,8 @@ if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	}
 	$tabs['cms_details']=array(
 		$this->pi_getLL('admin_cms'),
-		$tmpcontent);
+		$tmpcontent
+	);
 	$tmpcontent='';
 	// tabs
 	$content.='<script type="text/javascript">
@@ -274,15 +276,15 @@ if($cms['id'] or $_REQUEST['action'] == 'edit_cms') {
 	</script>
 	<div id="tab-container">
 	    <ul class="tabs">';
-	foreach($tabs as $key=>$value) {
+	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='<li'.(($count == 1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 	}
 	$content.='</ul>
 	    <div class="tab_container">
 	<form class="admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">';
 	$count=0;
-	foreach($tabs as $key=>$value) {
+	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='<div style="display: block;" id="'.$key.'" class="tab_content">
 				'.$value[1].'

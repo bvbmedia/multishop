@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // Configuration group ids
@@ -25,7 +25,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Multishop Encryption key',
 	'configuration_key'=>'MULTISHOP_ENCRYPTION_KEY',
@@ -35,7 +36,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show Specials Box',
 	'configuration_key'=>'HOME_SPECIALS_BOX',
@@ -45,7 +47,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show Products Listing',
 	'configuration_key'=>'HOME_PRODUCTS_LISTING',
@@ -55,7 +58,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show Specials Box on Products Listing page',
 	'configuration_key'=>'PRODUCTS_LISTING_SPECIALS',
@@ -65,7 +69,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 /*		
 $records[]=array(
 		'configuration_title'=>'Webshop Country ISO Number',
@@ -87,7 +92,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Store Name',
 	'configuration_key'=>'STORE_NAME',
@@ -97,7 +103,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Store E-mail',
 	'configuration_key'=>'STORE_EMAIL',
@@ -107,7 +114,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Category image size',
 	'configuration_key'=>'CATEGORY_IMAGE_SIZE_NORMAL',
@@ -117,7 +125,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product image size (50)',
 	'configuration_key'=>'PRODUCT_IMAGE_SIZE_50',
@@ -127,7 +136,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product image size (100)',
 	'configuration_key'=>'PRODUCT_IMAGE_SIZE_100',
@@ -137,7 +147,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product image size (200)',
 	'configuration_key'=>'PRODUCT_IMAGE_SIZE_200',
@@ -147,7 +158,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product image size (300)',
 	'configuration_key'=>'PRODUCT_IMAGE_SIZE_300',
@@ -157,7 +169,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product image size (enlarged)',
 	'configuration_key'=>'PRODUCT_IMAGE_SIZE_ENLARGED',
@@ -167,7 +180,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Meta Title',
 	'configuration_key'=>'META_TITLE',
@@ -177,7 +191,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Meta Description',
 	'configuration_key'=>'META_DESCRIPTION',
@@ -187,7 +202,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Meta Keywords',
 	'configuration_key'=>'META_KEYWORDS',
@@ -197,7 +213,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 /*		
 $records[]=array(
 		'configuration_title'=>'Google Analytics Account',
@@ -219,7 +236,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Google Adwords Conversion Code',
 	'configuration_key'=>'GOOGLE_ADWORDS_CONVERSION_CODE',
@@ -229,7 +247,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products Listing Limiting',
 	'configuration_key'=>'PRODUCTS_LISTING_LIMIT',
@@ -239,7 +258,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Categories Listing Type',
 	'configuration_key'=>'CATEGORIES_LISTING_TYPE',
@@ -249,7 +269,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products Listing Type',
 	'configuration_key'=>'PRODUCTS_LISTING_TYPE',
@@ -259,7 +280,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Page pagination type',
 	'configuration_key'=>'PRODUCTS_LISTING_PAGINATION_TYPE',
@@ -269,7 +291,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'default\', \'with page number button\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Pagination',
 	'configuration_key'=>'PRODUCTS_DETAIL_PAGE_PAGINATION',
@@ -279,7 +302,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Affiliate Shop',
 	'configuration_key'=>'AFFILIATE_SHOP',
@@ -289,7 +313,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Image Watermark Text',
 	'configuration_key'=>'PRODUCT_IMAGE_WATERMARK_TEXT',
@@ -299,7 +324,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Image Watermark Font-size',
 	'configuration_key'=>'PRODUCT_IMAGE_WATERMARK_FONT_SIZE',
@@ -309,7 +335,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Image Watermark Position',
 	'configuration_key'=>'PRODUCT_IMAGE_WATERMARK_POSITION',
@@ -319,7 +346,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'north-east\', \'south-east\',\'south-west\',\'north-west\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Image Shaped Corners',
 	'configuration_key'=>'PRODUCT_IMAGE_SHAPED_CORNERS',
@@ -329,7 +357,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Category Image Shaped Corners',
 	'configuration_key'=>'CATEGORY_IMAGE_SHAPED_CORNERS',
@@ -339,7 +368,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Checkout Type',
 	'configuration_key'=>'CHECKOUT_TYPE',
@@ -349,7 +379,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show product prices with and without VAT',
 	'configuration_key'=>'SHOW_PRICES_WITH_AND_WITHOUT_VAT',
@@ -359,7 +390,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Enable the manual order',
 	'configuration_key'=>'MANUAL_ORDER',
@@ -369,7 +401,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'This module enable to print invoice order',
 	'configuration_key'=>'INVOICE_PRINT',
@@ -379,7 +412,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'This module enable to print order packing list',
 	'configuration_key'=>'PACKING_LIST_PRINT',
@@ -389,7 +423,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Invoice prefix',
 	'configuration_key'=>'INVOICE_PREFIX',
@@ -399,7 +434,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 /*		
 $records[]=array(
 		'configuration_title'=>'Accordion Menu',
@@ -433,7 +469,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Staffel Prices',
 	'configuration_key'=>'STAFFEL_PRICE_MODULE',
@@ -443,7 +480,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Coupon Code',
 	'configuration_key'=>'COUPONS',
@@ -453,7 +491,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Order Edit',
 	'configuration_key'=>'ORDER_EDIT',
@@ -463,7 +502,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Cache front-end',
 	'configuration_key'=>'CACHE_FRONT_END',
@@ -473,7 +513,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Cache time out for categories/products listing page',
 	'configuration_key'=>'CACHE_TIME_OUT_LISTING_PAGES',
@@ -483,7 +524,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Cache time out for search page',
 	'configuration_key'=>'CACHE_TIME_OUT_SEARCH_PAGES',
@@ -493,7 +535,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Cache time out for products detail page',
 	'configuration_key'=>'CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES',
@@ -503,7 +546,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Cache time out for the categories navigation menu',
 	'configuration_key'=>'CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU',
@@ -513,7 +557,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Flat Database',
 	'configuration_key'=>'FLAT_DATABASE',
@@ -523,7 +568,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Length telephone number',
 	'configuration_key'=>'CHECKOUT_LENGTH_TELEPHONE_NUMBER',
@@ -533,7 +579,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Validate Checkout Form',
 	'configuration_key'=>'CHECKOUT_VALIDATE_FORM',
@@ -543,7 +590,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Telephone Required',
 	'configuration_key'=>'CHECKOUT_REQUIRED_TELEPHONE',
@@ -553,7 +601,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Orders Custom Export Script',
 	'configuration_key'=>'ORDERS_CUSTOM_EXPORT_SCRIPT',
@@ -563,7 +612,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products Listing Autocorrection Type',
 	'configuration_key'=>'PRODUCTS_LISTING_AUTO_COMPLETE_TYPE',
@@ -573,7 +623,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show prices including VAT',
 	'configuration_key'=>'SHOW_PRICES_INCLUDING_VAT',
@@ -583,7 +634,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products short description contains HTML markup',
 	'configuration_key'=>'PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP',
@@ -593,7 +645,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show products with image first',
 	'configuration_key'=>'SHOW_PRODUCTS_WITH_IMAGE_FIRST',
@@ -603,7 +656,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Enable state',
 	'configuration_key'=>'CHECKOUT_ENABLE_STATE',
@@ -613,7 +667,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Enable birthday',
 	'configuration_key'=>'CHECKOUT_ENABLE_BIRTHDAY',
@@ -623,7 +678,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Flat Database extra attribute option columns',
 	'configuration_key'=>'FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS',
@@ -633,7 +689,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show stock level as boolean (yes/no)',
 	'configuration_key'=>'SHOW_STOCK_LEVEL_AS_BOOLEAN',
@@ -643,7 +700,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'yes_without_image\',\'yes_with_image\', \'no\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Image Watermark Width',
 	'configuration_key'=>'PRODUCT_IMAGE_WATERMARK_WIDTH',
@@ -653,7 +711,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Image Watermark Height',
 	'configuration_key'=>'PRODUCT_IMAGE_WATERMARK_HEIGHT',
@@ -663,7 +722,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product Image Watermark Font File',
 	'configuration_key'=>'PRODUCT_IMAGE_WATERMARK_FONT_FILE',
@@ -673,7 +733,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Orders Paid Custom Script',
 	'configuration_key'=>'ORDERS_PAID_CUSTOM_SCRIPT',
@@ -683,7 +744,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Specials Listing Type',
 	'configuration_key'=>'SPECIALS_LISTING_TYPE',
@@ -693,7 +755,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Price Filter Box Steppings',
 	'configuration_key'=>'PRICE_FILTER_BOX_STEPPINGS',
@@ -703,7 +766,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Send Order Confirmation Letters also to',
 	'configuration_key'=>'SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO',
@@ -713,7 +777,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Disable product attributes tab in products editor',
 	'configuration_key'=>'DISABLE_PRODUCT_ATTRIBUTES_TAB_IN_EDITOR',
@@ -723,7 +788,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in products description',
 	'configuration_key'=>'SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION',
@@ -733,7 +799,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Show specials box till categories sublevel',
 	'configuration_key'=>'CATEGORIES_LISTING_SPECIALS_CATEGORIES_SUBLEVEL',
@@ -743,7 +810,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Ultrasearch Fields',
 	'configuration_key'=>'ULTRASEARCH_FIELDS',
@@ -753,7 +821,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products Relatives Type',
 	'configuration_key'=>'PRODUCTS_RELATIVES_TYPE',
@@ -763,7 +832,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Product edit method filter',
 	'configuration_key'=>'PRODUCT_EDIT_METHOD_FILTER',
@@ -773,7 +843,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Edit Order Type',
 	'configuration_key'=>'ADMIN_EDIT_ORDER_TYPE',
@@ -783,7 +854,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Products Edit Type',
 	'configuration_key'=>'ADMIN_PRODUCTS_EDIT_TYPE',
@@ -793,7 +865,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Shopping cart Type',
 	'configuration_key'=>'SHOPPING_CART_TYPE',
@@ -803,7 +876,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Create Account Type',
 	'configuration_key'=>'CREATE_ACCOUNT_TYPE',
@@ -813,7 +887,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Edit Account Type',
 	'configuration_key'=>'EDIT_ACCOUNT_TYPE',
@@ -823,7 +898,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Invoice PDF header image',
 	'configuration_key'=>'INVOICE_PDF_HEADER_IMAGE',
@@ -833,7 +909,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Invoice PDF footer image',
 	'configuration_key'=>'INVOICE_PDF_FOOTER_IMAGE',
@@ -843,7 +920,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Multishop version',
 	'configuration_key'=>'MULTISHOP_VERSION',
@@ -853,7 +931,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Subtract Stock',
 	'configuration_key'=>'SUBTRACT_STOCK',
@@ -863,7 +942,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products Detail Tabs',
 	'configuration_key'=>'PRODUCTS_DETAIL_NUMBER_OF_TABS',
@@ -873,7 +953,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Basket Content Element Type',
 	'configuration_key'=>'BASKET_TYPE',
@@ -883,7 +964,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in products id',
 	'configuration_key'=>'SEARCH_ALSO_IN_PRODUCTS_ID',
@@ -893,7 +975,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 /*		
 $records[]=array(
 		'configuration_title'=>'Disable VAT rate when cross borders',
@@ -915,7 +998,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Disable crumbar navigation menu',
 	'configuration_key'=>'DISABLE_CRUMBAR',
@@ -925,7 +1009,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Include products description database field',
 	'configuration_key'=>'INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING',
@@ -935,7 +1020,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Download Invoice Type',
 	'configuration_key'=>'DOWNLOAD_INVOICE_TYPE',
@@ -945,7 +1031,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Categories Type',
 	'configuration_key'=>'CATEGORIES_TYPE',
@@ -955,7 +1042,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Account Order History',
 	'configuration_key'=>'ORDER_HISTORY_TYPE',
@@ -965,7 +1053,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Customers Import Type',
 	'configuration_key'=>'ADMIN_CUSTOMERS_IMPORT_TYPE',
@@ -975,7 +1064,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Specials Section Listing Type',
 	'configuration_key'=>'SPECIALS_SECTION_LISTING_TYPE',
@@ -985,7 +1075,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Disable Product When Negative Stock',
 	'configuration_key'=>'DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK',
@@ -995,7 +1086,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Orders Type',
 	'configuration_key'=>'ADMIN_ORDERS_TYPE',
@@ -1005,7 +1097,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Lock Order After Creating Invoice',
 	'configuration_key'=>'LOCK_ORDER_AFTER_CREATING_INVOICE',
@@ -1015,7 +1108,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Order Proposal System',
 	'configuration_key'=>'ADMIN_ORDER_PROPOSAL_MODULE',
@@ -1025,7 +1119,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Invoice System',
 	'configuration_key'=>'ADMIN_INVOICE_MODULE',
@@ -1035,7 +1130,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Cart session page uid',
 	'configuration_key'=>'CART_PAGE_UID',
@@ -1045,7 +1141,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products Listing Sort-Order Option',
 	'configuration_key'=>'PRODUCTS_LISTING_SORT_ORDER_OPTION',
@@ -1055,7 +1152,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'asc\',\'desc\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products New: number of days',
 	'configuration_key'=>'PRODUCTS_NEW_NUMBER_OF_DAYS',
@@ -1065,7 +1163,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Manufacturers Type',
 	'configuration_key'=>'MANUFACTURERS_TYPE',
@@ -1075,7 +1174,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Disable Multishop Warning System',
 	'configuration_key'=>'DISABLE_MULTISHOP_CONFIGURATION_VALIDATION',
@@ -1085,7 +1185,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 /*		
 $records[]=array(
 		'configuration_title'=>'Geonames username',
@@ -1107,7 +1208,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Edit Order Print Type',
 	'configuration_key'=>'ADMIN_EDIT_ORDER_PRINT_TYPE',
@@ -1117,7 +1219,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Categories Edit Type',
 	'configuration_key'=>'ADMIN_CATEGORIES_EDIT_TYPE',
@@ -1127,7 +1230,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Enabled Currencies',
 	'configuration_key'=>'ENABLED_CURRENCIES',
@@ -1137,7 +1241,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Default Currency',
 	'configuration_key'=>'DEFAULT_CURRENCY',
@@ -1147,7 +1252,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Manufacturers Edit Type',
 	'configuration_key'=>'ADMIN_MANUFACTURERS_EDIT_TYPE',
@@ -1157,7 +1263,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Manufacturers Products Listing Type',
 	'configuration_key'=>'MANUFACTURERS_PRODUCTS_LISTING_TYPE',
@@ -1167,7 +1274,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Customers Edit Type',
 	'configuration_key'=>'ADMIN_CUSTOMERS_EDIT_TYPE',
@@ -1177,7 +1285,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Number of Product Images',
 	'configuration_key'=>'NUMBER_OF_PRODUCT_IMAGES',
@@ -1187,7 +1296,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Add to Cart - Redirect Back to Products Detail Page',
 	'configuration_key'=>'REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART',
@@ -1197,7 +1307,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Enabled languages',
 	'configuration_key'=>'ENABLED_LANGUAGES',
@@ -1207,7 +1318,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Ultrasearch Server Type',
 	'configuration_key'=>'ULTRASEARCH_SERVER_TYPE',
@@ -1217,7 +1329,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin Products Search and Edit',
 	'configuration_key'=>'ADMIN_PRODUCTS_SEARCH_AND_EDIT',
@@ -1227,7 +1340,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Manufacturer image size',
 	'configuration_key'=>'MANUFACTURER_IMAGE_SIZE_NORMAL',
@@ -1237,7 +1351,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 /*		
 $records[]=array(
 		'configuration_title'=>'Attributes Stock',
@@ -1269,7 +1384,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Display specials above products listing',
 	'configuration_key'=>'DISPLAY_SPECIALS_ABOVE_PRODUCTS_LISTING',
@@ -1279,7 +1395,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Enable Full-Text Search (MySQL MATCH) in products search',
 	'configuration_key'=>'ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH',
@@ -1289,7 +1406,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Minimum number of chars to use Full-Text Search (MySQL MATCH).',
 	'configuration_key'=>'FULLTEXT_SEARCH_MIN_CHARS',
@@ -1299,7 +1417,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Products Search Fallback Search',
 	'configuration_key'=>'PRODUCTS_SEARCH_FALLBACK_SEARCH',
@@ -1309,7 +1428,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Ultrasearch Content Element',
 	'configuration_key'=>'ULTRASEARCH_TYPE',
@@ -1319,7 +1439,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in vendor code',
 	'configuration_key'=>'SEARCH_ALSO_IN_VENDOR_CODE',
@@ -1329,7 +1450,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search wildcard operator (%) mode',
 	'configuration_key'=>'REGULAR_SEARCH_MODE',
@@ -1339,7 +1461,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'%keyword%\',\'%keyword\', \'keyword%\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in categories name',
 	'configuration_key'=>'SEARCH_ALSO_IN_CATEGORIES_NAME',
@@ -1349,7 +1472,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in SKU code',
 	'configuration_key'=>'SEARCH_ALSO_IN_SKU_CODE',
@@ -1359,7 +1483,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in EAN code',
 	'configuration_key'=>'SEARCH_ALSO_IN_EAN_CODE',
@@ -1369,7 +1494,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in products model',
 	'configuration_key'=>'SEARCH_ALSO_IN_PRODUCTS_MODEL',
@@ -1379,7 +1505,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Disable checkout for guests',
 	'configuration_key'=>'DISABLE_CHECKOUT_FOR_GUESTS',
@@ -1389,7 +1516,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in products attributes values',
 	'configuration_key'=>'SEARCH_ALSO_IN_ATTRIBUTE_OPTION_IDS',
@@ -1399,7 +1527,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in manufacturers name',
 	'configuration_key'=>'SEARCH_ALSO_IN_MANUFACTURERS_NAME',
@@ -1409,7 +1538,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Enable the status on order product level',
 	'configuration_key'=>'ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS',
@@ -1419,7 +1549,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Allowing customers to make reservation order for out of stock product',
 	'configuration_key'=>'ALLOW_ORDER_OUT_OF_STOCK_PRODUCT',
@@ -1429,7 +1560,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Allowing webshop owner to disable out of stock warning message',
 	'configuration_key'=>'DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE',
@@ -1439,7 +1571,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Create invoice after creating order',
 	'configuration_key'=>'CREATE_INVOICE_DIRECTLY_AFTER_CREATING_ORDER',
@@ -1449,7 +1582,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Display product image in admin order details',
 	'configuration_key'=>'DISPLAY_PRODUCT_IMAGE_IN_ADMIN_ORDER_DETAILS',
@@ -1459,7 +1593,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Display product image in admin packing slip',
 	'configuration_key'=>'DISPLAY_PRODUCT_IMAGE_IN_ADMIN_PACKING_SLIP',
@@ -1469,7 +1604,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Page title delimeter',
 	'configuration_key'=>'PAGE_TITLE_DELIMETER',
@@ -1479,7 +1615,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Admin customers export/import data',
 	'configuration_key'=>'CUSTOMERS_DATA_EXPORT_IMPORT',
@@ -1489,7 +1626,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Display VAT id input in checkout',
 	'configuration_key'=>'CHECKOUT_DISPLAY_VAT_ID_INPUT',
@@ -1499,7 +1637,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Display the selectbox for products listing limit',
 	'configuration_key'=>'PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM',
@@ -1509,7 +1648,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Display the "sort by" for the products listing',
 	'configuration_key'=>'PRODUCTS_LISTING_DISPLAY_ORDERBY_FORM',
@@ -1519,7 +1659,8 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Search also in products negative keywords',
 	'configuration_key'=>'SEARCH_ALSO_IN_PRODUCTS_NEGATIVE_KEYWORDS',
@@ -1529,12 +1670,14 @@ $records[]=array(
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
 	'depend_on_configuration_key'=>'',
-	'use_function'=>'');
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
-if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(
-		'records'=>&$records);
-	foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'] as $funcRef) {
+		'records'=>&$records
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }

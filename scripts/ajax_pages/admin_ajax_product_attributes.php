@@ -1,31 +1,31 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content='';
-if($_GET['a'] == 'update_options') {
+if ($_GET['a']=='update_options') {
 	$str="select * from tx_multishop_products_options where language_id = '".$this->sys_language_uid."' order by sort_order";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$content.='<option value="'.$row['products_options_id'].'">'.$row['products_options_name'].'</option>';
 	}
 }
-if($_GET['a'] == 'update_attributes') {
+if ($_GET['a']=='update_attributes') {
 	$str="select optval.* from tx_multishop_products_options_values as optval, tx_multishop_products_options_values_to_products_options as optval2opt where optval2opt.products_options_id = ".$_GET['opid']." and optval2opt.products_options_values_id = optval.products_options_values_id and optval.language_id = '".$this->sys_language_uid."' order by optval2opt.sort_order";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$content.='<option value="'.$row['products_options_values_id'].'">'.$row['products_options_values_name'].'</option>';
 	}
 }
-if($_GET['a'] == 'add_option') {
+if ($_GET['a']=='add_option') {
 	//die(print_r($_GET));
 	$optid=0;
-	if(!empty($_GET['optname'])) {
+	if (!empty($_GET['optname'])) {
 		$rowid=$_GET['rowid']+1;
 		$content.='<tr><td colspan="5"><div class="wrap-attributes"><table><tr id="attributes_select_box_'.$rowid.'_a" class="option_row"><td><select name="options[]" id="option_'.$rowid.'" onchange="updateAttribute(this.value,\''.$rowid.'\');"><option value="">choose option</option>';
 		$sql_chk="select products_options_id from tx_multishop_products_options where products_options_name = '".addslashes($_GET['optname'])."' and language_id = '".$this->sys_language_uid."' order by sort_order";
 		$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-		if($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk) > 0) {
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
 			$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
 			$optid=$rs_chk['products_options_id'];
 		} else {
@@ -39,18 +39,18 @@ if($_GET['a'] == 'add_option') {
 		}
 		$str="select * from tx_multishop_products_options where language_id = '".$this->sys_language_uid."' order by sort_order";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-			if($optid == $row['products_options_id']) {
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			if ($optid==$row['products_options_id']) {
 				$content.='<option value="'.$row['products_options_id'].'" selected="selected">'.$row['products_options_name'].'</option>';
 			} else {
 				$content.='<option value="'.$row['products_options_id'].'">'.$row['products_options_name'].'</option>';
 			}
 		}
 		$content.='</select></td><td><select name="attributes[]" id="attribute_'.$rowid.'"><option value="">choose attribute</option>';
-		if(!empty($_GET['optval'])) {
+		if (!empty($_GET['optval'])) {
 			$sql_chk="select products_options_values_id from tx_multishop_products_options_values where products_options_values_name = '".addslashes($_GET['optval'])."' and language_id = '".$this->sys_language_uid."'";
 			$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-			if($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk) > 0) {
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
 				$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
 				$valid=$rs_chk['products_options_values_id'];
 			} else {
@@ -60,14 +60,14 @@ if($_GET['a'] == 'add_option') {
 			}
 			$sql_chk="select products_options_values_to_products_options_id from tx_multishop_products_options_values_to_products_options where products_options_id = '".$optid."' and  products_options_values_id = '".$valid."'";
 			$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-			if($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk) == 0) {
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)==0) {
 				$sql_ins="insert into tx_multishop_products_options_values_to_products_options (products_options_values_to_products_options_id, products_options_id, products_options_values_id,sort_order) values ('', '".$optid."', '".$valid."','".time()."')";
 				$GLOBALS['TYPO3_DB']->sql_query($sql_ins);
 			}
 			$str="select optval.* from tx_multishop_products_options_values as optval, tx_multishop_products_options_values_to_products_options as optval2opt where optval2opt.products_options_id = ".$optid." and optval2opt.products_options_values_id = optval.products_options_values_id and optval.language_id = '".$this->sys_language_uid."' order by optval2opt.sort_order";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) != false) {
-				if($valid == $row['products_options_values_id']) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				if ($valid==$row['products_options_values_id']) {
 					$content.='<option value="'.$row['products_options_values_id'].'" selected="selected">'.$row['products_options_values_name'].'</option>';
 				} else {
 					$content.='<option value="'.$row['products_options_values_id'].'">'.$row['products_options_values_name'].'</option>';

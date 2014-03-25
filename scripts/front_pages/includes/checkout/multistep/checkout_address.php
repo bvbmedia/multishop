@@ -1,22 +1,22 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-if(count($cart['products']) < 1) {
+if (count($cart['products'])<1) {
 	$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 } else {
-	if(mslib_fe::loggedin()) {
-		if(isset($cart['user']['first_name']) && isset($cart['user']['street_name'])) {
+	if (mslib_fe::loggedin()) {
+		if (isset($cart['user']['first_name']) && isset($cart['user']['street_name'])) {
 			$user=$cart['user'];
 		} else {
 			$billing_address=mslib_fe::getFeUserTTaddressDetails($GLOBALS['TSFE']->fe_user->user['uid']);
-			if(is_array($billing_address)) {
+			if (is_array($billing_address)) {
 				$user=array();
 				$user['first_name']=$billing_address['first_name'];
 				$user['middle_name']=$billing_address['middle_name'];
 				$user['last_name']=$billing_address['last_name'];
-				$user['gender']=($billing_address['gender'] == 0 ? "m" : "f");
+				$user['gender']=($billing_address['gender']==0 ? "m" : "f");
 				$user['company']=$billing_address['company'];
 				$user['tx_multishop_newsletter']=$billing_address['tx_multishop_newsletter'];
 				$user['address_ext']=$billing_address['address_ext'];
@@ -26,7 +26,7 @@ if(count($cart['products']) < 1) {
 				$user['address']=preg_replace('/\s+/', ' ', $user['address']);
 				$user['zip']=$billing_address['zip'];
 				$user['city']=$billing_address['city'];
-				if($this->ms['MODULES']['CHECKOUT_ENABLE_STATE']) {
+				if ($this->ms['MODULES']['CHECKOUT_ENABLE_STATE']) {
 					$user['state']=$billing_address['state'];
 				}
 				$user['email']=$billing_address['email'];
@@ -38,7 +38,7 @@ if(count($cart['products']) < 1) {
 				$user['first_name']=$GLOBALS['TSFE']->fe_user->user['first_name'];
 				$user['middle_name']=$GLOBALS['TSFE']->fe_user->user['middle_name'];
 				$user['last_name']=$GLOBALS['TSFE']->fe_user->user['last_name'];
-				$user['gender']=($GLOBALS['TSFE']->fe_user->user['gender'] == 0 ? "m" : "f");
+				$user['gender']=($GLOBALS['TSFE']->fe_user->user['gender']==0 ? "m" : "f");
 				$user['company']=$GLOBALS['TSFE']->fe_user->user['company'];
 				$user['tx_multishop_newsletter']=$GLOBALS['TSFE']->fe_user->user['tx_multishop_newsletter'];
 				$user['address_ext']=$GLOBALS['TSFE']->fe_user->user['address_ext'];
@@ -48,7 +48,7 @@ if(count($cart['products']) < 1) {
 				$user['address']=preg_replace('/\s+/', ' ', $user['address']);
 				$user['zip']=$GLOBALS['TSFE']->fe_user->user['zip'];
 				$user['city']=$GLOBALS['TSFE']->fe_user->user['city'];
-				if($this->ms['MODULES']['CHECKOUT_ENABLE_STATE']) {
+				if ($this->ms['MODULES']['CHECKOUT_ENABLE_STATE']) {
 					$user['state']=$GLOBALS['TSFE']->fe_user->user['state'];
 					$user['delivery_state']=$GLOBALS['TSFE']->fe_user->user['delivery_state'];
 				}
@@ -57,44 +57,44 @@ if(count($cart['products']) < 1) {
 				$user['mobile']=$GLOBALS['TSFE']->fe_user->user['mobile'];
 				$user['country']=$GLOBALS['TSFE']->fe_user->user['country'];
 			}
-			if($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($GLOBALS['TSFE']->fe_user->user['tx_multishop_vat_id'])) {
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($GLOBALS['TSFE']->fe_user->user['tx_multishop_vat_id'])) {
 				$user['tx_multishop_vat_id']=$GLOBALS['TSFE']->fe_user->user['tx_multishop_vat_id'];
 			}
 		}
 	} else {
 		$user=$cart['user'];
 	}
-	if($posted_page == current($stepCodes)) {
+	if ($posted_page==current($stepCodes)) {
 		// now verify the posted values
-		if(!$this->post['tx_multishop_pi1']['email']) {
+		if (!$this->post['tx_multishop_pi1']['email']) {
 			$erno[]=$this->pi_getLL('no_email_address_has_been_specified');
 		}
-		if(!$this->post['street_name']) {
+		if (!$this->post['street_name']) {
 			$erno[]='No street name has been specified';
 		}
-		if(!$this->post['address_number']) {
+		if (!$this->post['address_number']) {
 			$erno[]=$this->pi_getLL('no_address_number_has_been_specified');
 		}
-		if(!$this->post['first_name']) {
+		if (!$this->post['first_name']) {
 			$erno[]=$this->pi_getLL('no_first_name_has_been_specified');
 		}
-		if(!$this->post['last_name']) {
+		if (!$this->post['last_name']) {
 			$erno[]=$this->pi_getLL('no_last_name_has_been_specified');
 		}
-		if(!$this->post['zip']) {
+		if (!$this->post['zip']) {
 			$erno[]=$this->pi_getLL('no_zip_has_been_specified');
 		}
-		if(!$this->post['city']) {
+		if (!$this->post['city']) {
 			$erno[]=$this->pi_getLL('no_city_has_been_specified');
 		}
-		if(!$erno) {
+		if (!$erno) {
 			// billing details
 			$user['email']=$this->post['tx_multishop_pi1']['email'];
 			$user['company']=$this->post['company'];
 			$user['first_name']=$this->post['first_name'];
 			$user['middle_name']=$this->post['middle_name'];
 			$user['last_name']=$this->post['last_name'];
-			if($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
+			if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
 				$user['birthday']=$this->post['birthday'];
 			}
 			$user['telephone']=$this->post['telephone'];
@@ -111,15 +111,15 @@ if(count($cart['products']) < 1) {
 			$user['email']=$this->post['tx_multishop_pi1']['email'];
 			$user['telephone']=$this->post['telephone'];
 			$user['tx_multishop_newsletter']=$this->post['tx_multishop_newsletter'];
-			if($this->ms['MODULES']['CHECKOUT_ENABLE_STATE']) {
+			if ($this->ms['MODULES']['CHECKOUT_ENABLE_STATE']) {
 				$user['state']=$this->post['state'];
 			}
-			if($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($this->post['tx_multishop_vat_id'])) {
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($this->post['tx_multishop_vat_id'])) {
 				$user['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
 			}
 			// billing details eof	
 			// delivery details	
-			if(!$this->post['different_delivery_address']) {
+			if (!$this->post['different_delivery_address']) {
 				$user['different_delivery_address']=0;
 			} else {
 				$user['different_delivery_address']=1;
@@ -156,19 +156,19 @@ if(count($cart['products']) < 1) {
 	} else {
 		$show_checkout_address=1;
 	}
-	if($erno or $show_checkout_address) {
+	if ($erno or $show_checkout_address) {
 		// load enabled countries to array
 		$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 		$enabled_countries=array();
-		while(($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) != false) {
+		while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
 			$enabled_countries[]=$row2;
 		}
 		// load enabled countries to array eof
 		//$regex = "/^[^\\\W][a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\@[a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\.[a-zA-Z]{2,4}$/";
 		$regex='/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i';
 		$regex_for_character="/[^0-9]$/";
-		if($this->ms['MODULES']['CHECKOUT_VALIDATE_FORM']) {
+		if ($this->ms['MODULES']['CHECKOUT_VALIDATE_FORM']) {
 			$validation.='
 			<script type="text/javascript">
 				jQuery(document).ready(function () {
@@ -178,7 +178,7 @@ if(count($cart['products']) < 1) {
 			$GLOBALS['TSFE']->additionalHeaderData[]=$validation;
 		}
 		// birthday validation
-		if($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
+		if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
 			$GLOBALS['TSFE']->additionalHeaderData[]='
 			<script type="text/javascript">
 				jQuery(document).ready(function ($) {
@@ -196,10 +196,10 @@ if(count($cart['products']) < 1) {
 		}
 		// birthday validation eof
 		$content.=CheckoutStepping($stepCodes, current($stepCodes), $this);
-		if(is_array($erno) and count($erno) > 0) {
+		if (is_array($erno) and count($erno)>0) {
 			$content.='<div class="error_msg">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach($erno as $item) {
+			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';
 			}
 			$content.='</ul>';
@@ -217,13 +217,13 @@ if(count($cart['products']) < 1) {
 			<div class="account-field">
 				<span id="ValidRadio" class="InputGroup">
 					<label for="radio_gender_mr" id="account-gender">'.ucfirst($this->pi_getLL('title')).'</label>
-					<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio_gender_mr" '.(($user['gender'] == 'm') ? 'checked' : '').' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'">
+					<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio_gender_mr" '.(($user['gender']=='m') ? 'checked' : '').' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'">
 					<label class="account-male" for="radio_gender_mr">'.ucfirst($this->pi_getLL('mr')).'</label>
-					<input type="radio" name="gender" value="f" class="InputGroup" id="radio_gender_mrs" '.(($user['gender'] == 'f') ? 'checked' : '').'>
+					<input type="radio" name="gender" value="f" class="InputGroup" id="radio_gender_mrs" '.(($user['gender']=='f') ? 'checked' : '').'>
 					<label class="account-female" for="radio_gender_mrs">'.ucfirst($this->pi_getLL('mrs')).'</label>
 					<div id="invalid-gender" class="error-space" style="display:none"></div>
 				</span>';
-		if($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
+		if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
 			$content.='<label for="birthday" id="account-birthday">'.ucfirst($this->pi_getLL('birthday')).'</label>
 					<input type="text" name="birthday_visitor" class="birthday" id="birthday_visitor" value="'.htmlspecialchars($user['birthday']).'" >
 					<input type="hidden" name="birthday" id="birthday" value="'.htmlspecialchars($user['birthday']).'" >';
@@ -243,7 +243,7 @@ if(count($cart['products']) < 1) {
 		<div class="account-field">
 			<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
 			<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>';
-		if($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
+		if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
 			$content.='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id')).'</label>
 			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($user['tx_multishop_vat_id']).'"/>';
 		}
@@ -270,22 +270,22 @@ if(count($cart['products']) < 1) {
 			<input type="text" name="state" id="state" class="state" value="'.htmlspecialchars($user['state']).'" >			
 			' : '').'</div>';
 		// load countries
-		if(count($enabled_countries) == 1) {
+		if (count($enabled_countries)==1) {
 			$content.='<input name="country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 			$content.='<input name="delivery_country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 		} else {
 			$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
-			if(!$user['country']) {
+			if (!$user['country']) {
 				$user['country']=$default_country['cn_short_en'];
 			}
-			if(!$user['delivery_country']) {
+			if (!$user['delivery_country']) {
 				$user['delivery_country']=$default_country['cn_short_en'];
 			}
-			foreach($enabled_countries as $country) {
-				$tmpcontent_con.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['country']) == t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
-				$tmpcontent_con_delivery.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['delivery_country']) == t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			foreach ($enabled_countries as $country) {
+				$tmpcontent_con.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+				$tmpcontent_con_delivery.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($user['delivery_country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 			}
-			if($tmpcontent_con) {
+			if ($tmpcontent_con) {
 				$content.='
 				<div class="account-field">
 				<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
@@ -301,8 +301,8 @@ if(count($cart['products']) < 1) {
 		// country eof
 		$telephone_validation='';
 		$mobile_validation='';
-		if($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
-			if(!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
+		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
+			if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
 				$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'"';
 				$mobile_validation=' required="required" data-h5-errorid="invalid-mobile" title="'.$this->pi_getLL('mobile_must_be_x_digits_long').'"';
 			} else {
@@ -504,9 +504,9 @@ if(count($cart['products']) < 1) {
 			<div class="account-field">
 				<span class="InputGroup">
 					<label for="radio_delivery_gender_mr" id="account-gender">'.ucfirst($this->pi_getLL('title')).'</label>
-					<input type="radio" name="delivery_gender" value="m" class="account-gender-radio" id="radio_delivery_gender_mr" '.(($user['delivery_gender'] == 'm') ? 'checked' : '').' />
+					<input type="radio" name="delivery_gender" value="m" class="account-gender-radio" id="radio_delivery_gender_mr" '.(($user['delivery_gender']=='m') ? 'checked' : '').' />
 					<label class="account-male" for="radio_delivery_gender_mr">'.ucfirst($this->pi_getLL('mr')).'</label>
-					<input type="radio" name="delivery_gender" value="f" class="account-gender-radio" id="radio_delivery_gender_mrs" '.(($user['delivery_gender'] == 'f') ? 'checked' : '').' />
+					<input type="radio" name="delivery_gender" value="f" class="account-gender-radio" id="radio_delivery_gender_mrs" '.(($user['delivery_gender']=='f') ? 'checked' : '').' />
 					<label class="account-female" for="radio_delivery_gender_mrs">'.ucfirst($this->pi_getLL('mrs')).'</label>
 					<div id="invalid-delivery_gender" class="error-space" style="display:none"></div>
 				</span>
@@ -549,7 +549,7 @@ if(count($cart['products']) < 1) {
 				<label class="account-state" for="delivery_state">'.ucfirst($this->pi_getLL('state')).'*</label>
 				<input type="text" name="delivery_state" id="delivery_state" class="delivery_state" value="'.htmlspecialchars($user['delivery_state']).'" >	
 				' : '').'</div>';
-		if($tmpcontent_con) {
+		if ($tmpcontent_con) {
 			$tmpcontent.='
 			<div class="account-field">
 			<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>

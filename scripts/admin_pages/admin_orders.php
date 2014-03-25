@@ -1,9 +1,9 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $all_orders_status=mslib_fe::getAllOrderStatus();
-if($this->post['tx_multishop_pi1']['edit_order'] == 1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
+if ($this->post['tx_multishop_pi1']['edit_order']==1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
 	$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->post['tx_multishop_pi1']['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal']);
 	$GLOBALS['TSFE']->additionalHeaderData[]='
 	<script type="text/javascript">
@@ -12,30 +12,30 @@ if($this->post['tx_multishop_pi1']['edit_order'] == 1 and is_numeric($this->post
 	});
 	</script>';
 }
-if(!$this->post['tx_multishop_pi1']['action'] && $this->get['tx_multishop_pi1']['action']) {
+if (!$this->post['tx_multishop_pi1']['action'] && $this->get['tx_multishop_pi1']['action']) {
 	$this->post['tx_multishop_pi1']['action']=$this->get['tx_multishop_pi1']['action'];
 }
-if($this->post) {
-	foreach($this->post as $post_idx=>$post_val) {
+if ($this->post) {
+	foreach ($this->post as $post_idx=>$post_val) {
 		$this->get[$post_idx]=$post_val;
 	}
 }
-if($this->get) {
-	foreach($this->get as $get_idx=>$get_val) {
+if ($this->get) {
+	foreach ($this->get as $get_idx=>$get_val) {
 		$this->post[$get_idx]=$get_val;
 	}
 }
-switch($this->post['tx_multishop_pi1']['action']) {
+switch ($this->post['tx_multishop_pi1']['action']) {
 	case 'export_selected_order_to_xls':
-		if(is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
+		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/orders/orders_xls_export.php');
 		}
 		break;
 	case 'convert_to_order':
-		if($this->post['orders_id']) {
+		if ($this->post['orders_id']) {
 			$order=mslib_fe::getOrder($this->post['orders_id']);
-			if($order['is_proposal']) {
+			if ($order['is_proposal']) {
 				$updateArray=array();
 				$updateArray['is_proposal']=0;
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$order['orders_id'].'\'', $updateArray);
@@ -44,11 +44,11 @@ switch($this->post['tx_multishop_pi1']['action']) {
 		}
 		break;
 	case 'change_order_status_for_selected_orders':
-		if(is_array($this->post['selected_orders']) and count($this->post['selected_orders']) and is_numeric($this->post['tx_multishop_pi1']['update_to_order_status'])) {
-			foreach($this->post['selected_orders'] as $orders_id) {
-				if(is_numeric($orders_id)) {
+		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders']) and is_numeric($this->post['tx_multishop_pi1']['update_to_order_status'])) {
+			foreach ($this->post['selected_orders'] as $orders_id) {
+				if (is_numeric($orders_id)) {
 					$orders=mslib_fe::getOrder($orders_id);
-					if($orders['orders_id'] and ($orders['status'] != $this->post['tx_multishop_pi1']['update_to_order_status'])) {
+					if ($orders['orders_id'] and ($orders['status']!=$this->post['tx_multishop_pi1']['update_to_order_status'])) {
 						// mslib_befe::updateOrderStatus($orders['orders_id'],$this->post['tx_multishop_pi1']['update_to_order_status']);
 						mslib_befe::updateOrderStatus($orders['orders_id'], $this->post['tx_multishop_pi1']['update_to_order_status'], 1);
 					}
@@ -57,9 +57,9 @@ switch($this->post['tx_multishop_pi1']['action']) {
 		}
 		break;
 	case 'delete_selected_orders':
-		if(is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			foreach($this->post['selected_orders'] as $orders_id) {
-				if(is_numeric($orders_id)) {
+		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
+			foreach ($this->post['selected_orders'] as $orders_id) {
+				if (is_numeric($orders_id)) {
 					$updateArray=array();
 					$updateArray['deleted']=1;
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
@@ -69,13 +69,13 @@ switch($this->post['tx_multishop_pi1']['action']) {
 		}
 		break;
 	case 'mail_selected_orders_to_merchant':
-		if(is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			foreach($this->post['selected_orders'] as $orders_id) {
-				if(is_numeric($orders_id)) {
+		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
+			foreach ($this->post['selected_orders'] as $orders_id) {
+				if (is_numeric($orders_id)) {
 					$order=mslib_fe::getOrder($orders_id);
-					if($order['orders_id']) {
+					if ($order['orders_id']) {
 						$mail_template='';
-						if($order['paid']) {
+						if ($order['paid']) {
 							$mail_template='email_order_paid_letter';
 						}
 						mslib_fe::mailOrder($orders_id, 0, $this->ms['MODULES']['STORE_EMAIL'], $mail_template);
@@ -85,13 +85,13 @@ switch($this->post['tx_multishop_pi1']['action']) {
 		}
 		break;
 	case 'mail_selected_orders_to_customer':
-		if(is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			foreach($this->post['selected_orders'] as $orders_id) {
-				if(is_numeric($orders_id)) {
+		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
+			foreach ($this->post['selected_orders'] as $orders_id) {
+				if (is_numeric($orders_id)) {
 					$order=mslib_fe::getOrder($orders_id);
-					if($order['orders_id']) {
+					if ($order['orders_id']) {
 						$mail_template='';
-						if($order['paid']) {
+						if ($order['paid']) {
 							$mail_template='email_order_paid_letter';
 						}
 						mslib_fe::mailOrder($orders_id, 0, '', $mail_template);
@@ -102,14 +102,14 @@ switch($this->post['tx_multishop_pi1']['action']) {
 		break;
 	case 'update_selected_orders_to_paid':
 	case 'update_selected_orders_to_not_paid':
-		if(is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			foreach($this->post['selected_orders'] as $orders_id) {
-				if(is_numeric($orders_id)) {
+		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
+			foreach ($this->post['selected_orders'] as $orders_id) {
+				if (is_numeric($orders_id)) {
 					$order=mslib_fe::getOrder($orders_id);
-					if($order['orders_id']) {
-						if($this->post['tx_multishop_pi1']['action'] == 'update_selected_orders_to_paid') {
+					if ($order['orders_id']) {
+						if ($this->post['tx_multishop_pi1']['action']=='update_selected_orders_to_paid') {
 							mslib_fe::updateOrderStatusToPaid($orders_id);
-						} elseif($this->post['tx_multishop_pi1']['action'] == 'update_selected_orders_to_not_paid') {
+						} elseif ($this->post['tx_multishop_pi1']['action']=='update_selected_orders_to_not_paid') {
 							$updateArray=array('paid'=>0);
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -120,60 +120,60 @@ switch($this->post['tx_multishop_pi1']['action']) {
 		}
 		break;
 	case 'mail_selected_orders_for_payment_reminder':
-		if(is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			foreach($this->post['selected_orders'] as $orders_id) {
+		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
+			foreach ($this->post['selected_orders'] as $orders_id) {
 				$tmpArray=mslib_befe::getRecord($orders_id, 'tx_multishop_orders', 'orders_id');
-				if($tmpArray['paid'] == 0) {
+				if ($tmpArray['paid']==0) {
 					// replacing the variables with dynamic values
 					$billing_address='';
 					$delivery_address='';
 					$full_customer_name=$tmpArray['billing_first_name'];
-					if($tmpArray['billing_middle_name']) {
+					if ($tmpArray['billing_middle_name']) {
 						$full_customer_name.=' '.$tmpArray['billing_middle_name'];
 					}
-					if($tmpArray['billing_last_name']) {
+					if ($tmpArray['billing_last_name']) {
 						$full_customer_name.=' '.$tmpArray['billing_last_name'];
 					}
 					$delivery_full_customer_name=$tmpArray['delivery_first_name'];
-					if($tmpArray['delivery_middle_name']) {
+					if ($tmpArray['delivery_middle_name']) {
 						$delivery_full_customer_name.=' '.$tmpArray['delivery_middle_name'];
 					}
-					if($order['delivery_last_name']) {
+					if ($order['delivery_last_name']) {
 						$delivery_full_customer_name.=' '.$tmpArray['delivery_last_name'];
 					}
 					$full_customer_name=preg_replace('/\s+/', ' ', $full_customer_name);
 					$delivery_full_customer_name=preg_replace('/\s+/', ' ', $delivery_full_customer_name);
-					if($tmpArray['delivery_company']) {
+					if ($tmpArray['delivery_company']) {
 						$delivery_address=$tmpArray['delivery_company']."<br />";
 					}
-					if($delivery_full_customer_name) {
+					if ($delivery_full_customer_name) {
 						$delivery_address.=$delivery_full_customer_name."<br />";
 					}
-					if($tmpArray['delivery_address']) {
+					if ($tmpArray['delivery_address']) {
 						$delivery_address.=$tmpArray['delivery_address']."<br />";
 					}
-					if($tmpArray['delivery_zip'] and $tmpArray['delivery_city']) {
+					if ($tmpArray['delivery_zip'] and $tmpArray['delivery_city']) {
 						$delivery_address.=$tmpArray['delivery_zip']." ".$tmpArray['delivery_city'];
 					}
-					if($tmpArray['delivery_country']) {
+					if ($tmpArray['delivery_country']) {
 						$delivery_address.='<br />'.ucfirst(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $tmpArray['delivery_country']));
 					}
-					if($tmpArray['billing_company']) {
+					if ($tmpArray['billing_company']) {
 						$billing_address=$tmpArray['billing_company']."<br />";
 					}
-					if($full_customer_name) {
+					if ($full_customer_name) {
 						$billing_address.=$full_customer_name."<br />";
 					}
-					if($tmpArray['billing_address']) {
+					if ($tmpArray['billing_address']) {
 						$billing_address.=$tmpArray['billing_address']."<br />";
 					}
-					if($tmpArray['billing_zip'] and $tmpArray['billing_city']) {
+					if ($tmpArray['billing_zip'] and $tmpArray['billing_city']) {
 						$billing_address.=$tmpArray['billing_zip']." ".$tmpArray['billing_city'];
 					}
-					if($tmpArray['billing_country']) {
+					if ($tmpArray['billing_country']) {
 						$billing_address.='<br />'.ucfirst(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $tmpArray['billing_country']));
 					}
-					if(empty($tmpArray['hash'])) {
+					if (empty($tmpArray['hash'])) {
 						$hashcode=md5($orders_id+time());
 						$updateArray=array();
 						$updateArray['hash']=$hashcode;
@@ -239,7 +239,7 @@ switch($this->post['tx_multishop_pi1']['action']) {
 					$invoice=mslib_fe::getOrderInvoice($tmpArray['orders_id'], 0);
 					$invoice_id='';
 					$invoice_link='';
-					if(is_array($invoice)) {
+					if (is_array($invoice)) {
 						$invoice_id=$invoice['invoice_id'];
 						$invoice_link='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'">'.$invoice['invoice_id'].'</a>';
 					}
@@ -276,30 +276,30 @@ switch($this->post['tx_multishop_pi1']['action']) {
 					$array2[]=$link;
 					$cms_type='payment_reminder_email_templates_'.$tmpArray['payment_method'];
 					$page=mslib_fe::getCMScontent($cms_type, $GLOBALS['TSFE']->sys_language_uid);
-					if(!count($page[0])) {
+					if (!count($page[0])) {
 						$page=mslib_fe::getCMScontent('payment_reminder_email_templates', $GLOBALS['TSFE']->sys_language_uid);
 					}
-					if($page[0]['name']) {
+					if ($page[0]['name']) {
 						$reminder_cms_content='';
-						if($page[0]['name']) {
+						if ($page[0]['name']) {
 							$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
 							$reminder_cms_content.='<div class="main-heading"><h2>'.$page[0]['name'].'</h2></div>';
 						}
-						if($page[0]['content']) {
+						if ($page[0]['content']) {
 							$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
 							$reminder_cms_content.=$page[0]['content'];
 						}
 						$full_customer_name=$tmpArray['billing_first_name'];
-						if($order['billing_middle_name']) {
+						if ($order['billing_middle_name']) {
 							$full_customer_name.=' '.$tmpArray['billing_middle_name'];
 						}
-						if($order['billing_last_name']) {
+						if ($order['billing_last_name']) {
 							$full_customer_name.=' '.$tmpArray['billing_last_name'];
 						}
 						$user=array();
 						$user['name']=$full_customer_name;
 						$user['email']=$tmpArray['billing_email'];
-						if($user['email']) {
+						if ($user['email']) {
 							mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
 						}
 					}
@@ -309,16 +309,16 @@ switch($this->post['tx_multishop_pi1']['action']) {
 		break;
 	default:
 		// post processing by third party plugins
-		if(is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'])) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'])) {
 			$params=array();
-			foreach($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'] as $funcRef) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'] as $funcRef) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		break;
 }
 // now parse all the objects in the tmpl file
-if($this->conf['admin_orders_tmpl_path']) {
+if ($this->conf['admin_orders_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_orders_tmpl_path']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_orders.tmpl');
@@ -329,17 +329,17 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['orders_results']=$this->cObj->getSubpart($subparts['template'], '###RESULTS###');
 $subparts['orders_listing']=$this->cObj->getSubpart($subparts['orders_results'], '###ORDERS_LISTING###');
 $subparts['orders_noresults']=$this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
-if($this->post['Search'] and ($this->post['payment_status'] != $this->cookie['payment_status'])) {
+if ($this->post['Search'] and ($this->post['payment_status']!=$this->cookie['payment_status'])) {
 	$this->cookie['payment_status']=$this->post['payment_status'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if($this->post['Search'] and ($this->post['limit'] != $this->cookie['limit'])) {
+if ($this->post['Search'] and ($this->post['limit']!=$this->cookie['limit'])) {
 	$this->cookie['limit']=$this->post['limit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if($this->cookie['limit']) {
+if ($this->cookie['limit']) {
 	$this->post['limit']=$this->cookie['limit'];
 } else {
 	$this->post['limit']=10;
@@ -357,10 +357,11 @@ $option_search=array(
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-	"payment_method"=>$this->pi_getLL('admin_payment_method'));
+	"payment_method"=>$this->pi_getLL('admin_payment_method')
+);
 asort($option_search);
 $type_search=$this->post['type_search'];
-if($_REQUEST['skeyword']) {
+if ($_REQUEST['skeyword']) {
 	//  using $_REQUEST cause TYPO3 converts "Command & Conquer" to "Conquer" (the & sign sucks ass)
 	$this->post['skeyword']=$_REQUEST['skeyword'];
 	$this->post['skeyword']=trim($this->post['skeyword']);
@@ -368,10 +369,10 @@ if($_REQUEST['skeyword']) {
 	$this->post['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->post['skeyword'], TRUE);
 	$this->post['skeyword']=mslib_fe::RemoveXSS($this->post['skeyword']);
 }
-if(is_numeric($this->post['p'])) {
+if (is_numeric($this->post['p'])) {
 	$p=$this->post['p'];
 }
-if($p > 0) {
+if ($p>0) {
 	$offset=(((($p)*$this->ms['MODULES']['ORDERS_LISTING_LIMIT'])));
 } else {
 	$p=0;
@@ -379,16 +380,16 @@ if($p > 0) {
 }
 // orders search
 $option_item='<select name="type_search"><option value="all">'.$this->pi_getLL('all').'</option>';
-foreach($option_search as $key=>$val) {
-	$option_item.='<option value="'.$key.'" '.($this->post['type_search'] == $key ? "selected" : "").'>'.$val.'</option>';
+foreach ($option_search as $key=>$val) {
+	$option_item.='<option value="'.$key.'" '.($this->post['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
 $option_item.='</select>';
 $orders_status_list='<select name="orders_status_search"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
-if(is_array($all_orders_status)) {
+if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
-	foreach($all_orders_status as $row) {
-		$orders_status_list.='<option value="'.$row['id'].'" '.(($this->post['orders_status_search'] == $row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
-		if($this->post['orders_status_search'] == $row['id']) {
+	foreach ($all_orders_status as $row) {
+		$orders_status_list.='<option value="'.$row['id'].'" '.(($this->post['orders_status_search']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
+		if ($this->post['orders_status_search']==$row['id']) {
 			$order_status_search_selected=true;
 		}
 	}
@@ -413,8 +414,8 @@ $limits[]='350';
 $limits[]='400';
 $limits[]='450';
 $limits[]='500';
-foreach($limits as $limit) {
-	$limit_selectbox.='<option value="'.$limit.'"'.($limit == $this->post['limit'] ? ' selected' : '').'>'.$limit.'</option>';
+foreach ($limits as $limit) {
+	$limit_selectbox.='<option value="'.$limit.'"'.($limit==$this->post['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
 $limit_selectbox.='</select>';
 $filter=array();
@@ -425,8 +426,8 @@ $orderby=array();
 $where=array();
 $orderby=array();
 $select=array();
-if($this->post['skeyword']) {
-	switch($type_search) {
+if ($this->post['skeyword']) {
+	switch ($type_search) {
 		case 'all':
 			$option_fields=$option_search;
 			unset($option_fields['all']);
@@ -435,7 +436,7 @@ if($this->post['skeyword']) {
 			unset($option_fields['delivery_name']);
 			//print_r($option_fields);
 			$items=array();
-			foreach($option_fields as $fields=>$label) {
+			foreach ($option_fields as $fields=>$label) {
 				$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
@@ -476,14 +477,14 @@ if($this->post['skeyword']) {
 			break;
 	}
 }
-if(!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
+if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->post['order_date_from']);
 	list($fd, $fm, $fy)=explode('/', $from_date);
 	list($till_date, $till_time)=explode(" ", $this->post['order_date_till']);
 	list($td, $tm, $ty)=explode('/', $till_date);
 	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
 	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
-	if($this->post['search_by_status_last_modified']) {
+	if ($this->post['search_by_status_last_modified']) {
 		$column='o.status_last_modified';
 	} else {
 		$column='o.crdate';
@@ -493,23 +494,23 @@ if(!empty($this->post['order_date_from']) && !empty($this->post['order_date_till
 //print_r($filter);
 //print_r($this->post);
 //die();
-if($this->post['orders_status_search'] > 0) {
+if ($this->post['orders_status_search']>0) {
 	$filter[]="(o.status='".$this->post['orders_status_search']."')";
 }
-if($this->cookie['payment_status'] == 'paid_only') {
+if ($this->cookie['payment_status']=='paid_only') {
 	$filter[]="(o.paid='1')";
 } else {
-	if($this->cookie['payment_status'] == 'unpaid_only') {
+	if ($this->cookie['payment_status']=='unpaid_only') {
 		$filter[]="(o.paid='0')";
 	}
 }
-if(!$this->masterShop) {
+if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
 //$orderby[]='orders_id desc';	
 $select[]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
-switch($this->get['tx_multishop_pi1']['order_by']) {
+switch ($this->get['tx_multishop_pi1']['order_by']) {
 	case 'billing_name':
 		$order_by='o.billing_name';
 		break;
@@ -533,7 +534,7 @@ switch($this->get['tx_multishop_pi1']['order_by']) {
 		$order_by='o.orders_id';
 		break;
 }
-switch($this->get['tx_multishop_pi1']['order']) {
+switch ($this->get['tx_multishop_pi1']['order']) {
 	case 'a':
 		$order='asc';
 		$order_link='d';
@@ -545,17 +546,17 @@ switch($this->get['tx_multishop_pi1']['order']) {
 		break;
 }
 $orderby[]=$order_by.' '.$order;
-if($this->post['tx_multishop_pi1']['by_phone']) {
+if ($this->post['tx_multishop_pi1']['by_phone']) {
 	$filter[]='o.by_phone=1';
 }
-if($this->post['tx_multishop_pi1']['is_proposal']) {
+if ($this->post['tx_multishop_pi1']['is_proposal']) {
 	$filter[]='o.is_proposal=1';
 } else {
 	$filter[]='o.is_proposal=0';
 }
 $pageset=mslib_fe::getOrdersPageSet($filter, $offset, $this->post['limit'], $orderby, $having, $select, $where, $from);
 $tmporders=$pageset['orders'];
-if($pageset['total_rows'] > 0) {
+if ($pageset['total_rows']>0) {
 	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/orders/orders_listing_table.php');
 } else {
 	$subpartArray=array();
@@ -564,12 +565,12 @@ if($pageset['total_rows'] > 0) {
 }
 $payment_status_select='<select name="payment_status">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
-if($this->cookie['payment_status'] == 'paid_only') {
+if ($this->cookie['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="paid_only">'.$this->pi_getLL('show_paid_orders_only').'</option>';
 }
-if($this->cookie['payment_status'] == 'unpaid_only') {
+if ($this->cookie['payment_status']=='unpaid_only') {
 	$payment_status_select.='<option value="unpaid_only" selected="selected">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
 } else {
 	$payment_status_select.='<option value="unpaid_only">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';

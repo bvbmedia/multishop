@@ -1,5 +1,5 @@
 <?php
-if(!defined('TYPO3_MODE')) {
+if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 /*
@@ -38,7 +38,7 @@ $content.='<div class="main-heading"><h1>Clear Database</h1></div>
 			<label>Items to delete</label>
 			<ul>
 			';
-foreach($navItems as $key=>$val) {
+foreach ($navItems as $key=>$val) {
 	$content.='<li><input name="tx_multishop_pi1[items][]" type="checkbox" value="'.$key.'" /> '.$val.'</li>'."\n";
 }
 $content.='
@@ -50,11 +50,11 @@ $content.='
 	</div>
 </form>
 ';
-if($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count($this->post['tx_multishop_pi1']['items'])) {
+if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count($this->post['tx_multishop_pi1']['items'])) {
 	set_time_limit(86400);
 	ignore_user_abort(true);
-	foreach($this->post['tx_multishop_pi1']['items'] as $item) {
-		switch($item) {
+	foreach ($this->post['tx_multishop_pi1']['items'] as $item) {
+		switch ($item) {
 			case 'orders':
 				$tables='
 				tx_multishop_orders
@@ -63,7 +63,7 @@ if($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count(
 				tx_multishop_orders_status_history
 				';
 				$tableArray=explode("\n", $tables);
-				foreach($tableArray as $table) {
+				foreach ($tableArray as $table) {
 					$table=trim($table);
 					$qry=$GLOBALS['TYPO3_DB']->sql_query('TRUNCATE '.$table);
 				}
@@ -84,14 +84,14 @@ if($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count(
 				break;
 			case 'categories':
 				$query=$GLOBALS['TYPO3_DB']->sql_query("select categories_id from tx_multishop_categories where parent_id='0' and page_uid='".$this->showCatalogFromPage."'");
-				while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query)) != false) {
+				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query))!=false) {
 					mslib_befe::deleteCategory($row['categories_id']);
 				}
 				$content.='<p>categories has been cleared.</p>';
 				break;
 			case 'products':
 				$query=$GLOBALS['TYPO3_DB']->sql_query("select products_id from tx_multishop_products where page_uid='".$this->showCatalogFromPage."'");
-				while(($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query)) != false) {
+				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query))!=false) {
 					mslib_befe::deleteProduct($row['products_id']);
 				}
 				$content.='<p>products has been cleared.</p>';
@@ -103,8 +103,8 @@ if($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count(
 				TRUNCATE `tx_multishop_manufacturers_info`;			
 				';
 				$array=explode("\n", $string);
-				foreach($array as $item) {
-					if($item) {
+				foreach ($array as $item) {
+					if ($item) {
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($item);
 					}
 				}
@@ -121,8 +121,8 @@ if($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count(
 				TRUNCATE `tx_multishop_products_options_values_to_products_options`				
 				';
 				$array=explode("\n", $string);
-				foreach($array as $item) {
-					if($item) {
+				foreach ($array as $item) {
+					if ($item) {
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($item);
 					}
 				}
@@ -172,23 +172,23 @@ if($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count(
 				TRUNCATE `tx_multishop_stores_description`;
 				*/
 				$array=explode("\n", $string);
-				foreach($array as $item) {
-					if($item) {
+				foreach ($array as $item) {
+					if ($item) {
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($item);
 					}
 				}
-				foreach($this->ms['image_paths']['products'] as $key=>$path) {
-					if($path) {
+				foreach ($this->ms['image_paths']['products'] as $key=>$path) {
+					if ($path) {
 						$return=mslib_befe::deltree($this->DOCUMENT_ROOT.$path);
 					}
 				}
-				foreach($this->ms['image_paths']['categories'] as $key=>$path) {
-					if($path) {
+				foreach ($this->ms['image_paths']['categories'] as $key=>$path) {
+					if ($path) {
 						$return=mslib_befe::deltree($this->DOCUMENT_ROOT.$path);
 					}
 				}
-				foreach($this->ms['image_paths']['manufacturers'] as $key=>$path) {
-					if($path) {
+				foreach ($this->ms['image_paths']['manufacturers'] as $key=>$path) {
+					if ($path) {
 						$return=mslib_befe::deltree($this->DOCUMENT_ROOT.$path);
 					}
 				}
