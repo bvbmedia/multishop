@@ -51,7 +51,7 @@
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core table { border-collapse:collapse; margin:0 0 10px; padding:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core table table { margin:0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core table#product_import_table { margin:0 0 10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core table#product_import_table { margin:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset table#product_import_table { margin-top:10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core table td { font:12px Arial, Helvetica, sans-serif; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form { overflow:hidden; width:100%; }
@@ -569,3 +569,5 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table.bvbmedia_netops_data_table td { font-size:14px; font-weight:normal; padding:3px 9px; } */
 
 #netops_domain_action_buttons { text-align:center; }
+
+.msHorizontalOverflowWrapper { overflow:auto; margin:0 0 20px; }
