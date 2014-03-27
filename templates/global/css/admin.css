@@ -20,7 +20,6 @@
 #tx_multishop_pi1_core #btw_overzicht #orders_stats_form label { float:left; display:block; font:12px Arial, Helvetica, sans-serif; padding:3px 10px 0; }
 #tx_multishop_pi1_core #btw_overzicht #orders_stats_form select { float:left; border:1px solid #999; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; padding:2px; }
 #tx_multishop_pi1_core #btw_overzicht #orders_stats_form option { padding:0 10px 0 0 ; }
-
 #tx_multishop_pi1_core .fullwidth_div { /* padding:20px; */ }
 
 /* #tx_multishop_pi1_core .fullwidth_div { position:absolute; left:0; top:25px; min-width:100%; height:100%; z-index:990; }
@@ -144,7 +143,7 @@
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field { clear:both; overflow:hidden; width:100%; padding:7px 0 0; }
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field div { float:left; overflow:hidden; width:310px; }
 
-#msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field .error-space { position:absolute; float:none; overflow:visible; background:#d5201e; width:auto; height:auto; font:11px Arial, Helvetica, sans-serif; color:#fff; margin-top:-24px; margin-left:140px; padding:5px 10px; text-transform:lowercase; border-radius:6px; } 
+#msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field .error-space { position:absolute; float:none; overflow:visible; background:#d5201e; width:auto; height:auto; font:11px Arial, Helvetica, sans-serif; color:#fff; margin-top:-24px; margin-left:140px; padding:5px 10px; text-transform:lowercase; border-radius:6px; }
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field .error-space em { position:absolute; bottom:-5px; border-top:5px solid #d5201e; border-left:5px solid transparent; border-right:5px solid transparent; }
 
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field #invalid-address_number.error-space,
@@ -431,7 +430,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 .msadmin_balloon table.basket_contents_table tr.odd td { background:#444; }
 
  .pb10 { margin-bottom:10px !important; margin-bottom:10px;  }
- 
+
 #msAdminOrdersListingActionForm { overflow:hidden; width:100%; margin:0; }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_orders_list_action select { float:left; margin:0 10px 10px 0; }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_update_to_order_status select { clear:none; float:left; margin:0 10px 0 0; padding:0; }
@@ -453,7 +452,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 /* #msAdminOrdersFormField_update_to_order_status select { float:left; margin:0 10px 10px 0; } */
 #msAdminOrdersFormField_update_to_order_status select { float:left; margin:0; }
 #msAdminOrdersFormField_update_status_templates select { float:left; margin:0 0 10px; }
-/* #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container .tab_container #Orders_By_Date.tab_content #msAdminOrdersFormField_submit_button { clear:left; } 
+/* #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container .tab_container #Orders_By_Date.tab_content #msAdminOrdersFormField_submit_button { clear:left; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container .tab_container #Orders_By_Date.tab_content #msAdminOrdersFormField_submit_button input { margin-left:0; } */
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core table td.cellProductsPrice,
@@ -554,7 +553,7 @@ table#admin_modules_listing td input { float:left; }
 table#admin_modules_listing td label { display:block; padding:2px 0 0 20px; }
 
 .msBackendButton.disabled { opacity:0.3; }
-.msBackendButton.disabled:hover { 
+.msBackendButton.disabled:hover {
 background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)) !important; /* Firefox+ */
 background-image   :-webkit-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)) !important; /* Chrome+, Safari+ */
 background-image   :-o-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)) !important; /* Opera+ */
