@@ -103,6 +103,7 @@ $content='
 <div class="main-heading"><h2>'.$this->pi_getLL('groups').'</h2></div>
 <form id="form1" name="form1" method="get" action="index.php">
 	<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
+	<input name="type" type="hidden" value="2003" />
 	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customer_groups" />
 	<div class="account-field">
