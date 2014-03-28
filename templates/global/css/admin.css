@@ -1,4 +1,4 @@
-.blockUI.blockMsg { font:12px Arial,Helvetica,sans-serif; color:#e6e6e6; -mozkit-border-radius:6px; -webkit-border-radius:6px; border-radius:6px; }
+.blockUI.blockMsg { font:12px Arial,Helvetica,sans-serif; color:#e6e6e6; border-radius:6px; }
 .blockUI.blockMsg h1 { font:bold 16px Arial,Helvetica,sans-serif; color:#c50000; text-align:left; margin:0 0 10px; padding:0 0 0 74px; }
 .blockUI.blockMsg a { color:#999; text-decoration:underline; }
 .blockUI.blockMsg a:hover { color:#cdcdcd; }
@@ -16,14 +16,13 @@
 #tx_multishop_pi1_core table.msadmin_border tr.even:hover td { background-color:#F1FAFF; } */
 
 #tx_multishop_pi1_core #btw_overzicht h2 { border:none; background:none; font:bold 16px Arial, Helvetica, sans-serif; color:#c50000; margin:0 0 10px; padding:3px 0 0; line-height:100%; }
-#tx_multishop_pi1_core #btw_overzicht #orders_stats_form { float:right; pmsadding:0 0 10px; }
+#tx_multishop_pi1_core #btw_overzicht #orders_stats_form { float:right; padding:0 0 10px; }
 #tx_multishop_pi1_core #btw_overzicht #orders_stats_form label { float:left; display:block; font:12px Arial, Helvetica, sans-serif; padding:3px 10px 0; }
 #tx_multishop_pi1_core #btw_overzicht #orders_stats_form select { float:left; border:1px solid #999; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; padding:2px; }
 #tx_multishop_pi1_core #btw_overzicht #orders_stats_form option { padding:0 10px 0 0 ; }
 #tx_multishop_pi1_core .fullwidth_div { /* padding:20px; */ }
-
 /* #tx_multishop_pi1_core .fullwidth_div { position:absolute; left:0; top:25px; min-width:100%; height:100%; z-index:990; }
-#tx_multishop_pi1_core .fullwidth_div .shadowbox-outer { border:1px solid #cdcdcd; background:#FFFFFF; margin:40px 20px 20px; padding:9px; -moz-border-radius:8px; -webkit-border-radius:8px; border-radius:8px; -moz-box-shadow: 0 0 10px #666; -webkit-box-shadow: 0 0 10px#666; box-shadow: 0 0 10px #666; }
+#tx_multishop_pi1_core .fullwidth_div .shadowbox-outer { border:1px solid #cdcdcd; background:#FFFFFF; margin:40px 20px 20px; padding:9px; border-radius:8px; box-shadow: 0 0 10px #666; }
 #tx_multishop_pi1_core .fullwidth_div .shadowbox-inner { width:100%; background:none; font:12px Arial, Helvetica, sans-serif; color:#333; margin:0; padding:0; }
 #tx_multishop_pi1_core .fullwidth_div .shadowbox-container,
 #tx_multishop_pi1_core .fullwidth_div .shadowbox { border:none; background:none; margin:0; padding:0; }  */
@@ -174,7 +173,7 @@
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field input[type="password"] { float:left; width:300px; border:1px solid #CDCDCD; background:#fff5f5; font:12px Arial,Helvetica,sans-serif; color:#333333; margin-right:4px; margin:0 4px 7px 0; padding:3px 4px; }
 
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field select#country,
-#msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field select#delivery_country { float:left; width:310px; border:1px solid #cdcdcd; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; margin:0 4px 7px 0; padding:2px; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px; }
+#msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field select#delivery_country { float:left; width:310px; border:1px solid #cdcdcd; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; margin:0 4px 7px 0; padding:2px; border-radius:2px; }
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field select#country option,
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout .account-field select#delivery_country option { padding-right:8px; }
 #msadmin_section #msadmin_content  #tx_multishop_pi1_core form#ms_checkout #delivery_address_category .main-heading { background:none; margin:0; padding:10px 0 0; line-height:100%; }
@@ -252,7 +251,7 @@ table.multishop_table input[type="text"],
 
 #tx_multishop_pi1_core ul#horizontal_navigation { overflow:hidden; width:100%; margin:0; padding:0; list-style:none; }
 #tx_multishop_pi1_core ul#horizontal_navigation li { float:left; background:none; margin:10px 0 0; padding:0; list-style:none; line-height:100%; }
-#tx_multishop_pi1_core ul#horizontal_navigation li a { float:left; display:block; border:1px solid #84a5ba; background:#b0c7d6; color:#fff; text-decoration:none; margin:0 10px 0 0; padding:7px 10px; -mozkit-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; }
+#tx_multishop_pi1_core ul#horizontal_navigation li a { float:left; display:block; border:1px solid #84a5ba; background:#b0c7d6; color:#fff; text-decoration:none; margin:0 10px 0 0; padding:7px 10px; border-radius:4px; }
 /* #tx_multishop_pi1_core ul#horizontal_navigation li a:hover { background:#84a5ba; } */
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core table#pagenav_container,
@@ -338,7 +337,7 @@ input.importer_advanced_settings:hover { background:#e2e2e2; }
 /* --- end of buttons --- */
 
 /* --- admin autofiller --- */
-ul#ui-autocomplete-admin { overflow:hidden; width:198px; width:198px !important; border:1px solid #aaa; background:#fff; list-style:none; margin:0; padding:0; white-space:nowrap; border-radius:0; }
+ul#ui-autocomplete-admin { overflow:hidden; width:198px !important; border:1px solid #aaa; background:#fff; list-style:none; margin:0; padding:0; white-space:nowrap; border-radius:0; }
 ul#ui-autocomplete-admin li.ui-menu-item,
 ul#ui-autocomplete-admin li.ui-category { float:left; display:block; width:198px; border:none; background:none; font:11px Arial, Helvetica, sans-serif; color:#000; text-align:left; margin:0; padding:0; white-space:nowrap; }
 
@@ -429,7 +428,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 .msadmin_balloon table.basket_contents_table td {  border:1px solid #666; background:#333; font:11px Arial, Helvetica, sans-serif; color:#f0f0f0; padding:5px; }
 .msadmin_balloon table.basket_contents_table tr.odd td { background:#444; }
 
- .pb10 { margin-bottom:10px !important; margin-bottom:10px;  }
+ .pb10 { margin-bottom:10px !important; }
 
 #msAdminOrdersListingActionForm { overflow:hidden; width:100%; margin:0; }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_orders_list_action select { float:left; margin:0 10px 10px 0; }
