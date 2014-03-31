@@ -86,7 +86,7 @@ $total_amount=0;
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
-	$end_time=strtotime($value."-31 23:59:59");
+	$end_time=strtotime($value."-01 00:00:00 +1 MONTH");
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';
@@ -94,7 +94,7 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
-	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	$str="SELECT o.orders_id, o.grand_total FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_price=($total_price+$row['grand_total']);
@@ -129,7 +129,7 @@ $content.='
 </table>';
 // LAST MONTHS EOF
 $dates=array();
-$content.='<h2>'.htmlspecialchars($this->pi_getLL('sales_average_by_month', 'Monthly sales average')).'</h2>';
+$content.='<h2>'.htmlspecialchars($this->pi_getLL('average_order_amount_per_month', 'Average order amount per month')).'</h2>';
 for ($i=1; $i<13; $i++) {
 	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
@@ -148,7 +148,8 @@ foreach ($dates as $key=>$value) {
 	$total_price_avrg=0;
 	$total_orders=0;
 	$start_time=strtotime($value."-01 00:00:00");
-	$end_time=strtotime($value."-31 23:59:59");
+	//$end_time=strtotime($value."-31 23:59:59");
+	$end_time=strtotime($value."-01 00:00:00 +1 MONTH");
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';

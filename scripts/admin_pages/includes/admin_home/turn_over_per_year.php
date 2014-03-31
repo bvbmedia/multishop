@@ -22,7 +22,8 @@ if (!$row_year['crdate']) {
 	foreach ($dates as $key=>$value) {
 		$total_price=0;
 		$start_time=strtotime($value);
-		$end_time=strtotime(date("Y-12-31 23:59:59", strtotime($value)));
+		//$end_time=strtotime(date("Y-12-31 23:59:59", strtotime($value)));
+		$end_time=strtotime("Y-01-01 00:00:00 +1 YEAR",$start_time);
 		$where=array();
 		$where[]='(o.paid=1 or o.paid=0)';
 		$where[]='(o.deleted=0)';
