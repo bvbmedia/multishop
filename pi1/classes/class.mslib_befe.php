@@ -2746,26 +2746,37 @@ class mslib_befe {
 			return $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		}
 	}
-	public function getRecords($value, $table, $field, $additional_where=array(), $groupBy='', $orderBy='', $limit='') {
-		if (isset($value) and $table and $field) {
-			$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-				$table, // FROM ...
-				$field.'="'.addslashes($value).'"'.(count($additional_where) ? ' AND '.implode(' AND ', $additional_where) : ''), // WHERE...
-				$groupBy, // GROUP BY...
-				$orderBy, // ORDER BY...
-				$limit // LIMIT ...
-			);
-			if ($this->msDebug) {
-				return $query;
-			}
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
-				$items=array();
-				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					$items[]=$row;
+	public function getRecords($value='', $table, $field='', $additional_where=array(), $groupBy='', $orderBy='', $limit='') {
+		$queryArray=array();
+		$queryArray['from']=$table;
+		if ($value and $field) {
+			$queryArray['where'][]=addslashes($field).'=\''.addslashes($value).'\'';
+		}
+		if (count($additional_where)) {
+			foreach ($additional_where as $where) {
+				if ($where) {
+					$queryArray['where'][]=$where;
 				}
-				return $items;
 			}
+		}
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			$queryArray['from'], // FROM ...
+			implode(' AND ', $queryArray['where']), // WHERE...
+			$groupBy, // GROUP BY...
+			$orderBy, // ORDER BY...
+			$limit // LIMIT ...
+		);
+		//echo $query;
+		if ($this->msDebug) {
+			return $query;
+		}
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			$items=array();
+			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$items[]=$row;
+			}
+			return $items;
 		}
 	}
 	public function updateImportedProductsLockedFields($products_id, $table, $updateArray) {
