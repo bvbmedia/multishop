@@ -63,7 +63,19 @@ class tx_mslib_cart extends tslib_pibase {
 				}
 				// products				
 				if (is_array($this->cart['products'])) {
+					// redirect if products stock are negative or quantity ordered is greater than the stock itself
+					$redirect_to_cart_page=false;
 					foreach ($this->cart['products'] as $key=>&$product) {
+						if ($this->get['tx_multishop_pi1']['page_section']=='checkout') {
+							$product_db=mslib_fe::getProduct($product['products_id']);
+							if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+								if ($product_db['products_quantity']<1) {
+									$redirect_to_cart_page=true;
+								} else if ($product['qty'] > $product_db['products_quantity']) {
+									$redirect_to_cart_page=true;
+								}
+							}
+						}
 						if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
 							$product['tax']=0;
 							$product['tax_rate']=0;
@@ -90,6 +102,13 @@ class tx_mslib_cart extends tslib_pibase {
 						$product['total_price_including_vat']=mslib_fe::taxDecimalCrop((($product['final_price']+$total_attributes_price)*$product['qty'])*(1+$product['tax_rate']));
 						$this->cart['summarize']['sub_total']+=$product['total_price'];
 						$this->cart['summarize']['sub_total_including_vat']+=$product['total_price_including_vat'];
+					}
+					if ($redirect_to_cart_page) {
+						$link=mslib_fe::typolink($this->shoppingcart_page_pid, '&tx_multishop_pi1[page_section]=shopping_cart', 1);
+						if ($link) {
+							header("Location: ".$this->FULL_HTTP_URL.$link);
+							exit();
+						}
 					}
 				}
 				// get shipping tax rate	
