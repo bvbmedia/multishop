@@ -57,6 +57,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 	if ($this->showIfsub) {
 		if (is_numeric($this->get['categories_id'])) {
 			$user_crumbar=$GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'];
+			if (!is_array($user_crumbar)) {
+				$user_crumbar=mslib_fe::Crumbar($this->get['categories_id']);
+			}
 			if (is_array($user_crumbar) and count($user_crumbar)) {
 				$user_crumbar=array_reverse($user_crumbar);
 			}
@@ -238,6 +241,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 			if (count($delimited_array)>0) {
 				// multi row tabnavigation menu
 				$user_crumbar=$GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'];
+				if (!is_array($user_crumbar)) {
+					$user_crumbar=mslib_fe::Crumbar($this->get['categories_id']);
+				}
 				if (is_array($user_crumbar) and count($user_crumbar)) {
 					$user_crumbar=array_reverse($user_crumbar);
 				}
@@ -353,6 +359,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 		} else {
 			// show default categories box
 			$user_crumbar=$GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'];
+			if (!is_array($user_crumbar)) {
+				$user_crumbar=mslib_fe::Crumbar($this->get['categories_id']);
+			}
 			if (count($user_crumbar)) {
 				$user_crumbar=array_reverse($user_crumbar);
 			}
@@ -398,7 +407,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 					$actifsub=0;
 					$act=0;
 					$hasChild=0;
-					if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
+					if (is_array($user_crumbar) && $user_crumbar[$nested_level]['id']==$cat['categories_id']) {
 						if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
 							$act=1;
 						}
