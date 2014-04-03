@@ -182,7 +182,10 @@ class mslib_fe {
 				$filter[]=$prefix."products_id IN (".implode(',', $product_ids).")";
 				break;
 			case 'relatives':
-				$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id,relative_product_id', 'tx_multishop_products_to_relative_products', "(products_id = '".$product['products_id']."' or relative_product_id = '".$product['products_id']."')", '', $limit);
+				//$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=1;
+				$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id,relative_product_id', 'tx_multishop_products_to_relative_products', "(products_id = '".$product['products_id']."' or relative_product_id = '".$product['products_id']."')", '', '',$limit);
+				//echo $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery;
+				//die();
 				$product_ids=array();
 				foreach ($data as $item) {
 					if ($product['products_id']==$item['relative_product_id']) {
