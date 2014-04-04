@@ -743,6 +743,30 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'update_attributes_options_groups_sortable':
+		// this is the AJAX server for changing the sort order of the product attributes
+		if ($this->ADMIN_USER) {
+			switch ($this->get['tx_multishop_pi1']['type']) {
+				case 'options_groups':
+					if (is_array($this->post['options_groups']) and count($this->post['options_groups'])) {
+						$no=1;
+						foreach ($this->post['options_groups'] as $prod_id) {
+							if (is_numeric($prod_id)) {
+								$where="attributes_options_groups_id = ".$prod_id;
+								$updateArray=array(
+									'sort_order'=>$no
+								);
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups', $where, $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$no++;
+							}
+						}
+					}
+					break;
+			}
+		}
+		exit();
+		break;
 	case 'fetch_attributes':
 		// this is the AJAX server for deleting the product attributes
 		if ($this->ADMIN_USER) {

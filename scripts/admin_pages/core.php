@@ -104,6 +104,11 @@ switch ($this->ms['page']) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_product_attributes.php');
 		}
 		break;
+	case 'admin_attributes_options_groups':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_attributes_options_groups.php');
+		}
+		break;
 	case 'admin_manufacturers':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_manufacturers.php');

@@ -4438,6 +4438,11 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['label']=$this->pi_getLL('admin_product_attributes');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['description']=$this->pi_getLL('admin_maintain_product_attributes').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_product_attributes');
+			if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['label']=$this->pi_getLL('admin_attributes_options_groups');
+				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['description']=$this->pi_getLL('admin_maintain_attributes_options_groups').'.';
+				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_attributes_options_groups');
+			}
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['label']=$this->pi_getLL('admin_update_prices');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['description']=$this->pi_getLL('admin_update_product_prices_by_percentage').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_mass_product_updater');
@@ -6573,6 +6578,31 @@ class mslib_fe {
 			$enabled_countries[]=$row2;
 		}
 		return $enabled_countries;
+	}
+	public function buildAttributesOptionsGroupSelectBox($options_id) {
+		if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+			$str="SELECT * from tx_multishop_attributes_options_groups";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$content='<select name="options_groups['.$options_id.']">';
+				$content.='<option value="">select group</option>';
+				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+					$str2="select attributes_options_groups_to_products_options_id from tx_multishop_attributes_options_groups_to_products_options where attributes_options_groups_id = '".$row['attributes_options_groups_id']."' and products_options_id = '" . $options_id . "'";
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2)>0) {
+						$content.='<option value="'.$row['attributes_options_groups_id'].'" selected="selected">'.$row['attributes_options_groups_name'].'</option>';
+					} else {
+						$content.='<option value="'.$row['attributes_options_groups_id'].'">'.$row['attributes_options_groups_name'].'</option>';
+					}
+				}
+				$content.='</select>';
+				return $content;
+			} else {
+				return '';
+			}
+		} else {
+			return '';
+		}
 	}
 	// deprecated methods
 	// alias for old v2 client side scripts

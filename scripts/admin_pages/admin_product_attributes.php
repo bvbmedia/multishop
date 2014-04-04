@@ -32,6 +32,17 @@ if (is_array($this->post['option_names']) and count($this->post['option_names'])
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
+			if (isset($this->post['options_groups'][$products_options_id]) && !empty($this->post['options_groups'][$products_options_id])) {
+				$updateArray=array();
+				$updateArray['attributes_options_groups_id']=$this->post['options_groups'][$products_options_id];
+				$updateArray['products_options_id']=$products_options_id;
+				$str="select 1 from tx_multishop_attributes_options_groups_to_products_options where products_options_id='".$products_options_id."' and attributes_options_groups_id='".$this->post['options_groups'][$products_options_id]."'";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_groups_to_products_options', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
+			}
 		}
 	}
 }
@@ -62,9 +73,14 @@ if ($rows) {
 	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" name="admin_product_attributes">
 	<ul class="attribute_options_sortable">';
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id']);
+		if (!empty($options_group)) {
+			$options_group='<span class="options_groups">options group: '.$options_group.'</span>';
+		}
 		$content.='
 		<li id="options_'.$row['products_options_id'].'">
 		<h2><span class="option_id">Option ID: '.$row['products_options_id'].'</span>
+		'.$options_group.'
 		<span class="listing_type">
 		listing type: 
 		<select name="listtype['.$row['products_options_id'].']">';

@@ -345,6 +345,34 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		$str="select attributes_options_group_id from tx_multishop_attributes_options_groups limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="CREATE TABLE IF NOT EXISTS `tx_multishop_attributes_options_groups` (
+				`attributes_options_groups_id` int(11) NOT NULL AUTO_INCREMENT,
+				`language_id` int(5) NOT NULL DEFAULT '0',
+				`attributes_options_groups_name` varchar(64) DEFAULT '',
+				`sort_order` int(11) DEFAULT '0',
+				PRIMARY KEY (`attributes_options_groups_id`,`language_id`),
+				KEY `attributes_options_groups_name` (`attributes_options_groups_name`),
+				KEY `attributes_options_groups_id` (`attributes_options_groups_id`),
+				KEY `sort_order` (`sort_order`)
+			) ENGINE=MyISAM;";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+			$str="select attributes_options_groups_to_products_options_id from tx_multishop_attributes_options_groups_to_products_options limit 1";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if (!$qry) {
+				$str="CREATE TABLE IF NOT EXISTS `tx_multishop_attributes_options_groups_to_products_options` (
+					`attributes_options_groups_to_products_options_id` int(11) NOT NULL AUTO_INCREMENT,
+					`attributes_options_groups_id` int(11) NOT NULL DEFAULT '0',
+					`products_options_id` int(11) NOT NULL DEFAULT '0',
+					PRIMARY KEY (`attributes_options_groups_to_products_options_id`)
+				) ENGINE=MyISAM;";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+			}
+		}
 		$str="select street_name from fe_users limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
