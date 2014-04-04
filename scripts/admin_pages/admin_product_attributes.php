@@ -76,6 +76,8 @@ if ($rows) {
 		$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id']);
 		if (!empty($options_group)) {
 			$options_group='<span class="options_groups">options group: '.$options_group.'</span>';
+		} else {
+			$options_group='<span class="options_groups">options group: -no groups defined-</span>';
 		}
 		$content.='
 		<li id="options_'.$row['products_options_id'].'">
