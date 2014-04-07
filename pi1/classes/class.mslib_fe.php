@@ -2124,7 +2124,7 @@ class mslib_fe {
 				$from_clause.=", ";
 				$from_clause.=implode(",", $extra_from);
 			}
-			if ($this->ADMIN_USER) {
+			if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 				$where_clause.=" 1 ";
 			} else {
 				$where_clause.=" p.products_status=1 ";
