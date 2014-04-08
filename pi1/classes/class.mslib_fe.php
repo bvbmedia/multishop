@@ -2325,6 +2325,37 @@ class mslib_fe {
 		if ($rows>0) {
 			$tax_ruleset=array();
 			while ($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+				if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+
+				} else {
+					// check every cat status
+					$disable_product=false;
+					if ($product['categories_id']) {
+						// get all cats to generate multilevel fake url
+						$level=0;
+						$cats=mslib_fe::Crumbar($product['categories_id']);
+						$cats=array_reverse($cats);
+						$product_crumbar_tree=array();
+						if (count($cats)>0) {
+							foreach ($cats as $cat) {
+								if ($cat['status']==0) {
+									$disable_product=true;
+								}
+								$product_crumbar_tree[$level]['id']=$cat['id'];
+								$product_crumbar_tree[$level]['name']=$cat['name'];
+								$product_crumbar_tree[$level]['url']=$cat['url'];
+								$level++;
+							}
+						}
+						// get all cats to generate multilevel fake url eof
+						if (count($product_crumbar_tree)) {
+							$product['categories_crumbar']=$product_crumbar_tree;
+						}
+					}
+					if ($disable_product && !$include_disabled_products) {
+						continue;
+					}
+				}
 				if ($product['specials_new_products_price']>0) {
 					if ($product['special_start_date']>0) {
 						if ($product['special_start_date']>time()) {
