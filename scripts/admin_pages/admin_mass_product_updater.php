@@ -65,9 +65,10 @@ if ($this->post) {
 		</div>
 		<div class="account-field">
 			<label for="amount">by Amount</label>
-			<input name="amount" id="amount" type="text" value="'.$this->post['amount'].'" size="10" />&nbsp;<input name="amount_vat" id="amount_vat" type="checkbox" value="1" />
+			<input name="amount" id="amount" type="text" value="'.$this->post['amount'].'" size="10" />&nbsp;<input name="amount_vat" id="amount_vat" type="checkbox" value="1" checked="checked" />
 			<label for="amount_vat">Substract/Increase price based on including VAT</label>
 		</div>
+		<div class="hr"></div>
 		<div class="account-field">
 			<label for="rules_group_id">VAT Rate</label>
 			<select name="rules_group_id"><option value="">skip</option>
@@ -85,6 +86,19 @@ if ($this->post) {
 			<input name="Submit" type="submit" value="Update All Products" onclick="return confirm(\'Are you sure?\')" class="msadmin_button" />
 		</div>			
 		</form>
-	';
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(document).on("change", "#percentage", function(){
+					if ($(this).val() != "") {
+						$("#amount").val("");
+					}
+				});
+				$(document).on("change", "#amount", function(){
+					if ($(this).val() != "") {
+						$("#percentage").val("");
+					}
+				});
+			});
+		</script>';
 }
 ?>
