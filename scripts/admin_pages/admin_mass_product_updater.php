@@ -12,18 +12,19 @@ if ($this->post) {
 	}
 	// update prices
 	if (!empty($this->post['amount'])) {
-		$amount=$this->post['amount'];
+		$originalAmount=$this->post['amount'];
 		// convert the dec sign from comma to dot
-		if (strpos($amount, ',')!==false) {
-			$amount=str_replace(',', '.', $amount);
+		if (strpos($originalAmount, ',')!==false) {
+			$originalAmount=str_replace(',', '.', $originalAmount);
 		}
-		if (isset($this->post['amount_vat']) && $this->post['amount_vat'] > 0) {
+		if (isset($this->post['amount_vat']) && $this->post['amount_vat']>0) {
 			$sql_get_products="select p.products_id, pt.rate as tax_rate from tx_multishop_products p left join tx_multishop_taxes pt on pt.tax_id = p.tax_id where page_uid='".$this->showCatalogFromPage."'";
 			$qry_get_products=$GLOBALS['TYPO3_DB']->sql_query($sql_get_products);
 			$sql_affected_rows=0;
-			while ($rs_get_products = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_get_products)) {
-				$tax_rate = $rs_get_products['tax_rate'];
-				if ($tax_rate > 0) {
+			while ($rs_get_products=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_get_products)) {
+				$amount=$originalAmount;
+				$tax_rate=$rs_get_products['tax_rate'];
+				if ($tax_rate>0) {
 					$amount=($amount/(100+$tax_rate))*100;
 				}
 				$str="update tx_multishop_products set products_price=(products_price+".$amount.") where products_id = '".$rs_get_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
@@ -33,12 +34,26 @@ if ($this->post) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 			}
 			$content.='<strong>Price update completed. '.$sql_affected_rows.' products has been updated.</strong><br />';
+			if ($sql_affected_rows>0 && $this->ms['MODULES']['FLAT_DATABASE']) {
+				// if the flat database module is enabled we have to sync the changes to the flat table
+				set_time_limit(86400);
+				ignore_user_abort(true);
+				mslib_befe::rebuildFlatDatabase();
+			}
 		} else {
+			$amount=$originalAmount;
 			$str="update tx_multishop_products set products_price=(products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$content.='<strong>Price update completed. '.$GLOBALS['TYPO3_DB']->sql_affected_rows().' products has been updated.</strong><br />';
+			$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+			$content.='<strong>Price update completed. '.$sql_affected_rows.' products has been updated.</strong><br />';
 			$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($sql_affected_rows>0 && $this->ms['MODULES']['FLAT_DATABASE']) {
+				// if the flat database module is enabled we have to sync the changes to the flat table
+				set_time_limit(86400);
+				ignore_user_abort(true);
+				mslib_befe::rebuildFlatDatabase();
+			}
 		}
 	}
 	if ($this->post['percentage']) {
