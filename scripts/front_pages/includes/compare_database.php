@@ -54,6 +54,13 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select relation_types from tx_multishop_products_to_relative_products limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_products_to_relative_products` ADD `relation_types` varchar(127) DEFAULT 'cross-sell'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	$str="select foreign_products_id from tx_multishop_products limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -352,7 +359,7 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
-		$str="select attributes_options_group_id from tx_multishop_attributes_options_groups limit 1";
+		$str="select attributes_options_groups_id from tx_multishop_attributes_options_groups limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
 			$str="CREATE TABLE IF NOT EXISTS `tx_multishop_attributes_options_groups` (

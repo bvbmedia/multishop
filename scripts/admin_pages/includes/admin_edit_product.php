@@ -663,7 +663,6 @@ if ($this->post) {
 		$js_header='';
 		$markerArray=array();
 		$markerArray['AJAX_PID']=(isset($this->get['pid']) ? $this->get['pid'] : 0);
-		$markerArray['AJAX_URL_PRODUCT_RELATIVE']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives');
 		$markerArray['AJAX_URL_COPY_PRODUCT']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=copy_duplicate_product');
 		$markerArray['AJAX_URL_GET_TAX_RULESET']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
 		$markerArray['AJAX_URL_GET_SPECIAL_SECTIONS']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getSpecialSections');
@@ -674,7 +673,30 @@ if ($this->post) {
 		}
 		$markerArray['DATE_FORMAT']=$this->pi_getLL('locale_date_format_js', 'yy/mm/dd');
 		$markerArray['YEAR_RANGE']=date("Y").':'.(date("Y")+2);
-		$markerArray['AJAX_URL_PRODUCT_RELATIVE']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives');
+		$markerArray['AJAX_URL_PRODUCT_RELATIVE']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives&relation_types=cross-sell');
+		$js_extra=array();
+		// custom page hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'])) {
+			$params=array(
+				'markerArray'=>&$markerArray,
+				'product'=>&$product,
+				'js_extra'=>&$js_extra
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom page hook that can be controlled by third-party plugin eof
+		if (!count($js_extra['functions'])) {
+			$markerArray['JS_FUNCTIONS_EXTRA']='';
+		} else {
+			$markerArray['JS_FUNCTIONS_EXTRA']=implode("\n", $js_extra['functions']);
+		}
+		if (!count($js_extra['triggers'])) {
+			$markerArray['JS_TRIGGERS_EXTRA']='';
+		} else {
+			$markerArray['JS_TRIGGERS_EXTRA']=implode("\n", $js_extra['triggers']);
+		}
 		$js_header.=$this->cObj->substituteMarkerArray($subparts['js_header'], $markerArray, '###|###');
 		/*
 		 * details tab
