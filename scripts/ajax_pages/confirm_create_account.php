@@ -13,7 +13,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 	// auto login the user
 	$loginData=array(
 		'uname'=>$user['username'],
-		//usernmae
+		//username
 		'uident'=>$user['password'],
 		//password
 		'status'=>'login'

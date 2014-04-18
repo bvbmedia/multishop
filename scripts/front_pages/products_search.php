@@ -463,6 +463,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($this->get['skeyword']) {
 				mslib_befe::storeProductsKeywordSearch($this->get['skeyword'], 1);
 			}
+			header('HTTP/1.0 404 Not Found');
 			$content.='<div class="main-heading"><h2>'.$this->pi_getLL('no_products_found_heading').'</h2></div>'."\n";
 			$content.='<p>'.$this->pi_getLL('no_products_found_description').'</p>'."\n";
 		}
