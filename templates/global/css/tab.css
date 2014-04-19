@@ -680,3 +680,7 @@ span.viewfront a:hover { background:#e2e2e2; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_shippingcost.tab_content fieldset fieldset table { margin-top:10px; }
 
 .redactor_box { float:left; width:639px; }
+
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul { list-style:none; margin:10px 0; padding:0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul li { background:none; margin:0; padding:0 0 5px; } 
+#tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2.tab_content ul li input[type="checkbox"] { margin:0 5px 0 0; }
