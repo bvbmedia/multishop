@@ -1128,7 +1128,7 @@ class mslib_befe {
 					$flat_product['products_model']=$row['products_model'];
 					$flat_product['products_description']=$row['products_description'];
 					$flat_product['products_shortdescription']=$row['products_shortdescription'];
-					$flat_product['products_extra_description']=$row['products_extra_description'];
+					//$flat_product['products_extra_description']=$row['products_extra_description'];
 					$flat_product['products_quantity']=$row['products_quantity'];
 					$flat_product['products_price']=$row['products_price'];
 					$flat_product['products_viewed']=$row['products_viewed'];
@@ -1432,7 +1432,6 @@ class mslib_befe {
 		  `sort_order` int(11) NOT NULL,
 		  `product_capital_price` decimal(24,14) NOT NULL,
 		  `page_uid` int(11) NOT NULL,
-		  `products_extra_description` text NOT NULL,
 		  `products_negative_keywords` varchar(254) NOT NULL,
 		  `products_meta_title` varchar(254) NOT NULL,
 		  `products_meta_description` varchar(254) NOT NULL,
