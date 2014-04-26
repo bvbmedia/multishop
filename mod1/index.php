@@ -29,7 +29,7 @@
 
 
 $LANG->includeLLFile('EXT:multishop/mod1/locallang.xml');
-require_once(PATH_t3lib . 'class.t3lib_scbase.php');
+//require_once(PATH_t3lib . 'class.t3lib_scbase.php');
 include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
 include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
 //require_once(PATH_t3lib . 'class.t3lib_iconworks.php');

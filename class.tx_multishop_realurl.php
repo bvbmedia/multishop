@@ -37,22 +37,6 @@ class tx_multishop_realurl {
 							'GETvar' => 'tx_multishop_pi1[previous_checkout_section]',
 						),
 					),
-					// delete-products
-					'delete-products'=>array(
-						array(
-							'GETvar' => 'delete_products_id',
-							'lookUpTable' => array(
-								'table' => 'tx_multishop_products_description',
-								'id_field' => 'products_id',
-								'alias_field' => 'products_name',
-								'useUniqueCache' => 1,
-								'useUniqueCache_conf' => array(
-									'strtolower' => 1,
-									'spaceCharacter' => '-',
-								),
-							),
-						),
-					),
 					// section
 					'section' => array (
 						array(
