@@ -7,7 +7,7 @@ $json_data=array();
 if ($this->post['req']=='init') {
 	// pre-defined product relation
 	$relations_data=array();
-	$where_relatives='((products_id = '.$pid.') or (relative_product_id =  '.$pid.'))';
+	$where_relatives='((products_id = '.$pid.') or (relative_product_id =  '.$pid.')) and relation_types=\'cross-sell\'';
 	$query=$GLOBALS['TYPO3_DB']->SELECTquery('products_id, relative_product_id', // SELECT ...
 		'tx_multishop_products_to_relative_products', // FROM ...
 		$where_relatives, // WHERE.
@@ -92,7 +92,7 @@ if ($this->post['req']=='init') {
 	}
 } else {
 	if ($this->post['req']=='search') {
-		$where_relatives='((products_id = '.$pid.') or (relative_product_id =  '.$pid.'))';
+		$where_relatives='((products_id = '.$pid.') or (relative_product_id =  '.$pid.')) and relation_types=\'cross-sell\'';
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('products_id, relative_product_id', // SELECT ...
 			'tx_multishop_products_to_relative_products', // FROM ...
 			$where_relatives, // WHERE.
@@ -200,7 +200,7 @@ if ($this->post['req']=='init') {
 					$data_pids[]=$pid;
 				}
 				foreach ($data_pids as $data_pid) {
-					$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$data_pid.') or (products_id = '.$data_pid.' AND relative_product_id = '.$this->post['pid'].'))';
+					$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$data_pid.') or (products_id = '.$data_pid.' AND relative_product_id = '.$this->post['pid'].')) and relation_types=\'cross-sell\'';
 					$query_checking=$GLOBALS['TYPO3_DB']->SELECTquery('count(*) as total', // SELECT ...
 						'tx_multishop_products_to_relative_products', // FROM ...
 						$where_relatives, // WHERE.
@@ -226,7 +226,7 @@ if ($this->post['req']=='init') {
 					}
 				}
 			} else {
-				$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$this->post['product_id'].') or (products_id = '.$this->post['product_id'].' AND relative_product_id = '.$this->post['pid'].'))';
+				$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$this->post['product_id'].') or (products_id = '.$this->post['product_id'].' AND relative_product_id = '.$this->post['pid'].')) and relation_types=\'cross-sell\'';
 				$query_checking=$GLOBALS['TYPO3_DB']->SELECTquery('count(*) as total', // SELECT ...
 					'tx_multishop_products_to_relative_products', // FROM ...
 					$where_relatives, // WHERE.
@@ -261,7 +261,7 @@ if ($this->post['req']=='init') {
 						$data_pids[]=$pid;
 					}
 					foreach ($data_pids as $data_pid) {
-						$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$data_pid.') or (products_id = '.$data_pid.' AND relative_product_id = '.$this->post['pid'].'))';
+						$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$data_pid.') or (products_id = '.$data_pid.' AND relative_product_id = '.$this->post['pid'].')) and relation_types=\'cross-sell\'';
 						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_relative_products', $where_relatives);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						if ($res) {
@@ -269,7 +269,7 @@ if ($this->post['req']=='init') {
 						}
 					}
 				} else {
-					$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$this->post['product_id'].') or (products_id = '.$this->post['product_id'].' AND relative_product_id = '.$this->post['pid'].'))';
+					$where_relatives='((products_id = '.$this->post['pid'].' AND relative_product_id = '.$this->post['product_id'].') or (products_id = '.$this->post['product_id'].' AND relative_product_id = '.$this->post['pid'].')) and relation_types=\'cross-sell\'';
 					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_relative_products', $where_relatives);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					if ($res) {
