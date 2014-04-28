@@ -49,6 +49,7 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number li { padding:0 3px; }
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number li span { font-weight:bold; } */
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number { padding:0 10px; }
+#msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number ul { margin:0; }
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number li { padding:2px 3px; }
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number li a,
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number li span { display:block; height:21px; border:1px solid #cdcdcd; font-weight:bold; padding:6px 6px 0; border-radius:4px; line-height:16px; }

@@ -29,6 +29,8 @@
 #tx_multishop_pi1_core .fullwidth_div .shadowbox { border:none; background:none; margin:0; padding:0; }  */
 #msadmin_section #msadmin_content #tx_multishop_pi1_core a { color:#c50000; text-decoration:none; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core a:hover { color:#c50000; text-decoration:underline; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor_toolbar li a { color:#333; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor_toolbar li a:hover { background:#c50000; color:#fff; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .main-heading { background:none; margin:0; padding:0; line-height:100%; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core h1,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core h2 { border:none; background:none; font:bold 16px Arial, Helvetica, sans-serif; color:#c50000; margin:0 0 10px; padding:0; line-height:100%; }
