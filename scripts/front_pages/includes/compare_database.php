@@ -191,6 +191,13 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		$str="select endtime from tx_multishop_categories limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE  `tx_multishop_categories` ADD `hide_in_menu` tinyint(1) default '0', ADD KEY `hide_in_menu` (hide_in_menu)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 		$str="select user_agent from tx_multishop_orders limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {

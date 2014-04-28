@@ -85,7 +85,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 		}
 	}
 	foreach ($subCats as $subCat) {
-		$categories[]=$subCat;
+		if (!$subCat['hide_in_menu']) {
+			$categories[]=$subCat;
+		}
 	}
 	if (!$p) {
 		if ($this->ms['MODULES']['PRODUCTS_LISTING_SPECIALS']) {

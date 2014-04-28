@@ -65,6 +65,11 @@ if ($this->post) {
 	$updateArray=array();
 	$updateArray['custom_settings']=$this->post['custom_settings'];
 	$updateArray['parent_id']=$this->post['parent_id'];
+	if (isset($this->post['hide_in_menu'])) {
+		$updateArray['hide_in_menu']=$this->post['hide_in_menu'];
+	} else {
+		$updateArray['hide_in_menu']=0;
+	}
 	$updateArray['categories_url']=$this->post['categories_url'];
 	$updateArray['status']=$this->post['status'];
 	if ($update_category_image) {
@@ -82,7 +87,7 @@ if ($this->post) {
 			$i_x++;
 		}
 	}
-	$updateArray['option_attributes']			=$option_attributes; */
+	$updateArray['option_attributes']=$option_attributes; */
 	$updateArray['option_attributes']='';
 	if ($_REQUEST['action']=='add_category') {
 		$updateArray['page_uid']=$this->showCatalogFromPage;
@@ -325,6 +330,12 @@ if ($this->post) {
 		$subpartArray['###CATEGORIES_ID_FOOTER0###']=$category['categories_id'];
 		$subpartArray['###PAGE_ACTION###']=$_REQUEST['action'];
 		$subpartArray['###CATEGORIES_ID_FOOTER1###']=$category['categories_id'];
+		$subpartArray['###LABEL_HIDE_IN_MENU###']=$this->pi_getLL('hide_in_menu', 'Hide in menu');
+		if ($category['hide_in_menu'] == 1) {
+			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='checked="checked"';
+		} else {
+			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='';
+		}
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'])) {
 			$params=array(

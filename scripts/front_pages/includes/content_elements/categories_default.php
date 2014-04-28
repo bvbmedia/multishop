@@ -74,136 +74,140 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 				$content.='<div id="multishop_catbox_'.$this->cObj->data['uid'].'">
 					<ul id="catalog_sortable_'.$this->cObj->data['uid'].'">';
 				foreach ($catlist as $cat) {
-					// level 0
-					// get all cats to generate multilevel fake url
-					$nested_level=1;
-					if ($cat['categories_url']) {
-						$parsed_url=@parse_url($cat['categories_url']);
-						if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
-							$target=" target=\"_blank\"";
+					if (!$cat['hide_in_menu']) {
+						// level 0
+						// get all cats to generate multilevel fake url
+						$nested_level=1;
+						if ($cat['categories_url']) {
+							$parsed_url=@parse_url($cat['categories_url']);
+							if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
+								$target=" target=\"_blank\"";
+							} else {
+								$target='';
+							}
+							$link=$cat['categories_url'];
 						} else {
-							$target='';
-						}
-						$link=$cat['categories_url'];
-					} else {
-						$target="";
-						$level=0;
-						$cats=mslib_fe::Crumbar($cat['categories_id']);
-						$cats=array_reverse($cats);
-						$where='';
-						if (count($cats)>0) {
-							foreach ($cats as $item) {
-								$where.="categories_id[".$level."]=".$item['id']."&";
-								$level++;
+							$target="";
+							$level=0;
+							$cats=mslib_fe::Crumbar($cat['categories_id']);
+							$cats=array_reverse($cats);
+							$where='';
+							if (count($cats)>0) {
+								foreach ($cats as $item) {
+									$where.="categories_id[".$level."]=".$item['id']."&";
+									$level++;
+								}
+								$where=substr($where, 0, (strlen($where)-1));
+								$where.='&';
 							}
-							$where=substr($where, 0, (strlen($where)-1));
-							$where.='&';
+							// get all cats to generate multilevel fake url eof
+							$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 						}
-						// get all cats to generate multilevel fake url eof					
-						$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-					}
-					$categories_name=htmlspecialchars($cat['categories_name']);
-					$meta_description=htmlspecialchars($cat['meta_description']);
-					$actifsub=0;
-					$act=0;
-					$hasChild=0;
-					if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
-						if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
-							$act=1;
+						$categories_name=htmlspecialchars($cat['categories_name']);
+						$meta_description=htmlspecialchars($cat['meta_description']);
+						$actifsub=0;
+						$act=0;
+						$hasChild=0;
+						if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
+							if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
+								$act=1;
+							}
+							if ($user_crumbar[($nested_level+1)]) {
+								$actifsub=1;
+							}
 						}
-						if ($user_crumbar[($nested_level+1)]) {
-							$actifsub=1;
+						if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
+							$hasChild=1;
 						}
-					}
-					if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
-						$hasChild=1;
-					}
-					$content.='<li';
-					if ($this->ADMIN_USER) {
-						$content.=' id="sortable_maincat_'.$cat['categories_id'].'"';
-					}
-					$this->class=array();
-					if ($hasChild) {
-						$this->class[]='hasChild';
-					}
-					if ($act) {
-						$this->class[]='active';
-					}
-					if ($actifsub) {
-						$this->class[]='actifsub active';
-					}
-					$content.=' class="'.implode(' ', $this->class).'"><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
-					// level 0 eof
-					if ($this->maxDEPTH>$nested_level or ($actifsub or $act)) {
-						$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
-						if (count($catlist2)>0) {
-							// level 1
-							$content.='<ul>';
-							foreach ($catlist2 as $cat) {
-								$nested_level=2;
-								if ($cat['categories_url']) {
-									$parsed_url=@parse_url($cat['categories_url']);
-									if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
-										$target=" target=\"_blank\"";
-									} else {
-										$target='';
-									}
-									$link=$cat['categories_url'];
-								} else {
-									$target="";
-									// get all cats to generate multilevel fake url
-									$level=0;
-									$cats=mslib_fe::Crumbar($cat['categories_id']);
-									$cats=array_reverse($cats);
-									$where='';
-									if (count($cats)>0) {
-										foreach ($cats as $item) {
-											$where.="categories_id[".$level."]=".$item['id']."&";
-											$level++;
+						$content.='<li';
+						if ($this->ADMIN_USER) {
+							$content.=' id="sortable_maincat_'.$cat['categories_id'].'"';
+						}
+						$this->class=array();
+						if ($hasChild) {
+							$this->class[]='hasChild';
+						}
+						if ($act) {
+							$this->class[]='active';
+						}
+						if ($actifsub) {
+							$this->class[]='actifsub active';
+						}
+						$content.=' class="'.implode(' ', $this->class).'"><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
+						// level 0 eof
+						if ($this->maxDEPTH>$nested_level or ($actifsub or $act)) {
+							$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
+							if (count($catlist2)>0) {
+								// level 1
+								$content.='<ul>';
+								foreach ($catlist2 as $cat) {
+									if (!$cat['hide_in_menu']) {
+										$nested_level=2;
+										if ($cat['categories_url']) {
+											$parsed_url=@parse_url($cat['categories_url']);
+											if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
+												$target=" target=\"_blank\"";
+											} else {
+												$target='';
+											}
+											$link=$cat['categories_url'];
+										} else {
+											$target="";
+											// get all cats to generate multilevel fake url
+											$level=0;
+											$cats=mslib_fe::Crumbar($cat['categories_id']);
+											$cats=array_reverse($cats);
+											$where='';
+											if (count($cats)>0) {
+												foreach ($cats as $item) {
+													$where.="categories_id[".$level."]=".$item['id']."&";
+													$level++;
+												}
+												$where=substr($where, 0, (strlen($where)-1));
+												$where.='&';
+											}
+											// get all cats to generate multilevel fake url eof
+											$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 										}
-										$where=substr($where, 0, (strlen($where)-1));
-										$where.='&';
-									}
-									// get all cats to generate multilevel fake url eof					
-									$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
+										$categories_name=htmlspecialchars($cat['categories_name']);
+										$meta_description=htmlspecialchars($cat['meta_description']);
+										$actifsub=0;
+										$act=0;
+										$hasChild=0;
+										if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
+											if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
+												$act=1;
+											}
+											if ($user_crumbar[($nested_level+1)]) {
+												$actifsub=1;
+											}
+										}
+										if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
+											$hasChild=1;
+										}
+										$this->class=array();
+										if ($hasChild) {
+											$this->class[]='hasChild';
+										}
+										if ($act) {
+											$this->class[]='active';
+										}
+										if ($actifsub) {
+											$this->class[]='actifsub active';
+										}
+										$content.='<li class="'.implode(' ', $this->class).'">
+										<a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'>
+											<span>'.$categories_name.'</span>
+										</a>';
+										$content.='</li>';
+									} // hide in menu
 								}
-								$categories_name=htmlspecialchars($cat['categories_name']);
-								$meta_description=htmlspecialchars($cat['meta_description']);
-								$actifsub=0;
-								$act=0;
-								$hasChild=0;
-								if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
-									if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
-										$act=1;
-									}
-									if ($user_crumbar[($nested_level+1)]) {
-										$actifsub=1;
-									}
-								}
-								if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
-									$hasChild=1;
-								}
-								$this->class=array();
-								if ($hasChild) {
-									$this->class[]='hasChild';
-								}
-								if ($act) {
-									$this->class[]='active';
-								}
-								if ($actifsub) {
-									$this->class[]='actifsub active';
-								}
-								$content.='<li class="'.implode(' ', $this->class).'">
-								<a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'>
-									<span>'.$categories_name.'</span>
-								</a>';
-								$content.='</li>';
+								$content.='</ul>';
+								// level 1 eof
 							}
-							$content.='</ul>';
-							// level 1 eof
 						}
-					}
-					$content.='</li>';
+						$content.='</li>';
+					} // hide in menu
 				}
 				$content.='</ul></div>';
 				if ($this->ADMIN_USER) {
@@ -252,83 +256,85 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 					$item_counter=0;
 					$item_counter_accordion=0;
 					foreach ($catlist as $cat) {
-						$tmpcontent='';
-						$item_counter++;
-						// level 0
-						// get all cats to generate multilevel fake url
-						$nested_level=0;
-						$level=0;
-						if ($cat['categories_url']) {
-							$parsed_url=@parse_url($cat['categories_url']);
-							if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
-								$target=" target=\"_blank\"";
-							} else {
-								$target='';
-							}
-							$link=$cat['categories_url'];
-						} else {
-							$target="";
-							$cats=mslib_fe::Crumbar($cat['categories_id']);
-							$cats=array_reverse($cats);
-							$where='';
-							if (count($cats)>0) {
-								foreach ($cats as $item) {
-									$where.="categories_id[".$level."]=".$item['id']."&";
-									$level++;
+						if (!$cat['hide_in_menu']) {
+							$tmpcontent='';
+							$item_counter++;
+							// level 0
+							// get all cats to generate multilevel fake url
+							$nested_level=0;
+							$level=0;
+							if ($cat['categories_url']) {
+								$parsed_url=@parse_url($cat['categories_url']);
+								if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
+									$target=" target=\"_blank\"";
+								} else {
+									$target='';
 								}
-								$where=substr($where, 0, (strlen($where)-1));
-								$where.='&';
+								$link=$cat['categories_url'];
+							} else {
+								$target="";
+								$cats=mslib_fe::Crumbar($cat['categories_id']);
+								$cats=array_reverse($cats);
+								$where='';
+								if (count($cats)>0) {
+									foreach ($cats as $item) {
+										$where.="categories_id[".$level."]=".$item['id']."&";
+										$level++;
+									}
+									$where=substr($where, 0, (strlen($where)-1));
+									$where.='&';
+								}
+								// get all cats to generate multilevel fake url eof
+								$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 							}
-							// get all cats to generate multilevel fake url eof					
-							$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-						}
-						$categories_name=htmlspecialchars($cat['categories_name']);
-						$meta_description=htmlspecialchars($cat['meta_description']);
-						$actifsub=0;
-						$act=0;
-						$hasChild=0;
-						if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
-							if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
-								$act=1;
+							$categories_name=htmlspecialchars($cat['categories_name']);
+							$meta_description=htmlspecialchars($cat['meta_description']);
+							$actifsub=0;
+							$act=0;
+							$hasChild=0;
+							if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
+								if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
+									$act=1;
+								}
+								if ($user_crumbar[($nested_level+1)]) {
+									$actifsub=1;
+								}
 							}
-							if ($user_crumbar[($nested_level+1)]) {
-								$actifsub=1;
+							if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
+								$hasChild=1;
 							}
-						}
-						if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
-							$hasChild=1;
-						}
-						$tmpcontent.='<li';
-						$class='';
-						$class_h2='';
-						$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
-						if (count($catlist2)>0) {
-							$class_h2='main';
-							$num=$item_counter_accordion;
-						} else {
-							$class_h2="main";
-						}
-						if ($this->ADMIN_USER) {
-							$tmpcontent.=' id="sortable_maincat_'.$cat['categories_id'].'"';
-						}
-						$class.='item_'.$item_counter.' ';
-						$this->class=array();
-						if ($hasChild) {
-							$this->class[]='hasChild';
-						}
-						if ($act) {
-							$this->class[]='active';
-						}
-						if ($actifsub) {
-							$this->class[]='actifsub active';
-						}
-						$class.=' '.implode(' ', $this->class);
-						trim($class);
-						$label='';
-						$tmpcontent.=(($class) ? ' class="'.trim($class).'"' : '').'><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$label.''.$categories_name.'</span></a>';
-						// level 0 eof
-						$tmpcontent.='</li>';
-						$items[]=$tmpcontent;
+							$tmpcontent.='<li';
+							$class='';
+							$class_h2='';
+							$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
+							if (count($catlist2)>0) {
+								$class_h2='main';
+								$num=$item_counter_accordion;
+							} else {
+								$class_h2="main";
+							}
+							if ($this->ADMIN_USER) {
+								$tmpcontent.=' id="sortable_maincat_'.$cat['categories_id'].'"';
+							}
+							$class.='item_'.$item_counter.' ';
+							$this->class=array();
+							if ($hasChild) {
+								$this->class[]='hasChild';
+							}
+							if ($act) {
+								$this->class[]='active';
+							}
+							if ($actifsub) {
+								$this->class[]='actifsub active';
+							}
+							$class.=' '.implode(' ', $this->class);
+							trim($class);
+							$label='';
+							$tmpcontent.=(($class) ? ' class="'.trim($class).'"' : '').'><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$label.''.$categories_name.'</span></a>';
+							// level 0 eof
+							$tmpcontent.='</li>';
+							$items[]=$tmpcontent;
+						} // hide in menu
 					}
 					$content.='<div id="multishop_catbox_'.$this->cObj->data['uid'].'">';
 					$del_num=0;
@@ -372,166 +378,98 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 				$item_counter=0;
 				$item_counter_accordion=0;
 				foreach ($catlist as $cat) {
-					$item_counter++;
-					// level 0
-					// get all cats to generate multilevel fake url
-					$nested_level=0;
-					$level=0;
-					if ($cat['categories_url']) {
-						$parsed_url=@parse_url($cat['categories_url']);
-						if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
-							$target=" target=\"_blank\"";
-						} else {
-							$target='';
-						}
-						$link=$cat['categories_url'];
-					} else {
-						$target="";
-						$cats=mslib_fe::Crumbar($cat['categories_id']);
-						$cats=array_reverse($cats);
-						$where='';
-						if (count($cats)>0) {
-							foreach ($cats as $item) {
-								$where.="categories_id[".$level."]=".$item['id']."&";
-								$level++;
+					if (!$cat['hide_in_menu']) {
+						$item_counter++;
+						// level 0
+						// get all cats to generate multilevel fake url
+						$nested_level=0;
+						$level=0;
+						if ($cat['categories_url']) {
+							$parsed_url=@parse_url($cat['categories_url']);
+							if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
+								$target=" target=\"_blank\"";
+							} else {
+								$target='';
 							}
-							$where=substr($where, 0, (strlen($where)-1));
-							$where.='&';
+							$link=$cat['categories_url'];
+						} else {
+							$target="";
+							$cats=mslib_fe::Crumbar($cat['categories_id']);
+							$cats=array_reverse($cats);
+							$where='';
+							if (count($cats)>0) {
+								foreach ($cats as $item) {
+									$where.="categories_id[".$level."]=".$item['id']."&";
+									$level++;
+								}
+								$where=substr($where, 0, (strlen($where)-1));
+								$where.='&';
+							}
+							// get all cats to generate multilevel fake url eof
+							$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 						}
-						// get all cats to generate multilevel fake url eof					
-						$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-					}
-					if ($cat['categories_url']) {
-						$link=$cat['categories_url'];
-					}
-					$actifsub=0;
-					$act=0;
-					$hasChild=0;
-					if (is_array($user_crumbar) && $user_crumbar[$nested_level]['id']==$cat['categories_id']) {
-						if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
-							$act=1;
+						if ($cat['categories_url']) {
+							$link=$cat['categories_url'];
 						}
-						if ($user_crumbar[($nested_level+1)]) {
-							$actifsub=1;
+						$actifsub=0;
+						$act=0;
+						$hasChild=0;
+						if (is_array($user_crumbar) && $user_crumbar[$nested_level]['id']==$cat['categories_id']) {
+							if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
+								$act=1;
+							}
+							if ($user_crumbar[($nested_level+1)]) {
+								$actifsub=1;
+							}
 						}
-					}
-					if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
-						$hasChild=1;
-					}
-					$categories_name=htmlspecialchars($cat['categories_name']);
-					$meta_description=htmlspecialchars($cat['meta_description']);
-					$content.='<li ';
-					$class='';
-					$class_h2='';
-					$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
-					if (count($catlist2)>0) {
-						$class_h2='main';
-						$num=$item_counter_accordion;
-					} else {
-						$class_h2="main";
-					}
-					if ($this->ADMIN_USER) {
-						$content.='id="sortable_maincat_'.$cat['categories_id'].'" ';
-					}
-					$class.='item_'.$item_counter.' ';
-					$this->class=array();
-					if ($hasChild) {
-						$this->class[]='hasChild';
-					}
-					if ($act) {
-						$this->class[]='active';
-					}
-					if ($actifsub) {
-						$this->class[]='actifsub active';
-					}
-					$class=trim($class.' '.implode(' ', $this->class));
-					$content.='class="'.$class.'"><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
-					/*
-										if ($actifsub or $act)  {
-											$class.='active ';
-											if (count($catlist2) > 0){
-												$active_accordion = 'bottomAccordion.activate($$("#vertical_container .accordion_toggle")['.$num.']);';
-											}
-										}
-										$content.=(($class)?'class="'.trim($class).'"':'').'><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
-					*/
-					// level 0 eof
-					if ($this->maxDEPTH>$nested_level) {
+						if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
+							$hasChild=1;
+						}
+						$categories_name=htmlspecialchars($cat['categories_name']);
+						$meta_description=htmlspecialchars($cat['meta_description']);
+						$content.='<li ';
+						$class='';
+						$class_h2='';
+						$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
 						if (count($catlist2)>0) {
-							// level 1							
-							$content.='<ul>';
-							foreach ($catlist2 as $cat) {
-								$nested_level=1;
-								// get all cats to generate multilevel fake url
-								$level=0;
-								if ($cat['categories_url']) {
-									$parsed_url=@parse_url($cat['categories_url']);
-									if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
-										$target=" target=\"_blank\"";
-									} else {
-										$target='';
-									}
-									$link=$cat['categories_url'];
-								} else {
-									$target="";
-									$cats=mslib_fe::Crumbar($cat['categories_id']);
-									$cats=array_reverse($cats);
-									$where='';
-									if (count($cats)>0) {
-										foreach ($cats as $item) {
-											$where.="categories_id[".$level."]=".$item['id']."&";
-											$level++;
-										}
-										$where=substr($where, 0, (strlen($where)-1));
-										$where.='&';
-									}
-									// get all cats to generate multilevel fake url eof					
-									$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-								}
-								if ($cat['categories_url']) {
-									$parsed_url=@parse_url($cat['categories_url']);
-									if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
-										$target=" target=\"_blank\"";
-									} else {
-										$target='';
-									}
-									$link=$cat['categories_url'];
-								}
-								$categories_name=htmlspecialchars($cat['categories_name']);
-								$meta_description=htmlspecialchars($cat['meta_description']);
-								$actifsub=0;
-								$act=0;
-								$hasChild=0;
-								if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
-									if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
-										$act=1;
-									}
-									if ($user_crumbar[($nested_level+1)]) {
-										$actifsub=1;
-									}
-								}
-								if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
-									$hasChild=1;
-								}
-								$catlist3=mslib_fe::getSubcatsOnly($cat['categories_id']);
-								//level submenu 2 start
-								if (count($catlist3)>0 and $this->maxDEPTH>2) {
-									$this->class=array();
-									if ($hasChild) {
-										$this->class[]='hasChild';
-									}
-									if ($act) {
-										$this->class[]='active';
-									}
-									if ($actifsub) {
-										$this->class[]='actifsub active';
-									}
-									$content.='<li class="'.implode(' ', $this->class).'">
-									<a href="'.$link.'" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>
-									<ul>';
-									$cat_level_3="";
-									foreach ($catlist3 as $cat) {
-										$nested_level=2;
+							$class_h2='main';
+							$num=$item_counter_accordion;
+						} else {
+							$class_h2="main";
+						}
+						if ($this->ADMIN_USER) {
+							$content.='id="sortable_maincat_'.$cat['categories_id'].'" ';
+						}
+						$class.='item_'.$item_counter.' ';
+						$this->class=array();
+						if ($hasChild) {
+							$this->class[]='hasChild';
+						}
+						if ($act) {
+							$this->class[]='active';
+						}
+						if ($actifsub) {
+							$this->class[]='actifsub active';
+						}
+						$class=trim($class.' '.implode(' ', $this->class));
+						$content.='class="'.$class.'"><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
+						/*
+											if ($actifsub or $act)  {
+												$class.='active ';
+												if (count($catlist2) > 0){
+													$active_accordion = 'bottomAccordion.activate($$("#vertical_container .accordion_toggle")['.$num.']);';
+												}
+											}
+											$content.=(($class)?'class="'.trim($class).'"':'').'><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
+						*/
+						// level 0 eof
+						if ($this->maxDEPTH>$nested_level) {
+							if (count($catlist2)>0) {
+								// level 1
+								$content.='<ul>';
+								foreach ($catlist2 as $cat) {
+									if (!$cat['hide_in_menu']) {
+										$nested_level=1;
 										// get all cats to generate multilevel fake url
 										$level=0;
 										if ($cat['categories_url']) {
@@ -555,7 +493,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 												$where=substr($where, 0, (strlen($where)-1));
 												$where.='&';
 											}
-											// get all cats to generate multilevel fake url eof					
+											// get all cats to generate multilevel fake url eof
 											$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
 										}
 										if ($cat['categories_url']) {
@@ -583,40 +521,114 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 										if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
 											$hasChild=1;
 										}
-										$this->class=array();
-										if ($hasChild) {
-											$this->class[]='hasChild';
+										$catlist3=mslib_fe::getSubcatsOnly($cat['categories_id']);
+										//level submenu 2 start
+										if (count($catlist3)>0 and $this->maxDEPTH>2) {
+											$this->class=array();
+											if ($hasChild) {
+												$this->class[]='hasChild';
+											}
+											if ($act) {
+												$this->class[]='active';
+											}
+											if ($actifsub) {
+												$this->class[]='actifsub active';
+											}
+											$content.='<li class="'.implode(' ', $this->class).'">
+											<a href="'.$link.'" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>
+											<ul>';
+											$cat_level_3="";
+											foreach ($catlist3 as $cat) {
+												if (!$cat['hide_in_menu']) {
+													$nested_level=2;
+													// get all cats to generate multilevel fake url
+													$level=0;
+													if ($cat['categories_url']) {
+														$parsed_url=@parse_url($cat['categories_url']);
+														if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
+															$target=" target=\"_blank\"";
+														} else {
+															$target='';
+														}
+														$link=$cat['categories_url'];
+													} else {
+														$target="";
+														$cats=mslib_fe::Crumbar($cat['categories_id']);
+														$cats=array_reverse($cats);
+														$where='';
+														if (count($cats)>0) {
+															foreach ($cats as $item) {
+																$where.="categories_id[".$level."]=".$item['id']."&";
+																$level++;
+															}
+															$where=substr($where, 0, (strlen($where)-1));
+															$where.='&';
+														}
+														// get all cats to generate multilevel fake url eof
+														$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
+													}
+													if ($cat['categories_url']) {
+														$parsed_url=@parse_url($cat['categories_url']);
+														if ($parsed_url['host'] and ($parsed_url['host']<>$this->server['HTTP_HOST'])) {
+															$target=" target=\"_blank\"";
+														} else {
+															$target='';
+														}
+														$link=$cat['categories_url'];
+													}
+													$categories_name=htmlspecialchars($cat['categories_name']);
+													$meta_description=htmlspecialchars($cat['meta_description']);
+													$actifsub=0;
+													$act=0;
+													$hasChild=0;
+													if ($user_crumbar[$nested_level]['id']==$cat['categories_id']) {
+														if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
+															$act=1;
+														}
+														if ($user_crumbar[($nested_level+1)]) {
+															$actifsub=1;
+														}
+													}
+													if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
+														$hasChild=1;
+													}
+													$this->class=array();
+													if ($hasChild) {
+														$this->class[]='hasChild';
+													}
+													if ($act) {
+														$this->class[]='active';
+													}
+													if ($actifsub) {
+														$this->class[]='actifsub active';
+													}
+													$cat_level_3.='<li class="'.implode(' ', $this->class).'"><a href="'.$link.'" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a></li>';
+												} // hide in menu
+											}
+											$content.=$cat_level_3.'</ul>';
+										} else {
+											$this->class=array();
+											if ($hasChild) {
+												$this->class[]='hasChild';
+											}
+											if ($act) {
+												$this->class[]='active';
+											}
+											if ($actifsub) {
+												$this->class[]='actifsub active';
+											}
+											$content.='<li class="'.implode(' ', $this->class).'"><a href="'.$link.'" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
 										}
-										if ($act) {
-											$this->class[]='active';
-										}
-										if ($actifsub) {
-											$this->class[]='actifsub active';
-										}
-										$cat_level_3.='<li class="'.implode(' ', $this->class).'"><a href="'.$link.'" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a></li>';
-									}
-									$content.=$cat_level_3.'</ul>';
-								} else {
-									$this->class=array();
-									if ($hasChild) {
-										$this->class[]='hasChild';
-									}
-									if ($act) {
-										$this->class[]='active';
-									}
-									if ($actifsub) {
-										$this->class[]='actifsub active';
-									}
-									$content.='<li class="'.implode(' ', $this->class).'"><a href="'.$link.'" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
+										//level submenu 2 eof
+										$content.='</li>';
+									} // hide in menu
 								}
-								//level submenu 2 eof
-								$content.='</li>';
+								$content.='</ul>';
+								// level 1 eof
 							}
-							$content.='</ul>';
-							// level 1 eof
 						}
-					}
-					$content.='</li>';
+						$content.='</li>';
+					} // hide in menu
 				}
 				$content.='</ul></div>';
 				if ($this->ADMIN_USER) {
