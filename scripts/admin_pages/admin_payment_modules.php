@@ -4,31 +4,19 @@ if (!defined('TYPO3_MODE')) {
 }
 $active_shop=mslib_fe::getActiveShop();
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script language="javascript" type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/tiny_mce/tinymce.min.js"></script>
-<script language="javascript" type="text/javascript">
-tinyMCE.init({
-        // General options
-        mode : "textareas",
-        plugins: [
-			"advlist autolink lists link image charmap print preview anchor",
-			"searchreplace visualblocks code fullscreen",
-			"insertdatetime media table contextmenu paste"
-    	],
-		toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-        document_base_url : "'.$this->FULL_HTTP_URL.'",
-        relative_urls : false,
-        convert_urls : false,
-        height : 300,
-        editor_selector : "mceEditor",
-        apply_source_formatting : true,
-        //cleanup : false,
-        accessibility_warnings : false,
-        verify_html : false,
-	   forced_root_block : false,
-	   force_br_newlines : true,
-	   force_p_newlines : false
-});
-jQuery(document).ready(function($){
+<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
+<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$(\'.mceEditor\').redactor({
+		focus: false,
+		clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+		minHeight:\'400\'
+	});
 	$("#add_payment_method").click(function(e){
 		e.preventDefault();
 		$(\'#admin_payment_methods_list\').slideToggle(\'slow\', function(){});
