@@ -3601,7 +3601,7 @@ class mslib_fe {
 		if (!is_numeric($relative_product_id)) {
 			return false;
 		}
-		$where_relatives='((products_id = '.$pid.' AND relative_product_id =  '.$relative_product_id.') or (products_id = '.$relative_product_id.' AND relative_product_id =  '.$pid.'))';
+		$where_relatives='((products_id = '.$pid.' AND relative_product_id =  '.$relative_product_id.') or (products_id = '.$relative_product_id.' AND relative_product_id =  '.$pid.')) and relation_types=\'cross-sell\'';
 		$query_checking=$GLOBALS['TYPO3_DB']->SELECTquery('count(*) as total', // SELECT ...
 			'tx_multishop_products_to_relative_products', // FROM ...
 			$where_relatives, // WHERE.
