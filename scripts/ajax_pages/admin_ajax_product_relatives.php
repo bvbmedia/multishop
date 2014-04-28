@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$pid=intval($this->post['pid']);
+$pid=(int) $this->post['pid'];
 $json_data=array();
 if ($this->post['req']=='init') {
 	// pre-defined product relation
