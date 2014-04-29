@@ -511,7 +511,11 @@ class tx_mslib_user {
 		$insertArray['city']						= $this->city;
 		$insertArray['telephone']					= $this->telephone;
 		$insertArray['mobile']						= $this->mobile;
-		$insertArray['tx_multishop_newsletter']		= $this->newsletter;
+		if (isset($this->newsletter) && !empty($this->newsletter)) {
+			$insertArray['tx_multishop_newsletter']		= $this->newsletter;
+		} else {
+			$insertArray['tx_multishop_newsletter']		= '';
+		}
 		$insertArray['disable']						= 1;
 		$insertArray['tstamp']						= time();
 		$insertArray['usergroup']					= $this->ref->conf['fe_customer_usergroup'];
@@ -519,7 +523,11 @@ class tx_mslib_user {
 		$insertArray['tx_multishop_code']			= md5(uniqid('',TRUE));
 		$insertArray['crdate']						= time();
 		$insertArray['page_uid']					= $this->ref->shop_pid;
-		$insertArray['http_referer']				= $this->ref->cookie['HTTP_REFERER'];	
+		if (isset($this->ref->cookie['HTTP_REFERER']) && !empty($this->ref->cookie['HTTP_REFERER'])) {
+			$insertArray['http_referer']				= $this->ref->cookie['HTTP_REFERER'];
+		} else {
+			$insertArray['http_referer']				= '';
+		}
 		$insertArray['ip_address']					= $this->ref->REMOTE_ADDR;	
 		if (is_array($this->customFields) and count($this->customFields)) {
 			foreach ($this->customFields as $key => $val) {
