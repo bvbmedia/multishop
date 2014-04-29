@@ -1254,13 +1254,25 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray['payment_method_costs']=$address['payment_method_costs'];
 			$insertArray['hash']=md5(uniqid('', TRUE));
 			$insertArray['store_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
-			$insertArray['customer_currency']=$this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'];
-			$insertArray['currency_rate']=$this->cookie['currency_rate'];
+			if (isset($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3']) && !empty($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'])) {
+				$insertArray['customer_currency']=$this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'];
+			} else {
+				$insertArray['customer_currency']='';
+			}
+			if (isset($this->cookie['currency_rate']) && !empty($this->cookie['currency_rate'])) {
+				$insertArray['currency_rate']=$this->cookie['currency_rate'];
+			} else {
+				$insertArray['currency_rate']=1;
+			}
 			$insertArray['language_id']=$this->sys_language_uid;
 			// get default orders status
 			$status=mslib_fe::getDefaultOrdersStatus($this->sys_language_uid);
 			$insertArray['status']=$status['id'];
-			$insertArray['http_referer']=$this->cookie['HTTP_REFERER'];
+			if (isset($this->cookie['HTTP_REFERER']) && !empty($this->cookie['HTTP_REFERER'])) {
+				$insertArray['http_referer']=$this->cookie['HTTP_REFERER'];
+			} else {
+				$insertArray['http_referer']='';
+			}
 			$insertArray['ip_address']=$this->server['REMOTE_ADDR'];
 			$insertArray['user_agent']=$this->server['HTTP_USER_AGENT'];
 			if (isset($address['expected_delivery_date'])) {
@@ -1319,9 +1331,21 @@ class tx_mslib_cart extends tslib_pibase {
 						}
 						// get all cats eof						
 						$insertArray['manufacturers_id']=$value['manufacturers_id'];
-						$insertArray['order_unit_id']=$value['order_unit_id'];
-						$insertArray['order_unit_name']=$value['order_unit_name'];
-						$insertArray['order_unit_code']=$value['order_unit_code'];
+						if (isset($value['order_unit_id']) && !empty($value['order_unit_id'])) {
+							$insertArray['order_unit_id']=$value['order_unit_id'];
+						} else {
+							$insertArray['order_unit_id']='';
+						}
+						if (isset($value['order_unit_name']) && !empty($value['order_unit_name'])) {
+							$insertArray['order_unit_name']=$value['order_unit_name'];
+						} else {
+							$insertArray['order_unit_name']='';
+						}
+						if (isset($value['order_unit_code']) && !empty($value['order_unit_code'])) {
+							$insertArray['order_unit_code']=$value['order_unit_code'];
+						} else {
+							$insertArray['order_unit_code']='';
+						}
 						$insertArray['qty']=$value['qty'];
 						$insertArray['products_tax']=($value['tax_rate']*100);
 						$insertArray['products_name']=$value['products_name'];
