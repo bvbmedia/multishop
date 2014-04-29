@@ -1330,7 +1330,11 @@ class tx_mslib_cart extends tslib_pibase {
 							}
 						}
 						// get all cats eof						
-						$insertArray['manufacturers_id']=$value['manufacturers_id'];
+						if (isset($value['manufacturers_id']) && !empty($value['manufacturers_id'])) {
+							$insertArray['manufacturers_id']=$value['manufacturers_id'];
+						} else {
+							$insertArray['manufacturers_id']='';
+						}
 						if (isset($value['order_unit_id']) && !empty($value['order_unit_id'])) {
 							$insertArray['order_unit_id']=$value['order_unit_id'];
 						} else {
