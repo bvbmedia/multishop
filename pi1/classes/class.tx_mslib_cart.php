@@ -1278,7 +1278,7 @@ class tx_mslib_cart extends tslib_pibase {
 			if (isset($address['expected_delivery_date'])) {
 				$insertArray['expected_delivery_date']=$address['expected_delivery_date'];
 			}
-			//$insertArray['orders_tax_data']			=	serialize($orders_tax);			
+			//$insertArray['orders_tax_data']			=	serialize($orders_tax);
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'])) {
 				// hook
 				$params=array(
@@ -1292,7 +1292,7 @@ class tx_mslib_cart extends tslib_pibase {
 			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			// now add the order eof		
+			// now add the order eof
 			$orders_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostProc'])) {
 				// hook
