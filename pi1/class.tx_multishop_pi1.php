@@ -221,7 +221,8 @@ class tx_multishop_pi1 extends tslib_pibase {
 					// the reason why we have to return the header tags as content is because this section is already mapped to the head tag
 					// if we put it in additionalHeaderData the page.headerData order is ignored and it can give annoying conflicts	
 					//$GLOBALS['TSFE']->additionalHeaderData[]= mslib_fe::processmeta($meta_tags_html);
-					return mslib_fe::processmeta($meta_tags_html);
+					//return mslib_fe::processmeta($meta_tags_html);
+					$GLOBALS['TSFE']->additionalHeaderData[]= mslib_fe::processmeta($meta_tags_html);
 				}				
 			break;
 			case 'basket':
