@@ -126,12 +126,20 @@ plugin.tx_multishop_pi1 {
 #page.headerData.2002 = USER
 
 # we have to wait until TYPO3 pagerender works with USER_INT again.
-page.headerData.2002 = USER_INT
-page.headerData.2002 =< plugin.tx_multishop_pi1
-page.headerData.2002 {
-    userFunc = tx_multishop_pi1->main
+#page.headerData.2002 = USER_INT
+#page.headerData.2002 =< plugin.tx_multishop_pi1
+#page.headerData.2002 {
+#    userFunc = tx_multishop_pi1->main
+#    method=meta_tags
+#}
+
+# TYPO3 6.2 LTS loads the page.headerData USER_INT too late (body content elements are processed first), so causes a bug. Temporary workaround is to load through page object.
+page.1=USER_INT
+page.1=< plugin.tx_multishop_pi1
+page.1 {
+    userFunc=tx_multishop_pi1->main
     method=meta_tags
-} 
+}
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION) EOF
 # LOAD THE AJAX SERVER
@@ -505,10 +513,17 @@ multishop_admin_page {
 
   includeCSS.adminDashboard=EXT:multishop/templates/admin_dashboard/css/core.css
   # loading application top (meta tags + admin panel)
-  headerData.2002 < page.headerData.2002
+  1=USER_INT
+  1=< plugin.tx_multishop_pi1
+  1 {
+    userFunc=tx_multishop_pi1->main
+    method=meta_tags
+  }
+  #headerData.2002 < page.headerData.2002
   # copy rzcolorbox CSS
   headerData.1441 < page.headerData.1441
 }
+
 [globalVar = LIT:1 = {$plugin.multishop.hideFacebookInAdminInterface}]
 # remove facebook from admin interface
 multishop_admin_page.10.marks.FACEBOOK=
