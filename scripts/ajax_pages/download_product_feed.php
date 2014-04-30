@@ -379,7 +379,22 @@ if ($this->get['feed_hash']) {
 							$cats=array_reverse($cats);
 							$product['categories_crum']=$cats;
 							// some parts are not available in flat table and vice versa so lets merge them
-							$records[]=array_merge($product, $row);
+							/*
+							 * exclude products from feeds
+							 */
+							$feed_id=$feed['id'];
+							$in_feed_exclude_list=false;
+							if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['products_id'])) {
+								$in_feed_exclude_list=true;
+							}
+							if (!$in_feed_exclude_list) {
+								if (mslib_fe::isItemInFeedsExcludeList($feed_id, $product['categories_id'], 'categories')) {
+									$in_feed_exclude_list=true;
+								}
+							}
+							if (!$in_feed_exclude_list) {
+								$records[]=array_merge($product, $row);
+							}
 						}
 					}
 				}

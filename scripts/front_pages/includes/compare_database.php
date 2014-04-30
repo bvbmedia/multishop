@@ -191,7 +191,7 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
-		$str="select endtime from tx_multishop_categories limit 1";
+		$str="select hide_in_menu from tx_multishop_categories limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
 			$str="ALTER TABLE  `tx_multishop_categories` ADD `hide_in_menu` tinyint(1) default '0', ADD KEY `hide_in_menu` (hide_in_menu)";
@@ -2824,6 +2824,22 @@ if (!$skipMultishopUpdates) {
 		`status` tinyint( 1 ) NOT NULL DEFAULT '0' ,
 		INDEX (  `orders_id` ,  `transaction_id` ,  `crdate` ,  `status` )
 		) ";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+		$str="select id from tx_multishop_feeds_excludelist";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="CREATE TABLE IF NOT EXISTS `tx_multishop_feeds_excludelist` (
+			  	`id` int(11) NOT NULL AUTO_INCREMENT,
+			  	`feed_id` int(11) NOT NULL DEFAULT '0',
+			  	`exclude_id` int(11) NOT NULL DEFAULT '0',
+			  	`exclude_type` varchar(11) CHARACTER SET utf8 NOT NULL DEFAULT 'categories',
+			  	PRIMARY KEY (`id`),
+			  	KEY `feed_id` (`feed_id`),
+			  	KEY `exclude_id` (`exclude_id`),
+			  	KEY `exclude_type` (`exclude_type`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}

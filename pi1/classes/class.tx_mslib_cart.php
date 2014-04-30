@@ -854,12 +854,20 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray['tx_multishop_code']=md5(uniqid('', TRUE));
 			$insertArray['tstamp']=time();
 			$insertArray['crdate']=time();
-			$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
+			if (isset($address['tx_multishop_newsletter']) && !empty($address['tx_multishop_newsletter'])) {
+				$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
+			} else {
+				$insertArray['tx_multishop_newsletter']='';
+			}
 			$insertArray['page_uid']=$this->shop_pid;
 			$insertArray['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10));
 			$insertArray['usergroup']=$this->conf['fe_customer_usergroup'];
 			$insertArray['pid']=$this->conf['fe_customer_pid'];
-			$insertArray['http_referer']=$this->cookie['HTTP_REFERER'];
+			if (isset($this->cookie['HTTP_REFERER']) && !empty($this->cookie['HTTP_REFERER'])) {
+				$insertArray['http_referer']=$this->cookie['HTTP_REFERER'];
+			} else {
+				$insertArray['http_referer']='';
+			}
 			$insertArray['ip_address']=$this->server['REMOTE_ADDR'];
 			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($address['tx_multishop_vat_id'])) {
 				$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
