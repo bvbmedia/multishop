@@ -513,10 +513,17 @@ multishop_admin_page {
 
   includeCSS.adminDashboard=EXT:multishop/templates/admin_dashboard/css/core.css
   # loading application top (meta tags + admin panel)
-  headerData.2002 < page.headerData.2002
+  1=USER_INT
+  1=< plugin.tx_multishop_pi1
+  1 {
+    userFunc=tx_multishop_pi1->main
+    method=meta_tags
+  }
+  #headerData.2002 < page.headerData.2002
   # copy rzcolorbox CSS
   headerData.1441 < page.headerData.1441
 }
+
 [globalVar = LIT:1 = {$plugin.multishop.hideFacebookInAdminInterface}]
 # remove facebook from admin interface
 multishop_admin_page.10.marks.FACEBOOK=
