@@ -63,12 +63,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 		// create the meta tags eof
 		$display_listing=true;
 	} else {
-		if ($this->get['tx_multishop_pi1']['page_section'] == 'home') {
+		if ($this->get['categories_id']) {
+			$content.=$this->pi_getLL('no_products_available');
+		} else {
 			$parent_id=$this->categoriesStartingPoint;
 			$this->get['categories_id']=$this->categoriesStartingPoint;
 			$display_listing=true;
-		} else {
-			$content.=$this->pi_getLL('no_products_available');
 		}
 	}
 	if ($display_listing) {
