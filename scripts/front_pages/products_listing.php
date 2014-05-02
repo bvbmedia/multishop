@@ -30,6 +30,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$current=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 	// first check if the meta_title exists
+	$display_listing=false;
 	$output_array=array();
 	if ($current['categories_id']) {
 		if ($current['custom_settings']) {
@@ -59,7 +60,18 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				$output_array['meta']['keywords']='<meta name="keywords" content="'.htmlspecialchars($meta_keywords).'" />';
 			}
 		}
+		$display_listing=true;
 		// create the meta tags eof
+	} else {
+		if ($this->get['tx_multishop_pi1']['page_section'] == 'home') {
+			$parent_id=$this->categoriesStartingPoint;
+			$this->get['categories_id']=$this->categoriesStartingPoint;
+			$display_listing=true;
+		} else {
+			$content.=$this->pi_getLL('no_products_available');
+		}
+	}
+	if ($display_listing) {
 		$subCats=mslib_fe::getSubcatsOnly($parent_id);
 		if ($this->ADMIN_USER and $this->get['sort_by']) {
 			if (is_array($subCats) and count($subCats)>0) {
@@ -280,8 +292,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				$content.=mslib_fe::htmlBox('', $current['content_footer'], 2);
 			}
 		}
-	} else {
-		$content.=$this->pi_getLL('no_products_available');
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$output_array['content']=$content;
