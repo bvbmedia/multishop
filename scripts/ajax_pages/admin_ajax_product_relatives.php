@@ -253,7 +253,7 @@ if ($this->post['req']=='init') {
 			}
 		} else {
 			if ($this->post['req']=='delete') {
-				if (strpos($this->post['product_id'], '&')!==false) {
+				if (strpos($this->post['product_id'], '&')!==false || strpos($this->post['product_id'], '=')!==false) {
 					$data_pids=array();
 					$related_pid=explode("&", $this->post['product_id']);
 					foreach ($related_pid as $multipid) {
