@@ -60,8 +60,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				$output_array['meta']['keywords']='<meta name="keywords" content="'.htmlspecialchars($meta_keywords).'" />';
 			}
 		}
-		$display_listing=true;
 		// create the meta tags eof
+		$display_listing=true;
 	} else {
 		if ($this->get['tx_multishop_pi1']['page_section'] == 'home') {
 			$parent_id=$this->categoriesStartingPoint;
