@@ -1153,7 +1153,11 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray=array();
 			$insertArray['customer_id']=$customer_id;
 			$insertArray['page_uid']=$this->shop_pid;
-			$insertArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
+			if (isset($GLOBALS['TSFE']->fe_user->user['uid']) && !empty($GLOBALS['TSFE']->fe_user->user['uid'])) {
+				$insertArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
+			} else {
+				$insertArray['cruser_id']='';
+			}
 			$insertArray['customer_comments']=$this->post['customer_comments'];
 			$insertArray['billing_company']=$address['company'];
 			$insertArray['billing_first_name']=$address['first_name'];

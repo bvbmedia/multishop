@@ -416,7 +416,7 @@ class tx_mslib_order extends tslib_pibase {
 					'array2' => &$array2,
 					'order' => &$order,
 					'mail_template' => $mail_template
-				); 
+				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
@@ -813,12 +813,11 @@ class tx_mslib_order extends tslib_pibase {
 				$item['ITEM_NAME'] .= '<br/>SKU: '.$product['sku_code'];
 			}
 			if (!empty($product['vendor_code'])) {
-				$item['ITEM_NAME'] .= '<br/>Vendor code: '.$product['vendor_code'];
+				$item['ITEM_NAME'] .= '<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
 			}
-			
 			if (count($product['attributes'])) {
 				foreach ($product['attributes'] as $tmpkey => $options) {
-					$subprices .= '<BR>';			
+					$subprices .= '<BR>';
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						$attribute_price = round(($options['options_values_price']*($product['products_tax']/100)),4)+$options['options_values_price'];
 					} else {

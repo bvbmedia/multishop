@@ -112,8 +112,12 @@ foreach ($available_sid as $sids) {
 }
 // we display the shipping costs and payment costs including vat
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multishop_pi1']['sid']) {
-	// set to unreachable number for shipping method id so the session for shipping method are cleared
-	$this->post['tx_multishop_pi1']['sid']=999999;
+	if (count($available_sid) == 1) {
+		$this->post['tx_multishop_pi1']['sid']=$available_sid[0];
+	} else {
+		// set to unreachable number for shipping method id so the session for shipping method are cleared
+		$this->post['tx_multishop_pi1']['sid']=999999;
+	}
 }
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
