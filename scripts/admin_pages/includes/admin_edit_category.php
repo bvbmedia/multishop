@@ -138,6 +138,21 @@ if ($this->post) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 		}
+		if (count($this->post['exclude_feed'])) {
+			$sql_check="delete from tx_multishop_feeds_excludelist where exclude_id='".addslashes($catid)."' and exclude_type='categories'";
+			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+			foreach ($this->post['exclude_feed'] as $feed_id) {
+				$updateArray=array();
+				$updateArray['feed_id']=$feed_id;
+				$updateArray['exclude_id']=$catid;
+				$updateArray['exclude_type']='categories';
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_feeds_excludelist', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+		} else {
+			$sql_check="delete from tx_multishop_feeds_excludelist where exclude_id='".addslashes($catid)."' and exclude_type='categories'";
+			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+		}
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['saveCategoryPostHook'])) {
 			$params=array(
@@ -335,6 +350,28 @@ if ($this->post) {
 			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='checked="checked"';
 		} else {
 			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='';
+		}
+		$feed_checkbox='';
+		$sql_feed='SELECT * from tx_multishop_product_feeds';
+		$qry_feed=$GLOBALS['TYPO3_DB']->sql_query($sql_feed);
+		while($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
+			if ($_REQUEST['action']=='edit_category') {
+				$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($category['categories_id'])."' and exclude_type='categories'";
+				$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+				} else {
+					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+				}
+			} else {
+				$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+			}
+		}
+		$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
+		if (empty($feed_checkbox)) {
+			$subpartArray['###FEEDS_LIST###']='no feeds';
+		} else {
+			$subpartArray['###FEEDS_LIST###']=$feed_checkbox;
 		}
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'])) {

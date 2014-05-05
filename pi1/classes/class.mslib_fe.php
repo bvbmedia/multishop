@@ -6634,6 +6634,28 @@ class mslib_fe {
 			return '';
 		}
 	}
+	function isItemInFeedsExcludeList($feed_id, $exclude_id, $exclude_type='products') {
+		if ($exclude_type=='categories') {
+			$cats=mslib_fe::Crumbar($exclude_id);
+			if (count($cats)>0) {
+				foreach ($cats as $cat) {
+					$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($cat['id'])."' and exclude_type='categories'";
+					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+						return true;
+						break;
+					}
+				}
+			}
+		} else if ($exclude_type=='products') {
+			$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($feed_id)."' and exclude_id='".addslashes($exclude_id)."' and exclude_type='products'";
+			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	// deprecated methods
 	// alias for old v2 client side scripts
 	public function Money2Cents($amount, $customer_currency=1) {

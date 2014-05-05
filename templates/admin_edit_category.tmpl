@@ -42,6 +42,10 @@ jQuery(document).ready(function($) {
 					<label for="hide_in_menu">###LABEL_HIDE_IN_MENU###</label>
 					<input name="hide_in_menu" id="hide_in_menu" type="checkbox" value="1" ###CATEGORY_HIDE_IN_MENU_CHECKED### />
 				</div>
+				<div class="account-field" id="msEditCategoryInputExcludeFromFeeds">
+					<label>###LABEL_EXCLUDE_FROM_FEED###</label>
+					###FEEDS_LIST###
+				</div>
 				<div class="account-field" id="msEditCategoryInputImage">
 					<label for="categories_image">###LABEL_IMAGE###</label>
 					<div id="categories_image">		
@@ -62,7 +66,7 @@ jQuery(document).ready(function($) {
 							params: {
 								categories_name: categories_name,
 								file_type: 'categories_image'
-							},	
+							},
 							template: '<div class="qq-uploader">' + 
 				                '<div class="qq-upload-drop-area"><span>Drop files here to upload</span></div>' +
 			    	            '<div class="qq-upload-button">###LABEL_CHOOSE_IMAGE###</div>' +
