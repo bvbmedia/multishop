@@ -71,7 +71,7 @@ class tx_mslib_cart extends tslib_pibase {
 							if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
 								if ($product_db['products_quantity']<1) {
 									$redirect_to_cart_page=true;
-								} else if ($product['qty'] > $product_db['products_quantity']) {
+								} else if ($product['qty']>$product_db['products_quantity']) {
 									$redirect_to_cart_page=true;
 								}
 							}
@@ -851,7 +851,7 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray['telephone']=$address['telephone'];
 			$insertArray['city']=$address['city'];
 			$insertArray['country']=$address['country'];
-			$insertArray['tx_multishop_code']=md5(uniqid('', TRUE));
+			$insertArray['tx_multishop_code']=md5(uniqid('', true));
 			$insertArray['tstamp']=time();
 			$insertArray['crdate']=time();
 			$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
@@ -1252,7 +1252,7 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray['payment_method_label']=$address['payment_method_label'];
 			$insertArray['shipping_method_costs']=$address['shipping_method_costs'];
 			$insertArray['payment_method_costs']=$address['payment_method_costs'];
-			$insertArray['hash']=md5(uniqid('', TRUE));
+			$insertArray['hash']=md5(uniqid('', true));
 			$insertArray['store_currency']=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_iso_3'];
 			if (isset($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3']) && !empty($this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'])) {
 				$insertArray['customer_currency']=$this->ms['MODULES']['CUSTOMER_ARRAY']['cu_iso_3'];

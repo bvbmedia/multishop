@@ -1580,7 +1580,7 @@ class mslib_befe {
 	public function print_r($array_in, $title='') {
 		if (is_object($array_in)) {
 			$json=json_encode($array_in);
-			$array_in=json_decode($json, TRUE);
+			$array_in=json_decode($json, true);
 		}
 		if (is_array($array_in)) {
 			if (count($array_in)==0) {
@@ -1615,7 +1615,7 @@ class mslib_befe {
 							if (method_exists($val, '__toString')) {
 								$string.=get_class($val).': '.(string)$val;
 							} else {
-								$string.=print_r($val, TRUE);
+								$string.=print_r($val, true);
 							}
 							$result.=''.nl2br(htmlspecialchars($string)).'<br />';
 						} else {
