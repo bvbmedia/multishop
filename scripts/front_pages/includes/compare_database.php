@@ -2843,6 +2843,22 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		$str="select id from tx_multishop_feeds_stock_excludelist";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="CREATE TABLE IF NOT EXISTS `tx_multishop_feeds_stock_excludelist` (
+			  	`id` int(11) NOT NULL AUTO_INCREMENT,
+			  	`feed_id` int(11) NOT NULL DEFAULT '0',
+			  	`exclude_id` int(11) NOT NULL DEFAULT '0',
+			  	`exclude_type` varchar(11) CHARACTER SET utf8 NOT NULL DEFAULT 'categories',
+			  	PRIMARY KEY (`id`),
+			  	KEY `feed_id` (`feed_id`),
+			  	KEY `exclude_id` (`exclude_id`),
+			  	KEY `exclude_type` (`exclude_type`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 		$key='PRICE_FILTER_BOX_STEPPINGS';
 		$title='Price Filter Box Steppings';
 		$description='Optional field. Defines the steppings of the price filter box.';
