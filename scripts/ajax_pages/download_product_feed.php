@@ -397,14 +397,18 @@ if ($this->get['feed_hash']) {
 								if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['products_id'])) {
 									$in_feed_stock_exclude_list=true;
 								}
-								if (!$in_feed_exclude_list) {
+								if (!$in_feed_stock_exclude_list) {
 									if (mslib_fe::isItemInFeedsStockExcludeList($feed_id, $product['categories_id'], 'categories')) {
 										$in_feed_stock_exclude_list=true;
 									}
 								}
 								if ($in_feed_stock_exclude_list) {
-									$product['products_quantity']='';
-									$row['products_quantity']='';
+									if (isset($product['products_quantity'])) {
+										$product['products_quantity']='';
+									}
+									if (isset($row['products_quantity'])) {
+										$row['products_quantity']='';
+									}
 								}
 								$records[]=array_merge($product, $row);
 							}
