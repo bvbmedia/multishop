@@ -17,10 +17,10 @@ if ($this->post['req']=='init') {
 	);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	while ($rows=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-		if ($rows['relative_product_id']!=$product['products_id']) {
+		if ($rows['relative_product_id']!=$pid) {
 			$relations_data[]=$rows['relative_product_id'];
 		} else {
-			if ($rows['products_id']!=$product['products_id']) {
+			if ($rows['products_id']!=$pid) {
 				$relations_data[]=$rows['products_id'];
 			}
 		}
@@ -42,6 +42,7 @@ if ($this->post['req']=='init') {
 		'.$where.'
 		GROUP BY cd.categories_name ASC ORDER BY cd.categories_name';
 		//	error_log($query);
+		$pid_regs=array();
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
@@ -64,24 +65,30 @@ if ($this->post['req']=='init') {
 						$json_data['related_product'][$row['categories_id']]['products']=array();
 						$product_counter=0;
 						while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2))!=false) {
-							if (mslib_fe::isChecked($pid, $row2['products_id'])) {
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id']=$row2['products_id'];
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name']=$row2['products_name'];
-								if ($row2['products_model']) {
-									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' - '.$row2['products_model'];
+							if (!in_array($row2['products_id'], $pid_regs)) {
+								if (mslib_fe::isChecked($pid, $row2['products_id'])) {
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id']=$row2['products_id'];
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name']=$row2['products_name'];
+									if ($row2['products_model']) {
+										$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' - '.$row2['products_model'];
+									}
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' (ID: '.$row2['products_id'].')';
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=1;
+								} else {
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id']=$row2['products_id'];
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name']=$row2['products_name'];
+									if ($row2['products_model']) {
+										$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' - '.$row2['products_model'];
+									}
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' (ID: '.$row2['products_id'].')';
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=0;
 								}
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' (ID: '.$row2['products_id'].')';
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=1;
-							} else {
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id']=$row2['products_id'];
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name']=$row2['products_name'];
-								if ($row2['products_model']) {
-									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' - '.$row2['products_model'];
-								}
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' (ID: '.$row2['products_id'].')';
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=0;
+								$pid_regs[]=$row2['products_id'];
+								$product_counter++;
 							}
-							$product_counter++;
+						}
+						if (!count($json_data['related_product'][$row['categories_id']]['products'])) {
+							unset($json_data['related_product'][$row['categories_id']]);
 						}
 					} else {
 						$json_data['related_product']=0;
@@ -144,8 +151,10 @@ if ($this->post['req']=='init') {
 		);
 //	error_log($query);
 		//	error_log($query);
+		$pid_regs=array();
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
 				if ($row['categories_name']) {
 					$productFilter=$filter;
@@ -171,18 +180,24 @@ if ($this->post['req']=='init') {
 						$json_data['related_product'][$row['categories_id']]['products']=array();
 						$product_counter=0;
 						while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2))!=false) {
-							$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id']=$row2['products_id'];
-							$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name']=$row2['products_name'];
-							if ($row2['products_model']) {
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' - '.$row2['products_model'];
+							if (!in_array($row2['products_id'], $pid_regs)) {
+								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['id']=$row2['products_id'];
+								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name']=$row2['products_name'];
+								if ($row2['products_model']) {
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' - '.$row2['products_model'];
+								}
+								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' (ID: '.$row2['products_id'].')';
+								if (mslib_fe::isChecked($_REQUEST['pid'], $row2['products_id'])) {
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=1;
+								} else {
+									$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=0;
+								}
+								$pid_regs[]=$row2['products_id'];
+								$product_counter++;
 							}
-							$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['name'].=' (ID: '.$row2['products_id'].')';
-							if (mslib_fe::isChecked($_REQUEST['pid'], $row2['products_id'])) {
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=1;
-							} else {
-								$json_data['related_product'][$row['categories_id']]['products'][$product_counter]['checked']=0;
-							}
-							$product_counter++;
+						}
+						if (!count($json_data['related_product'][$row['categories_id']]['products'])) {
+							unset($json_data['related_product'][$row['categories_id']]);
 						}
 					} else {
 						$json_data['related_product']=0;
@@ -192,7 +207,7 @@ if ($this->post['req']=='init') {
 		}
 	} else {
 		if ($this->post['req']=='save') {
-			if (strpos($this->post['product_id'], '&')!==false) {
+			if (strpos($this->post['product_id'], '&')!==false || strpos($this->post['product_id'], '=')!==false) {
 				$data_pids=array();
 				$related_pid=explode("&", $this->post['product_id']);
 				foreach ($related_pid as $multipid) {
