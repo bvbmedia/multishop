@@ -17,10 +17,10 @@ if ($this->post['req']=='init') {
 	);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	while ($rows=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-		if ($rows['relative_product_id']!=$pid) {
+		if ($rows['relative_product_id']!=$pid && $rows['relative_product_id'] > 0) {
 			$relations_data[]=$rows['relative_product_id'];
 		} else {
-			if ($rows['products_id']!=$pid) {
+			if ($rows['products_id']!=$pid && $rows['products_id'] > 0) {
 				$relations_data[]=$rows['products_id'];
 			}
 		}
@@ -39,7 +39,7 @@ if ($this->post['req']=='init') {
 			 tx_multishop_products_description pd
 		INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
 		INNER JOIN tx_multishop_categories_description cd ON p2c.categories_id = cd.categories_id
-		'.$where.'
+		'.$where.' and pd.language_id='.$this->sys_language_uid.' and cd.language_id='.$this->sys_language_uid.'
 		GROUP BY cd.categories_name ASC ORDER BY cd.categories_name';
 		//	error_log($query);
 		$pid_regs=array();
@@ -56,7 +56,7 @@ if ($this->post['req']=='init') {
 						 tx_multishop_products_description pd
 					INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
 					INNER JOIN tx_multishop_categories_description c ON p2c.categories_id = c.categories_id
-					'.$where.' AND (p2c.categories_id = '.$row['categories_id'].')
+					'.$where.' AND (p2c.categories_id = '.$row['categories_id'].') and pd.language_id='.$this->sys_language_uid.' and c.language_id='.$this->sys_language_uid.'
 					group by p.products_id ORDER BY pd.products_name ASC';
 					$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 					$cheking_check=0;
