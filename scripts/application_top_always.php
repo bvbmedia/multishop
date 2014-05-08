@@ -21,6 +21,19 @@ if (is_array($this->get['categories_id'])) {
 $this->productsID=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'productsID', 's_advanced');
 $this->categoriesID=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'categoriesID', 's_advanced');
 $this->searchKeywordListing=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'searchKeywordListing', 's_advanced');
+// FLEXFORM PARAMETER TO OVERRIDE DEFAULT HTML TEMPLATE
+$this->customTemplatePath=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'customTemplatePath', 's_advanced');
+if ($this->customTemplatePath) {
+	$this->method=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'method', 'sDEFAULT');
+	switch($this->method) {
+		case 'products':
+		case 'specials':
+			$this->conf['products_listing_tmpl_path']=$this->customTemplatePath;
+			$this->conf['product_detail_tmpl_path']=$this->customTemplatePath;
+			$this->conf['specials_sections_products_listing_tmpl_path']=$this->customTemplatePath;
+			break;
+	}
+}
 // if categoriesStartingPoint is defined through the template
 if (is_numeric($this->conf['categoriesStartingPoint'])) {
 	$this->categoriesStartingPoint=$this->conf['categoriesStartingPoint'];

@@ -454,8 +454,19 @@
 						<default></default>
 					</config>
 					</TCEforms>
-				</customSettings>						
-				<categoriesStartingPoint>
+				</customSettings>
+                <customTemplatePath>
+                    <TCEforms>
+                        <label>Custom template path</label>
+                        <config>
+                            <type>input</type>
+                            <eval>text</eval>
+                            <size>30</size>
+                            <default></default>
+                        </config>
+                    </TCEforms>
+                </customTemplatePath>
+                <categoriesStartingPoint>
 					<TCEforms>
 					<label>Categories Starting Point (default 0)</label>
 					<config>
