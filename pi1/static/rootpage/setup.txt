@@ -70,6 +70,8 @@ plugin.tx_multishop_pi1 {
 	login_pid={$plugin.multishop.login_pid}
 	products_listing_tmpl={$plugin.multishop.products_listing_tmpl}
 	products_listing_tmpl_path={$plugin.multishop.products_listing_tmpl_path}
+	specials_sections_products_listing_tmpl={$plugin.multishop.specials_sections_products_listing_tmpl}
+    specials_sections_products_listing_tmpl_path={$plugin.multishop.specials_sections_products_listing_tmpl_path}
 	alwaysIncludeHighSlide={$plugin.multishop.alwaysIncludeHighSlide}
 	useHighslideControls={$plugin.multishop.useHighslideControls}
 	html_box_tmpl={$plugin.multishop.html_box_tmpl}

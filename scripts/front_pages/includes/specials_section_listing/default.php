@@ -4,15 +4,27 @@ if (!defined('TYPO3_MODE')) {
 }
 $teller=0;
 $specials_items='';
-$content.='<ul class="msFrontSpecialsListingSection">';
 if (!$this->imageWidth) {
 	$this->imageWidth=200;
 }
+// now parse all the objects in the tmpl file
+if ($this->conf['specials_sections_products_listing_tmpl_path']) {
+	$template=$this->cObj->fileResource($this->conf['specials_sections_products_listing_tmpl_path']);
+} elseif ($this->conf['specials_sections_products_listing_tmpl']) {
+	$template=$this->cObj->fileResource($this->conf['specials_sections_products_listing_tmpl']);
+} else {
+	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/specials_sections.tmpl');
+}
+// Extract the subparts from the template
+$subparts=array();
+$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
+$subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
 foreach ($products as $product) {
+	$output=array();
 	if ($product['products_image']) {
-		$image='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
+		$output['image']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
 	} else {
-		$image='<div class="no_image"></div>';
+		$output['image']='<div class="no_image"></div>';
 	}
 	if ($product['categories_id']) {
 		// get all cats to generate multilevel fake url
@@ -30,22 +42,50 @@ foreach ($products as $product) {
 		}
 		// get all cats to generate multilevel fake url eof
 	}
-	$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-	$tel++;
-	$content.='<li class="multishop_specialsbox_item"><h3><a href="'.$link.'" class="ajax_link">'.$product['products_name'].'</a></h3><div class="multishop_specialsbox_item_image"><a href="'.$link.'" title="'.htmlspecialchars($product['products_name']).'" class="ajax_link">'.$image.'</a></div>';
+	$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 	$final_price=mslib_fe::final_products_price($product);
 	if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
 		$old_price=$product['products_price']*(1+$product['tax_rate']);
 	} else {
 		$old_price=$product['products_price'];
 	}
+	$special_section_price='';
 	if ($old_price and $final_price) {
-		$content.='<div class="section_products_old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="section_products_specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$output['special_section_price']='<div class="section_products_old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="section_products_specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
 	} else {
-		$content.='<div class="section_products_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$output['special_section_price']='<div class="section_products_price">'.mslib_fe::amount2Cents($final_price).'</div>';
 	}
-	$content.='</li>';
+	$output['products_name']=htmlspecialchars($product['products_name']);
+	$markerArray=array();
+	$markerArray['ITEM_DETAILS_PAGE_LINK']=$output['link'];
+	$markerArray['ITEM_PRODUCTS_NAME']=$output['products_name'];
+	$markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];
+	$markerArray['ITEM_PRODUCTS_PRICE']=$output['special_section_price'];
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'])) {
+		$params=array(
+			'markerArray'=>&$markerArray,
+			'product'=>&$product,
+			'output'=>&$output,
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsProductsListingHook'] as $funcRef) {
+			t3lib_div::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	// custom hook that can be controlled by third-party plugin eof
+	$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 }
-$content.='</ul>';
-//			$content.='</div></div>';		
+$subpartArray=array();
+$subpartArray['###ITEM###']=$contentItem;
+// custom hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsPostHook'])) {
+	$params=array(
+		'subpartArray'=>&$subpartArray
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsPostHook'] as $funcRef) {
+		t3lib_div::callUserFunction($funcRef, $params, $this);
+	}
+}
+// custom hook that can be controlled by third-party plugin eof
+$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 ?>

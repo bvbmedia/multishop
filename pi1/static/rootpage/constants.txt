@@ -131,7 +131,11 @@ plugin.multishop {
 	# cat=plugin.multishop - templates/file; type=string; label= Products Listing Page Template File Path: Location of the HTML-template file of the products listing page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/products_listing.tmpl.
 	products_listing_tmpl_path = EXT:multishop/templates/products_listing.tmpl
 
-	
+	# cat=plugin.multishop - templates/file; type=file[html,htm,tmpl,txt]; label= Specials section products Listing Page Template File: Save the HTML-template file of the products listing page as resource object in the TYPO3 template. Use this option OR use the Template File Path option. If both are filled the Template File Path will overrule.
+	specials_sections_products_listing_tmpl =
+	# cat=plugin.multishop - templates/file; type=string; label= Specials section products Listing Page Template File Path: Location of the HTML-template file of the products listing page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/specials_sections.tmpl.
+	specials_sections_products_listing_tmpl_path = EXT:multishop/templates/specials_sections.tmpl
+
 	# cat=plugin.multishop - templates/file; type=string; label= E-mail Template File Path: Optionally specify the location of the e-mail template file. Example: fileadmin/templates/multishop/email_template.tmpl.
 	email_tmpl_path=		
 

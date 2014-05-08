@@ -149,7 +149,7 @@ if ($this->post['req']=='init') {
 			'C.categories_name ASC', // ORDER BY...
 			'' // LIMIT ...
 		);
-//	error_log($query);
+		//	error_log($query);
 		//	error_log($query);
 		$pid_regs=array();
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
