@@ -100,7 +100,11 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$updateArray['include_header']=$this->post['include_header'];
 			$updateArray['plain_text']=$this->post['plain_text'];
 			$updateArray['delimiter']=$this->post['delimiter'];
-			$updateArray['feed_type']=$this->post['feed_type'];
+			if (isset($this->post['feed_type']) && !empty($this->post['feed_type'])) {
+				$updateArray['feed_type']=$this->post['feed_type'];
+			} else {
+				$updateArray['feed_type']='';
+			}
 			$updateArray['fields']=serialize($this->post['fields']);
 			$updateArray['post_data']=serialize($this->post);
 			if (is_numeric($this->post['feed_id'])) {

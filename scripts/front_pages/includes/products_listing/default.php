@@ -292,8 +292,7 @@ if (!in_array($this->ms['page'], $skippedTypes) and ($this->ROOTADMIN_USER or ($
 								//do something with the sorted data 
 						}
 				}); 
-			} 
-
+			}
 		});
 	  });
 	  </script>					
