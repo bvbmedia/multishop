@@ -182,25 +182,25 @@ page {
   includeCSS {
     jqueryTab = EXT:multishop/templates/global/css/tab.css
     jqueryTab {
-      media = screen
+      media = 
       import = 0
       compress=1
     }    
     jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
     jqueryAutocomplete {
-      media = screen
+      media = 
       import = 0
       compress=1
     }  
     core = EXT:multishop/templates/global/css/core.css
     core {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
     prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
     prettycheckboxes {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -210,31 +210,31 @@ multishop_admin_page {
   includeCSS {
     jqueryTab = EXT:multishop/templates/global/css/tab.css
     jqueryTab {
-      media = screen
+      media = 
       import = 0
       compress=1
     }    
     jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
     jqueryAutocomplete {
-      media = screen
+      media = 
       import = 0
       compress=1
     }  
     core = EXT:multishop/templates/global/css/core.css
     core {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
     prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
     prettycheckboxes {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
     select2 = EXT:multishop/js/select2/select2.css
     select2 {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -246,7 +246,7 @@ page {
   includeCSS {
     jqueryui = EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
     jqueryui {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -256,7 +256,7 @@ multishop_admin_page {
   includeCSS {
     jqueryui = EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
     jqueryui {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -335,7 +335,7 @@ page {
   includeCSS {
     highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
     highslide {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -349,7 +349,7 @@ multishop_admin_page {
   includeCSS {
     highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
     highslide {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -365,7 +365,7 @@ page {
   includeCSS {
     highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
     highslide {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -379,7 +379,7 @@ multishop_admin_page {
   includeCSS {
     highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
     highslide {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -402,13 +402,13 @@ page {
   includeCSS {
     adminglobalCSS = EXT:multishop/templates/global/css/admin.css
     adminglobalCSS {
-      media = screen
+      media = 
       import = 0
       compress=1
     }  
     adminCSS = {$plugin.multishop.admin_template_folder}/css/admin_frontend.css
     adminCSS {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
@@ -430,19 +430,19 @@ multishop_admin_page {
   includeCSS {
     adminglobalCSS = EXT:multishop/templates/global/css/admin.css
     adminglobalCSS {
-      media = screen
+      media = 
       import = 0
       compress=1
     }  
     adminCSS = {$plugin.multishop.admin_template_folder}/css/admin_frontend.css
     adminCSS {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
     msUiTimePickerCSS = EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.css
     msUiTimePickerCSS {
-      media = screen
+      media = 
       import = 0
       compress=1
     }	
@@ -454,7 +454,7 @@ page {
   includeCSS {
     exampleCSS = EXT:multishop/templates/introduction/css/core.css
     exampleCSS {
-      media = screen
+      media = 
       import = 0
       compress=1
     }
