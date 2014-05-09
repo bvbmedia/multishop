@@ -1,4 +1,5 @@
 <?php
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 /*
 //QUICK LANGUAGE UID FIXER:
 
@@ -1322,7 +1323,7 @@ if (count($shops)>0) {
 		$content.='
 		<fieldset><legend>Multishop Configuration</legend>
 		<fieldset><legend>Downloader / Duplicator</legend>
-		<form action="mod.php?M=web_txmultishopM1" method="post" enctype="multipart/form-data">
+		<form action="'.BackendUtility::getModuleUrl('web_txmultishopM1').'" method="post" enctype="multipart/form-data">
 		<input name="action" type="hidden" value="configuration_actions" />
 		'.$tmpcontent.'
 			<table>
@@ -1351,7 +1352,7 @@ if (count($shops)>0) {
 		if ($options) {
 			$content.='
 			<fieldset><legend>Uploader</legend>
-			<form action="mod.php?M=web_txmultishopM1" method="post" enctype="multipart/form-data">	
+			<form action="'.BackendUtility::getModuleUrl('web_txmultishopM1').'" method="post" enctype="multipart/form-data">
 				Target shop
 		';
 			$content.='<select name="target_pid">'."\n";
@@ -1388,7 +1389,7 @@ if (count($multishop_content_objects)>0) {
 		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['pid'], '');
 		if (is_numeric($pageinfo['uid'])) {
 			$content.='
-							<form action="mod.php?M=web_txmultishopM1" method="post" enctype="multipart/form-data">
+							<form action="'.BackendUtility::getModuleUrl('web_txmultishopM1').'" method="post" enctype="multipart/form-data">
 							<div class="shadow_bottom">
 							<fieldset>
 							<legend><a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['pid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['pid']), '', '')).'">'.trim($pageinfo['_thePathFull'], '/').'</a> <a title="View" href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['pid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['pid']), '', '')).'">'.$this->Typo3Icon('actions-document-view', 'View').'</a> <a title="Delete" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['pid'].'&action=erase" onClick="return CONFIRM(\'Are you sure you want to delete the products, categories, orders, cms pages and settings of: '.$pageinfo['_thePathFull'].'?\')">'.$this->Typo3Icon('actions-edit-delete', 'Delete').'</a>

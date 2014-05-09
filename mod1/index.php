@@ -27,7 +27,6 @@
  * Hint: use extdeveval to insert/update function index above.
  */
 
-
 $LANG->includeLLFile('EXT:multishop/mod1/locallang.xml');
 //require_once(PATH_t3lib . 'class.t3lib_scbase.php');
 include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');

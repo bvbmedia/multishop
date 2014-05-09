@@ -1,6 +1,7 @@
 <?php
-	$title='Help';
-	$content.='
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+$title='Help';
+$content.='
 	<div class="shadow_bottom">
 		<fieldset>
 				<center>
@@ -12,13 +13,13 @@
 				</center>
 			<strong>	
 				<ul>
-					<li><a href="http://www.typo3multishop.com/forum/" target="_blank">'.$this->Typo3Icon('actions-document-view','Forum').' Forum</a></li>
-					<li><a href="http://www.typo3multishop.com/help/" target="_blank">'.$this->Typo3Icon('actions-document-view','Help').' Help</a></li>
-					<li><a href="http://www.typo3multishop.com/contact-us/" target="_blank">'.$this->Typo3Icon('actions-document-view','Contact us').' Contact Us</a></li>
+					<li><a href="http://www.typo3multishop.com/forum/" target="_blank">'.$this->Typo3Icon('actions-document-view', 'Forum').' Forum</a></li>
+					<li><a href="http://www.typo3multishop.com/help/" target="_blank">'.$this->Typo3Icon('actions-document-view', 'Help').' Help</a></li>
+					<li><a href="http://www.typo3multishop.com/contact-us/" target="_blank">'.$this->Typo3Icon('actions-document-view', 'Contact us').' Contact Us</a></li>
 				</ul>			
 			</strong>	
 		</fieldset>
 	</div>
 	';
-	$this->content.=$this->doc->section($title,$content,0,1);		
+$this->content.=$this->doc->section($title, $content, 0, 1);
 ?>
