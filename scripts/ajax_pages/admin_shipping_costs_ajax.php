@@ -116,9 +116,9 @@ if ($this->ADMIN_USER) {
 						</td>
 						<td width="100" align="right">
 							<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="'.$zone_price[1].'"></div>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
+								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="'.$zone_price[1].'" class="'.$zone_pid.'_priceInput'.$i.'"></div>
 							</div>
 						</td>
 					</tr>';
@@ -144,19 +144,21 @@ if ($this->ADMIN_USER) {
 							<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'" >0 '.$this->pi_getLL('admin_shipping_kg').'</div></td>
 							<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'" > to </div></td>
 							<td>';
+						$disabled='';
 						if ($row_counter==1) {
 							$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 									'.mslib_befe::createSelectboxWeightsList().'
 									</select>';
 						} else {
+							$disabled=' disabled="disabled"';
 							$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 						}
 						$content.='</td>
 							<td width="100" align="right">
 								<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="" rel="'.$row['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="" rel="'.$row['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
-									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" /></di>
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><label for="display_name">Excl. VAT</label></div>
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><label for="display_name">Incl. VAT</label></div>
+									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></di>
 								</div>
 							</td>
 						</tr>';
@@ -200,19 +202,21 @@ if ($this->ADMIN_USER) {
 						<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'" >0 '.$this->pi_getLL('admin_shipping_kg').'</div></td>
 						<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'" > to </div></td>
 						<td>';
+				$disabled='';
 				if ($row_counter==1) {
 					$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 								'.mslib_befe::createSelectboxWeightsList().'
 								</select>';
 				} else {
+					$disabled=' disabled="disabled"';
 					$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 				}
 				$content.='</td>
 						<td width="100" align="right">
 							<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="" rel="'.$row['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="" rel="'.$row['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" /></di>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><label for="display_name">Excl. VAT</label></div>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><label for="display_name">Incl. VAT</label></div>
+								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></di>
 							</div>
 						</td>
 					</tr>';
@@ -332,10 +336,10 @@ if ($this->ADMIN_USER) {
 				var number = prime + "." + decimal.substr(0, 2);
 				return number;
 			}
-			jQuery(".msProductsPriceExcludingVat").keyup(function() {
+			jQuery(document).on("keyup", ".msProductsPriceExcludingVat", function() {
 				productPrice(true, jQuery(this));
 			});
-			jQuery(".msProductsPriceIncludingVat").keyup(function() {
+			jQuery("document").on("keyup", ".msProductsPriceIncludingVat", function() {
 				productPrice(false, jQuery(this));
 			});
 		});

@@ -36,7 +36,8 @@ if ($this->post) {
 					$i=0;
 					$weight_and_price="";
 					foreach ($weight as $value) {
-						if ($this->post[$key_price][$i]) {
+						// empty value will always read as 0
+						if (isset($this->post[$key_price][$i]) && $this->post[$key_price][$i] !== '') {
 							if (strstr($this->post[$key_price][$i], ",")) {
 								$this->post[$key_price][$i]=str_replace(",", ".", $this->post[$key_price][$i]);
 							}
@@ -63,7 +64,6 @@ if ($this->post) {
 						}
 					}
 				}
-				unset($insertArray);
 			}
 		} else {
 			if ($shipping_type=='flat') {
@@ -100,7 +100,6 @@ if ($this->post) {
 							$res_update=$GLOBALS['TYPO3_DB']->sql_query($query_update);
 						}
 					} // end of check for flat value
-					unset($insertArray);
 				}
 			}
 		}
@@ -114,6 +113,7 @@ if ($this->post) {
 		$update_shipping['shipping_costs_type']=$shipping_type;
 		$query_update_shipping=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', "id = ".$shipping_id, $update_shipping);
 		$res_update_ship=$GLOBALS['TYPO3_DB']->sql_query($query_update_shipping);
+		header('Location: ' .mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs'));
 	} // end for POST
 } //end if post
 $str="SELECT * from tx_multishop_zones order by name";
@@ -286,9 +286,9 @@ if (count($shipping_methods)>0) {
 							$content.='</td>
 							<td width="100" align="right">
 								<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
-									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="'.$zone_price[1].'"></div>
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
+									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="'.$zone_price[1].'" class="'.$zone_pid.'_priceInput'.$i.'"></div>
 								</div>
 							</td>
 						</tr>';
@@ -314,19 +314,21 @@ if (count($shipping_methods)>0) {
 								<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'" >0 '.$this->pi_getLL('admin_shipping_kg').'</div></td>
 								<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'" > to </div></td>
 								<td>';
+							$disabled='';
 							if ($row_counter==1) {
 								$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 										'.mslib_befe::createSelectboxWeightsList().'
 										</select>';
 							} else {
+								$disabled=' disabled="disabled"';
 								$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 							}
 							$content.='</td>
 								<td width="100" align="right">
 									<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="" rel="'.$row['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
-										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="" rel="'.$row['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
-										<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" /></di>
+										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row['tax_id'].'"'.$disabled.'><label for="display_name">Excl. VAT</label></div>
+										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row['tax_id'].'"'.$disabled.'><label for="display_name">Incl. VAT</label></div>
+										<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.'/></di>
 									</div>
 								</td>
 							</tr>';
