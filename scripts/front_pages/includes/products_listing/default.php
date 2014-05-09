@@ -76,6 +76,8 @@ foreach ($products as $current_product) {
 	$markerArray=array();
 	$markerArray['ADMIN_ICONS']=$output['admin_icons'];
 	$markerArray['PRODUCTS_ID']=$current_product['products_id'];
+	$markerArray['ITEM_CLASS']='';
+
 	if (($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) and !$current_product['products_status'] and !$this->ms['MODULES']['FLAT_DATABASE']) {
 		$markerArray['ITEM_CLASS']='disabled_product';
 	}
