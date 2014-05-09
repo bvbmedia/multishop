@@ -50,8 +50,6 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		$updateArray['page_uid']=$this->post['related_shop_pid'];
 		$updateArray['handling_costs']=$this->post['handling_costs'];
 		$updateArray['tax_id']=$this->post['tax_id'];
-		$updateArray['sort_order']=$this->post['sort_order'];
-		//$updateArray['vars']	 		=	serialize($data);
 		$updateArray['vars']=serialize($this->post);
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\''.$row['id'].'\'', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
