@@ -784,6 +784,12 @@ class tx_mslib_cart extends tslib_pibase {
 		$total_price=0;
 		$order=array();
 		$address=$cart['user'];
+		// check for NULL, convert to empty string - typo3 v6.x related bug
+		foreach ($address as $key=>$val) {
+			if ($val==null || $val==NULL) {
+				$address[$key]='';
+			}
+		}
 		/*
 		 * always use *_tax and *_total_tax_rate, unless need different calc for country/region
 		 * WARNING: *_country_* and *_region_* not always have value, depends on the tax ruleset
