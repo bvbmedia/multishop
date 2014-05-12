@@ -85,28 +85,28 @@ plugin.multishop {
 	customSettings=
 	jQueryPopup_rel={$plugin.rzcolorbox.rel}
 	
-	# cat=plugin.multishop - optional; type=int+; label= FE Catalog Admin Usergroup: The uid number of the website usergroup Catalog Admin. This usergroup can maintain the catalog.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE Catalog Admin Usergroup: The uid number of the website usergroup Catalog Admin. This usergroup can maintain the catalog.
 	fe_catalogadmin_usergroup =
 	
-	# cat=plugin.multishop - optional; type=int+; label= FE Orders Admin Usergroup: The uid number of the website usergroup Orders Admin. This usergroup can maintain the orders.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE Orders Admin Usergroup: The uid number of the website usergroup Orders Admin. This usergroup can maintain the orders.
 	fe_ordersadmin_usergroup = 	
 
-	# cat=plugin.multishop - optional; type=int+; label= FE Customers Admin Usergroup: The uid number of the website usergroup Customers Admin. This usergroup can maintain the customers.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE Customers Admin Usergroup: The uid number of the website usergroup Customers Admin. This usergroup can maintain the customers.
 	fe_customersadmin_usergroup = 		
 
-	# cat=plugin.multishop - optional; type=int+; label= FE Statistics Admin Usergroup: The uid number of the website usergroup Statistics Admin. This usergroup can view the statistics.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE Statistics Admin Usergroup: The uid number of the website usergroup Statistics Admin. This usergroup can view the statistics.
 	fe_statisticsadmin_usergroup = 		
 
-	# cat=plugin.multishop - optional; type=int+; label= FE CMS Admin Usergroup: The uid number of the website usergroup CMS Admin. This usergroup can maintain the CMS pages in the front-end.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE CMS Admin Usergroup: The uid number of the website usergroup CMS Admin. This usergroup can maintain the CMS pages in the front-end.
 	fe_cmsadmin_usergroup = 	
 	
-	# cat=plugin.multishop - optional; type=int+; label= FE Stores Admin Usergroup: The uid number of the website usergroup Stores Admin. This usergroup can switch from shops by the Stores menu in the in the front-end.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE Stores Admin Usergroup: The uid number of the website usergroup Stores Admin. This usergroup can switch from shops by the Stores menu in the in the front-end.
 	fe_storesadmin_usergroup = 			
 	
-	# cat=plugin.multishop - optional; type=int+; label= FE Search Admin Usergroup: The uid number of the website usergroup Search Admin. This usergroup can search in the top right area of the admin panel.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE Search Admin Usergroup: The uid number of the website usergroup Search Admin. This usergroup can search in the top right area of the admin panel.
 	fe_searchadmin_usergroup = 			
 
-	# cat=plugin.multishop - optional; type=int+; label= FE System Admin Usergroup: The uid number of the website usergroup System Admin. This usergroup can see the system menu item of the admin panel.
+	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE System Admin Usergroup: The uid number of the website usergroup System Admin. This usergroup can see the system menu item of the admin panel.
 	fe_systemadmin_usergroup = 			
 	
 	
