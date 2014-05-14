@@ -776,13 +776,7 @@ class mslib_befe {
 				// remove any found products
 				$products_query=$GLOBALS['TYPO3_DB']->sql_query("SELECT p.products_id from tx_multishop_products p, tx_multishop_products_to_categories p2c where p2c.categories_id='".$categories_id."' and p.products_id=p2c.products_id");
 				while (($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_query))!=false) {
-					// check if the products related to many categories
-					$prodcheck=$GLOBALS['TYPO3_DB']->sql_query("SELECT p2c.* from tx_multishop_products_to_categories p2c where p2c.products_id=".$product['products_id']);
-					if ($GLOBALS['TYPO3_DB']->sql_num_rows($prodcheck)>1) {
-						$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'categories_id='.$categories_id.' and products_id='.$product['products_id']);
-					} else {
-						mslib_befe::deleteProduct($product['products_id']);
-					}
+					mslib_befe::deleteProduct($product['products_id'], $categories_id);
 				}
 				// finally delete the category
 				$filename=$row['categories_image'];
