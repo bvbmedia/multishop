@@ -331,7 +331,7 @@ if ($this->get['feed_hash']) {
 								if ($loadAttributeValues) {
 									$attributes_data=array();
 									//$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
-									$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id'];
+									$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and pa.products_id = ".$product['products_id']." order by po.sort_order, povp.sort_order";
 									$qry_attributes=$GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
 									while ($row_attributes=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
 										$attributes_data['attribute_option_name_'.$row_attributes['options_id']]['values'][]=$row_attributes['products_options_values_name'];
