@@ -910,6 +910,7 @@ switch ($this->ms['page']) {
 			$return_data['option_value_name']=mslib_fe::getNameOptions($option_value_id);
 			$return_data['data_id']=$this->post['data_id'];
 			$return_data['delete_status']='notok';
+			$have_entries_in_pa_table=false;
 			if ($option_value_id>0) {
 				$str="select products_id from tx_multishop_products_attributes where options_id='".$option_id."' and options_values_id=".$option_value_id;
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -919,10 +920,18 @@ switch ($this->ms['page']) {
 					$return_data['products']=array();
 					while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 						$product=mslib_fe::getProduct($rs['products_id'], '', '', 1);
-						$return_data['products'][$ctr]['name']=$product['products_name'];
-						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
-						$ctr++;
+						if (!empty($product['products_name'])) {
+							$return_data['products'][$ctr]['name']=$product['products_name'];
+							$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
+							$ctr++;
+						} else {
+							$have_entries_in_pa_table=true;
+							$total_product--;
+						}
 					}
+				}
+				if (!$total_product && $have_entries_in_pa_table) {
+					$this->get['force_delete']=1;
 				}
 				if (isset($this->get['force_delete']) && $this->get['force_delete']==1) {
 					if (!$total_product) {
@@ -944,10 +953,18 @@ switch ($this->ms['page']) {
 					$return_data['products']=array();
 					while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 						$product=mslib_fe::getProduct($rs['products_id'], '', '', 1);
-						$return_data['products'][$ctr]['name']=$product['products_name'];
-						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
-						$ctr++;
+						if (!empty($product['products_name'])) {
+							$return_data['products'][$ctr]['name']=$product['products_name'];
+							$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
+							$ctr++;
+						} else {
+							$have_entries_in_pa_table=true;
+							$total_product--;
+						}
 					}
+				}
+				if (!$total_product && $have_entries_in_pa_table) {
+					$this->get['force_delete']=1;
 				}
 				if (isset($this->get['force_delete']) && $this->get['force_delete']==1) {
 					if (!$total_product) {

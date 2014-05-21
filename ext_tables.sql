@@ -663,7 +663,7 @@ CREATE TABLE `tx_multishop_orders_status_history` (
   `old_value` int(5) DEFAULT '0',
   `crdate` int(11) NULL DEFAULT '0',
   `customer_notified` int(1) DEFAULT '0',
-  `comments` text NULL,
+  `comments` TEXT NULL DEFAULT '',
   PRIMARY KEY (`orders_status_history_id`),
   KEY `orders_id` (`orders_id`),
   KEY `crdate` (`crdate`),
