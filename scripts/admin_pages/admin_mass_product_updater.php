@@ -27,11 +27,15 @@ if ($this->post) {
 				if ($tax_rate>0) {
 					$amount=($amount/(100+$tax_rate))*100;
 				}
-				$str="update tx_multishop_products set products_price=(products_price+".$amount.") where products_id = '".$rs_get_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
-				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-				$sql_affected_rows+=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-				$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where products_id = '".$rs_get_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
-				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+				if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
+					$str="update tx_multishop_products set products_price=(products_price+".$amount.") where products_id = '".$rs_get_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
+					$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$sql_affected_rows+=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+				}
+				if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
+					$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where products_id = '".$rs_get_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
+					$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+				}
 			}
 			$content.='<strong>Price update completed. '.$sql_affected_rows.' products has been updated.</strong><br />';
 			if ($sql_affected_rows>0 && $this->ms['MODULES']['FLAT_DATABASE']) {
@@ -42,12 +46,16 @@ if ($this->post) {
 			}
 		} else {
 			$amount=$originalAmount;
-			$str="update tx_multishop_products set products_price=(products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
-			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-			$content.='<strong>Price update completed. '.$sql_affected_rows.' products has been updated.</strong><br />';
-			$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
-			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
+				$str="update tx_multishop_products set products_price=(products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
+				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+				$content.='<strong>Price update completed. '.$sql_affected_rows.' products has been updated.</strong><br />';
+			}
+			if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
+				$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
+				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+			}
 			if ($sql_affected_rows>0 && $this->ms['MODULES']['FLAT_DATABASE']) {
 				// if the flat database module is enabled we have to sync the changes to the flat table
 				set_time_limit(86400);
@@ -58,14 +66,30 @@ if ($this->post) {
 	}
 	if ($this->post['percentage']) {
 		$multiply=(100+$this->post['percentage'])/100;
-		$str="update tx_multishop_products set products_price=(products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
-		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$content.='<strong>Price update completed. '.$GLOBALS['TYPO3_DB']->sql_affected_rows().' products has been updated.</strong><br />';
-		$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
-		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
+			$str="update tx_multishop_products set products_price=(products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
+			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+			$content.='<strong>Price update completed. '.$GLOBALS['TYPO3_DB']->sql_affected_rows().' products has been updated.</strong><br />';
+		}
+		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
+			$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
+			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+		}
+		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('attributes', $this->post['tx_multishop_pi1']['price_update_area']))) {
+			$sql_products="select products_id from tx_multishop_products where page_uid='".$this->showCatalogFromPage."'";
+			$qry_products=$GLOBALS['TYPO3_DB']->sql_query($sql_products);
+			while ($rs_products=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_products)) {
+				$str="update tx_multishop_products_attributes set options_values_price=(options_values_price*".$multiply.") where options_values_price>0 and products_id='".$rs_products['products_id']."'";
+				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+			}
+		}
 	}
 	if ($this->ms['MODULES']['FLAT_DATABASE']) {
 		mslib_befe::rebuildFlatDatabase();
+	}
+	if (!$sql_affected_rows) {
+		$content.='<p><strong>Nothing is updated</strong></p>';
 	}
 } else {
 	$content.='
@@ -82,7 +106,14 @@ if ($this->post) {
 			<label for="amount">by Amount</label>
 			<input name="amount" id="amount" type="text" value="'.$this->post['amount'].'" size="10" />&nbsp;<input name="amount_vat" id="amount_vat" type="checkbox" value="1" checked="checked" />
 			<label for="amount_vat">Substract/Increase price based on including VAT</label>
-		</div>
+		</div>';
+	if ($this->ROOTADMIN_USER) {
+		$content.='<div class="account-field">
+				<label for="amount">Price area for update</label>
+				<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="products" />&nbsp;Products&nbsp;&nbsp;<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="specials" />&nbsp;Specials&nbsp;&nbsp;<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="attributes" />&nbsp;Attributes
+			</div>';
+	}
+	$content.='
 		<div class="hr"></div>
 		<div class="account-field">
 			<label for="rules_group_id">VAT Rate</label>
