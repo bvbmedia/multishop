@@ -262,8 +262,10 @@ $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, 
 $skippedTypes=array();
 $skippedTypes[]='products_modified';
 $skippedTypes[]='products_search';
-$skippedTypes[]='products_news';
+$skippedTypes[]='products_new';
 $skippedTypes[]='products_specials';
+$skippedTypes[]='specials_listing_page';
+
 if (!in_array($this->ms['page'], $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
 	$content.='					
 	<script>
