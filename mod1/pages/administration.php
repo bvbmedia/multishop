@@ -130,17 +130,17 @@ switch ($_REQUEST['action']) {
 		$this->ms['category_image_formats']['normal']['width']=$format[0];
 		$this->ms['category_image_formats']['normal']['height']=$format[1];
 		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_50']);
-		$this->ms['product_image_formats'][50]['width']=$format[0];
-		$this->ms['product_image_formats'][50]['height']=$format[1];
+		$this->ms['product_image_formats']['50']['width']=$format[0];
+		$this->ms['product_image_formats']['50']['height']=$format[1];
 		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_100']);
-		$this->ms['product_image_formats'][100]['width']=$format[0];
-		$this->ms['product_image_formats'][100]['height']=$format[1];
+		$this->ms['product_image_formats']['100']['width']=$format[0];
+		$this->ms['product_image_formats']['100']['height']=$format[1];
 		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_200']);
-		$this->ms['product_image_formats'][200]['width']=$format[0];
-		$this->ms['product_image_formats'][200]['height']=$format[1];
+		$this->ms['product_image_formats']['200']['width']=$format[0];
+		$this->ms['product_image_formats']['200']['height']=$format[1];
 		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_300']);
-		$this->ms['product_image_formats'][300]['width']=$format[0];
-		$this->ms['product_image_formats'][300]['height']=$format[1];
+		$this->ms['product_image_formats']['300']['width']=$format[0];
+		$this->ms['product_image_formats']['300']['height']=$format[1];
 		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_ENLARGED']);
 		$this->ms['product_image_formats']['enlarged']['width']=$format[0];
 		$this->ms['product_image_formats']['enlarged']['height']=$format[1];
@@ -393,6 +393,8 @@ switch ($_REQUEST['action']) {
 				$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_ENLARGED']);
 				$this->ms['product_image_formats']['enlarged']['width']=$format[0];
 				$this->ms['product_image_formats']['enlarged']['height']=$format[1];
+
+
 				if (count($restore_files['products'])>0) {
 					foreach ($restore_files['products'] as $filename=>$path) {
 						// backup original

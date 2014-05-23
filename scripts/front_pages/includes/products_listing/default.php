@@ -259,14 +259,9 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 }
 // custom hook that can be controlled by third-party plugin eof
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
-$skippedTypes=array();
-$skippedTypes[]='products_modified';
-$skippedTypes[]='products_search';
-$skippedTypes[]='products_news';
-$skippedTypes[]='products_specials';
-if (!in_array($this->ms['page'], $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
-	$content.='					
-	<script>
+// ADD OPACITY TO PRODUCTS THAT ARE TURNED OFF
+$content.='
+	<script type="text/javascript">
 	  jQuery(document).ready(function($) {
 		$(".disabled_product").css({ opacity: 0.6 });
 		$(".disabled_product").hover(
@@ -276,7 +271,20 @@ if (!in_array($this->ms['page'], $skippedTypes) and ($this->ROOTADMIN_USER or ($
 		  function () {
 			$(".disabled_product").css({ opacity: 0.6 });
 		  }
-		);			  
+		)
+	  });
+	</script>
+';
+$skippedTypes=array();
+$skippedTypes[]='products_modified';
+$skippedTypes[]='products_search';
+$skippedTypes[]='products_new';
+$skippedTypes[]='products_specials';
+$skippedTypes[]='specials_listing_page';
+if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
+	$content.='					
+	<script type="text/javascript">
+	  jQuery(document).ready(function($) {
 		var result = jQuery("#product_listing").sortable({
 			cursor:     "move", 
 			//axis:       "y", 
