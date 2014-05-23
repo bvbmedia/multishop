@@ -65,34 +65,22 @@ if ($this->post) {
 		}
 	}
 	if ($this->post['percentage']) {
-		$percentage=$this->post['percentage'];
-		if (strpos($percentage, '-')!==false) {
-			$percentage=str_replace('-', '', $percentage);
-			$percentage=100+$percentage;
-			$products_price="(products_price/".$percentage.")*100";
-			$special_price="(specials_new_products_price/".$percentage.")*100";
-			$attributes_price="(options_values_price/".$percentage.")*100";
-		} else {
-			$multiply=(100+$percentage)/100;
-			$products_price="products_price*".$multiply;
-			$special_price="specials_new_products_price*".$multiply;
-			$attributes_price="options_values_price*".$multiply;
-		}
+		$multiply=(100+$this->post['percentage'])/100;
 		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
-			$str="update tx_multishop_products set products_price=(".$products_price.") where page_uid='".$this->showCatalogFromPage."'";
+			$str="update tx_multishop_products set products_price=(products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
 			$content.='<strong>Price update completed. '.$GLOBALS['TYPO3_DB']->sql_affected_rows().' products has been updated.</strong><br />';
 		}
 		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
-			$str="update tx_multishop_specials set specials_new_products_price=(".$special_price.") where page_uid='".$this->showCatalogFromPage."'";
+			$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('attributes', $this->post['tx_multishop_pi1']['price_update_area']))) {
 			$sql_products="select products_id from tx_multishop_products where page_uid='".$this->showCatalogFromPage."'";
 			$qry_products=$GLOBALS['TYPO3_DB']->sql_query($sql_products);
 			while ($rs_products=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_products)) {
-				$str="update tx_multishop_products_attributes set options_values_price=(".$attributes_price.") where options_values_price>0 and products_id='".$rs_products['products_id']."'";
+				$str="update tx_multishop_products_attributes set options_values_price=(options_values_price*".$multiply.") where options_values_price>0 and products_id='".$rs_products['products_id']."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 			}
 		}
