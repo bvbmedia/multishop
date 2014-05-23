@@ -996,6 +996,8 @@ class mslib_fe {
 			$customer_landnaam=$row['naam'];
 		}
 		if ($bu_landen_id) {
+			// new static_info_tables
+			//$str="SELECT st.*, str.tx_rate FROM static_taxes st, static_tax_rates str, static_countries sc WHERE st.tx_rate_id=str.uid and sc.cn_iso_2=st.tx_country_iso_2 and sc.cn_iso_nr ='".$bu_landen_id."'";
 			$str="SELECT * FROM `static_taxes` WHERE `tx_country_iso_nr` ='".$bu_landen_id."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);

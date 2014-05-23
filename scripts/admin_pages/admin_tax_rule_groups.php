@@ -92,7 +92,7 @@ $content.='
 	</fieldset>
 ';
 if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
-	$GLOBALS['TSFE']->additionalHeaderData[]='
+	$GLOBALS['TSFE']->additionalHeaderData['msTreeLevelJs']='
 	<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
 	<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 	<style>
@@ -124,8 +124,6 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 		if ($zone['name']) {
 			$counter++;
 			$GLOBALS['TSFE']->additionalHeaderData[]='
-			<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
-			<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 			<script type="text/javascript">
 					jQuery(function($) {
 						$(".category_listing_ul_'.$counter.'").treeview({
@@ -171,7 +169,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 				);
 				$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2)>0) {
-					$tab_content.='<ul>';
+					$tab_content.='<div class="state_tax_sb_wrapper"><ul class="state_tax_sb">';
 					while ($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) {
 						$tab_content.='<li class="item_'.$counter.''.(!$row['status'] ? ' ' : '').'">';
 						$tab_content.='<label class="tree_item_label">';
@@ -197,7 +195,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 						}
 						$tab_content.='</select>';
 					}
-					$tab_content.='</ul>';
+					$tab_content.='</ul></div>';
 				}
 				$tab_content.='
 				</li>';
@@ -213,7 +211,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	$content.='
 	<script type="text/javascript"> 
 	jQuery(document).ready(function($) {
-		jQuery(".tab_content").hide(); 
+		jQuery(".tab_content").hide();
 		jQuery("ul.tabs li:first").addClass("active").show();
 		jQuery(".tab_content:first").show();
 		jQuery("ul.tabs li").click(function() {
