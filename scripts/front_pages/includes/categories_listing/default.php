@@ -14,7 +14,8 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
 // load optional cms content and show the current category name
 if ($current['content']) {
-	$output['categories_header_description']=mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
+	//$output['categories_header_description']=mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
+	$output['categories_header_description']=mslib_fe::htmlBox('', $current['content'], 1);
 }
 $output['categories_header']=trim($current['categories_name']);
 if ($current['categories_id']==$this->conf['categoriesStartingPoint'] and $this->hideHeader) {
