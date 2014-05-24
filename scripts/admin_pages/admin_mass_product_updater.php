@@ -96,9 +96,6 @@ if ($this->post) {
 	if ($this->ms['MODULES']['FLAT_DATABASE']) {
 		mslib_befe::rebuildFlatDatabase();
 	}
-	if (!$sql_affected_rows) {
-		$content.='<p><strong>Nothing is updated</strong></p>';
-	}
 } else {
 	$content.='
 	<p>
