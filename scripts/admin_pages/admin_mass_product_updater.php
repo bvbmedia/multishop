@@ -83,12 +83,14 @@ if ($this->post) {
 		if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('attributes', $this->post['tx_multishop_pi1']['price_update_area']))) {
 			$sql_products="select products_id from tx_multishop_products where page_uid='".$this->showCatalogFromPage."'";
 			$qry_products=$GLOBALS['TYPO3_DB']->sql_query($sql_products);
+			$sql_attribute_values_affected_rows=0;
 			while ($rs_products=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_products)) {
 				$str="update tx_multishop_products_attributes set options_values_price=(options_values_price*".$multiply.") where options_values_price>0 and products_id='".$rs_products['products_id']."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-				$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-				$content.='<strong>'.$sql_affected_rows.' attribute values has been updated.</strong><br />';
+				$sql_attribute_values_affected_rows+=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+
 			}
+			$content.='<strong>'.$sql_attribute_values_affected_rows.' attribute option values has been updated.</strong><br />';
 		}
 	}
 	if ($this->ms['MODULES']['FLAT_DATABASE']) {
