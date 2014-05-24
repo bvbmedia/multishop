@@ -272,14 +272,14 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
 				$(\'#product_feed_fields\').append(item);
 				$(\'select.msAdminProductsFeedSelectField\').select2({
-					width:\'450px\'
+					width:\'650px\'
 				});
 			});
 			$(document).on("click", ".delete_field", function() {
 				jQuery(this).parent().remove();
 			});
 			$(\'.msAdminProductsFeedSelectField\').select2({
-					width:\'450px\'
+					width:\'650px\'
 			});
 			$(document).on("change", ".msAdminProductsFeedSelectField", function() {
 				var selected=$(this).val();

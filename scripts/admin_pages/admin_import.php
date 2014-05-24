@@ -100,7 +100,8 @@ $coltypes['manufacturers_name']='Manufacturers name';
 $coltypes['manufacturers_image']='Manufacturers image';
 $coltypes['manufacturers_products_id']='Manufacturers products id';
 $coltypes['attribute_option_name']='Attribute option name';
-$coltypes['attribute_option_value']='Attribute option value (specify option name in the aux field or also define attribute option name field)';
+$coltypes['attribute_option_value']='Attribute option values (specify option name in the aux field or also define attribute option name field)';
+$coltypes['attribute_option_value_including_vat']='Attribute option values incl. VAT (specify option name in the aux field or also define attribute option name field)';
 //$total_static_coltypes=count($coltypes);
 //$counter=$total_static_coltypes;
 $coltypes['products_meta_title']='Products meta title';
@@ -110,7 +111,7 @@ $coltypes['products_delivery_time']='Products delivery time';
 $str="SELECT * FROM `tx_multishop_products_options` where language_id='".$language_id."' order by products_options_id asc";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-	$coltypes['attribute_option_name_'.$row['products_options_id']]='Attribute option name: '.$row['products_options_name'];
+	$coltypes['attribute_option_name_'.$row['products_options_id']]='Attribute option values for option name: '.$row['products_options_name'];
 }
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_importer.php']['adminProductsImporterColtypesHook'])) {
@@ -577,7 +578,7 @@ if ($this->post['action']=='category-insert') {
 					$(this).next().toggle();			
 				});
 				$(\'.select_columns_fields\').select2({
-					width:\'300px\'
+					width:\'550px\'
 				});
 			});			
 			</script>			
@@ -1061,6 +1062,7 @@ if ($this->post['action']=='category-insert') {
 							$item[$this->post['select'][$i]]=preg_replace("/^".$char."|".$char."$/is", '', $item[$this->post['select'][$i]]);
 							break;
 						case 'attribute_option_value':
+						case 'attribute_option_value_including_vat':
 							// attribute option value (with aux as option)
 							// if aux is defined use that value as option name. else use the field option name.
 							if ($this->post['input'][$i]) {
@@ -1085,11 +1087,6 @@ if ($this->post['action']=='category-insert') {
 												$option_value2=explode($subdelimiter, $option_value);
 												$option_value=$option_value2[0];
 												$option_price=str_replace(",", ".", $option_value2[1]);
-												$item['attribute_option_value'][]=array(
-													$key,
-													$option_value,
-													$option_price
-												);
 											} else {
 												$internal_count++;
 												$option_price=0;
@@ -1106,16 +1103,17 @@ if ($this->post['action']=='category-insert') {
 													// FORMAAT|||;|$price
 													// so we use the first value (Option_name) as key
 													$option_price=$option_value;
-												} else {
-													$item['attribute_option_value'][]=array(
-														$key,
-														$option_value,
-														$option_price
-													);
 												}
 												if ($internal_count==$total) {
 													$internal_count=0;
 												}
+											}
+											if ($key && $option_value) {
+												$item[$this->post['select'][$i]][]=array(
+													$key,
+													$option_value,
+													$option_price
+												);
 											}
 											$count++;
 										}
@@ -2122,6 +2120,33 @@ if ($this->post['action']=='category-insert') {
 						if (!$this->post['incremental_update'] and $products_id) {
 							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+						if (is_array($item['attribute_option_value_including_vat'])) {
+							// these attributes need further processing since the prices are including VAT
+							// we will substract the VAT of each option value and then copy it to the traditional $item['attribute_option_value'] array
+							foreach ($item['attribute_option_value_including_vat'] as $option_row) {
+								if ($option_row[2] > 0) {
+									// if attribute option value has price
+									$vatRate=0;
+									if ($item['products_vat_rate']) {
+										$vatRate=$item['products_vat_rate'];
+									} else {
+										/*
+										// we have to find the product to get the right VAT rate
+										if ($old_product) {
+											print_r($old_product);
+											die();
+										}
+										*/
+									}
+									if ($vatRate) {
+										// reduce VAT from the price
+										$option_row[2]=number_format(($option_row[2]/(100+$vatRate)*100),16);
+									}
+								}
+								// now add it to the attribute_option_value array for further processing
+								$item['attribute_option_value'][]=$option_row;
+							}
 						}
 						if (is_array($item['attribute_option_value'])) {
 							foreach ($item['attribute_option_value'] as $option_row) {
