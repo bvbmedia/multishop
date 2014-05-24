@@ -27,12 +27,12 @@ if ($this->post) {
 				if ($tax_rate>0) {
 					$amount=($amount/(100+$tax_rate))*100;
 				}
-				if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
+				if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
 					$str="update tx_multishop_products set products_price=(products_price+".$amount.") where products_id = '".$rs_get_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
 					$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$sql_affected_rows+=$GLOBALS['TYPO3_DB']->sql_affected_rows();
 				}
-				if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
+				if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
 					$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where products_id = '".$rs_get_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
 					$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				}
@@ -46,13 +46,13 @@ if ($this->post) {
 			}
 		} else {
 			$amount=$originalAmount;
-			if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
+			if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
 				$str="update tx_multishop_products set products_price=(products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
 				$content.='<strong>Price update completed. '.$sql_affected_rows.' products has been updated.</strong><br />';
 			}
-			if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
+			if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
 				$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 			}
@@ -66,17 +66,17 @@ if ($this->post) {
 	}
 	if ($this->post['percentage']) {
 		$multiply=(100+$this->post['percentage'])/100;
-		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
+		if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('products', $this->post['tx_multishop_pi1']['price_update_area']))) {
 			$str="update tx_multishop_products set products_price=(products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
 			$content.='<strong>Price update completed. '.$GLOBALS['TYPO3_DB']->sql_affected_rows().' products has been updated.</strong><br />';
 		}
-		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
+		if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
 			$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
-		if ($this->ADMIN_USER || ($this->ROOTADMIN_USER && in_array('attributes', $this->post['tx_multishop_pi1']['price_update_area']))) {
+		if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('attributes', $this->post['tx_multishop_pi1']['price_update_area']))) {
 			$sql_products="select products_id from tx_multishop_products where page_uid='".$this->showCatalogFromPage."'";
 			$qry_products=$GLOBALS['TYPO3_DB']->sql_query($sql_products);
 			while ($rs_products=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_products)) {
