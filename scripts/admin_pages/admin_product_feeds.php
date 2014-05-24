@@ -263,7 +263,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 					$(".hide_pf").show();				
 				}
 			});		
-			$("#add_field").click(function(event) {
+			$(document).on("click", "#add_field", function(event) {
 				counter++;
 				var item=\'<div><div class="account-field"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
 		foreach ($array as $key=>$option) {
@@ -271,9 +271,15 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 		$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
 				$(\'#product_feed_fields\').append(item);
+				$(\'select.msAdminProductsFeedSelectField\').select2({
+					width:\'450px\'
+				});
 			});
 			$(document).on("click", ".delete_field", function() {
 				jQuery(this).parent().remove();
+			});
+			$(\'.msAdminProductsFeedSelectField\').select2({
+					width:\'450px\'
 			});
 			$(document).on("change", ".msAdminProductsFeedSelectField", function() {
 				var selected=$(this).val();

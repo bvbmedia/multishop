@@ -303,7 +303,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				$tmpcontent.='
 				<tr class="'.$switch.'">
 					<td class="first">
-					<select name="select['.$i.']" id="select['.$i.']">
+					<select name="select['.$i.']" id="select['.$i.']" class="select_columns_fields">
 						<option value="">'.$this->pi_getLL('skip').'</option>
 						';
 				foreach ($coltypes as $key=>$value) {
@@ -383,6 +383,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 			});			
 			$(".importer_advanced_settings").click(function(event) {
 				$(this).next().toggle();			
+			});
+			$(\'.select_columns_fields\').select2({
+				width:\'250px\'
 			});
 		});			
 		</script>			
