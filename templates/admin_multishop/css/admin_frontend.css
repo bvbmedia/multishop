@@ -1,5 +1,5 @@
 
-#tx_multishop_admin_header_wrapper { position:fixed; left:0;top:0; min-width:990px; width:100%; text-align:left; margin:0; padding:0; z-index:1001; }
+#tx_multishop_admin_header_wrapper { position:fixed; left:0;top:0; min-width:990px; width:100%; text-align:left; margin:0; padding:0; z-index:10002; }
 #tx_multishop_admin_header_wrapper #tx_multishop_admin_header_bg { height:42px; background:url(../images/admin_bar_shadow.png) left top repeat-x; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header, 
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul { margin:0; padding:0; list-style:none; line-height:100% }
