@@ -151,6 +151,7 @@ CREATE TABLE `tx_multishop_categories` (
   `custom_settings` text,
   `google_taxonomy_id` int(11) DEFAULT '0',
   `hashed_id` varchar(32) NULL DEFAULT '',
+  `hide_in_menu` TINYINT(1) NULL DEFAULT '0',
   PRIMARY KEY (`categories_id`),
   KEY `idx_categories_parent_id` (`parent_id`),
   KEY `status` (`status`),
@@ -162,7 +163,8 @@ CREATE TABLE `tx_multishop_categories` (
   KEY `combined_two` (`page_uid`,`status`,`categories_id`),
   KEY `combined_three` (`page_uid`,`status`,`parent_id`),
   KEY `google_taxonomy_id` (`google_taxonomy_id`),
-  KEY `hashed_id` (`hashed_id`)
+  KEY `hashed_id` (`hashed_id`),
+  KEY `hide_in_menu` (`hide_in_menu`)
 ) ENGINE=InnoDB ;
 
 CREATE TABLE `tx_multishop_categories_description` (
@@ -594,6 +596,9 @@ CREATE TABLE `tx_multishop_orders_products` (
   `categories_name_4` varchar(150) NULL DEFAULT '',
   `categories_id_5` int(5) NULL DEFAULT '0',
   `categories_name_5` varchar(150) NULL DEFAULT '',
+  `ean_code`    VARCHAR(50) NULL DEFAULT '',
+  `sku_code`    VARCHAR(50) NULL DEFAULT '',
+  `vendor_code` VARCHAR(50) NULL DEFAULT '',
   PRIMARY KEY (`orders_products_id`),
   KEY `orders_id` (`orders_id`),
   KEY `type` (`type`),
@@ -603,7 +608,10 @@ CREATE TABLE `tx_multishop_orders_products` (
   KEY `file_download_code` (`file_download_code`),
   KEY `order_unit_id` (`order_unit_id`),
   KEY `categories_id` (`categories_id`),
-  KEY `manufacturers_id` (`manufacturers_id`)
+  KEY `manufacturers_id` (`manufacturers_id`),
+  KEY `ean_code` (`ean_code`),
+  KEY `sku_code` (`sku_code`),
+  KEY `vendor_code` (`vendor_code`)
 ) ENGINE=InnoDB  COMMENT='Orderregels';
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (
@@ -1068,6 +1076,7 @@ CREATE TABLE `tx_multishop_product_feeds` (
   `include_header` tinyint(1) NULL DEFAULT '0',
   `feed_type` varchar(50) NULL DEFAULT '',
   `post_data` text,
+  `plain_text` TINYINT(0) NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `code` (`code`)
 ) ENGINE=InnoDB ;
@@ -1368,4 +1377,58 @@ CREATE TABLE `tx_multishop_products_locked_fields` (
   KEY crdate (crdate),  
   KEY field_key (field_key),  
   KEY products_id (products_id)
-) ENGINE=InnoDB ;
+)
+  ENGINE =InnoDB;
+
+CREATE TABLE `tx_multishop_attributes_options_groups` (
+  `attributes_options_groups_id`   INT(11)     NULL AUTO_INCREMENT,
+  `language_id`                    INT(5)      NULL DEFAULT '0',
+  `attributes_options_groups_name` VARCHAR(64) NULL DEFAULT '',
+  `sort_order`                     INT(11)     NULL DEFAULT '0',
+  PRIMARY KEY (`attributes_options_groups_id`, `language_id`),
+  KEY `attributes_options_groups_name` (`attributes_options_groups_name`),
+  KEY `attributes_options_groups_id` (`attributes_options_groups_id`),
+  KEY `sort_order` (`sort_order`)
+)
+  ENGINE =MyISAM;
+
+CREATE TABLE `tx_multishop_attributes_options_groups_to_products_options` (
+  `attributes_options_groups_to_products_options_id` INT(11) NULL AUTO_INCREMENT,
+  `attributes_options_groups_id`                     INT(11) NULL DEFAULT '0',
+  `products_options_id`                              INT(11) NULL DEFAULT '0',
+  PRIMARY KEY (`attributes_options_groups_to_products_options_id`)
+)
+  ENGINE =MyISAM;
+
+CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
+  `id`                 INT(11) NULL AUTO_INCREMENT,
+  `zone_id`            INT(4) DEFAULT '0',
+  `shipping_method_id` INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `zone_id` (`zone_id`, `shipping_method_id`)
+)
+  ENGINE =MyISAM;
+
+CREATE TABLE `tx_multishop_feeds_excludelist` (
+  `id`           INT(11)     NULL AUTO_INCREMENT,
+  `feed_id`      INT(11)     NULL DEFAULT '0',
+  `exclude_id`   INT(11)     NULL DEFAULT '0',
+  `exclude_type` VARCHAR(11) NULL DEFAULT 'categories',
+  PRIMARY KEY (`id`),
+  KEY `feed_id` (`feed_id`),
+  KEY `exclude_id` (`exclude_id`),
+  KEY `exclude_type` (`exclude_type`)
+)
+  ENGINE =InnoDB;
+
+CREATE TABLE `tx_multishop_feeds_stock_excludelist` (
+  `id`           INT(11)     NULL AUTO_INCREMENT,
+  `feed_id`      INT(11)     NULL DEFAULT '0',
+  `exclude_id`   INT(11)     NULL DEFAULT '0',
+  `exclude_type` VARCHAR(11) NULL DEFAULT 'categories',
+  PRIMARY KEY (`id`),
+  KEY `feed_id` (`feed_id`),
+  KEY `exclude_id` (`exclude_id`),
+  KEY `exclude_type` (`exclude_type`)
+)
+  ENGINE =InnoDB;
