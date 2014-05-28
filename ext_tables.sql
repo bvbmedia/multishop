@@ -1378,8 +1378,7 @@ CREATE TABLE `tx_multishop_products_locked_fields` (
   KEY crdate (crdate),  
   KEY field_key (field_key),  
   KEY products_id (products_id)
-)
-  ENGINE =InnoDB;
+) ENGINE=InnoDB;
 
 CREATE TABLE `tx_multishop_attributes_options_groups` (
   `attributes_options_groups_id`   INT(11)     NULL AUTO_INCREMENT,
@@ -1390,16 +1389,14 @@ CREATE TABLE `tx_multishop_attributes_options_groups` (
   KEY `attributes_options_groups_name` (`attributes_options_groups_name`),
   KEY `attributes_options_groups_id` (`attributes_options_groups_id`),
   KEY `sort_order` (`sort_order`)
-)
-  ENGINE =MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE `tx_multishop_attributes_options_groups_to_products_options` (
   `attributes_options_groups_to_products_options_id` INT(11) NULL AUTO_INCREMENT,
   `attributes_options_groups_id`                     INT(11) NULL DEFAULT '0',
   `products_options_id`                              INT(11) NULL DEFAULT '0',
   PRIMARY KEY (`attributes_options_groups_to_products_options_id`)
-)
-  ENGINE =MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
   `id`                 INT(11) NULL AUTO_INCREMENT,
@@ -1407,8 +1404,7 @@ CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
   `shipping_method_id` INT(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `zone_id` (`zone_id`, `shipping_method_id`)
-)
-  ENGINE =MyISAM;
+) ENGINE=MyISAM;
 
 CREATE TABLE `tx_multishop_feeds_excludelist` (
   `id`           INT(11)     NULL AUTO_INCREMENT,
@@ -1419,8 +1415,7 @@ CREATE TABLE `tx_multishop_feeds_excludelist` (
   KEY `feed_id` (`feed_id`),
   KEY `exclude_id` (`exclude_id`),
   KEY `exclude_type` (`exclude_type`)
-)
-  ENGINE =InnoDB;
+) ENGINE=InnoDB;
 
 CREATE TABLE `tx_multishop_feeds_stock_excludelist` (
   `id`           INT(11)     NULL AUTO_INCREMENT,
@@ -1431,5 +1426,4 @@ CREATE TABLE `tx_multishop_feeds_stock_excludelist` (
   KEY `feed_id` (`feed_id`),
   KEY `exclude_id` (`exclude_id`),
   KEY `exclude_type` (`exclude_type`)
-)
-  ENGINE =InnoDB;
+) ENGINE=InnoDB;
