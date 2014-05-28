@@ -74,6 +74,7 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search { float:right; font:14px Arial,Helvetica,sans-serif; margin:-5px 0 0; padding:0 0 0 14px; text-transform:uppercase; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search:hover { background:none; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search form { background:url(../images/adminsearch_txt.png) left top no-repeat; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search span { display:none; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search label { display:none; float:left; padding:3px 5px 0 0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search input[type="text"] { float:left; width:190px; /* height:21px; */ border:none; background:none; font:12px Arial, Helvetica, sans-serif; padding:3px 5px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search input[type="submit"] { width:19px; height:21px; border:none; background:url(../images/adminsearch_submit.png) left top no-repeat; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; margin:0; padding:21px 0 0; cursor:pointer; }
