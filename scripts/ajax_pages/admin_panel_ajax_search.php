@@ -339,7 +339,7 @@ if ($this->ADMIN_USER) {
 			//if ($pages != $totpage){
 			$prod=array();
 			$prod['Name']=$this->pi_getLL('more_results');
-			$prod['Link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.$pages.'&q='.urlencode($this->get['q']));
+			$prod['Link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
 			$prod['Title']='<span id="more-results">'.htmlspecialchars($this->pi_getLL('more_results')).' (Page '.($this->get['page']+1).' of '.$global_max_page.')</span>';
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']=$this->get['page']+1;
@@ -350,7 +350,7 @@ if ($this->ADMIN_USER) {
 			$prod=array();
 			if ($results_counter>0) {
 				$prod['Name']=$this->pi_getLL('more_results');
-				$prod['Link']='';
+				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
 				$prod['Title']='<span id="more-results">(Page '.($this->get['page']+1).' of '.$global_max_page.')</span>';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$this->get['page']+1;
@@ -789,7 +789,7 @@ if ($this->ADMIN_USER) {
 		if ($have_paging) {
 			$prod=array();
 			$prod['Name']=$this->pi_getLL('more_results');
-			$prod['Link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.$pages.'&q='.urlencode($this->get['q']));
+			$prod['Link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
 			$prod['Title']='<span id="more-results">'.htmlspecialchars($this->pi_getLL('more_results')).' (Page '.($this->get['page']+1).' from '.$global_max_page.')</span>';
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']=$this->get['page']+1;
@@ -799,7 +799,7 @@ if ($this->ADMIN_USER) {
 			$prod=array();
 			if ($results_counter>0) {
 				$prod['Name']=$this->pi_getLL('more_results');
-				$prod['Link']='';
+				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
 				$prod['Title']='<span id="more-results">(Page '.($this->get['page']+1).' of '.$global_max_page.')</span>';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$this->get['page']+1;
