@@ -188,10 +188,14 @@ if ($this->ADMIN_USER) {
 					$jsonData['html'].='<div class="hr"></div>';
 					$jsonData['html'].='<div id="adminOrderDetailsFooter">';
 					$jsonData['html'].='<div class="left">';
-					$jsonData['html'].=implode("", $extraDetails['left']);
+					if (is_array($extraDetails['left']) && count($extraDetails['left'])) {
+						$jsonData['html'].=implode("", $extraDetails['left']);
+					}
 					$jsonData['html'].='</div>';
 					$jsonData['html'].='<div class="right">';
-					$jsonData['html'].=implode("", $extraDetails['right']);
+					if (is_array($extraDetails['right']) && count($extraDetails['right'])) {
+						$jsonData['html'].=implode("", $extraDetails['right']);
+					}
 					$jsonData['html'].='</div>';
 					$jsonData['html'].='</div>';
 				}
