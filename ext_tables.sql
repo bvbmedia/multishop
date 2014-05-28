@@ -868,6 +868,7 @@ CREATE TABLE `tx_multishop_products` (
   KEY `foreign_products_id` (`foreign_products_id`)
 ) ENGINE=MyISAM ;
 
+
 CREATE TABLE `tx_multishop_products_attributes` (
   `products_attributes_id` int(5) NULL auto_increment,
   `products_id` int(11) NULL DEFAULT '0',
