@@ -340,7 +340,7 @@ input.importer_advanced_settings:hover { background:#e2e2e2; }
 /* --- end of buttons --- */
 
 /* --- admin autofiller --- */
-ul#ui-autocomplete-admin { overflow:hidden; width:198px !important; border:1px solid #aaa; background:#fff; list-style:none; margin:0; padding:0; white-space:nowrap; border-radius:0; }
+ul#ui-autocomplete-admin { overflow:hidden; width:198px !important; border:1px solid #aaa; background:#fff; list-style:none; margin:0; padding:0; white-space:nowrap; border-radius:0; z-index:10002; }
 ul#ui-autocomplete-admin li.ui-menu-item,
 ul#ui-autocomplete-admin li.ui-category { float:left; display:block; width:198px; border:none; background:none; font:11px Arial, Helvetica, sans-serif; color:#000; text-align:left; margin:0; padding:0; white-space:nowrap; }
 
