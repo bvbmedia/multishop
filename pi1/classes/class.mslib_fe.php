@@ -2184,11 +2184,6 @@ class mslib_fe {
 			if (!$this->masterShop) {
 				$where[]="pf.page_uid='".$this->showCatalogFromPage."'";
 			}
-			$from_clause.="tx_multishop_products_flat pf ";
-			if (count($extra_join)) {
-				$from_clause.=" ";
-				$from_clause.=implode(" ", $extra_join);
-			}
 			//hook to let other plugins further manipulate the query
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSet'])) {
 				$query_elements=array();
@@ -2204,6 +2199,7 @@ class mslib_fe {
 				$query_elements['redirect_if_one_product']=&$redirect_if_one_product;
 				$query_elements['extra_from']=&$extra_from;
 				$query_elements['search_section']=&$search_section;
+				$query_elements['extra_join']=&$extra_join;
 				$params=array(
 					'query_elements'=>&$query_elements,
 					'enableFetchTaxRate'=>&$enableFetchTaxRate
@@ -2211,6 +2207,11 @@ class mslib_fe {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSet'] as $funcRef) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
+			}
+			$from_clause.="tx_multishop_products_flat pf ";
+			if (count($extra_join)) {
+				$from_clause.=" ";
+				$from_clause.=implode(" ", $extra_join);
 			}
 			//hook to let other plugins further manipulate the query eof					
 			if (count($extra_from)) {
