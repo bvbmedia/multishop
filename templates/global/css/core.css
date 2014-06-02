@@ -405,3 +405,6 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 .ui-dialog-content.ui-widget-content ul.threeCols li.bulletBlack { width:234px; background:url(../images/bullet-black.png) -7px -7px no-repeat; padding:0 0 4px 24px; }
 .ui-dialog.ui-widget .ui-dialog-buttonpane { border:none; margin:0; padding:0 0 10px; text-align:center; box-shadow:none; }
 .ui-dialog.ui-widget .ui-dialog-buttonpane button { float:none !important; background-image:none; margin-left:5px !important; margin-right:5px !important; min-width:100px !important; }
+.ui-dialog .ui-button-icon-only.ui-dialog-titlebar-close { width:20px; height:20px; border:1px solid transparent; background:none; }
+.ui-dialog .ui-button-icon-only.ui-dialog-titlebar-close:hover { border:1px solid #666; background:#333; }
+.ui-dialog .ui-dialog-titlebar-close span.ui-button-icon-primary.ui-icon-closethick { top:0; margin-left:-8px; }
