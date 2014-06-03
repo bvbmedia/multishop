@@ -187,14 +187,16 @@ class mslib_fe {
 				//echo $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery;
 				//die();
 				$product_ids=array();
-				foreach ($data as $item) {
-					if ($product['products_id']==$item['relative_product_id']) {
-						$product_ids[]=$item['products_id'];
-					} else {
-						$product_ids[]=$item['relative_product_id'];
-					}
-					if (count($product_ids)==$limit) {
-						break;
+				if (is_array($data) && count($data)) {
+					foreach ($data as $item) {
+						if ($product['products_id']==$item['relative_product_id']) {
+							$product_ids[]=$item['products_id'];
+						} else {
+							$product_ids[]=$item['relative_product_id'];
+						}
+						if (count($product_ids)==$limit) {
+							break;
+						}
 					}
 				}
 				if (!count($product_ids)) {
