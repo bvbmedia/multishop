@@ -160,18 +160,21 @@ class mslib_fe {
 				$orders=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('orders_id', 'tx_multishop_orders_products', "products_id = '".$product['products_id']."'", 'orders_id');
 				foreach ($orders as $order) {
 					$products=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id', 'tx_multishop_orders_products', "orders_id = '".$order['orders_id']."' and products_id !='".$product['products_id']."'", '', $limit);
-					foreach ($products as $product) {
-						$product_ids[]=$product['products_id'];
+					if (is_array($products) && count($products)) {
+						foreach ($products as $product) {
+							$product_ids[]=$product['products_id'];
+							if (count($product_ids)==$limit) {
+								break;
+							}
+						}
 						if (count($product_ids)==$limit) {
 							break;
 						}
 					}
-					if (count($product_ids)==$limit) {
-						break;
-					}
 				}
-				$product_ids=array_unique($product_ids);
-				if (!count($product_ids)) {
+				if (count($product_ids)) {
+					$product_ids=array_unique($product_ids);
+				} else {
 					return false;
 				}
 				if (!$this->ms['MODULES']['FLAT_DATABASE']) {
@@ -2323,8 +2326,9 @@ class mslib_fe {
 			$limit_clause // LIMIT ...
 		);
 		//echo $str.'<br>';
-		//error_log($str);
 		//die();
+		//error_log($str);
+
 		if ($this->msDebug) {
 			$this->msDebugInfo.=$str."\n\n";
 		}
