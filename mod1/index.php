@@ -259,6 +259,13 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			tx_t3jquery::addJqJS();
 			$this->content.=tx_t3jquery::getJqJSBE();
 		}
+		$typo3Version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : t3lib_div::int_from_ver(TYPO3_version);
+		if ($typo3Version>=6000000) {
+			$t3lib_BEfuncAlias = '\TYPO3\CMS\Backend\Utility\BackendUtility';
+		} else {
+			$t3lib_BEfuncAlias = 't3lib_BEfunc';
+		}
+
 		$this->iconWorks=method_exists('t3lib_iconWorks', 'getSpriteIcon');
 		$this->mod_info=$this->getExtensionInfo('multishop');
 		$this->get=$_GET;

@@ -1,10 +1,5 @@
 <?php
-$typo3Version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : t3lib_div::int_from_ver(TYPO3_version);
-if ($typo3Version>=6000000) {
-	include_once(t3lib_extMgm::extPath('multishop').'mod1/pages/includes/use.php');
-} else {
-	$t3lib_BEfuncAlias='t3lib_BEfunc';
-}
+
 $title='Help';
 $content.='
 	<div class="shadow_bottom">
