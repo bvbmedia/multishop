@@ -3144,6 +3144,21 @@ class mslib_fe {
 			$array[1]=',-';
 		}
 		$output.=$array[0].$cu_decimal_point.'</span><span class="amount_cents">'.$array[1].'</span>';
+		//hook to let other plugins further manipulate the query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPostProc'])) {
+			$params=array(
+				'amount'=>&$amount,
+				'customer_currency'=>&$customer_currency,
+				'include_currency_symbol'=>&$include_currency_symbol,
+				'cu_thousands_point'=>&$cu_thousands_point,
+				'cu_decimal_point'=>&$cu_decimal_point,
+				'array'=>&$array,
+				'output'=>&$output
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPostProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		return $output;
 	}
 	public function taxDecimalCrop($float, $precision=2, $disable=true) {
