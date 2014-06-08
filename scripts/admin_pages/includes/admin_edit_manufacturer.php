@@ -122,13 +122,13 @@ if ($this->post) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 		}
-		echo $this->pi_getLL('manufacturer_saved');
-		echo '
-		<script>
-		parent.window.location.reload();
-		</script>
-		';
-		exit();
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+			exit();
+		} else {
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+			exit();
+		}
 	}
 }
 if ($_REQUEST['action']=='edit_manufacturer') {
@@ -157,10 +157,10 @@ $manufacturersMeta='';
 if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer') {
 	if ($_REQUEST['action']=='edit_manufacturer' and $manufacturer['manufacturers_image']) {
 		$tmpcontent.='<img src="'.mslib_befe::getImagePath($manufacturer['manufacturers_image'], 'manufacturers', 'normal').'">';
-		$tmpcontent.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image').'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+		$tmpcontent.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image').'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
 		$markerArray=array();
 		$markerArray['MANUFACTURER_IMAGES_SRC']=mslib_befe::getImagePath($manufacturer['manufacturers_image'], 'manufacturers', 'normal');
-		$markerArray['MANUFACTURER_IMAGES_DELETE_LINK']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image');
+		$markerArray['MANUFACTURER_IMAGES_DELETE_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image');
 		$markerArray['FULL_HTTP_URL']=$this->FULL_HTTP_URL_MS;
 		$manufacturersImage.=$this->cObj->substituteMarkerArray($subparts['manufacturers_images'], $markerArray, '###|###');
 	}
@@ -215,7 +215,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$subpartArray['###MANUFACTURER_NOT_VISIBLE_CHECKED###']='';
 	}
 	$subpartArray['###MANUFACTURER_ID###']=$manufacturer['manufacturers_id'];
-	$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id']);
+	$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id']);
 	$subpartArray['###LABEL_MANUFACTURER_NAME###']=$this->pi_getLL('admin_name');
 	$subpartArray['###VALUE_MANUFACTURER_NAME###']=htmlspecialchars($manufacturer['manufacturers_name']);
 	$subpartArray['###LABEL_MANUFACTURER_IMAGE###']=$this->pi_getLL('admin_image');
@@ -230,6 +230,12 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	$subpartArray['###MANUFACTURER_IMAGES###']=$manufacturersImage;
 	$subpartArray['###MANUFACTURERS_CONTENT###']=$manufacturersContent;
 	$subpartArray['###MANUFACTURERS_META###']=$manufacturersMeta;
+	$subpartArray['###VALUE_REFERRER###']='';
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+	} else {
+		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+	}
 	$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 }
 ?>

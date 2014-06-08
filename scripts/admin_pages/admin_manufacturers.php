@@ -224,7 +224,7 @@ if (!count($pageset['dataset'])) {
 			$markerArray=array();
 			$markerArray['ROW_TYPE']=$tr_type;
 			$markerArray['MANUFACTURER_ID']=$row['manufacturers_id'];
-			$markerArray['MANUFACTURER_EDIT_LINK']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=edit_manufacturer';
+			$markerArray['MANUFACTURER_EDIT_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=edit_manufacturer';
 			$markerArray['MANUFACTURER_NAME']=$row['manufacturers_name'];
 			$markerArray['MANUFACTURER_DATE_ADDED']=strftime("%x %X", strtotime($row['date_added']));
 			$markerArray['MANUFACTURER_STATUS']=$status_html;
@@ -290,6 +290,6 @@ if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAG
 }
 // pagination eof
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<div class="float_right"><div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=add_manufacturer" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="float_right msadmin_button">'.t3lib_div::strtoupper($this->pi_getLL('add_manufacturer')).'</a></div></div>';
+$content.='<div class="float_right"><div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=add_manufacturer" class="float_right msadmin_button">'.t3lib_div::strtoupper($this->pi_getLL('add_manufacturer')).'</a></div></div>';
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 ?>
