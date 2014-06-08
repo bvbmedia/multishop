@@ -140,7 +140,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
 	foreach ($types as $key=>$value) {
-		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars($value.' / Key: '.$key).'</option>'."\n";
+		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars('<h3>'.$value.'</h3>Key: '.$key.'<br/>').'</option>'."\n";
 	}
 	$tmpcontent.='</select>
 		</div>
@@ -274,7 +274,14 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			
 		});
 		$(\'#selected_type\').select2({
-			width:\'750px\'
+			width:\'650px\',
+			formatSelection: function(item) {
+				return item.text;
+			},
+			formatSelection: function(item) {
+				return item.text;
+			},
+			escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
 		});
 	});
 	</script>
