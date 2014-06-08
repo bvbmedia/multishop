@@ -148,8 +148,8 @@ foreach ($categories as $category) {
 	$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 	$cat_selectbox.='<option value="'.$category['categories_id'].'" id="sl-cat_'.$category['categories_id'].'">+ '.$category['categories_name'].'</option>';
 	$category_action_icon='<div class="action_icons">
-	<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="msadmin_edit_icon"><span>edit</span></a>
-	<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )" class="msadmin_delete_icon" alt="Remove"><span>delete</span></a>
+	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category" class="msadmin_edit_icon"><span>edit</span></a>
+	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category').'" class="msadmin_delete_icon" alt="Remove"><span>delete</span></a>
 	<a href="'.$link.'" target="_blank" class="msadmin_view"><span>view</span></a>
 	</div>';
 	$subcat_list='';
@@ -167,7 +167,7 @@ foreach ($categories as $category) {
 	$markerArray['COUNTER']=$counter;
 	$markerArray['EXTRA_CLASS']=(!$category['status'] ? 'msAdminCategoryDisabled' : '');
 	$markerArray['CATEGORY_ID']=$category['categories_id'];
-	$markerArray['CATEGORY_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category';
+	$markerArray['CATEGORY_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category';
 	$markerArray['CATEGORY_NAME']=$category['categories_name'];
 	$markerArray['CATEGORY_STATUS']=(!$category['status'] ? '(disabled)' : '');
 	$markerArray['CATEGORY_ACTION_ICON']=$category_action_icon;
