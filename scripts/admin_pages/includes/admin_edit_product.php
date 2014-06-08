@@ -602,22 +602,12 @@ if ($this->post) {
 			// if the flat database module is enabled we have to sync the changes to the flat table
 			mslib_befe::convertProductToFlat($prodid);
 		}
-		if ($this->get['type']==2003) {
-			if ($this->post['tx_multishop_pi1']['referrer']) {
-				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-				exit();
-			} else {
-				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
-				exit();
-			}
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+			exit();
 		} else {
-			// deprecated highslide popup code
-			$content.=$this->pi_getLL('product_saved').'.';
-			$content.='
-			<script>
-			parent.window.location.reload();
-			</script>
-			';
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+			exit();
 		}
 	}
 	//window.opener.location.reload();

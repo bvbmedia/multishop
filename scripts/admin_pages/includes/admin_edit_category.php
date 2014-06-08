@@ -178,22 +178,12 @@ if ($this->post) {
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
-		if ($this->get['type']==2003) {
-			if ($this->post['tx_multishop_pi1']['referrer']) {
-				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-				exit();
-			} else {
-				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
-				exit();
-			}
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+			exit();
 		} else {
-			// deprecated highslide popup code
-			$content.=$this->pi_getLL('category_saved').'.';
-			$content.='
-			<script type="text/javascript">
-			parent.window.location.reload();
-			</script>
-			';
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+			exit();
 		}
 	}
 } else {
