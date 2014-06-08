@@ -602,19 +602,23 @@ if ($this->post) {
 			// if the flat database module is enabled we have to sync the changes to the flat table
 			mslib_befe::convertProductToFlat($prodid);
 		}
-		if ($this->post['tx_multishop_pi1']['referrer']) {
-			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-			exit();
+		if ($this->get['type']==2003) {
+			if ($this->post['tx_multishop_pi1']['referrer']) {
+				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+				exit();
+			} else {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+				exit();
+			}
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
-			exit();
+			// deprecated highslide popup code
+			$content.=$this->pi_getLL('product_saved').'.';
+			$content.='
+			<script>
+			parent.window.location.reload();
+			</script>
+			';
 		}
-		$content.=$this->pi_getLL('product_saved').'.';
-		$content.='
-		<script>
-		parent.window.location.reload();
-		</script>
-		';
 	}
 	//window.opener.location.reload();
 	//parent.window.hs.close();
@@ -1517,7 +1521,7 @@ if ($this->post) {
 		$subpartArray['###FOOTER_LABEL_BUTTON_CANCEL###']=$this->pi_getLL('admin_cancel');
 		$subpartArray['###FOOTER_LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
 		$subpartArray['###PRODUCT_PID###']=$product['products_id'];
-		$subpartArray['###FORM_ACTION_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&pid='.$this->get['pid']);
+		$subpartArray['###FORM_ACTION_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&pid='.$this->get['pid']);
 		if ($_COOKIE['hide_advanced_options']==1) {
 			$subpartArray['###JS_ADVANCED_OPTION_TOGGLE###']='$(".toggle_advanced_option").hide();'."\n";
 		} else {

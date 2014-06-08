@@ -178,19 +178,23 @@ if ($this->post) {
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
-		if ($this->post['tx_multishop_pi1']['referrer']) {
-			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-			exit();
+		if ($this->get['type']==2003) {
+			if ($this->post['tx_multishop_pi1']['referrer']) {
+				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+				exit();
+			} else {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+				exit();
+			}
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
-			exit();
+			// deprecated highslide popup code
+			$content.=$this->pi_getLL('category_saved').'.';
+			$content.='
+			<script type="text/javascript">
+			parent.window.location.reload();
+			</script>
+			';
 		}
-		$content.=$this->pi_getLL('category_saved').'.';
-		$content.='
-		<script type="text/javascript">
-		parent.window.location.reload();
-		</script>
-		';
 	}
 } else {
 	if ($_REQUEST['action']=='edit_category') {
@@ -340,7 +344,7 @@ if ($this->post) {
 		$subpartArray=array();
 		$subpartArray['###CATEGORIES_ID0###']=$category['categories_id'];
 		$subpartArray['###CATEGORIES_ID1###']=$category['categories_id'];
-		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
+		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
 		$subpartArray['###LABEL_BUTTON_CANCEL###']=$this->pi_getLL('cancel');
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');
 		$subpartArray['###HEADING_PAGE###']=$heading_page;
