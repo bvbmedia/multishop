@@ -140,7 +140,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
 	foreach ($types as $key=>$value) {
-		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars($value).'</option>'."\n";
+		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars($value.' / Key: '.$key).'</option>'."\n";
 	}
 	$tmpcontent.='</select>
 		</div>
@@ -273,7 +273,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			jQuery("#has").show();
 			
 		});
-	
+		$(\'#selected_type\').select2({
+			width:\'750px\'
+		});
 	});
 	</script>
 	<div id="tab-container">
