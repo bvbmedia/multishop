@@ -4661,6 +4661,7 @@ class mslib_fe {
 				foreach ($members as $member) {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['label']=$member['username'];
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['description']='Logged in at '.strftime("%x %X", $member['lastlogin']);
+					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$member['uid'].'&action=edit_customer',1);
 				}
 			}
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.($rowguests['total']-$total_members);
