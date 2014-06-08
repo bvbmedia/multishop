@@ -28,10 +28,22 @@ if (count($products)<0) {
 		foreach ($customers as $customer) {
 			if ($customer['email']) {
 				if ($customer['company']) {
-					$content.='<option value="'.$customer['uid'].'">'.$customer['company'].' - '.htmlspecialchars($customer['name'].' ('.$customer['email'].', '.$customer['uid'].')').'</option>';
+					$name=$customer['company'];
 				} else {
-					$content.='<option value="'.$customer['uid'].'">'.htmlspecialchars($customer['name'].' ('.$customer['email'].', '.$customer['uid'].')').'</option>';
+					$name=$customer['name'];
 				}
+				// CUSTOM HTML MARKUP FOR SELECT2
+				$htmlTitle='<h3>'.$name.'</h3>';
+				$htmlTitle.=$this->pi_getLL('admin_customer_id').': <strong>'.$customer['uid'].'</strong><br/>';
+				$htmlTitle.=$this->pi_getLL('name').': <strong>'.$customer['name'].'</strong><br/>';
+				$htmlTitle.=$this->pi_getLL('email').': <strong>'.$customer['email'].'</strong><br/>';
+				$htmlTitle.=$this->pi_getLL('username').': <strong>'.$customer['username'].'</strong><br/>';
+				$htmlTitle.=$this->pi_getLL('address').': <strong>'.$customer['address'].'</strong><br/>';
+				$htmlTitle.=$this->pi_getLL('telephone').': <strong>'.$customer['telephone'].'</strong><br/>';
+
+				//$title.='<span style="padding-left:10px;">'.$this->pi_getLL('email').'<br>bas<br/>: '.$customer['email'].'</span><span style="padding-left:10px;">'.$this->pi_getLL('admin_customer_id').': '.$customer['uid'].'</span>';
+				//$html='<table width="100%" border=3><tr><td>'.$title.'</td><td>'.$title.'</td><td>'.$customer['email'].'</td><td>'.$customer['uid'].'</td></tr></table>';
+				$content.='<option value="'.$customer['uid'].'">'.htmlspecialchars($htmlTitle).'</option>';
 			}
 		}
 		$content.='</select>';
@@ -204,7 +216,14 @@ if (count($products)<0) {
 		$tmpcontent.='<script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$(\'#manual_order_customer_id\').select2({
-					width:\'310px\'
+					width:\'350px\',
+					formatSelection: function(item) {
+						return item.text;
+					},
+					formatSelection: function(item) {
+						return item.text;
+					},
+					escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
 				});
 				$(\'#manual_order_customer_id\').change(function() {
 					if ($(this).val() == \'\') {
