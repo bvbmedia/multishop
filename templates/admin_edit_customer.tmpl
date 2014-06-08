@@ -56,7 +56,8 @@
 			<!-- ###DETAILS### end -->
 			<div style="display: block;" id="edit_customer" class="tab_content">
 				<div id="live-validation">
-					<form action="" method="post" name="edit_customer" class="edit_customer" id="edit_customer">
+					<form action="###CUSTOMER_EDIT_FORM_URL###" method="post" name="edit_customer" class="edit_customer" id="edit_customer">
+                        <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###" >
 						<div class="account-field">
 							<label for="username" id="account-username">###LABEL_USERNAME###</label>
 							<input type="text" name="username" class="username" id="username" ###USERNAME_READONLY### value="###VALUE_USERNAME###" required="required" data-h5-errorid="invalid-username" title="###INVALID_USERNAME_MESSAGE###" /><div id="invalid-username" class="error-space" style="display:none"></div>
