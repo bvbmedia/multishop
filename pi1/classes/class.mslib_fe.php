@@ -4963,16 +4963,16 @@ class mslib_fe {
 			$html.='<ul>';
 		}
 		while ($parent_categories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($parent_categories_query)) {
-			$html.='<li><div class="float-right-bold"><a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id']).'&action=delete_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 890, height: 140} )" alt="Remove" class="admin_menu_remove" title="Remove"></a>';
+			$html.='<li><div class="float-right-bold"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id']).'&action=delete_category" alt="Remove" class="admin_menu_remove" title="Remove"></a>';
 			$strchk="select * from tx_multishop_categories where parent_id='".$parent_categories['id']."'";
 			$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
-				$html.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id'].'&action=add_product').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 890, height: 500} )" class="admin_menu_add" title="Add Product"></a>';
+				$html.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id'].'&action=add_product').'" class="admin_menu_add" title="Add Product"></a>';
 			}
 			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
 				$html.=' <a href="#" cid="'.$parent_categories['id'].'" class="admin_menu_upload_productfeed" title="Upload Productfeed"></a>';
 			}
-			$html.='</div><strong><a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 890, height: 500} )">'.$parent_categories['name'].'</a></strong>';
+			$html.='</div><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id']).'&action=edit_category">'.$parent_categories['name'].'</a></strong>';
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
 				$html.=mslib_fe::tep_get_categories_edit($parent_categories['id'], $aid);
 			} else {
@@ -6014,10 +6014,10 @@ class mslib_fe {
 						$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 //						$where.='categories_id['.$level.']='.$category['categories_id'];
 						// get all cats to generate multilevel fake url eof
-						$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">'.$item['categories_name'].'</a>';
+						$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category">'.$item['categories_name'].'</a>';
 						$content.='<div class="action_icons">
-						<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="msadmin_edit_icon"><span>edit</span></a>
-						<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id'].'&action=delete_category').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )" class="msadmin_delete_icon" alt="Remove"><span>delete</span></a>
+						<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" class="msadmin_edit_icon"><span>edit</span></a>
+						<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id'].'&action=delete_category').'" class="msadmin_delete_icon" alt="Remove"><span>delete</span></a>
 						<a href="'.$link.'" target="_blank" class="msadmin_view"><span>view</span></a>
 						</div>';
 //						$content.='<span class="msadmin_cat_edit_icons"><a href="'.mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="msadmin_edit">edit</a> | <a href="'.mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id'].'&action=delete_category').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )" class="msadmin_delete" alt="Remove">delete</a></span> | <span class="msadmin_cat_view_icons"><a href="'.$link.'" target="_blank" class="msadmin_view">view</a>';
@@ -6128,10 +6128,10 @@ class mslib_fe {
 						$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 						//						$where.='categories_id['.$level.']='.$category['categories_id'];
 						// get all cats to generate multilevel fake url eof
-						$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">'.$item['categories_name'].'</a>';
+						$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category">'.$item['categories_name'].'</a>';
 						$content.='<div class="action_icons">
-							<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="msadmin_edit_icon"><span>edit</span></a>
-							<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id'].'&action=delete_category').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )" class="msadmin_delete_icon" alt="Remove"><span>delete</span></a>
+							<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" class="msadmin_edit_icon"><span>edit</span></a>
+							<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id'].'&action=delete_category').'" class="msadmin_delete_icon" alt="Remove"><span>delete</span></a>
 							<a href="'.$link.'" target="_blank" class="msadmin_view"><span>view</span></a>
 						</div>';
 						//						$content.='<span class="msadmin_cat_edit_icons"><a href="'.mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="msadmin_edit">edit</a> | <a href="'.mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id'].'&action=delete_category').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )" class="msadmin_delete" alt="Remove">delete</a></span> | <span class="msadmin_cat_view_icons"><a href="'.$link.'" target="_blank" class="msadmin_view">view</a>';
