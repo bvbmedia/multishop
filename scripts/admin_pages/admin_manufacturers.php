@@ -271,6 +271,13 @@ if (!count($pageset['dataset'])) {
 		$subpartArray['###LABEL_FOOTER_MANUFACTURER_ACTION###']=$this->pi_getLL('action');
 		$subpartArray['###MANUFACTURERS###']=$contentItem;
 		$results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
+		// pagination
+		if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
+			$content='';
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+			$results.=$tmp;
+		}
+		// pagination eof
 	}
 }
 $subpartArray=array();
@@ -283,13 +290,8 @@ $subpartArray['###SEARCH_NAV###']=$searchCharNav;
 $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$noresults;
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-// pagination
-if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
-	$content.=$tmp;
-}
-// pagination eof
+
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<div class="float_right"><div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=add_manufacturer" class="float_right msadmin_button">'.t3lib_div::strtoupper($this->pi_getLL('add_manufacturer')).'</a></div></div>';
+$content.='<div class="float_right"><div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id'].'&action=add_manufacturer',1).'" class="admin_menu_add label">'.t3lib_div::strtoupper($this->pi_getLL('add_manufacturer')).'</a></div></div>';
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 ?>

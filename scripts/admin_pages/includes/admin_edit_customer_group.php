@@ -43,11 +43,13 @@ if ($this->post) {
 			$group_string=mslib_fe::updateFeUserGroup($user['uid'], $add_array, $remove_array);
 		}
 	}
-	echo '
-	<script>
-		parent.window.location.reload();
-	</script>
-	';
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+		exit();
+	} else {
+		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups',1));
+		exit();
+	}
 }
 $group=mslib_fe::getGroup($this->get['customer_group_id'], 'uid');
 $group['tx_multishop_remaining_budget']=round($group['tx_multishop_remaining_budget'], 13);
@@ -85,6 +87,12 @@ $subpartArray['###VALUE_DISCOUNT###']=htmlspecialchars($group['tx_multishop_disc
 $subpartArray['###LABEL_MEMBERS###']='MEMBERS';
 $subpartArray['###MEMBERS_OPTION###']=$contentItem;
 $subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');
+$subpartArray['###VALUE_REFERRER###']='';
+if ($this->post['tx_multishop_pi1']['referrer']) {
+	$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+} else {
+	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+}
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'])) {
 	$params=array(
