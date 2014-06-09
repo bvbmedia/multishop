@@ -166,6 +166,7 @@ ul#ms_admin_maximize li a { display:block; float:left; width:85px; height:24px; 
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li:hover ul li.dropdown_bottom a:hover { background:#111; border-right-color:#444; border-left-color:#444; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li:hover ul li a:hover span { }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li:hover ul li.dropdown_bottom a:hover span { }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li:hover ul li span.ms_admin_menu_item_description { color:#cdcdcd !important; }
 
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li>span { float:left; display:block; width:230px; border-left:1px solid #cdcdcd; border-right:1px solid #cdcdcd; background:none; color:#333; font:bold 14px Arial, Helvetica, sans-serif; color:#333; text-transform:uppercase; padding:7px 10px; cursor:default; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li a span,
