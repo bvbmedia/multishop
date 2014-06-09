@@ -5,3 +5,7 @@ function CONFIRM(label) {
         return false;
     }
 }
+function isMobile() {
+    try{ document.createEvent("TouchEvent"); return true; }
+    catch(e){ return false; }
+}
