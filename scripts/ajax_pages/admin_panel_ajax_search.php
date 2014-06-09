@@ -102,10 +102,10 @@ if ($this->ADMIN_USER) {
 		if (!is_numeric($p)) {
 			$p=0;
 		}
-		//$limit=5;
-		$limit=1000;
-		//$offset=$p*$limit;
-		$offset=0;
+		$limit=10;
+		//$limit=100;
+		$offset=$p*$limit;
+		//$offset=0;
 		$this->get['limit']=$limit;
 		$global_max_page=0;
 		$modules=array();
@@ -166,7 +166,7 @@ if ($this->ADMIN_USER) {
 				$have_paging=true;
 			}
 			if ($pageset['total_rows']>0) {
-				$results_counter++;
+				$results_counter+=$pageset['total_rows'];
 			}
 		}
 		// cms search eof		
@@ -202,7 +202,7 @@ if ($this->ADMIN_USER) {
 				$have_paging=true;
 			}
 			if ($pageset['total_rows']>0) {
-				$results_counter++;
+				$results_counter+=$pageset['total_rows'];
 			}
 		}
 		// admin_settings search eof	
@@ -237,7 +237,7 @@ if ($this->ADMIN_USER) {
 				$have_paging=true;
 			}
 			if ($pageset['total_rows']>0) {
-				$results_counter++;
+				$results_counter+=$pageset['total_rows'];
 			}
 		}
 		// categories search eof		
@@ -272,7 +272,7 @@ if ($this->ADMIN_USER) {
 				$have_paging=true;
 			}
 			if ($pageset['total_rows']>0) {
-				$results_counter++;
+				$results_counter+=$pageset['total_rows'];
 			}
 		}
 		// orders search eof
@@ -300,7 +300,7 @@ if ($this->ADMIN_USER) {
 				$have_paging=true;
 			}
 			if ($pageset['total_rows']>0) {
-				$results_counter++;
+				$results_counter+=$pageset['total_rows'];
 			}
 		}
 		// invoices eof	
@@ -315,10 +315,10 @@ if ($this->ADMIN_USER) {
 			$select=array();
 			if (strlen($this->get['q'])>0) {
 				$items=array();
-				$items[]="f.company like '".addslashes($this->get['q'])."%'";
-				$items[]="f.name like '".addslashes($this->get['q'])."%'";
-				$items[]="f.email like '".addslashes($this->get['q'])."%'";
-				$items[]="f.username like '".addslashes($this->get['q'])."%'";
+				$items[]="f.company like '%".addslashes($this->get['q'])."%'";
+				$items[]="f.name like '%".addslashes($this->get['q'])."%'";
+				$items[]="f.email like '%".addslashes($this->get['q'])."%'";
+				$items[]="f.username like '%".addslashes($this->get['q'])."%'";
 				$filter[]='('.implode(" or ", $items).')';
 				$filter[]='(f.disable=0 and f.deleted=0)';
 			}
@@ -332,7 +332,7 @@ if ($this->ADMIN_USER) {
 				$have_paging=true;
 			}
 			if ($pageset['total_rows']>0) {
-				$results_counter++;
+				$results_counter+=$pageset['total_rows'];
 			}
 		}
 		// customer search eof
@@ -419,7 +419,7 @@ if ($this->ADMIN_USER) {
 				$have_paging=true;
 			}
 			if ($pageset['total_rows']>0) {
-				$results_counter++;
+				$results_counter+=$pageset['total_rows'];
 			}
 		}
 		// product search eof
@@ -435,8 +435,8 @@ if ($this->ADMIN_USER) {
 				$prod=array();
 				$prod['is_children']=true;
 				$prod['Name']=substr($category['name'], 0, 50);
-				$prod['id']=$prod['Name'];
-				$prod['text']=$prod['Name'];
+				$prod['id']=md5($category['name']);
+				$prod['text']=$category['name'];
 				$prod['Title']=$prod['Name'];
 				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cmt_id='.$category['id']).'&action=edit_cms';
 				$prod['Image']='';
@@ -462,9 +462,9 @@ if ($this->ADMIN_USER) {
 				$prod=array();
 				$prod['is_children']=true;
 				$prod['Name']=substr($category['configuration_title'], 0, 50);
-				$prod['id']=$prod['Name'];
+				$prod['id']=md5($category['configuration_title']);
 				$prod['Title']=$prod['Name'];
-				$prod['text']=$prod['Name'];
+				$prod['text']=$category['configuration_title'];
 				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&module_id='.$category['id']).'&action=edit_module';
 				$prod['Image']='';
 				$prod['Desc']='';
@@ -489,8 +489,8 @@ if ($this->ADMIN_USER) {
 				$prod=array();
 				$prod['is_children']=true;
 				$prod['Name']=substr($category['categories_name'], 0, 50);
-				$prod['id']=$prod['Name'];
-				$prod['text']=$prod['Name'];
+				$prod['id']=md5($category['categories_name']);
+				$prod['text']=$category['categories_name'];
 				$prod['Title']=$prod['Name'];
 				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=edit_category');
 				$prod['Image']='';
@@ -541,8 +541,8 @@ if ($this->ADMIN_USER) {
 				$prod=array();
 				$prod['is_children']=true;
 				$prod['Name']=substr($order['orders_id'], 0, 50);
-				$prod['id']=$prod['Name'];
-				$prod['text']=$prod['Name'];
+				$prod['id']=md5($order['orders_id']);
+				$prod['text']=$order['orders_id'];
 				$prod['Title']=$prod['Name'];
 				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id']).'&action=edit_order';
 				$prod['Image']='';
@@ -568,8 +568,8 @@ if ($this->ADMIN_USER) {
 				$prod=array();
 				$prod['is_children']=true;
 				$prod['Name']=substr($invoice['invoice_id'], 0, 50);
-				$prod['id']=$prod['Name'];
-				$prod['text']=$prod['Name'];
+				$prod['id']=md5($invoice['invoice_id']);
+				$prod['text']=$invoice['invoice_id'];
 				$prod['Title']=$prod['Name'];
 				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
 				$prod['Image']='';
@@ -601,8 +601,8 @@ if ($this->ADMIN_USER) {
 				$prod=array();
 				$prod['is_children']=true;
 				$prod['Name']=substr($customer['name'], 0, 50);
-				$prod['id']=$prod['Name'];
-				$prod['text']=$prod['Name'];
+				$prod['id']=md5($customer['name']);
+				$prod['text']=$customer['name'];
 				$prod['Title']=$prod['Name'];
 				$prod['Link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer');
 				$prod['Image']='';
@@ -635,8 +635,8 @@ if ($this->ADMIN_USER) {
 					</div>';
 				}
 				$prod['Title']='<div class="ajax_products_name">'.substr($product['products_name'], 0, 50).'</div>';
-				$prod['id']=substr($product['products_name'], 0, 50);
-				$prod['text']=substr($product['products_name'], 0, 50);
+				$prod['id']=md5($product['products_name']);
+				$prod['text']=$product['products_name'];
 				$prod['Title']=$prod['Title'];
 				$product['products_shortdescription']=strip_tags($product['products_shortdescription']);
 				$prod['Desc']='<div class="ajax_products_shortdescription">'.str_highlight(substr($product['products_shortdescription'], 0, 75), $this->get['q']).'</div>';
@@ -674,35 +674,14 @@ if ($this->ADMIN_USER) {
 				$data['listing']['products'][]=$prod;
 			}
 		}
-		if ($have_paging) {
-			$prod=array();
-			$prod['Name']=$this->pi_getLL('more_results');
-			$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
-			$prod['Title']='<span id="more-results">'.htmlspecialchars($this->pi_getLL('more_results')).' (Page '.($this->get['page']+1).' from '.$global_max_page.')</span>';
-			$prod['skeyword']=$this->get['q'];
-			$prod['Page']=$this->get['page']+1;
-			$prod['Product']='paging';
-			//$data['footer']['paging']=$prod;
-		} else {
-			$prod=array();
-			if ($results_counter>0) {
-				$prod['Name']=$this->pi_getLL('more_results');
-				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
-				$prod['Title']='<span id="more-results">(Page '.($this->get['page']+1).' of '.$global_max_page.')</span>';
-				$prod['skeyword']=$this->get['q'];
-				$prod['Page']=$this->get['page']+1;
-				$prod['Product']='paging';
-			} else {
-				$prod['Name']='';
-				$prod['Link']='';
-				$prod['Title']='';
-				$prod['skeyword']='';
-				$prod['Page']='';
-				$prod['Product']='';
-			}
-			//$data['footer']['paging']=$prod;
-		}
 		// end products
+		$page_marker=array();
+		$page_marker['admin_settings']=false;
+		$page_marker['categories']=false;
+		$page_marker['orders']=false;
+		$page_marker['invoices']=false;
+		$page_marker['customers']=false;
+		$page_marker['products']=false;
 		$data_json=array();
 		if (count($data['listing']['cms'])>0) {
 			$data_json[]=array(
@@ -753,7 +732,10 @@ if ($this->ADMIN_USER) {
 				'children'=>$data['listing']['products']
 			);
 		}
-		$content=array("products"=>$data_json);
+		$content=array(
+			"products"=>$data_json,
+			"total_rows"=>$results_counter
+		);
 		$content=json_encode($content, ENT_NOQUOTES);
 		// now build up the listing eof
 	}

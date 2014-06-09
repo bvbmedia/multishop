@@ -4617,15 +4617,19 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_search']['description'].='
 								<form action="'.mslib_fe::typolink().'" method="get" id="ms_admin_top_search">
 									<!-- <input class="admin_skeyword" id="ms_admin_skeyword" name="ms_admin_skeyword" type="text" placeholder="'.$this->pi_getLL('keyword').'" value="" />-->
-									<input type="hidden" class="bigdrop" id="ms_admin_skeyword" style="width: 200px" name="ms_admin_skeyword" />
+									<input type="hidden" class="bigdrop" id="ms_admin_skeyword" style="width: 200px" name="ms_admin_skeyword" value="" />
 									<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 									<input name="type" type="hidden" value="2003" />
 									<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_search" />
 									<input name="page" id="ms_admin_us_page" type="hidden" value="0" />	
-									<input name="Submit" type="submit" />
+									<input name="Submit" type="submit" id="btn_search_admin_panel" />
 								</form>'."\n";
 			$ms_menu['header']['ms_admin_search']['description'].='<script type="text/javascript">
 			adminPanelSearch();
+			$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
+				$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
+				return true;
+			});
 			</script>'."\n";
 		}
 		if ($this->ROOTADMIN_USER or $this->STORESADMIN_USER) {

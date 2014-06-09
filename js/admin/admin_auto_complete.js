@@ -1,7 +1,7 @@
 var adminPanelSearch = function () {
     jQuery("li.ms_admin_search > form#ms_admin_top_search > input#ms_admin_skeyword").select2({
-        placeholder:"Search",
-        minimumInputLength:3,
+        placeholder: MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL,
+        minimumInputLength: 1,
         formatResult:function(data){
             if (data.is_children) {
                 if (data.Product == true) {
@@ -32,12 +32,13 @@ var adminPanelSearch = function () {
             url:MS_ADMIN_PANEL_AUTO_COMPLETE_URL,
             dataType:'json',
             quietMillis: 100,
-            data: function (term) {
-                return { q:term };
+            data: function (term, page) {
+                return { q: term, page: page };
             },
-            results: function (data) {
+            results: function (data, page) {
+                var more = (page * 10) < data.total_rows; // whether or not there are more results available
                 //console.log(data);
-                return {results:data.products};
+                return {results: data.products, more: more};
             }
         }
     });
