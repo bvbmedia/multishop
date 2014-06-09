@@ -534,6 +534,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 .msadmin_balloon_item table#msOrderDetailsTable td.msOrderDetailsItemName { width:90%; }
 .msadmin_balloon_item table#msOrderDetailsTable td.msOrderDetailsItemQuantity,
 .msadmin_balloon_item table#msOrderDetailsTable td.msOrderDetailsItemTotal { text-align:right; }
+.msadmin_balloon_item table#msOrderDetailsTable td.msOrderDetailsItemTotal { white-space:nowrap; }
 .msadmin_balloon_item table#msOrderDetailsTable tr.odd td { background:#202020; }
 
 .msadmin_balloon_item table#msOrderDetailsSubTotalTable { width:520px; border-collapse:collapse; }
