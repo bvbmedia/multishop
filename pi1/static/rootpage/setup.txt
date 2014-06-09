@@ -386,13 +386,13 @@ multishop_admin_page {
 [usergroup = {$plugin.multishop.fe_admin_usergroup}, {$plugin.multishop.fe_rootadmin_usergroup}]
 page {
   includeJS.msAdminPanel = EXT:multishop/js/admin/admin_panel.js
-  includeJS.msAdminPanel.compress=1	
-  includeJS.msAdminAutoComplete = EXT:multishop/js/admin/admin_auto_complete.js
-  includeJS.msAdminAutoComplete.compress=1	
+  includeJS.msAdminPanel.compress=1
   includeJS.msAdminMisc = EXT:multishop/js/admin/misc.js
   includeJS.msAdminMisc.compress=1
   includeJS.jquerySelect2 = EXT:multishop/js/select2/select2.min.js
   includeJS.jquerySelect2.compress=1
+  includeJS.msAdminAutoComplete = EXT:multishop/js/admin/admin_auto_complete.js
+  includeJS.msAdminAutoComplete.compress=1
   includeCSS {
     adminglobalCSS = EXT:multishop/templates/global/css/admin.css
     adminglobalCSS {
