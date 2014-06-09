@@ -475,7 +475,7 @@ if ($this->ADMIN_USER) {
 				$prod['Price']='';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$pages;
-				$prod['Product']=true;
+				$prod['Product']=false;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
 				$data['listing']['cms'][]=$prod;
@@ -502,7 +502,7 @@ if ($this->ADMIN_USER) {
 				$prod['Price']='';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$pages;
-				$prod['Product']=true;
+				$prod['Product']=false;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
 				$data['listing']['admin_settings'][]=$prod;
@@ -529,7 +529,7 @@ if ($this->ADMIN_USER) {
 				$prod['Price']='';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$pages;
-				$prod['Product']=true;
+				$prod['Product']=false;
 				$prod['SmallListing']=true;
 				if ($category['categories_url']) {
 					$target=' target="_blank"';
@@ -581,7 +581,7 @@ if ($this->ADMIN_USER) {
 				$prod['Price']='';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$pages;
-				$prod['Product']=true;
+				$prod['Product']=false;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
 				$data['listing']['orders'][]=$prod;
@@ -608,7 +608,7 @@ if ($this->ADMIN_USER) {
 				$prod['Price']='';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$pages;
-				$prod['Product']=true;
+				$prod['Product']=false;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
 				$data['listing']['invoices'][]=$prod;
@@ -641,7 +641,7 @@ if ($this->ADMIN_USER) {
 				$prod['Price']='';
 				$prod['skeyword']=$this->get['q'];
 				$prod['Page']=$pages;
-				$prod['Product']=true;
+				$prod['Product']=false;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
 				$data['listing']['customers'][]=$prod;

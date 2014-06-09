@@ -4,7 +4,7 @@ var adminPanelSearch = function () {
         minimumInputLength:3,
         formatResult:function(data){
             if (data.is_children) {
-                if (data.Product) {
+                if (data.Product == true) {
                     var result_html='<div class="ajax_products">';
                     result_html+=data.Image;
                     result_html+='<div class="ajax_products_name"><a href="'+data.Link+'"><span>'+data.Title+'</span></a></div>';
