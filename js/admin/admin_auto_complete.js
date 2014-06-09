@@ -24,7 +24,9 @@ var adminPanelSearch = function () {
             }
         },
         formatSelection:function(data){
-            location.href=data.Link;
+            if (data.Link) {
+                location.href = data.Link;
+            }
         },
         dropdownCssClass:"bigdrop",
         escapeMarkup: function (m) { return m; },

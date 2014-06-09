@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 if ($this->ADMIN_USER) {
-	if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) {
+	/*if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) {
 		$this->ms['MODULES']['CACHE_FRONT_END']=0;
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
@@ -15,8 +15,8 @@ if ($this->ADMIN_USER) {
 		$Cache_Lite=new Cache_Lite($options);
 		$string=md5('ajax_products_search_'.$this->showCatalogFromPage.'_'.$_REQUEST['q'].'_'.$this->get['page']);
 	}
-	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
-		$data=array();
+	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {*/
+	$data=array();
 		if ($_REQUEST['q']) {
 			$this->get['q']=$_REQUEST['q'];
 			$this->get['q']=trim($this->get['q']);
@@ -102,8 +102,8 @@ if ($this->ADMIN_USER) {
 		if (!is_numeric($p)) {
 			$p=0;
 		}
-		$limit=10;
-		//$limit=100;
+	$limit=20;
+	//$limit=100;
 		$offset=$p*$limit;
 		//$offset=0;
 		$this->get['limit']=$limit;
@@ -253,7 +253,7 @@ if ($this->ADMIN_USER) {
 			if (strlen($this->get['q'])>0) {
 				$items=array();
 				$items[]="orders_id='".addslashes($this->get['q'])."'";
-				$items[]="customer_id LIKE '%".addslashes($this->get['q'])."%'";
+				$items[]="customer_id LIKE '".addslashes($this->get['q'])."%'";
 				$filter[]='('.implode(" or ", $items).')';
 				$filter[]='(o.deleted=0)';
 			}
@@ -738,7 +738,7 @@ if ($this->ADMIN_USER) {
 		);
 		$content=json_encode($content, ENT_NOQUOTES);
 		// now build up the listing eof
-	}
+	//}
 	echo $content;
 	exit;
 }
