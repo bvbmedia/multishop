@@ -344,7 +344,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']=$this->get['page']+1;
 			$prod['Product']='paging';
-			//$data['headers']['paging'][]=$prod;
+			$data[]=$prod;
 			//}
 		} else {
 			$prod=array();
@@ -363,7 +363,7 @@ if ($this->ADMIN_USER) {
 				$prod['Page']='';
 				$prod['Product']='paging';
 			}
-			//$data['headers']['paging']=$prod;
+			$data[]=$prod;
 		}
 		// product search
 		if ($modules['products'] and $this->get['q']) {
@@ -462,7 +462,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['headers']['cms']=$prod;
+			$data[]=$prod;
 			foreach ($resultset['admin_cms']['admin_cms'] as $category) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -480,7 +480,7 @@ if ($this->ADMIN_USER) {
 				$prod['Product']=true;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
-				$data['listing']['cms'][]=$prod;
+				$data[]=$prod;
 			}
 			$prod=array();
 			$prod['Name']="Total";
@@ -489,7 +489,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['listing']['cms'][]=$prod;
+			$data[]=$prod;
 		}
 		// end admin cms
 		// admin settings
@@ -501,7 +501,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['headers']['admin_settings']=$prod;
+			$data[]=$prod;
 			foreach ($resultset['admin_settings']['admin_settings'] as $category) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -519,7 +519,7 @@ if ($this->ADMIN_USER) {
 				$prod['Product']=true;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
-				$data['listing']['admin_settings'][]=$prod;
+				$data[]=$prod;
 			}
 			$prod=array();
 			$prod['Name']="Total";
@@ -528,7 +528,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['listing']['admin_settings'][]=$prod;
+			$data[]=$prod;
 		}
 		// end admin settings
 		// categories
@@ -540,7 +540,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['headers']['categories']=$prod;
+			$data[]=$prod;
 			foreach ($resultset['categories']['categories'] as $category) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -583,7 +583,7 @@ if ($this->ADMIN_USER) {
 							$prod['EditIcons']='<ul class="ui-edit-item"><li><a href="'.$link.'" class="ui-edit-view" target="_blank">view</a></li>
 				<li><a href="'.mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category').'" class="ui-edit-delete" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )">delete</a></li></ul>';
 				*/
-				$data['listing']['categories'][]=$prod;
+				$data[]=$prod;
 			}
 			$prod=array();
 			$prod['Name']="Total";
@@ -592,7 +592,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['listing']['categories'][]=$prod;
+			$data[]=$prod;
 		}
 		// end categories
 		// orders
@@ -604,7 +604,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['headers']['orders']=$prod;
+			$data[]=$prod;
 			foreach ($resultset['orders']['orders'] as $order) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -622,7 +622,7 @@ if ($this->ADMIN_USER) {
 				$prod['Product']=true;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
-				$data['listing']['orders'][]=$prod;
+				$data[]=$prod;
 			}
 			$prod=array();
 			$prod['Name']="Total";
@@ -631,7 +631,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['listing']['orders'][]=$prod;
+			$data[]=$prod;
 		}
 		// end orders
 		// invoices
@@ -643,7 +643,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['headers']['invoices']=$prod;
+			$data[]=$prod;
 			foreach ($resultset['invoices']['invoices'] as $invoice) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -661,7 +661,7 @@ if ($this->ADMIN_USER) {
 				$prod['Product']=true;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
-				$data['listing']['invoices'][]=$prod;
+				$data[]=$prod;
 			}
 			$prod=array();
 			$prod['Name']="Total";
@@ -670,7 +670,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['listing']['invoices'][]=$prod;
+			$data[]=$prod;
 		}
 		// end invoices	
 		// customers
@@ -682,7 +682,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['headers']['customers']=$prod;
+			$data[]=$prod;
 			foreach ($resultset['customers']['customers'] as $customer) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -706,7 +706,7 @@ if ($this->ADMIN_USER) {
 				$prod['Product']=true;
 				$prod['SmallListing']=true;
 				$prod['EditIcons']='';
-				$data['listing']['customers'][]=$prod;
+				$data[]=$prod;
 			}
 			$prod=array();
 			$prod['Name']="Total";
@@ -715,7 +715,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['listing']['customers'][]=$prod;
+			$data[]=$prod;
 		}
 		// end customers		
 		// products
@@ -727,7 +727,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['headers']['products']=$prod;
+			$data[]=$prod;
 			foreach ($resultset['products']['products'] as $product) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -775,7 +775,7 @@ if ($this->ADMIN_USER) {
 				} else {
 					$link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, '&'.$where.'&products_id='.$product['products_id']);
 				}
-				$data['listing']['products'][]=$prod;
+				$data[]=$prod;
 			}
 			$prod=array();
 			$prod['Name']="Total";
@@ -784,7 +784,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']='';
 			$prod['Product']=false;
-			$data['listing']['products'][]=$prod;
+			$data[]=$prod;
 		}
 		if ($have_paging) {
 			$prod=array();
@@ -794,7 +794,7 @@ if ($this->ADMIN_USER) {
 			$prod['skeyword']=$this->get['q'];
 			$prod['Page']=$this->get['page']+1;
 			$prod['Product']='paging';
-			//$data['footer']['paging']=$prod;
+			$data[]=$prod;
 		} else {
 			$prod=array();
 			if ($results_counter>0) {
@@ -812,7 +812,7 @@ if ($this->ADMIN_USER) {
 				$prod['Page']='';
 				$prod['Product']='';
 			}
-			//$data['footer']['paging']=$prod;
+			$data[]=$prod;
 		}
 		// end products
 		$content=array("products"=>$data);

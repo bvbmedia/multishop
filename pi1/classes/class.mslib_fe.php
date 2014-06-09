@@ -4616,7 +4616,7 @@ class mslib_fe {
 			';
 			$ms_menu['header']['ms_admin_search']['description'].='
 								<form action="'.mslib_fe::typolink().'" method="get" id="ms_admin_top_search">
-									<input class="admin_skeyword" id="ms_admin_skeyword" name="ms_admin_skeyword" type="text" value="'.$this->pi_getLL('keyword').'" />
+									<input class="admin_skeyword" id="ms_admin_skeyword" name="ms_admin_skeyword" type="text" placeholder="'.$this->pi_getLL('keyword').'" value="" />
 									<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 									<input name="type" type="hidden" value="2003" />
 									<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_search" />

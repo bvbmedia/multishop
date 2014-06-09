@@ -232,12 +232,6 @@ multishop_admin_page {
       import = 0
       compress=1
     }
-    select2 = EXT:multishop/js/select2/select2.css
-    select2 {
-      media = 
-      import = 0
-      compress=1
-    }
   }
 }
 [end]
@@ -299,8 +293,6 @@ multishop_admin_page {
     #jqueryvalidatefunctions.compress=1	
     prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js	
     prettycheckboxes.compress=1
-    jquerySelect2 = EXT:multishop/js/select2/select2.min.js
-    jquerySelect2.compress=1
   }
 }
 [end]
@@ -310,7 +302,7 @@ page {
     jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
     jqueryblockUI.compress=1
     jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
-    jqueryhotkeys.compress=1	
+    jqueryhotkeys.compress=1
   }
 }
 multishop_admin_page {
@@ -318,7 +310,7 @@ multishop_admin_page {
     jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
     jqueryblockUI.compress=1
     jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
-    jqueryhotkeys.compress=1	
+    jqueryhotkeys.compress=1
   }
 }
 [end]
@@ -398,7 +390,9 @@ page {
   includeJS.msAdminAutoComplete = EXT:multishop/js/admin/admin_auto_complete.js
   includeJS.msAdminAutoComplete.compress=1	
   includeJS.msAdminMisc = EXT:multishop/js/admin/misc.js
-  includeJS.msAdminMisc.compress=1	    
+  includeJS.msAdminMisc.compress=1
+  includeJS.jquerySelect2 = EXT:multishop/js/select2/select2.min.js
+  includeJS.jquerySelect2.compress=1
   includeCSS {
     adminglobalCSS = EXT:multishop/templates/global/css/admin.css
     adminglobalCSS {
@@ -411,6 +405,12 @@ page {
       media = 
       import = 0
       compress=1
+    }
+    select2 = EXT:multishop/js/select2/select2.css
+    select2 {
+       	media =
+      	import = 0
+       	compress=1
     }
   }
 }
@@ -425,7 +425,9 @@ multishop_admin_page {
 	msUiSliderAccess = EXT:multishop/js/jquery.timepicker/jquery-ui-sliderAccess.js
 	msUiSliderAccess.compress=1	 
 	msUiTimePicker = EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.js
-	msUiTimePicker.compress=1	 	   
+	msUiTimePicker.compress=1
+	jquerySelect2 = EXT:multishop/js/select2/select2.min.js
+    jquerySelect2.compress=1
   }
   includeCSS {
     adminglobalCSS = EXT:multishop/templates/global/css/admin.css
@@ -445,7 +447,13 @@ multishop_admin_page {
       media = 
       import = 0
       compress=1
-    }	
+    }
+    select2 = EXT:multishop/js/select2/select2.css
+    select2 {
+      	media =
+    	import = 0
+       	compress=1
+    }
   }
 }
 [end]
