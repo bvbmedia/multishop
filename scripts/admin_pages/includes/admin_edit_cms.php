@@ -59,11 +59,13 @@ if ($this->post and $_REQUEST['action']=='edit_cms') {
 			}
 		}
 	}
-	echo $this->pi_getLL('content_saved').'.';
-	echo '<script type="text/javascript">
-	parent.window.location.reload();
-	</script>';
-	exit();
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+		exit();
+	} else {
+		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_cms',1));
+		exit();
+	}
 }
 if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$save_block='
@@ -138,7 +140,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
 	foreach ($types as $key=>$value) {
-		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars($value).'</option>'."\n";
+		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars('<h3>'.$value.'</h3>Key: '.$key.'<br/>').'</option>'."\n";
 	}
 	$tmpcontent.='</select>
 		</div>
@@ -271,7 +273,16 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			jQuery("#has").show();
 			
 		});
-	
+		$(\'#selected_type\').select2({
+			width:\'650px\',
+			formatSelection: function(item) {
+				return item.text;
+			},
+			formatSelection: function(item) {
+				return item.text;
+			},
+			escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+		});
 	});
 	</script>
 	<div id="tab-container">
@@ -280,9 +291,17 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		$count++;
 		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 	}
+	$subpartArray['###VALUE_REFERRER###']='';
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+	} else {
+		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+	}
 	$content.='</ul>
 	    <div class="tab_container">
-	<form class="admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">';
+	<form class="admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
+	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
+	';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;

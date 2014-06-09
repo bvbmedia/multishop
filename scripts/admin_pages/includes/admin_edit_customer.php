@@ -238,12 +238,13 @@ if ($this->post) {
 		$updateArray['delivery_telephone']=
 		$updateArray['delivery_mobile']=
 		*/
-		echo '
-		<script type="text/javascript">
-		parent.window.location.reload();
-		</script>
-		';
-		exit();
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+			exit();
+		} else {
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers',1));
+			exit();
+		}
 	}
 }
 // load enabled countries to array
@@ -402,6 +403,13 @@ $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel')
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
 $subpartArray['###CUSTOMER_FORM_HEADING###']='Edit customer';
 $subpartArray['###MASTER_SHOP###']='';
+$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
+$subpartArray['###VALUE_REFERRER###']='';
+if ($this->post['tx_multishop_pi1']['referrer']) {
+	$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+} else {
+	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+}
 switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));

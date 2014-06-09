@@ -94,7 +94,7 @@ foreach ($tmporders as $order) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['ORDER_ID']=$order['orders_id'];
-	$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+	$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
 	$markerArray['EDIT_ORDER_POPUP_WIDTH']=$edit_order_popup_width;
 	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
 	$markerArray['ORDER_CUSTOMER_NAME']=$customer_name;

@@ -177,13 +177,14 @@ if ($this->post) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		// custom hook that can be controlled by third-party plugin eof			
-		$content.=$this->pi_getLL('category_saved').'.';
-		$content.='
-		<script type="text/javascript">
-		parent.window.location.reload();
-		</script>
-		';
+		// custom hook that can be controlled by third-party plugin eof
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+			exit();
+		} else {
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+			exit();
+		}
 	}
 } else {
 	if ($_REQUEST['action']=='edit_category') {
@@ -333,7 +334,7 @@ if ($this->post) {
 		$subpartArray=array();
 		$subpartArray['###CATEGORIES_ID0###']=$category['categories_id'];
 		$subpartArray['###CATEGORIES_ID1###']=$category['categories_id'];
-		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
+		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
 		$subpartArray['###LABEL_BUTTON_CANCEL###']=$this->pi_getLL('cancel');
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');
 		$subpartArray['###HEADING_PAGE###']=$heading_page;
@@ -361,6 +362,12 @@ if ($this->post) {
 		$subpartArray['###PAGE_ACTION###']=$_REQUEST['action'];
 		$subpartArray['###CATEGORIES_ID_FOOTER1###']=$category['categories_id'];
 		$subpartArray['###LABEL_HIDE_IN_MENU###']=$this->pi_getLL('hide_in_menu', 'Hide in menu');
+		$subpartArray['###VALUE_REFERRER###']='';
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+		} else {
+			$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+		}
 		if ($category['hide_in_menu'] == 1) {
 			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='checked="checked"';
 		} else {

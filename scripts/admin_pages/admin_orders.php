@@ -577,7 +577,7 @@ if ($this->cookie['payment_status']=='unpaid_only') {
 }
 $payment_status_select.='</select>';
 $subpartArray=array();
-$subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order');
+$subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
