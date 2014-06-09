@@ -237,6 +237,7 @@ if ($this->ADMIN_USER) {
 			jQuery(document).ready(function($){
 				$(document).on("click", ".ms_admin_minimize", function(e) {
 					e.preventDefault();
+					$("li.ms_admin_search > form#ms_admin_top_search > input#ms_admin_skeyword").select2("close");
 					$.cookie("hide_admin_panel", "1", { expires: 7, path: \'/\', domain: \''.$this->server['HTTP_HOST'].'\'});
 					$("#tx_multishop_admin_header_bg").slideToggle("slow");
 					$("#tx_multishop_admin_footer_wrapper").slideToggle("slow");

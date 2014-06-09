@@ -336,37 +336,6 @@ if ($this->ADMIN_USER) {
 			}
 		}
 		// customer search eof
-		if ($have_paging) {
-			//echo $totpage;
-			//if ($pages != $totpage){
-			$prod=array();
-			$prod['Name']=$this->pi_getLL('more_results');
-			$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
-			$prod['Title']='<span id="more-results">'.htmlspecialchars($this->pi_getLL('more_results')).' (Page '.($this->get['page']+1).' of '.$global_max_page.')</span>';
-			$prod['skeyword']=$this->get['q'];
-			$prod['Page']=$this->get['page']+1;
-			$prod['Product']='paging';
-			//$data['headers']['paging'][]=$prod;
-			//}
-		} else {
-			$prod=array();
-			if ($results_counter>0) {
-				$prod['Name']=$this->pi_getLL('more_results');
-				$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search&page='.($this->get['page']+1).'&q='.urlencode($this->get['q']));
-				$prod['Title']='<span id="more-results">(Page '.($this->get['page']+1).' of '.$global_max_page.')</span>';
-				$prod['skeyword']=$this->get['q'];
-				$prod['Page']=$this->get['page']+1;
-				$prod['Product']='paging';
-			} else {
-				$prod['Name']='no results';
-				$prod['Link']='';
-				$prod['Title']='<span id="more-results">No item(s) found</span>';
-				$prod['skeyword']=$this->get['q'];
-				$prod['Page']='';
-				$prod['Product']='paging';
-			}
-			//$data['headers']['paging']=$prod;
-		}
 		// product search
 		if ($modules['products'] and $this->get['q']) {
 			$this->ms['MODULES']['FLAT_DATABASE']=0;
@@ -735,56 +704,55 @@ if ($this->ADMIN_USER) {
 		}
 		// end products
 		$data_json=array();
-		if (count($data['listing']['cms']) > 0) {
+		if (count($data['listing']['cms'])>0) {
 			$data_json[]=array(
 				'id'=>1,
 				'text'=>'CMS',
-				'children' => $data['listing']['cms']
+				'children'=>$data['listing']['cms']
 			);
 		}
-		if (count($data['listing']['admin_settings']) > 0) {
+		if (count($data['listing']['admin_settings'])>0) {
 			$data_json[]=array(
 				'id'=>2,
 				'text'=>'Admin settings',
-				'children' => $data['listing']['admin_settings']
+				'children'=>$data['listing']['admin_settings']
 			);
 		}
-		if (count($data['listing']['categories']) > 0) {
+		if (count($data['listing']['categories'])>0) {
 			$data_json[]=array(
 				'id'=>3,
 				'text'=>'Categories',
-				'children' => $data['listing']['categories']
+				'children'=>$data['listing']['categories']
 			);
 		}
-		if (count($data['listing']['orders']) > 0) {
+		if (count($data['listing']['orders'])>0) {
 			$data_json[]=array(
 				'id'=>4,
 				'text'=>'Orders',
-				'children' => $data['listing']['orders']
+				'children'=>$data['listing']['orders']
 			);
 		}
-		if (count($data['listing']['invoices']) > 0) {
+		if (count($data['listing']['invoices'])>0) {
 			$data_json[]=array(
 				'id'=>5,
 				'text'=>'Invoices',
-				'children' => $data['listing']['invoices']
+				'children'=>$data['listing']['invoices']
 			);
 		}
-		if (count($data['listing']['customers']) > 0) {
+		if (count($data['listing']['customers'])>0) {
 			$data_json[]=array(
 				'id'=>6,
 				'text'=>'Customers',
-				'children' => $data['listing']['customers']
+				'children'=>$data['listing']['customers']
 			);
 		}
-		if (count($data['listing']['products']) > 0) {
+		if (count($data['listing']['products'])>0) {
 			$data_json[]=array(
 				'id'=>7,
 				'text'=>'Products',
-				'children' => $data['listing']['products']
+				'children'=>$data['listing']['products']
 			);
 		}
-
 		$content=array("products"=>$data_json);
 		$content=json_encode($content, ENT_NOQUOTES);
 		// now build up the listing eof
