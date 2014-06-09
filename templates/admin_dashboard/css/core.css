@@ -109,6 +109,7 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .formfield-wrapper ul.netopsVerticalList li input[type="checkbox"] { float:left; margin:4px 5px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .formfield-wrapper ul.netopsVerticalList li label { float:left; padding-top:3px; }
 
+.msAdminHighslidePopup .select2-container-active h3 { background:none; }
 .select2-container-active .select2-choice,
 .select2-container-active .select2-choices,
 .select2-drop-active { border-color:#444 !important; }
