@@ -33,7 +33,7 @@ foreach ($dates as $key=>$value) {
 	$total_customers=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
-	$end_time=strtotime($value."-01 00:00:00 +1 MONTH");
+	$end_time=strtotime($value."-01 00:00:00 +1 MONTH -1 DAY");
 	$where=array();
 	$where[]='(f.deleted=0)';
 	$str="SELECT count(1) as total from fe_users f WHERE (".implode(" AND ", $where).") and (f.crdate BETWEEN ".$start_time." and ".$end_time.")";

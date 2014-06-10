@@ -173,7 +173,7 @@ if ($this->ADMIN_USER) {
 		// orders this week eof
 		// orders this month
 		$from=strtotime(date("Y-m-1 00:00:00"));
-		$till=strtotime(date("Y-m-31 23:59:59"));
+		$till=strtotime("+1 MONTH -1 DAY ".date("Y-m-1 23:59:59"));
 		$str="SELECT count(1) as total from tx_multishop_orders where deleted=0 and crdate BETWEEN ".$from." and ".$till;
 		if (!$this->masterShop) {
 			$str.=" and page_uid='".$this->shop_pid."'";
