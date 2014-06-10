@@ -1881,7 +1881,7 @@ if ($this->post['action']=='category-insert') {
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
 								}
-							} elseif ($item['updated_products_id']) {
+							} elseif ($item['products_price'] && $item['updated_products_id']) {
 								// delete any special
 								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id']);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
