@@ -38,7 +38,7 @@ var adminPanelSearch = function () {
                 return { q: term, page: page };
             },
             results: function (data, page) {
-                var more = (page * 10) < data.total_rows; // whether or not there are more results available
+                var more = (page * 20) < data.total_rows; // whether or not there are more results available
                 //console.log(data);
                 return {results: data.products, more: more};
             }
