@@ -86,7 +86,7 @@ if (is_array($this->get['attributes'])) {
 					unset($attr['attributes'][$key]);
 				}
 				foreach ($array as $item) {
-					$str="SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='".$products_id."' and a.options_id='".$key."' and a.options_values_id='".$item."' and o.hide_in_cart=0 and a.options_id=o.products_options_id and o.language_id='".$this->sys_language_uid."' and ov.language_id='".$this->sys_language_uid."' and a.options_values_id=ov.products_options_values_id";
+					$str="SELECT * from tx_multishop_products_attributes a, tx_multishop_products_options o, tx_multishop_products_options_values ov where a.products_id='".$products_id."' and a.options_id='".$key."' and a.options_values_id='".$item."' and (o.hide_in_cart=0 or o.hide_in_cart is null) and a.options_id=o.products_options_id and o.language_id='".$this->sys_language_uid."' and ov.language_id='".$this->sys_language_uid."' and a.options_values_id=ov.products_options_values_id";
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 						$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
