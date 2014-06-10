@@ -496,7 +496,7 @@ if ($this->post['action']=='category-insert') {
 					<input name="advanced_settings" class="importer_advanced_settings msadmin_button" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
 					<fieldset class="advanced_settings_container hide">
 						<div class="form-field">
-							aux
+							<span>aux</span>
 							<input name="input['.$i.']" type="text" style="width:150px;" value="'.htmlspecialchars($this->post['input'][$i]).'" />
 						</div>	
 					</fieldset>				
@@ -616,6 +616,7 @@ if ($this->post['action']=='category-insert') {
 	}
 	$combinedContent.=$tmpcontent;
 	$combinedContent.='
+			<br />
 			<fieldset>
 			<legend>'.$this->pi_getLL('save_import_task').'</legend>
 			<div class="account-field">					
