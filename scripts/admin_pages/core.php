@@ -49,9 +49,9 @@ switch ($this->ms['page']) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/manual_order/admin_new_order.php');
 		}
 		break;
-	case 'admin_proced_manual_order':
+	case 'admin_processed_manual_order':
 		if ($this->ADMIN_USER) {
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/manual_order/admin_proced_manual_order.php');
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/manual_order/admin_processed_manual_order.php');
 		}
 		break;
 	case 'admin_order_units':

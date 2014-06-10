@@ -170,7 +170,10 @@ if ($this->post['proced_order']) {
 		// redirect back to orders and let highslide open it
 //		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[edit_order]=1&tx_multishop_pi1[orders_id]='.$orders_id));
 //		exit();
-		$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$orders_id.'&tx_multishop_pi1[is_manual]=1&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal']);
+		$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$orders_id.'&tx_multishop_pi1[is_manual]=1&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal']);
+		header('Location: '.$url);
+		exit();
+		/*
 		$GLOBALS['TSFE']->additionalHeaderData[]='
 		<script>
 		jQuery(document).ready(function($){
@@ -178,6 +181,8 @@ if ($this->post['proced_order']) {
 		});
 		</script>
 		';
+		*/
+
 	} //add to orders eof
 }
 ?>
