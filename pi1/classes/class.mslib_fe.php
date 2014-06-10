@@ -1791,7 +1791,7 @@ class mslib_fe {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
-		$str="select popt.products_options_id, popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".(int)$products_id."' and popt.hide_in_cart=0 and patrib.options_id = popt.products_options_id group by popt.products_options_id order by popt.products_options_id";
+		$str="select popt.products_options_id, popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".(int)$products_id."' and (popt.hide_in_cart=0 or popt.hide_in_cart is null) and patrib.options_id = popt.products_options_id group by popt.products_options_id order by popt.products_options_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 			return true;
