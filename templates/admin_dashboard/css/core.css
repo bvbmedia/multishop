@@ -79,8 +79,9 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsSubTotalTable td.msOrderDetailsSubTotalValue { text-align:right; }
 
 #msadmin_content ul.admin_search_result { overflow:hidden; width:100%; }
-#msadmin_content li.ui-menu-item.ui-menu-item-alternate { float:left; width:19%; margin:0 0.5% 10px;}
-#msadmin_content li.ui-menu-item.ui-menu-item-alternate a { display:block; border:1px solid #ddd; border-radius:6px; text-decoration:none; padding:10px; }
+#msadmin_content ul.admin_search_result li.ui-category { clear:left; }
+#msadmin_content li.ui-menu-item.ui-menu-item-alternate { display:inline-block; width:19%; margin:0 0.5% 10px; vertical-align:top; }
+#msadmin_content li.ui-menu-item.ui-menu-item-alternate a { display:block; min-height:30px; border:1px solid #ddd; border-radius:6px; text-decoration:none; padding:10px; }
 #msadmin_content li.ui-menu-item.ui-menu-item-alternate a:hover { border-color:#999; text-decoration:none !important; }
 #msadmin_content li.ui-menu-item.ui-menu-item-alternate .ajax_products_image_wrapper { height:50px; text-align:center; padding:0 0 5px; }
 #msadmin_content li.ui-menu-item.ui-menu-item-alternate .ajax_products_search_item .ajax_products_name { height:30px; font-weight:bold; color:#E42434; }
