@@ -1,6 +1,6 @@
 var adminPanelSearch = function () {
     jQuery("li.ms_admin_search > form#ms_admin_top_search > input#ms_admin_skeyword").select2({
-        dropdownCssClass: "msAdminTopSearchDropDown", // apply css that makes the dropdown taller
+        dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
         placeholder: MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL,
         minimumInputLength: 1,
         formatResult:function(data){
