@@ -122,3 +122,7 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 .select2-drop-active { border-color:#444 !important; }
 .select2-results .select2-highlighted { background:#444 !important; }
 .select2-results .select2-result-label { border-bottom:1px solid #dedede; padding:5px 7px 5px; }
+
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container { margin-top:10px; padding-top:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container * { display:inline-block; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container input[type="text"] { margin-right:0; }
