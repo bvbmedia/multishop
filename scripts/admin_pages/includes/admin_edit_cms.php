@@ -137,10 +137,10 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 				<a href="http://www.typo3multishop.com/help/english/multishop-owners/setting-up-your-multishop/catalog/content-management/e-mail-order-confirmation-letter/" target="_blank"></a>
 			</span>						
 			</label>
-			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
+			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="" data-title="'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
 	foreach ($types as $key=>$value) {
-		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').'>'.htmlspecialchars('<h3>'.$value.'</h3>Key: '.$key.'<br/>').'</option>'."\n";
+		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').' data-title="'.htmlspecialchars($value).'">'.htmlspecialchars('<h3>'.$value.'</h3>Key: '.$key).'</option>'."\n";
 	}
 	$tmpcontent.='</select>
 		</div>
@@ -275,11 +275,11 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		});
 		$(\'#selected_type\').select2({
 			width:\'650px\',
-			formatSelection: function(item) {
+			formatResult: function(item) {
 				return item.text;
 			},
 			formatSelection: function(item) {
-				return item.text;
+				return $(item.element).data("title");
 			},
 			escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
 		});
