@@ -53,8 +53,8 @@ foreach ($categories as $cat) {
 		}
 //		$row['description']='';
 		$content.='<tr class="'.$tr_type.'">
-		<td><strong><a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id']).'&action=edit_module" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">'.$row['configuration_key'].'</a></strong></td>
-		<td><strong><a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id']).'&action=edit_module" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">'.$row['configuration_title'].'</a></strong></td>
+		<td><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id'].'&action=edit_module',1).'">'.$row['configuration_key'].'</a></strong></td>
+		<td><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id'].'&action=edit_module',1).'">'.$row['configuration_title'].'</a></strong></td>
 		<td>'.$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']].'</td>
 		<td>'.$this->ms['MODULES'][$row['configuration_key']].'</td>
 		</tr>';

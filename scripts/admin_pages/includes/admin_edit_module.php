@@ -11,6 +11,13 @@ window.onload = function(){
 }
 </script>
 ';
+$subpartArray=array();
+$subpartArray['###VALUE_REFERRER###']='';
+if ($this->post['tx_multishop_pi1']['referrer']) {
+	$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+} else {
+	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+}
 if ($_REQUEST['action']=='edit_module') {
 	$str="SELECT * from tx_multishop_configuration where id='".$_REQUEST['module_id']."'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -54,12 +61,13 @@ if ($this->post and $_REQUEST['action']=='edit_module') {
 		mslib_befe::cacheLite('clear_all', 'delete');
 	}
 	$string='loadConfiguration_'.$this->shop_pid;
-	echo '
-	<script>
-	parent.window.location.reload();
-	</script>
-	';
-	die();
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+		exit();
+	} else {
+		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules',1));
+		exit();
+	}
 }
 if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$configuration['parent_id']=$this->get['cid'];
@@ -120,9 +128,11 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$content.=$value_field.'
 
 		</div>';
+
 	$content.='
 	<input name="configuration_key" type="hidden" value="'.$configuration['configuration_key'].'" />
 	<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
+	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	</form>';
 	$content.='
 			<div id="ajax_message_'.$configuration['categories_id'].'" class="ajax_message"></div>

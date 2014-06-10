@@ -483,6 +483,7 @@ if ($this->post['action']=='category-insert') {
 				$tmpcontent.='
 				<tr class="'.$switch.'">
 					<td class="first">
+					<div class="msAdminSelect2Wrapper bigdropWider">
 					<select name="select['.$i.']" id="select['.$i.']" class="select_columns_fields">
 						<option value="">'.$this->pi_getLL('skip').'</option>
 						';
@@ -491,6 +492,7 @@ if ($this->post['action']=='category-insert') {
 				}
 				$tmpcontent.='
 					</select>
+					</div>
 					<input name="advanced_settings" class="importer_advanced_settings msadmin_button" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
 					<fieldset class="advanced_settings_container hide">
 						<div class="form-field">
@@ -578,7 +580,8 @@ if ($this->post['action']=='category-insert') {
 					$(this).next().toggle();			
 				});
 				$(\'.select_columns_fields\').select2({
-					width:\'550px\'
+					dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
+					width:\'220px\'
 				});
 			});			
 			</script>			
