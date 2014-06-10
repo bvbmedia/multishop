@@ -276,8 +276,10 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer #ValidRadio label.account-female { clear:none; float:left; width:auto; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer input[type="radio"] { float:left; margin:4px 5px 0 0; }
 
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer .account-field { clear:both; overflow:hidden; width:910px; border-bottom:1px dotted #e0e0e0; background:#fff; font:12px Arial, Helvetica, sans-serif; color:#333; padding:7px 0 0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer .account-field { clear:both; overflow:hidden; width: 910px; border-bottom:1px dotted #e0e0e0; background:#fff; font:12px Arial, Helvetica, sans-serif; color:#333; padding:7px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer .account-field .account-field { border:none; margin:0 0 10px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer .account-field input[type="text"] { width:285px; margin-bottom:7px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer .account-field select { width:295px; }
 /* #tx_multishop_pi1_core form#edit_customer .account-field div { float:left; overflow:hidden; width:310px; } */
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content form#edit_customer .account-field label { clear:none; display:block; float:left; width:140px; font:12px Arial, Helvetica, sans-serif; color:#000; text-align:right; text-transform:uppercase; padding:3px 10px 0 0; }
