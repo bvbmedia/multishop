@@ -89,7 +89,7 @@ background-image   :-ms-linear-gradient(top, rgba(255,255,255,1), rgba(240,240,2
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search form .select2-container .select2-choice > .select2-chosen { font-size:12px; color:#333; line-height:19px; text-transform:none; margin:0; padding:0 0 0 8px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search form .select2-container .select2-choice .select2-arrow { border-radius:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search form .select2-container .select2-choice .select2-arrow b { background-position:left -2px; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search form .select2-dropdown-open .select2-choice { border-radius:6px 0 0 0; border:1px solid #cdcdcd;
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search form .select2-dropdown-open .select2-choice { float:right; width:400px; border-radius:6px 0 0 0; border:1px solid #cdcdcd;
 background:#f5f5f5;
 background-image   :-moz-linear-gradient(top, rgba(240,240,240,1), rgba(255,255,255,1)); /* Firefox+ */
 background-image   :-webkit-linear-gradient(top, rgba(240,240,240,1), rgba(255,255,255,1)); /* Chrome+, Safari+ */
@@ -111,16 +111,20 @@ background-image   :-ms-linear-gradient(top, rgba(240,240,240,1), rgba(255,255,2
 .select2-results .ajax_products .ajax_specials_price { font-weight:bold; }
 .se2lect2-results li:hover ul li .select2-result-label .ajax_products_name,
 .s2elect2-results li:hover ul li .select2-result-label .ajax_products_name a { color:#fff !important; }
-.select2-drop.select2-drop-active { border-color:#cdcdcd !important; z-index:10003 !important; }
-.select2-results { max-height:360px; }
+.select2-drop.select2-drop-active.bigdrop { width:402px !important; border-color:#cdcdcd !important; z-index:10003 !important; }
+.select2-search input { font:13px Arial, Helvetica, sans-serif !important; }
+.select2-results { max-height:360px !important; }
 .select2-results .select2-no-results { background:none !important; font-size:12px; }
-.select2-results li { font-size:12px; }
-.select2-results > li > .select2-result-label { background:#f5f5f5; color:#333; padding:3px 5px; }
+.select2-results li { border:none; font:12px Arial, Helvetica, sans-serif; }
+.select2-results > li > .select2-result-label { border-bottom:1px solid #dedede; background:#f5f5f5; color:#333; padding:3px 5px; }
 .select2-results > li.select2-highlighted > .select2-result-label { background:#444; color:#fff; }
-.select2-results li ul li a { display:block; font-size:11px; color:#333; padding:3px 5px; }
-.select2-results li ul li.select2-highlighted a { color:#fff; }
+.select2-results li ul li a { display:block; font-size:12px; color:#333; padding:3px 5px; }
+.select2-results li ul li .select2-result-label { border-bottom:1px solid #dedede; }
+.select2-results li ul li.select2-highlighted .select2-result-label { background:#444; }
+.select2-results li ul li.select2-highlighted .select2-result-label a { color:#fff; }
 .select2-results li a { text-decoration:none; }
 .select2-results ul.select2-result-sub > li .select2-result-label { padding:0 !important; }
+
 
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search label { display:none; float:left; padding:3px 5px 0 0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search input[type="text"] { float:left; width:190px; /* height:21px; */ border:none; background:none; font:12px Arial, Helvetica, sans-serif; padding:3px 5px; }
