@@ -60,7 +60,7 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li:hover ul li:hover ul li.dropdown_bottom a:hover span { color:#cdcdcd; }
 
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li:hover ul li>span { float:left; display:block; width:230px; border-left:1px solid #cdcdcd; border-right:1px solid #cdcdcd; border-bottom:1px solid #cdcdcd; background:none; color:#333; font:bold 14px arial; color:#333; padding:7px 10px; cursor:default; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li:hover ul li span span { font:12px Arial, Helvetica, sans-serif; color:#777; text-transform:none; padding:0; cursor:default; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li:hover ul li span span { display:block; font:12px Arial, Helvetica, sans-serif; color:#777; text-transform:none; padding:0; cursor:default; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li:hover ul li:hover span { border-color:#444; color:#fff; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li:hover ul li:hover span span { color:#cdcdcd; }
 
