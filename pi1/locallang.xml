@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3locallang>
   <meta type="array">
     <type>module</type>
@@ -2907,12 +2907,12 @@
       <label index="list_mode_1">Mode 1</label>
       <label index="list_mode_2">Mode 2</label>
       <label index="list_mode_3">Mode 3</label>
-      <label index="submit_button_label">Haga clic aqu� para enviar un valor</label>
+      <label index="submit_button_label">Haga clic aquí para enviar un valor</label>
       <label index="basket">Canasta</label>
       <label index="checkout">checkout</label>
       <label index="catalog">caja</label>
       <label index="keyword">palabra clave</label>
-      <label index="search">b�squeda</label>
+      <label index="search">búsqueda</label>
       <label index="you_have_item_in_your_cart">tienes %d elemento en su cesta</label>
       <label index="you_have_items_in_your_cart">tienes %d elementos en su carro</label>
       <label index="back">Volver</label>
