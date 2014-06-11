@@ -2189,6 +2189,7 @@ class mslib_fe {
 			if (!$this->masterShop) {
 				$where[]="pf.page_uid='".$this->showCatalogFromPage."'";
 			}
+			$where[]="pf.language_id='".$this->sys_language_uid."'";
 			//hook to let other plugins further manipulate the query
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSet'])) {
 				$query_elements=array();
