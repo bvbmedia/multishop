@@ -560,9 +560,9 @@ if ($pageset['total_rows']>0) {
 		if ($rs['specials_new_products_price']==0 || empty($rs['specials_new_products_price'])) {
 			$rs['specials_new_products_price']='';
 		}
-		$link_edit_cat=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$rs['categories_id'].'&action=edit_category');
-		$link_edit_prod=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$rs['categories_id'].'&action=edit_product');
-		$link_delete_prod=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&action=delete_product');
+		$link_edit_cat=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$rs['categories_id'].'&action=edit_category');
+		$link_edit_prod=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$rs['categories_id'].'&action=edit_product');
+		$link_delete_prod=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&action=delete_product');
 		// view product link
 		$where='';
 		if ($rs['categories_id']) {
@@ -595,7 +595,7 @@ if ($pageset['total_rows']>0) {
 			} else {
 				$class='';
 			}
-			$cat_crumbar.='<li class="'.$class.'"><a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$cats[$i]['id'].'&action=edit_category').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">'.$cats[$i]['name'].'</a></li>';
+			$cat_crumbar.='<li class="'.$class.'"><a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$cats[$i]['id'].'&action=edit_category').'">'.$cats[$i]['name'].'</a></li>';
 		}
 		$cat_crumbar.='</ul>';
 		$status='';
