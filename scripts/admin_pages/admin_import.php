@@ -2010,6 +2010,10 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['products_sort_order'])) {
 								$updateArray['sort_order']=$item['products_sort_order'];
 							}
+							if (!isset($item['products_status'])) {
+								// incremental updates must also have status=1
+								$updateArray['products_status']=1;
+							}
 							// custom hook that can be controlled by third-party plugin
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPreHook'])) {
 								$params=array(

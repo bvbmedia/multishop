@@ -267,6 +267,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				if (!$hide_no_products_message) {
 					$content.=$this->pi_getLL('no_products_available');
 				}
+				if ($current['content_footer'] and !$p) {
+					$hide_no_products_message=1;
+					if ($current['content_footer']) {
+						$content.=mslib_fe::htmlBox($current['categories_name'], $current['content_footer'], 1);
+					} else {
+						$show_default_header=1;
+					}
+				}
 			} else {
 				if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {
 					die('error in PRODUCTS_LISTING_TYPE value');
@@ -288,9 +296,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				// pagination eof
 			}
 			// load products listing eof
-			if ($current['content_footer']) {
-				$content.=mslib_fe::htmlBox('', $current['content_footer'], 2);
-			}
 		}
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {

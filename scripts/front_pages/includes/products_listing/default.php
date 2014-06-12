@@ -148,7 +148,7 @@ if ($current['content']) {
 } else {
 	$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
 }
-if ($current['content']) {
+if ($current['content_footer']) {
 	$subpartArray['###CURRENT_CATEGORIES_FOOTER_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
 } else {
 	$subpartArray['###CURRENT_CATEGORIES_FOOTER_DESCRIPTION###']='';
