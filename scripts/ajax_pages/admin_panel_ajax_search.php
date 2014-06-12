@@ -183,7 +183,7 @@ if ($this->ADMIN_USER) {
 					$prod['Name']=substr($category['name'], 0, 50);
 					$prod['id']=md5($category['name']);
 					$prod['text']=$category['name'];
-					$prod['Title']=$prod['Name'];
+					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
 					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cmt_id='.$category['id']).'&action=edit_cms';
 					$prod['Image']='';
 					$prod['Desc']='';
@@ -240,7 +240,7 @@ if ($this->ADMIN_USER) {
 					$prod['is_children']=true;
 					$prod['Name']=substr($category['configuration_title'], 0, 50);
 					$prod['id']=md5($category['configuration_title']);
-					$prod['Title']=$prod['Name'];
+					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
 					$prod['text']=$category['configuration_title'];
 					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&module_id='.$category['id']).'&action=edit_module';
 					$prod['Image']='';
@@ -299,7 +299,7 @@ if ($this->ADMIN_USER) {
 					$prod['Name']=substr($order['orders_id'], 0, 50);
 					$prod['id']=md5($order['orders_id']);
 					$prod['text']=$order['orders_id'];
-					$prod['Title']=$prod['Name'];
+					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
 					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id']).'&action=edit_order';
 					$prod['Image']='';
 					$prod['Desc']='';
@@ -350,7 +350,7 @@ if ($this->ADMIN_USER) {
 					$prod['Name']=substr($invoice['invoice_id'], 0, 50);
 					$prod['id']=md5($invoice['invoice_id']);
 					$prod['text']=$invoice['invoice_id'];
-					$prod['Title']=$prod['Name'];
+					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
 					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
 					$prod['Image']='';
 					$prod['Desc']='';
@@ -411,7 +411,7 @@ if ($this->ADMIN_USER) {
 					$prod['Name']=substr($customer['name'], 0, 50);
 					$prod['id']=md5($customer['name']);
 					$prod['text']=$customer['name'];
-					$prod['Title']=$prod['Name'];
+					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
 					$prod['Link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer');
 					$prod['Image']='';
 					$prod['Desc']='';
@@ -469,7 +469,7 @@ if ($this->ADMIN_USER) {
 					$prod['Name']=substr($category['categories_name'], 0, 50);
 					$prod['id']=md5($category['categories_name']);
 					$prod['text']=$category['categories_name'];
-					$prod['Title']=$prod['Name'];
+					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
 					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=edit_category');
 					$prod['Image']='';
 					$prod['Desc']='';
