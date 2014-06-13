@@ -2218,15 +2218,18 @@ if ($this->post['action']=='category-insert') {
 												$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\'');
 												$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 											}
-											$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id='.$products_options_id." and products_options_values_id='".$option_value_id."'");
-											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-
-											$insertArray=array();
-											$insertArray['products_options_id']=$products_options_id;
-											$insertArray['products_options_values_id']=$option_value_id;
-											$insertArray['sort_order']=microtime();
-											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
-											$GLOBALS['TYPO3_DB']->sql_query($query);
+											//$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id='.$products_options_id." and products_options_values_id='".$option_value_id."'");
+											//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+											$filter=array();
+											$filter[]='products_options_values_id=\''.addslashes($option_value_id).'\'';
+											if (!mslib_befe::ifExists($products_options_id, 'tx_multishop_products_options_values_to_products_options', 'products_options_id', $filter)) {
+												$insertArray=array();
+												$insertArray['products_options_id']=$products_options_id;
+												$insertArray['products_options_values_id']=$option_value_id;
+												$insertArray['sort_order']=microtime();
+												$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
+												$GLOBALS['TYPO3_DB']->sql_query($query);
+											}
 											if ($products_id and $products_options_id and $option_value_id) {
 												$insertArray=array();
 												$insertArray['products_id']=$products_id;
