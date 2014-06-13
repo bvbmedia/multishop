@@ -28,19 +28,23 @@ var adminPanelSearch = function () {
                 location.href = data.Link;
             }
         },
+        context: function (data) {
+            return data.page_marker.section
+        },
         dropdownCssClass:"bigdrop",
         escapeMarkup: function (m) { return m; },
         ajax: { // instead of writing the function to execute the request we use Select2's convenient helper
             url:MS_ADMIN_PANEL_AUTO_COMPLETE_URL,
             dataType:'json',
             quietMillis: 100,
-            data: function (term, page) {
-                return { q: term, page: page };
+            context: 'sss',
+            data: function (term, page, context) {
+                return { q: term, context: context };
             },
             results: function (data, page) {
-                var more = (page * 20) < data.total_rows; // whether or not there are more results available
-                //console.log(data);
-                return {results: data.products, more: more};
+                var more = data.page_marker.context.next;
+                console.log(data.page_marker.context);
+                return {results: data.products, more: more, context: data.page_marker.context};
             }
         }
     });
