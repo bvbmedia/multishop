@@ -96,7 +96,7 @@ if ($this->post) {
 	}
 
 	$content.='
-	<form class="admin_add_multiple_categories" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
+	<form class="admin_add_multiple_categories blockSubmitForm" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
 	$tmpcontent.='<div style="float:right;">'.$save_block.'</div>';
