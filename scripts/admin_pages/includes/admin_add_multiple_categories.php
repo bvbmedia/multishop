@@ -70,12 +70,13 @@ if ($this->post) {
 			}
 		}
 	}
-	$content.=$this->pi_getLL('category_saved').'.';
-	$content.='
-		<script type="text/javascript">
-		parent.window.location.reload();
-		</script>
-	';
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+		exit();
+	} else {
+		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_categories',1));
+		exit();
+	}
 } else {
 	if (!$category['parent_id']) {
 		$category['parent_id']=$this->get['cid'];
@@ -86,8 +87,18 @@ if ($this->post) {
 			<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="submit" />
 		</div>
 	';
+	$subpartArray=array();
+	$subpartArray['###VALUE_REFERRER###']='';
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+	} else {
+		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+	}
+
 	$content.='
-	<form class="admin_add_multiple_categories" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">';
+	<form class="admin_add_multiple_categories" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
+	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
+	';
 	$tmpcontent.='<div style="float:right;">'.$save_block.'</div>';
 	$tmpcontent.='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
 	$tmpcontent.='
@@ -102,7 +113,7 @@ if ($this->post) {
 	$tmpcontent.='
 	<div class="account-field" id="msEditCategoriesInputName">
 		<label for="categories_name">'.$this->pi_getLL('admin_multiple_categories', 'CATEGORIES NAME').'</label>
-		<textarea name="categories_name" id="categories_name" class="expand100-200"></textarea>
+		<textarea name="categories_name" id="categories_name" style="height:500px;" class="expand100-200"></textarea>
 	</div>';
 	$tabs['category_main']=array(
 		'DETAILS',
