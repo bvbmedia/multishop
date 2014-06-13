@@ -595,7 +595,7 @@ if ($pageset['total_rows']>0) {
 			} else {
 				$class='';
 			}
-			$cat_crumbar.='<li class="'.$class.'"><a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$cats[$i]['id'].'&action=edit_category').'">'.$cats[$i]['name'].'</a></li>';
+			$cat_crumbar.='<li class="'.$class.'"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$cats[$i]['id'].'&action=edit_category').'">'.$cats[$i]['name'].'</a></li>';
 		}
 		$cat_crumbar.='</ul>';
 		$status='';
