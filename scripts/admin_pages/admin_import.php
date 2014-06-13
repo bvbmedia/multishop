@@ -36,6 +36,7 @@ if ($this->get['run_as_cron']) {
 }
 set_time_limit(86400);
 ignore_user_abort(true);
+$sortOrderArray=array();
 $language_id=$GLOBALS['TSFE']->sys_language_uid;
 // define the different columns
 $coltypes=array();
@@ -1902,7 +1903,12 @@ if ($this->post['action']=='category-insert') {
 								if (isset($item['products_sort_order'])) {
 									$updateArray['sort_order']=$item['products_sort_order'];
 								} else {
-									$updateArray['sort_order']=time();
+									if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
+										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
+									} else {
+										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
+									}
+									$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
 								}
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2084,7 +2090,12 @@ if ($this->post['action']=='category-insert') {
 								if (isset($item['products_sort_order'])) {
 									$updateArray['sort_order']=$item['products_sort_order'];
 								} else {
-									$updateArray['sort_order']=time();
+									if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
+										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
+									} else {
+										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
+									}
+									$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
 								}
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2151,7 +2162,8 @@ if ($this->post['action']=='category-insert') {
 									}
 									if ($vatRate) {
 										// reduce VAT from the price
-										$option_row[2]=number_format(($option_row[2]/(100+$vatRate)*100),16);
+										$price=($option_row[2]/(100+$vatRate)*100);
+										$option_row[2]=number_format($price,16,'.','');
 									}
 								}
 								// now add it to the attribute_option_value array for further processing
@@ -2185,7 +2197,12 @@ if ($this->post['action']=='category-insert') {
 										$insertArray['products_options_name']=$option_name;
 										$insertArray['listtype']='pulldownmenu';
 										$insertArray['attributes_values']='0';
-										$insertArray['sort_order']=microtime();
+										if ($sortOrderArray['tx_multishop_products_options']['sort_order']) {
+											$sortOrderArray['tx_multishop_products_options']['sort_order']++;
+										} else {
+											$sortOrderArray['tx_multishop_products_options']['sort_order']=time();
+										}
+										$insertArray['sort_order']=$sortOrderArray['tx_multishop_products_options']['sort_order'];
 										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
 										$GLOBALS['TYPO3_DB']->sql_query($query);
 										$products_options_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -2226,7 +2243,12 @@ if ($this->post['action']=='category-insert') {
 												$insertArray=array();
 												$insertArray['products_options_id']=$products_options_id;
 												$insertArray['products_options_values_id']=$option_value_id;
-												$insertArray['sort_order']=microtime();
+												if ($sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order']) {
+													$sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order']++;
+												} else {
+													$sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order']=time();
+												}
+												$insertArray['sort_order']=$sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order'];
 												$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
 												$GLOBALS['TYPO3_DB']->sql_query($query);
 											}
@@ -2285,7 +2307,12 @@ if ($this->post['action']=='category-insert') {
 										$insertArray=array();
 										$insertArray['products_options_id']=$products_options_id;
 										$insertArray['products_options_values_id']=$option_value_id;
-										$insertArray['sort_order']=microtime();
+										if ($sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order']) {
+											$sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order']++;
+										} else {
+											$sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order']=time();
+										}
+										$insertArray['sort_order']=$sortOrderArray['tx_multishop_products_options_values_to_products_options']['sort_order'];
 										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
 										$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
