@@ -2010,10 +2010,12 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['products_sort_order'])) {
 								$updateArray['sort_order']=$item['products_sort_order'];
 							}
+							/*
 							if (!isset($item['products_status'])) {
 								// incremental updates must also have status=1
 								$updateArray['products_status']=1;
 							}
+							*/
 							// custom hook that can be controlled by third-party plugin
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPreHook'])) {
 								$params=array(
@@ -2178,8 +2180,14 @@ if ($this->post['action']=='category-insert') {
 										$products_options_id=$rs_chk['products_options_id'];
 									} else {
 										// add the option
-										$sql_ins="insert into tx_multishop_products_options (products_options_id, language_id, products_options_name, listtype, attributes_values,sort_order) values ('', '".$language_id."', '".addslashes($option_name)."', 'pulldownmenu', '0',".time().")";
-										$GLOBALS['TYPO3_DB']->sql_query($sql_ins);
+										$insertArray=array();
+										$insertArray['language_id']=$language_id;
+										$insertArray['products_options_name']=$option_name;
+										$insertArray['listtype']='pulldownmenu';
+										$insertArray['attributes_values']='0';
+										$insertArray['sort_order']=microtime();
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
+										$GLOBALS['TYPO3_DB']->sql_query($query);
 										$products_options_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									}
 									if ($products_options_id and $option_value) {
@@ -2194,8 +2202,11 @@ if ($this->post['action']=='category-insert') {
 											$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 											$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($qry2);
 											if (!$rows2) {
-												$str2="INSERT into tx_multishop_products_options_values (language_id,products_options_values_id,products_options_values_name) VALUES (".$language_id.",'','".addslashes($option_value)."')";
-												$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+												$insertArray=array();
+												$insertArray['language_id']=$language_id;
+												$insertArray['products_options_values_name']=$option_value;
+												$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
+												$GLOBALS['TYPO3_DB']->sql_query($query);
 												$option_value_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 											} else {
 												$row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
@@ -2209,13 +2220,22 @@ if ($this->post['action']=='category-insert') {
 											}
 											$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id='.$products_options_id." and products_options_values_id='".$option_value_id."'");
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-											$str2="INSERT into tx_multishop_products_options_values_to_products_options  (products_options_id,products_options_values_id,sort_order) VALUES ('".$products_options_id."','".$option_value_id."',".time().")";
-											$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+
+											$insertArray=array();
+											$insertArray['products_options_id']=$products_options_id;
+											$insertArray['products_options_values_id']=$option_value_id;
+											$insertArray['sort_order']=microtime();
+											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
+											$GLOBALS['TYPO3_DB']->sql_query($query);
 											if ($products_id and $products_options_id and $option_value_id) {
-												$str2="INSERT into tx_multishop_products_attributes   (products_id,options_id,options_values_id,options_values_price,price_prefix) VALUES ('".$products_id."','".$products_options_id."','".$option_value_id."','".$option_price."','+')";
-												$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-											} else {
-												$str2="INSERT into tx_multishop_products_attributes   (products_id,options_id,options_values_id,options_values_price,price_prefix) VALUES ('".$products_id."','".$products_options_id."','".$option_value_id."','".$option_price."','+')";
+												$insertArray=array();
+												$insertArray['products_id']=$products_id;
+												$insertArray['options_id']=$products_options_id;
+												$insertArray['options_values_id']=$option_value_id;
+												$insertArray['options_values_price']=$option_price;
+												$insertArray['price_prefix']='+';
+												$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $insertArray);
+												$GLOBALS['TYPO3_DB']->sql_query($query);
 											}
 										}
 									}
@@ -2242,8 +2262,11 @@ if ($this->post['action']=='category-insert') {
 									$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 									$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($qry2);
 									if (!$rows2) {
-										$str2="INSERT into tx_multishop_products_options_values (language_id,products_options_values_id,products_options_values_name) VALUES (".$language_id.",'','".addslashes($option_value)."')";
-										$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+										$insertArray=array();
+										$insertArray['language_id']=$language_id;
+										$insertArray['products_options_values_name']=$option_value;
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
+										$GLOBALS['TYPO3_DB']->sql_query($query);
 										$option_value_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									} else {
 										$row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
@@ -2256,8 +2279,12 @@ if ($this->post['action']=='category-insert') {
 									$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 									$rows2=$GLOBALS['TYPO3_DB']->sql_num_rows($qry2);
 									if (!$rows2) {
-										$str2="INSERT into tx_multishop_products_options_values_to_products_options  (products_options_id,products_options_values_id,sort_order) VALUES ('".$products_options_id."','".$option_value_id."',".time().")";
-										$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+										$insertArray=array();
+										$insertArray['products_options_id']=$products_options_id;
+										$insertArray['products_options_values_id']=$option_value_id;
+										$insertArray['sort_order']=microtime();
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
+										$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
 									// added 2013-07-31 due to double records when re-importing the same partial feed
 									if ($this->post['incremental_update'] and $products_id) {
