@@ -16,87 +16,45 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
 <link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 <script type="text/javascript">
-function moveCheckBox(id) {
-	var split_id = id.split("_");
-	var real_id = id;
-	var checkbox_id = "#cb-cat_" + id;
-	if (split_id[1] != undefined) {
-		var sl_id = "sl-cat_" + split_id[1];
-		var cb_id = "cb-cat_" + split_id[1];
-		var parent_sl_id = "sl-cat_" + real_id;
-		if ($(checkbox_id).is(":checked")) {
-			$("select option[id*=" + parent_sl_id +"]").attr(\'disabled\', \'disabled\');
-		} else {
-			$("select option[id*=" + parent_sl_id +"]").removeAttr(\'disabled\');
-		}
-	} else {
-		var sl_id = "sl-cat_" + id;
-		var cb_id = "cb-cat_" + id; 
-	}
-	if ($(checkbox_id).is(":checked")) {
-		$("select option[id*=" + sl_id +"]").attr(\'disabled\', \'disabled\');
-		$("input[id*=" + cb_id +"]").attr(\'checked\', \'checked\');
-		$("input[id*=" + cb_id +"]").attr(\'disabled\', \'disabled\');
-	} else {
-		$("select option[id*=" + sl_id +"]").removeAttr(\'disabled\');
-		$("input[id*=" + cb_id +"]").removeAttr(\'checked\');
-		$("input[id*=" + cb_id +"]").removeAttr(\'disabled\');
-	}
-	if (split_id[1] != undefined) {
-		$("input[id*=" + cb_id +"]").each(function(k) {
-			moveCheckBox($(this).attr("rel"));
-		});
-	}
-}
 jQuery(document).ready(function($) {
-	$("#delete_selected_categories").click(function () {
+	$(document).on("click", "#delete_selected_categories", function () {
 		if (confirm("Delete selected categories?")) {
 			return true;
 		} else {
 			return false;
 		}
 	});
-
 	$("#msAdmin_category_listing_ul").treeview({
 		collapsed: true,
 		animated: "medium",
 		control:"#sidetreecontrol",
 		persist: "location"
 	});
-	$(".movecats").click(function() {
-		var split_id = $(this).attr("rel").split("_");
-		var real_id = $(this).attr("rel");
-		if (split_id[1] != undefined) {
-			var sl_id = "sl-cat_" + split_id[1];
-			var cb_id = "cb-cat_" + split_id[1];
-			var parent_sl_id = "sl-cat_" + real_id;
-
-			if ($(this).is(":checked")) {
-				$("select option[id*=" + parent_sl_id +"]").attr(\'disabled\', \'disabled\');
-			} else {
-				$("select option[id*=" + parent_sl_id +"]").removeAttr(\'disabled\');
-			}
-		} else {
-			var sl_id = "sl-cat_" + $(this).attr("rel");
-			var cb_id = "cb-cat_" + $(this).attr("rel");
-		}
+	$(document).on("click", ".movecats", function() {
+		var current_id = $(this).attr("id");
+		var selectbox_id= "#" + current_id.replace("cb-", "sl-");
+		var childrens = $(this).parent().find("ul>li.category > input.movecats");
 		if ($(this).is(":checked")) {
-			$("select option[id*=" + sl_id +"]").attr(\'disabled\', \'disabled\');
-			$("input[id*=" + cb_id +"]").attr(\'checked\', \'checked\');
-			$("input[id*=" + cb_id +"]").attr(\'disabled\', \'disabled\');
-		} else {
-			$("select option[id*=" + sl_id +"]").removeAttr(\'disabled\');
-			$("input[id*=" + cb_id +"]").removeAttr(\'checked\');
-			$("input[id*=" + cb_id +"]").removeAttr(\'disabled\');
-		}
-		$("input[id*=" + cb_id +"]").each(function(k) {
-			var split_id_subs = $(this).attr("rel").split("_");
-			if (split_id_subs[1] != undefined) {
-				moveCheckBox($(this).attr("rel"));
+			$(selectbox_id).attr("disabled", "disabled");
+			if ($(childrens).length > 0) {
+				$(childrens).each(function(i,v){
+					var c_current_id = $(v).attr("id");
+					var c_selectbox_id= "#" + c_current_id.replace("cb-", "sl-");
+					$(v).attr("disabled", "disabled");
+					$(c_selectbox_id).attr("disabled", "disabled");
+				});
 			}
-		});
-		// re-enabled the initial checked checkbox
-		$(this).removeAttr("disabled");
+		} else {
+			$(selectbox_id).removeAttr("disabled");
+			if ($(childrens).length > 0) {
+				$(childrens).each(function(i,v){
+					var c_current_id = $(v).attr("id");
+					var c_selectbox_id= "#" + c_current_id.replace("cb-", "sl-");
+					$(v).removeAttr("disabled");
+					$(c_selectbox_id).removeAttr("disabled");
+				});
+			}
+		}
 	});
 });
 </script>';
