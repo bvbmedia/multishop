@@ -11,6 +11,26 @@ window.onload = function(){
 }
 </script>
 ';
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	jQuery(".tab_content").hide();
+	jQuery("ul.tabs li:first").addClass("active").show();
+	jQuery(".tab_content:first").show();
+	jQuery("ul.tabs li").click(function() {
+		jQuery("ul.tabs li").removeClass("active");
+		jQuery(this).addClass("active");
+		jQuery(".tab_content").hide();
+		var activeTab = jQuery(this).find("a").attr("href");
+		jQuery(activeTab).fadeIn(0);
+		return false;
+	});
+});
+</script>
+';
+
+$tabs=array();
+
 $subpartArray=array();
 $subpartArray['###VALUE_REFERRER###']='';
 if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -136,6 +156,41 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	</form>';
 	$content.='
 			<div id="ajax_message_'.$configuration['categories_id'].'" class="ajax_message"></div>
-			';
+	';
+	$tabs['module'.$configuration['gid']]=array($configuration['configuration_title'],$content);
+	$content='';
+
+
+	$content='<div class="main-heading"><h2>Admin Modules</h2></div>';
+	$content.='
+<div id="tab-container">
+    <ul class="tabs" id="admin_modules">';
+	$count=0;
+	foreach ($tabs as $key=>$value) {
+		$count++;
+		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+	}
+	$content.='
+    </ul>
+    <div class="tab_container">
+	<form id="form1" name="form1" method="get" action="index.php">
+	'.$formTopSearch.'
+	</form>
+	';
+	$count=0;
+	foreach ($tabs as $key=>$value) {
+		$count++;
+		$content.='
+        <div style="display: block;" id="'.$key.'" class="tab_content">
+			'.$value[1].'
+        </div>
+	';
+	}
+	$content.='
+    </div>
+</div>';
+
+	$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+	$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 }
 ?>
