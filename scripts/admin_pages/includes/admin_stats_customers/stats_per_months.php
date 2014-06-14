@@ -115,11 +115,11 @@ foreach ($dates as $key=>$value) {
 			} else {
 				$name=$customer['billing_name'];
 			}
-			$customer_edit_link=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['customer_id'].'&action=edit_customer');
+			$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['customer_id'].'&action=edit_customer',1);
 			$content.='
 			<tr class="'.$tr_type.'">
 				<td valign="top" align="right"><strong>'.mslib_fe::amount2Cents($customer['total'], 0).'</strong></td>
-				<td valign="top"><a href="'.$customer_edit_link.'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 950, height: 600} )">'.$name.'</a></td>
+				<td valign="top"><a href="'.$customer_edit_link.'">'.$name.'</a></td>
 			</tr>
 			';
 		}

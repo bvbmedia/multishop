@@ -408,7 +408,7 @@ if ($this->ADMIN_USER) {
 			$tmp_listing.='<li class="ui-category"><span class="admin_ajax_res_header">Admin CMS</span></li>';
 			foreach ($resultset['admin_cms']['admin_cms'] as $category) {
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($category['name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cmt_id='.$category['id']).'&action=edit_cms" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">
+					<a alt="'.substr($category['name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cmt_id='.$category['id'].'&action=edit_cms',1).'">
 						<div class="single_row">'.substr($category['name'], 0, 50).'</div>
 					</a>
 				</li>';
@@ -421,7 +421,7 @@ if ($this->ADMIN_USER) {
 			$tmp_listing.='<li class="ui-category"><span class="admin_ajax_res_header">Admin Settings</span></li>';
 			foreach ($resultset['admin_settings']['admin_settings'] as $category) {
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($category['configuration_title'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&module_id='.$category['id']).'&action=edit_module" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">
+					<a alt="'.substr($category['configuration_title'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&module_id='.$category['id'].'&action=edit_module',1).'">
 						<div class="single_row">'.substr($category['configuration_title'], 0, 50).'</div>
 					</a>
 				</li>';
@@ -434,7 +434,7 @@ if ($this->ADMIN_USER) {
 			$tmp_listing.='<li class="ui-category"><span class="admin_ajax_res_header">Categories</span></li>';
 			foreach ($resultset['categories']['categories'] as $category) {
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($category['categories_name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=edit_category').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">
+					<a alt="'.substr($category['categories_name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=edit_category',1).'">
 						<div class="single_row">'.substr($category['categories_name'], 0, 50).'</div>
 					</a>
 				</li>';
@@ -447,7 +447,7 @@ if ($this->ADMIN_USER) {
 			$tmp_listing.='<li class="ui-category"><span id="admin_ajax_res_header">Orders</span></li>';
 			foreach ($resultset['orders']['orders'] as $order) {
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($order['orders_id'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order',1).'">
+					<a alt="'.substr($order['orders_id'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order',1).'">
 						<div class="single_row">'.substr($order['orders_id'], 0, 50).'</div>
 					</a>
 				</li>';
@@ -491,7 +491,7 @@ if ($this->ADMIN_USER) {
 		if (count($resultset['products']['products'])) {
 			$tmp_listing.='<li class="ui-category"><span id="admin_ajax_res_header">Products</span></li>';
 			foreach ($resultset['products']['products'] as $product) {
-				$prod_link=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=edit_product');
+				$prod_link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=edit_product',1);
 				if ($product['products_image']) {
 					$prod_image='<div class="ajax_products_image">'.'<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">'.'</div>';
 				} else {
@@ -506,7 +506,7 @@ if ($this->ADMIN_USER) {
 					$prod_price='<div class="ajax_products_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div>';
 				}
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="test product" class="ui-corner-all" tabindex="-1" href="'.$prod_link.'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">
+					<a alt="test product" class="ui-corner-all" tabindex="-1" href="'.$prod_link.'">
 						<div class="ajax_products_image_wrapper">
 							'.$prod_image.'
 						</div>
