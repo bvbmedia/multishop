@@ -157,7 +157,7 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$content.='
 			<div id="ajax_message_'.$configuration['categories_id'].'" class="ajax_message"></div>
 	';
-	$tabs['module'.$configuration['gid']]=array($configuration['configuration_title'],$content);
+	$tabs['module'.$configuration['gid']]=array('Configuration',$content);
 	$content='';
 
 
