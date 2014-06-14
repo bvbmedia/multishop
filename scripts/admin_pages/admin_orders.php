@@ -270,7 +270,6 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$array2[]='';
 					$array1[]='###CUSTOMER_ID###';
 					$array2[]=$tmpArray['customer_id'];
-					//$link = $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=payment_reminder_checkout&tx_multishop_pi1[hash]=' . $hashcode);
 					$link=$this->FULL_HTTP_URL.mslib_fe::typolink($tmpArray['page_uid'], 'tx_multishop_pi1[page_section]=payment_reminder_checkout&tx_multishop_pi1[hash]='.$hashcode);
 					$array1[]='###PAYMENT_PAGE_LINK###';
 					$array2[]=$link;
@@ -596,6 +595,7 @@ $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_numb
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
+$subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs_orders');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.$content.'</div>';

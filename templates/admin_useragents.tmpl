@@ -1,62 +1,62 @@
 <!-- ###TEMPLATE### begin -->
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">
-		<li class="active"><a href="#user-agents">USER-AGENTS</a></li>
+        <li class="active"><a href="#user-agents">USER-AGENTS</a></li>
     </ul>
-	<div class="tab_container">
-		<form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="post">
-			<div id="search-orders">
-				<input name="id" type="hidden" value="###SHOP_PID###" />
-				<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />	
-				<table width="100%">
-					<tr>
-						<td valign="top">
-						&nbsp;
-						</td>
-						<td nowrap valign="top" align="right" class="searchLimit">
-							<div style="float:right;">
-								<label>###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
-								###RESULTS_LIMIT_SELECTBOX###
-							</div>			
-						</td>
-					</tr>
-				</table>
-			</div>
+    <div class="tab_container">
+        <form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="post">
+            <div id="search-orders">
+                <input name="id" type="hidden" value="###SHOP_PID###"/>
+                <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders"/>
+                <table width="100%">
+                    <tr>
+                        <td valign="top">
+                            &nbsp;
+                        </td>
+                        <td nowrap valign="top" align="right" class="searchLimit">
+                            <div style="float:right;">
+                                <label>###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+                                ###RESULTS_LIMIT_SELECTBOX###
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
-			<div style="display: block;" id="Orders_By_Date" class="tab_content">
-				<!-- ###RESULTS### begin -->
-				<div class="msHorizontalOverflowWrapper">
-				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
-					<tr>
-						<th width="250" class="cell_customer_name">###LABEL_HEADER_CUSTOMER###</th>
-						<th width="110" class="cell_ipaddress">###LABEL_HEADER_IPADDRESS###</th>
-						<th class="cell_useragents">###LABEL_HEADER_USERAGENTS###</th>
-					</tr>
-					<!-- ###ORDERS_LISTING### begin -->
-					<tr class="###ROW_TYPE###">
-						<td align="left" nowrap>###CUSTOMER_NAME###</a></td>	
-						<td align="left" nowrap>###IPADDRESS###</td>
-						<td align="left" nowrap>###USERAGENTS###</td>	
-					</tr>
-					<!-- ###ORDERS_LISTING### end -->
-					<tr>
-						<th width="250" class="cell_customer_name">###LABEL_FOOTER_CUSTOMER###</th>
-						<th width="110" class="cell_ipaddress">###LABEL_FOOTER_IPADDRESS###</th>
-						<th class="cell_useragents">###LABEL_FOOTER_USERAGENTS###</th>
-					</tr>
-				</table>
-				</div>
-				<div id="msAdminOrdersListingActionForm">
-					<a href="###DOWNLOAD_EXCEL###">Download as Excel</a>	
-				</div>
-				###PAGINATION###
-				<!-- ###RESULTS### end -->
-				
-				<!-- ###NORESULTS### begin -->
-					###LABEL_NO_RESULTS###
-				<!-- ###NORESULTS### end -->
-			</div>	
-		</form>	
-	</div>
+            <div style="display: block;" id="Orders_By_Date" class="tab_content">
+                <!-- ###RESULTS### begin -->
+                <div class="msHorizontalOverflowWrapper">
+                    <table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
+                        <tr>
+                            <th width="250" class="cell_customer_name">###LABEL_HEADER_CUSTOMER###</th>
+                            <th width="110" class="cell_ipaddress">###LABEL_HEADER_IPADDRESS###</th>
+                            <th class="cell_useragents">###LABEL_HEADER_USERAGENTS###</th>
+                        </tr>
+                        <!-- ###ORDERS_LISTING### begin -->
+                        <tr class="###ROW_TYPE###">
+                            <td align="left" nowrap>###CUSTOMER_NAME###</a></td>
+                            <td align="left" nowrap>###IPADDRESS###</td>
+                            <td align="left" nowrap>###USERAGENTS###</td>
+                        </tr>
+                        <!-- ###ORDERS_LISTING### end -->
+                        <tr>
+                            <th width="250" class="cell_customer_name">###LABEL_FOOTER_CUSTOMER###</th>
+                            <th width="110" class="cell_ipaddress">###LABEL_FOOTER_IPADDRESS###</th>
+                            <th class="cell_useragents">###LABEL_FOOTER_USERAGENTS###</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="msAdminOrdersListingActionForm">
+                    <a href="###DOWNLOAD_EXCEL###">###ADMIN_LABEL_LINK_DOWNLOAD_AS_EXCEL###</a>
+                </div>
+                ###PAGINATION###
+                <!-- ###RESULTS### end -->
+
+                <!-- ###NORESULTS### begin -->
+                ###LABEL_NO_RESULTS###
+                <!-- ###NORESULTS### end -->
+            </div>
+        </form>
+    </div>
 </div>
 <!-- ###TEMPLATE### end -->

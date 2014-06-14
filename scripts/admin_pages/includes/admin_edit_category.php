@@ -182,7 +182,7 @@ if ($this->post) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 			exit();
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
 			exit();
 		}
 	}
@@ -276,7 +276,7 @@ if ($this->post) {
 		$categories_image='';
 		if ($_REQUEST['action']=='edit_category' and $category['categories_image']) {
 			$categories_image.='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'">';
-			$categories_image.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&action=edit_category&delete_image=categories_image').'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+			$categories_image.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&action=edit_category&delete_image=categories_image').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
 		}
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['addItemsToTabDetails'])) {
@@ -319,15 +319,15 @@ if ($this->post) {
 			$categories_meta_block.=''.$language['title'].'
 			</div>						
 			<div class="account-field" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
-				<label for="meta_title">META TITLE</label>
+				<label for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
 				<input type="text" class="text" name="meta_title['.$language['uid'].']" id="meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_title']).'">
 			</div>				
 			<div class="account-field" id="msEditCategoryInputMetaKeywords_'.$language['uid'].'">
-				<label for="meta_keywords">META KEYWORDS</label>
+				<label for="meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
 				<input type="text" class="text" name="meta_keywords['.$language['uid'].']" id="meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_keywords']).'">
 			</div>				
 			<div class="account-field" id="msEditCategoryInputMetaDesc_'.$language['uid'].'">
-				<label for="meta_description">META DESCRIPTION</label>
+				<label for="meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
 				<input type="text" class="text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
 			</div>';
 		}
@@ -368,7 +368,7 @@ if ($this->post) {
 		} else {
 			$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 		}
-		if ($category['hide_in_menu'] == 1) {
+		if ($category['hide_in_menu']==1) {
 			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='checked="checked"';
 		} else {
 			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='';
@@ -377,25 +377,25 @@ if ($this->post) {
 		$feed_stock_checkbox='';
 		$sql_feed='SELECT * from tx_multishop_product_feeds';
 		$qry_feed=$GLOBALS['TYPO3_DB']->sql_query($sql_feed);
-		while($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
+		while ($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
 			if ($_REQUEST['action']=='edit_category') {
 				$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($category['categories_id'])."' and exclude_type='categories'";
 				$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				} else {
-					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				}
 				$sql_stock_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($category['categories_id'])."' and exclude_type='categories'";
 				$qry_stock_check=$GLOBALS['TYPO3_DB']->sql_query($sql_stock_check);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_stock_check)) {
-					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				} else {
-					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				}
 			} else {
-				$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
-				$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+				$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+				$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 			}
 		}
 		$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
@@ -410,6 +410,11 @@ if ($this->post) {
 		} else {
 			$subpartArray['###STOCK_FEEDS_LIST###']=$feed_stock_checkbox;
 		}
+		$subpartArray['###ADMIN_LABEL_DROP_FILES_HERE_TO_UPLOAD###']=$this->pi_getLL('admin_label_drop_files_here_to_upload');
+		$subpartArray['###ADMIN_LABEL_TABS_DETAILS###']=$this->pi_getLL('admin_label_tabs_details');
+		$subpartArray['###ADMIN_LABEL_TABS_CONTENT###']=$this->pi_getLL('admin_label_tabs_content');
+		$subpartArray['###ADMIN_LABEL_TABS_META###']=$this->pi_getLL('admin_label_tabs_meta');
+		$subpartArray['###ADMIN_LABEL_TABS_ADVANCED###']=$this->pi_getLL('admin_label_tabs_advanced');
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'])) {
 			$params=array(

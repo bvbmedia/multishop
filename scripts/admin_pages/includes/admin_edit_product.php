@@ -606,7 +606,7 @@ if ($this->post) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 			exit();
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
 			exit();
 		}
 	}
@@ -1532,25 +1532,25 @@ if ($this->post) {
 		$feed_stock_checkbox='';
 		$sql_feed='SELECT * from tx_multishop_product_feeds';
 		$qry_feed=$GLOBALS['TYPO3_DB']->sql_query($sql_feed);
-		while($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
+		while ($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
 			if ($_REQUEST['action']=='edit_product') {
 				$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
 				$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				} else {
-					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				}
 				$sql_stock_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
 				$qry_stock_check=$GLOBALS['TYPO3_DB']->sql_query($sql_stock_check);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_stock_check)) {
-					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				} else {
-					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 				}
 			} else {
-				$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
-				$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;' . $rs_feed['name'] . '&nbsp;';
+				$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+				$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
 			}
 		}
 		$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
@@ -1739,9 +1739,13 @@ if ($this->post) {
 			$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_header']);
 			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
 		}
+		$subpartArray['######ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###']=$this->pi_getLL('admin_label_js_please_select_category_for_this_product');
+		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=$this->pi_getLL('admin_label_js_product_name_is_empty');
+		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TAB###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
+		$subpartArray['###ADMIN_LABEL_PRODUCT_NOT_LOADED_SORRY_WE_CANT_FIND_IT###']=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
 		$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 	} else {
-		$content.='Product not loaded, sorry we can\'t find it.';
+		$content.=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
 	}
 }
 ?>

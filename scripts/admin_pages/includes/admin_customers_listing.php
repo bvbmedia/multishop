@@ -50,7 +50,7 @@ foreach ($customers as $customer) {
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	if ($rows>0) {
 		$order=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		$latest_order.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order',1).'">'.$order['orders_id'].'</a>'."\n";
+		$latest_order.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'">'.$order['orders_id'].'</a>'."\n";
 		if ($rows>1) {
 			$latest_order.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&type_search=customer_id&skeyword='.$customer['uid']).'">('.htmlspecialchars($this->pi_getLL('show_all')).')</a>';
 		}
@@ -97,6 +97,7 @@ foreach ($customers as $customer) {
 			'clearcache'
 		)));
 	$markerArray['CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS']='return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')';
+	$markerArray['ADMIN_LABEL_ALT_REMOVE']=ucfirst($this->pi_getLL('admin_label_alt_remove'));
 	$markerArray['MASTER_SHOP']=$master_shop_col;
 	// custom page hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customers_listing.php']['adminCustomersListingTmplIteratorPreProc'])) {

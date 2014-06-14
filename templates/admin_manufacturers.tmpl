@@ -1,100 +1,101 @@
 <!-- ###TEMPLATE### begin -->
-<script type="text/javascript">      
-jQuery(document).ready(function($) {
-	jQuery(".tab_content").hide(); 
-	jQuery("ul.tabs li:first").addClass("active").show();
-	jQuery(".tab_content:first").show();
-	jQuery("ul.tabs li").click(function() {
-		jQuery("ul.tabs li").removeClass("active");
-		jQuery(this).addClass("active"); 
-		jQuery(".tab_content").hide();
-		var activeTab = jQuery(this).find("a").attr("href");
-		jQuery(activeTab).fadeIn(0);
-		return false;
-	});
-             		
-    jQuery('#order_date_from').datetimepicker({
-    	dateFormat: 'dd/mm/yy',
-        showSecond: true,
-		timeFormat: 'hh:mm:ss'         		
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        jQuery(".tab_content").hide();
+        jQuery("ul.tabs li:first").addClass("active").show();
+        jQuery(".tab_content:first").show();
+        jQuery("ul.tabs li").click(function () {
+            jQuery("ul.tabs li").removeClass("active");
+            jQuery(this).addClass("active");
+            jQuery(".tab_content").hide();
+            var activeTab = jQuery(this).find("a").attr("href");
+            jQuery(activeTab).fadeIn(0);
+            return false;
+        });
+
+        jQuery('#order_date_from').datetimepicker({
+            dateFormat: 'dd/mm/yy',
+            showSecond: true,
+            timeFormat: 'hh:mm:ss'
+        });
+
+        jQuery('#order_date_till').datetimepicker({
+            dateFormat: 'dd/mm/yy',
+            showSecond: true,
+            timeFormat: 'hh:mm:ss'
+        });
+
     });
-             		
-	jQuery('#order_date_till').datetimepicker({
-    	dateFormat: 'dd/mm/yy',
-        showSecond: true,
-		timeFormat: 'hh:mm:ss'         		
-    });
- 
-});
 </script>
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">
-		<li class="active"><a href="#CmsListing">Manufacturers</a></li>
+        <li class="active"><a href="#CmsListing">###ADMIN_LABEL_TABS_MANUFACTURERS###</a></li>
     </ul>
     <div class="tab_container">
-		<form id="form1" name="form1" method="get" action="index.php">
-			<div id="search-orders">
-				<table width="100%">
-					<tr>
-						<td nowrap valign="top">				
-							<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
-							<input name="id" type="hidden" value="###SHOP_PID###" />
-							<input name="type" type="hidden" value="2003" />
-							<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_manufacturers" />
-							<div class="formfield-container-wrapper">
-								<div class="formfield-wrapper">
-									<label>###LABEL_KEYWORD###</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###" />					
-									<input type="submit" name="Search" class="msadmin_button" value="###LABEL_SEARCH###" />
-								</div>
-							</div>
-						</td>
-						<td nowrap valign="top" align="right" class="searchLimit">
-							<div style="float:right;">			
-								###INPUT_LIMIT_RESULT_SELECTBOX###
-							</div>
-						</td>			
-					</tr>
-				</table>
-				###SEARCH_NAV###
-			</div>
-		</form>
+        <form id="form1" name="form1" method="get" action="index.php">
+            <div id="search-orders">
+                <table width="100%">
+                    <tr>
+                        <td nowrap valign="top">
+                            <input name="tx_multishop_pi1[do_search]" type="hidden" value="1"/>
+                            <input name="id" type="hidden" value="###SHOP_PID###"/>
+                            <input name="type" type="hidden" value="2003"/>
+                            <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_manufacturers"/>
+
+                            <div class="formfield-container-wrapper">
+                                <div class="formfield-wrapper">
+                                    <label>###LABEL_KEYWORD###</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###"/>
+                                    <input type="submit" name="Search" class="msadmin_button" value="###LABEL_SEARCH###"/>
+                                </div>
+                            </div>
+                        </td>
+                        <td nowrap valign="top" align="right" class="searchLimit">
+                            <div style="float:right;">
+                                ###INPUT_LIMIT_RESULT_SELECTBOX###
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                ###SEARCH_NAV###
+            </div>
+        </form>
         <div style="display: block;" id="CmsListing" class="tab_content">
-        	<!-- ###RESULTS### begin -->
-        	<div class="msHorizontalOverflowWrapper">
-			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">
-				<tr>
-					<th width="50" nowrap>###LABEL_MANUFACTURER_ID###</th>
-					<th>###LABEL_MANUFACTURER_NAME###</th>
-					<th width="100" nowrap>###LABEL_MANUFACTURER_DATE_ADDED###</th>
-					<th width="50" nowrap>###LABEL_MANUFACTURER_STATUS###</th>
-					<th>###LABEL_MANUFACTURER_ACTION###</th>
-				</tr>
-				<!-- ###MANUFACTURERS### begin -->
-				<tr class="###ROW_TYPE###">
-					<td align="right" nowrap>###MANUFACTURER_ID###</td>		
-					<td><a href="###MANUFACTURER_EDIT_LINK###">###MANUFACTURER_NAME###</a></td>
-					<td align="right" nowrap>###MANUFACTURER_DATE_ADDED###</td>
-					<td align="center">###MANUFACTURER_STATUS###</td>
-					<td width="50">
-						<a href="###MANUFACTURER_EDIT_LINK###" class="admin_menu_edit">edit</a>
-						<a href="###MANUFACTURER_DELETE_LINK###" class="admin_menu_remove" alt="Remove"></a>
-					</td>
-				</tr>
-				<!-- ###MANUFACTURERS### end -->
-				<tr>
-					<th width="50" nowrap>###LABEL_FOOTER_MANUFACTURER_ID###</th>
-					<th>###LABEL_FOOTER_MANUFACTURER_NAME###</th>
-					<th width="100" nowrap>###LABEL_FOOTER_MANUFACTURER_DATE_ADDED###</th>
-					<th width="50" nowrap>###LABEL_FOOTER_MANUFACTURER_STATUS###</th>
-					<th>###LABEL_FOOTER_MANUFACTURER_ACTION###</th>
-				</tr>
-			</table>
-			</div>
-			<!-- ###RESULTS### end -->
-			
-			<!-- ###NORESULTS### begin -->
-			###LABEL_NO_RESULT###
-			<!-- ###NORESULTS### end -->
+            <!-- ###RESULTS### begin -->
+            <div class="msHorizontalOverflowWrapper">
+                <table class="msZebraTable msadmin_orders_listing" id="product_import_table">
+                    <tr>
+                        <th width="50" nowrap>###LABEL_MANUFACTURER_ID###</th>
+                        <th>###LABEL_MANUFACTURER_NAME###</th>
+                        <th width="100" nowrap>###LABEL_MANUFACTURER_DATE_ADDED###</th>
+                        <th width="50" nowrap>###LABEL_MANUFACTURER_STATUS###</th>
+                        <th>###LABEL_MANUFACTURER_ACTION###</th>
+                    </tr>
+                    <!-- ###MANUFACTURERS### begin -->
+                    <tr class="###ROW_TYPE###">
+                        <td align="right" nowrap>###MANUFACTURER_ID###</td>
+                        <td><a href="###MANUFACTURER_EDIT_LINK###">###MANUFACTURER_NAME###</a></td>
+                        <td align="right" nowrap>###MANUFACTURER_DATE_ADDED###</td>
+                        <td align="center">###MANUFACTURER_STATUS###</td>
+                        <td width="50">
+                            <a href="###MANUFACTURER_EDIT_LINK###" class="admin_menu_edit">###ADMIN_LABEL_LINK_EDIT###</a>
+                            <a href="###MANUFACTURER_DELETE_LINK###" class="admin_menu_remove" alt="###ADMIN_LABEL_ALT_REMOVE###"></a>
+                        </td>
+                    </tr>
+                    <!-- ###MANUFACTURERS### end -->
+                    <tr>
+                        <th width="50" nowrap>###LABEL_FOOTER_MANUFACTURER_ID###</th>
+                        <th>###LABEL_FOOTER_MANUFACTURER_NAME###</th>
+                        <th width="100" nowrap>###LABEL_FOOTER_MANUFACTURER_DATE_ADDED###</th>
+                        <th width="50" nowrap>###LABEL_FOOTER_MANUFACTURER_STATUS###</th>
+                        <th>###LABEL_FOOTER_MANUFACTURER_ACTION###</th>
+                    </tr>
+                </table>
+            </div>
+            <!-- ###RESULTS### end -->
+
+            <!-- ###NORESULTS### begin -->
+            ###LABEL_NO_RESULT###
+            <!-- ###NORESULTS### end -->
         </div>
     </div>
 </div>
