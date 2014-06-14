@@ -79,7 +79,7 @@ foreach ($orders as $order) {
 		$tmp.='<td align="center"><input type="checkbox" name="ordid[]" id="ordid_'.$cb_ctr++.'" value="'.$order['orders_id'].'"></td>';
 	}
 	$tmp.='<td align="left">'.$order['orders_id'].'</td>';
-	$tmp.='<td align="left"><a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id']).'&action=edit_order" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: browser_height} )">'.$order['billing_name'].'</a></td>';
+	$tmp.='<td align="left"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order',1).'">'.$order['billing_name'].'</a></td>';
 	$tmp.='<td align="right">'.mslib_fe::amount2Cents($order['total_amount'], 0).'</td>';
 	$tmp.='<td align="center">'.(($order['paid']) ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</td>';
 	// green,red,yellow,grey,orange
@@ -87,13 +87,13 @@ foreach ($orders as $order) {
 	if ($this->ms['MODULES']['INVOICE_PRINT'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 		$tmp.='<td align="center">';
 		if ($this->ms['MODULES']['INVOICE_PRINT']) {
-			$tmp.='<a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id']).'&action=edit_order&print=invoice" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: (document.body.clientWidth-50), height: 660} )"><input type="button" class="msadmin_button" value="'.htmlspecialchars($this->pi_getLL('invoice')).'" /></a>';
+			$tmp.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice',1).'"><input type="button" class="msadmin_button" value="'.htmlspecialchars($this->pi_getLL('invoice')).'" /></a>';
 		}
 		if ($this->ms['MODULES']['INVOICE_PRINT'] && $this->ms['MODULES']['INVOICE_PRINT']) {
 			$tmp.='&nbsp;';
 		}
 		if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
-			$tmp.='<a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id']).'&action=edit_order&print=packing" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: (document.body.clientWidth-50), height: 555} )"><input type="button" class="msadmin_button" value="'.htmlspecialchars($this->pi_getLL('packing_list')).'" /></a>';
+			$tmp.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing',1).'"><input type="button" class="msadmin_button" value="'.htmlspecialchars($this->pi_getLL('packing_list')).'" /></a>';
 		}
 		$tmp.='</td>';
 	}

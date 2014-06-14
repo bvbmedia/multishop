@@ -447,7 +447,7 @@ if ($this->ADMIN_USER) {
 			$tmp_listing.='<li class="ui-category"><span id="admin_ajax_res_header">Orders</span></li>';
 			foreach ($resultset['orders']['orders'] as $order) {
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($order['orders_id'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id']).'&action=edit_order" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">
+					<a alt="'.substr($order['orders_id'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order',1).'">
 						<div class="single_row">'.substr($order['orders_id'], 0, 50).'</div>
 					</a>
 				</li>';
@@ -460,7 +460,7 @@ if ($this->ADMIN_USER) {
 			$tmp_listing.='<li class="ui-category"><span id="admin_ajax_res_header">Invoices</span></li>';
 			foreach ($resultset['invoices']['invoices'] as $invoice) {
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($invoice['invoice_id'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">
+					<a alt="'.substr($invoice['invoice_id'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash'],1).'">
 						<div class="single_row">'.substr($invoice['invoice_id'], 0, 50).'</div>
 					</a>
 				</li>';
@@ -479,7 +479,7 @@ if ($this->ADMIN_USER) {
 					$customer['name']=$customer['username'];
 				}
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($customer['name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )">
+					<a alt="'.substr($customer['name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer',1).'">
 						<div class="single_row">'.substr($customer['name'], 0, 50).'</div>
 					</a>
 				</li>';

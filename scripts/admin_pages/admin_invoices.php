@@ -278,7 +278,7 @@ $content.='
           hs.overrides.push("onAfterExpand");
           hs.htmlExpand(anchor, {
              objectType: "iframe",
-             src: "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'?action=edit_order",
+             src: "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax&action=edit_order',1).'",
              width: 380,
              height: 90,
              onAfterExpand: function(expander) {

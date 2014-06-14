@@ -50,7 +50,7 @@ foreach ($customers as $customer) {
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	if ($rows>0) {
 		$order=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		$latest_order.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id']).'&action=edit_order">'.$order['orders_id'].'</a>'."\n";
+		$latest_order.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order',1).'">'.$order['orders_id'].'</a>'."\n";
 		if ($rows>1) {
 			$latest_order.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&type_search=customer_id&skeyword='.$customer['uid']).'">('.htmlspecialchars($this->pi_getLL('show_all')).')</a>';
 		}

@@ -467,11 +467,11 @@ if (is_numeric($this->get['orders_id'])) {
 		}
 		if ($redirect_after_delete) {
 			// to redirect to 'normal url' after successfull deletion of item in order
-			echo '<script>location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'</script>';
+			echo '<script>location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order',1).'\'</script>';
 		}
 		// redirect after editing or adding order product
 		if (!empty($this->post['product_name']) || !empty($this->post['manual_product_name'])) {
-			echo '<script>location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'</script>';
+			echo '<script>location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order',1).'\'</script>';
 		}
 	}
 	$str="SELECT *, o.crdate, o.status, osd.name as orders_status from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) where o.orders_id='".$this->get['orders_id']."'";
@@ -1073,7 +1073,7 @@ if (is_numeric($this->get['orders_id'])) {
 	';
 			$orderDetails[]=$orderDetailsItem;
 		}
-// hook for adding new items to details fieldset
+		// hook for adding new items to details fieldset
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'])) {
 			// hook
 			$params=array(

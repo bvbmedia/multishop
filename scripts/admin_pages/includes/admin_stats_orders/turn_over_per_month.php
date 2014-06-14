@@ -237,7 +237,7 @@ foreach ($dates as $key=>$value) {
 	$users=array();
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_price=($total_price+$row['grand_total']);
-		$uids[]='<a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$row['orders_id'].'&action=edit_order').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 980, height: browser_height} )">'.$row['orders_id'].'</a>';
+		$uids[]='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$row['orders_id'].'&action=edit_order',1).'">'.$row['orders_id'].'</a>';
 		$total_daily_orders++;
 	}
 	$content.='<td align="right">'.mslib_fe::amount2Cents($total_price, 0).'</td>';
