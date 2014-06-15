@@ -2,6 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$compiledWidget['key']='ordersLatest';
+$compiledWidget['defaultCol']=1;
+$compiledWidget['title']=$this->pi_getLL('latest_orders', 'Bestellingen');
 $headerData='';
 $headerData.='
 <script type="text/javascript">
@@ -322,21 +325,21 @@ if ($pageset['total_rows']>0) {
 		);
 	}
 	$counter=0;
-	$libaryWidgets['ordersLatest']['content'].='<div id="tblWidgetOrdersLatest-wrapper"><table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="tblWidgetOrdersLatest">';
+	$compiledWidget['content'].='<div id="tblWidgetOrdersLatest-wrapper"><table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="tblWidgetOrdersLatest">';
 	$tr_type='';
 	$rowCounter=0;
 	foreach ($data as $host=>$item) {
 		$counter++;
 		if ($counter==1) {
-			$libaryWidgets['ordersLatest']['content'].='<tr class="tblHeader">';
+			$compiledWidget['content'].='<tr class="tblHeader">';
 			$colCounter=0;
 			foreach ($item as $col) {
 				$colCounter++;
-				$libaryWidgets['ordersLatest']['content'].='
+				$compiledWidget['content'].='
 					<th class="tblHeadCol'.$colCounter.'">'.$col.'</th>
 				';
 			}
-			$libaryWidgets['ordersLatest']['content'].='</tr>';
+			$compiledWidget['content'].='</tr>';
 		} else {
 			$rowCounter++;
 			if (!$tr_type or $tr_type=='even') {
@@ -344,18 +347,18 @@ if ($pageset['total_rows']>0) {
 			} else {
 				$tr_type='even';
 			}
-			$libaryWidgets['ordersLatest']['content'].='<tr class="tblBody '.$tr_type.'">';
+			$compiledWidget['content'].='<tr class="tblBody '.$tr_type.'">';
 			$colCounter=0;
 			foreach ($item as $col) {
 				$colCounter++;
-				$libaryWidgets['ordersLatest']['content'].='
+				$compiledWidget['content'].='
 					<td class="tblBodyCol'.$colCounter.'">'.$col.'</td>
 				';
 			}
-			$libaryWidgets['ordersLatest']['content'].='</tr>';
+			$compiledWidget['content'].='</tr>';
 		}
 	}
-	$libaryWidgets['ordersLatest']['content'].='</table></div>';
+	$compiledWidget['content'].='</table></div>';
 }
 
 ?>

@@ -2,11 +2,14 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$compiledWidget['key']='turnoverPerYear';
+$compiledWidget['defaultCol']=1;
+$compiledWidget['title']=$this->pi_getLL('sales_volume_by_year', 'Jaaromzet');
 $sql_year="select crdate from tx_multishop_orders where deleted=0 order by orders_id asc limit 1";
 $qry_year=$GLOBALS['TYPO3_DB']->sql_query($sql_year);
 $row_year=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
 if (!$row_year['crdate']) {
-	$libaryWidgets['turnoverPerYear']['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
+	$compiledWidget['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 } else {
 	$oldest_year=date("Y", $row_year['crdate']);
 	$current_year=date("Y");
@@ -39,29 +42,29 @@ if (!$row_year['crdate']) {
 		}
 	}
 	if ($tmpContent!='') {
-		$libaryWidgets['turnoverPerYear']['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
-		$libaryWidgets['turnoverPerYear']['content'].='<tr class="odd">';
+		$compiledWidget['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
+		$compiledWidget['content'].='<tr class="odd">';
 		foreach ($dates as $key=>$value) {
-			$libaryWidgets['turnoverPerYear']['content'].='<td align="right">'.ucfirst($key).'</td>';
+			$compiledWidget['content'].='<td align="right">'.ucfirst($key).'</td>';
 		}
-		$libaryWidgets['turnoverPerYear']['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</td>';
-		$libaryWidgets['turnoverPerYear']['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('average', 'Average')).'</td>';
-		$libaryWidgets['turnoverPerYear']['content'].='</tr>';
-		$libaryWidgets['turnoverPerYear']['content'].='<tr class="even">';
-		$libaryWidgets['turnoverPerYear']['content'].=$tmpContent;
+		$compiledWidget['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</td>';
+		$compiledWidget['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('average', 'Average')).'</td>';
+		$compiledWidget['content'].='</tr>';
+		$compiledWidget['content'].='<tr class="even">';
+		$compiledWidget['content'].=$tmpContent;
 		$tmpContent='';
-		$libaryWidgets['turnoverPerYear']['content'].='<td align="right" nowrap>'.mslib_fe::amount2Cents($total_amount, 0).'</td>';
-		$libaryWidgets['turnoverPerYear']['content'].='<td align="right" nowrap>'.mslib_fe::amount2Cents(($total_amount/count($dates)), 0).'</td>';
-		$libaryWidgets['turnoverPerYear']['content'].='</tr>';
+		$compiledWidget['content'].='<td align="right" nowrap>'.mslib_fe::amount2Cents($total_amount, 0).'</td>';
+		$compiledWidget['content'].='<td align="right" nowrap>'.mslib_fe::amount2Cents(($total_amount/count($dates)), 0).'</td>';
+		$compiledWidget['content'].='</tr>';
 		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
 		}
-		$libaryWidgets['turnoverPerYear']['content'].='
+		$compiledWidget['content'].='
 		</table>';
 	} else {
-		$libaryWidgets['turnoverPerYear']['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
+		$compiledWidget['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 	}
 }
 ?>

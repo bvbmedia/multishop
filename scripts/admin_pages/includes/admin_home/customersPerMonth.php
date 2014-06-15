@@ -2,6 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$compiledWidget['key']='customersPerMonth';
+$compiledWidget['defaultCol']=1;
+$compiledWidget['title']=$this->pi_getLL('customers_volume_by_month', 'Gebruikers');
 $sql_year="select crdate from fe_users where deleted=0 order by uid asc limit 1";
 $qry_year=$GLOBALS['TYPO3_DB']->sql_query($sql_year);
 $row_year=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
@@ -12,22 +15,22 @@ if ($row_year['crdate']>0) {
 }
 $current_year=date("Y");
 $dates=array();
-//$libaryWidgets['customersPerMonth']['content'].='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h2>';
+//$compiledWidget['content'].='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h2>';
 for ($i=3; $i>=0; $i--) {
 	//$time=strtotime("-".$i." month");
 	$time=strtotime(date('Y-m-01').' -'.$i.' MONTH');
 //	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-$libaryWidgets['customersPerMonth']['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
-$libaryWidgets['customersPerMonth']['content'].='<tr class="odd">';
+$compiledWidget['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
+$compiledWidget['content'].='<tr class="odd">';
 foreach ($dates as $key=>$value) {
-	$libaryWidgets['customersPerMonth']['content'].='<td align="right">'.ucfirst($key).'</td>';
+	$compiledWidget['content'].='<td align="right">'.ucfirst($key).'</td>';
 }
-$libaryWidgets['customersPerMonth']['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</td>';
-$libaryWidgets['customersPerMonth']['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
-$libaryWidgets['customersPerMonth']['content'].='</tr>';
-$libaryWidgets['customersPerMonth']['content'].='<tr class="even">';
+$compiledWidget['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</td>';
+$compiledWidget['content'].='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
+$compiledWidget['content'].='</tr>';
+$compiledWidget['content'].='<tr class="even">';
 $total_amount=0;
 foreach ($dates as $key=>$value) {
 	$total_customers=0;
@@ -41,7 +44,7 @@ foreach ($dates as $key=>$value) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_customers=($total_customers+$row['total']);
 	}
-	$libaryWidgets['customersPerMonth']['content'].='<td align="right">'.number_format($total_customers, 0, 3, '.').'</td>';
+	$compiledWidget['content'].='<td align="right">'.number_format($total_customers, 0, 3, '.').'</td>';
 	$total_amount=$total_amount+$total_customers;
 }
 if ($this->cookie['stats_year_sb']==date("Y") || !$this->cookie['stats_year_sb']) {
@@ -59,14 +62,14 @@ if ($this->cookie['stats_year_sb']==date("Y") || !$this->cookie['stats_year_sb']
 	$currentYear=0;
 	$currentMonth=0;
 }
-$libaryWidgets['customersPerMonth']['content'].='<td align="right" nowrap>'.number_format($total_amount, 0, 3, '.').'</td>';
-$libaryWidgets['customersPerMonth']['content'].='<td align="right" nowrap>'.number_format(($total_amount/$dayOfTheYear)*365, 0, 3, '.').'</td>';
-$libaryWidgets['customersPerMonth']['content'].='</tr>';
+$compiledWidget['content'].='<td align="right" nowrap>'.number_format($total_amount, 0, 3, '.').'</td>';
+$compiledWidget['content'].='<td align="right" nowrap>'.number_format(($total_amount/$dayOfTheYear)*365, 0, 3, '.').'</td>';
+$compiledWidget['content'].='</tr>';
 if (!$tr_type or $tr_type=='even') {
 	$tr_type='odd';
 } else {
 	$tr_type='even';
 }
-$libaryWidgets['customersPerMonth']['content'].='
+$compiledWidget['content'].='
 </table>';
 ?>
