@@ -28,9 +28,7 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
-
 $tabs=array();
-
 $subpartArray=array();
 $subpartArray['###VALUE_REFERRER###']='';
 if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -72,9 +70,9 @@ if ($this->post and $_REQUEST['action']=='edit_module') {
 		if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..')) {
 			$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
 			exec($command);
-			$content.='<br /><p><strong>Multishop cache has been cleared.</strong></p>';
+			$content.='<br /><p><strong>'.$this->pi_getLL('admin_label_multishop_cache_has_been_cleared').'</strong></p>';
 		} else {
-			$content.='<br /><p><strong>Cache not cleared. Something is wrong with your configuration (DOCUMENT_ROOT is not set correctly).</strong></p>';
+			$content.='<br /><p><strong>'.$this->pi_getLL('admin_label_cache_not_cleared_something_is_wrong_with_configuration_document_root_is_not_set_directly').'</strong></p>';
 		}
 	}
 	if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END']) {
@@ -85,7 +83,7 @@ if ($this->post and $_REQUEST['action']=='edit_module') {
 		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 		exit();
 	} else {
-		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules',1));
+		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules', 1));
 		exit();
 	}
 }
@@ -148,7 +146,6 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$content.=$value_field.'
 
 		</div>';
-
 	$content.='
 	<input name="configuration_key" type="hidden" value="'.$configuration['configuration_key'].'" />
 	<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
@@ -157,10 +154,11 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$content.='
 			<div id="ajax_message_'.$configuration['categories_id'].'" class="ajax_message"></div>
 	';
-	$tabs['module'.$configuration['gid']]=array('Configuration',$content);
+	$tabs['module'.$configuration['gid']]=array(
+		'Configuration',
+		$content
+	);
 	$content='';
-
-
 	$content='<div class="main-heading"><h2>Admin Modules</h2></div>';
 	$content.='
 <div id="tab-container">
@@ -189,7 +187,6 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$content.='
     </div>
 </div>';
-
 	$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 	$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 }

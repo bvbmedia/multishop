@@ -155,14 +155,14 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 		<div class="account-field">
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
-				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="0.00"><label for="display_name">Excl. VAT</label></div>
-				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="0.00"><label for="display_name">Incl. VAT</label></div>
+				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="0" /></div>
 			</div>
 		</div>
 		<div class="account-field">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
-		<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
+		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -347,14 +347,14 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 	<div class="account-field">
 		<label>'.$this->pi_getLL('handling_costs').'</label>
 		<div class="msAttribute">
-			<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">Excl. VAT</label></div>
-			<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">Incl. VAT</label></div>
+			<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+			<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
 			<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$row['handling_costs'].'" /></div>
 		</div>
 	</div>
 	<div class="account-field">
 	<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
-	<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
+	<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {

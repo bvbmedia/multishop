@@ -6,7 +6,7 @@ $sql_year="select crdate from tx_multishop_orders where deleted=0 order by order
 $qry_year=$GLOBALS['TYPO3_DB']->sql_query($sql_year);
 $row_year=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
 if (!$row_year['crdate']) {
-	$libaryWidgets['turnoverPerYear']['content']='<p>Nog geen data beschikbaar.</p>';
+	$libaryWidgets['turnoverPerYear']['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 } else {
 	$oldest_year=date("Y", $row_year['crdate']);
 	$current_year=date("Y");
@@ -23,7 +23,7 @@ if (!$row_year['crdate']) {
 		$total_price=0;
 		$start_time=strtotime($value);
 		//$end_time=strtotime(date("Y-12-31 23:59:59", strtotime($value)));
-		$end_time=strtotime("Y-01-01 00:00:00 +1 YEAR",$start_time);
+		$end_time=strtotime("Y-01-01 00:00:00 +1 YEAR", $start_time);
 		$where=array();
 		$where[]='(o.paid=1 or o.paid=0)';
 		$where[]='(o.deleted=0)';
@@ -61,7 +61,7 @@ if (!$row_year['crdate']) {
 		$libaryWidgets['turnoverPerYear']['content'].='
 		</table>';
 	} else {
-		$libaryWidgets['turnoverPerYear']['content']='<p>Nog geen data beschikbaar.</p>';
+		$libaryWidgets['turnoverPerYear']['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 	}
 }
 ?>

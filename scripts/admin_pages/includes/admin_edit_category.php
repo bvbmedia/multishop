@@ -400,13 +400,13 @@ if ($this->post) {
 		}
 		$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
 		if (empty($feed_checkbox)) {
-			$subpartArray['###FEEDS_LIST###']='no feeds';
+			$subpartArray['###FEEDS_LIST###']=$this->pi_getLL('admin_label_no_feeds');
 		} else {
 			$subpartArray['###FEEDS_LIST###']=$feed_checkbox;
 		}
 		$subpartArray['###LABEL_EXCLUDE_STOCK_FROM_FEED###']=$this->pi_getLL('exclude_stock_from_feeds', 'Exclude stock from feeds');
 		if (empty($feed_stock_checkbox)) {
-			$subpartArray['###STOCK_FEEDS_LIST###']='no feeds';
+			$subpartArray['###STOCK_FEEDS_LIST###']=$this->pi_getLL('admin_label_no_feeds');
 		} else {
 			$subpartArray['###STOCK_FEEDS_LIST###']=$feed_stock_checkbox;
 		}

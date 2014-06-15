@@ -16,7 +16,7 @@ if ($_GET['update_dates']) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 }
-$content.='<div class="main-heading"><h1>Consistency Checker</h1></div>';
+$content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_label_consistency_checker').'</h1></div>';
 $str="SELECT products_id, products_status from tx_multishop_products";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $products=array();
@@ -71,7 +71,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$products[$row['products_id']]=$row;
 	}
 }
-$content.='<div class="main-heading"><h2>Check 1</h2></div>';
+$content.='<div class="main-heading"><h2>'.$this->pi_getLL('admin_label_check_1').'</h2></div>';
 if (count($products)>0) {
 	$content.='<ul id="products_listing">';
 	foreach ($products as $row) {
@@ -108,7 +108,7 @@ if (count($products)>0) {
 	}
 	$content.='</ul>';
 }
-$content.='<strong>'.count($products).'</strong> products has been deleted.<br />';
+$content.='<strong>'.count($products).'</strong> '.$this->pi_getLL('admin_label_x_products_has_been_deleted').'.<br />';
 // chk 2
 $str="SELECT products_id from tx_multishop_products_to_categories";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -120,13 +120,13 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$products[$row['products_id']]=$row;
 	}
 }
-$content.='<div class="main-heading"><h2>Check 2</h2></div>';
+$content.='<div class="main-heading"><h2>'.$this->pi_getLL('admin_label_check_2').'</h2></div>';
 foreach ($products as $row) {
 	$products_id=$row['products_id'];
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id='.$products_id);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 }
-$content.='<strong>'.count($products).'</strong> orphaned products_to_categories relations has been deleted.<br />';
+$content.='<strong>'.count($products).'</strong> '.$this->pi_getLL('admin_label_x_orphanned_products_to_categories_relations_has_been_deleted').'.<br />';
 $str="SELECT categories_id from tx_multishop_categories";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $cats=array();
@@ -140,9 +140,9 @@ foreach ($cats as $row) {
 		mslib_befe::deleteCategory($row['categories_id']);
 	}
 }
-$content.='<strong>'.count($cats).'</strong> orphanned categories has been deleted.<br />';
+$content.='<strong>'.count($cats).'</strong> '.$this->pi_getLL('admin_label_x_orphanned_categories_has_been_deleted').'.<br />';
 // chk 3 the unused options
-$content.='<div class="main-heading"><h2>Check 3</h2></div>';
+$content.='<div class="main-heading"><h2>'.$this->pi_getLL('admin_label_check_3').'</h2></div>';
 $str="SELECT products_options_values_id from tx_multishop_products_options_values";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $option_values=array();
@@ -172,7 +172,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		}
 	}
 }
-$content.='<strong>'.$option_values_chains.'</strong> attribute option to value chains has been deleted.<br />';
+$content.='<strong>'.$option_values_chains.'</strong> '.$this->pi_getLL('admin_label_x_attribute_option_to_value_chains_has_been_deleted').'.<br />';
 // delete unused chains eof
 if (count($option_values)) {
 	foreach ($option_values as $products_options_values_id) {
@@ -182,9 +182,9 @@ if (count($option_values)) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 }
-$content.='<strong>'.count($option_values).'</strong> orphanned option values has been deleted.<br />';
+$content.='<strong>'.count($option_values).'</strong> '.$this->pi_getLL('admin_label_x_attribute_option_to_value_chains_has_been_deleted').'.<br />';
 // chk 4 missing product images
-$content.='<div class="main-heading"><h2>Check 4 (not existing product images)</h2></div>';
+$content.='<div class="main-heading"><h2>'.$this->pi_getLL('admin_label_check_4').'</h2></div>';
 $unmapped_images=0;
 $str="SELECT * from tx_multishop_products";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -219,8 +219,8 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	}
 }
 if ($unmapped_images) {
-	$content.='<strong>'.$unmapped_images.'</strong> missing related images has been adjust to the database.<br />';
+	$content.='<strong>'.$unmapped_images.'</strong> '.$this->pi_getLL('admin_label_missing_related_images_has_been_adjust_to_the_database').'.<br />';
 } else {
-	$content.='Everything is fine.';
+	$content.=$this->pi_getLL('admin_label_everything_is_fine');
 }
 ?>

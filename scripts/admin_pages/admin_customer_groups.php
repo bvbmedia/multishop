@@ -31,7 +31,7 @@ if (is_numeric($this->get['disable']) and is_numeric($this->get['customer_group_
 if ($this->post) {
 	$erno=array();
 	if (!$this->post['group_name']) {
-		$erno[]='Group name is not defined';
+		$erno[]=$this->pi_getLL('admin_label_group_name_is_not_defined');
 	}
 	if (!is_numeric($this->post['discount'])) {
 		$this->post['discount']=0;

@@ -79,7 +79,7 @@ foreach ($zones as $zone) {
 			</form>
 			';
 		} else {
-			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="cancel" onclick="history.back();return false;" class="msadmin_button" />';
+			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="msadmin_button" />';
 		}
 	} else {
 		if ($rows>0) {
@@ -89,7 +89,7 @@ foreach ($zones as $zone) {
 			}
 			$content.='</ul>';
 		} else {
-			$content.='Currently there are no countries mapped to this zone.';
+			$content.=$this->pi_getLL('admin_label_current_no_countries_mapped_to_this_zone');
 		}
 	}
 	if ($this->get['zone_id']!=$zone['id']) {
@@ -105,7 +105,7 @@ $content.='
 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <fieldset><legend>'.$this->pi_getLL('add_new_zone').'</legend>
 <div class="account-field">
-		<label for="">Name</label>
+		<label for="">'.$this->pi_getLL('name').'</label>
 		<input type="text" name="zone_name" id="zone_name" value=""> <input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
 </div>
 </fieldset>

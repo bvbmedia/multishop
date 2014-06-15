@@ -16,7 +16,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	);
 }
 if (count($data)==1) {
-	$libaryWidgets['searchKeywordsToplist']['content']='<p>Nog geen data beschikbaar.</p>';
+	$libaryWidgets['searchKeywordsToplist']['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 } else {
 //	$libaryWidgets['searchKeywordsToplist']['content']='<p>Websites waarvandaan bestellingen tot stand zijn gekomen.</p>';
 	$counter=0;

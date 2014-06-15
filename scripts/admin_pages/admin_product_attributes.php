@@ -92,10 +92,10 @@ if ($rows) {
 		$content.='</select>
 		</span>
 		<span class="required">
-			<input name="required['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['required'] ? ' checked' : '').'/> required
+			<input name="required['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['required'] ? ' checked' : '').'/> '.$this->pi_getLL('required').'
 		</span>		
 		<span class="hide_in_cart">
-			<input name="hide_in_cart['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide_in_cart'] ? ' checked' : '').'/> don\'t include attribute values in cart
+			<input name="hide_in_cart['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide_in_cart'] ? ' checked' : '').'/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
 		</span>		
 		</h2>
 		<h3>Option name <input name="option_names['.$row['products_options_id'].'][0]" type="text" value="'.htmlspecialchars($row['products_options_name']).'"  />';
@@ -112,7 +112,7 @@ if ($rows) {
 				$content.=$this->languages[$key]['title'].' <input name="option_names['.$row['products_options_id'].']['.$key.']" type="text" value="'.$value.'"  />';
 			}
 		}
-		$content.='<a href="#" class="delete_options admin_menu_remove" rel="'.$row['products_options_id'].'">delete</a>&nbsp;';
+		$content.='<a href="#" class="delete_options admin_menu_remove" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
 		$content.='<a href="#" class="msadmin_button fetch_attributes_values" id="button_label_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>&nbsp;';
 		$content.='<a href="#" class="msadmin_button fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
 		$content.='</h3>
@@ -144,33 +144,33 @@ if ($rows) {
 	}
 	$content.='
 		</ul>
-		<br /><input name="Submit" type="submit" value="Save" class="msadmin_button" />
+		<br /><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
 		</form>
 		
-		<div id="dialog-edit-description" title="Edit options description">
+		<div id="dialog-edit-description" title="'.$this->pi_getLL('admin_label_edit_options_description').'">
 	  		<div id="description_editor_header"></div>
 			<div id="description_editor"></div>
 		</div>
 			
-		<div id="dialog-edit-options-values-description" title="Edit options values description">
+		<div id="dialog-edit-options-values-description" title="'.$this->pi_getLL('admin_label_edit_options_values_description').'">
 	  		<div id="description_ov_editor_header"></div>
 			<div id="description_ov_editor"></div>
 		</div>
 			
-		<div id="dialog-confirm" title="WARNING: THIS ACTION IS NOT REVERSIBLE!!">
-	  		<p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you want to delete <span id="attributes-name0"></span> attribute(s)?</p>
+		<div id="dialog-confirm" title="'.$this->pi_getLL('admin_label_warning_this_action_is_not_reversible').'">
+	  		<p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>'.sprintf($this->pi_getLL('admin_label_are_you_sure_want_to_delete_x_attributes'), '<span id="attributes-name0"></span>').'</p>
 		</div>
 			
-		<div id="dialog-confirm-force" title="WARNING: THIS ACTION IS NOT REVERSIBLE!!">
+		<div id="dialog-confirm-force" title="'.$this->pi_getLL('admin_label_warning_this_action_is_not_reversible').'">
 	  		<p>
 				<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-				There are <span id="used-product-number"></span> product(s) using <span id="attributes-name1"></span> attribute(s), are you sure want to delete it?
+				'.sprintf($this->pi_getLL('admin_label_there_are_x_products_using_x_attributes_are_you_sure_want_to_delete_it'), '<span id="used-product-number"></span>', '<span id="attributes-name1"></span>').'
 			</p>
 			<br/><br/>
 			<p style="text-align:left">
-				The products using this attributes are:
+				'.$this->pi_getLL('admin_label_the_products_using_this_attributes_are').':
 				<br/>
-				(link will open in new tab/window)
+				('.$this->pi_getLL('admin_label_link_will_open_in_new_tab_window').')
 			</p>
 			<br/>
 			<span id="products-used-attributes-list" style="text-align:left"></span>
@@ -370,20 +370,20 @@ if ($rows) {
 									values_data += y.lang_title + \' <input name="option_values[\' + v.values_id + \'][\' + y.lang_id + \']" type="text" value="\' + y.lang_values + \'" />\';
 								});
 							
-								values_data += \'<a href="#" class="delete_options admin_menu_remove" rel="\' + opt_id + \':\' + v.values_id + \'">delete</a>&nbsp;\';
+								values_data += \'<a href="#" class="delete_options admin_menu_remove" rel="\' + opt_id + \':\' + v.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
 								values_data += \'<a href="#" class="fetch_options_values_description msadmin_button" rel="\' + v.pov2po_id + \'">'.$this->pi_getLL('show_options_description', 'EDIT VALUES DESCRIPTION').'</a>\';
 								values_data += \'</li>\';
 							});
 
-							values_data += \'<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">HIDE VALUES</a>\';
+							values_data += \'<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a>\';
 						
 							jQuery(container_id).html(values_data);
 							jQuery(fetched_id).val("1");
 										
 							jQuery(container_id).show();
-							jQuery(button_label_id).html("HIDE VALUES");
+							jQuery(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
 						} else {
-							jQuery(button_label_id).html("NO VALUES");
+							jQuery(button_label_id).html('.$this->pi_getLL('admin_label_no_values').');
 						}
 					} 
 				});
@@ -391,10 +391,10 @@ if ($rows) {
 			} else if ($(fetched_id).val() == "1") {
 				if ($(container_id).is(":hidden")) {
 					$(container_id).show();
-					$(button_label_id).html("HIDE VALUES");
+					$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
 				} else {
 					$(container_id).hide();
-					$(button_label_id).html("SHOW VALUES");
+					$(button_label_id).html("'.$this->pi_getLL('show_attributes_values').'");
 				}
 			}
 		});
@@ -405,10 +405,10 @@ if ($rows) {
 			var button_label_id = "#button_label_" + opt_id;
 			if ($(container_id).is(":hidden")) {
 				$(container_id).show();
-				$(button_label_id).html("HIDE VALUES");
+				$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
 			} else {
 				$(container_id).hide();
-				$(button_label_id).html("SHOW VALUES");
+				$(button_label_id).html("'.$this->pi_getLL('show_attributes_values').'");
 			}
 		});		
 		$(document).on("click", ".delete_options", function(e) {
@@ -482,11 +482,6 @@ if ($rows) {
 						}
 					} 
 			});
-			
-			
-			/* if (confirm(\'Are you sure you want to delete this Attributes Option?\')) {
-				
-			} */
 		});
 		
 		var result 	= jQuery(".attribute_options_sortable").sortable({
@@ -527,8 +522,8 @@ if ($rows) {
 	  });
 	  </script>';
 } else {
-	$content.='<h1>No product attributes defined yet</h1>';
-	$content.='You can add product attributes while creating and/or editing a product (through the products attribute tab).';
+	$content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
+	$content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
 }
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';

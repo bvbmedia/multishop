@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 //add order
-if ($this->post['proced_order']) {
+if ($this->post['proceed_order']) {
 	$unique_id=md5($this->post['first_name'].$this->post['last_name'].$this->post['company'].$this->post['tx_multishop_pi1']['telephone']);
 	if ($this->post['customer_id']) {
 		$user=mslib_fe::getUser($this->post['customer_id']);
@@ -170,7 +170,7 @@ if ($this->post['proced_order']) {
 		// redirect back to orders and let highslide open it
 //		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[edit_order]=1&tx_multishop_pi1[orders_id]='.$orders_id));
 //		exit();
-		$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$orders_id.'&tx_multishop_pi1[is_manual]=1&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal'],1);
+		$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$orders_id.'&tx_multishop_pi1[is_manual]=1&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal'], 1);
 		header('Location: '.$url);
 		exit();
 		/*
@@ -182,7 +182,6 @@ if ($this->post['proced_order']) {
 		</script>
 		';
 		*/
-
 	} //add to orders eof
 }
 ?>

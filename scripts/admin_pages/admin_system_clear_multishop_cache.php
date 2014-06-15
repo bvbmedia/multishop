@@ -62,9 +62,9 @@ if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['ca
 	if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..')) {
 		$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
 		exec($command);
-		$content.='<br /><p><strong>Multishop cache has been cleared.</strong></p>';
+		$content.='<br /><p><strong>'.$this->pi_getLL('admin_label_multishop_cache_has_been_cleared').'</strong></p>';
 	} else {
-		$content.='<br /><p><strong>Cache not cleared. Something is wrong with your configuration (DOCUMENT_ROOT is not set correctly).</strong></p>';
+		$content.='<br /><p><strong>'.$this->pi_getLL('admin_label_cache_not_cleared_something_is_wrong_with_configuration_document_root_is_not_set_directly').'</strong></p>';
 	}
 }
 ?>

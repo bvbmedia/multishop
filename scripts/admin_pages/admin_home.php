@@ -138,7 +138,7 @@ foreach ($dates as $key=>$value) {
 $key='google_chart_orders';
 $libaryWidgets[$key]['key']='google_chart';
 $libaryWidgets[$key]['defaultCol']=2;
-$libaryWidgets[$key]['title']='Bestellingen';
+$libaryWidgets[$key]['title']=$this->pi_getLL('admin_label_orders');
 $libaryWidgets[$key]['class']='googleChart-wrapper';
 $libaryWidgets[$key]['content']='
     <script type="text/javascript">
@@ -152,7 +152,7 @@ $libaryWidgets[$key]['content']='
 			title: \'\',
 			height:100,
 			hAxis: {title: \'\', titleTextStyle: {color: \'red\'}},
-			vAxis: {title: \'Bestellingen\', titleTextStyle: {color: \'red\'}},
+			vAxis: {title: \''.$this->pi_getLL('admin_label_orders').'\', titleTextStyle: {color: \'red\'}},
 			legend: {position: \'none\'},
 			chartArea: {
 				left: 60,
@@ -198,7 +198,7 @@ foreach ($dates as $key=>$value) {
 $key='google_chart_customers';
 $libaryWidgets[$key]['key']='google_chart';
 $libaryWidgets[$key]['defaultCol']=2;
-$libaryWidgets[$key]['title']='Gebruikers';
+$libaryWidgets[$key]['title']=$this->pi_getLL('admin_label_users');
 $libaryWidgets[$key]['class']='googleChart-wrapper';
 $libaryWidgets[$key]['content']='
     <script type="text/javascript">
@@ -212,7 +212,7 @@ $libaryWidgets[$key]['content']='
           title: \'\',
 		  height:100,
           hAxis: {title: \'\', titleTextStyle: {color: \'red\'}},
-          vAxis: {title: \'Gebruikers\', titleTextStyle: {color: \'red\'}},
+          vAxis: {title: \''.$this->pi_getLL('admin_label_users').'\', titleTextStyle: {color: \'red\'}},
 		  legend: {position: \'none\'},
 			chartArea: {
 				left: 60,
@@ -258,7 +258,7 @@ foreach ($dates as $key=>$value) {
 $key='google_chart_carts';
 $libaryWidgets[$key]['key']='google_chart';
 $libaryWidgets[$key]['defaultCol']=2;
-$libaryWidgets[$key]['title']='Winkelwagens';
+$libaryWidgets[$key]['title']=$this->pi_getLL('admin_label_shoppingcart');
 $libaryWidgets[$key]['class']='googleChart-wrapper';
 $libaryWidgets[$key]['content']='
     <script type="text/javascript">
@@ -272,7 +272,7 @@ $libaryWidgets[$key]['content']='
           title: \'\',
 		  height:100,
           hAxis: {title: \'\', titleTextStyle: {color: \'red\'}},
-          vAxis: {title: \'Winkelwagens\', titleTextStyle: {color: \'red\'}},
+          vAxis: {title: \''.$this->pi_getLL('admin_label_shoppingcart').'\', titleTextStyle: {color: \'red\'}},
 		  legend: {position: \'none\'},
 			chartArea: {
 				left: 60,
