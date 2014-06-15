@@ -86,7 +86,8 @@ $total_amount=0;
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
-	$end_time=strtotime($value."-01 00:00:00 +1 MONTH -1 DAY");
+	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
+
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';
@@ -149,7 +150,8 @@ foreach ($dates as $key=>$value) {
 	$total_orders=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
-	$end_time=strtotime($value."-01 00:00:00 +1 MONTH -1 DAY");
+	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
+
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';
