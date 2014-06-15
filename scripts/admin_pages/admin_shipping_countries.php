@@ -27,7 +27,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$countries[]=$row;
 }
 $content.='
-<div class="main-heading"><h2>Enabled Countries</h2></div>
+<div class="main-heading"><h2>'.$this->pi_getLL('admin_label_enabled_countries').'</h2></div>
 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <ul id="tx_multishop_countries_checkboxes">';
 foreach ($countries as $country) {

@@ -50,6 +50,7 @@ foreach ($groups as $group) {
 	$markerArray['VALUE_GROUP_NAME']=$group['title'];
 	$markerArray['VALUE_GROUP_DISCOUNT']=$group['tx_multishop_discount'];
 	$markerArray['VALUE_GROUP_STATUS']=$status_html;
+	$markerArray['ADMIN_LABEL_ALT_REMOVE']=ucfirst($this->pi_getLL('admin_label_alt_remove'));
 	$markerArray['VALUE_GROUP_DELETE_LINK']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&delete=1&'.mslib_fe::tep_get_all_get_params(array(
 			'customer_group_id',
 			'delete',

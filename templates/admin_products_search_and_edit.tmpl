@@ -190,10 +190,10 @@ jQuery(document).ready(function($) {
 			data:   "products_id="+products_id,
 			success: function(msg) {
 				if (msg.html==0) {
-					return_string='<span class="admin_status_red" alt="Disable"></span><a href="#" class="update_product_status" rel="'+products_id+'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
-				} else if (msg.html==1) {
-					return_string='<a href="#" class="update_product_status" rel="'+products_id+'"><span class="admin_status_red_disable" alt="Disabled"></span></a><span class="admin_status_green" alt="Enable"></span>';
-				}
+                    return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green_disable" alt="###ADMIN_LABEL_ENABLE###"></span></a>';
+                } else if (msg.html==1) {
+                    return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red_disable" alt="###ADMIN_LABEL_DISABLE###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE###"></span>';
+                }
 				tthis.html(return_string);
 			}
 		});

@@ -138,9 +138,9 @@ if (count($statusses)) {
 		<td width="60" align="center">';
 		if (!$status['default_status']) {
 			$content.='';
-			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
-			$content.='<span class="admin_status_green" alt="Enable"></span>';
+			$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 			$content.='';
 		}
 		$content.='

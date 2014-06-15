@@ -150,21 +150,21 @@ if (!count($pageset['dataset'])) {
 			$tr_type='even';
 		}
 		if (!$row['name']) {
-			$row['name']='No title';
+			$row['name']=$this->pi_getLL('admin_label_no_title');
 		}
 		$status_html='';
 		if (!$row['status']) {
-			$status_html.='<span class="admin_status_red" alt="Disable"></span>';
-			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+			$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
+			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
-			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
-			$status_html.='<span class="admin_status_green" alt="Enable"></span>';
+			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+			$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 		}
 		$markerArray=array();
 		$markerArray['ROW_TYPE']=$tr_type;
-		$markerArray['CMS_ID']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms',1).'">'.$row['id'].'</a>';
-		$markerArray['CMS_TITLE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms',1).'">'.htmlspecialchars($row['name']).'</a>';
-		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms',1).'">'.htmlspecialchars($row['type']).'</a>';
+		$markerArray['CMS_ID']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.$row['id'].'</a>';
+		$markerArray['CMS_TITLE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['name']).'</a>';
+		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['type']).'</a>';
 		$markerArray['CMS_DATE_CREATED']=strftime("%x %X", $row['crdate']);
 		$markerArray['CMS_STATUS']=$status_html;
 		$markerArray['CMS_REMOVE_BUTTON']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&delete=1').'" onclick="return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')" class="admin_menu_remove" alt="Remove"></a>';

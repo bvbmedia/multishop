@@ -173,13 +173,13 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$tmpcontent.='</strong>';
 			if (!empty($product['ean_code'])) {
-				$tmpcontent.='<br/>EAN: '.$product['ean_code'];
+				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
 			}
 			if (!empty($product['sku_code'])) {
-				$tmpcontent.='<br/>SKU: '.$product['sku_code'];
+				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
 			}
 			if (!empty($product['vendor_code'])) {
-				$tmpcontent.='<br/>Vendor code: '.$product['vendor_code'];
+				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
 			}
 			$tmpcontent.='</td>';
 			if ($this->get['print']=='invoice') {

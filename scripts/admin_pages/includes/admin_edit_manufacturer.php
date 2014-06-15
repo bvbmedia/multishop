@@ -126,7 +126,7 @@ if ($this->post) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 			exit();
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit',1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
 			exit();
 		}
 	}
@@ -191,6 +191,9 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		} else {
 			$markerArray['MANUFACTURER_META_FLAG']='';
 		}
+		$markerArray['ADMIN_LABEL_INPUT_META_TITLE']=$this->pi_getLL('admin_label_input_meta_title');
+		$markerArray['ADMIN_LABEL_INPUT_META_KEYWORDS']=$this->pi_getLL('admin_label_input_meta_keywords');
+		$markerArray['ADMIN_LABEL_INPUT_META_DESCRIPTION']=$this->pi_getLL('admin_label_input_meta_description');
 		$markerArray['VALUE_MANUFACTURER_META_TITLE']=htmlspecialchars($lngman[$language['uid']]['meta_title']);
 		$markerArray['VALUE_MANUFACTURER_META_KEYWORDS']=htmlspecialchars($lngman[$language['uid']]['meta_keywords']);
 		$markerArray['VALUE_MANUFACTURER_META_DESCRIPTION']=htmlspecialchars($lngman[$language['uid']]['meta_description']);
@@ -236,6 +239,11 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	} else {
 		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 	}
+	$subpartArray['###ADMIN_LABEL_JS_ARE_YOU_SURE###']=$this->pi_getLL('admin_label_js_are_you_sure');
+	$subpartArray['###ADMIN_LABEL_DROP_FILES_HERE_TO_UPLOAD###']=$this->pi_getLL('admin_label_drop_files_here_to_upload');
+	$subpartArray['###ADMIN_LABEL_TABS_DETAILS###']=$this->pi_getLL('admin_label_tabs_details');
+	$subpartArray['###ADMIN_LABEL_TABS_CONTENT###']=$this->pi_getLL('admin_label_tabs_content');
+	$subpartArray['###ADMIN_LABEL_TABS_META###']=$this->pi_getLL('admin_label_tabs_meta');
 	$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 }
 ?>

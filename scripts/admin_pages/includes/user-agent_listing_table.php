@@ -63,6 +63,7 @@ $subpartArray['###LABEL_HEADER_USERAGENTS###']=$this->pi_getLL('user_agent', 'us
 $subpartArray['###LABEL_FOOTER_CUSTOMER###']=$this->pi_getLL('customer');
 $subpartArray['###LABEL_FOOTER_IPADDRESS###']=$this->pi_getLL('ip_address');
 $subpartArray['###LABEL_FOOTER_USERAGENTS###']=$this->pi_getLL('user_agent', 'user agents');
+$subpartArray['###ADMIN_LABEL_LINK_DOWNLOAD_AS_EXCEL###']=$this->pi_getLL('admin_label_link_download_as_excel');
 // pagination
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {

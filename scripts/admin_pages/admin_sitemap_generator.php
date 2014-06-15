@@ -114,7 +114,7 @@ if (!$this->get['skip_products']) {
 //{
 @unlink($sitemap_file);
 @copy($log_file, $sitemap_file);
-$content.='<div class="main-heading"><h1>Sitemap creator</h1></div>';
-$content.='<p>Your sitemap has been created/updated.</p>You can download it here: <a href="'.$sitemap_file_web_path.'" target="_blank">'.$sitemap_file_web_path.'</a>';
+$content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_label_sitemap_creator').'</h1></div>';
+$content.='<p>'.$this->pi_getLL('admin_label_your_sitemap_has_been_created').'</p>'.$this->pi_getLL('admin_label_you_can_download_it_here').': <a href="'.$sitemap_file_web_path.'" target="_blank">'.$sitemap_file_web_path.'</a>';
 //}
 ?>

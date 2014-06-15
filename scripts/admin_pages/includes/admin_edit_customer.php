@@ -225,24 +225,11 @@ if ($this->post) {
 				}
 			}
 		}
-		/*
-		$updateArray['delivery_company']=
-		$updateArray['delivery_first_name']=
-		$updateArray['delivery_middle_name']=
-		$updateArray['delivery_last_name']=
-		$updateArray['delivery_address']=
-		$updateArray['delivery_address_number']=
-		$updateArray['delivery_zip']=
-		$updateArray['delivery_city']=
-		$updateArray['delivery_email']=
-		$updateArray['delivery_telephone']=
-		$updateArray['delivery_mobile']=
-		*/
 		if ($this->post['tx_multishop_pi1']['referrer']) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 			exit();
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers',1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
 			exit();
 		}
 	}
@@ -351,7 +338,7 @@ $images_tab_block.='
 	<input name="tx_multishop_pi1[image]" id="ajax_fe_user_image" type="hidden" value="" />';
 if ($_REQUEST['action']=='edit_product' and $this->post['image']) {
 	$images_tab_block.='<img src="'.mslib_befe::getImagePath($this->post['image'], 'products', '50').'">';
-	$images_tab_block.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+	$images_tab_block.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 }
 $images_tab_block.='</div>';
 $images_tab_block.='
@@ -364,7 +351,7 @@ jQuery(document).ready(function($) {
 			file_type: \'fe_user_image'.'\'
 		},
 		template: \'<div class="qq-uploader">\' +
-				  \'<div class="qq-upload-drop-area"><span>Drop files here to upload</span></div>\' +
+				  \'<div class="qq-upload-drop-area"><span>'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_drop_files_here_to_upload'))).'</span></div>\' +
 				  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 				  \'<ul class="qq-upload-list"></ul>\' +
 				  \'</div>\',
@@ -401,7 +388,7 @@ $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
 $subpartArray['###VALUE_IMAGE###']=$images_tab_block;
 $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
-$subpartArray['###CUSTOMER_FORM_HEADING###']='Edit customer';
+$subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
 $subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
 $subpartArray['###VALUE_REFERRER###']='';
@@ -527,8 +514,11 @@ switch ($_REQUEST['action']) {
 		$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
 		$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
 		$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
+		$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
+		$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
+		$markerArray['ADMIN_LABEL_DELIVERY_ADDRESS']=$this->pi_getLL('admin_label_delivery_address');
 		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
-		$subpartArray['###DETAILS_TAB###']='<li class="active"><a href="#view_customer">DETAILS</a></li>';
+		$subpartArray['###DETAILS_TAB###']='<li class="active"><a href="#view_customer">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
 		$subpartArray['###DETAILS###']=$customer_details;
 		break;
 	default:
@@ -606,6 +596,7 @@ if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 	}
 }
 $subpartArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
+$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerTmplPreProc'])) {
 	$params=array(

@@ -26,16 +26,16 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query))
 die();
 */
 $navItems=array();
-$navItems['categories']='Categories';
-$navItems['products']='Products';
-$navItems['products_attributes']='Product Attributes';
-$navItems['manufacturers']='Manufacturers';
-$navItems['orders']='Orders';
-$navItems['everything']='Everything';
-$content.='<div class="main-heading"><h1>Clear Database</h1></div>
+$navItems['categories']=$this->pi_getLL('categories');
+$navItems['products']=$this->pi_getLL('products');
+$navItems['products_attributes']=$this->pi_getLL('admin_label_products_attributes');
+$navItems['manufacturers']=$this->pi_getLL('manufacturers');
+$navItems['orders']=$this->pi_getLL('orders');
+$navItems['everything']=$this->pi_getLL('admin_label_everything');
+$content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_label_clear_database').'</h1></div>
 <form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_clear_database').'" method="post">
 	<div class="account-field">
-			<label>Items to delete</label>
+			<label>'.$this->pi_getLL('admin_label_items_to_delete').'</label>
 			<ul>
 			';
 foreach ($navItems as $key=>$val) {
@@ -80,21 +80,21 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 					$res2 = $GLOBALS['TYPO3_DB']->sql_query($query2);
 				}
 				*/
-				$content.='<p>orders has been cleared.</p>';
+				$content.='<p>'.$this->pi_getLL('admin_label_orders_has_been_cleared').'</p>';
 				break;
 			case 'categories':
 				$query=$GLOBALS['TYPO3_DB']->sql_query("select categories_id from tx_multishop_categories where parent_id='0' and page_uid='".$this->showCatalogFromPage."'");
 				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query))!=false) {
 					mslib_befe::deleteCategory($row['categories_id']);
 				}
-				$content.='<p>categories has been cleared.</p>';
+				$content.='<p>'.$this->pi_getLL('admin_label_categories_has_been_cleared').'</p>';
 				break;
 			case 'products':
 				$query=$GLOBALS['TYPO3_DB']->sql_query("select products_id from tx_multishop_products where page_uid='".$this->showCatalogFromPage."'");
 				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query))!=false) {
 					mslib_befe::deleteProduct($row['products_id']);
 				}
-				$content.='<p>products has been cleared.</p>';
+				$content.='<p>'.$this->pi_getLL('admin_label_products_has_been_cleared').'</p>';
 				break;
 			case 'manufacturers':
 				$string='
@@ -108,7 +108,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($item);
 					}
 				}
-				$content.='<p>manufacturers has been cleared.</p>';
+				$content.='<p>'.$this->pi_getLL('admin_label_manufacturers_has_been_cleared').'</p>';
 				break;
 			case 'products_attributes':
 				$string='
@@ -192,7 +192,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 						$return=mslib_befe::deltree($this->DOCUMENT_ROOT.$path);
 					}
 				}
-				$content.='<p>everything has been cleared.</p>';
+				$content.='<p>'.$this->pi_getLL('admin_label_everything_has_been_cleared').'</p>';
 				break;
 		}
 	}

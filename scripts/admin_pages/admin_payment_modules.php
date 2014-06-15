@@ -134,14 +134,14 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		<div class="account-field">
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
-				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">Excl. VAT</label></div>
-				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">Incl. VAT</label></div>
+				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$row['handling_costs'].'" /></div>
 			</div>
 		</div>
 		<div class="account-field">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
-		<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
+		<select name="tax_id" id="tax_id"><option value="0"'.$this->pi_getLL('admin_label_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -354,14 +354,14 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		<div class="account-field">
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
-				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="0.00"><label for="display_name">Excl. VAT</label></div>
-				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="0.00"><label for="display_name">Incl. VAT</label></div>
+				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="0" /></div>
 			</div>
 		</div>
 		<div class="account-field">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
-		<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
+		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -547,16 +547,16 @@ if ($this->ms['show_main']) {
 			<td>'.date("Y-m-d", $row['date']).'</td>
 			<td align="center">';
 			if (!$row['status']) {
-				$tmpcontent.='<span class="admin_status_red" alt="Disable"></span>';
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				$tmpcontent.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 			} else {
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
-				$tmpcontent.='<span class="admin_status_green" alt="Enable"></span>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+				$tmpcontent.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 			}
 			$tmpcontent.='
 			</td>
 			<td align="center">
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>
+			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"></a>
 			</td>
 			</tr>';
 		}

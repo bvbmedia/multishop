@@ -9,11 +9,11 @@ if (count($products)<0) {
 } else {
 	if ($this->get['tx_multishop_pi1']['is_proposal']) {
 		$content.='<div class="account-field">	
-			<h1>Offerte aanmaken</h1>
+			<h1>'.$this->pi_getLL('admin_label_create_quotation').'</h1>
 		</div>';
 	} else {
 		$content.='<div class="account-field">	
-			<h1>Bestelling plaatsen</h1>
+			<h1>'.$this->pi_getLL('admin_label_create_order').'</h1>
 		</div>';
 	}
 	$customers=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'company, name, email');
@@ -40,14 +40,13 @@ if (count($products)<0) {
 				$htmlTitle.=$this->pi_getLL('username').': <strong>'.$customer['username'].'</strong><br/>';
 				$htmlTitle.=$this->pi_getLL('address').': <strong>'.$customer['address'].'</strong><br/>';
 				$htmlTitle.=$this->pi_getLL('telephone').': <strong>'.$customer['telephone'].'</strong><br/>';
-
 				//$title.='<span style="padding-left:10px;">'.$this->pi_getLL('email').'<br>bas<br/>: '.$customer['email'].'</span><span style="padding-left:10px;">'.$this->pi_getLL('admin_customer_id').': '.$customer['uid'].'</span>';
 				//$html='<table width="100%" border=3><tr><td>'.$title.'</td><td>'.$title.'</td><td>'.$customer['email'].'</td><td>'.$customer['uid'].'</td></tr></table>';
 				$content.='<option value="'.$customer['uid'].'">'.htmlspecialchars($htmlTitle).'</option>';
 			}
 		}
 		$content.='</select>';
-		$content.='<input type="hidden" id="proced_order" value="proced_order" name="proced_order"/></div>';
+		$content.='<input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/></div>';
 		$content.='</form>';
 	}
 	if ($this->post) {
@@ -461,7 +460,7 @@ if (count($products)<0) {
 		$content.='<div id="delivery_address_category" class="hide"><div class="main-heading"><h2>'.$this->pi_getLL('delivery_address').'</h2></div>'.$tmpcontent.'</div></div>';
 		$content.='<div id="bottom-navigation">
 						<div id="navigation"> 							
-	 						<input type="hidden" id="proced_order" value="proced_order" name="proced_order"/>
+	 						<input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/>
 	 						<input type="submit" id="submit" value="'.htmlspecialchars($this->pi_getLL('next')).'"/>
 							<input name="tx_multishop_pi1[is_proposal]" type="hidden" value="'.$this->get['tx_multishop_pi1']['is_proposal'].'" />
 	 					</div>

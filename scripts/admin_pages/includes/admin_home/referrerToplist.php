@@ -17,9 +17,9 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	);
 }
 if (count($data)==1) {
-	$libaryWidgets['referrerToplist']['content']='<p>Nog geen data beschikbaar.</p>';
+	$libaryWidgets['referrerToplist']['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 } else {
-	$libaryWidgets['referrerToplist']['content']='<p>Websites waarvandaan bestellingen tot stand zijn gekomen.</p>';
+	$libaryWidgets['referrerToplist']['content']='<p>'.$this->pi_getLL('admin_label_orders_come_from_referer').'.</p>';
 	$counter=0;
 	$libaryWidgets['referrerToplist']['content'].='<table width="100%" class="msZebraTable tblWidget" cellspacing="0" cellpadding="0" border="0" >';
 	foreach ($data as $host=>$item) {
