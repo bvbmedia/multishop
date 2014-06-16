@@ -91,7 +91,7 @@ $content.='</div>';
 
 $content='<div class="main-heading"><h2>Admin Modules</h2></div>';
 $content.='
-<div id="tab-container">
+<div id="tab-container" class="msadminVerticalTabs ">
     <ul class="tabs" id="admin_modules">';
 $count=0;
 foreach ($tabs as $key=>$value) {
