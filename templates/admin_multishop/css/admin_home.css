@@ -206,6 +206,7 @@ min-height:100px;
 #msadmin_content .ui-sortable-placeholder * { visibility: hidden; }
 
 #msadmin_content .msAdminHighslidePopup .portlet-header h3 { background:none; color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container #view_customer.tab_content h1.blackSquare { border:1px solid #000; background:#222; font-size:12px; color:#fff; margin:0 0 10px; padding:7px 10px; box-shadow:0 0 4px #666 inset, 0 2px 4px #888; border-radius:4px; font:14px Arial, Helvetica, sans-serif; font-weight:bold; }
 
 #msadmin_content .widgetRow { overflow:hidden; width:100%; }
 #msadmin_content .widgetRow ul { margin:0; padding:0; list-style:none; }
