@@ -253,10 +253,10 @@ if ($this->ADMIN_USER) {
 				});
 				$(document).on("change", "#ms_admin_simulate_language", function() {
 					$("#multishop_admin_language_form").submit();
-				});							
-				if (isMobile()) {
-					return false;
-				}
+				});
+				// if (isMobile()) {
+				//	return false;
+				// }
 				jQuery.ajax({
 					url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel&tx_multishop_pi1[categories_id]='.$this->get['categories_id'].'&tx_multishop_pi1[products_id]='.$this->get['products_id']).'\',
 					data: \'\',
@@ -320,7 +320,7 @@ if ($this->ADMIN_USER) {
 								}																
 								$("#footer_content_cols").slideToggle("500");
 
-							}							
+							}
 							';
 	if ($_COOKIE['hide_admin_panel']) {
 		$html.='
