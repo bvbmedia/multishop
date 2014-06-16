@@ -46,7 +46,23 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
-	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
+	switch($this->dashboardArray['section']) {
+		case 'admin_home':
+			break;
+		case 'admin_edit_customer':
+			if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+				$where[]='(f.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+			}
+			break;
+	}
+	$str=$GLOBALS['TYPO3_DB']->SELECTquery('o.orders_id, o.grand_total', // SELECT ...
+		'tx_multishop_orders o', // FROM ...
+		'('.implode(" AND ", $where).')', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_price=($total_price+$row['grand_total']);

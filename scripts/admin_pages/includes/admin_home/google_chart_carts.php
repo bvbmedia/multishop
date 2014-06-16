@@ -21,9 +21,24 @@ foreach ($dates as $key=>$value) {
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
 	$where=array();
 	$where[]='(f.is_checkout=0 or f.is_checkout=1)';
-	$str="SELECT count(1) as total from tx_multishop_cart_contents f WHERE (".implode(" AND ", $where).") and (f.crdate BETWEEN ".$start_time." and ".$end_time.")";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+	switch($this->dashboardArray['section']) {
+		case 'admin_home':
+			break;
+		case 'admin_edit_customer':
+			if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+				$where[]='(f.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+			}
+			break;
+	}
+	$qry=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
+		'tx_multishop_cart_contents f', // FROM ...
+		'('.implode(" AND ", $where).') and (f.crdate BETWEEN '.$start_time.' and '.$end_time.')', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
+	$res=$GLOBALS['TYPO3_DB']->sql_query($qry);
+	$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 	$data[]=array(
 		date("m-Y", $start_time),
 		(int)$row['total']

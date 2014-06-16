@@ -40,6 +40,15 @@ foreach ($dates as $key=>$value) {
 
 	$where=array();
 	$where[]='(f.deleted=0)';
+	switch($this->dashboardArray['section']) {
+		case 'admin_home':
+			break;
+		case 'admin_edit_customer':
+			if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+				$where[]='(f.uid='.$this->get['tx_multishop_pi1']['cid'].')';
+			}
+			break;
+	}
 	$str="SELECT count(1) as total from tx_multishop_orders f WHERE (".implode(" AND ", $where).") and (f.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
