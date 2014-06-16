@@ -164,10 +164,15 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 				updateForm();								
 			});
 		</script>
-		<div class="account-field">
-			<label>Dynamic markers</label>
+		<div class="account-field" style="display:none" id="msadminMarkersBox">
+			<label>'.$this->pi_getLL('marker').'</label>
 			<div class="valueField">
-				<ul>';
+				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msAdminTooltipTable msZebraTable msadmin_orders_listing">
+				<tr>
+					<th>'.$this->pi_getLL('marker').'</th>
+					<th>'.$this->pi_getLL('description').'</th>
+				</tr>
+				';
 	$markers=array();
 	$markers['DELIVERY_FIRST_NAME']=$this->pi_getLL('admin_label_cms_marker_first_name_delivery');
 	$markers['DELIVERY_LAST_NAME']=$this->pi_getLL('admin_label_cms_marker_last_name_delivery');
@@ -219,10 +224,16 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		}
 	}
 	ksort($markers);
+	$tr_subtype='';
 	foreach ($markers as $key=>$label) {
-		$tmpcontent.='<li><span class="marker_description">'.htmlspecialchars($label).':</span><span class="marker_key">###'.$key.'###</span></li>'."\n";
+		if (!$tr_subtype or $tr_subtype=='even') {
+			$tr_subtype='odd';
+		} else {
+			$tr_subtype='even';
+		}
+		$tmpcontent.='<tr class="'.$tr_subtype.'"><td class="marker_key">###'.$key.'###</td><td class="marker_description">'.htmlspecialchars($label).'</td></tr>'."\n";
 	}
-	$tmpcontent.='</ul>
+	$tmpcontent.='</table>
 				</div>			
 			</div>';
 	foreach ($this->languages as $key=>$language) {
@@ -237,7 +248,8 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		<div class="account-field">
 			<label for="cms_name['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 			<input spellcheck="true" type="text" class="text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
-		</div>	
+			<span><a href="#" class="tooltipMarker" title="Dynamic markers">markers</a></span>
+		</div>
 		<div class="account-field">
 			<label for="cms_content['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('content')).'</label>
 			<textarea spellcheck="true" name="cms_content['.$language['uid'].']" id="cms_content['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($cms[$language['uid']]['content']).'</textarea>
@@ -315,4 +327,17 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	</div>';
 	// tabs eof
 }
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<script type="text/javascript">
+	jQuery(document).ready(function($){
+		$(".tooltipMarker").tooltip({
+			position: "bottom",
+			onBeforeShow: function() {
+				var html=$("#msadminMarkersBox .valueField").html();
+				this.getTip().html("<h1>'.$this->pi_getLL('marker').'</h1>"+html);
+			}
+		});
+	});
+</script>
+';
 ?>

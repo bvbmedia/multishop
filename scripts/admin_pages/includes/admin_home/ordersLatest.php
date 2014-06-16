@@ -263,7 +263,7 @@ if ($pageset['total_rows']>0) {
 			$tr_type='even';
 		}
 		if ($this->masterShop) {
-			$master_shop_col='<td align="left" nowrap>'.mslib_fe::getShopNameByPageUid($order['page_uid']).'</td>';
+			$master_shop_col='<td align="left">'.mslib_fe::getShopNameByPageUid($order['page_uid']).'</td>';
 		}
 		if ($order['billing_company']) {
 			$customer_name=$order['billing_company'];
@@ -309,7 +309,7 @@ if ($pageset['total_rows']>0) {
 		$order_list_button_extra='';
 		if ($print_order_list_button) {
 			//button area
-			$order_list_button_extra.='<td align="center" nowrap>';
+			$order_list_button_extra.='<td align="center">';
 			$order_list_button_extra.=implode("&nbsp;", $orderlist_buttons);
 			$order_list_button_extra.='</td>';
 		}
