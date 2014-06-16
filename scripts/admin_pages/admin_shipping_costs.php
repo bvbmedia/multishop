@@ -113,7 +113,7 @@ if ($this->post) {
 		$update_shipping['shipping_costs_type']=$shipping_type;
 		$query_update_shipping=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', "id = ".$shipping_id, $update_shipping);
 		$res_update_ship=$GLOBALS['TYPO3_DB']->sql_query($query_update_shipping);
-		header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs'));
+		header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs',1));
 	} // end for POST
 } //end if post
 $str="SELECT * from tx_multishop_zones order by name";
@@ -144,7 +144,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 // hook to add shipping cost type eof
 $tr_type='even';
 if (count($shipping_methods)>0) {
-	$content.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" enctype="multipart/form-data">';
+	$content.='<form class="edit_form" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'],1).'" method="post" enctype="multipart/form-data">';
 	$count_shipping_methods=array();
 	foreach ($shipping_methods as $row) {
 		$content.='<fieldset class="multishop_fieldset">';
