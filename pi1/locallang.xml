@@ -869,6 +869,8 @@
             <label index="sortby_options_label_price_desc">Price (desc)</label>
             <label index="sortby_options_label_new_asc">New (asc)</label>
             <label index="sortby_options_label_new_desc">New (desc)</label>
+            <label index="admin_global_statistics">Statistics dashboard</label>
+            <label index="admin_global_statistics_description">View global statistics</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="admin_label_collapse_all">Alles inklappen</label>
@@ -1722,6 +1724,8 @@
             <label index="sortby_options_label_price_desc">Prijs (aflopend)</label>
             <label index="sortby_options_label_new_asc">Nieuw (opvolgend)</label>
             <label index="sortby_options_label_new_desc">Nieuw (aflopend)</label>
+            <label index="admin_global_statistics">Statistieken dashboard</label>
+            <label index="admin_global_statistics_description">Bekijk globale statistieken</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>

@@ -4587,6 +4587,9 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_statistics']['label']=$this->pi_getLL('admin_statistics');
 			$ms_menu['header']['ms_admin_statistics']['description']=$this->pi_getLL('admin_statistics_description').'.';
 			$ms_menu['header']['ms_admin_statistics']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_home');
+			$ms_menu['header']['ms_admin_statistics']['subs']['ms_global_stats']['label']=$this->pi_getLL('admin_global_statistics');
+			$ms_menu['header']['ms_admin_statistics']['subs']['ms_global_stats']['description']=$this->pi_getLL('admin_global_statistics_description').'.';
+			$ms_menu['header']['ms_admin_statistics']['subs']['ms_global_stats']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_home');
 			$ms_menu['header']['ms_admin_statistics']['subs']['ms_products_search_stats']['label']=$this->pi_getLL('admin_products_search');
 			$ms_menu['header']['ms_admin_statistics']['subs']['ms_products_search_stats']['description']=$this->pi_getLL('admin_products_search_description').'.';
 			$ms_menu['header']['ms_admin_statistics']['subs']['ms_products_search_stats']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_stats');
