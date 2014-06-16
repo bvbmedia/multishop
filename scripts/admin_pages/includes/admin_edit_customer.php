@@ -508,6 +508,9 @@ switch ($_REQUEST['action']) {
 			$delivery_country=ucwords(strtolower($user['country']));
 		}
 		$markerArray['DETAILS_COMPANY_NAME']=$company_name;
+		if (!$markerArray['DETAILS_COMPANY_NAME']) {
+			$markerArray['DETAILS_COMPANY_NAME']=$fullname;
+		}
 		$markerArray['BILLING_FULLNAME']=$fullname.'<br/>';
 		$markerArray['BILLING_TELEPHONE']=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
 		$markerArray['BILLING_EMAIL']=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address;
