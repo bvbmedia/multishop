@@ -5,7 +5,24 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key']='searchKeywordsToplist';
 $compiledWidget['defaultCol']=3;
 $compiledWidget['title']=$this->pi_getLL('search_keywords_toplist', 'Gezochte termen');
-$str="SELECT s.keyword, count(s.keyword) as total, s.negative_results FROM tx_multishop_products_search_log s where s.keyword <> '' group by s.keyword order by total desc limit 10";
+$where=array();
+$where[]='s.keyword <> \'\'';
+switch($this->dashboardArray['section']) {
+	case 'admin_home':
+		break;
+	case 'admin_edit_customer':
+		if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+			$where[]='(s.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+		}
+		break;
+}
+$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.keyword, count(s.keyword) as total, s.negative_results', // SELECT ...
+	'tx_multishop_products_search_log s', // FROM ...
+	'('.implode(" AND ", $where).')', // WHERE...
+	's.keyword', // GROUP BY...
+	'total desc', // ORDER BY...
+	'10' // LIMIT ...
+);
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $data=array();
 $data[]=array(

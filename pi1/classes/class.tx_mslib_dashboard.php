@@ -100,6 +100,16 @@ class tx_mslib_dashboard extends tslib_pibase {
 					$this->enabledWidgets['ordersLatest']=1;
 					// ORDERS TOTAL TABLES EOF
 				break;
+			case 'admin_edit_customer':
+				$this->enabledWidgets['ordersPerMonth']=1;
+				$this->enabledWidgets['google_chart_orders']=1;
+				$this->enabledWidgets['google_chart_carts']=1;
+				$this->enabledWidgets['turnoverPerMonth']=1;
+				$this->enabledWidgets['turnoverPerYear']=1;
+				$this->enabledWidgets['referrerToplist']=1;
+				$this->enabledWidgets['searchKeywordsToplist']=1;
+				$this->enabledWidgets['ordersLatest']=1;
+				break;
 		}
 		// COMPILING
 		$this->compiledWidgets=array();
@@ -257,6 +267,7 @@ class tx_mslib_dashboard extends tslib_pibase {
 		} else {
 			switch($this->dashboardArray['section']) {
 				case 'admin_home':
+				case 'admin_edit_customer':
 					$pageLayout[]=array(
 						'class'=>'layout1big1small',
 						'cols'=>array(

@@ -6,8 +6,25 @@ $compiledWidget['key']='turnoverPerMonth';
 $compiledWidget['defaultCol']=1;
 $compiledWidget['title']=$this->pi_getLL('sales_volume_by_month');
 
-$sql_year="select crdate from tx_multishop_orders where deleted=0 order by orders_id asc limit 1";
-$qry_year=$GLOBALS['TYPO3_DB']->sql_query($sql_year);
+$where=array();
+$where[]='(o.deleted=0)';
+switch($this->dashboardArray['section']) {
+	case 'admin_home':
+		break;
+	case 'admin_edit_customer':
+		if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+			$where[]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+		}
+		break;
+}
+$str=$GLOBALS['TYPO3_DB']->SELECTquery('o.crdate', // SELECT ...
+	'tx_multishop_orders o', // FROM ...
+	'('.implode(" AND ", $where).')', // WHERE...
+	'', // GROUP BY...
+	'orders_id asc', // ORDER BY...
+	'1' // LIMIT ...
+);
+$qry_year=$GLOBALS['TYPO3_DB']->sql_query($str);
 $row_year=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_year);
 if ($row_year['crdate']>0) {
 	$oldest_year=date("Y", $row_year['crdate']);
@@ -38,7 +55,6 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';
@@ -46,7 +62,23 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
-	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
+	switch($this->dashboardArray['section']) {
+		case 'admin_home':
+			break;
+		case 'admin_edit_customer':
+			if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+				$where[]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+			}
+			break;
+	}
+	$str=$GLOBALS['TYPO3_DB']->SELECTquery('o.orders_id, o.grand_total', // SELECT ...
+		'tx_multishop_orders o', // FROM ...
+		'('.implode(" AND ", $where).')', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_price=($total_price+$row['grand_total']);

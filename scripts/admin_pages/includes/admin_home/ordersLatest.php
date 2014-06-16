@@ -225,6 +225,15 @@ if ($this->post['tx_multishop_pi1']['is_proposal']) {
 } else {
 	$filter[]='o.is_proposal=0';
 }
+switch($this->dashboardArray['section']) {
+	case 'admin_home':
+		break;
+	case 'admin_edit_customer':
+		if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
+			$filter[]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+		}
+		break;
+}
 $pageset=mslib_fe::getOrdersPageSet($filter, $offset, 20, $orderby, $having, $select, $where, $from);
 $tmporders=$pageset['orders'];
 if ($pageset['total_rows']>0) {
@@ -232,6 +241,7 @@ if ($pageset['total_rows']>0) {
 	$data[]=array(
 		$this->pi_getLL('admin_label_order_number'),
 		$this->pi_getLL('admin_label_amount'),
+		$this->pi_getLL('date'),
 		$this->pi_getLL('admin_paid'),
 		$this->pi_getLL('admin_payment_method')
 	);
@@ -320,6 +330,7 @@ if ($pageset['total_rows']>0) {
 		$data[]=array(
 			'<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
 			mslib_fe::amount2Cents($order['grand_total'], 0),
+			strftime("%x %X", $order['crdate']),
 			$paid_status,
 			'<span title="'.htmlspecialchars($order['payment_method_label']).'">'.$order['payment_method_label'].'</span>'
 		);
@@ -336,7 +347,7 @@ if ($pageset['total_rows']>0) {
 			foreach ($item as $col) {
 				$colCounter++;
 				$compiledWidget['content'].='
-					<th class="tblHeadCol'.$colCounter.'">'.$col.'</th>
+					<th class="tblHeadCol'.$colCounter.'" nowrap>'.$col.'</th>
 				';
 			}
 			$compiledWidget['content'].='</tr>';
@@ -352,7 +363,7 @@ if ($pageset['total_rows']>0) {
 			foreach ($item as $col) {
 				$colCounter++;
 				$compiledWidget['content'].='
-					<td class="tblBodyCol'.$colCounter.'">'.$col.'</td>
+					<td class="tblBodyCol'.$colCounter.'" nowrap>'.$col.'</td>
 				';
 			}
 			$compiledWidget['content'].='</tr>';
