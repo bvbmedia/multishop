@@ -63,7 +63,7 @@ foreach ($dates as $key=>$value) {
 			break;
 		case 'admin_edit_customer':
 			if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
-				$where[]='(o.uid='.$this->get['tx_multishop_pi1']['cid'].')';
+				$where[]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
 			}
 			break;
 	}
