@@ -205,6 +205,8 @@ min-height:100px;
 #msadmin_content .ui-sortable-placeholder { border: 1px dotted #666; visibility: visible !important; height: 66px !important; }
 #msadmin_content .ui-sortable-placeholder * { visibility: hidden; }
 
+#msadmin_content .msAdminHighslidePopup .portlet-header h3 { background:none; color:#fff; }
+
 #msadmin_content .widgetRow { overflow:hidden; width:100%; }
 #msadmin_content .widgetRow ul { margin:0; padding:0; list-style:none; }
 #msadmin_content .widgetRow .column { float:left; background:none; margin:0 1% 0 0; padding:0; }
