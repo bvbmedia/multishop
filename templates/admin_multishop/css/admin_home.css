@@ -247,7 +247,7 @@ min-height:100px;
 #msadmin_content #tblWidgetOrdersLatest .tblBodyCol5,
 #msadmin_content #tblWidgetOrdersLatest .tblBodyCol6 { text-align:center; }
 #msadmin_content #tblWidgetOrdersLatest .tblBodyCol1 { width:84px; }
-#msadmin_content #tblWidgetOrdersLatest .tblBodyCol3 { width:48px; }
+#msadmin_content #tblWidgetOrdersLatest .tblBodyCol3 { width:48px; white-space:nowrap; }
 #msadmin_content #tblWidgetOrdersLatest .tblBodyCol4 { width:42px; }
 #msadmin_content #tblWidgetOrdersLatest .tblBodyCol5 { width:80px; }
 #msadmin_content #tblWidgetOrdersLatest .tblBodyCol6 { width:82px; }
