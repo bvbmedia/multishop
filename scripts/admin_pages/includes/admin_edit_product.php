@@ -506,6 +506,7 @@ if ($this->post) {
 						$this->post['attributes'][$x]=$valid;
 					}
 					$attributesArray['options_values_id']=$this->post['attributes'][$x];
+					$attributesArray['sort_order_option_name']=time();
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}
@@ -1152,28 +1153,315 @@ if ($this->post) {
 		if (!$this->ms['MODULES']['DISABLE_PRODUCT_ATTRIBUTES_TAB_IN_EDITOR']) {
 			$attributes_tab_block.='
 			<input name="options_form" type="hidden" value="1" />
-			<script>
+			<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				jQuery("#addAttributes").click(function(event) {
-					var counter_data = parseInt(document.getElementById(\'option_row_counter\').value) + 1;			
-					$(\'#add_attributes_button\').before(\'<tr id="attributes_select_box_\'+counter_data+\'_a"><td colspan="5"><div class="wrap-attributes"><table><tr class="option_row"><td><select name="options[]" id="option_\' + counter_data + \'" onchange="updateAttribute(this.value,\' + counter_data + \');"><option value="">choose option</option></select></td><td><select name="attributes[]" id="attribute_\' + counter_data + \'"><option value="">choose attribute</option></select></select></td><td><input type="text" name="prefix[]" value="+" /></td><td><div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msAttributesPriceExcludingVat"><label for="display_name">Excl. VAT</label></div><div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat"><label for="display_name">Incl. VAT</label></div><div class="msAttributesField hidden"><input type="hidden" name="price[]" /></div></td><td><input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button" onclick="removeAttributeRow(\' + counter_data + \')"></td></tr><tr id="attributes_select_box_\' + counter_data + \'_b" class="option_row"><td>&nbsp;</td><td><input type="text" name="manual_attributes[]" /></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr></table></div></td></tr>\');
-					$.get(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&a=update_options').'\', function(data) {
-						$(data).appendTo(\'#option_\' + counter_data);
-					});
-					document.getElementById(\'option_row_counter\').value = counter_data;
+				jQuery(document).on("click", "#addAttributes", function(event) {
+					$(this).parent().parent().hide();
+					if ($(\'#add_attributes_holder>td\').html() !=\'\' && $(\'#add_attributes_holder>td\').html() !=\'&nbsp;\') {
+						return false;
+					}
+					var new_attributes_html=\'\';
+					new_attributes_html+=\'<span class="new_product_attributes">'.$this->pi_getLL('admin_label_add_new_product_attributes').'</span><div class="wrap-attributes-item" rel="new">\';
+					new_attributes_html+=\'<table>\';
+					new_attributes_html+=\'<tr class="option_row">\';
+
+					new_attributes_html+=\'<td class="product_attribute_option">\';
+					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" style="width:200px" />\';
+					new_attributes_html+=\'</td>\';
+
+					new_attributes_html+=\'<td class="product_attribute_value">\';
+					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" style="width:200px" />\';
+					new_attributes_html+=\'</td>\';
+
+					new_attributes_html+=\'<td class="product_attribute_prefix">\';
+					new_attributes_html+=\'<select name="tx_multishop_pi1[prefix][]">\';
+					new_attributes_html+=\'<option value="+">+</option>\';
+					new_attributes_html+=\'<option value="-">-</option>\';
+					new_attributes_html+=\'</select>\';
+					new_attributes_html+=\'</td>\';
+
+					new_attributes_html+=\'<td class="product_attribute_price">\';
+					new_attributes_html+=\'<div class="msAttributesField">\';
+					new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceExcludingVat">\';
+					new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('excluding_vat').'</label>\';
+					new_attributes_html+=\'</div>\';
+					new_attributes_html+=\'<div class="msAttributesField">\';
+					new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat">\';
+					new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('including_vat').'</label>\';
+					new_attributes_html+=\'</div>\';
+					new_attributes_html+=\'<div class="msAttributesField hidden">\';
+					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
+					new_attributes_html+=\'</div>\';
+					new_attributes_html+=\'</td>\';
+
+					new_attributes_html+=\'<td>\';
+					new_attributes_html+=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="msadmin_button save_new_attributes">&nbsp;<input type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="msadmin_button delete_tmp_product_attributes">\';
+					new_attributes_html+=\'</td>\';
+					new_attributes_html+=\'</tr>\';
+
+					new_attributes_html+=\'</table>\';
+					new_attributes_html+=\'</div>\';
+					$(\'#add_attributes_holder>td\').html(new_attributes_html);
+					// init selec2
+					select2_sb("#tmp_options_sb", "'.$this->pi_getLL('admin_label_choose_option').'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+					select2_values_sb("#tmp_attributes_sb", "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					jQuery("#attributes_header").show();
 					event.preventDefault();
 				});
-				jQuery("#manual_button").click(function(event) {
-				jQuery("#attributes_header").show();
-				});			
+				jQuery(document).on("click", ".save_new_attributes", function(){
+					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
+					var pa_option_sb=$("#tmp_options_sb").select2("data");
+					var selected_pa_option_id=pa_option_sb.id;
+					var selected_pa_option_text=pa_option_sb.text;
+					var pa_attributes_sb=$("#tmp_attributes_sb").select2("data");
+					/*var selected_pa_value_id=pa_attributes_sb.id;
+					var selected_pa_value_text=pa_attributes_sb.text;*/
+					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id;
+					//if (selected_pa_option_id != "" && $(pa_value_sb).val() != "") {
+						var delete_button_html=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes">\';
+						// add class for marker
+						$(pa_main_divwrapper).addClass("new_attributes");
+						// check for the main tr if it exists
+						if ($("#product_attributes_content_row").length===0) {
+							var new_tr=\'<tr id="product_attributes_content_row"><td colspan="5"><ul id="products_attributes_items"></ul></td></tr>\';
+							$(new_tr).insertAfter("#product_attributes_header_row");
+							// activate sortable on ul > li
+							sort_li();
+						}
+						// destroy select2 before moving to <li>
+						$("#tmp_options_sb").select2("destroy");
+						$("#tmp_attributes_sb").select2("destroy");
+						// check if the <li> is exist
+						if ($(target_liwrapper_id).length) {
+							// directly append if exist
+							if ($(target_liwrapper_id).children().last().hasClass("odd_item_row ")) {
+								$(pa_main_divwrapper).addClass("even_item_row");
+							} else {
+								$(pa_main_divwrapper).addClass("odd_item_row");
+							}
+							// rewrite the button
+							$(this).parent().empty().html(delete_button_html);
+							// flush it to existing li
+							$(target_liwrapper_id).append(pa_main_divwrapper);
+						} else {
+							var li_class="odd_group_row";
+							if ($(".products_attributes_items").children().last().hasClass("odd_group_row")) {
+								li_class="even_group_row";
+							}
+							var new_li = $("<li/>", {
+								id: "products_attributes_item_" + selected_pa_option_id,
+								alt: selected_pa_option_text,
+								class: "products_attributes_item " + li_class
+							});
+							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \'</span>\');
+							$(pa_main_divwrapper).addClass("odd_item_row");
+							// rewrite the button
+							$(this).parent().empty().html(delete_button_html);
+							// flush it to existing li
+							$(new_li).append(pa_main_divwrapper);
+							// flush new li to the newly created tr > ul
+							$("#products_attributes_items").append(new_li);
+							// activate sorting for li children
+							sort_li_children();
+						}
+						// remove the id of each selectbox
+						$("#tmp_options_sb").addClass("product_attribute_options");
+						$("#tmp_attributes_sb").addClass("product_attribute_values");
+						$("#tmp_options_sb").removeAttr("id");
+						$("#tmp_attributes_sb").removeAttr("id");
+						// init the select2 for new product attributes
+						select2_sb(".product_attribute_options", "'.$this->pi_getLL('admin_label_choose_option').'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+						select2_values_sb(".product_attribute_values", "'.$this->pi_getLL('admin_label_choose_attribute').'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+						// clear the temp holder
+						$("tr#add_attributes_holder > td").html("");
+						$("#add_attributes_button").show();
+					//} else {
+					//	alert("'.$this->pi_getLL('admin_label_please_select_options_and_attributes_value').'");
+					//}
+				});
+				jQuery(document).on("click", "#manual_button", function(event) {
+					jQuery("#attributes_header").show();
+				});
+				jQuery(document).on("click", ".delete_product_attributes", function(){
+					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
+					var pa_main_liwrapper=$(pa_main_divwrapper).parent();
+					var product_attribute_id=$(pa_main_divwrapper).attr("rel");
+					if (product_attribute_id != "new") {
+						href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=delete_product_attributes&pid='.$product['products_id']).'";
+						jQuery.ajax({
+							type:"POST",
+							url:href,
+							data: "paid=" + product_attribute_id,
+							success: function(msg) {
+								//do something with the sorted data
+							}
+						});
+					}
+					$(pa_main_divwrapper).remove();
+					if ($(pa_main_liwrapper).children().length == 1) {
+						$(pa_main_liwrapper).remove();
+					}
+				});
+				jQuery(document).on("click", ".delete_tmp_product_attributes", function(){
+					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
+					$(pa_main_divwrapper).remove();
+				});
+				/*jQuery(document).on("change", ".product_attribute_options, #tmp_options_sb", function(){
+					var value_sb=$($(this).parent().next()).children();
+					jQuery.get(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&a=update_attributes&opid=').'\' + $(this).val(), function(data){
+						jQuery(value_sb).empty();
+						jQuery(\'<option value="">'.$this->pi_getLL('admin_label_choose_attribute').'</option>\' + data).appendTo(value_sb);
+					});
+				});*/
+				var select2_sb = function(selector, placeholder, dropdowncss, ajax_url) {
+					$(selector).select2({
+						placeholder: placeholder,
+						createSearchChoice:function(term, data) {
+							if ($(data).filter(function() {
+								return this.text.localeCompare(term)===0;
+							}).length===0) {
+								return {id:term, text:term};
+							}
+						},
+						minimumInputLength: 0,
+						ajax: {
+							url: ajax_url,
+							dataType: "json",
+							data: function (term, page) {
+								return {q: term};
+							},
+							results: function (data, page) {
+								return {results: data};
+							}
+						},
+						initSelection: function(element, callback) {
+							var id=$(element).val();
+							if (id!=="") {
+								$.ajax(ajax_url, {
+									data: {
+										q: id
+									},
+									dataType: "json"
+								}).done(function(data) { callback(data); });
+							}
+						},
+						formatResult: function(data){
+							return data.text;
+						},
+						formatSelection: function(data){
+							if (data.text===undefined) {
+								if (data.length > 1) {
+									$.each(data, function(i, v){
+										return {id: v.id, text: v.text};
+									});
+								} else {
+									return data[0].text;
+								}
+							} else {
+								return data.text;
+							}
+						},
+						dropdownCssClass: dropdowncss,
+						escapeMarkup: function (m) { return m; }
+					});
+				}
+				var select2_values_sb = function(selector, placeholder, dropdowncss, ajax_url) {
+					$(selector).select2({
+						placeholder: placeholder,
+						createSearchChoice:function(term, data) {
+							if ($(data).filter(function() {
+								return this.text.localeCompare(term)===0;
+							}).length===0) {
+								return {id:term, text:term};
+							}
+						},
+						minimumInputLength: 0,
+						ajax: {
+							url: ajax_url,
+							dataType: "json",
+							data: function (term, page) {
+								return {q: term + "|optid=" +  $(selector).parent().prev().children("input").val()};
+							},
+							results: function (data, page) {
+								return {results: data};
+							}
+						},
+						initSelection: function(element, callback) {
+							var id=$(element).val();
+							if (id!=="") {
+								$.ajax(ajax_url, {
+									data: {
+										q: id,
+									},
+									dataType: "json"
+								}).done(function(data) { callback(data); });
+							}
+						},
+						formatResult: function(data){
+							return data.text;
+						},
+						formatSelection: function(data){
+							if (data.text===undefined) {
+								if (data.length > 1) {
+									$.each(data, function(i, v){
+										return {id: v.id, text: v.text};
+									});
+								} else {
+									return data[0].text;
+								}
+							} else {
+								return data.text;
+							}
+						},
+						dropdownCssClass: dropdowncss,
+						escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+					});
+				}
+				'.($product['products_id'] ? '
+				var sort_li = function () {
+					jQuery("#products_attributes_items").sortable({
+						cursor:"move",
+						items:">li.products_attributes_item",
+						update: function(e, ui) {
+							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=sort_product_attributes_option&pid='.$product['products_id']).'";
+							jQuery(this).sortable("refresh");
+							sorted = jQuery(this).sortable("serialize", "id");
+							jQuery.ajax({
+								type:"POST",
+								url:href,
+								data:sorted,
+								success: function(msg) {
+									//do something with the sorted data
+								}
+							});
+						}
+					});
+				}
+				var sort_li_children = function () {
+					jQuery(".products_attributes_item").sortable({
+						cursor:"move",
+						items:">div.wrap-attributes-item",
+						update: function(e, ui) {
+							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=sort_product_attributes_value&pid='.$product['products_id']).'";
+							jQuery(this).sortable("refresh");
+							sorted = jQuery(this).sortable("serialize", "id");
+							jQuery.ajax({
+								type:"POST",
+								url:href,
+								data:sorted,
+								success: function(msg) {
+									//do something with the sorted data
+								}
+							});
+						}
+					});
+				}
+				' : '').'
+				sort_li();
+				sort_li_children();
 			});
 			var updateAttribute = function (b,c) {
 				jQuery.get(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&a=update_attributes&opid=').'\' + b, function(data){ jQuery(\'#attribute_\' + c).empty(); jQuery(\'<option value="">choose attribute</option>\' + data).appendTo(\'#attribute_\' + c); });
-			}			
-			var removeAttributeRow = function(c) {
-				jQuery(\'#attributes_select_box_\' + c + \'_a\').remove();
-				jQuery(\'#attributes_select_box_\' + c + \'_b\').remove();
 			}
 			var addOption = function (b, c, d) {
 				jQuery.get(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&a=add_option').'&optname=\' + b + \'&optval=\' + c + \'&rowid=\' + d, function(data){
@@ -1313,9 +1601,13 @@ if ($this->post) {
 				}
 			}
 			// end optional predefined attributes menu
-			// $sql_pa = "select * from tx_multishop_products_attributes where
-			// products_id = " . $product['products_id'];
-			$sql_pa="select popt.required,popt.products_options_id, popt.products_options_name, popt.listtype, patrib.* from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$product['products_id']."' and popt.language_id = '0' and patrib.options_id = popt.products_options_id order by popt.sort_order";
+			$sql_pa=$GLOBALS ['TYPO3_DB']->SELECTquery('popt.required,popt.products_options_id, popt.products_options_name, popt.listtype, patrib.*', // SELECT ...
+				'tx_multishop_products_options popt, tx_multishop_products_attributes patrib', // FROM ...
+				"patrib.products_id='".$product['products_id']."' and popt.language_id = '0' and patrib.options_id = popt.products_options_id", // WHERE.
+				'', // GROUP BY...
+				'patrib.sort_order_option_name, patrib.sort_order_option_value', // ORDER BY...
+				'' // LIMIT ...
+			);
 			$qry_pa=$GLOBALS ['TYPO3_DB']->sql_query($sql_pa);
 			if ($GLOBALS ['TYPO3_DB']->sql_num_rows($qry_pa)>0) {
 				$display_header=" ";
@@ -1323,109 +1615,132 @@ if ($this->post) {
 				$display_header="none";
 			}
 			$attributes_tab_block.='
-			<table width="100%" cellpadding="2" cellspacing="2">
-				<tr >
+			<table width="100%" cellpadding="2" cellspacing="2" id="product_attributes_table">
+				<tr id="product_attributes_header_row" >
 				   <td colspan="5">
 				     <div class="wrap-attributes-header">
 				        <table>
 						<tr id="attributes_header" style="display:'.$display_header.'">
-							<td>'.ucfirst($this->pi_getLL('admin_option')).'</td>
-							<td>'.ucfirst($this->pi_getLL('admin_value')).'</td>
-							<td>'.ucfirst($this->pi_getLL('admin_prefix')).'</td>
-							<td>'.ucfirst($this->pi_getLL('admin_price')).'</td>';
+							<td class="product_attribute_option">'.ucfirst($this->pi_getLL('admin_option')).'</td>
+							<td class="product_attribute_value">'.ucfirst($this->pi_getLL('admin_value')).'</td>
+							<td class="product_attribute_prefix">'.ucfirst($this->pi_getLL('admin_prefix')).'</td>
+							<td class="product_attribute_price">'.ucfirst($this->pi_getLL('admin_price')).'</td>';
 			if ($product['products_id']) {
-				if ($GLOBALS ['TYPO3_DB']->sql_num_rows($qry_pa)>0) {
+				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_pa)>0) {
 					$attributes_tab_block.='<td>&nbsp;<input type="hidden" id="option_row_counter" value="'.$GLOBALS ['TYPO3_DB']->sql_num_rows($qry_pa).'"></td>';
 					$attributes_tab_block.='</tr></table>
 					     </div>
 					   </td>
 					</tr>';
 					$ctr=1;
+					$options_data=array();
+					$attributes_data=array();
 					while (($row=$GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry_pa))!=false) {
-						$attributes_tab_block.='<tr id="attributes_select_box_'.$ctr.'_a">
-														   <td colspan="5">
-														     <div class="wrap-attributes">
-														        <table>';
-						$attributes_tab_block.='<tr  class="option_row"><td><select name="options[]" id="option_'.$ctr.'" onchange="updateAttribute(this.value,\''.$ctr.'\');"><option value="">choose option</option>';
-						// $str = "select * from tx_multishop_products_options where
-						// language_id = 0 order by products_options_name asc";
-						$str="select * from tx_multishop_products_options where language_id = 0 order by sort_order asc";
-						$qry=$GLOBALS ['TYPO3_DB']->sql_query($str);
-						while (($row2=$GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-							if ($row2 ['products_options_id']==$row ['options_id']) {
-								$attributes_tab_block.='<option value="'.$row2 ['products_options_id'].'" selected="selected">'.$row2 ['products_options_name'].'</option>';
+						$options_data[$row['products_options_id']]=$row['products_options_name'];
+						$attributes_data[$row['products_options_id']][]=$row;
+					}
+					if (count($options_data)) {
+						$attributes_tab_block.='<tr id="product_attributes_content_row">';
+						$attributes_tab_block.='<td colspan="5"><ul id="products_attributes_items">';
+						foreach ($options_data as $option_id=>$option_name) {
+							if (!isset($group_row_type) || $group_row_type=='even_group_row') {
+								$group_row_type='odd_group_row';
 							} else {
-								$attributes_tab_block.='<option value="'.$row2 ['products_options_id'].'">'.$row2 ['products_options_name'].'</option>';
+								$group_row_type='even_group_row';
 							}
-						}
-						$attributes_tab_block.='</select></td><td><select name="attributes[]" id="attribute_'.$ctr.'"><option value="">choose attribute</option>';
-						$str2="select optval.* from tx_multishop_products_options_values as optval, tx_multishop_products_options_values_to_products_options as optval2opt where optval2opt.products_options_id = ".$row ['options_id']." and optval2opt.products_options_values_id = optval.products_options_values_id and optval.language_id = 0 order by optval2opt.sort_order";
-						$qry2=$GLOBALS ['TYPO3_DB']->sql_query($str2);
-						while (($row3=$GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
-							if ($row3 ['products_options_values_id']==$row ['options_values_id']) {
-								$attributes_tab_block.='<option value="'.$row3 ['products_options_values_id'].'" selected="selected">'.$row3 ['products_options_values_name'].'</option>';
-							} else {
-								$attributes_tab_block.='<option value="'.$row3 ['products_options_values_id'].'">'.$row3 ['products_options_values_name'].'</option>';
+							$attributes_tab_block.='<li id="products_attributes_item_'.$option_id.'" alt="'.$option_name.'" class="products_attributes_item '.$group_row_type.'">
+							<span class="option_name">'.$option_name.'</span>';
+							foreach ($attributes_data[$option_id] as $attribute_data) {
+								if (!isset($item_row_type) || $item_row_type=='even_item_row') {
+									$item_row_type='odd_item_row';
+								} else {
+									$item_row_type='even_item_row';
+								}
+								$attributes_tab_block.='<div class="wrap-attributes-item '.$item_row_type.'" id="item_product_attribute_'.$attribute_data['products_attributes_id'].'" rel="'.$attribute_data['products_attributes_id'].'">';
+								$attributes_tab_block.='<table>';
+								$attributes_tab_block.='<tr class="option_row">';
+								$attributes_tab_block.='<td class="product_attribute_option">';
+								$attributes_tab_block.='<select name="options[]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options">';
+								$attributes_tab_block.='<option value="">'.$this->pi_getLL('admin_label_choose_option').'</option>';
+								// fetch attributes options
+								$str=$GLOBALS ['TYPO3_DB']->SELECTquery('*', // SELECT ...
+									'tx_multishop_products_options', // FROM ...
+									'language_id = 0', // WHERE.
+									'', // GROUP BY...
+									'sort_order', // ORDER BY...
+									'' // LIMIT ...
+								);
+								$qry=$GLOBALS ['TYPO3_DB']->sql_query($str);
+								while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+									if ($row2['products_options_id']==$option_id) {
+										$attributes_tab_block.='<option value="'.$row2['products_options_id'].'" selected="selected">'.$row2['products_options_name'].'</option>';
+									} else {
+										$attributes_tab_block.='<option value="'.$row2['products_options_id'].'">'.$row2['products_options_name'].'</option>';
+									}
+								}
+								$attributes_tab_block.='</select>';
+								$attributes_tab_block.='</td>';
+								$attributes_tab_block.='<td class="product_attribute_value">';
+								$attributes_tab_block.='<select name="attributes[]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values">';
+								$attributes_tab_block.='<option value="">'.$this->pi_getLL('admin_label_choose_attribute').'</option>';
+								// fetch values
+								$str2=$GLOBALS ['TYPO3_DB']->SELECTquery('optval.*', // SELECT...
+									'tx_multishop_products_options_values as optval, tx_multishop_products_options_values_to_products_options as optval2opt', // FROM...
+									'optval2opt.products_options_id = '.$option_id.' and optval2opt.products_options_values_id = optval.products_options_values_id and optval.language_id = 0', // WHERE...
+									'', // GROUP BY...
+									'optval2opt.sort_order', // ORDER BY...
+									'' // LIMIT...
+								);
+								$qry2=$GLOBALS ['TYPO3_DB']->sql_query($str2);
+								while (($row3=$GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
+									if ($row3['products_options_values_id']==$attribute_data['options_values_id']) {
+										$attributes_tab_block.='<option value="'.$row3['products_options_values_id'].'" selected="selected">'.$row3['products_options_values_name'].'</option>';
+									} else {
+										$attributes_tab_block.='<option value="'.$row3['products_options_values_id'].'">'.$row3['products_options_values_name'].'</option>';
+									}
+								}
+								$attributes_tab_block.='</select>';
+								$attributes_tab_block.='</td>';
+								$attributes_tab_block.='<td class="product_attribute_prefix"><input type="text" name="prefix[]" value="'.$attribute_data['price_prefix'].'" /></td>';
+								// recalc price to display
+								$attributes_tax=mslib_fe::taxDecimalCrop(($attribute_data['options_values_price']*$product_tax_rate)/100);
+								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
+								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
+								$attributes_tab_block.='<td>
+											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+											<div class="msAttributesField hidden"><input type="hidden" name="price[]" value="'.$attributes_data['options_values_price'].'" /></div>
+										</td>';
+								$attributes_tab_block.='<td class="product_attribute_price"><input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes"></td>';
+								$attributes_tab_block.='</tr>';
+								$attributes_tab_block.='</table>';
+								$attributes_tab_block.='</div>';
 							}
+							$attributes_tab_block.='</li>';
 						}
-						$attributes_tax=mslib_fe::taxDecimalCrop(($row ['options_values_price']*$product_tax_rate)/100);
-						$attribute_price_display=mslib_fe::taxDecimalCrop($row ['options_values_price'], 2, false);
-						$attribute_price_display_incl=mslib_fe::taxDecimalCrop($row ['options_values_price']+$attributes_tax, 2, false);
-						$attributes_tab_block.='</select></td><td><input type="text" name="prefix[]" value="'.$row ['price_prefix'].'" /></td>
-										<td>
-											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">Excl. VAT</label></div>
-											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">Incl. VAT</label></div>
-											<div class="msAttributesField hidden"><input type="hidden" name="price[]" value="'.$row ['options_values_price'].'" /></div>
-										</td><td><input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button" onclick="removeAttributeRow(\''.$ctr.'\')"></td></tr>';
-						$attributes_tab_block.='<tr id="attributes_select_box_'.$ctr.'_b" class="option_row2"><td>&nbsp;</td><td><input type="text" name="manual_attributes[]" /></td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>';
-						$attributes_tab_block.='</table>
-																     </div>
-																   </td>
-																</tr>';
-						$ctr++;
+						$attributes_tab_block.='</ul></td>';
+						$attributes_tab_block.='</tr>';
 					}
 				} else {
-					$attributes_tab_block.='<td>&nbsp;<input type="hidden" id="option_row_counter" value="0"></td>';
+					$attributes_tab_block.='<td>&nbsp;</td>';
 					$attributes_tab_block.='</tr></table>
 					     </div>
 					   </td>
 					</tr>';
 				}
 			} else {
-				$attributes_tab_block.='<td>&nbsp;<input type="hidden" id="option_row_counter" value="0"></td>';
+				$attributes_tab_block.='<td>&nbsp;</td>';
 				$attributes_tab_block.='</tr></table>
 					 </div>
 				   </td>
 				</tr>';
 			}
+			$attributes_tab_block.='<tr id="add_attributes_holder">
+					<td colspan="5">&nbsp;</td>
+			</tr>';
 			$attributes_tab_block.='<tr id="add_attributes_button">
 					<td colspan="5" align="right"><input id="addAttributes" type="button" class="msadmin_button" value="'.$this->pi_getLL('admin_add_new_value').' [+]"></td>
 			</tr>
-			<tr id="lower_line">
-				<td colspan="5">&nbsp;</td>
-			</tr>
-			<tr>
-				<td colspan ="5">
-					<div id="footer_product_container">
-					<div id="footer_product_attributs">
-						<table>
-							<tr>
-								<td colspan="5">
-			
-									<span>'.$this->pi_getLL('admin_add_new_option_plus_value').'</span>
-									<label for="manual_option"> '.$this->pi_getLL('admin_option').' </label>
-									<input type="text" name="manual_option" id="manual_option">
-									<label for="manual_attribute" > '.ucfirst($this->pi_getLL('admin_value')).' </label>
-									<input type="text" name="manual_attribute" id="manual_attribute">
-									<input id="manual_button" type="button" value="'.$this->pi_getLL('admin_add_option_plus_value').'" onclick="addOption(document.getElementById(\'manual_option\').value, document.getElementById(\'manual_attribute\').value, document.getElementById(\'option_row_counter\').value);">
-								</td>
-							</tr>
-						</table>
-					</div>
-					</div>
-			
-				</td>
-			 </tr>
 			</table>
 			<script>
 			$(document).on("keyup", ".msAttributesPriceExcludingVat", function() {
@@ -1434,6 +1749,31 @@ if ($this->post) {
 			$(document).on("keyup", ".msAttributesPriceIncludingVat", function() {
 				productPrice(false, $(this));
 			});
+			$(".product_attribute_options").select2({
+				placeholder: "_ _ _ _ _ _ _ _ _ _",
+				minimumInputLength: 1,
+				formatResult:function(data){
+					return data.text;
+				},
+				formatSelection:function(data){
+					return data.text;
+				},
+				dropdownCssClass:"manual_option_input_class",
+				escapeMarkup: function (m) { return m; },
+				ajax: {
+					url:MS_ADMIN_PANEL_AUTO_COMPLETE_URL,
+					dataType:\'json\',
+					quietMillis: 100,
+					context: \'sss\',
+					data: function (term, page) {
+						return { q: term};
+					},
+					results: function (data, page) {
+						return {results: data.options, more: false};
+					}
+				}
+			});
+
 			</script>
 			';
 		}

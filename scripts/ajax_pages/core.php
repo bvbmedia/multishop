@@ -4,6 +4,56 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'admin_ajax_product_attributes':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/admin_ajax_product_attributes.php');
+		}
+		exit();
+		break;
+	case 'delete_product_attributes':
+		if ($this->ADMIN_USER) {
+			$pid=$this->get['pid'];
+			$paid=$this->post['paid'];
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_attributes', "products_id='".$pid."' and products_attributes_id='".$paid."'");
+		}
+		exit();
+		break;
+	case 'sort_product_attributes_option':
+		if ($this->ADMIN_USER) {
+			$pid=$this->get['pid'];
+			$no=1;
+			foreach ($this->post['products_attributes_item'] as $optid) {
+				if (is_numeric($optid)) {
+					$where="options_id = ".$optid." and products_id=".$pid;
+					$updateArray=array(
+						'sort_order_option_name'=>$no
+					);
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$no++;
+				}
+			}
+		}
+		exit();
+		break;
+	case 'sort_product_attributes_value':
+		if ($this->ADMIN_USER) {
+			$pid=$this->get['pid'];
+			$no=1;
+			foreach ($this->post['item_product_attribute'] as $paid) {
+				if (is_numeric($paid)) {
+					$where="products_attributes_id = ".$paid." and products_id=".$pid;
+					$updateArray=array(
+						'sort_order_option_value'=>$no
+					);
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$no++;
+				}
+			}
+		}
+		exit();
+		break;
 	case 'downloadCategoryTree':
 		if ($this->ADMIN_USER) {
 			$multishop_category_array=array();
@@ -1100,12 +1150,6 @@ switch ($this->ms['page']) {
 				';
 				echo $content;
 			}
-		}
-		exit();
-		break;
-	case 'admin_ajax_product_attributes':
-		if ($this->ADMIN_USER) {
-			require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/admin_ajax_product_attributes.php');
 		}
 		exit();
 		break;

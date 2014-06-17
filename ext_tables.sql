@@ -881,10 +881,14 @@ CREATE TABLE `tx_multishop_products_attributes` (
   `hide` tinyint(1) DEFAULT '0',
   `price_group_id` int(11) DEFAULT '0',
   `attribute_image` varchar(150) DEFAULT '',
+  `sort_order_option_name` int(11) DEFAULT '0',
+  `sort_order_option_value` int(11) DEFAULT '0',
   PRIMARY KEY (`products_attributes_id`),
   KEY `products_id` (`products_id`),
   KEY `options_id` (`options_id`),
-  KEY `options_values_id` (`options_values_id`)
+  KEY `options_values_id` (`options_values_id`),
+  KEY `sort_order_option_name` (`sort_order_option_name`),
+  KEY `sort_order_option_value` (`sort_order_option_value`)
 ) ENGINE=MyISAM ;
 
 CREATE TABLE `tx_multishop_products_attributes_download` (
