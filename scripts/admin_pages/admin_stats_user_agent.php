@@ -227,6 +227,7 @@ $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_numb
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
+$subpartArray['###HEADING_TAB1###']=$this->pi_getLL('admin_user_agent_statistics');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 //$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
