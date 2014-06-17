@@ -597,10 +597,12 @@ class tx_mslib_cart extends tslib_pibase {
 					$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 					if ($GLOBALS['TSFE']->fe_user->user['username']) {
 						$customer_name=$GLOBALS['TSFE']->fe_user->user['username'];
+						$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$GLOBALS['TSFE']->fe_user->user['uid'].'&action=edit_customer');
 					} else {
 						$customer_name=$this->pi_getLL('customer');
+						$customer_edit_link='';
 					}
-					$message=sprintf($this->pi_getLL('customer_added_productx_to_the_shopping_cart'), '<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shoppping_cart_stats').'">'.$customer_name.'</a>', '<a href="'.$link.'">'.$product['products_name'].'</a>').'.';
+					$message=sprintf($this->pi_getLL('customer_added_productx_to_the_shopping_cart'), '<a href="'.$customer_edit_link.'">'.$customer_name.'</a>', '<a href="'.$link.'">'.$product['products_name'].'</a>').'.';
 					if (count($cart['products'])>0) {
 						if (!$sub_tr_type or $sub_tr_type=='even') {
 							$sub_tr_type='odd';
