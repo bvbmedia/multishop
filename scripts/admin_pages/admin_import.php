@@ -2152,6 +2152,10 @@ if ($this->post['action']=='category-insert') {
 							foreach ($item['attribute_option_value_including_vat'] as $option_row) {
 								if ($option_row[2] > 0) {
 									// if attribute option value has price
+									if (substr_count($option_row[2], '.') > 1) {
+										// this amount has double dot (Excel issue). We need to strip the first dot.
+										$option_row[2]=preg_replace("/\./","",$option_row[2],1);
+									}
 									$vatRate=0;
 									if ($item['products_vat_rate']) {
 										$vatRate=$item['products_vat_rate'];
