@@ -111,7 +111,8 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .formfield-wrapper ul.netopsVerticalList li label { float:left; padding-top:3px; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .bigdrop .select2-dropdown-open .select2-choice { width:392px !important; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .bigdropWider .select2-dropdown-open .select2-choice { width:692px !important; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .bigdropWider .select2-dropdown-open .select2-choice,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .select2BigDropWider.select2-dropdown-open .select2-choice { width:692px !important; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .select2-container .select2-choice { color:#333; }
 .msAdminSelect2Wrapper.bigdrop,
 .msAdminSelect2Wrapper.bigdropWider { margin:0 0 10px; }
