@@ -9,6 +9,12 @@ window.onload = function(){
   text_input.focus ();
   text_input.select ();
 }
+jQuery(document).ready(function($) {
+	$(\'.select2BigDropWider\').select2({
+		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
+		width:\'220px\'
+	});
+});
 </script>
 ';
 $update_category_image='';
@@ -271,7 +277,7 @@ if ($this->post) {
 		$category_tree='
 		<div class="account-field" id="msEditCategoryInputParent">
 			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>	
-			'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id']).'
+			'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
 		</div>';
 		$categories_image='';
 		if ($_REQUEST['action']=='edit_category' and $category['categories_image']) {
