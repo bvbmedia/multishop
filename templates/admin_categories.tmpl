@@ -6,10 +6,10 @@
         <div id="sidetreecontrol">
             <a href="#">###ADMIN_LABEL_COLLAPSE_ALL###</a> | <a href="#">###ADMIN_LABEL_EXPAND_ALL###</a>
         </div>
-        <ul id="msAdmin_category_listing_ul">
+        <ul id="msAdmin_category_listing_ul" class="master_categories_ul">
             <!-- ###CATEGORIES### begin -->
-            <li class="item_###COUNTER### ###EXTRA_CLASS###">
-                <input type="checkbox" class="movecats" name="movecats[]" value="###CATEGORY_ID###" id="cb-cat_###CATEGORY_ID###" rel="###CATEGORY_ID###">&nbsp;
+            <li class="item_###COUNTER### ###EXTRA_CLASS### categories_sorting" id="categories_id_###CATEGORY_ID###">
+            <input type="checkbox" class="movecats" name="movecats[]" value="###CATEGORY_ID###" id="cb-cat_###CATEGORY_ID###" rel="###CATEGORY_ID###">&nbsp;
                 <strong>
                     <a href="###CATEGORY_EDIT_LINK###">###CATEGORY_NAME### ###CATEGORY_STATUS###</a>
                     ###CATEGORY_ACTION_ICON###

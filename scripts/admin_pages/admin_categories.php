@@ -17,6 +17,40 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+	jQuery(".master_categories_ul").sortable({
+		cursor:"move",
+		items:">li.categories_sorting",
+		update: function(e, ui) {
+			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_categories_sorting').'";
+			jQuery(this).sortable("refresh");
+			sorted = jQuery(this).sortable("serialize", "id");
+			jQuery.ajax({
+				type:"POST",
+				url:href,
+				data:sorted,
+				success: function(msg) {
+					//do something with the sorted data
+				}
+			});
+		}
+	});
+	jQuery(".sub_categories_ul").sortable({
+		cursor:"move",
+		items:">li.sub_categories_sorting",
+		update: function(e, ui) {
+			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_categories_sorting').'";
+			jQuery(this).sortable("refresh");
+			sorted = jQuery(this).sortable("serialize", "id");
+			jQuery.ajax({
+				type:"POST",
+				url:href,
+				data:sorted,
+				success: function(msg) {
+					//do something with the sorted data
+				}
+			});
+		}
+	});
 	$(document).on("click", "#delete_selected_categories", function () {
 		if (confirm("'.$this->pi_getLL('admin_label_delete_selected_categories').'")) {
 			return true;
@@ -115,7 +149,7 @@ foreach ($categories as $category) {
 	if (count($dataArray)) {
 		$sub_content=mslib_fe::displayAdminCategories($dataArray, false, 0, $category['categories_id']);
 		if ($sub_content) {
-			$subcat_list.='<ul>';
+			$subcat_list.='<ul class="sub_categories_ul">';
 			$subcat_list.=$sub_content;
 			$subcat_list.='</ul>';
 		}

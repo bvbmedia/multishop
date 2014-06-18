@@ -6121,7 +6121,7 @@ class mslib_fe {
 			foreach ($dataArray['subs'] as $item) {
 				// cats
 				if (!$selectbox) {
-					$content.='<li class="category'.(!$item['status'] ? ' disabled' : '').'">';
+					$content.='<li class="sub_categories_sorting category'.(!$item['status'] ? ' disabled' : '').'" id="categories_id_'.$item['categories_id'].'">';
 					$content.='<input type="checkbox" class="movecats" name="movecats[]" value="'.$item['categories_id'].'" id="cb-cat_'.$parent_id.'_'.$item['categories_id'].'" rel="'.$parent_id.'_'.$item['categories_id'].'">&nbsp;';
 					if ($this->ADMIN_USER and $admin_mode) {
 						// get all cats to generate multilevel fake url
@@ -6176,7 +6176,7 @@ class mslib_fe {
 					}
 					$sub_content=mslib_fe::displayAdminCategories($item, $selectbox, 0, $item['categories_id']);
 					if ($sub_content) {
-						$content.='<ul>'.$sub_content.'</ul>';
+						$content.='<ul class="sub_categories_ul">'.$sub_content.'</ul>';
 					}
 					$content.='</li>';
 				} else {

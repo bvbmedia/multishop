@@ -4,6 +4,23 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'admin_categories_sorting':
+		if ($this->ADMIN_USER) {
+			$no=1;
+			foreach ($this->post['categories_id'] as $catid) {
+				if (is_numeric($catid)) {
+					$where="categories_id = ".$catid;
+					$updateArray=array(
+						'sort_order'=>$no
+					);
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$no++;
+				}
+			}
+		}
+		exit();
+		break;
 	case 'admin_ajax_product_attributes':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/admin_ajax_product_attributes.php');
