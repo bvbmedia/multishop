@@ -383,7 +383,7 @@ if ($rows) {
 							jQuery(container_id).show();
 							jQuery(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
 						} else {
-							jQuery(button_label_id).html('.$this->pi_getLL('admin_label_no_values').');
+							jQuery(button_label_id).html("'.$this->pi_getLL('admin_label_no_values').'");
 						}
 					} 
 				});
