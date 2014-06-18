@@ -1403,7 +1403,7 @@ if (count($multishop_content_objects)>0) {
 					</fieldset>
 					';
 	foreach ($multishop_content_objects as $content_object) {
-		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['pid'], '');
+		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['uid'], '');
 		if (is_numeric($pageinfo['uid'])) {
 			$typoLink=$t3lib_BEfuncAlias::getModuleUrl('web_txmultishopM1');
 			$content.='
