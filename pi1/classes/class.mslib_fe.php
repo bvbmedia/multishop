@@ -4650,10 +4650,10 @@ class mslib_fe {
 				$total=count($multishop_content_objects);
 				foreach ($multishop_content_objects as $pageinfo) {
 					$counter++;
-					if (is_numeric($pageinfo['puid']) and $pageinfo['puid']!=$this->shop_pid) {
+					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
 						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['label']=t3lib_div::strtoupper($pageinfo['title']);
 						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
-						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["puid"], '');
+						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');
 					}
 				}
 			}
