@@ -270,6 +270,13 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content table td .wrap-attributes input[type="text"].msAttributesPriceExcludingVat,
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content table td .wrap-attributes input[type="text"].msAttributesPriceIncludingVat { text-align:right; }
 
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-header { margin:0; padding:0;}
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table ul { margin:0; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table ul li.products_attributes_item { overflow:hidden; border:1px solid #666; margin:10px 0 0; padding:0; border-radius:6px; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .option_name { display:block; background:#444; font-weight:bold; font-size:16px; color:#fff; text-align:left; padding:5px 10px; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-item.odd_item_row { background:#dedede; padding-left:10px; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-item.even_item_row { background:#f0f0f0; padding-left:10px; }
+
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table td { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table td input#filter { border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; margin:0 3px; padding:2px 6px; cursor:pointer; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table td input#filter:hover { background:#e2e2e2; }
