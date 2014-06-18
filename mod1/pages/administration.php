@@ -1298,10 +1298,11 @@ $multishop_content_objects = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 	''
 );
 */
-$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tt_content', 'deleted=0 and hidden=0 and sys_language_uid=0 and list_type = \'multishop_pi1\' and pi_flexform like \'%<value index="vDEF">coreshop</value>%\'', '');
+$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
+//$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tt_content', 'deleted=0 and hidden=0 and sys_language_uid=0 and list_type = \'multishop_pi1\' and pi_flexform like \'%<value index="vDEF">coreshop</value>%\'', '');
 if (count($multishop_content_objects)>0) {
 	foreach ($multishop_content_objects as $content_object) {
-		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['pid'], '');
+		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['uid'], '');
 		if (is_numeric($pageinfo['uid'])) {
 			if (!$shops[$pageinfo['uid']]) {
 				$shops[$pageinfo['uid']]=0;
@@ -1382,7 +1383,8 @@ if (count($shops)>0) {
 		}
 	}
 }
-$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tt_content', 'deleted=0 and hidden=0 and sys_language_uid=0 and list_type = \'multishop_pi1\' and pi_flexform like \'%<value index="vDEF">coreshop</value>%\'', 'pid');
+$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
+//$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tt_content', 'deleted=0 and hidden=0 and sys_language_uid=0 and list_type = \'multishop_pi1\' and pi_flexform like \'%<value index="vDEF">coreshop</value>%\'', 'pid');
 /*
 				$multishop_content_objects = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 					'*',
@@ -1395,8 +1397,8 @@ if (count($multishop_content_objects)>0) {
 	$content.='
 					<fieldset class="mod1MultishopFieldset"><legend>Global Features</legend>
 						<ul>
-							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['pid'].'&action=clearMultishopCache">Clear Multishop Cache</a></li>
-							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['pid'].'&action=fulls_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
+							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=clearMultishopCache">Clear Multishop Cache</a></li>
+							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=fulls_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
 						</ul>						
 					</fieldset>
 					';

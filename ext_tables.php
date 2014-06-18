@@ -154,6 +154,15 @@ $TCA['tt_address']['palettes']['multishopaddress']=array(
 );
 t3lib_extMgm::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
 // TT ADDRESS EOF
+// ADD CUSTOM PAGE TYPE
+t3lib_div::loadTCA('pages');
+$TCA['pages']['columns']['module']['config']['items'][] = array('Multishop: core shop', 'mscore', t3lib_extMgm::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif');
+t3lib_SpriteManager::addTcaTypeIcon('pages', 'contains-mscore', t3lib_extMgm::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif');
+$ICON_TYPES['mscore']['icon'] = t3lib_extMgm::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif';
+// ADD CUSTOM PAGE TYPE EOF
+
+
+
 t3lib_extMgm::addPlugin(array(
 	'LLL:EXT:multishop/locallang_db.xml:tt_content.list_type_pi1',
 	$_EXTKEY.'_pi1',

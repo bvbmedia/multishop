@@ -4436,9 +4436,12 @@ class mslib_fe {
 	}
 	public function getActiveShop() {
 //		$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
+		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
+		/*
 		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid', 'tt_content t, pages p', 't.list_type = \'multishop_pi1\' and t.pi_flexform like \'%<value index="vDEF">coreshop</value>%\' and t.pi_flexform like \'%<field index="page_uid">
                     <value index="vDEF"></value>
                 </field>%\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.pid=p.uid', 'p.sorting');
+		*/
 //		error_log($GLOBALS['TYPO3_DB']->debug_lastBuiltQuery);
 		return $multishop_content_objects;
 	}
@@ -5724,7 +5727,8 @@ class mslib_fe {
 			return false;
 		}
 		if (is_numeric($page_uid)) {
-			$shop=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid', 'tt_content t, pages p', 'p.uid=\''.$page_uid.'\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.list_type = \'multishop_pi1\' and t.pi_flexform like \'%<value index="vDEF">coreshop</value>%\' and t.pid=p.uid', 'p.sorting');
+			$shop=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'uid=\''.$page_uid.'\' and deleted=0 and hidden=0 and module = \'mscore\'', '');
+			//$shop=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('t.pid, p.title, p.uid as puid', 'tt_content t, pages p', 'p.uid=\''.$page_uid.'\' and p.hidden=0 and t.hidden=0 and p.deleted=0 and t.deleted=0 and t.list_type = \'multishop_pi1\' and t.pi_flexform like \'%<value index="vDEF">coreshop</value>%\' and t.pid=p.uid', 'p.sorting');
 			return $shop[0];
 		}
 	}
