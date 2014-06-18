@@ -1903,6 +1903,11 @@ if ($this->post) {
 		 * layout page
 		*/
 		$subpartArray=array();
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+		} else {
+			$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+		}
 		$subpartArray['###LABEL_TABS_PRODUCTS_DETAILS###']=$this->pi_getLL('admin_details');
 		$subpartArray['###LABEL_TABS_PRODUCT_OPTIONS###']=$this->pi_getLL('admin_options');
 		$subpartArray['###LABEL_TABS_PRODUCT_IMAGES###']=$this->pi_getLL('admin_images');
@@ -1913,13 +1918,9 @@ if ($this->post) {
 		$subpartArray['###JS_HEADER###']=$js_header;
 		$subpartArray['###VALUE_ADVANCED_OPTION###']=($_COOKIE['hide_advanced_options']==1 ? $this->pi_getLL('admin_show_options') : $this->pi_getLL('admin_hide_options'));
 		$subpartArray['###LABEL_BUTTON_CANCEL###']=$this->pi_getLL('admin_cancel');
+		$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
 		$subpartArray['###VALUE_REFERRER###']='';
-		if ($this->post['tx_multishop_pi1']['referrer']) {
-			$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
-		} else {
-			$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
-		}
 		if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
 			$subpartArray['###BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';
 			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';

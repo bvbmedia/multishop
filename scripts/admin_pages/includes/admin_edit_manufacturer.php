@@ -200,6 +200,11 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$manufacturersMeta.=$this->cObj->substituteMarkerArray($subparts['manufacturers_meta'], $markerArray, '###|###');
 	}
 	$subpartArray=array();
+	if ($this->post['tx_multishop_pi1']['referrer']) {
+		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+	} else {
+		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+	}
 	if ($_REQUEST['action']=='add_manufacturer') {
 		$subpartArray['###MANUFACTURER_FORM_HEADING###']=t3lib_div::strtoupper($this->pi_getLL('add_manufacturer'));
 	} else {
@@ -229,16 +234,12 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	$subpartArray['###LABEL_MANUFACTURER_ADMIN_NO###']=$this->pi_getLL('admin_no');
 	$subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 	$subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
+	$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 	$subpartArray['###VALUE_FORM_MANUFACTURER_ACTION_URL###']=$_REQUEST['action'];
 	$subpartArray['###MANUFACTURER_IMAGES###']=$manufacturersImage;
 	$subpartArray['###MANUFACTURERS_CONTENT###']=$manufacturersContent;
 	$subpartArray['###MANUFACTURERS_META###']=$manufacturersMeta;
 	$subpartArray['###VALUE_REFERRER###']='';
-	if ($this->post['tx_multishop_pi1']['referrer']) {
-		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
-	} else {
-		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
-	}
 	$subpartArray['###ADMIN_LABEL_JS_ARE_YOU_SURE###']=$this->pi_getLL('admin_label_js_are_you_sure');
 	$subpartArray['###ADMIN_LABEL_DROP_FILES_HERE_TO_UPLOAD###']=$this->pi_getLL('admin_label_drop_files_here_to_upload');
 	$subpartArray['###ADMIN_LABEL_TABS_DETAILS###']=$this->pi_getLL('admin_label_tabs_details');

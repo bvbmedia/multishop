@@ -338,10 +338,22 @@ if ($this->post) {
 			</div>';
 		}
 		$subpartArray=array();
+		if ($this->post['tx_multishop_pi1']['referrer']) {
+			$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+		} else {
+			$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+		}
+		if ($category['hide_in_menu']==1) {
+			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='checked="checked"';
+		} else {
+			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='';
+		}
 		$subpartArray['###CATEGORIES_ID0###']=$category['categories_id'];
 		$subpartArray['###CATEGORIES_ID1###']=$category['categories_id'];
 		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
 		$subpartArray['###LABEL_BUTTON_CANCEL###']=$this->pi_getLL('cancel');
+		$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
+		$subpartArray['###LINK_BUTTON_CANCEL_FOOTER###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');
 		$subpartArray['###HEADING_PAGE###']=$heading_page;
 		$subpartArray['###INPUT_CATEGORY_NAME_BLOCK###']=$category_name_block;
@@ -369,16 +381,6 @@ if ($this->post) {
 		$subpartArray['###CATEGORIES_ID_FOOTER1###']=$category['categories_id'];
 		$subpartArray['###LABEL_HIDE_IN_MENU###']=$this->pi_getLL('hide_in_menu', 'Hide in menu');
 		$subpartArray['###VALUE_REFERRER###']='';
-		if ($this->post['tx_multishop_pi1']['referrer']) {
-			$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
-		} else {
-			$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
-		}
-		if ($category['hide_in_menu']==1) {
-			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='checked="checked"';
-		} else {
-			$subpartArray['###CATEGORY_HIDE_IN_MENU_CHECKED###']='';
-		}
 		$feed_checkbox='';
 		$feed_stock_checkbox='';
 		$sql_feed='SELECT * from tx_multishop_product_feeds';

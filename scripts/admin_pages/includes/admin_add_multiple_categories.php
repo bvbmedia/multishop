@@ -12,6 +12,13 @@ window.onload = function(){
 </script>
 ';
 // hidden filename that is retrieved from the ajax upload
+$subpartArray=array();
+$subpartArray['###VALUE_REFERRER###']='';
+if ($this->post['tx_multishop_pi1']['referrer']) {
+	$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+} else {
+	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+}
 if ($this->post) {
 	$categories_name=explode("\n", $this->post['categories_name']);
 	foreach ($categories_name as $category_name) {
@@ -83,17 +90,10 @@ if ($this->post) {
 	}
 	$save_block='
 		<div class="save_block">
-			<input name="cancel" type="button" value="'.$this->pi_getLL('cancel').'" onClick="parent.window.hs.close();" class="submit" />
+			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
 			<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="submit" />
 		</div>
 	';
-	$subpartArray=array();
-	$subpartArray['###VALUE_REFERRER###']='';
-	if ($this->post['tx_multishop_pi1']['referrer']) {
-		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
-	} else {
-		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
-	}
 
 	$content.='
 	<form class="admin_add_multiple_categories blockSubmitForm" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
