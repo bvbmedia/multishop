@@ -210,7 +210,10 @@ plugin.multishop {
 	
 	# cat=plugin.multishop - templates/file; type=string; label= Admin edit customer File Path: Optionally specify the location of the template file that is being used for building up the admin edit customer. Example: fileadmin/templates/multishop/admin_edit_customer.tmpl.
 	admin_edit_customer_tmpl_path = EXT:multishop/templates/admin_edit_customer.tmpl
-	
+
+	# cat=plugin.multishop - templates/file; type=string; label= Admin edit category File Path: Optionally specify the location of the template file that is being used for building up the admin edit category. Example: fileadmin/templates/multishop/admin_edit_category.tmpl.
+	admin_edit_category_tmpl_path = EXT:multishop/templates/admin_edit_category.tmpl
+
 	# cat=plugin.multishop - templates/file; type=string; label= Admin edit product File Path: Optionally specify the location of the template file that is being used for building up the admin edit product. Example: fileadmin/templates/multishop/admin_edit_product.tmpl.
 	admin_edit_product_tmpl_path = EXT:multishop/templates/admin_edit_product.tmpl
 	

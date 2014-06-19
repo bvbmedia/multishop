@@ -101,6 +101,7 @@ plugin.tx_multishop_pi1 {
 	admin_manufacturers_tmpl_path={$plugin.multishop.admin_manufacturers_tmpl_path}
 	admin_edit_manufacturer_tmpl_path={$plugin.multishop.admin_edit_manufacturer_tmpl_path}
 	admin_edit_customer_tmpl_path={$plugin.multishop.admin_edit_customer_tmpl_path}
+	admin_edit_category_tmpl_path={$plugin.multishop.admin_edit_category_tmpl_path}
 	admin_edit_product_tmpl_path={$plugin.multishop.admin_edit_product_tmpl_path}
 	admin_products_search_and_edit_tmpl_path={$plugin.multishop.admin_products_search_and_edit_tmpl_path}
 	admin_cms_tmpl_path={$plugin.multishop.admin_cms_tmpl_path}
