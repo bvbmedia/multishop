@@ -75,16 +75,16 @@ if ($rows) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id']);
 		if (!empty($options_group)) {
-			$options_group='<span class="options_groups">options group: '.$options_group.'</span>';
+			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$options_group.'</span>';
 		} else {
-			$options_group='<span class="options_groups">options group: -no groups defined-</span>';
+			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$this->pi_getLL('admin_label_no_groups_defined').'</span>';
 		}
 		$content.='
 		<li id="options_'.$row['products_options_id'].'">
-		<h2><span class="option_id">Option ID: '.$row['products_options_id'].'</span>
+		<h2><span class="option_id">'.$this->pi_getLL('admin_label_option_id').': '.$row['products_options_id'].'</span>
 		'.$options_group.'
 		<span class="listing_type">
-		listing type: 
+		'.$this->pi_getLL('admin_label_listing_type').':
 		<select name="listtype['.$row['products_options_id'].']">';
 		foreach ($selects as $key=>$value) {
 			$content.='<option value="'.$key.'"'.($key==$row['listtype'] ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
@@ -98,7 +98,7 @@ if ($rows) {
 			<input name="hide_in_cart['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide_in_cart'] ? ' checked' : '').'/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
 		</span>		
 		</h2>
-		<h3>Option name <input name="option_names['.$row['products_options_id'].'][0]" type="text" value="'.htmlspecialchars($row['products_options_name']).'s"  />';
+		<h3>'.$this->pi_getLL('admin_label_option_name').' <input name="option_names['.$row['products_options_id'].'][0]" type="text" value="'.htmlspecialchars($row['products_options_name']).'"  />';
 		$value=htmlspecialchars($row2['products_options_values_name']);
 		foreach ($this->languages as $key=>$language) {
 			if ($key>0 && isset($this->languages[$key]['uid']) && isset($this->languages[$key]['title']) && $key==$this->languages[$key]['uid']) {
@@ -163,8 +163,7 @@ if ($rows) {
 			
 		<div id="dialog-confirm-force" title="'.$this->pi_getLL('admin_label_warning_this_action_is_not_reversible').'">
 	  		<p>
-				<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-				'.sprintf($this->pi_getLL('admin_label_there_are_x_products_using_x_attributes_are_you_sure_want_to_delete_it'), '<span id="used-product-number"></span>', '<span id="attributes-name1"></span>').'
+				<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>'.sprintf($this->pi_getLL('admin_label_there_are_x_products_using_x_attributes_are_you_sure_want_to_delete_it'), '<span id="used-product-number"></span>', '<span id="attributes-name1"></span>').'
 			</p>
 			<br/><br/>
 			<p style="text-align:left">
@@ -201,7 +200,7 @@ if ($rows) {
 					if (r.results) {
 						if (r.options_name != "") {
 							$("#description_editor_header").html("");
-							$("#description_editor_header").html("<strong>Option: " + r.options_name + "</strong>");
+							$("#description_editor_header").html("<strong>'.$this->pi_getLL('admin_label_option').': " + r.options_name + "</strong>");
 						}
 						var values_data = "";
 					
@@ -367,7 +366,7 @@ if ($rows) {
 								} else {
 									classItem=\'even\';
 								}
-								values_data += \'<li id="option_values_\' + v.values_id + \'" class="option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">Option value <input name="option_values[\' + v.values_id + \'][0]" type="text" value="\' + v.values_name + \'" />\';
+								values_data += \'<li id="option_values_\' + v.values_id + \'" class="option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">'.$this->pi_getLL('admin_label_option_value').' <input name="option_values[\' + v.values_id + \'][0]" type="text" value="\' + v.values_name + \'" />\';
 								$.each(v.language, function(x, y){
 									values_data += y.lang_title + \' <input name="option_values[\' + v.values_id + \'][\' + y.lang_id + \']" type="text" value="\' + y.lang_values + \'" />\';
 								});

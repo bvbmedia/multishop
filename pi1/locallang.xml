@@ -879,6 +879,13 @@
             <label index="admin_label_choose_attribute">choose attribute</label>
             <label index="admin_label_add_new_product_attributes">Add new product attributes</label>
             <label index="admin_label_please_select_options_and_attributes_value">Please select options and attributes value!</label>
+            <label index="admin_label_options_group">options group</label>
+            <label index="admin_label_no_groups_defined">- no groups defined-</label>
+            <label index="admin_label_option_id">Option ID</label>
+            <label index="admin_label_option_name">Option name</label>
+            <label index="admin_label_option">Option</label>
+            <label index="admin_label_listing_type">listing type</label>
+            <label index="admin_label_option_value">Option value</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1742,6 +1749,13 @@
             <label index="admin_label_choose_attribute">choose attribute</label>
             <label index="admin_label_add_new_product_attributes">Add new product attributes</label>
             <label index="admin_label_please_select_options_and_attributes_value">Please select options and attributes value!</label>
+            <label index="admin_label_options_group">options group</label>
+            <label index="admin_label_no_groups_defined">- no groups defined-</label>
+            <label index="admin_label_option_id">Option ID</label>
+            <label index="admin_label_option_name">Option name</label>
+            <label index="admin_label_option">Option</label>
+            <label index="admin_label_listing_type">listing type</label>
+            <label index="admin_label_option_value">Option value</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
