@@ -1745,17 +1745,17 @@
             <label index="payment_to_zone_mapping">Betaalmethodes per zone</label>
             <label index="vat_id">BTW nummer:</label>
             <label index="user_agent">Browser</label>
-            <label index="admin_label_choose_option">choose option</label>
-            <label index="admin_label_choose_attribute">choose attribute</label>
-            <label index="admin_label_add_new_product_attributes">Add new product attributes</label>
-            <label index="admin_label_please_select_options_and_attributes_value">Please select options and attributes value!</label>
-            <label index="admin_label_options_group">options group</label>
-            <label index="admin_label_no_groups_defined">- no groups defined-</label>
-            <label index="admin_label_option_id">Option ID</label>
-            <label index="admin_label_option_name">Option name</label>
-            <label index="admin_label_option">Option</label>
-            <label index="admin_label_listing_type">listing type</label>
-            <label index="admin_label_option_value">Option value</label>
+            <label index="admin_label_choose_option">selecteer optie</label>
+            <label index="admin_label_choose_attribute">selecteer attribuut</label>
+            <label index="admin_label_add_new_product_attributes">Voeg nieuwe productattribuut toe</label>
+            <label index="admin_label_please_select_options_and_attributes_value">U dient eerst een optie en waarde selecteren!</label>
+            <label index="admin_label_options_group">optie groep</label>
+            <label index="admin_label_no_groups_defined">- niet gekoppeld aan een groep-</label>
+            <label index="admin_label_option_id">Optie ID</label>
+            <label index="admin_label_option_name">Optie naam</label>
+            <label index="admin_label_option">Optie</label>
+            <label index="admin_label_listing_type">weergave type</label>
+            <label index="admin_label_option_value">Optie waarde</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
