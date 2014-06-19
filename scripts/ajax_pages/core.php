@@ -831,12 +831,19 @@ switch ($this->ms['page']) {
 			$return_data=array();
 			$option_name=mslib_fe::getRealNameOptions($option_id);
 			$return_data['options_name']=$option_name;
-			$str2="select products_options_id, products_options_descriptions, language_id from tx_multishop_products_options po where po.products_options_id='".$option_id."'";
-			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 			$counter=0;
-			while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
+			foreach ($this->languages as $key=>$language) {
+				$str2=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_id, products_options_descriptions, language_id', // SELECT ...
+					"tx_multishop_products_options po", // FROM ...
+					"po.products_options_id='".$option_id."' and language_id='".$key."'", // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+				);
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
 				$return_data['results'][$counter]['option_id']=$row2['products_options_id'];
-				$return_data['results'][$counter]['lang_title']=$this->languages[$row2['language_id']]['title'];
+				$return_data['results'][$counter]['lang_title']=$this->languages[$key]['title'];
 				$return_data['results'][$counter]['lang_id']=$row2['language_id'];
 				$return_data['results'][$counter]['description']=htmlspecialchars($row2['products_options_descriptions']);
 				$counter++;
@@ -851,10 +858,46 @@ switch ($this->ms['page']) {
 		if ($this->ADMIN_USER) {
 			foreach ($this->post['opt_desc'] as $opt_id=>$langs_id) {
 				foreach ($langs_id as $lang_id=>$opt_desc) {
-					$updateArray=array();
-					$updateArray['products_options_descriptions']=$opt_desc;
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\''.$opt_id.'\' and language_id = '.$lang_id, $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_id, products_options_descriptions, language_id', // SELECT ...
+						"tx_multishop_products_options po", // FROM ...
+						"po.products_options_id='".$opt_id."' and language_id='".$lang_id."'", // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry2);
+					if ($num_rows>0) {
+						$updateArray=array();
+						$updateArray['products_options_descriptions']=$opt_desc;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\''.$opt_id.'\' and language_id = '.$lang_id, $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					} else {
+						$str2=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_id, products_options_descriptions, language_id', // SELECT ...
+							"tx_multishop_products_options po", // FROM ...
+							"po.products_options_id='".$opt_id."' and language_id='0'", // WHERE...
+							'', // GROUP BY...
+							'', // ORDER BY...
+							'' // LIMIT ...
+						);
+						$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+						$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
+						// insert new lang desc
+						$insertArray=array();
+						$insertArray['products_options_id']=$opt_id;
+						$insertArray['language_id']=$lang_id;
+						$insertArray['listtype']=$rs['listtype'];
+						$insertArray['description']=$rs['description'];
+						$insertArray['sort_order']=$rs['sort_order'];
+						$insertArray['price_group_id']=$rs['price_group_id'];
+						$insertArray['hide']=$rs['hide'];
+						$insertArray['attributes_values']=$rs['attributes_values'];
+						$insertArray['hide_in_cart']=$rs['hide_in_cart'];
+						$insertArray['required']=$rs['required'];
+						$insertArray['products_options_descriptions']=$opt_desc;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
 				}
 			}
 		}
