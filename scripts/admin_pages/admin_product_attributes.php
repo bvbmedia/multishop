@@ -4,15 +4,15 @@ if (!defined('TYPO3_MODE')) {
 }
 mslib_befe::loadLanguages();
 $selects=array();
-$selects['select']='Selectbox';
-$selects['select_multiple']='Selectbox multiple';
-$selects['radio']='Radio';
-$selects['checkbox']='Checkbox';
-$selects['input']='Text input';
-$selects['textarea']='Textarea';
-$selects['hidden_field']='Hidden field';
-$selects['file']='File input';
-$selects['divider']='Divider';
+$selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
+$selects['select_multiple']=$this->pi_getLL('admin_label_option_type_selectbox_multiple');
+$selects['radio']=$this->pi_getLL('admin_label_option_type_radio');
+$selects['checkbox']=$this->pi_getLL('admin_label_option_type_checkbox');
+$selects['input']=$this->pi_getLL('admin_label_option_type_text_input');
+$selects['textarea']=$this->pi_getLL('admin_label_option_type_textarea');
+$selects['hidden_field']=$this->pi_getLL('admin_label_option_type_hidden_field');
+$selects['file']=$this->pi_getLL('admin_label_option_type_file_input');
+$selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
 if (is_array($this->post['option_names']) and count($this->post['option_names'])) {
 	foreach ($this->post['option_names'] as $products_options_id=>$array) {
 		foreach ($array as $language_id=>$value) {
