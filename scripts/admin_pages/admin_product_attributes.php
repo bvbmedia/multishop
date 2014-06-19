@@ -98,10 +98,10 @@ if ($rows) {
 			<input name="hide_in_cart['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide_in_cart'] ? ' checked' : '').'/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
 		</span>		
 		</h2>
-		<h3>Option name <input name="option_names['.$row['products_options_id'].'][0]" type="text" value="'.htmlspecialchars($row['products_options_name']).'"  />';
+		<h3>Option name <input name="option_names['.$row['products_options_id'].'][0]" type="text" value="'.htmlspecialchars($row['products_options_name']).'s"  />';
 		$value=htmlspecialchars($row2['products_options_values_name']);
 		foreach ($this->languages as $key=>$language) {
-			if ($key>0) {
+			if ($key>0 && isset($this->languages[$key]['uid']) && isset($this->languages[$key]['title']) && $key==$this->languages[$key]['uid']) {
 				$str3="select products_options_name from tx_multishop_products_options where products_options_id='".$row['products_options_id']."' and language_id='".$key."'";
 				$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 				while (($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3))!=false) {
