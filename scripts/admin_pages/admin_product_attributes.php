@@ -208,7 +208,6 @@ if ($rows) {
 						if (r.results.length > 1) {
 							dialog_height = parseInt(170 * r.results.length);
 						}
-						
 						$.each(r.results, function(i, v){
 							values_data += \'<li class="description_content">\';
 							values_data += \'<span>\' + v.lang_title + \': </span>\';
@@ -361,9 +360,14 @@ if ($rows) {
 					success: function(r) { 
 						if (r.results) {
 							var values_data = "";
-							
-							$.each(r.results, function(i, v){
-								values_data += \'<li id="option_values_\' + v.values_id + \'" class="option_values_\' + opt_id + \'_\' + v.values_id + \'">Option value <input name="option_values[\' + v.values_id + \'][0]" type="text" value="\' + v.values_name + \'" />\';
+							var classItem=\'even\';
+							$.each(r.results, function(i, v) {
+								if (classItem==\'even\') {
+									classItem=\'odd\';
+								} else {
+									classItem=\'even\';
+								}
+								values_data += \'<li id="option_values_\' + v.values_id + \'" class="option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">Option value <input name="option_values[\' + v.values_id + \'][0]" type="text" value="\' + v.values_name + \'" />\';
 								$.each(v.language, function(x, y){
 									values_data += y.lang_title + \' <input name="option_values[\' + v.values_id + \'][\' + y.lang_id + \']" type="text" value="\' + y.lang_values + \'" />\';
 								});
