@@ -394,6 +394,7 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 .ui-dialog-content.ui-widget-content { font:12px Arial, Helvetica, sans-serif; text-align:left; box-shadow:none; }
 .ui-dialog-content.ui-widget-content h1 { font-size:14px; margin:0 0 10px; padding:0; }
 .ui-dialog-content.ui-widget-content strong { display:block; margin:0 0 10px; }
+.ui-dialog-content.ui-widget-content #used-product-number strong { display:inline-block; margin:0; }
 .ui-dialog-content.ui-widget-content ul { margin:0; padding:0; list-style:none; }
 .ui-dialog-content.ui-widget-content ul li { margin:0; padding:0; }
 .ui-dialog-content.ui-widget-content ul li span { float:left; display:block; width:150px; text-align:left; padding:2px 0 0 0; }
