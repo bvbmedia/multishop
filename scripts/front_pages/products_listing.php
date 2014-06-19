@@ -251,51 +251,63 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 						break;
 				}
 			}
-			$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
-			$products=$pageset['products'];
-			// load products listing
-			$products_compare=true;
-			if (!count($products)) {
-				if ($current['content'] and !$p) {
-					$hide_no_products_message=1;
-					if ($current['content']) {
-						$content.=mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
-					} else {
-						$show_default_header=1;
-					}
+			$show_products_listing=true;
+			if (!$this->ROOTADMIN_USER or (!$this->ADMIN_USER and !$this->CATALOGADMIN_USER)) {
+				if ($current['hide_in_menu']) {
+					$show_products_listing=false;
 				}
+			}
+			if ($show_products_listing) {
+				$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
+				$products=$pageset['products'];
+				// load products listing
+				$products_compare=true;
+				if (!count($products)) {
+					if ($current['content'] and !$p) {
+						$hide_no_products_message=1;
+						if ($current['content']) {
+							$content.=mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
+						} else {
+							$show_default_header=1;
+						}
+					}
+					if (!$hide_no_products_message) {
+						$content.=$this->pi_getLL('no_products_available');
+					}
+					if ($current['content_footer'] and !$p) {
+						$hide_no_products_message=1;
+						if ($current['content_footer']) {
+							$content.=mslib_fe::htmlBox($current['categories_name'], $current['content_footer'], 1);
+						} else {
+							$show_default_header=1;
+						}
+					}
+				} else {
+					if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {
+						die('error in PRODUCTS_LISTING_TYPE value');
+					} else {
+						if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "/")) {
+							require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
+						} else {
+							require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing/'.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
+						}
+					}
+					// pagination
+					if (!$this->hidePagination and ($pageset['total_rows']>$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'])) {
+						if (!isset($this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']) || $this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']=='default') {
+							require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');
+						} else {
+							require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination_with_number.php');
+						}
+					}
+					// pagination eof
+				}
+				// load products listing eof
+			} else {
 				if (!$hide_no_products_message) {
 					$content.=$this->pi_getLL('no_products_available');
 				}
-				if ($current['content_footer'] and !$p) {
-					$hide_no_products_message=1;
-					if ($current['content_footer']) {
-						$content.=mslib_fe::htmlBox($current['categories_name'], $current['content_footer'], 1);
-					} else {
-						$show_default_header=1;
-					}
-				}
-			} else {
-				if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {
-					die('error in PRODUCTS_LISTING_TYPE value');
-				} else {
-					if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "/")) {
-						require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
-					} else {
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing/'.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
-					}
-				}
-				// pagination
-				if (!$this->hidePagination and ($pageset['total_rows']>$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'])) {
-					if (!isset($this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']) || $this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']=='default') {
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');
-					} else {
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination_with_number.php');
-					}
-				}
-				// pagination eof
 			}
-			// load products listing eof
 		}
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
