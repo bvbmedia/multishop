@@ -61,6 +61,20 @@ foreach ($products as $product) {
 	$markerArray['ITEM_PRODUCTS_NAME']=$output['products_name'];
 	$markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];
 	$markerArray['ITEM_PRODUCTS_PRICE']=$output['special_section_price'];
+	if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
+		$button_submit='<a href="'.$output['link'].'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
+	} else {
+		$button_submit='<input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/>';
+	}
+	$markerArray['ITEM_DETAILS_ADD_TO_CART_BUTTON']='
+		<div class="msFrontAddToCartButton">
+			<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart&products_id='.$product['products_id']).'" method="post">
+				<input type="hidden" name="quantity" value="1" />
+				<input type="hidden" name="products_id" value="'.$product['products_id'].'" />
+				'.$button_submit.'
+			</form>
+		</div>
+	';
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'])) {
 		$params=array(
