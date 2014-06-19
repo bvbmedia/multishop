@@ -1410,7 +1410,7 @@ if (count($multishop_content_objects)>0) {
 							<form action="'.$typoLink.'" method="post" enctype="multipart/form-data">
 							<div class="shadow_bottom">
 							<fieldset>
-							<legend><a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['pid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['pid']), '', '')).'">'.trim($pageinfo['_thePathFull'], '/').'</a> <a title="View" href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['pid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['pid']), '', '')).'">'.$this->Typo3Icon('actions-document-view', 'View').'</a> <a title="Delete" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['pid'].'&action=erase" onClick="return CONFIRM(\'Are you sure you want to delete the products, categories, orders, cms pages and settings of: '.$pageinfo['_thePathFull'].'?\')">'.$this->Typo3Icon('actions-edit-delete', 'Delete').'</a>
+							<legend><a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['uid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['uid']), '', '')).'">'.trim($pageinfo['_thePathFull'], '/').'</a> <a title="View" href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['uid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['uid']), '', '')).'">'.$this->Typo3Icon('actions-document-view', 'View').'</a> <a title="Delete" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=erase" onClick="return CONFIRM(\'Are you sure you want to delete the products, categories, orders, cms pages and settings of: '.$pageinfo['_thePathFull'].'?\')">'.$this->Typo3Icon('actions-edit-delete', 'Delete').'</a>
 							</legend>';
 			$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total', 'fe_users', '', '');
 			$row=$data[0];
@@ -1468,7 +1468,7 @@ if (count($multishop_content_objects)>0) {
 				$content.='<li><input name="tx_multishop_pi[selected_tables][]" class="selected_tables" type="checkbox" value="'.$type.'" /> '.$type.'</li>'."\n";
 			}
 			$content.='
-	<li><strong><a class="buttons_db backup_subshop_btn" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['pid'].'&action=backup">Download Backup</a></strong></li>
+	<li><strong><a class="buttons_db backup_subshop_btn" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=backup">Download Backup</a></strong></li>
 </ul>
 <script type="text/javascript">
 	$(function(){
@@ -1502,7 +1502,7 @@ if (count($multishop_content_objects)>0) {
 							<input name="resize_images" type="checkbox" value="1" /> Resize images (if unchecked the images are restored, but you have to run the resize thumbnails command afterwards.<BR>
 							<input name="full_restore" type="checkbox" value="1" /> Full Restore (careful, cause it will erase all Multishop data on this TYPO3 installation and imports the backup)
 							<input name="action" type="hidden" value="restore" />
-							<input name="page_uid" type="hidden" value="'.$content_object['pid'].'" />
+							<input name="page_uid" type="hidden" value="'.$content_object['uid'].'" />
 							</fieldset>
 							</fieldset>
 							</div>
