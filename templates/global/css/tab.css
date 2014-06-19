@@ -290,7 +290,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li { padding-top:8px; padding-bottom:8px; }  
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li input { margin-bottom:0 !important; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h3 { background:#999; color:#fff; padding-left:10px; padding-top:10px; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li .admin_menu_remove { vertical-align:middle; line-height: 28px; margin-top: 1px;}
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li .admin_menu_remove { vertical-align:middle; line-height: 28px; margin-botom:1px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul ul > a.msadmin_button { margin-top:10px; margin-bottom:10px; margin-left:10px; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table td { padding:0 10px 0 0; }
