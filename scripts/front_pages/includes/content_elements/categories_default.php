@@ -75,6 +75,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 				}
 				$content.='<div id="multishop_catbox_'.$this->cObj->data['uid'].'">
 					<ul id="catalog_sortable_'.$this->cObj->data['uid'].'">';
+				$count_hidden_menu=0;
 				foreach ($catlist as $cat) {
 					if (!$cat['hide_in_menu']) {
 						// level 0
@@ -209,7 +210,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 							}
 						}
 						$content.='</li>';
-					} // hide in menu
+					} else {
+						$count_hidden_menu++;
+					}
+					// hide in menu
 				}
 				$content.='</ul></div>';
 				if ($this->ADMIN_USER) {
@@ -262,6 +266,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 				} else {
 					$item_counter=0;
 					$item_counter_accordion=0;
+					$count_hidden_menu=0;
 					foreach ($catlist as $cat) {
 						if (!$cat['hide_in_menu']) {
 							$tmpcontent='';
@@ -341,6 +346,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 							// level 0 eof
 							$tmpcontent.='</li>';
 							$items[]=$tmpcontent;
+						} else {
+							$count_hidden_menu++;
 						} // hide in menu
 					}
 					$content.='<div id="multishop_catbox_'.$this->cObj->data['uid'].'">';
@@ -388,6 +395,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 					<ul id="vertical_container">';
 				$item_counter=0;
 				$item_counter_accordion=0;
+				$count_hidden_menu=0;
 				foreach ($catlist as $cat) {
 					if (!$cat['hide_in_menu']) {
 						$item_counter++;
@@ -639,7 +647,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 							}
 						}
 						$content.='</li>';
-					} // hide in menu
+					} else {
+						$count_hidden_menu++;
+					}
+					// hide in menu
 				}
 				$content.='</ul></div>';
 				if ($this->ADMIN_USER) {
@@ -671,7 +682,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 			// show default categories box eof
 		}
 	}
-	if (!$content) {
+	if (!$content || ($count_hidden_menu==$count_list)) {
 		// no content. lets hide it
 		$this->hideIfNoResults=1;
 		$this->no_database_results=1;
