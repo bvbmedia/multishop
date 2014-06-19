@@ -4,11 +4,12 @@ if (!defined('TYPO3_MODE')) {
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
-window.onload = function(){
-  var text_input = document.getElementById (\'categories_name_0\');
-  text_input.focus ();
-  text_input.select ();
-}
+jQuery(document).ready(function($) {
+	$(\'.select2BigDropWider\').select2({
+		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
+		width:\'220px\'
+	});
+});
 </script>
 ';
 // hidden filename that is retrieved from the ajax upload
@@ -91,7 +92,7 @@ if ($this->post) {
 	$save_block='
 		<div class="save_block">
 			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="submit" />
+			<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>
 		</div>
 	';
 
@@ -100,7 +101,7 @@ if ($this->post) {
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
 	$tmpcontent.='<div style="float:right;">'.$save_block.'</div>';
-	$tmpcontent.='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
+	//$tmpcontent.='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
 	$tmpcontent.='
 		<div class="account-field" id="msEditCategoriesInputVisibility">
 			<label for="status">'.$this->pi_getLL('admin_visible').'</label>
@@ -108,62 +109,30 @@ if ($this->post) {
 		</div>
 		<div class="account-field" id="msEditCategoriesInputParent">
 			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>
-			'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id']).'
+			'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
 		</div>';
 	$tmpcontent.='
 	<div class="account-field" id="msEditCategoriesInputName">
 		<label for="categories_name">'.$this->pi_getLL('admin_multiple_categories', 'CATEGORIES NAME').'</label>
-		<textarea name="categories_name" id="categories_name" style="height:500px;" class="expand100-200"></textarea>
+		<textarea name="categories_name" id="categories_name" style="width:250px;height:500px;" class="expand100-200"></textarea>
 	</div>';
 	$tabs['category_main']=array(
 		'DETAILS',
 		$tmpcontent
 	);
 	// tabber
-	$content.='
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	
-	jQuery(".tab_content").hide();
-	jQuery("ul.tabs li:first").addClass("active").show();
-	jQuery(".tab_content:first").show();
-	jQuery("ul.tabs li").click(function() {
-		jQuery("ul.tabs li").removeClass("active");
-		jQuery(this).addClass("active");
-		jQuery(".tab_content").hide();
-		var activeTab = jQuery(this).find("a").attr("href");
-		jQuery(activeTab).fadeIn(0);
-		return false;
-	});
-	
-});
-</script>
-<div id="tab-container">
-    <ul class="tabs" id="admin_orders">
+	$content.='<h1>'.$this->pi_getLL('admin_new_multiple_category').'</h1>
 ';
-	$count=0;
-	foreach ($tabs as $key=>$value) {
-		$count++;
-		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
-	}
-	$content.='
-    </ul>
-    <div class="tab_container">
-	
-	';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
-        <div style="display: block;" id="'.$key.'" class="tab_content">
+
 			'.$value[1].'
-        </div>
+
 	';
 	}
-	$content.=$save_block.'
-    </div>
-</div>
-';
+
 	// tabber eof
 	$content.='<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
 	</form>';

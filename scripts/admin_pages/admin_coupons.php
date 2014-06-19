@@ -158,7 +158,7 @@ $content.='</select>
 <div class="account-field">
 	<label>&nbsp;</label>
 	<input type="hidden" name="coupons_id" value="'.$edit_row['id'].'" />
-	<input type="submit" name="editpost" class="msadmin_button" value="'.$this->pi_getLL('save').'" />	
+	<span class="msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" name="editpost" value="'.$this->pi_getLL('save').'" /></span>
 </div>
 </form>
 ';

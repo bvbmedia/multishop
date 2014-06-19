@@ -2,6 +2,13 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$subpartArray=array();
+$subpartArray['###VALUE_REFERRER###']='';
+if ($this->post['tx_multishop_pi1']['referrer']) {
+	$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+} else {
+	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+}
 if (is_numeric($this->get['orders_id'])) {
 	$order=mslib_fe::getOrder($this->get['orders_id']);
 	if ($this->post) {
@@ -532,9 +539,10 @@ if (is_numeric($this->get['orders_id'])) {
 		}
 		$save_block='
 			<div class="save_block">
-				<input name="cancel" type="button" value="'.$this->pi_getLL('admin_cancel').'" onClick="parent.window.hs.close();"  class="submit" />
-				<input name="Submit" type="submit" value="'.$this->pi_getLL('admin_save').'"  class="submit submit_button" />
-			</div>';
+				<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
+				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>
+			</div>
+			';
 		// count total products
 		$total_amount=0;
 		$str2="SELECT * from tx_multishop_orders_products where orders_id='".$orders['orders_id']."'";
@@ -2217,16 +2225,10 @@ $("#button_manual_new_product").click(function(e) {
 		$count++;
 		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 	}
-	$subpartArray['###VALUE_REFERRER###']='';
-	if ($this->post['tx_multishop_pi1']['referrer']) {
-		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
-	} else {
-		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
-	}
 	$content.='
 		</ul>
 		<div class="tab_container">
-	<form class="admin_product_edit" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
+	<form class="admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
 		<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 		';
 	$count=0;

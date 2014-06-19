@@ -2,6 +2,12 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$subpartArray['###VALUE_REFERRER###']='';
+if ($this->post['tx_multishop_pi1']['referrer']) {
+	$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
+} else {
+	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
+}
 $tabs=array();
 if ($_REQUEST['action']=='edit_cms') {
 	$str="SELECT * from tx_multishop_cms c, tx_multishop_cms_description cd where c.id='".$_REQUEST['cms_id']."' and cd.id=c.id";
@@ -70,9 +76,10 @@ if ($this->post and $_REQUEST['action']=='edit_cms') {
 if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$save_block='
 		<div class="save_block">
-			<input name="cancel" type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" onClick="parent.window.hs.close();" class="submit" />
-			<input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="submit" />
-		</div>';
+			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
+			<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>
+		</div>
+	';
 	$types=array();
 	$payment_methods=mslib_fe::loadPaymentMethods();
 	// Home
@@ -301,12 +308,6 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
-	}
-	$subpartArray['###VALUE_REFERRER###']='';
-	if ($this->post['tx_multishop_pi1']['referrer']) {
-		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
-	} else {
-		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 	}
 	$content.='</ul>
 	    <div class="tab_container">

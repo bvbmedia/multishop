@@ -381,22 +381,23 @@ if ($this->get['tx_multishop_pi1']['cid']) {
 	$login_as_this_user_link='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$this->get['tx_multishop_pi1']['cid']).'" target="_parent" class="msadmin_button">'.$this->pi_getLL('login_as_user').'</a>';
 }
 $subpartArray=array();
-// global fields 
-$subpartArray['###LABEL_VAT_ID###']=ucfirst($this->pi_getLL('vat_id', 'VAT ID'));
-$subpartArray['###VALUE_VAT_ID###']=htmlspecialchars($this->post['tx_multishop_vat_id']);
-$subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
-$subpartArray['###VALUE_IMAGE###']=$images_tab_block;
-$subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
-$subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
-$subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
-$subpartArray['###MASTER_SHOP###']='';
-$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
 $subpartArray['###VALUE_REFERRER###']='';
 if ($this->post['tx_multishop_pi1']['referrer']) {
 	$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
 } else {
 	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 }
+// global fields 
+$subpartArray['###LABEL_VAT_ID###']=ucfirst($this->pi_getLL('vat_id', 'VAT ID'));
+$subpartArray['###VALUE_VAT_ID###']=htmlspecialchars($this->post['tx_multishop_vat_id']);
+$subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
+$subpartArray['###VALUE_IMAGE###']=$images_tab_block;
+$subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
+$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
+$subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
+$subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
+$subpartArray['###MASTER_SHOP###']='';
+$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
 switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));

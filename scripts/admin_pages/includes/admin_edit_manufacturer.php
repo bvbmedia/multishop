@@ -3,6 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // now parse all the objects in the tmpl file
+
 if ($this->conf['admin_edit_manufacturer_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_manufacturer_tmpl_path']);
 } else {

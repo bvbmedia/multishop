@@ -97,7 +97,7 @@ $content='
 	</div>
 	<div class="account-field">
 		<label>&nbsp;</label>
-		<input type="submit" name="Submit" class="msadmin_button" value="'.$this->pi_getLL('add_new_group').'" />
+		<span class="msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" name="Submit" value="'.$this->pi_getLL('add_new_group').'" /></span>
 	</div>
 </form>
 <div class="main-heading"><h2>'.$this->pi_getLL('groups').'</h2></div>

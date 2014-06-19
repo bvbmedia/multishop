@@ -19,6 +19,9 @@ jQuery(function(){
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+	$(".msadminTooltip").tooltip({
+		position: "bottom"
+	});
 	jQuery(".tab_content").hide();
 	jQuery("ul.tabs li:first").addClass("active").show();
 	jQuery(".tab_content:first").show();
@@ -51,9 +54,7 @@ foreach ($categories as $cat) {
 	$innerContent.='<table width="100%" border="0" align="center" class="msadmin_border msZebraTable" id="admin_modules_listing">';
 	$innerContent.='<tr><td colspan="'.$colspan.'" class="module_heading">'.t3lib_div::strtoupper($cat['gtitle']).' (ID: '.$cat['gid'].')</div></td></tr>';
 	$innerContent.='<tr>
-	<th>Title</th>
 	<th>Key</th>
-	<th>Default Setting</th>
 	<th>Current Setting</th>
 	</tr>';
 	$str="SELECT * from tx_multishop_configuration where group_id='".addslashes($cat['group_id'])."' order by id ";
@@ -72,14 +73,14 @@ foreach ($categories as $cat) {
 		if (strlen($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']])>$maxchars) {
 			$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']]=substr($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']], 0, $maxchars).'...';
 		}
+		$editLink=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id'].'&action=edit_module',1);
 //		$row['description']='';
 		$innerContent.='<tr class="'.$tr_type.'">
-		<td><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id'].'&action=edit_module',1).'">'.$row['configuration_title'].'</a></strong></td>
-		<td><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id'].'&action=edit_module',1).'">'.$row['configuration_key'].'</a></strong></td>
-		<td>'.$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']].'</td>
-		<td>'.$this->ms['MODULES'][$row['configuration_key']].'</td>
+		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_title'].'</h3>'.$row['description']).'" class="msadminTooltip">'.$row['configuration_key'].'</a></strong></td>
+		<td><a href="'.$editLink.'">'.$this->ms['MODULES'][$row['configuration_key']].'</a></td>
 		</tr>';
-		$innerContent.='<tr class="'.$tr_type.'"><td colspan="'.$colspan.'">'.$row['description'].'</td></tr>';
+		//<td><a href="'.$editLink.'">'.$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']].'</a></td>
+		//$innerContent.='<tr class="'.$tr_type.'"><td colspan="'.$colspan.'">'.$row['description'].'</td></tr>';
 	}
 	$innerContent.='</table>';
 	$innerContent.='</div>';

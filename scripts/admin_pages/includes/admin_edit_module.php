@@ -91,9 +91,9 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$configuration['parent_id']=$this->get['cid'];
 	$save_block='
 		<div class="save_block">
-			<input name="cancel" type="button" value="Cancel" onClick="parent.window.hs.close();" class="submit" />
-			<input name="Submit" type="submit" value="Save" class="submit" />
-		</div>		
+			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
+			<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>
+		</div>
 	';
 	$content.='
 	<form class="admin_configuration_edit" name="admin_categories_edit_'.$configuration['categories_id'].'" id="admin_categories_edit_'.$configuration['categories_id'].'" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$configuration['id']).'" enctype="multipart/form-data">';
