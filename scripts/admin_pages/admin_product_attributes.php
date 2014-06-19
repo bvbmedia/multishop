@@ -70,7 +70,7 @@ $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
 	$content.='
-	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" name="admin_product_attributes">
+	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">
 	<ul class="attribute_options_sortable">';
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id']);
