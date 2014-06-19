@@ -1262,7 +1262,8 @@ if ($this->post) {
 
 					new_attributes_html+=\'<td class="product_attribute_prefix">\';
 					new_attributes_html+=\'<select name="tx_multishop_pi1[prefix][]">\';
-					new_attributes_html+=\'<option value="+">+</option>\';
+					new_attributes_html+=\'<option value="">&nbsp;</option>\';
+					new_attributes_html+=\'<option value="+" selected="selected">+</option>\';
 					new_attributes_html+=\'<option value="-">-</option>\';
 					new_attributes_html+=\'</select>\';
 					new_attributes_html+=\'</td>\';
@@ -1292,7 +1293,6 @@ if ($this->post) {
 					// init selec2
 					select2_sb("#tmp_options_sb", "'.$this->pi_getLL('admin_label_choose_option').'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb("#tmp_attributes_sb", "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
-					jQuery("#attributes_header").show();
 					event.preventDefault();
 				});
 				jQuery(document).on("click", ".save_new_attributes", function(){
@@ -1306,7 +1306,7 @@ if ($this->post) {
 						var selected_pa_option_id="";
 						var selected_pa_option_text="";
 					}
-					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id;
+					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id + " > div.items_wrapper";
 					if (selected_pa_option_id != "") {
 						var delete_button_html=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes">\';
 						// add class for marker
@@ -1314,7 +1314,7 @@ if ($this->post) {
 						// check for the main tr if it exists
 						if ($("#product_attributes_content_row").length===0) {
 							var new_tr=\'<tr id="product_attributes_content_row"><td colspan="5"><ul id="products_attributes_items"></ul></td></tr>\';
-							$(new_tr).insertAfter("#product_attributes_header_row");
+							$(new_tr).insertBefore("#add_attributes_holder");
 							// activate sortable on ul > li
 							sort_li();
 						}
@@ -1324,7 +1324,7 @@ if ($this->post) {
 						// check if the <li> is exist
 						if ($(target_liwrapper_id).length) {
 							// directly append if exist
-							if ($(target_liwrapper_id).children().last().hasClass("odd_item_row ")) {
+							if ($(target_liwrapper_id).children().last().hasClass("odd_item_row")) {
 								$(pa_main_divwrapper).addClass("even_item_row");
 							} else {
 								$(pa_main_divwrapper).addClass("odd_item_row");
@@ -1333,6 +1333,10 @@ if ($this->post) {
 							$(this).parent().empty().html(delete_button_html);
 							// flush it to existing li
 							$(target_liwrapper_id).append(pa_main_divwrapper);
+							if ($(target_liwrapper_id).is(":hidden")) {
+								$(target_liwrapper_id).prev().children().removeClass("items_wrapper_folded").addClass("items_wrapper_unfolded").html("fold");
+								$(target_liwrapper_id).show();
+							}
 						} else {
 							var li_class="odd_group_row";
 							if ($(".products_attributes_items").children().last().hasClass("odd_group_row")) {
@@ -1343,12 +1347,12 @@ if ($this->post) {
 								alt: selected_pa_option_text,
 								class: "products_attributes_item " + li_class
 							});
-							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \'</span>\');
+							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \' <a href="#" class="items_wrapper_unfolded">fold</a></span><div class="items_wrapper"></div>\');
 							$(pa_main_divwrapper).addClass("odd_item_row");
 							// rewrite the button
 							$(this).parent().empty().html(delete_button_html);
 							// flush it to existing li
-							$(new_li).append(pa_main_divwrapper);
+							$(new_li).children().last().append(pa_main_divwrapper);
 							// flush new li to the newly created tr > ul
 							$("#products_attributes_items").append(new_li);
 							// activate sorting for li children
@@ -1363,14 +1367,27 @@ if ($this->post) {
 						select2_sb(".product_attribute_options", "'.$this->pi_getLL('admin_label_choose_option').'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 						select2_values_sb(".product_attribute_values", "'.$this->pi_getLL('admin_label_choose_attribute').'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 						// clear the temp holder
-						$("tr#add_attributes_holder > td").html("");
+						$("tr#add_attributes_holder > td").html("&nbsp;");
 						$("#add_attributes_button").show();
 					} else {
 						alert("'.$this->pi_getLL('admin_label_please_select_options_and_attributes_value').'");
 					}
 				});
-				jQuery(document).on("click", "#manual_button", function(event) {
+				$(document).on("click", "#manual_button", function(event) {
 					jQuery("#attributes_header").show();
+				});
+				$(document).on("click", ".items_wrapper_folded", function(e){
+					e.preventDefault();
+					$(this).parent().next(".items_wrapper").show();
+					$(this).removeClass("items_wrapper_folded");
+					$(this).addClass("items_wrapper_unfolded").html("fold");
+				});
+				$(document).on("click", ".items_wrapper_unfolded", function(e){
+					e.preventDefault();
+					$(this).parent().next(".items_wrapper").hide();
+					$(this).removeClass("items_wrapper_unfolded");
+					$(this).addClass("items_wrapper_folded").html("unfold");
+
 				});
 				jQuery(document).on("click", ".delete_product_attributes", function(){
 					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
@@ -1395,6 +1412,9 @@ if ($this->post) {
 				jQuery(document).on("click", ".delete_tmp_product_attributes", function(){
 					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
 					$(pa_main_divwrapper).remove();
+
+					$("tr#add_attributes_holder > td").html("&nbsp;");
+					$("#add_attributes_button").show();
 				});
 				var select2_sb = function(selector_str, placeholder, dropdowncss, ajax_url) {
 					$(selector_str).select2({
@@ -1551,6 +1571,7 @@ if ($this->post) {
 				' : '').'
 				sort_li();
 				sort_li_children();
+				$(".items_wrapper").hide();
 				select2_sb(".product_attribute_options", "'.$this->pi_getLL('admin_label_choose_option').'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 				select2_values_sb(".product_attribute_values", "'.$this->pi_getLL('admin_label_choose_attribute').'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 			});
@@ -1708,24 +1729,9 @@ if ($this->post) {
 			} else {
 				$display_header="none";
 			}
-			$attributes_tab_block.='
-			<table width="100%" cellpadding="2" cellspacing="2" id="product_attributes_table">
-				<tr id="product_attributes_header_row" >
-				   <td colspan="5">
-				     <div class="wrap-attributes-header">
-				        <table>
-						<tr id="attributes_header" style="display:'.$display_header.'">
-							<td class="product_attribute_option">'.ucfirst($this->pi_getLL('admin_option')).'</td>
-							<td class="product_attribute_value">'.ucfirst($this->pi_getLL('admin_value')).'</td>
-							<td class="product_attribute_prefix">'.ucfirst($this->pi_getLL('admin_prefix')).'</td>
-							<td class="product_attribute_price">'.ucfirst($this->pi_getLL('admin_price')).'</td>';
+			$attributes_tab_block.='<table width="100%" cellpadding="2" cellspacing="2" id="product_attributes_table">';
 			if ($product['products_id']) {
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_pa)>0) {
-					$attributes_tab_block.='<td>&nbsp;<input type="hidden" id="option_row_counter" value="'.$GLOBALS ['TYPO3_DB']->sql_num_rows($qry_pa).'"></td>';
-					$attributes_tab_block.='</tr></table>
-					     </div>
-					   </td>
-					</tr>';
 					$ctr=1;
 					$options_data=array();
 					$attributes_data=array();
@@ -1743,7 +1749,9 @@ if ($this->post) {
 								$group_row_type='even_group_row';
 							}
 							$attributes_tab_block.='<li id="products_attributes_item_'.$option_id.'" alt="'.$option_name.'" class="products_attributes_item '.$group_row_type.'">
-							<span class="option_name">'.$option_name.'</span>';
+							<span class="option_name">'.$option_name.' <a href="#" class="items_wrapper_folded">unfold</a></span>
+							<div class="items_wrapper">
+							';
 							foreach ($attributes_data[$option_id] as $attribute_data) {
 								if (!isset($item_row_type) || $item_row_type=='even_item_row') {
 									$item_row_type='odd_item_row';
@@ -1802,6 +1810,7 @@ if ($this->post) {
 								$attributes_tab_block.='</td>';
 								$attributes_tab_block.='<td class="product_attribute_prefix">';
 								$attributes_tab_block.='<select name="tx_multishop_pi1[prefix][]">';
+								$attributes_tab_block.='<option value="">&nbsp;</option>';
 								$attributes_tab_block.='<option value="+"'.($attribute_data['price_prefix']=='+' ? ' selected="selected"' : '').'>+</option>';
 								$attributes_tab_block.='<option value="-"'.($attribute_data['price_prefix']=='-' ? ' selected="selected"' : '').'>-</option>';
 								$attributes_tab_block.='</select>';
@@ -1821,24 +1830,13 @@ if ($this->post) {
 								$attributes_tab_block.='</table>';
 								$attributes_tab_block.='</div>';
 							}
+							$attributes_tab_block.='</div>';
 							$attributes_tab_block.='</li>';
 						}
 						$attributes_tab_block.='</ul></td>';
 						$attributes_tab_block.='</tr>';
 					}
-				} else {
-					$attributes_tab_block.='<td>&nbsp;</td>';
-					$attributes_tab_block.='</tr></table>
-					     </div>
-					   </td>
-					</tr>';
 				}
-			} else {
-				$attributes_tab_block.='<td>&nbsp;</td>';
-				$attributes_tab_block.='</tr></table>
-					 </div>
-				   </td>
-				</tr>';
 			}
 			$attributes_tab_block.='<tr id="add_attributes_holder">
 					<td colspan="5">&nbsp;</td>
