@@ -1450,6 +1450,9 @@ if ($this->post) {
 					$(selector_str).select2({
 						placeholder: placeholder,
 						createSearchChoice:function(term, data) {
+							if (attributesOptions[term] === undefined) {
+								attributesOptions[term]={id: term, text: term};
+							}
 							return {id:term, text:term};
 						},
 						minimumInputLength: 0,
@@ -1467,14 +1470,19 @@ if ($this->post) {
 						initSelection: function(element, callback) {
 							var id=$(element).val();
 							if (id!=="") {
-								$.ajax(ajax_url, {
-									data: {
-										preselected_id: id
-									},
-									dataType: "json"
-								}).done(function(data) {
-									callback(data);
-								});
+								if (attributesOptions[id] !== undefined) {
+									callback(attributesOptions[id]);
+								} else {
+									$.ajax(ajax_url, {
+										data: {
+											preselected_id: id
+										},
+										dataType: "json"
+									}).done(function(data) {
+										attributesOptions[data.id]={id: data.id, text: data.text};
+										callback(data);
+									});
+								}
 							}
 						},
 						formatResult: function(data){
@@ -1510,6 +1518,9 @@ if ($this->post) {
 							if ($(data).filter(function() {
 								return this.text.localeCompare(term)===0;
 							}).length===0) {
+								if (attributesValues[term] === undefined) {
+									attributesValues[term]={id: term, text: term};
+								}
 								return {id:term, text:term};
 							}
 						},
@@ -1528,14 +1539,19 @@ if ($this->post) {
 						initSelection: function(element, callback) {
 							var id=$(element).val();
 							if (id!=="") {
-								$.ajax(ajax_url, {
-									data: {
-										preselected_id: id,
-									},
-									dataType: "json"
-								}).done(function(data) {
-									callback(data);
-								});
+								if (attributesValues[id] !== undefined) {
+									callback(attributesValues[id]);
+								} else {
+									$.ajax(ajax_url, {
+										data: {
+											preselected_id: id,
+										},
+										dataType: "json"
+									}).done(function(data) {
+										attributesValues[data.id]={id: data.id, text: data.text};
+										callback(data);
+									});
+								}
 							}
 						},
 						formatResult: function(data){
@@ -1754,20 +1770,26 @@ if ($this->post) {
 				'' // LIMIT ...
 			);
 			$qry_pa=$GLOBALS ['TYPO3_DB']->sql_query($sql_pa);
-			if ($GLOBALS ['TYPO3_DB']->sql_num_rows($qry_pa)>0) {
-				$display_header=" ";
-			} else {
-				$display_header="none";
-			}
 			$attributes_tab_block.='<table width="100%" cellpadding="2" cellspacing="2" id="product_attributes_table">';
+			$js_select2_cache='';
+			$js_select2_cache_options=array();
+			$js_select2_cache_values=array();
 			if ($product['products_id']) {
+				$js_select2_cache='
+				<script type="text/javascript">
+					var attributesOptions=[];
+					var attributesValues=[];'."\n";
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_pa)>0) {
 					$ctr=1;
 					$options_data=array();
 					$attributes_data=array();
 					while (($row=$GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry_pa))!=false) {
+						$row['options_values_name']=mslib_fe::getNameOptions($row['options_values_id']);
 						$options_data[$row['products_options_id']]=$row['products_options_name'];
 						$attributes_data[$row['products_options_id']][]=$row;
+						// js cache
+						$js_select2_cache_options[$row['products_options_id']]='attributesOptions['.$row['products_options_id'].']={id:"'.$row['products_options_id'].'", text:"'.$row['products_options_name'].'"}';
+						$js_select2_cache_values[$row['options_values_id']]='attributesValues['.$row['options_values_id'].']={id:"'.$row['options_values_id'].'", text:"'.$row['options_values_name'].'"}';
 					}
 					if (count($options_data)) {
 						$attributes_tab_block.='<tr id="product_attributes_content_row">';
@@ -1867,6 +1889,21 @@ if ($this->post) {
 						$attributes_tab_block.='</tr>';
 					}
 				}
+				$count_js_cache_options=count($js_select2_cache_options);
+				$count_js_cache_values=count($js_select2_cache_values);
+				if ($count_js_cache_options) {
+					$js_select2_cache.=implode(";\n", $js_select2_cache_options);
+				}
+				if ($count_js_cache_values) {
+					if ($count_js_cache_options) {
+						$js_select2_cache.=";\n";
+					}
+					$js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
+				}
+				$js_select2_cache.='</script>';
+			}
+			if (!empty($js_select2_cache)) {
+				$GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
 			}
 			$attributes_tab_block.='<tr id="add_attributes_holder">
 					<td colspan="5">&nbsp;</td>
