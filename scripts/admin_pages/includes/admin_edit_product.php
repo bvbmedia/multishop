@@ -1905,6 +1905,7 @@ if ($this->post) {
 		 * layout page
 		*/
 		$subpartArray=array();
+		$subpartArray['###VALUE_REFERRER###']='';
 		if ($this->post['tx_multishop_pi1']['referrer']) {
 			$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
 		} else {
@@ -1923,7 +1924,7 @@ if ($this->post) {
 		$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###FOOTER_LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
-		$subpartArray['###VALUE_REFERRER###']='';
+
 		if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
 			$subpartArray['###BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';
 			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';

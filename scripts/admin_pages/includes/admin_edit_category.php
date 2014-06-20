@@ -338,6 +338,7 @@ if ($this->post) {
 			</div>';
 		}
 		$subpartArray=array();
+		$subpartArray['###VALUE_REFERRER###']='';
 		if ($this->post['tx_multishop_pi1']['referrer']) {
 			$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
 		} else {
@@ -380,7 +381,7 @@ if ($this->post) {
 		$subpartArray['###PAGE_ACTION###']=$_REQUEST['action'];
 		$subpartArray['###CATEGORIES_ID_FOOTER1###']=$category['categories_id'];
 		$subpartArray['###LABEL_HIDE_IN_MENU###']=$this->pi_getLL('hide_in_menu', 'Hide in menu');
-		$subpartArray['###VALUE_REFERRER###']='';
+
 		$feed_checkbox='';
 		$feed_stock_checkbox='';
 		$sql_feed='SELECT * from tx_multishop_product_feeds';
