@@ -1384,14 +1384,18 @@ if ($this->post) {
 							// activate sorting for li children
 							sort_li_children();
 						}
-						// remove the id of each selectbox
-						$("#tmp_options_sb").addClass("product_attribute_options");
-						$("#tmp_attributes_sb").addClass("product_attribute_values");
+						// appended to select2 class name for newly created select2 instantiation
+						// so it wont refresh others select2 elements
+						var d = new Date();
+						var n = d.getTime();
+						$("#tmp_options_sb").addClass("product_attribute_options" + n);
+						$("#tmp_attributes_sb").addClass("product_attribute_values" + n);
+						// remove id for reuse later
 						$("#tmp_options_sb").removeAttr("id");
 						$("#tmp_attributes_sb").removeAttr("id");
 						// init the select2 for new product attributes
-						select2_sb(".product_attribute_options", "'.$this->pi_getLL('admin_label_choose_option').'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
-						select2_values_sb(".product_attribute_values", "'.$this->pi_getLL('admin_label_choose_attribute').'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+						select2_sb(".product_attribute_options" + n, "'.$this->pi_getLL('admin_label_choose_option').'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+						select2_values_sb(".product_attribute_values" + n, "'.$this->pi_getLL('admin_label_choose_attribute').'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 						// clear the temp holder
 						$("tr#add_attributes_holder > td").html("&nbsp;");
 						$("#add_attributes_button").show();
