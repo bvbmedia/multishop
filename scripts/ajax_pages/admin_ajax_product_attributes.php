@@ -20,10 +20,10 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 			} else if (!is_numeric($this->get['q'])) {
 				$where[]="products_options_name like '%".addslashes($this->get['q'])."%'";
 			} else {
-				$where[]="products_options_id like '".addslashes($this->get['q'])."'";
+				$where[]="products_options_id = '".addslashes($this->get['q'])."'";
 			}
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
-			$where[]="products_options_id like '".addslashes($this->get['preselected_id'])."'";
+			$where[]="products_options_id = '".addslashes($this->get['preselected_id'])."'";
 		}
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_products_options', // FROM ...
