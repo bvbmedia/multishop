@@ -1774,11 +1774,11 @@ if ($this->post) {
 			$js_select2_cache='';
 			$js_select2_cache_options=array();
 			$js_select2_cache_values=array();
+			$js_select2_cache='
+			<script type="text/javascript">
+				var attributesOptions=[];
+				var attributesValues=[];'."\n";
 			if ($product['products_id']) {
-				$js_select2_cache='
-				<script type="text/javascript">
-					var attributesOptions=[];
-					var attributesValues=[];'."\n";
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_pa)>0) {
 					$ctr=1;
 					$options_data=array();
@@ -1900,8 +1900,8 @@ if ($this->post) {
 					}
 					$js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
 				}
-				$js_select2_cache.='</script>';
 			}
+			$js_select2_cache.='</script>';
 			if (!empty($js_select2_cache)) {
 				$GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
 			}
