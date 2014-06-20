@@ -1406,18 +1406,18 @@ if ($this->post) {
 				$(document).on("click", "#manual_button", function(event) {
 					jQuery("#attributes_header").show();
 				});
-				$(document).on("click", ".items_wrapper_folded", function(e){
+				$(document).on("click", "span.option_name", function(e){
 					e.preventDefault();
-					$(this).parent().next(".items_wrapper").show();
-					$(this).removeClass("items_wrapper_folded");
-					$(this).addClass("items_wrapper_unfolded").html("fold");
-				});
-				$(document).on("click", ".items_wrapper_unfolded", function(e){
-					e.preventDefault();
-					$(this).parent().next(".items_wrapper").hide();
-					$(this).removeClass("items_wrapper_unfolded");
-					$(this).addClass("items_wrapper_folded").html("unfold");
-
+					var self = $(this).children("a");
+					if($(self).hasClass("items_wrapper_unfolded")) {
+						$(self).parent().next(".items_wrapper").hide();
+						$(self).removeClass("items_wrapper_unfolded");
+						$(self).addClass("items_wrapper_folded").html("unfold");
+					} else {
+						$(self).parent().next(".items_wrapper").show();
+						$(self).removeClass("items_wrapper_folded");
+						$(self).addClass("items_wrapper_unfolded").html("fold");
+					}
 				});
 				jQuery(document).on("click", ".delete_product_attributes", function(){
 					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
