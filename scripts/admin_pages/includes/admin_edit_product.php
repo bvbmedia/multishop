@@ -1456,15 +1456,19 @@ if ($this->post) {
 							return {id:term, text:term};
 						},
 						minimumInputLength: 0,
-						ajax: {
-							url: ajax_url,
-							dataType: "json",
-							cache: true,
-							data: function (term, page) {
-								return {q: term};
-							},
-							results: function (data, page) {
-								return {results: data};
+						query: function(query) {
+							if (attributesSearchOptions[query.term] !== undefined) {
+								query.callback({results: attributesSearchOptions[query.term]});
+							} else {
+								$.ajax(ajax_url, {
+									data: {
+										q: query.term
+									},
+									dataType: "json"
+								}).done(function(data) {
+									attributesSearchOptions[query.term]=data;
+									query.callback({results: data});
+								});
 							}
 						},
 						initSelection: function(element, callback) {
@@ -1525,15 +1529,19 @@ if ($this->post) {
 							}
 						},
 						minimumInputLength: 0,
-						ajax: {
-							url: ajax_url,
-							dataType: "json",
-							cache: true,
-							data: function (term, page) {
-								return {q: term + "||optid=" +  $(this).parent().prev().children("input").val()};
-							},
-							results: function (data, page) {
-								return {results: data};
+						query: function(query) {
+							if (attributesSearchValues[query.term] !== undefined) {
+								query.callback({results: attributesSearchValues[query.term]});
+							} else {
+								$.ajax(ajax_url, {
+									data: {
+										q: query.term
+									},
+									dataType: "json"
+								}).done(function(data) {
+									attributesSearchValues[query.term]=data;
+									query.callback({results: data});
+								});
 							}
 						},
 						initSelection: function(element, callback) {
@@ -1776,6 +1784,8 @@ if ($this->post) {
 			$js_select2_cache_values=array();
 			$js_select2_cache='
 			<script type="text/javascript">
+				var attributesSearchOptions=[];
+				var attributesSearchValues=[];
 				var attributesOptions=[];
 				var attributesValues=[];'."\n";
 			if ($product['products_id']) {
