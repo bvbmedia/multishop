@@ -1827,7 +1827,7 @@ if ($this->post) {
 								$attributes_tab_block.='<td>
 											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
 											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-											<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attributes_data['options_values_price'].'" /></div>
+											<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
 										</td>';
 								$attributes_tab_block.='<td class="product_attribute_price"><input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes"></td>';
 								$attributes_tab_block.='</tr>';
