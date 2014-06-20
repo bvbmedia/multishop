@@ -252,11 +252,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				}
 			}
 			$show_products_listing=true;
-			if (!$this->ROOTADMIN_USER or (!$this->ADMIN_USER and !$this->CATALOGADMIN_USER)) {
+			/*if (!$this->ROOTADMIN_USER or (!$this->ADMIN_USER and !$this->CATALOGADMIN_USER)) {
 				if ($current['hide_in_menu']) {
 					$show_products_listing=false;
 				}
-			}
+			}*/
 			if ($show_products_listing) {
 				$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
 				$products=$pageset['products'];
