@@ -44,6 +44,7 @@
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field { overflow:hidden; width:100%; border-bottom:1px dotted #e0e0e0; background:#fff; font:12px Arial, Helvetica, sans-serif; color:#333; padding:7px 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field label { clear:left; float:left; display:block; width:180px; color:#333; text-align:right; text-transform:uppercase; padding:3px 20px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_total .account-field label { float:none; display:inline-block; width:auto; text-align:right; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttribute { padding:0 0 0 200px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField { overflow:hidden; padding:0px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField input[type="text"] { clear:left; float:left; margin:0 10px 0 0; }
