@@ -1431,8 +1431,8 @@ if ($this->post) {
 						});
 					}
 					$(pa_main_divwrapper).remove();
-					if ($(pa_main_liwrapper).children().length == 1) {
-						$(pa_main_liwrapper).remove();
+					if ($(pa_main_liwrapper).children().length === 0) {
+						$(pa_main_liwrapper).parent().remove();
 					}
 				});
 				jQuery(document).on("click", ".delete_tmp_product_attributes", function(){
