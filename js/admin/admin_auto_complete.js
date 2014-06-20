@@ -31,7 +31,7 @@ var adminPanelSearch = function () {
         context: function (data) {
             return data.page_marker.section
         },
-        dropdownCssClass: "bigdrop",
+        dropdownCssClass: "adminpanel-search-bigdrop",
         escapeMarkup: function (m) {
             return m;
         },
