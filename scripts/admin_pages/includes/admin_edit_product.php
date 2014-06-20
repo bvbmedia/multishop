@@ -4,16 +4,20 @@ if (!defined('TYPO3_MODE')) {
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
-window.onload = function() {
-  var text_input = jQuery(\'#products_name_0\');
-  text_input.focus();
-  text_input.select();
-}
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
     }
 }
+jQuery(document).ready(function($) {
+	var text_input = $(\'#products_name_0\');
+	text_input.focus();
+	text_input.select();
+	$(\'.select2BigDropWider\').select2({
+		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
+		width:\'220px\'
+	});
+});
 </script>';
 $tabs=array();
 $update_category_image='';
@@ -1888,7 +1892,7 @@ if ($this->post) {
 				<div class="account-field" id="msEditProductInputDuplicateProduct">
 		
 				<label for="cid">'.$this->pi_getLL('admin_select_category').'</label>
-				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid']).'
+				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'],'class="select2BigDropWider"').'
 				</div>
 				<div id="cp_buttons">
 					<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
@@ -1945,7 +1949,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$product['categories_id'];
-		$subpartArray['###INPUT_CATEGORY_TREE###']=mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid']);
+		$subpartArray['###INPUT_CATEGORY_TREE###']=mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'],'class="select2BigDropWider"');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;
 		//exclude list products
 		$feed_checkbox='';
