@@ -293,11 +293,12 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li .admin_menu_remove { vertical-align:middle; line-height: 28px; margin-bottom:1px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul ul > a.msadmin_button { margin-top:10px; margin-bottom:10px; margin-left:10px; }
 
-#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .option_name .items_wrapper_unfolded { float:right; overflow:hidden; width:10px; height:0; background:url(../images/arrowDownWhite.png) left top no-repeat; padding:6px 0 0; }
-#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .option_name .items_wrapper_folded { float:right; overflow:hidden; width:5px; height:0; background:url(../images/arrowRightWhite.png) left top no-repeat; padding:9px 0 0; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .option_name .items_wrapper_unfolded { float:right; overflow:hidden; width:0; height:0; border-top:7px solid #fff; border-left:7px solid transparent; border-right:7px solid transparent; margin:6px 0 0; padding:0; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .option_name .items_wrapper_folded { float:right; overflow:hidden; width:0; height:0; border-left:7px solid #fff; border-top:6px solid transparent; border-bottom:6px solid transparent; margin:3px 3px 0 0; padding:0; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core tr#add_attributes_holder .new_product_attributes { display:block; border:1px solid #666; border-bottom:none; background:#444; font-weight:bold; font-size:16px; color:#fff; text-align:left; margin:10px 0 0; padding:5px 10px; border-radius:6px 6px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core tr#add_attributes_holder .wrap-attributes-item { border:1px solid #666; border-top:none; background:#dedede; padding-left:10px; border-radius:0 0 6px 6px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core tr#add_attributes_holder .wrap-attributes-item .select2-container .select2-choice { color:#333 !important; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table td { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table td input#filter { border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; margin:0 3px; padding:2px 6px; cursor:pointer; }
