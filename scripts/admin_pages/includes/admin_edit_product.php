@@ -542,6 +542,28 @@ if ($this->post) {
 							$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
 					}
+				} else {
+					$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_to_products_options_id', // SELECT ...
+						'tx_multishop_products_options_values_to_products_options', // FROM ...
+						"products_options_id = '".$pa_option."' and  products_options_values_id = '".$pa_value."'", // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+					if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)) {
+						// use microtime as the default sorting
+						$tmp_mtime=explode(" ", microtime());
+						$mtime=array_sum($tmp_mtime);
+						// insert new relations
+						$insertArray=array();
+						$insertArray['products_options_values_to_products_options_id']='';
+						$insertArray['products_options_id']=$pa_option;
+						$insertArray['products_options_values_id']=$pa_value;
+						$insertArray['sort_order']=$mtime;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
+						$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
 				}
 				$pa_prefix=$this->post['tx_multishop_pi1']['prefix'][$opt_sort];
 				$pa_price=$this->post['tx_multishop_pi1']['price'][$opt_sort];

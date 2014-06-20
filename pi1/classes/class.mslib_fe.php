@@ -1461,7 +1461,7 @@ class mslib_fe {
 		$query_array['where'][]='popt.language_id = \''.$this->sys_language_uid.'\'';
 		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$query_array['group_by'][]='popt.products_options_id';
-		$query_array['order_by'][]='popt.sort_order';
+		$query_array['order_by'][]='patrib.sort_order_option_name, patrib.sort_order_option_value';
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNamesQuery'])) {
 			$params=array(
