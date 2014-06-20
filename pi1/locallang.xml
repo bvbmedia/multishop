@@ -1774,6 +1774,7 @@
             <label index="admin_label_option_type_hidden_field">Hidden field</label>
             <label index="admin_label_option_type_file_input">File input</label>
             <label index="admin_label_option_type_divider">Divider</label>
+
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
