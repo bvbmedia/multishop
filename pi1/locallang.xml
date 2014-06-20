@@ -887,7 +887,7 @@
             <label index="admin_label_listing_type">listing type</label>
             <label index="admin_label_option_value">Option value</label>
             <label index="admin_label_option_type_selectbox">Selectbox</label>
-            <label index="admin_label_option_type_selectbox_multiple">electbox multiple</label>
+            <label index="admin_label_option_type_selectbox_multiple">selectbox multiple</label>
             <label index="admin_label_option_type_radio">Radio</label>
             <label index="admin_label_option_type_checkbox">Checkbox</label>
             <label index="admin_label_option_type_text_input">Text input</label>
@@ -1766,7 +1766,7 @@
             <label index="admin_label_listing_type">weergave type</label>
             <label index="admin_label_option_value">Optie waarde</label>
             <label index="admin_label_option_type_selectbox">Selectbox</label>
-            <label index="admin_label_option_type_selectbox_multiple">electbox multiple</label>
+            <label index="admin_label_option_type_selectbox_multiple">selectbox multiple</label>
             <label index="admin_label_option_type_radio">Radio</label>
             <label index="admin_label_option_type_checkbox">Checkbox</label>
             <label index="admin_label_option_type_text_input">Text input</label>
@@ -1774,7 +1774,6 @@
             <label index="admin_label_option_type_hidden_field">Hidden field</label>
             <label index="admin_label_option_type_file_input">File input</label>
             <label index="admin_label_option_type_divider">Divider</label>
-
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
