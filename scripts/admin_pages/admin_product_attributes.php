@@ -73,11 +73,14 @@ if ($rows) {
 	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">
 	<ul class="attribute_options_sortable">';
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id']);
-		if (!empty($options_group)) {
-			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$options_group.'</span>';
-		} else {
-			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$this->pi_getLL('admin_label_no_groups_defined').'</span>';
+		$options_group='';
+		if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+			$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id']);
+			if (!empty($options_group)) {
+				$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$options_group.'</span>';
+			} else {
+				$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$this->pi_getLL('admin_label_no_groups_defined').'</span>';
+			}
 		}
 		$content.='
 		<li id="options_'.$row['products_options_id'].'">

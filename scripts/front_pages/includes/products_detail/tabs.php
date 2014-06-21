@@ -278,14 +278,7 @@ if (!$product['products_id']) {
 	$output['product_attributes']=mslib_fe::showAttributes($product['products_id'], $product['tax_rate']);
 	// loading the attributes eof
 	// add to basket
-	if ($this->ms['MODULES']['AFFILIATE_SHOP'] and $product['products_url']) {
-		if (!strstr($product['products_url'], 'http://') and !strstr($product['products_url'], 'http://')) {
-			$product['products_url']='http://'.$product['products_url'];
-		}
-		$order_now_button.='<input id="multishop_add_to_cart" name="Submit" type="button" value="'.$this->pi_getLL('add_to_basket').'" onclick="window.open(\''.$product['products_url'].'\', \'\',\'\'); return false" />';
-	} else {
-		$order_now_button.='<input id="multishop_add_to_cart" name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('add_to_basket')).'" />';
-	}
+	$order_now_button.='<input id="multishop_add_to_cart" name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('add_to_basket')).'" />';
 	$output['add_to_cart_button'].='<input name="products_id" id="products_id" type="hidden" value="'.$product['products_id'].'" />'.$order_now_button;
 	// add to basket eof
 	// now parse all the objects in the tmpl file

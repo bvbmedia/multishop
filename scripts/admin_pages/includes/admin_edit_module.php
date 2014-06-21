@@ -100,21 +100,21 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$content.=$save_block;
 	$content.='
 		<div class="account-field">
-			<label for="categories_name">Name</label>
+			<label for="categories_name">'.$this->pi_getLL('title').'</label>
 			'.htmlspecialchars($configuration['configuration_title']).'
 		</div>
 		<div class="account-field">		
-			<label>Description</label>
+			<label>'.$this->pi_getLL('description').'</label>
 			'.htmlspecialchars($configuration['description']).'
-		</div>		
-		<div class="account-field">		
-			<label>Key</label>
+		</div>
+		<div class="account-field">
+			<label>'.$this->pi_getLL('name').'</label>
 			'.htmlspecialchars($configuration['configuration_key']).'
-		</div>		
+		</div>
 		';
 	$content.='
 		<div class="account-field configuration_modules">
-			<label for="value">Default value</label>	
+			<label for="value">'.$this->pi_getLL('default_value').'</label>
 ';
 	if ($configuration['set_function']) {
 		eval('$value_field = mslib_fe::'.$configuration['set_function'].'\''.addslashes(htmlspecialchars($this->ms['MODULES']['GLOBAL_MODULES'][$configuration['configuration_key']])).'\',\'global\');');
@@ -122,29 +122,17 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 		$value_field=mslib_fe::tep_draw_input_field('configuration[global]', $this->ms['MODULES']['GLOBAL_MODULES'][$configuration['configuration_key']]);
 	}
 	$content.=$value_field.'
-
 		</div>';
 	$content.='
 		<div class="account-field configuration_modules">
-			<label for="value">Current value</label>	
+			<label for="value">'.$this->pi_getLL('current_value').'</label>
 ';
 	if ($configuration['set_function']) {
 		eval('$value_field = mslib_fe::'.$configuration['set_function'].'\''.addslashes(htmlspecialchars($this->ms['MODULES'][$configuration['configuration_key']])).'\',\'local\');');
 	} else {
 		$value_field=mslib_fe::tep_draw_input_field('configuration[local]', $this->ms['MODULES'][$configuration['configuration_key']]);
 	}
-	/*
-		if (tep_not_null($configuration['use_function']))
-		{
-			$cfgValue = $configuration['use_function']($configuration['value']);
-		}
-		else
-		{
-			$cfgValue = $configuration['value'];
-		}
-	*/
 	$content.=$value_field.'
-
 		</div>';
 	$content.='
 	<input name="configuration_key" type="hidden" value="'.$configuration['configuration_key'].'" />
@@ -155,11 +143,11 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 			<div id="ajax_message_'.$configuration['categories_id'].'" class="ajax_message"></div>
 	';
 	$tabs['module'.$configuration['gid']]=array(
-		'Configuration',
+		$this->pi_getLL('configuration'),
 		$content
 	);
 	$content='';
-	$content='<div class="main-heading"><h2>Admin Modules</h2></div>';
+	$content='<div class="main-heading"><h2>'.$this->pi_getLL('admin_multishop_settings').'</h2></div>';
 	$content.='
 <div id="tab-container">
     <ul class="tabs" id="admin_modules">';

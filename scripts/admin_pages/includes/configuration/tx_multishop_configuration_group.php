@@ -88,6 +88,18 @@ $records[]=array(
 	'description'=>'',
 	'visible'=>'1'
 );
+$records[]=array(
+	'id'=>'13',
+	'configuration_title'=>'Search Settings',
+	'description'=>'',
+	'visible'=>'1'
+);
+$records[]=array(
+	'id'=>'14',
+	'configuration_title'=>'Performance Settings',
+	'description'=>'',
+	'visible'=>'1'
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration_group.php']['addConfigurationGroupRecordsPreHook'])) {
 	$params=array(

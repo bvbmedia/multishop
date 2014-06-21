@@ -897,6 +897,7 @@
             <label index="admin_label_option_type_divider">Divider</label>
             <label index="default_value">Default value</label>
             <label index="current_value">Current value</label>
+            <label index="configuration">Configuration</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1155,7 +1156,7 @@
             <label index="admin_attribute">Attribuut</label>
             <label index="admin_option">Optie</label>
             <label index="admin_product_attributes">PRODUCT ATTRIBUTEN</label>
-            <label index="admin_attributes_options_groups">ATTRIBUTEN OPTIES GROEPEN</label>
+            <label index="admin_attributes_options_groups">ATTRIBUUTGROEPEN</label>
             <label index="admin_weight">Gewicht</label>
             <label index="admin_stock">Voorraad</label>
             <label index="admin_main_category">HOOFD CATEGORIE</label>
@@ -1196,7 +1197,7 @@
             <label index="delete_zone">zone verwijderen</label>
             <label index="add_new_zone">Zone toevoegen</label>
             <label index="admin_maintain_product_attributes">Beheer hier de product attributen</label>
-            <label index="admin_maintain_attributes_options_groups">Beheer hier de attributen opties groepen</label>
+            <label index="admin_maintain_attributes_options_groups">Beheer hier de groepen van de attributen</label>
             <label index="admin_clear_cooluri_cache">LEEG COOLURI CACHE</label>
             <label index="admin_are_you_sure_you_want_to_reset_the_cooluri_cache">Weet je het zeker dat je de CoolURI cache wilt legen</label>
             <label index="admin_clear_multishop_cache">LEEG MULTISHOP CACHE</label>
@@ -1695,10 +1696,10 @@
             <label index="admin_label_unknown_order_status">Onbekende bestelstatus</label>
             <label index="including_vat">Incl. BTW</label>
             <label index="no_records_found">Geen records gevonden</label>
-            <label index="admin_label_add_new_options_group">Maak nieuwe optie groep aan</label>
+            <label index="admin_label_add_new_options_group">Attribuutgroep</label>
             <label index="admin_label_no_attributes_options_groups_defined">Geen attribuutgroepen ingesteld</label>
             <label index="admin_label_option_group_name">Optie groepnaam</label>
-            <label index="admin_label_you_can_add_attributes_options_groups_below">U kunt attribuutoptie groepen hieronder toevoegen.</label>
+            <label index="admin_label_you_can_add_attributes_options_groups_below">U kunt hieronder een attribuutgroep toevoegen.</label>
             <label index="admin_label_no_title">Geen titel</label>
             <label index="admin_label_group_name_is_not_defined">Groepnaam is niet opgegeven</label>
             <label index="admin_label_users">Gebruikers</label>
@@ -1778,6 +1779,7 @@
             <label index="admin_label_option_type_divider">Afbreekveld</label>
             <label index="default_value">Standaard waarde</label>
             <label index="current_value">Huidige waarde</label>
+            <label index="configuration">Configuratie</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
