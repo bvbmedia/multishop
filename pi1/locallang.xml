@@ -895,6 +895,8 @@
             <label index="admin_label_option_type_hidden_field">Hidden field</label>
             <label index="admin_label_option_type_file_input">File input</label>
             <label index="admin_label_option_type_divider">Divider</label>
+            <label index="default_value">Default value</label>
+            <label index="current_value">Current value</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1765,15 +1767,17 @@
             <label index="admin_label_option">Optie</label>
             <label index="admin_label_listing_type">weergave type</label>
             <label index="admin_label_option_value">Optie waarde</label>
-            <label index="admin_label_option_type_selectbox">Selectbox</label>
-            <label index="admin_label_option_type_selectbox_multiple">selectbox multiple</label>
-            <label index="admin_label_option_type_radio">Radio</label>
-            <label index="admin_label_option_type_checkbox">Checkbox</label>
-            <label index="admin_label_option_type_text_input">Text input</label>
-            <label index="admin_label_option_type_textarea">Textarea</label>
-            <label index="admin_label_option_type_hidden_field">Hidden field</label>
-            <label index="admin_label_option_type_file_input">File input</label>
-            <label index="admin_label_option_type_divider">Divider</label>
+            <label index="admin_label_option_type_selectbox">Uitklapmenu</label>
+            <label index="admin_label_option_type_selectbox_multiple">Uitklapmenu (meervoudig)</label>
+            <label index="admin_label_option_type_radio">Radioknop</label>
+            <label index="admin_label_option_type_checkbox">Aankruisvak</label>
+            <label index="admin_label_option_type_text_input">Invoerveld</label>
+            <label index="admin_label_option_type_textarea">Invoerveld (textarea / meerdere regels)</label>
+            <label index="admin_label_option_type_hidden_field">Verborgen veld</label>
+            <label index="admin_label_option_type_file_input">Bestand uploadveld</label>
+            <label index="admin_label_option_type_divider">Afbreekveld</label>
+            <label index="default_value">Standaard waarde</label>
+            <label index="current_value">Huidige waarde</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
