@@ -4542,12 +4542,13 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_proposals']['subs']['admin_proposals_overview']['description']=$this->pi_getLL('admin_proposals_overview_description');
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_proposals']['subs']['admin_proposals_overview']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[is_proposal]=1');
 			}
-			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices_overview');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
-			}
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['label']=$this->pi_getLL('admin_orders_status');
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices_overview');
+				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['description']=$this->pi_getLL('admin_invoices_overview_description');
+				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
+			}
 		} // END IF $this->ORDERSADMIN_USER	
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
 			$ms_menu['header']['ms_admin_statistics']['label']=$this->pi_getLL('admin_statistics');

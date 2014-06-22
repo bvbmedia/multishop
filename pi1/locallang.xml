@@ -901,6 +901,7 @@
             <label index="shipping_name_is_required">Shipping name in default language is required</label>
             <label index="payment_name_is_required">Payment name in default language is required</label>
             <label index="included_vat_amount">Included VAT amount</label>
+            <label index="admin_invoices_overview_description">Manage invoices here</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1786,6 +1787,7 @@
             <label index="shipping_name_is_required">Shipping name in default language is required</label>
             <label index="payment_name_is_required">Payment name in default language is required</label>
             <label index="included_vat_amount">Waarvan BTW</label>
+            <label index="admin_invoices_overview_description">Beheer hier uw facturen</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
