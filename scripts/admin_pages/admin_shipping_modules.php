@@ -278,9 +278,11 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 				$("#add_shipping_form").submit(function(e) {
 					if (!$("#name_0").val()) {
 						e.preventDefault();
+						$("#name_0").focus();
 						alert("'.$this->pi_getLL('shipping_name_is_required').'!");
 					} else if (!$("#custom_code").val()) {
-						e.preventDefault();					
+						e.preventDefault();
+						$("#custom_code").focus();
 						alert("'.$this->pi_getLL('code_is_required').'!");
 					} else {
 						return true;

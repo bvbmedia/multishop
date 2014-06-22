@@ -478,9 +478,11 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 				$("#add_payment_form").submit(function(e) {
 					if (!$("#name_0").val()) {
 						e.preventDefault();
+						$("#name_0").focus();
 						alert("'.$this->pi_getLL('payment_name_is_required').'!");
 					} else if (!$("#custom_code").val()) {
-						e.preventDefault();					
+						e.preventDefault();
+						$("#custom_code").focus();
 						alert("'.$this->pi_getLL('code_is_required').'!");
 					} else {
 						return true;
