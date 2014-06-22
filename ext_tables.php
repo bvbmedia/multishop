@@ -35,7 +35,7 @@ $tempColumns=array(
 			"size"=>"25",
 			"max"=>"75",
 			"checkbox"=>"0",
-			"default"=>0
+			"default"=>""
 		)
 	),
 	"address_number"=>array(
@@ -46,7 +46,7 @@ $tempColumns=array(
 			"size"=>"10",
 			"max"=>"20",
 			"checkbox"=>"0",
-			"default"=>0
+			"default"=>""
 		)
 	),
 	"address_ext"=>array(
@@ -57,7 +57,7 @@ $tempColumns=array(
 			"size"=>"5",
 			"max"=>"5",
 			"checkbox"=>"0",
-			"default"=>0
+			"default"=>""
 		)
 	),
 	'mobile'=>array(
