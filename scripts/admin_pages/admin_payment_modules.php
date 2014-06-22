@@ -97,7 +97,7 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		</div>	
 		<div class="account-field">
 			<label for="name">'.$this->pi_getLL('admin_name').'</label>
-			<input type="text" class="text" name="name['.$language['uid'].']" id="name['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">
+			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">
 		</div>		
 		<div class="account-field">
 			<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
@@ -324,7 +324,7 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		</div>	
 		<div class="account-field">
 			<label for="name">'.$this->pi_getLL('admin_name').'</label>
-			<input type="text" class="text" name="name['.$language['uid'].']" id="name['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">
+			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">
 		</div>		
 		<div class="account-field">
 			<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
@@ -474,14 +474,17 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 				jQuery(".msHandlingCostIncludingVat").keyup(function() {
 					productPrice(false, jQuery(this));
 				});	
-				
+
 				$("#add_payment_form").submit(function(e) {
-					if (!$("#custom_code").val())
-					{
+					if (!$("#name_0").val()) {
+						e.preventDefault();
+						alert("'.$this->pi_getLL('payment_name_is_required').'!");
+					} else if (!$("#custom_code").val()) {
 						e.preventDefault();					
 						alert("'.$this->pi_getLL('code_is_required').'!");
+					} else {
+						return true;
 					}
-					else return true;
 				 });							
 			});
 		</script>	
