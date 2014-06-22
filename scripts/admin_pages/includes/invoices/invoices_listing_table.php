@@ -14,7 +14,7 @@ $tmp='
 ';
 $headercol.='
 <th width="50">'.$this->pi_getLL('invoice_number').'</th>
-<th width="50">'.$this->pi_getLL('orders_id').'</th>
+<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
 <th width="75">'.$this->pi_getLL('store').'</th>
 <th>'.$this->pi_getLL('customers').'</th>
 <th width="50">'.$this->pi_getLL('order_date').'</th>

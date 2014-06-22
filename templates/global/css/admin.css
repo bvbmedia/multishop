@@ -575,3 +575,5 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table.bvbmedia_netops_data_table td { font-size:14px; font-weight:normal; padding:3px 9px; } */
 
 #netops_domain_action_buttons { text-align:center; }
+
+.cell_orders_id { white-space:nowrap; }
