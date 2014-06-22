@@ -54,22 +54,19 @@ foreach ($tmporders as $order) {
 		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>&nbsp;';
 		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
-	$print_order_list_button=false;
+	$orderlist_buttons=array();
 	switch ($page_type) {
 		case 'proposals':
 			$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
 			$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
-			$print_order_list_button=true;
 			break;
 		case 'orders':
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 				if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
-					$print_order_list_button=true;
 				}
 				if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
 					$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
-					$print_order_list_button=true;
 				}
 			}
 			break;
@@ -85,7 +82,7 @@ foreach ($tmporders as $order) {
 		}
 	}
 	$order_list_button_extra='';
-	if ($print_order_list_button) {
+	if (count($orderlist_buttons)) {
 		//button area
 		$order_list_button_extra.='<td align="center" nowrap>';
 		$order_list_button_extra.=implode("&nbsp;", $orderlist_buttons);
