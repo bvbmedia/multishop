@@ -37,7 +37,7 @@ Steps to configure:
 - Extract the file to the vhost folder (i.e. /var/www/domain.com/web/).
 - Import the file database.sql to your database and remove it from the server.
 - Adjust the MySQL credentials (host, database, username and password) in the file: typo3conf/LocalConfiguration.php
-- Login to the TYPO3 backend (and also in front-end as fe_user user) with the following credentials:
+- Login to the TYPO3 backend (and also in front-end as fe_user) with the following credentials:
 Username: typo3mslabAdmin
 Password: testMultishop123!
 - Do not forget to change the password!
