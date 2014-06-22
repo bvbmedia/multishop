@@ -31,17 +31,17 @@ jQuery(document).ready(function($) {
 		$(".tab_content").hide();
 		var activeTab = $(this).find("a").attr("href");
 		$(activeTab).fadeIn(0);
-		window.location.hash=activeTab;
 		return false;
 	});
 	var lochash=window.location.hash;
 	if (lochash!="") {
 		var li_this=$("ul > li").find("a[href=\'" + lochash + "\']").parent();
-		$("ul.tabs li").removeClass("active");
-		$(li_this).addClass("active");
-		$(".tab_content").hide();
-		var activeTab = lochash;
-		$(activeTab).fadeIn(0);
+		if (li_this.length > 0) {
+			$("ul.tabs li").removeClass("active");
+			$(li_this).addClass("active");
+			$(".tab_content").hide();
+			$(lochash).fadeIn(0);
+		}
 	}
 
 });
