@@ -125,7 +125,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 				</div>	
 				<div class="account-field">
 					<label for="name">'.$this->pi_getLL('admin_name').'</label>
-					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">
+					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
 				</div>		
 				<div class="account-field">
 					<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
@@ -136,7 +136,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 		$tmpcontent.='
 		<div class="account-field">
 			<label for="custom_code">'.$this->pi_getLL('code').'</label>
-			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($_REQUEST['custom_code']).'" />
+			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($_REQUEST['custom_code']).'" required="required" />
 		</div>';
 		if (count($active_shop)>1) {
 			$tmpcontent.='
@@ -318,7 +318,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 			</div>	
 			<div class="account-field">
 				<label for="name">'.$this->pi_getLL('admin_name').'</label>';
-		$tmpcontent.='<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">';
+		$tmpcontent.='<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">';
 		$tmpcontent.='</div>
 			<div class="account-field">
 				<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>

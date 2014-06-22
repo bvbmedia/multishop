@@ -335,7 +335,7 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		$tmpcontent.='
 		<div class="account-field">
 			<label for="custom_code">'.$this->pi_getLL('code').'</label>
-			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($_REQUEST['custom_code']).'" />
+			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($_REQUEST['custom_code']).'" required="required" />
 		</div>';
 		if (count($active_shop)>1) {
 			$tmpcontent.='
