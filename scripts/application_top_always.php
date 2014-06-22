@@ -294,9 +294,6 @@ if (!isset($this->conf['includejCarousel'])) {
 if (!isset($this->conf['includejAutocomplete'])) {
 	$this->conf['includejAutocomplete']='1';
 }
-if (!$this->conf['highslide_folder']) {
-	$this->conf['highslide_folder']='highslide';
-}
 if (!$this->conf['admin_help_url']) {
 	$this->conf['admin_help_url']='http://www.typo3multishop.com';
 }

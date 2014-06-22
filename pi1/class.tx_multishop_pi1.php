@@ -168,7 +168,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 		// Autoloader works great in TYPO3 4.7.7. But in TYPO3 4.5.X the invalid namespace classes are not autoloaded so lets load it manually then too	
 		// PHP Fatal error:  Access to undeclared static property: t3lib_autoloader::$classNameToFileMapping in /shopcvs/skeleton/typo3_src-4.7.5/t3lib/class.t3lib_autoloader.php on line 151
 		if (!class_exists('Cache_Lite')) {
-			require_once(t3lib_extMgm::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/class.cache_lite.php');
+			require_once(t3lib_extMgm::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/Lite.php');
 		}
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
