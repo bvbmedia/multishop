@@ -4343,7 +4343,6 @@ if (!$skipMultishopUpdates) {
 	$keys[]=array('key' => 'SHOW_INNER_FOOTER_NAV', 'oldGroupId'=>'1', 'newGroupId'=>'3');
 	$keys[]=array('key' => 'USE_FLAT_DATABASE_ALSO_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT', 'oldGroupId'=>'3', 'newGroupId'=>'14');
 	$keys[]=array('key' => 'PRODUCTS_NEW_NUMBER_OF_DAYS', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-
 	$keys[]=array('key' => 'MANUAL_ORDER', 'oldGroupId'=>'3', 'newGroupId'=>'9');
 	$keys[]=array('key' => 'INVOICE_PRINT', 'oldGroupId'=>'3', 'newGroupId'=>'12');
 	$keys[]=array('key' => 'INVOICE_PREFIX', 'oldGroupId'=>'3', 'newGroupId'=>'12');
@@ -4351,9 +4350,6 @@ if (!$skipMultishopUpdates) {
 	$keys[]=array('key' => 'PACKING_LIST_PRINT', 'oldGroupId'=>'3', 'newGroupId'=>'12');
 	$keys[]=array('key' => 'PRODUCTS_LISTING_LIMIT', 'oldGroupId'=>'3', 'newGroupId'=>'6');
 	$keys[]=array('key' => 'CATEGORIES_LISTING_SPECIALS_CATEGORIES_SUBLEVEL', 'oldGroupId'=>'3', 'newGroupId'=>'5');
-
-
-
 	$keys[]=array('key' => 'CACHE_FRONT_END', 'oldGroupId'=>'3', 'newGroupId'=>'14');
 	$keys[]=array('key' => 'CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU', 'oldGroupId'=>'3', 'newGroupId'=>'14');
 	$keys[]=array('key' => 'CACHE_TIME_OUT_LISTING_PAGES', 'oldGroupId'=>'3', 'newGroupId'=>'14');
@@ -4361,10 +4357,21 @@ if (!$skipMultishopUpdates) {
 	$keys[]=array('key' => 'CACHE_TIME_OUT_SEARCH_PAGES', 'oldGroupId'=>'3', 'newGroupId'=>'14');
 	$keys[]=array('key' => 'FLAT_DATABASE', 'oldGroupId'=>'3', 'newGroupId'=>'14');
 	$keys[]=array('key' => 'FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-
 	$keys[]=array('key' => 'DISPLAY_REALTIME_NOTIFICATION_MESSAGES', 'oldGroupId'=>'3', 'newGroupId'=>'11');
-
-
+	$keys[]=array('key' => 'CART_PAGE_UID', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'CHECKOUT_TYPE', 'oldGroupId'=>'3', 'newGroupId'=>'8');
+	$keys[]=array('key' => 'DISABLE_CHECKOUT_FOR_GUESTS', 'oldGroupId'=>'3', 'newGroupId'=>'8');
+	$keys[]=array('key' => 'DISABLE_CRUMBAR', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'DISABLE_MULTISHOP_CONFIGURATION_VALIDATION', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'DISABLE_PRODUCT_ATTRIBUTES_TAB_IN_EDITOR', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'ENABLE_ATTRIBUTES_OPTIONS_GROUP', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'MULTISHOP_ENCRYPTION_KEY', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'MULTISHOP_VERSION', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'PAGE_TITLE_DELIMETER', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'PRICE_FILTER_BOX_STEPPINGS', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'ULTRASEARCH_FIELDS', 'oldGroupId'=>'3', 'newGroupId'=>'15');
 	foreach ($keys as $row) {
 		$filter=array();
 		$filter[]='group_id='.$row['oldGroupId'];
@@ -4382,6 +4389,7 @@ if (!$skipMultishopUpdates) {
 	$keys[]='ACCORDION_SETUP_MODULES';
 	$keys[]='AFFILIATE_SHOP';
 	$keys[]='SHOW_INNER_FOOTER_NAV';
+	$keys[]='GEONAMES_USERNAME';
 	foreach ($keys as $key) {
 		$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\''.addslashes($key).'\'');
 	}
