@@ -217,17 +217,6 @@ $records[]=array(
 		'use_function'=>'');
 */
 $records[]=array(
-	'configuration_title'=>'Addthis Account',
-	'configuration_key'=>'ADDTHIS_ACCOUNT',
-	'configuration_value'=>'',
-	'description'=>'Add a Addthis button to your webshop. Addthis.com makes sharing your website urls easy.',
-	'group_id'=>'4',
-	'use_function'=>'',
-	'set_function'=>'',
-	'depend_on_configuration_key'=>'',
-	'use_function'=>''
-);
-$records[]=array(
 	'configuration_title'=>'Google Adwords Conversion Code',
 	'configuration_key'=>'GOOGLE_ADWORDS_CONVERSION_CODE',
 	'configuration_value'=>'',

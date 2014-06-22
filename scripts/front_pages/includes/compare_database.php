@@ -3591,11 +3591,6 @@ if (!$skipMultishopUpdates) {
 			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Google Analytics Account', '".$key."', 'UA-16775241-1', 'Google Analytics is the enterprise-class web analytics solution that gives you rich insights into your website traffic and marketing effectiveness.', 4, NULL, NULL, now(), NULL, '');";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
-		$key='ADDTHIS_ACCOUNT';
-		if (!isset($settings['GLOBAL_MODULES'][$key])) {
-			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Addthis Account', '".$key."', 'typo3multishop', 'Add a Addthis button to your webshop. Addthis.com makes sharing your website urls easy.', 4, NULL, NULL, now(), NULL, '');";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		}
 		$key='GOOGLE_ADWORDS_CONVERSION_CODE';
 		if (!isset($settings['GLOBAL_MODULES'][$key])) {
 			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Google Adwords Conversion Code', '".$key."', '', 'Add a Google Adwords Conversion Code to the thank you page of the webshop. This makes it possible to calculate the success-ratio of your Google Adwords campaign.', 4, NULL, NULL, now(), NULL, '');";
@@ -4390,6 +4385,7 @@ if (!$skipMultishopUpdates) {
 	$keys[]='AFFILIATE_SHOP';
 	$keys[]='SHOW_INNER_FOOTER_NAV';
 	$keys[]='GEONAMES_USERNAME';
+	$keys[]='ADDTHIS_ACCOUNT';
 	foreach ($keys as $key) {
 		$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\''.addslashes($key).'\'');
 	}
