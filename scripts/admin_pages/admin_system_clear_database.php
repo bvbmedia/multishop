@@ -46,7 +46,7 @@ $content.='
 	</div>
 	<div class="account-field">
 			<label></label>
-			<input type="submit" id="submit" class="msadmin_button" value="delete" />
+			<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('delete').'" />
 	</div>
 </form>
 ';
