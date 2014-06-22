@@ -6,7 +6,7 @@ plugin.multishop {
 	fe_rootadmin_usergroup = 
 	# cat=plugin.multishop - main; type=int+; label= PID of the core shop: The ID number of the page where the core shop is put on.
 	shop_pid =    
-	# cat=plugin.multishop - main; type=int+; label= PID of the customer webusers: The ID number of the page where the customers must be saved.
+	# cat=plugin.multishop - main; type=int+; label= PID of the fe_users: The ID number of the page where the fe_users are stored.
 	fe_customer_pid =    
 	# cat=plugin.multishop - main; type=int+; label= FE Customer Usergroup: The ID number of the customer usergroup record.
 	fe_customer_usergroup = 

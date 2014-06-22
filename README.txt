@@ -23,8 +23,8 @@ Multishop requires jQuery 2. Currently rzcolorbox and t3jquery have some issues.
 Steps to do:
 mkdir /sources
 
-git clone https://basvanbeek@bitbucket.org/bvbmedia/rzcolorbox_jquery2.git
-git clone https://basvanbeek@bitbucket.org/bvbmedia/t3jquery_jquery2.git
+git clone https://bitbucket.org/bvbmedia/rzcolorbox_jquery2.git
+git clone https://bitbucket.org/bvbmedia/t3jquery_jquery2.git
 
 ln -s /sources/rzcolorbox_jquery2 /var/www/yourdomain.nl/web/typo3conf/ext/rzcolorbox
 ln -s /sources/t3jquery_jquery2/t3jquery /var/www/yourdomain.nl/web/typo3conf/ext/t3jquery

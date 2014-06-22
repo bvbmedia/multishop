@@ -395,18 +395,6 @@ jQuery(document).ready(function ($) {
         <input name="old_categories_id" type="hidden" value="###VALUE_OLD_CATEGORY_ID###" />
         ###INPUT_CATEGORY_TREE###
     </div>
-    <div class="account-field" id="msEditProductInputExcludeFromFeeds">
-        <label>###LABEL_EXCLUDE_FROM_FEED###</label>
-        ###FEEDS_LIST###
-    </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputStartEndTime">
-        <label for="starttime" class="starttime">Starttime</label>
-        <input type="text" name="starttime_visitor" class="starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
-        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">
-        <label for="endtime" class="endtime">Endtime</label>
-        <input type="text" name="endtime_visitor" class="endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
-        <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
-    </div>
     <!-- ###DETAILS_CONTENT### begin -->
     <div class="account-field toggle_advanced_option msEditProductLanguageDivider">
         <label>###LABEL_LANGUAGE###</label>
@@ -441,7 +429,18 @@ jQuery(document).ready(function ($) {
 </div>
 <div style="display: block;" id="product_options" class="tab_content">
     <h1>###LABEL_HEADING_TAB_OPTION###</h1>
-
+    <div class="account-field" id="msEditProductInputExcludeFromFeeds">
+        <label>###LABEL_EXCLUDE_FROM_FEED###</label>
+        ###FEEDS_LIST###
+    </div>
+    <div class="account-field toggle_advanced_option" id="msEditProductInputStartEndTime">
+        <label for="starttime" class="starttime">Starttime</label>
+        <input type="text" name="starttime_visitor" class="starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
+        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">
+        <label for="endtime" class="endtime">Endtime</label>
+        <input type="text" name="endtime_visitor" class="endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
+        <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
+    </div>
     <div class="account-field">
         <label for="tax_id">###LABEL_VAT_RATE###</label>
         ###INPUT_VATE_RATE###

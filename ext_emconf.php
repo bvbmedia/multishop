@@ -34,11 +34,12 @@ $EM_CONF[$_EXTKEY] = array(
 		'depends' => array(
 			'php' => '5.3.15-5.5.99',
 			'typo3' => '4.5.33-6.2.99',
+			'tt_address' => '2.3.4-2.3.99',
 			'static_info_tables' => '0.0.0',
 			'static_info_tables_taxes'=>'0.0.1-0.0.1',
 			't3jquery' => '0.0.0',
-			'rzcolorbox' => '0.0.0',
-			'phpexcel_service' => '1.7.6',			
+			'rzcolorbox_jquery2' => '0.0.0',
+			'phpexcel_service' => '1.7.6',
 		),
 		'conflicts' => array(
 			'dbal' => '0.0.0'
