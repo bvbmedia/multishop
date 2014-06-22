@@ -900,6 +900,7 @@
             <label index="configuration">Configuration</label>
             <label index="shipping_name_is_required">Shipping name in default language is required</label>
             <label index="payment_name_is_required">Payment name in default language is required</label>
+            <label index="included_vat_amount">Included VAT amount</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1784,6 +1785,7 @@
             <label index="configuration">Configuratie</label>
             <label index="shipping_name_is_required">Shipping name in default language is required</label>
             <label index="payment_name_is_required">Payment name in default language is required</label>
+            <label index="included_vat_amount">Waarvan BTW</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
