@@ -46,14 +46,6 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 }
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 	$this->ms['add_this_button']='';
-	if ($this->ms['MODULES']['ADDTHIS_ACCOUNT']) {
-		$this->ms['add_this_button']='					
-		<!-- AddThis Button BEGIN -->
-		<script type="text/javascript">var addthis_pub = "'.$this->ms['MODULES']['ADDTHIS_ACCOUNT'].'";</script>
-		<a rel="nofollow" href="http://www.addthis.com/bookmark.php" onmouseover="return addthis_open(this, \'\', \''.$this->FULL_HTTP_URL.'\', \''.$GLOBALS['TSFE']->tmpl->sitetitle.'\')" onmouseout="addthis_close()" onclick="return addthis_sendto()"><img src="http://s7.addthis.com/static/btn/lg-bookmark-en.gif" width="125" height="16" border="0" alt="" /></a><script type="text/javascript" src="http://s7.addthis.com/js/152/addthis_widget.js"></script>
-		<!-- AddThis Button END -->			
-		';
-	}
 	if ($this->showIfsub) {
 		if (is_numeric($this->get['categories_id'])) {
 			$user_crumbar=$GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar'];
