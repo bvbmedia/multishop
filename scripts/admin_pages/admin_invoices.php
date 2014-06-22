@@ -133,7 +133,9 @@ foreach ($option_search as $key=>$val) {
 }
 $form_orders_search='<div id="search-orders">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
-	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />	
+	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
+	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
+	<input name="type" type="hidden" value="2003" />
 	<table width="100%">
 		<tr>
 			<td>
@@ -187,9 +189,9 @@ if ($this->get['skeyword']) {
 			//print_r($option_fields);
 			$items=array();
 			foreach ($option_fields as $fields=>$label) {
-				$items[]=$fields." LIKE '%".addslashes($this->get['skeyword'])."%'";
+				$items[]='o.'.$fields." LIKE '%".addslashes($this->get['skeyword'])."%'";
 			}
-			$items[]="delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
+			$items[]="o.delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
 			$filter[]=implode(" or ", $items);
 			break;
 		case 'orders_id':
@@ -239,7 +241,7 @@ if ($this->cookie['paid_invoices_only']) {
 if (!$this->masterShop) {
 	$filter[]='i.page_uid='.$this->showCatalogFromPage;
 }
-//$orderby[]='orders_id desc';	
+//$orderby[]='orders_id desc';
 $select[]='*, i.hash';
 $orderby[]='i.id desc';
 $pageset=mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
@@ -266,15 +268,15 @@ $tmp='';
 $content.='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	jQuery(".tab_content").hide(); 
-	jQuery("ul.tabs li:first").addClass("active").show();
-	jQuery(".tab_content:first").show();
-	jQuery("ul.tabs li").click(function() {
-		jQuery("ul.tabs li").removeClass("active");
-		jQuery(this).addClass("active"); 
-		jQuery(".tab_content").hide();
-		var activeTab = jQuery(this).find("a").attr("href");
-		jQuery(activeTab).fadeIn(0);
+	$(".tab_content").hide();
+	$("ul.tabs li:first").addClass("active").show();
+	$(".tab_content:first").show();
+	$("ul.tabs li").click(function() {
+		$("ul.tabs li").removeClass("active");
+		$(this).addClass("active");
+		$(".tab_content").hide();
+		var activeTab = $(this).find("a").attr("href");
+		$(activeTab).fadeIn(0);
 		return false;
 	});
  
@@ -291,7 +293,7 @@ foreach ($tabs as $key=>$value) {
 $content.='        
     </ul>
     <div class="tab_container">
-	<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices').'" method="get">
+	<form action="index.php" method="get">
 	'.$form_orders_search;
 $count=0;
 foreach ($tabs as $key=>$value) {

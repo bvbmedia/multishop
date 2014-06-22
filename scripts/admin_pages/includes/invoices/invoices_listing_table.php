@@ -85,15 +85,11 @@ $tmp.='
 	<input name="tx_multishop_pi1[mailto]" type="text" value="'.$this->ms['MODULES']['STORE_EMAIL'].'" id="msadmin_invoices_mailto" />
 	<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" ></input>
 	<script>
-		jQuery(document).ready(function($)
-		{	
+		jQuery(document).ready(function($) {
 			$(\'#selected_invoices_action\').change(function() {
-				if ($(this).val()==\'mail_invoices\')
-				{
+				if ($(this).val()==\'mail_invoices\') {
 					$("#msadmin_invoices_mailto").show();
-				}
-				else
-				{
+				} else {
 					$("#msadmin_invoices_mailto").hide();
 				}
 			});
