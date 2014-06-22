@@ -260,7 +260,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 				return Math.round(float*100)/100;
 			}
 								
-			jQuery(document).ready(function($){
+			jQuery(document).ready(function($) {
 				jQuery(".msHandlingCostExcludingVat").keyup(function() {
 					productPrice(true, jQuery(this));
 				});
@@ -439,7 +439,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 			//return float;
 			return Math.round(float*100)/100;
 		}
-		jQuery(document).ready(function($){
+		jQuery(document).ready(function($) {
 			jQuery(".msHandlingCostExcludingVat").keyup(function() {
 				productPrice(true, jQuery(this));
 			});

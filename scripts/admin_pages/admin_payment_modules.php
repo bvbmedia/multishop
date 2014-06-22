@@ -238,7 +238,7 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 				return Math.round(float*100)/100;
 			}
 					
-			jQuery(document).ready(function($){
+			jQuery(document).ready(function($) {
 				jQuery(".msHandlingCostExcludingVat").keyup(function() {
 					productPrice(true, jQuery(this));
 				});
@@ -460,7 +460,7 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 				return Math.round(float*100)/100;
 			}
 									
-			jQuery(document).ready(function($){
+			jQuery(document).ready(function($) {
 				jQuery(".msHandlingCostExcludingVat").keyup(function() {
 					productPrice(true, jQuery(this));
 				});

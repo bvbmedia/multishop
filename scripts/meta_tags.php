@@ -84,7 +84,7 @@ if ($this->ADMIN_USER) {
 	// bind shortkeys
 	$meta_tags['1_jquery'].='
 	<script type="text/javascript">
-	jQuery(document).ready(function($){
+	jQuery(document).ready(function($) {
 			';
 	if ($this->get['products_id']) {
 		$meta_tags['1_jquery'].='msAdminShortcutFunc(\'product\');'."\n";

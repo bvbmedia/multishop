@@ -32,7 +32,7 @@ $content.='
 <div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only_py" type="checkbox" value="1" '.($this->cookie['paid_orders_only_py'] ? 'checked' : '').' /> '.$this->pi_getLL('show_paid_orders_only').'</div>
 </form>
 <script type="text/javascript" language="JavaScript">
-	jQuery(document).ready(function($){
+	jQuery(document).ready(function($) {
 		$("#checkbox_paid_orders_only").click(function(e) {
 			$("#orders_stats_form").submit();
 		});

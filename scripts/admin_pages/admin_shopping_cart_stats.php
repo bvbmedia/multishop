@@ -19,7 +19,7 @@ $content.='
 ';
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript" language="JavaScript">
-	jQuery(document).ready(function($){
+	jQuery(document).ready(function($) {
 		$("#checkbox_no_checkout_cart_entries_only").click(function(e) {
 			$("#orders_stats_form").submit();
 		 });							

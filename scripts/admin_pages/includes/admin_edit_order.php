@@ -1703,7 +1703,7 @@ if (is_numeric($this->get['orders_id'])) {
 				jQuery(\'#edit_product_row_counter\').val(parseInt(jQuery(\'#edit_product_row_counter\').val()) - 1);
 			}
 			
-			jQuery(document).ready(function($){';
+			jQuery(document).ready(function($) {';
 			if ($this->get['edit_product']) {
 				$tmpcontent.='jQuery(\'#edit_product_row_counter\').val(\''.$attr_counter.'\');';
 			}

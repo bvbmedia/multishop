@@ -167,7 +167,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			$("#selected_type").change(function(){
 				updateForm();								
 			});
-			jQuery(document).ready(function($){
+			jQuery(document).ready(function($) {
 				updateForm();								
 			});
 		</script>
@@ -330,7 +330,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
-	jQuery(document).ready(function($){
+	jQuery(document).ready(function($) {
 		$(".tooltipMarker").tooltip({
 			position: "bottom",
 			onBeforeShow: function() {

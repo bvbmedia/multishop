@@ -18,7 +18,7 @@ $content.='
 ';
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript" language="JavaScript">
-	jQuery(document).ready(function($){
+	jQuery(document).ready(function($) {
 		$("#checkbox_negative_keywords_only").click(function(e) {
 			$("#search_log_form").submit();
 		 });

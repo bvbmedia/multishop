@@ -2971,27 +2971,6 @@ class mslib_fe {
 		$shipping_methods['generic']=array(
 			'name'=>'Generic'
 		);
-		$shipping_methods['gls']=array(
-			'name'=>'GLS'
-		);
-		$shipping_methods['hermes']=array(
-			'name'=>'Hermes'
-		);
-		$shipping_methods['dhl']=array(
-			'name'=>'DHL'
-		);
-		$shipping_methods['ups']=array(
-			'name'=>'UPS'
-		);
-		$shipping_methods['fedex']=array(
-			'name'=>'FEDEX'
-		);
-		$shipping_methods['tnt']=array(
-			'name'=>'TNT'
-		);
-		$shipping_methods['gpl']=array(
-			'name'=>'GPL'
-		);
 		return $shipping_methods;
 	}
 	public function loadAllPaymentMethods() {
@@ -3002,18 +2981,6 @@ class mslib_fe {
 			'country'=>'int'
 		);
 		// GENERIC EOF
-		// ON ACCOUNT
-		$payment_methods['on_account']=array(
-			'name'=>'On Account',
-			'country'=>'int'
-		);
-		// ON ACCOUNT EOF
-		// PAYMENT IN STORE
-		$payment_methods['payment_in_store']=array(
-			'name'=>'Payment in Store',
-			'country'=>'int'
-		);
-		// PAYMENT IN STORE EOF
 		return $payment_methods;
 	}
 	public function parsePaymentMethodEditForm($psp, $selected_values='', $readonly=0) {
@@ -6220,16 +6187,14 @@ class mslib_fe {
 	}
 	public function displayAdminNotificationPopup() {
 		$content.='<script language="javascript" type="text/javascript">
-			function displayAdminNotificationMessage() 
-			{ 
+			function displayAdminNotificationMessage() {
 				jQuery.ajax({
 				  url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=retrieveAdminNotificationMessage').'\',
 				  data: \'\',
 				  dataType: \'json\',
 				  type: \'post\',
 				  success: function (j) {
-					  if (j.length > 0)
-					  {
+					  if (j.length > 0) {
 							if (jQuery(\'.msadmin_balloon_wrapper\').length != 0) jQuery(\'.msadmin_balloon_wrapper\').remove();							
 						    var content=\'\';
 							content+=\'<div class="msadmin_balloon_wrapper">\';
@@ -6248,7 +6213,7 @@ class mslib_fe {
 				});
 				setTimeout("displayAdminNotificationMessage()", 45000);	
 			}
-			jQuery(document).ready(function($){			
+			jQuery(document).ready(function($) {
 				displayAdminNotificationMessage();
 			});
 		</script>';
