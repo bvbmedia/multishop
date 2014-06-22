@@ -898,7 +898,7 @@
             <label index="default_value">Default value</label>
             <label index="current_value">Current value</label>
             <label index="configuration">Configuration</label>
-            <label index="shipping_name_is_required">Shipping name in default is required</label>
+            <label index="shipping_name_is_required">Shipping name in default language is required</label>
             <label index="payment_name_is_required">Payment name in default language is required</label>
         </languageKey>
         <languageKey index="nl" type="array">
@@ -1782,7 +1782,7 @@
             <label index="default_value">Standaard waarde</label>
             <label index="current_value">Huidige waarde</label>
             <label index="configuration">Configuratie</label>
-            <label index="shipping_name_is_required">Shipping name in default is required</label>
+            <label index="shipping_name_is_required">Shipping name in default language is required</label>
             <label index="payment_name_is_required">Payment name in default language is required</label>
         </languageKey>
         <languageKey index="fi" type="array">
