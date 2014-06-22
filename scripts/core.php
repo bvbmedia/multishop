@@ -476,16 +476,6 @@ switch ($this->ms['page']) {
 		// load cms bottom eof	
 		break;
 }
-if ($this->ms['MODULES']['SHOW_INNER_FOOTER_NAV']) {
-	$content.='
-	<div id="tx_multishop_footer_menu">
-	<ul>
-		<li><a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=manufacturers').'">'.ucfirst($this->pi_getLL('manufacturers')).'</a></li>
-		<li><a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=shopping_cart').'">'.ucfirst($this->pi_getLL('basket')).'</a></li>
-		<li><a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=checkout').'">'.ucfirst($this->pi_getLL('go_to_checkout')).'</a></li>
-	</ul>
-	</div>';
-}
 if (!$this->ms['MODULES']['DISABLE_CRUMBAR'] and $GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html']) {
 	$content=$GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html'].$content;
 }
