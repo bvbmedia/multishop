@@ -4320,7 +4320,7 @@ if (!$skipMultishopUpdates) {
 	$keys[]=array('key' => 'ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH', 'oldGroupId'=>'11', 'newGroupId'=>'13');
 	$keys[]=array('key' => 'FULLTEXT_SEARCH_MIN_CHARS', 'oldGroupId'=>'11', 'newGroupId'=>'13');
 	$keys[]=array('key' => 'PRODUCTS_SEARCH_FALLBACK_SEARCH', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-	$keys[]=array('key' => 'REGULAR_SEARCH_MODE', 'oldGroupId'=>'11', 'newGroupId'=>'11');
+	$keys[]=array('key' => 'REGULAR_SEARCH_MODE', 'oldGroupId'=>'11', 'newGroupId'=>'13');
 	$keys[]=array('key' => 'CATEGORIES_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'5');
 	$keys[]=array('key' => 'DEFAULT_CURRENCY', 'oldGroupId'=>'11', 'newGroupId'=>'3');
 	$keys[]=array('key' => 'DISABLE_CHECKOUT_FOR_GUESTS', 'oldGroupId'=>'11', 'newGroupId'=>'3');
@@ -4367,6 +4367,17 @@ if (!$skipMultishopUpdates) {
 	$keys[]=array('key' => 'PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP', 'oldGroupId'=>'3', 'newGroupId'=>'15');
 	$keys[]=array('key' => 'REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART', 'oldGroupId'=>'3', 'newGroupId'=>'15');
 	$keys[]=array('key' => 'ULTRASEARCH_FIELDS', 'oldGroupId'=>'3', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'BASKET_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'CREATE_ACCOUNT_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'CRUMBAR_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'EDIT_ACCOUNT_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'MANUFACTURERS_PRODUCTS_LISTING_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'MANUFACTURERS_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'ORDER_HISTORY_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'SHOPPING_CART_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
+	$keys[]=array('key' => 'ULTRASEARCH_SERVER_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'13');
+	$keys[]=array('key' => 'ULTRASEARCH_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'13');
+	$keys[]=array('key' => 'NUMBER_OF_PRODUCT_IMAGES', 'oldGroupId'=>'11', 'newGroupId'=>'3');
 	foreach ($keys as $row) {
 		$filter=array();
 		$filter[]='group_id='.$row['oldGroupId'];
