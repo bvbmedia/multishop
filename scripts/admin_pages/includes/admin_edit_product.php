@@ -1604,7 +1604,7 @@ if ($this->post) {
 					});
 				}
 				var sort_li_children = function () {
-					jQuery(".products_attributes_item").sortable({
+					jQuery(".items_wrapper").sortable({
 						cursor:"move",
 						items:">div.wrap-attributes-item",
 						update: function(e, ui) {
