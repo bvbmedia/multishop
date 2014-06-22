@@ -2,20 +2,6 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if ($this->ms['MODULES']['ACCORDION_SETUP_MODULES']) {
-	$GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript">
-jQuery(function(){
-	//jQuery("#accordion").accordion({ header: "h3" });
-	jQuery("#accordion2 .boxes-heading").next().hide();
-	jQuery("#accordion2 .boxes-heading").click(function () {
-		jQuery(this).toggleClass("active").next().slideToggle("slow");
-		}); 
-	
-});
-</script>
-';
-}
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
