@@ -1918,12 +1918,6 @@ if (!$skipMultishopUpdates) {
 				unset($settings['GLOBAL_MODULES'][$key]);
 			}
 		}
-		$key='GEONAMES_USERNAME';
-		if (!isset($settings['GLOBAL_MODULES'][$key])) {
-			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Geonames username', '".$key."', '', 'Geonames username. You can register your username here: http://www.geonames.org/.', 3, NULL, NULL, now(), NULL, '');";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$messages[]=$str;
-		}
 		$key='SEARCH_ALSO_IN_PRODUCTS_ID';
 		if (!isset($settings['GLOBAL_MODULES'][$key])) {
 			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Search also in products id', '".$key."', '0', 'This enables the search-engine to also search for the products id.', 3, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''1'',''0''),');";
@@ -2063,12 +2057,14 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		/*
 		$key='DISABLE_VAT_RATE_WHEN_CROSS_BORDERS';
 		if (!isset($settings['GLOBAL_MODULES'][$key])) {
 			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Disable VAT rate when cross borders', '".$key."', '1', 'When a customer is from a different country than the store owner calculate zero tax.', 3, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''0'',''1''),');";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		*/
 		$key='PRODUCTS_DETAIL_NUMBER_OF_TABS';
 		if (!isset($settings['GLOBAL_MODULES'][$key])) {
 			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Products Detail Tabs', '".$key."', '0', 'Optional field. Number of tabs used on the products detail page.', 11, NULL, NULL, now(), NULL, '');";
@@ -4128,7 +4124,7 @@ if (!$skipMultishopUpdates) {
 				$array['tstamp']=time();
 				$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $array);
 				$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
-				$messages[]=$str;
+				$messages[]=$query2;
 			}
 		}
 		// now fix the vat
@@ -4397,6 +4393,7 @@ if (!$skipMultishopUpdates) {
 	$keys[]='SHOW_INNER_FOOTER_NAV';
 	$keys[]='GEONAMES_USERNAME';
 	$keys[]='ADDTHIS_ACCOUNT';
+	$keys[]='DISABLE_VAT_RATE_WHEN_CROSS_BORDERS';
 	foreach ($keys as $key) {
 		$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\''.addslashes($key).'\'');
 	}

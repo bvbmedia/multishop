@@ -920,7 +920,7 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
-/*		
+/*
 $records[]=array(
 		'configuration_title'=>'Disable VAT rate when cross borders',
 		'configuration_key'=>'DISABLE_VAT_RATE_WHEN_CROSS_BORDERS',
@@ -1130,18 +1130,6 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
-/*		
-$records[]=array(
-		'configuration_title'=>'Geonames username',
-		'configuration_key'=>'GEONAMES_USERNAME',
-		'configuration_value'=>'',
-		'description'=>'Geonames username. You can register your username here: http://www.geonames.org/.',
-		'group_id'=>'3',
-		'use_function'=>'',
-		'set_function'=>'',
-		'depend_on_configuration_key'=>'',
-		'use_function'=>'');
-*/
 $records[]=array(
 	'configuration_title'=>'Admin Products Import Type',
 	'configuration_key'=>'ADMIN_PRODUCTS_IMPORT_TYPE',
