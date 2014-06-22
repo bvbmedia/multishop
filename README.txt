@@ -34,9 +34,13 @@ If you have difficulties with configuring Multishop you could download our demo 
 https://www.typo3multishop.com/fileadmin/user_upload/multishop_demo_site.tar.gz
 
 Steps to configure:
-Extract the file to the vhost folder (i.e. /var/www/domain.com/web/).
-Import the file database.sql to your database and remove it from the server.
-Adjust the MySQL credentials (host, database, username and password) in the file: typo3conf/LocalConfiguration.php
+- Extract the file to the vhost folder (i.e. /var/www/domain.com/web/).
+- Import the file database.sql to your database and remove it from the server.
+- Adjust the MySQL credentials (host, database, username and password) in the file: typo3conf/LocalConfiguration.php
+- Login to the TYPO3 backend (and also in front-end as fe_user user) with the following credentials:
+Username: typo3mslabAdmin
+Password: testMultishop123!
+- Do not forget to change the password!
 
 
 
