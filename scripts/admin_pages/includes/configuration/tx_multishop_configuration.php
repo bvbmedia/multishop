@@ -84,17 +84,6 @@ $records[]=array(
 		'use_function'=>'');
 */
 $records[]=array(
-	'configuration_title'=>'Show the footer navigation in the middle content',
-	'configuration_key'=>'SHOW_INNER_FOOTER_NAV',
-	'configuration_value'=>'0',
-	'description'=>'This module enables the inner footer navigation.',
-	'group_id'=>'3',
-	'use_function'=>'',
-	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
-	'depend_on_configuration_key'=>'',
-	'use_function'=>''
-);
-$records[]=array(
 	'configuration_title'=>'Store Name',
 	'configuration_key'=>'STORE_NAME',
 	'configuration_value'=>'TYPO3 Multishop Store',

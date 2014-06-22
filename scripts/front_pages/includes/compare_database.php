@@ -3186,11 +3186,6 @@ if (!$skipMultishopUpdates) {
 			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Webshop Country ISO Number', '".$key."', '0', 'The country where the webstore is located. Used to determine the local VAT classes.', 3, NULL, NULL, now(), NULL, 'tep_country_select_option(');";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
-		$key='SHOW_INNER_FOOTER_NAV';
-		if (!isset($settings['GLOBAL_MODULES'][$key])) {
-			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Show the footer navigation in the middle content', '".$key."', '0', 'This module enables the inner footer navigation.', 1, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''1'', ''0''),');";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		}
 		$key='STORE_NAME';
 		if (!isset($settings['GLOBAL_MODULES'][$key])) {
 			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Store Name', '".$key."', '', 'The name of the store.', 3, NULL, NULL, now(), NULL, '');";
@@ -4381,11 +4376,12 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$query2;
 		}
 	}
-	// DELETE OLD SETTINGS
+	// DELETE UNUSED SETTINGS
 	$keys=array();
 	$keys[]='ACCORDION_MENU';
 	$keys[]='ACCORDION_SETUP_MODULES';
 	$keys[]='AFFILIATE_SHOP';
+	$keys[]='SHOW_INNER_FOOTER_NAV';
 	foreach ($keys as $key) {
 		$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_configuration', 'configuration_key=\''.addslashes($key).'\'');
 	}
