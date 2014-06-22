@@ -8,39 +8,12 @@ $compiledWidget['title']=$this->pi_getLL('latest_orders', 'Bestellingen');
 $headerData='';
 $headerData.='
 <script type="text/javascript">
-function submitToHighslide(form) {
-	// identify the submit button to start the animation from
-	var anchor;
-	for (var i = 0; i < form.elements.length; i++) {
-		if (form.elements[i].type == "submit") {
-			anchor = form.elements[i];
-			break;
-		}
-	}
-	// open an expander and submit our form when the iframe is ready
-	hs.overrides.push("onAfterExpand");
-	hs.htmlExpand(anchor, {
-         objectType: "iframe",
-         src: "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order').'",
-         width: 380,
-         height: 90,
-         onAfterExpand: function(expander) {
-            form.target = expander.iframe.name;
-            form.submit();
-         }
-	});
-	// return false to delay the sumbit until the iframe is ready
-	return false;
-}
-</script>
-<script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(\'.change_orders_status\').change(function(){
 			var orders_id=$(this).attr("rel");
 			var orders_status_id=$("option:selected", this).val();
 			var orders_status_label=$("option:selected", this).text();
-			if (confirm("Do you want to change orders id: "+orders_id+" to status: "+orders_status_label))
-			{
+			if (confirm("Do you want to change orders id: "+orders_id+" to status: "+orders_status_label)) {
 				$.ajax({ 
 						type:   "POST", 
 						url:    "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
@@ -51,14 +24,10 @@ function submitToHighslide(form) {
 				});
 			}
 		});
-		
-		$(\'#selected_orders_action\').change(function(){
-			if ($(this).val()==\'change_order_status_for_selected_orders\')
-			{
+		$(\'#selected_orders_action\').change(function() {
+			if ($(this).val()==\'change_order_status_for_selected_orders\') {
 				$("#msadmin_order_status_select").show();
-			}
-			else
-			{
+			} else {
 				$("#msadmin_order_status_select").hide();
 			}';
 // extra input jquery
@@ -324,9 +293,6 @@ if ($pageset['total_rows']>0) {
 				$http_referer='<a href="'.$order['http_referer'].'" target="_blank" rel="noreferrer">'.$domain['host'].'</a>';
 			}
 		}
-		/*
-		'<a href="'.mslib_fe::typolink(',2002','&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order').'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: '.$edit_order_popup_width.', height: browser_height} )" title="Loading" class="tooltip" rel="'.$order['orders_id'].'">'.$customer_name.'</a>'
-		*/
 		$data[]=array(
 			'<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
 			mslib_fe::amount2Cents($order['grand_total'], 0),

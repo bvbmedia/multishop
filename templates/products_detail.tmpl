@@ -25,19 +25,15 @@ jQuery(document).ready(function($) {
 	if ($("#quantity").val() == "") {
 		$("#quantity").val("1");
 	}
-		
 	$(".qty_minus").click(function() {
 		var qty = parseInt($("#quantity").val());
-		
 		if (qty > 1) {
 			var new_val = parseInt(qty - 1);
 			$("#quantity").val(new_val);
 		}		
 	});
-	
 	$(".qty_plus").click(function() {
 		var qty = parseInt($("#quantity").val());
-		
 		var new_val = parseInt(qty + 1);
 		$("#quantity").val(new_val);		
 	});

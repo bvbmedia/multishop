@@ -54,40 +54,32 @@
 		<!-- ###CART_FOOTER### end -->		
 	</table>
 </form>
-
 <div id="bottom-navigation"><a href="#" onClick="history.back();return false;" class="msFrontButton prevState arrowLeft arrowPosLeft proceed_to_shop"><span>###LABEL_GOTO_CATALOG###</span></a>
 	<div class="cart">
 		<a href="###CHECKOUT_LINK###" class="msFrontButton continueState arrowRight arrowPosLeft proceed_to_checkout_button_en"><span>###LABEL_CHECKOUT###</span></a>
 	</div>
 </div>
-
 <script type="text/javascript">
-jQuery(document).ready(function($){
-	$("#shopping_cart_form input").change(function(){
-		if ($(this).attr("id") !='coupons_code')
-		{
+jQuery(document).ready(function($) {
+	$("#shopping_cart_form input").change(function() {
+		if ($(this).attr("id") !='coupons_code') {
 			$("#shopping_cart_form").submit();
 		}
 	});
-	
 	$(".qty_minus").click(function() {
 		var qty_id = "#" + $(this).attr("rel");
 		var qty = parseInt($(qty_id).val());
-		
 		if (qty > 1) {
 			var new_val = parseInt(qty - 1);
 			$(qty_id).val(new_val);
 		}
-		
 		$("#shopping_cart_form").submit();		
 	});
-	
 	$(".qty_plus").click(function() {
 		var qty_id = "#" + $(this).attr("rel");
 		var qty = parseInt($(qty_id).val());
 		var new_val = parseInt(qty + 1);
 		$(qty_id).val(new_val);
-		
 		$("#shopping_cart_form").submit();
 	});
 });	

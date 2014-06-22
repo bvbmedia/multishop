@@ -1,47 +1,23 @@
 <!-- ###TEMPLATE### begin -->
 <script type="text/javascript">
-    function submitToHighslide(form) {
-        // identify the submit button to start the animation from
-        var anchor;
-        for (var i = 0; i < form.elements.length; i++) {
-            if (form.elements[i].type == "submit") {
-                anchor = form.elements[i];
-                break;
-            }
-        }
-        // open an expander and submit our form when the iframe is ready
-        hs.overrides.push("onAfterExpand");
-        hs.htmlExpand(anchor, {
-            objectType: "iframe",
-            src: "###AJAX_ADMIN_EDIT_ORDER_URL###",
-            width: 380,
-            height: 90,
-            onAfterExpand: function (expander) {
-                form.target = expander.iframe.name;
-                form.submit();
-            }
-        });
-        // return false to delay the sumbit until the iframe is ready
-        return false;
-    }
     jQuery(document).ready(function ($) {
-        jQuery(".tab_content").hide();
-        jQuery("ul.tabs li:first").addClass("active").show();
-        jQuery(".tab_content:first").show();
-        jQuery("ul.tabs li").click(function () {
-            jQuery("ul.tabs li").removeClass("active");
-            jQuery(this).addClass("active");
-            jQuery(".tab_content").hide();
-            var activeTab = jQuery(this).find("a").attr("href");
-            jQuery(activeTab).fadeIn(0);
+        $(".tab_content").hide();
+        $("ul.tabs li:first").addClass("active").show();
+        $(".tab_content:first").show();
+        $("ul.tabs li").click(function () {
+            $("ul.tabs li").removeClass("active");
+            $(this).addClass("active");
+            $(".tab_content").hide();
+            var activeTab = $(this).find("a").attr("href");
+            $(activeTab).fadeIn(0);
             return false;
         });
-        jQuery('#order_date_from').datetimepicker({
+        $('#order_date_from').datetimepicker({
             dateFormat: 'dd/mm/yy',
             showSecond: true,
             timeFormat: 'HH:mm:ss'
         });
-        jQuery('#order_date_till').datetimepicker({
+        $('#order_date_till').datetimepicker({
             dateFormat: 'dd/mm/yy',
             showSecond: true,
             timeFormat: 'HH:mm:ss'

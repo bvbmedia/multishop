@@ -171,8 +171,8 @@ if ($this->ADMIN_USER) {
 				if ($order['cruser_id']) {
 					$user=mslib_fe::getUser($order['cruser_id']);
 					if ($user['username']) {
-						$customer_edit_link=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$user['uid'].'&action=edit_customer');
-						$extraDetails['right'][]=$this->pi_getLL('ordered_by').': <strong><a href="'.$customer_edit_link.'" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 950, height: 600})">'.$user['username'].'</a></strong><br />';
+						$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$user['uid'].'&action=edit_customer');
+						$extraDetails['right'][]=$this->pi_getLL('ordered_by').': <strong><a href="'.$customer_edit_link.'">'.$user['username'].'</a></strong><br />';
 					}
 				}
 				if ($order['ip_address']) {

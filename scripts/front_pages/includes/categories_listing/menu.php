@@ -31,9 +31,6 @@ foreach ($categories as $category) {
 	$content.='>
 		<h2>'.$category['categories_name'].'</h2>
 		';
-	if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
-		//$content.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 500} )" class="admin_menu_edit">Edit</a><a href="'.mslib_fe::typolink($this->shop_pid.',2002','tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=delete_category" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )" class="admin_menu_remove" title="Remove"></a></div>';
-	}
 	// now try to grab the products
 	// product listing
 	$str="SELECT *, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id = m.manufacturers_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_id=pd.products_id and p.products_status=1 and p.products_id=p2c.products_id and p2c.categories_id='".$category['categories_id']."' and p.page_uid='".$this->showCatalogFromPage."' and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id order by p2c.sort_order";

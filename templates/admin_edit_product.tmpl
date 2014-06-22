@@ -154,40 +154,40 @@ function getSpecialsSections(products_id) {
 jQuery(document).ready(function ($) {
     $('input').keypress(function (event) {
         if (event.keyCode == 13) {
-            jQuery('.save_as_new').attr('name', 'Submit');
+            $('.save_as_new').attr('name', 'Submit');
         }
     });
 
-    jQuery(".msPriceExcludingVat").keyup(function () {
-        productPrice(true, jQuery(this));
+    $(".msPriceExcludingVat").keyup(function () {
+        productPrice(true, $(this));
     });
 
-    jQuery("#tax_id").change(function () {
-        jQuery(".msPriceExcludingVat").each(function (i) {
-            productPrice(true, jQuery(this));
+    $("#tax_id").change(function () {
+        $(".msPriceExcludingVat").each(function (i) {
+            productPrice(true, $(this));
         });
     });
 
-    jQuery(".msPriceIncludingVat").keyup(function () {
-        productPrice(false, jQuery(this));
+    $(".msPriceIncludingVat").keyup(function () {
+        productPrice(false, $(this));
     });
-    jQuery("#specials_sections").hide();
+    $("#specials_sections").hide();
     getSpecialsSections(###AJAX_PID###)
     ;
 
-    jQuery(".tab_content").hide();
-    jQuery("ul.tabs li:first").addClass("active").show();
-    jQuery(".tab_content:first").show();
-    jQuery("ul.tabs li").click(function () {
-        jQuery("ul.tabs li").removeClass("active");
-        jQuery(this).addClass("active");
-        jQuery(".tab_content").hide();
-        var activeTab = jQuery(this).find("a").attr("href");
-        jQuery(activeTab).show();
+    $(".tab_content").hide();
+    $("ul.tabs li:first").addClass("active").show();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function () {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
+        $(".tab_content").hide();
+        var activeTab = $(this).find("a").attr("href");
+        $(activeTab).show();
         return false;
     });
 	###AJAX_REQUEST_SPECIAL_PRICE###
-	jQuery('#specials_new_products_price_excl_vat').keyup(function () {
+	$('#specials_new_products_price_excl_vat').keyup(function () {
         var value = this.value;
         if (this.value != this.lastValue) {
             if (this.timer) {
@@ -198,13 +198,13 @@ jQuery(document).ready(function ($) {
                     getSpecialsSections(###AJAX_PID###)
                     ;
                 } else {
-                    jQuery("#specials_sections").slideUp("fast");
+                    $("#specials_sections").slideUp("fast");
                 }
             }, 200);
             this.lastValue = value;
         }
     });
-    jQuery('#specials_new_products_price_incl_vat').keyup(function () {
+    $('#specials_new_products_price_incl_vat').keyup(function () {
         var value = this.value;
         if (this.value != this.lastValue) {
             if (this.timer) {
@@ -215,13 +215,13 @@ jQuery(document).ready(function ($) {
                     getSpecialsSections(###AJAX_PID###)
                     ;
                 } else {
-                    jQuery("#specials_sections").slideUp("fast");
+                    $("#specials_sections").slideUp("fast");
                 }
             }, 200);
             this.lastValue = value;
         }
     });
-    jQuery("#products_date_added_visitor").datepicker({
+    $("#products_date_added_visitor").datepicker({
         dateFormat: "###DATE_FORMAT###",
         altField: "#products_date_added",
         altFormat: "yy-mm-dd",
@@ -230,7 +230,7 @@ jQuery(document).ready(function ($) {
         showOtherMonths: true,
         yearRange: "###YEAR_RANGE###"
     });
-    jQuery("#products_date_available_visitor").datepicker({
+    $("#products_date_available_visitor").datepicker({
         dateFormat: "###DATE_FORMAT###",
         altField: "#products_date_available",
         altFormat: "yy-mm-dd",
@@ -239,7 +239,7 @@ jQuery(document).ready(function ($) {
         showOtherMonths: true,
         yearRange: "###YEAR_RANGE###"
     });
-    jQuery("#starttime_visitor").datetimepicker({
+    $("#starttime_visitor").datetimepicker({
         dateFormat: "###DATE_FORMAT###",
         changeMonth: true,
         changeYear: true,
@@ -251,7 +251,7 @@ jQuery(document).ready(function ($) {
         altFormat: "yy-mm-dd",
         altTimeFormat: "HH:mm:ss"
     });
-    jQuery("#endtime_visitor").datetimepicker({
+    $("#endtime_visitor").datetimepicker({
         dateFormat: "###DATE_FORMAT###",
         changeMonth: true,
         changeYear: true,
@@ -263,7 +263,7 @@ jQuery(document).ready(function ($) {
         altFormat: "yy-mm-dd",
         altTimeFormat: "HH:mm:ss"
     });
-    jQuery("#specials_price_start_visitor").datepicker({
+    $("#specials_price_start_visitor").datepicker({
         dateFormat: "###DATE_FORMAT###",
         altField: "#specials_price_start",
         altFormat: "yy-mm-dd",
@@ -272,7 +272,7 @@ jQuery(document).ready(function ($) {
         showOtherMonths: true,
         yearRange: "###YEAR_RANGE###"
     });
-    jQuery("#specials_price_expired_visitor").datepicker({
+    $("#specials_price_expired_visitor").datepicker({
         dateFormat: "###DATE_FORMAT###",
         altField: "#specials_price_expired",
         altFormat: "yy-mm-dd",
@@ -285,15 +285,15 @@ jQuery(document).ready(function ($) {
     var url_relatives = "###AJAX_URL_PRODUCT_RELATIVE###";
     // populate the existing related products
     initRelatedProduct(url_relatives);
-    jQuery("#filter").click(function () {
-        if (jQuery("#key").val().length === 0) {
+    $("#filter").click(function () {
+        if ($("#key").val().length === 0) {
             var keywords = 2;
         } else {
-            var keywords = jQuery("#key").val();
+            var keywords = $("#key").val();
         }
-        var cid = jQuery("#rel_catid").val();
+        var cid = $("#rel_catid").val();
 
-        jQuery.ajax({
+        $.ajax({
             type: "POST",
             url: url_relatives,
             dataType: "json",
@@ -304,14 +304,14 @@ jQuery(document).ready(function ($) {
         });
     });
     $(document).on("click", ".checkAll", function () {
-        var product_class_name = "." + jQuery(this).attr("rel");
+        var product_class_name = "." + $(this).attr("rel");
 
         if ($(this).is(":checked")) {
             $(product_class_name).attr("checked", true);
-            saveRelation(url_relatives, jQuery(product_class_name).serialize());
+            saveRelation(url_relatives, $(product_class_name).serialize());
         } else {
             // .serialize only() take the checked checkbox
-            deleteRelation(url_relatives, jQuery(product_class_name).serialize());
+            deleteRelation(url_relatives, $(product_class_name).serialize());
             $(product_class_name).attr("checked", false);
         }
     });

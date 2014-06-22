@@ -500,10 +500,6 @@ if ($this->ADMIN_USER) {
 						// get all cats to generate multilevel fake url eof
 						$link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 					}
-					/*
-								$prod['EditIcons']='<ul class="ui-edit-item"><li><a href="'.$link.'" class="ui-edit-view" target="_blank">view</a></li>
-					<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category').'" class="ui-edit-delete" onclick="return hs.htmlExpand(this, { objectType: \'iframe\', width: 910, height: 140} )">delete</a></li></ul>';
-					*/
 					$data['listing']['categories'][]=$prod;
 				}
 				$next_page=true;

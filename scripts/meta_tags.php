@@ -235,7 +235,7 @@ if ($this->ADMIN_USER) {
 			var MS_ADMIN_PANEL_AUTO_COMPLETE_URL=\''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search').'\';
 			var MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL=\''.$this->pi_getLL('keyword').'\';
 			var MS_ADMIN_PANEL_FULL_URL=\''.$this->FULL_HTTP_URL.'\';
-			jQuery(document).ready(function($){
+			jQuery(document).ready(function($) {
 				$(document).on("click", ".ms_admin_minimize", function(e) {
 					e.preventDefault();
 					$("li.ms_admin_search > form#ms_admin_top_search > input#ms_admin_skeyword").select2("close");
@@ -257,14 +257,14 @@ if ($this->ADMIN_USER) {
 				// if (isMobile()) {
 				//	return false;
 				// }
-				jQuery.ajax({
+				$.ajax({
 					url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel&tx_multishop_pi1[categories_id]='.$this->get['categories_id'].'&tx_multishop_pi1[products_id]='.$this->get['products_id']).'\',
 					data: \'\',
 					type: \'post\',
 					dataType: \'json\',
 					success: function (j){
 						if (j) {
-							//var json_data = jQuery.parseJSON(j);
+							//var json_data = $.parseJSON(j);
 							var json_data = j;
 							
 							// top admin menu
@@ -283,50 +283,44 @@ if ($this->ADMIN_USER) {
 							admin_menu_footer += \'</ul></div>\';
 
 							var admin_menu= admin_menu_header + admin_menu_footer;
-							'.(!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] ? 'jQuery("body").prepend(admin_menu);' : '').'
+							'.(!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] ? '$("body").prepend(admin_menu);' : '').'
 							
 							// load partial menu items and add them to the footer
-							if (jQuery(".footer_content").length > 0) {
-								jQuery("#footer_content_cols").hide();
-								jQuery("#footer_content_cols #footer_content1").html("");
-								jQuery("#footer_content_cols #footer_content2").html("");
-								jQuery("#footer_content_cols #footer_content3").html("");
-								jQuery("#footer_content_cols #footer_content4").html("");
-								//jQuery("#footer_content_cols #footer_content5").html("");
+							if ($(".footer_content").length > 0) {
+								$("#footer_content_cols").hide();
+								$("#footer_content_cols #footer_content1").html("");
+								$("#footer_content_cols #footer_content2").html("");
+								$("#footer_content_cols #footer_content3").html("");
+								$("#footer_content_cols #footer_content4").html("");
+								//$("#footer_content_cols #footer_content5").html("");
 								if (json_data.header.ms_admin_catalog != undefined) {
 									var admin_menu_catalog_html=renderAdminMenu(json_data.header.ms_admin_catalog, \'header\', 0);
-									jQuery("#footer_content_cols #footer_content1").append(\'<ul>\'+admin_menu_catalog_html+\'</ul>\');
+									$("#footer_content_cols #footer_content1").append(\'<ul>\'+admin_menu_catalog_html+\'</ul>\');
 								}
-								
 								if (json_data.header.ms_admin_cms != undefined) {
 									var admin_menu_cms_html=renderAdminMenu(json_data.header.ms_admin_cms, \'header\', 0);
-									jQuery("#footer_content_cols #footer_content1").append(\'<ul>\'+admin_menu_cms_html+\'</ul>\');
+									$("#footer_content_cols #footer_content1").append(\'<ul>\'+admin_menu_cms_html+\'</ul>\');
 								}
-								
 								if (json_data.header.ms_admin_orders_customers != undefined) {
 									var admin_menu_orders_html=renderAdminMenu(json_data.header.ms_admin_orders_customers, \'header\', 0);
-									jQuery("#footer_content_cols #footer_content2").append(\'<ul>\'+admin_menu_orders_html+\'</ul>\');
+									$("#footer_content_cols #footer_content2").append(\'<ul>\'+admin_menu_orders_html+\'</ul>\');
 								}
-								
-
-								
 								if (json_data.header.ms_admin_statistics != undefined) {
 									var admin_menu_statistics_html=renderAdminMenu(json_data.header.ms_admin_statistics, \'header\', 0);
-									jQuery("#footer_content_cols #footer_content3").append(\'<ul>\'+admin_menu_statistics_html+\'</ul>\');
+									$("#footer_content_cols #footer_content3").append(\'<ul>\'+admin_menu_statistics_html+\'</ul>\');
 								}
 								if (json_data.footer.ms_admin_system != undefined) {
 									var admin_menu_system_html=renderAdminMenu(json_data.footer.ms_admin_system, \'footer\', 0);
-									jQuery("#footer_content_cols #footer_content4").append(\'<ul>\'+admin_menu_system_html+\'</ul>\');
+									$("#footer_content_cols #footer_content4").append(\'<ul>\'+admin_menu_system_html+\'</ul>\');
 								}																
 								$("#footer_content_cols").slideToggle("500");
-
 							}
 							';
 	if ($_COOKIE['hide_admin_panel']) {
 		$html.='
-									jQuery("#tx_multishop_admin_header_bg").hide();
-									jQuery("#tx_multishop_admin_footer_wrapper").hide();
-									jQuery("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_maximize"><li><a href="#" class="ms_admin_maximize">'.$this->pi_getLL('maximize').'</a></li></ul>\');
+									$("#tx_multishop_admin_header_bg").hide();
+									$("#tx_multishop_admin_footer_wrapper").hide();
+									$("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_maximize"><li><a href="#" class="ms_admin_maximize">'.$this->pi_getLL('maximize').'</a></li></ul>\');
 								';
 	}
 	$html.='}
@@ -337,8 +331,7 @@ if ($this->ADMIN_USER) {
 	$html.='
 $(document).on("click", "#multishop_update_button", function(e) {
 	e.preventDefault();
-	if (CONFIRM(\'Are you sure you want to run the Multishop updater?\'))
-	{
+	if (CONFIRM(\'Are you sure you want to run the Multishop updater?\')) {
 			$.blockUI({ css: {
 				width: \'350\',
 				border: \'none\',
@@ -361,7 +354,7 @@ $(document).on("click", "#multishop_update_button", function(e) {
 						var string=j.html;
 						if (string)
 						{
-							jQuery.blockUI({
+							$.blockUI({
 								message: \'<h1>Multishop Update</h1><div class="growl_message">\'+string+\'</div>\',
 								fadeIn: 700,
 								fadeOut: 700,
@@ -383,10 +376,8 @@ $(document).on("click", "#multishop_update_button", function(e) {
 									color: \'#fff\'
 								}
 							});
-						}
-						else
-						{
-							jQuery.blockUI({
+						} else {
+							$.blockUI({
 								message: \'<h1>Multishop Update</h1><div class="growl_message">We are sorry, but the update failed</div>\',
 								fadeIn: 700,
 								fadeOut: 700,
@@ -423,298 +414,5 @@ $(document).on("click", "#multishop_update_button", function(e) {
 	if ($this->ms['MODULES']['DISPLAY_REALTIME_NOTIFICATION_MESSAGES']) {
 		$meta_tags['tx_multishop_pi1_admin_menu'].=mslib_fe::displayAdminNotificationPopup();
 	}
-	//<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-}
-if (($this->ADMIN_USER and ($this->conf['includeJS'] or $this->conf['includeHighSlide'])) or ($this->conf['alwaysIncludeHighSlide']=='1')) {
-	$meta_tags['tx_multishop_pi1_highslide']='
-				<script language="javascript" type="text/javascript">
-				var browser_width;
-				var browser_height;
-				jQuery(document).ready(function($){
-					browser_width=$(document).width();
-					browser_height=$(document).height();				
-				});
-				hs.align = "center";
-				hs.dimmingGeckoFix = true;
-				hs.dimmingDuration = 0;
-				hs.cacheAjax = false;
-				hs.allowMultipleInstances = false;									
-				hs.loadingTitle = \'\';
-				hs.focusTitle = \'\';
-				hs.fullExpandTitle = \'\';
-				hs.restoreTitle = \'\';
-				hs.graphicsDir = \''.$this->FULL_HTTP_URL_MS.'js/'.$this->conf['highslide_folder'].'/graphics/\';
-				hs.transitions = [\'expand\', \'\'];
-				hs.transitionDuration=0;
-				hs.expandDuration = 0;
-				hs.restoreDuration = 0;
-				hs.transitionDuration = 0;
-				hs.outlineType = \'rounded-white\';
-				hs.fadeInOut = false;
-				hs.wrapperClassName = \'borderless\';
-				hs.showCredits = false;
-				hs.dimmingOpacity = 0.7;										
-				if (hs.addSlideshow) hs.addSlideshow({
-					interval: 5000,
-					repeat: false,
-					useControls: '.($this->conf['useHighslideControls']=='1' ? 'true' : 'false').',
-					fixedControls: \'fit\',
-					overlayOptions: {
-						opacity: .75,
-						position: \'bottom center\',
-						hideOnMouseOut: false
-					}
-				});	
-				// Highslide fixed popup mod. Requires the "Events" component.
-				if (!hs.ie || hs.uaVersion > 6) hs.extend ( hs.Expander.prototype, {
-				fix: function(on) {
-				var sign = on ? -1 : 1,
-				stl = this.wrapper.style;
-				if (!on) hs.getPageSize(); // recalculate scroll positions
-				hs.setStyles (this.wrapper, {
-				position: on ? \'fixed\' : \'absolute\',
-				zoom: 1, // IE7 hasLayout bug,
-				left: (parseInt(stl.left) + sign * hs.page.scrollLeft) +\'px\',
-				top: (parseInt(stl.top) + sign * hs.page.scrollTop) +\'px\'
-				});
-				if (this.outline) {
-				stl = this.outline.table.style;
-				hs.setStyles (this.outline.table, {
-					position: on ? \'fixed\' : \'absolute\',
-					zoom: 1, // IE7 hasLayout bug,
-					left: (parseInt(stl.left) + sign * hs.page.scrollLeft) +\'px\',
-					top: (parseInt(stl.top) + sign * hs.page.scrollTop) +\'px\'
-				});
-				}
-				this.fixed = on; // flag for use on dragging
-				},
-/*
-				onAfterExpand: function() {
-				this.fix(true); // fix the popup to viewport coordinates
-				},
-*/				
-				onBeforeClose: function() {
-				this.fix(false); // unfix to get the animation right
-				},
-				onDrop: function() {
-				this.fix(true); // fix it again after dragging
-				},
-				onDrag: function(sender, args) {
-				//if (this.fixed) { // only unfix it on the first drag event
-				this.fix(true);
-				//}
-				}
-				});
-						
-						';
-	switch ($this->lang) {
-		case 'nl':
-			$meta_tags['tx_multishop_pi1_highslide'].='
-								hs.loadingText = \'Multishop is aan het laden...\';
-								hs.lang = {
-								   loadingText :     \'Multishop is aan het laden...\',
-								   loadingTitle :    \'Klik om te annuleren\',
-								   focusTitle :      \'Klik om naar voren te brengen\',
-								   fullExpandTitle : \'Vergroot naar origineel\',
-								   fullExpandText :  \'Volledige grootte\',
-								   creditsText :     \'Powered bij <i>Highslide JS</i>\',
-								   creditsTitle :    \'Ga naar de homepage van Highslide JS\',
-								   previousText :    \'Vorige\',
-								   previousTitle :   \'Vorige (linker pijl toets)\',
-								   nextText :        \'Volgende\',
-								   nextTitle :       \'Volgende (rechter pijl toets)\',
-								   moveTitle :       \'Verplaats\',
-								   moveText :        \'Verplaats\',
-								   closeText :       \'Sluiten\',
-								   closeTitle :      \'Sluiten (esc)\',
-								   resizeTitle :     \'Verander grootte\',
-								   playText :        \'Afspelen\',
-								   playTitle :       \'Speel slidshow af (spatiebalk)\',
-								   pauseText :       \'Pauze\',
-								   pauseTitle :      \'Slideshow pauze (spatiebalk)\',
-								   number :          \'Nummer %1 van %2\',									   
-								   restoreTitle :    \'Klik om te sluiten, Klik en sleep om te verplaatsen. Gebruik pijltjes toetsen voor volgende vorige.\'
-								};							
-		';
-			break;
-		case 'no':
-			$meta_tags['tx_multishop_pi1_highslide'].='
-								hs.loadingText = \'Lastar...\';	
-								hs.lang = {
-								   loadingText :     \'Lastar...\',
-								   loadingTitle :    \'Klikk for å avbryte\',
-								   focusTitle :      \'Klikk for å flytte fram\',
-								   fullExpandText :  \'Full storleik\',
-								   fullExpandTitle : \'Utvid til full storleik\',
-								   creditsText :     \'Drive av <i>Highslide JS</i>\',
-								   creditsTitle :    \'Gå til Highslide JS si heimeside\',
-								   previousText :    \'Forrige\',
-								   previousTitle :   \'Forrige (pil venstre)\',
-								   nextText :        \'Neste\',
-								   nextTitle :       \'Neste (pil høgre)\',
-								   moveText :        \'Flytt\',
-								   moveTitle :       \'Flytt\',
-								   closeText :       \'Lukk\',
-								   closeTitle :      \'Lukk (esc)\',
-								   resizeTitle :     \'Endre storleik\',
-								   playText :        \'Spel av\',
-								   playTitle :       \'Vis biletserie (mellomrom)\',
-								   pauseText :       \'Pause\',
-								   pauseTitle :      \'Pause (mellomrom)\',  
-								   number :          \'Bilete %1 av %2\',
-								   restoreTitle :    \'Klikk for å lukke biletet, klikk og dra for å flytte. Bruk piltastane for forrige og neste.\'
-								};						
-		';
-			break;
-		case 'fr':
-			$meta_tags['tx_multishop_pi1_highslide'].='
-								hs.loadingText = \'Chargement...\';		
-								hs.lang = { 
-								   loadingText :     \'Chargement...\', 
-								   loadingTitle :    \'Cliquer pour annuler\', 
-								   focusTitle :      \'Cliquer pour amener au premier plan\', 
-								   fullExpandTitle : \'Afficher à la taille réelle\', 
-								   fullExpandText :  \'Taille réelle\', 
-								   creditsText :     \'Développé sur <i>Highslide JS</i>\', 
-								   creditsTitle :    \'Site Web de Highslide JS\', 
-								   previousText :    \'Précédent\', 
-								   previousTitle :   \'Précédent (flèche gauche)\', 
-								   nextText :        \'Suivant\', 
-								   nextTitle :       \'Suivant (flèche droite)\', 
-								   moveTitle :       \'Déplacer\', 
-								   moveText :        \'Déplacer\', 
-								   closeText :       \'Fermer\', 
-								   closeTitle :      \'Fermer (esc ou Echap)\', 
-								   resizeTitle :     \'Redimensionner\', 
-								   playText :        \'Lancer\', 
-								   playTitle :       \'Lancer le diaporama (barre d\\\'espace)\', 
-								   pauseText :       \'Pause\', 
-								   pauseTitle :      \'Suspendre le diaporama (barre d\\\'espace)\',   
-								   number :          \'Image %1 sur %2\',
-								   restoreTitle :    \'Cliquer pour fermer l\\\'image, cliquer et faire glisser pour déplacer, utiliser les touches flèches droite et gauche pour suivant et précédent.\' 
-								};			
-		';
-			break;
-		case 'es':
-			$meta_tags['tx_multishop_pi1_highslide'].='
-								hs.loadingText = \'Cargando...\';			
-								hs.lang = {
-								   loadingText :     \'Cargando...\',
-								   loadingTitle :    \'Click para cancelar\',
-								   focusTitle :      \'Click para traer al frente\',
-								   fullExpandTitle : \'Expandir al tamaño actual\',
-								   fullExpandText :  \'Tamaño real\',
-								   creditsText :     \'Potenciado por <i>Highslide JS</i>\',
-								   creditsTitle :    \'Ir al home de Highslide JS\',
-								   previousText :    \'Anterior\',
-								   previousTitle :   \'Anterior (flecha izquierda)\',
-								   nextText :        \'Siguiente\',
-								   nextTitle :       \'Siguiente (flecha derecha)\',
-								   moveTitle :       \'Mover\',
-								   moveText :        \'Mover\',
-								   closeText :       \'Cerrar\',
-								   closeTitle :      \'Cerrar (esc)\',
-								   resizeTitle :     \'Redimensionar\',
-								   playText :        \'Iniciar\',
-								   playTitle :       \'Iniciar slideshow (barra espacio)\',
-								   pauseText :       \'Pausar\',
-								   pauseTitle :      \'Pausar slideshow (barra espacio)\',
-								   restoreTitle :    \'Click para cerrar la imagen, click y arrastrar para mover. Usa las flechas del teclado para avanzar o retroceder.\'
-								};	
-		';
-			break;
-		case 'de':
-			$meta_tags['tx_multishop_pi1_highslide'].='
-								hs.loadingText = \'Lade...\';				
-								hs.lang = {
-								   loadingText :     \'Lade...\',
-								   loadingTitle :    \'Klick zum Abbrechen\',
-								   focusTitle :      \'Klick um nach vorn zu bringen\',
-								   fullExpandTitle : \'Zur Originalgröße erweitern\',
-								   fullExpandText :  \'Vollbild\',
-								   creditsText :     \'Powered by <i>Highslide JS</i>\',
-								   creditsTitle :    \'Gehe zur Highslide JS Homepage\',
-								   previousText :    \'Voriges\',
-								   previousTitle :   \'Voriges (Pfeiltaste links)\',
-								   nextText :        \'Nächstes\',
-								   nextTitle :       \'Nächstes (Pfeiltaste rechts)\',
-								   moveTitle :       \'Verschieben\',
-								   moveText :        \'Verschieben\',
-								   closeText :       \'Schließen\',
-								   closeTitle :      \'Schließen (Esc)\',
-								   resizeTitle :     \'Größe wiederherstellen\',
-								   playText :        \'Abspielen\',
-								   playTitle :       \'Slideshow abspielen (Leertaste)\',
-								   pauseText :       \'Pause\',
-								   pauseTitle :      \'Pausiere Slideshow (Leertaste)\',
-								   restoreTitle :    \'Klick um das Bild zu schließen, klick und ziehe um zu verschieben. Benutze Pfeiltasten für vor und zurück.\'
-								};
-		';
-			break;
-		case 'dn':
-			$meta_tags['tx_multishop_pi1_highslide'].='
-								hs.loadingText = \'Henter...\';					
-								hs.lang = { 
-								   loadingText :     \'Henter...\', 
-								   loadingTitle :    \'Klik for at stoppe\', 
-								   focusTitle :      \'Klik for at bringe først på skærm\', 
-								   fullExpandTitle : \'Vis i original størrelse\', 
-								   fullExpandText :  \'Fuld størrelse\', 
-								   creditsText :     \'Vist med  <i>Highslide JS</i>\', 
-								   creditsTitle :    \'Gå til  Highslide JS\'s hjemmeside\', 
-								   previousText :    \'Forrige\', 
-								   previousTitle :   \'forrige (arrow left)\', 
-								   nextText :        \'Næste\', 
-								   nextTitle :       \'Næste (arrow right)\', 
-								   moveTitle :       \'Flyt\', 
-								   moveText :        \'Flyt\', 
-								   closeText :       \'Luk\', 
-								   closeTitle :      \'Luk (esc)\', 
-								   resizeTitle :     \'Ændre størrelse\', 
-								   playText :        \'Start\', 
-								   playTitle :       \'Start slideshow (spacebar)\', 
-								   pauseText :       \'Pause\', 
-								   pauseTitle :      \'Pause slideshow (spacebar)\', 
-								   restoreTitle :    \'Klik for at lukke billed, klik og træk for at flytte. Brug piletaster for at skifte forrige og næste billed.\' 
-								};
-		';
-			break;
-		case 'it':
-			$meta_tags['tx_multishop_pi1_highslide'].='
-								hs.loadingText = \'Caricamento in corso...\';						
-								hs.lang = {
-								  loadingText :     \'Caricamento in corso\',
-								  loadingTitle :    \'Fare clic per annullare\',
-								  focusTitle :      \'Fare clic per portare in avanti\',
-								  fullExpandTitle : \'Visualizza dimensioni originali\',
-								  fullExpandText :  \'Dimensione massima\',
-								  creditsText :     \'Powered by <i>Highslide JS</i>\',
-								  creditsTitle :    \'Vai al sito Web di Highslide JS\',
-								  previousText :    \'Precedente\',
-								  previousTitle :   \'Precedente (freccia sinistra)\',
-								  nextText :        \'Successiva\',
-								  nextTitle :       \'Successiva (freccia destra)\',
-								  moveTitle :       \'Sposta\',
-								  moveText :        \'Sposta\',
-								  closeText :       \'Chiudi\',
-								  closeTitle :      \'Chiudi (Esc)\',
-								  resizeTitle :     \'Ridimensiona\',
-								  playText :        \'Avvia\',
-								  playTitle :       \'Avvia slideshow (barra spaziatrice)\',
-								  pauseText :       \'Pausa\',
-								  pauseTitle :      \'Pausa slideshow (barra spaziatrice)\',
-								  restoreTitle :    \'Fare clic per chiudere l\\\'immagine, trascina per spostare. Frecce andare avanti e indietro.\'
-								};
-		';
-			break;
-		default:
-			$meta_tags['tx_multishop_pi1_highslide'].='
-		hs.loadingText = \'Multishop is loading...\';
-		';
-			break;
-	}
-	$meta_tags['tx_multishop_pi1_highslide'].='
-	</script>
-	';
 }
 ?>

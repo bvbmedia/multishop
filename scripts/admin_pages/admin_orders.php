@@ -5,12 +5,8 @@ if (!defined('TYPO3_MODE')) {
 $all_orders_status=mslib_fe::getAllOrderStatus();
 if ($this->post['tx_multishop_pi1']['edit_order']==1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
 	$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->post['tx_multishop_pi1']['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal']);
-	$GLOBALS['TSFE']->additionalHeaderData[]='
-	<script type="text/javascript">
-	jQuery(document).ready(function($){
-		hs.htmlExpand(null, {contentId: \'highslide-html2\', objectType: \'iframe\', width: 980, height: $(document).height(),src: \''.$url.'\'} );
-	});
-	</script>';
+	header('Location: '.$url);
+	exit();
 }
 if (!$this->post['tx_multishop_pi1']['action'] && $this->get['tx_multishop_pi1']['action']) {
 	$this->post['tx_multishop_pi1']['action']=$this->get['tx_multishop_pi1']['action'];

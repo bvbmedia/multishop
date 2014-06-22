@@ -264,33 +264,7 @@ $tabs['Invoices_By_Date']=array(
 );
 $tmp='';
 $content.='
-<script type="text/javascript"> 
-        function submitToHighslide(form) {
-           // identify the submit button to start the animation from
-           var anchor;
-           for (var i = 0; i < form.elements.length; i++) {
-              if (form.elements[i].type == "submit") {
-                anchor = form.elements[i];
-                break;
-             }
-          }
-          // open an expander and submit our form when the iframe is ready
-          hs.overrides.push("onAfterExpand");
-          hs.htmlExpand(anchor, {
-             objectType: "iframe",
-             src: "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax&action=edit_order',1).'",
-             width: 380,
-             height: 90,
-             onAfterExpand: function(expander) {
-                form.target = expander.iframe.name;
-                form.submit();
-             }
-          });
-
-          // return false to delay the sumbit until the iframe is ready
-          return false;
-       }
-       
+<script type="text/javascript">
 jQuery(document).ready(function($) {
 	jQuery(".tab_content").hide(); 
 	jQuery("ul.tabs li:first").addClass("active").show();
