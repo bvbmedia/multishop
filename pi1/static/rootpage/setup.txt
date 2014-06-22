@@ -21,7 +21,6 @@ multishop_pi1.value =
 plugin.tx_multishop_pi1 {
 	product_detail_tmpl={$plugin.multishop.product_detail_tmpl}
 	product_detail_tmpl_path={$plugin.multishop.product_detail_tmpl_path}
-	highslide_css={$plugin.multishop.highslide_css}
 	includeJS={$plugin.multishop.includeJS}
 	includeCSS={$plugin.multishop.includeCSS}
 	shop_pid={$plugin.multishop.shop_pid}
@@ -38,11 +37,9 @@ plugin.tx_multishop_pi1 {
 	admin_template_folder={$plugin.multishop.admin_template_folder}
 	includejCarousel={$plugin.multishop.includejCarousel}
 	logout_pid={$plugin.multishop.logout_pid}
-	includeHighSlide={$plugin.multishop.includeHighSlide}
 	search_page_pid={$plugin.multishop.search_page_pid}
 	shoppingcart_page_pid={$plugin.multishop.shoppingcart_page_pid}
 	checkout_page_pid={$plugin.multishop.checkout_page_pid}
-	highslide_folder={$plugin.multishop.highslide_folder}
 	admin_help_url={$plugin.multishop.admin_help_url}
 	admin_development_company_url={$plugin.multishop.admin_development_company_url}
 	admin_development_company_name={$plugin.multishop.admin_development_company_name}
@@ -72,8 +69,6 @@ plugin.tx_multishop_pi1 {
 	products_listing_tmpl_path={$plugin.multishop.products_listing_tmpl_path}
 	specials_sections_products_listing_tmpl={$plugin.multishop.specials_sections_products_listing_tmpl}
     specials_sections_products_listing_tmpl_path={$plugin.multishop.specials_sections_products_listing_tmpl_path}
-	alwaysIncludeHighSlide={$plugin.multishop.alwaysIncludeHighSlide}
-	useHighslideControls={$plugin.multishop.useHighslideControls}
 	html_box_tmpl={$plugin.multishop.html_box_tmpl}
 	html_box_tmpl_path={$plugin.multishop.html_box_tmpl_path}
 	cacheConfiguration={$plugin.multishop.cacheConfiguration}
@@ -323,67 +318,6 @@ page {
 	}
 }
 [end]
-[globalVar = LIT:1 = {$plugin.multishop.includeHighSlide}] && [usergroup = {$plugin.multishop.fe_admin_usergroup}, {$plugin.multishop.fe_rootadmin_usergroup}]
-page {
-  includeCSS {
-    highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
-    highslide {
-      media = 
-      import = 0
-      compress=1
-    }
-  }
-  includeJS {
-    jqueryHighSlide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide-full.packed.js
-    jqueryHighSlide.compress=1
-  }
-}
-multishop_admin_page {
-  includeCSS {
-    highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
-    highslide {
-      media = 
-      import = 0
-      compress=1
-    }
-  }
-  includeJS {
-    jqueryHighSlide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide-full.packed.js
-    jqueryHighSlide.compress=1
-  }
-}
-[end]
-[globalVar = LIT:1 = {$plugin.multishop.alwaysIncludeHighSlide}]
-page {
-  includeCSS {
-    highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
-    highslide {
-      media = 
-      import = 0
-      compress=1
-    }
-  }
-  includeJS {
-    jqueryHighSlide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide-full.packed.js
-    jqueryHighSlide.compress=1
-  }
-}
-multishop_admin_page {
-  includeCSS {
-    highslide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide.css
-    highslide {
-      media = 
-      import = 0
-      compress=1
-    }
-  }
-  includeJS {
-    jqueryHighSlide = EXT:multishop/js/{$plugin.multishop.highslide_folder}/highslide-full.packed.js
-    jqueryHighSlide.compress=1
-  }
-}
-[end]
-
 [usergroup = {$plugin.multishop.fe_admin_usergroup}, {$plugin.multishop.fe_rootadmin_usergroup}]
 page {
   includeJS.msAdminPanel = EXT:multishop/js/admin/admin_panel.js

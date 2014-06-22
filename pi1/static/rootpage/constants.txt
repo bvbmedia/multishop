@@ -52,8 +52,6 @@ plugin.multishop {
 	includejCarousel =1	
 	# cat=plugin.multishop - optional/file; type=string; label= Admin template skin: Folder of the admin template. Example: EXT:multishop/templates/admin_multishop.	
 	admin_template_folder=EXT:multishop/templates/admin_multishop
-	# cat=plugin.multishop - optional/file; type=string; label= Highslide folder: Folder name of Highslide. Example: highslide (for black outlines) or highslide-white (for white outlines).	
-	highslide_folder=highslide-white
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend logout page: Optional field. The ID number of the page where the logout content element is put on.
 	logout_pid =
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend login page: Optional field. The ID number of the page where the (felogin) login content element is put on.
@@ -64,9 +62,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend edit account page: Optional field. The ID number of the page where the front end user can adjust his user details.
 	edit_account_pid =	
-	
-	# cat=plugin.multishop - optional/enable; type=boolean; label= Include HighSlide library: 
-	includeHighSlide =1
+
 	# cat=plugin.multishop - optional/file; type=string; label= Admin help URL: The link that must be added on the Help button in the admin panel. Example: http://www.typo3multishop.com.
 	admin_help_url=http://www.typo3multishop.com
 	
