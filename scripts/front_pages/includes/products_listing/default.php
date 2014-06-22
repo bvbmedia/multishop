@@ -143,15 +143,13 @@ foreach ($products as $current_product) {
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 }
 // fill the row marker with the expanded rows
+$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
 if ($current['content']) {
 	$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='<div class="categories_top_description">'.trim($current['content']).'</div>';
-} else {
-	$subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
 }
+$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='';
 if ($current['content_footer']) {
-	$subpartArray['###CURRENT_CATEGORIES_FOOTER_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
-} else {
-	$subpartArray['###CURRENT_CATEGORIES_FOOTER_DESCRIPTION###']='';
+	$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
 }
 $subpartArray['###CURRENT_CATEGORIES_NAME###']=trim($current['categories_name']);
 $subpartArray['###ITEM###']=$contentItem;
