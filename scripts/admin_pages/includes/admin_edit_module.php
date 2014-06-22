@@ -4,25 +4,21 @@ if (!defined('TYPO3_MODE')) {
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
-window.onload = function(){
-  var text_input = document.getElementById (\'configuration[local]\');
-  text_input.focus ();
-  text_input.select ();
-}
-</script>
-';
-$GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript">
 jQuery(document).ready(function($) {
-	jQuery(".tab_content").hide();
-	jQuery("ul.tabs li:first").addClass("active").show();
-	jQuery(".tab_content:first").show();
-	jQuery("ul.tabs li").click(function() {
-		jQuery("ul.tabs li").removeClass("active");
-		jQuery(this).addClass("active");
-		jQuery(".tab_content").hide();
-		var activeTab = jQuery(this).find("a").attr("href");
-		jQuery(activeTab).fadeIn(0);
+	if ($(\'#configuration[local]\').length) {
+		var text_input = $(\'#configuration[local]\');
+  		text_input.focus ();
+  		text_input.select ();
+  	}
+	$(".tab_content").hide();
+	$("ul.tabs li:first").addClass("active").show();
+	$(".tab_content:first").show();
+	$("ul.tabs li").click(function() {
+		$("ul.tabs li").removeClass("active");
+		$(this).addClass("active");
+		$(".tab_content").hide();
+		var activeTab = $(this).find("a").attr("href");
+		$(activeTab).fadeIn(0);
 		return false;
 	});
 });
@@ -80,10 +76,10 @@ if ($this->post and $_REQUEST['action']=='edit_module') {
 	}
 	$string='loadConfiguration_'.$this->shop_pid;
 	if ($this->post['tx_multishop_pi1']['referrer']) {
-		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+		header("Location: ".$this->post['tx_multishop_pi1']['referrer']."#module".$this->post['tx_multishop_pi1']['gid']);
 		exit();
 	} else {
-		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules', 1));
+		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules&gid='.$this->post['gid'], 1));
 		exit();
 	}
 }
@@ -137,6 +133,7 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$content.='
 	<input name="configuration_key" type="hidden" value="'.$configuration['configuration_key'].'" />
 	<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
+	<input name="tx_multishop_pi1[gid]" type="hidden" value="'.$this->get['tx_multishop_pi1']['gid'].'" />
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	</form>';
 	$content.='

@@ -22,17 +22,28 @@ jQuery(document).ready(function($) {
 	$(".msadminTooltip").tooltip({
 		position: "bottom"
 	});
-	jQuery(".tab_content").hide();
-	jQuery("ul.tabs li:first").addClass("active").show();
-	jQuery(".tab_content:first").show();
-	jQuery("ul.tabs li").click(function() {
-		jQuery("ul.tabs li").removeClass("active");
-		jQuery(this).addClass("active");
-		jQuery(".tab_content").hide();
-		var activeTab = jQuery(this).find("a").attr("href");
-		jQuery(activeTab).fadeIn(0);
+	$(".tab_content").hide();
+	$("ul.tabs li:first").addClass("active").show();
+	$(".tab_content:first").show();
+	$("ul.tabs li").click(function() {
+		$("ul.tabs li").removeClass("active");
+		$(this).addClass("active");
+		$(".tab_content").hide();
+		var activeTab = $(this).find("a").attr("href");
+		$(activeTab).fadeIn(0);
+		window.location.hash=activeTab;
 		return false;
 	});
+	var lochash=window.location.hash;
+	if (lochash!="") {
+		var li_this=$("ul > li").find("a[href=\'" + lochash + "\']").parent();
+		$("ul.tabs li").removeClass("active");
+		$(li_this).addClass("active");
+		$(".tab_content").hide();
+		var activeTab = lochash;
+		$(activeTab).fadeIn(0);
+	}
+
 });
 </script>
 ';
@@ -71,7 +82,7 @@ foreach ($categories as $cat) {
 		if (strlen($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']])>$maxchars) {
 			$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']]=substr($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']], 0, $maxchars).'...';
 		}
-		$editLink=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$row['id'].'&action=edit_module', 1);
+		$editLink=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[gid]='.$cat['gid'].'&module_id='.$row['id'].'&action=edit_module', 1);
 //		$row['description']='';
 		$innerContent.='<tr class="'.$tr_type.'">
 		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_title'].'</h3>'.$row['description']).'" class="msadminTooltip">'.$row['configuration_key'].'</a></strong></td>
