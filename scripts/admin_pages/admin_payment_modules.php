@@ -2,279 +2,17 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$active_shop=mslib_fe::getActiveShop();
-$GLOBALS['TSFE']->additionalHeaderData[]='
-<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
-<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	$(\'.mceEditor\').redactor({
-		focus: false,
-		clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
-		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
-		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
-		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
-		minHeight:\'400\'
-	});
-	$("#add_payment_method").click(function(e){
-		e.preventDefault();
-		$(\'#admin_payment_methods_list\').slideToggle(\'slow\', function(){});
-	});
-});
-</script>
-';
-$default_payment_methods=mslib_fe::loadAllPaymentMethods();
-$mslib_payment=t3lib_div::makeInstance('mslib_payment');
-$mslib_payment->init($this);
-$payment_methods=array();
-$payment_methods=$mslib_payment->getInstalledPaymentMethods($this);
-if (count($payment_methods)>0) {
-	// merge default and installed payment
-	$payment_methods=array_merge($default_payment_methods, $payment_methods);
-} else {
-	$payment_methods=$default_payment_methods;
-}
-//$content.=mslib_befe::print_r($payment_methods);
-if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']) {
-	// update payment method
-	$row=mslib_fe::getPaymentMethod($_REQUEST['payment_method_id'], 'p.id');
-	if ($row['id']) {
-		/* $data=unserialize($row['vars']);
-		foreach ($this->post as $key => $value)
-		{
-			$data[$key]=trim($this->post[$key]);
-		} */
-		// now update the baby
-		$updateArray=array();
-		$updateArray['page_uid']=$this->post['related_shop_pid'];
-		$updateArray['handling_costs']=$this->post['handling_costs'];
-		$updateArray['tax_id']=$this->post['tax_id'];
-		$updateArray['vars']=serialize($this->post);
-		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\''.$row['id'].'\'', $updateArray);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		foreach ($this->post['name'] as $key=>$value) {
-			$updateArray=array();
-			$updateArray['name']=$this->post['name'][$key];
-			$updateArray['description']=$this->post['description'][$key];
-			$str="select 1 from tx_multishop_payment_methods_description where id='".$row['id']."' and language_id='".$key."'";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\''.$row['id'].'\' and language_id=\''.$key.'\'', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			} else {
-				$updateArray['id']=$row['id'];
-				$updateArray['language_id']=$key;
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_description', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			}
-		}
-		$this->ms['show_main']=1;
-	}
-} elseif ($this->get['edit']) {
-	$row=mslib_fe::getPaymentMethod($_REQUEST['payment_method_id'], 'p.id');
-	$str="SELECT * from tx_multishop_payment_methods_description where id='".$row['id']."'";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$lngproduct=array();
-	while (($tmprow=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$lngproduct[$tmprow['language_id']]=$tmprow;
-	}
-	$psp=$payment_methods[$row['provider']];
-	$inner_content=mslib_fe::parsePaymentMethodEditForm($psp, unserialize($row['vars']), 1);
-	$tmpcontent.='
-		<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
-		<input name="sub" type="hidden" value="update_payment_method" />
-		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />
-';
-	foreach ($this->languages as $key=>$language) {
-		$tmpcontent.='
-		<div class="account-field">
-		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
-		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-		}
-		$tmpcontent.=''.$language['title'].'
-		</div>	
-		<div class="account-field">
-			<label for="name">'.$this->pi_getLL('admin_name').'</label>
-			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">
-		</div>		
-		<div class="account-field">
-			<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
-			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>			
-		</div>		
-		';
-	}
-	$cost_tax_rate=0;
-	$data=mslib_fe::getTaxRuleSet($row['tax_id'], $row['handling_costs']);
-	$cost_tax_rate=$data['total_tax_rate'];
-	$cost_tax=mslib_fe::taxDecimalCrop(($row['handling_costs']*$cost_tax_rate)/100);
-	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($row['handling_costs'], 2, false);
-	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($row['handling_costs']+$cost_tax, 2, false);
-	$tmpcontent.='
-
-		<div class="account-field">
-			<label>'.$this->pi_getLL('code').'</label>
-			'.$row['code'].'
-		</div>';
-	if (count($active_shop)>1) {
-		$tmpcontent.='
-						<div class="account-field">
-							<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
-							<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
-		foreach ($active_shop as $pageinfo) {
-			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($row['page_uid']==$pageinfo['puid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
-		}
-		$tmpcontent.='
-						</div>';
-	} else {
-		$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
-	}
-	$tmpcontent.='
-		<div class="account-field">
-			<label>'.$this->pi_getLL('handling_costs').'</label>
-			<div class="msAttribute">
-				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$row['handling_costs'].'" /></div>
-			</div>
-		</div>
-		<div class="account-field">
-		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
-		<select name="tax_id" id="tax_id"><option value="0"'.$this->pi_getLL('admin_label_no_tax').'</option>';
-	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
-	}
-	$tmpcontent.='
-		</select>
-	</div>				
-			'.$inner_content.'
-		<div class="account-field">
-			<label for="">&nbsp;</label>
-			<input name="Submit" type="submit" class="msadmin_button" value="'.$this->pi_getLL('save').'" />
-		</div>				
-		</form>		
-	';
-	$tmpcontent.='
-		<script type="text/javascript" language="JavaScript">
-			function productPrice(to_include_vat, o, type) {
-				var original_val	= o.val();
-				var current_value 	= parseFloat(o.val());
-				var tax_id 			= jQuery("#tax_id").val();
-		
-				if (current_value > 0) {
-					if (to_include_vat) {
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
-    						if (json && json.price_including_tax) {
-								var incl_tax_crop = decimalCrop(json.price_including_tax);
-		
-								o.parent().next().first().children().val(incl_tax_crop);
-							} else {
-								o.parent().next().first().children().val(current_value);
-							}
-    					});
-				
-						// update the hidden excl vat
-						o.parent().next().next().first().children().val(original_val);
-		
-					} else {
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
-    						if (json && json.price_excluding_tax) {
-								var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-		
-								// update the excl. vat
-								o.parent().prev().first().children().val(excl_tax_crop);
-		
-								// update the hidden excl vat
-								o.parent().next().first().children().val(json.price_excluding_tax);
-					
-							} else {
-								// update the excl. vat
-								o.parent().prev().first().children().val(original_val);
-		
-								// update the hidden excl vat
-								o.next().parent().first().next().first().children().val(original_val);
-							}
-    					});
-					}
-			
-				} else {
-					if (to_include_vat) {
-						// update the incl. vat
-						o.parent().next().first().children().val(0);
-		
-						// update the hidden excl vat
-						o.parent().next().next().first().children().val(0);
-			
-					} else {
-						// update the excl. vat
-						o.parent().prev().first().children().next().val(0);
-		
-						// update the hidden excl vat
-						o.next().parent().first().next().first().children().val(0);
-					}
-				}
-			}
-		
-			function decimalCrop(float) {
-				var numbers = float.toString().split(".");
-				var prime 	= numbers[0];
-					
-				if (numbers[1] > 0 && numbers[1] != "undefined") {
-					var decimal = new String(numbers[1]);
-				} else {
-					var decimal = "00";
-				}
-					
-				var number = prime + "." + decimal.substr(0, 2);
-			
-				return number;
-			}
-			
-			function mathRound(float) {
-				//return float;
-				return Math.round(float*100)/100;
-			}
-					
-			jQuery(document).ready(function($) {
-				jQuery(".msHandlingCostExcludingVat").keyup(function() {
-					productPrice(true, jQuery(this));
-				});
-			
-				jQuery("#tax_id").change(function() {
-					jQuery(".msHandlingCostExcludingVat").each(function(i) {
-						productPrice(true, jQuery(this));
-					});
-				});
-			
-				jQuery(".msHandlingCostIncludingVat").keyup(function() {
-					productPrice(false, jQuery(this));
-				});
-			});
-		</script>
-		';
-	$content.=$tmpcontent;
-} elseif ($_REQUEST['sub']=='add_payment_method' and $_REQUEST['payment_method_code']) {
-	if ($this->post) {
+if ($this->post) {
+	if ($this->post['sub']=='add_payment_method' && $this->post['payment_method_code']) {
 		$erno=array();
 		$check=mslib_fe::getPaymentMethod($this->post['custom_code'], 'p.code');
 		if ($check['id']) {
 			$erno[]='<li>Code already in use</li>';
 		}
-		if (is_array($erno) and count($erno)>0) {
-			$content.='<div class="error_msg">';
-			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach ($erno as $item) {
-				$content.='<li>'.$item.'</li>';
-			}
-			$content.='</ul>';
-			$content.='</div>';
-		} else {
+		if (!count($erno)) {
 			$this->post['custom_code']=trim($this->post['custom_code']);
 			$this->post['handling_costs']=trim($this->post['handling_costs']);
-			$_REQUEST['payment_method_code']=trim($_REQUEST['payment_method_code']);
+			$this->post['payment_method_code']=trim($this->post['payment_method_code']);
 			// save payment method
 			$insertArray=array();
 			$insertArray['code']=$this->post['custom_code'];
@@ -284,7 +22,7 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 			$insertArray['date']=time();
 			$insertArray['status']=1;
 			$insertArray['page_uid']=$this->post['related_shop_pid'];
-			$insertArray['provider']=$_REQUEST['payment_method_code'];
+			$insertArray['provider']=$this->post['payment_method_code'];
 			$insertArray['vars']=serialize($this->post);
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -309,33 +47,307 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 				$this->ms['show_main']=1;
 			}
 		}
-	}
-	if ($erno or !$this->post) {
-		$psp=$payment_methods[$_REQUEST['payment_method_code']];
-		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
-		foreach ($this->languages as $key=>$language) {
-			$tmpcontent.='
-		<div class="account-field">
-		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
+	} else if ($this->post['sub']=='update_payment_method' && $this->post['payment_method_id']) {
+		// update payment method
+		$row=mslib_fe::getPaymentMethod($this->post['payment_method_id'], 'p.id');
+		if ($row['id']) {
+			// now update the baby
+			$updateArray=array();
+			$updateArray['page_uid']=$this->post['related_shop_pid'];
+			$updateArray['handling_costs']=$this->post['handling_costs'];
+			$updateArray['tax_id']=$this->post['tax_id'];
+			$updateArray['vars']=serialize($this->post);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\''.$row['id'].'\'', $updateArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			foreach ($this->post['name'] as $key=>$value) {
+				$updateArray=array();
+				$updateArray['name']=$this->post['name'][$key];
+				$updateArray['description']=$this->post['description'][$key];
+				$str="select 1 from tx_multishop_payment_methods_description where id='".$row['id']."' and language_id='".$key."'";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_description', 'id=\''.$row['id'].'\' and language_id=\''.$key.'\'', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				} else {
+					$updateArray['id']=$row['id'];
+					$updateArray['language_id']=$key;
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_description', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
 			}
-			$tmpcontent.=''.$language['title'].'
+			$this->ms['show_main']=1;
+		}
+	}
+}
+$active_shop=mslib_fe::getActiveShop();
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
+<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
+<script type="text/javascript">
+function productPrice(to_include_vat, o, type) {
+	var original_val = o.val();
+	var current_value = parseFloat(o.val());
+	var tax_id = jQuery("#tax_id").val();
+	if (current_value > 0) {
+		if (to_include_vat) {
+			jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
+				if (json && json.price_including_tax) {
+					var incl_tax_crop = decimalCrop(json.price_including_tax);
+
+					o.parent().next().first().children().val(incl_tax_crop);
+				} else {
+					o.parent().next().first().children().val(current_value);
+				}
+			});
+
+			// update the hidden excl vat
+			o.parent().next().next().first().children().val(original_val);
+		} else {
+			jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
+				if (json && json.price_excluding_tax) {
+					var excl_tax_crop = decimalCrop(json.price_excluding_tax);
+
+					// update the excl. vat
+					o.parent().prev().first().children().val(excl_tax_crop);
+
+					// update the hidden excl vat
+					o.parent().next().first().children().val(json.price_excluding_tax);
+
+				} else {
+					// update the excl. vat
+					o.parent().prev().first().children().val(original_val);
+
+					// update the hidden excl vat
+					o.next().parent().first().next().first().children().val(original_val);
+				}
+			});
+		}
+	} else {
+		if (to_include_vat) {
+			// update the incl. vat
+			o.parent().next().first().children().val(0);
+
+			// update the hidden excl vat
+			o.parent().next().next().first().children().val(0);
+
+		} else {
+			// update the excl. vat
+			o.parent().prev().first().children().next().val(0);
+
+			// update the hidden excl vat
+			o.next().parent().first().next().first().children().val(0);
+		}
+	}
+}
+function decimalCrop(float) {
+	var numbers = float.toString().split(".");
+	var prime 	= numbers[0];
+	if (numbers[1] > 0 && numbers[1] != "undefined") {
+		var decimal = new String(numbers[1]);
+	} else {
+		var decimal = "00";
+	}
+	var number = prime + "." + decimal.substr(0, 2);
+	return number;
+}
+function mathRound(float) {
+	//return float;
+	return Math.round(float*100)/100;
+}
+jQuery(document).ready(function($) {
+	$(\'.mceEditor\').redactor({
+		focus: false,
+		clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+		minHeight:\'400\'
+	});
+	$("#add_payment_method").click(function(e){
+		e.preventDefault();
+		$(\'#admin_payment_methods_list\').slideToggle(\'slow\', function(){});
+	});
+	$(document).on("keyup", ".msHandlingCostExcludingVat", function() {
+		productPrice(true, jQuery(this));
+	});
+	$(document).on("change", "#tax_id", function() {
+		$(".msHandlingCostExcludingVat").each(function(i) {
+			productPrice(true, jQuery(this));
+		});
+	});
+	$(document).on("keyup", ".msHandlingCostIncludingVat", function() {
+		productPrice(false, jQuery(this));
+	});
+	$(document).on("change", "#handling_cost_type", function(){
+		if ($(this).val()=="amount") {
+			$("#handling_cost_amount_div").show();
+			$("#handling_cost_amount_input").removeAttr("disabled");
+			$("#handling_cost_percentage_div").hide();
+			$("#handling_cost_percentage_input").attr("disabled", "disabled");
+		} else if ($(this).val()=="percentage") {
+			$("#handling_cost_amount_div").hide();
+			$("#handling_cost_amount_input").attr("disabled", "disabled");
+			$("#handling_cost_percentage_div").show();
+			$("#handling_cost_percentage_input").removeAttr("disabled");
+		}
+	});
+});
+</script>
+';
+$default_payment_methods=mslib_fe::loadAllPaymentMethods();
+$mslib_payment=t3lib_div::makeInstance('mslib_payment');
+$mslib_payment->init($this);
+$payment_methods=array();
+$payment_methods=$mslib_payment->getInstalledPaymentMethods($this);
+if (count($payment_methods)>0) {
+	// merge default and installed payment
+	$payment_methods=array_merge($default_payment_methods, $payment_methods);
+} else {
+	$payment_methods=$default_payment_methods;
+}
+//$content.=mslib_befe::print_r($payment_methods);
+if ($this->get['edit']) {
+	$row=mslib_fe::getPaymentMethod($this->get['payment_method_id'], 'p.id');
+	$str="SELECT * from tx_multishop_payment_methods_description where id='".$row['id']."'";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	$lngproduct=array();
+	while (($tmprow=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$lngproduct[$tmprow['language_id']]=$tmprow;
+	}
+	$psp=$payment_methods[$row['provider']];
+	$inner_content=mslib_fe::parsePaymentMethodEditForm($psp, unserialize($row['vars']), 1);
+	$tmpcontent.='<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+		<input name="sub" type="hidden" value="update_payment_method" />
+		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />';
+	foreach ($this->languages as $key=>$language) {
+		$tmpcontent.='<div class="account-field">
+		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
+		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
+			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
+		}
+		$tmpcontent.=$language['title'].'
 		</div>	
 		<div class="account-field">
 			<label for="name">'.$this->pi_getLL('admin_name').'</label>
-			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'">
+			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
 		</div>		
 		<div class="account-field">
 			<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
 			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>			
-		</div>		
-		';
+		</div>';
+	}
+	$cost_tax_rate=0;
+	$percentage_handling_cost=$row['handling_costs'];
+	if (strpos($percentage_handling_cost, '%')===FALSE) {
+		$tmp_phc=explode('.', $percentage_handling_cost);
+		if (isset($tmp_phc[1])>0) {
+			$percentage_handling_cost=mslib_fe::taxDecimalCrop($percentage_handling_cost, 2, false).'%';
+		} else {
+			$percentage_handling_cost=$percentage_handling_cost.'%';
+		}
+	}
+	$amount_handling_cost=str_replace('%', '', $row['handling_costs']);
+	$data=mslib_fe::getTaxRuleSet($row['tax_id'], $amount_handling_cost);
+	$cost_tax_rate=$data['total_tax_rate'];
+	$cost_tax=mslib_fe::taxDecimalCrop(($amount_handling_cost*$cost_tax_rate)/100);
+	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost, 2, false);
+	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost+$cost_tax, 2, false);
+	$tmpcontent.='<div class="account-field">
+		<label>'.$this->pi_getLL('code').'</label>
+		'.$row['code'].'
+	</div>';
+	if (count($active_shop)>1) {
+		$tmpcontent.='<div class="account-field">
+			<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
+			<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
+		foreach ($active_shop as $pageinfo) {
+			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($row['page_uid']==$pageinfo['puid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
+		}
+		$tmpcontent.='</div>';
+	} else {
+		$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
+	}
+	$percentage_cost=false;
+	if (strpos($row['handling_costs'], '%')!==false) {
+		$percentage_cost=true;
+	}
+	$tmpcontent.='
+		<div class="account-field">
+			<label>'.$this->pi_getLL('handling_costs_type').'</label>
+			<div class="msAttribute">
+				<select name="handling_costs_type" id="handling_cost_type">
+					<option value="amount"'.(!$percentage_cost ? ' selected="selected"' : '').'>amount</option>
+					<option value="percentage"'.($percentage_cost ? ' selected="selected"' : '').'>percentage</option>
+				</select>
+			</div>
+		</div>
+		<div class="account-field" id="handling_cost_percentage_div"'.(!$percentage_cost ? ' style="display:none"' : '').'>
+			<label>'.$this->pi_getLL('handling_costs').'</label>
+			<div class="msAttribute">
+				<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="'.$percentage_handling_cost.'"'.(!$percentage_cost ? ' disabled="disabled"' : '').' />
+			</div>
+		</div>
+		<div class="account-field" id="handling_cost_amount_div"'.($percentage_cost ? ' style="display:none"' : '').'>
+			<label>'.$this->pi_getLL('handling_costs').'</label>
+			<div class="msAttribute">
+				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$amount_handling_cost.'" id="handling_cost_amount_input"'.($percentage_cost ? ' disabled="disabled"' : '').' /></div>
+			</div>
+		</div>
+		<div class="account-field">
+		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
+		<select name="tax_id" id="tax_id"><option value="0"'.$this->pi_getLL('admin_label_no_tax').'</option>';
+	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+	}
+	$tmpcontent.='
+		</select>
+	</div>
+			'.$inner_content.'
+		<div class="account-field">
+			<label for="">&nbsp;</label>
+			<input name="Submit" type="submit" class="msadmin_button" value="'.$this->pi_getLL('save').'" />
+		</div>				
+	</form>';
+	$content.=$tmpcontent;
+} else if ($this->get['sub']=='add_payment_method' && $this->get['payment_method_code']) {
+	if ($erno or !$this->post) {
+		if (count($erno)) {
+			$content.='<div class="error_msg">';
+			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
+			foreach ($erno as $item) {
+				$content.='<li>'.$item.'</li>';
+			}
+			$content.='</ul>';
+			$content.='</div>';
+		}
+		$psp=$payment_methods[$this->get['payment_method_code']];
+		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
+		foreach ($this->languages as $key=>$language) {
+			$tmpcontent.='<div class="account-field">
+				<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
+			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
+				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
+			}
+			$tmpcontent.=''.$language['title'].'
+				</div>
+				<div class="account-field">
+					<label for="name">'.$this->pi_getLL('admin_name').'</label>
+					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
+				</div>
+				<div class="account-field">
+					<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
+				</div>';
 		}
 		$tmpcontent.='
 		<div class="account-field">
 			<label for="custom_code">'.$this->pi_getLL('code').'</label>
-			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($_REQUEST['custom_code']).'" required="required" />
+			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($this->post['custom_code']).'" required="required" />
 		</div>';
 		if (count($active_shop)>1) {
 			$tmpcontent.='
@@ -390,132 +402,11 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		$tmpcontent.='
 		<div class="account-field">
 			<label>&nbsp;</label>
-			<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($_REQUEST['payment_method_code']).'" />
+			<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($this->get['payment_method_code']).'" />
 			<input name="sub" type="hidden" value="add_payment_method" />
 			<input name="Submit" class="msadmin_button" type="submit" value="'.$this->pi_getLL('save').'" />
 		</div>
-		</form>
-		<script type="text/javascript" language="JavaScript">
-			function productPrice(to_include_vat, o, type) {
-				var original_val	= o.val();
-				var current_value 	= parseFloat(o.val());
-				var tax_id 			= jQuery("#tax_id").val();
-				
-				if (current_value > 0) {
-					if (to_include_vat) {
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
-    						if (json && json.price_including_tax) {
-								var incl_tax_crop = decimalCrop(json.price_including_tax);
-								
-								o.parent().next().first().children().val(incl_tax_crop);
-							} else {
-								o.parent().next().first().children().val(current_value);
-							}
-    					});
-							
-						// update the hidden excl vat
-						o.parent().next().next().first().children().val(original_val);
-						
-					} else {
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
-    						if (json && json.price_excluding_tax) {
-								var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-								
-								// update the excl. vat
-								o.parent().prev().first().children().val(excl_tax_crop);
-								
-								// update the hidden excl vat
-								o.parent().next().first().children().val(json.price_excluding_tax);
-									
-							} else {
-								// update the excl. vat
-								o.parent().prev().first().children().val(original_val);
-								
-								// update the hidden excl vat
-								o.next().parent().first().next().first().children().val(original_val);
-							}
-    					});
-					}
-					
-				} else {
-					if (to_include_vat) {
-						// update the incl. vat
-						o.parent().next().first().children().val(0);
-						
-						// update the hidden excl vat
-						o.parent().next().next().first().children().val(0);
-					
-					} else {
-						// update the excl. vat
-						o.parent().prev().first().children().next().val(0);
-						
-						// update the hidden excl vat
-						o.next().parent().first().next().first().children().val(0);
-					}
-				}
-			}
-				
-			function decimalCrop(float) {
-				var numbers = float.toString().split(".");
-				var prime 	= numbers[0];
-									
-				if (numbers[1] > 0 && numbers[1] != "undefined") {
-					var decimal = new String(numbers[1]);
-				} else {
-					var decimal = "00";			
-				}
-									
-				var number = prime + "." + decimal.substr(0, 2);
-					
-				return number;
-			}
-					
-			function mathRound(float) {
-				//return float;
-				return Math.round(float*100)/100;
-			}
-									
-			jQuery(document).ready(function($) {
-				$(document).on("keyup", ".msHandlingCostExcludingVat", function() {
-					productPrice(true, jQuery(this));
-				});
-				$(document).on("change", "#tax_id", function() {
-					$(".msHandlingCostExcludingVat").each(function(i) {
-						productPrice(true, jQuery(this));
-					});
-				});
-				$(document).on("keyup", ".msHandlingCostIncludingVat", function() {
-					productPrice(false, jQuery(this));
-				});
-				$(document).on("submit", "#add_payment_form", function(e) {
-					if (!$("#name_0").val()) {
-						e.preventDefault();
-						$("#name_0").focus();
-						alert("'.$this->pi_getLL('payment_name_is_required').'!");
-					} else if (!$("#custom_code").val()) {
-						e.preventDefault();
-						$("#custom_code").focus();
-						alert("'.$this->pi_getLL('code_is_required').'!");
-					} else {
-						return true;
-					}
-				 });
-				 $(document).on("change", "#handling_cost_type", function(){
-					if ($(this).val()=="amount") {
-						$("#handling_cost_amount_div").show();
-						$("#handling_cost_amount_input").removeAttr("disabled");
-						$("#handling_cost_percentage_div").hide();
-						$("#handling_cost_percentage_input").attr("disabled", "disabled");
-					} else if ($(this).val()=="percentage") {
-						$("#handling_cost_amount_div").hide();
-						$("#handling_cost_amount_input").attr("disabled", "disabled");
-						$("#handling_cost_percentage_div").show();
-						$("#handling_cost_percentage_input").removeAttr("disabled");
-					}
-				 });
-			});
-		</script>	
-		';
+		</form>';
 		$content.=mslib_fe::returnBoxedHTML($psp['name'], $tmpcontent);
 		$tmpcontent='';
 	}
