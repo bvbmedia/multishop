@@ -18,7 +18,6 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 				window.location.href=linkTarget;
 			});
 		});
-
 		$(document).on("click", ".hide_advanced_import_radio", function() {
 			$(this).parent().find(".hide").hide();
 		});
@@ -34,8 +33,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			event.preventDefault();
 		});
 	});
-</script>	
-';
+</script>';
 $max_category_level=4;
 if ($this->get['run_as_cron']) {
 	$lock_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/log/importer_is_running_'.$this->HTTP_HOST.'_'.$this->get['job_id'];
@@ -767,6 +765,7 @@ if ($this->post['action']=='category-insert') {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// we have to update the import job eof
 		$this->ms['show_default_form']=1;
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 	}
 	if (!$this->post['skip_import']) {
 		$stats=array();
@@ -2606,6 +2605,16 @@ if ($this->post['action']!='product-import-preview') {
 				jQuery(activeTab).fadeIn(0);
 				return false;
 			});
+			var lochash=window.location.hash;
+			if (lochash!="") {
+				var li_this=$("ul > li").find("a[href=\'" + lochash + "\']").parent();
+				if (li_this.length > 0) {
+					$("ul.tabs li").removeClass("active");
+					$(li_this).addClass("active");
+					$(".tab_content").hide();
+					$(lochash).fadeIn(0);
+				}
+			}
 		 
 		});
 		</script>
