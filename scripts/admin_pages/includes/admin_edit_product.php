@@ -1325,19 +1325,7 @@ if ($this->post) {
 					select2_values_sb("#tmp_attributes_sb", "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					event.preventDefault();
 				});
-
 				jQuery(document).on("click", ".add_new_attributes_values", function(event) {
-					var prev_row_attributes_input=$($(this).parent().prev()).children().last().find("td.product_attribute_value>input[class*=\'product_attribute_values\']");
-					if (prev_row_attributes_input.val()=="") {
-						cn=prev_row_attributes_input.attr("class").split(" ");
-						$.each(cn, function(i, c) {
-							if (c.indexOf("product_attribute_values")!==-1) {
-								select2_class="."+c;
-								$(select2_class).select2("focus");
-							}
-						});
-						return false;
-					}
 					var option_id=$(this).attr("rel");
 					var d = new Date();
 					var n = d.getTime();
@@ -2030,7 +2018,7 @@ if ($this->post) {
 				<div class="account-field" id="msEditProductInputDuplicateProduct">
 		
 				<label for="cid">'.$this->pi_getLL('admin_select_category').'</label>
-				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'],'class="select2BigDropWider"').'
+				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"').'
 				</div>
 				<div id="cp_buttons">
 					<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
@@ -2062,7 +2050,6 @@ if ($this->post) {
 		$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###FOOTER_LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
-
 		if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
 			$subpartArray['###BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';
 			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';
@@ -2088,7 +2075,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$product['categories_id'];
-		$subpartArray['###INPUT_CATEGORY_TREE###']=mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'],'class="select2BigDropWider"');
+		$subpartArray['###INPUT_CATEGORY_TREE###']=mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;
 		//exclude list products
 		$feed_checkbox='';
