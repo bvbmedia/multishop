@@ -144,13 +144,39 @@ $tempColumns=array(
 			"default"=>0
 		)
 	),
+	"tx_multishop_address_type"=>array(
+		'exclude'=>1,
+		'label'=>'Multishop address type:',
+		'config'=>array(
+			'type'=>'select',
+			'items'=>array(
+				array(
+					'Default',
+					''
+				),
+				array(
+					'Store address',
+					'store'
+				),
+				array(
+					'Billing address',
+					'billing'
+				),
+				array(
+					'Delivery address',
+					'delivery'
+				),
+
+			)
+		)
+	),
 );
 t3lib_div::loadTCA("tt_address");
 t3lib_extMgm::addTCAcolumns("tt_address", $tempColumns, 1);
 t3lib_extMgm::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_discount;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
 $TCA['tt_address']['palettes']['multishopaddress']=array(
-	'showitem'=>'address,street_name,address_number,address_ext'
+	'showitem'=>'address,street_name,address_number,address_ext,tx_multishop_address_type'
 );
 t3lib_extMgm::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
 // TT ADDRESS EOF
