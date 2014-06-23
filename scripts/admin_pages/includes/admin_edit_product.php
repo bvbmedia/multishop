@@ -1330,6 +1330,12 @@ if ($this->post) {
 					var new_value_cn="product_attribute_values" + n;
 					// cloned the first row of the option group
 					var element_cloned=$($(this).parent().prev()).children().first().clone();
+					// give the cloned row proper background color
+					if ($($(this).parent().prev()).children().last().hasClass("odd_item_row")) {
+						$(element_cloned).removeClass("odd_item_row").addClass("even_item_row");
+					} else {
+						$(element_cloned).removeClass("even_item_row").addClass("odd_item_row");
+					}
 					// cleaned up the cloned value
 					$(element_cloned).find("td.product_attribute_option>div").remove();
 					$(element_cloned).find("td.product_attribute_value>div").remove();
