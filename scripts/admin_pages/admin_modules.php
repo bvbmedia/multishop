@@ -29,7 +29,6 @@ jQuery(document).ready(function($) {
 			$(lochash).fadeIn(0);
 		}
 	}
-
 });
 </script>
 ';
