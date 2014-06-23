@@ -1325,7 +1325,6 @@ if ($this->post) {
 					select2_values_sb("#tmp_attributes_sb", "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					event.preventDefault();
 				});
-
 				jQuery(document).on("click", ".add_new_attributes_values", function(event) {
 					var option_id=$(this).attr("rel");
 					var d = new Date();
