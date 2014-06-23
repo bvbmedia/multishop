@@ -887,7 +887,7 @@
             <label index="admin_label_listing_type">listing type</label>
             <label index="admin_label_option_value">Option value</label>
             <label index="admin_label_option_type_selectbox">Selectbox</label>
-            <label index="admin_label_option_type_selectbox_multiple">selectbox multiple</label>
+            <label index="admin_label_option_type_selectbox_multiple">Selectbox (allow multiple values to be selected)</label>
             <label index="admin_label_option_type_radio">Radio</label>
             <label index="admin_label_option_type_checkbox">Checkbox</label>
             <label index="admin_label_option_type_text_input">Text input</label>
@@ -1774,7 +1774,7 @@
             <label index="admin_label_listing_type">weergave type</label>
             <label index="admin_label_option_value">Optie waarde</label>
             <label index="admin_label_option_type_selectbox">Uitklapmenu</label>
-            <label index="admin_label_option_type_selectbox_multiple">Uitklapmenu (meervoudig)</label>
+            <label index="admin_label_option_type_selectbox_multiple">Uitklapmenu (sta toe om meerdere waardes te selecteren)</label>
             <label index="admin_label_option_type_radio">Radioknop</label>
             <label index="admin_label_option_type_checkbox">Aankruisvak</label>
             <label index="admin_label_option_type_text_input">Invoerveld</label>
