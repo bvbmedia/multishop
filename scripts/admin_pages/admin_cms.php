@@ -26,17 +26,17 @@ if (is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_cms_description', 'id=\''.$this->get['cms_id'].'\'');
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 }
-if ($this->get['Search'] and ($this->get['limit']!=$this->cookie['limit'])) {
-	$this->cookie['limit']=$this->get['limit'];
+if ($this->get['Search'] and ($this->get['cmsLimit']!=$this->cookie['cmsLimit'])) {
+	$this->cookie['cmsLimit']=$this->get['cmsLimit'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-if ($this->cookie['limit']) {
-	$this->get['limit']=$this->cookie['limit'];
+if ($this->cookie['cmsLimit']) {
+	$this->get['cmsLimit']=$this->cookie['cmsLimit'];
 } else {
-	$this->get['limit']=10;
+	$this->get['cmsLimit']=30;
 }
-$this->ms['MODULES']['PAGESET_LIMIT']=$this->get['limit'];
+$this->ms['MODULES']['PAGESET_LIMIT']=$this->get['cmsLimit'];
 if (is_numeric($this->get['p'])) {
 	$p=$this->get['p'];
 }
@@ -69,7 +69,7 @@ $limits[]='400';
 $limits[]='450';
 $limits[]='500';
 foreach ($limits as $limit) {
-	$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
+	$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['cmsLimit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
 $limit_search_result_selectbox.='</select>';
 $queryData=array();
