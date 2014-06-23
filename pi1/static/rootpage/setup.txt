@@ -437,25 +437,13 @@ multishop_admin_page {
 	#CONTENT < plugin.tx_multishop_pi1
 	#CONTENT = USER
 	CONTENT.userFunc = tx_multishop_pi1->admin_main
-/*	
-	FOOTERNAV = HTML
-	FOOTERNAV.value (
-	<ul>
-		<li><a href="https://www.typo3multishop.com/donate?utm_source=Typo3Website&utm_medium=cpc&utm_term=Typo3Multishop&utm_content=Admin&utm_campaign=Typo3Multishop" title="Donate" target="_blank">Donate</a></li>	
-		<li><a href="https://www.typo3multishop.com/forum?utm_source=Typo3Website&utm_medium=cpc&utm_term=Typo3Multishop&utm_content=Admin&utm_campaign=Typo3Multishop" title="Forum" target="_blank">Forum</a></li>
-	</ul>
-	)	
-*/	
-	FOOTERNAV = HTML
+	FOOTERNAV = TEXT
 	FOOTERNAV.value =
-	
-	FACEBOOK = HTML
+	FACEBOOK = TEXT
 	FACEBOOK.value (
 	<iframe class="align-center" allowtransparency="yes" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; OVERFLOW: hidden; BORDER-TOP: medium none; BORDER-RIGHT: medium none;" frameborder="0" hspace="0" vspace="0" marginheight="0" marginwidth="0" width="185" height="410" scrolling="no" src="https://www.facebook.com/plugins/likebox.php?id=127486630606749&amp;width=185&amp;connections=10&amp;stream=false&amp;header=true&amp;height=410&amp;colorscheme=dark"></iframe>
 	)		
   }
- 
-
   includeCSS.adminDashboard=EXT:multishop/templates/admin_dashboard/css/core.css
   # loading application top (meta tags + admin panel)
   1=USER_INT
