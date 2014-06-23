@@ -200,11 +200,10 @@ width:100%;
 #tx_multishop_pi1_core #shoppingcart_listing {
 margin:0 0 10px;
 }
-#tx_multishop_pi1_core #shoppingcart_listing .shoppingcart-qty input {
-border:1px solid #c0c0c0;
-padding:1px 4px;
-font:12px Arial, Helvetica, sans-serif;
-}
+#tx_multishop_pi1_core #shoppingcart_listing .shoppingcart-qty input { display:inline-block; width:20px; border:1px solid #c0c0c0; font:12px Arial, Helvetica, sans-serif; text-align:center; padding:1px 4px; box-sizing:content-box; }
+#tx_multishop_pi1_core #shoppingcart_listing .shoppingcart-qty input.qty_minus,
+#tx_multishop_pi1_core #shoppingcart_listing .shoppingcart-qty input.qty_plus { width:8px; border:1px solid #cdcdcd; font:bold 12px arial; text-align:center; padding:1px 4px; box-sizing:content-box; }
+
 #tx_multishop_pi1_core #shoppingcart_listing .shoppingcart-coupons input#coupons_code {
 border:1px solid #c0c0c0;
 padding:1px 4px;

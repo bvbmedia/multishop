@@ -420,6 +420,9 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 }
 
 .msadmin_balloon_wrapper { position:fixed; bottom:40px; left:20px; z-index:9999; }
+.msadmin_balloon_wrapper *,
+.msadmin_balloon_wrapper *:after,
+.msadmin_balloon_wrapper *:before { box-sizing:content-box; }
 .msadmin_balloon_item { position:relative; clear:left; float:left; background:url(../images/balloon_t.png) left top repeat-x; margin:0 20px 20px 0; padding:14px; border-radius:6px; }
 .msadmin_balloon { width:520px; min-height:64px; height:auto; background:url(../images/alert_64x64.png) left top no-repeat; font:12px Arial, Helvetica, sans-serif; color:#dcdcdc; text-align:left; padding:0 0 0 74px; }
 .msadmin_balloon h2 { font:bold 14px Arial, Helvetica, sans-serif; color:#fff; margin:0; padding:0; }
