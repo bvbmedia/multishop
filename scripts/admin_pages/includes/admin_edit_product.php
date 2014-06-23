@@ -1583,11 +1583,9 @@ if ($this->post) {
 						}
 					});;
 				}
-				'.($product['products_id'] ? '
 				var sort_li = function () {
 					jQuery("#products_attributes_items").sortable({
-						cursor:"move",
-						items:">li.products_attributes_item",
+						'.($product['products_id'] ? '
 						update: function(e, ui) {
 							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_option&pid='.$product['products_id']).'";
 							jQuery(this).sortable("refresh");
@@ -1600,13 +1598,15 @@ if ($this->post) {
 									//do something with the sorted data
 								}
 							});
-						}
+						},
+						' : '').'
+						cursor:"move",
+						items:">li.products_attributes_item"
 					});
 				}
 				var sort_li_children = function () {
 					jQuery(".items_wrapper").sortable({
-						cursor:"move",
-						items:">div.wrap-attributes-item",
+						'.($product['products_id'] ? '
 						update: function(e, ui) {
 							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_value&pid='.$product['products_id']).'";
 							jQuery(this).sortable("refresh");
@@ -1619,10 +1619,12 @@ if ($this->post) {
 									//do something with the sorted data
 								}
 							});
-						}
+						},
+						' : '').'
+						cursor:"move",
+						items:">div.wrap-attributes-item"
 					});
 				}
-				' : '').'
 				sort_li();
 				sort_li_children();
 				$(".items_wrapper").hide();
@@ -2237,7 +2239,7 @@ if ($this->post) {
 			$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_header']);
 			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
 		}
-		$subpartArray['######ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###']=$this->pi_getLL('admin_label_js_please_select_category_for_this_product');
+		$subpartArray['###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###']=$this->pi_getLL('admin_label_js_please_select_category_for_this_product');
 		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=$this->pi_getLL('admin_label_js_product_name_is_empty');
 		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TAB###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
 		$subpartArray['###ADMIN_LABEL_PRODUCT_NOT_LOADED_SORRY_WE_CANT_FIND_IT###']=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
