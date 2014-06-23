@@ -14,14 +14,12 @@ plugin.multishop {
 	exampleCSS =0
 		
 	# MAIN SETTINGS EOF
-	# OPTIONAL SETTINGS	
-	# cat=plugin.multishop - optional; type=string; label= Highslide CSS: Location of the Highslide CSS file.
-	highslide_css =EXT:multishop/js/highslide/highslide.css 
+	# OPTIONAL SETTINGS
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include all internal JavaScript libraries (BlockUI, jQuery Cookie, jQuery Hotkeys, PrettyCheckboxes): 
 	includeJS =1
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include global CSS files: 
 	includeCSS =1    
-	# cat=plugin.multishop - optional/enable; type=boolean; label= Include internal jQuery UI theme: If you want to include your own jQuery UI theme enable this checkbox.
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Include internal jQuery UI theme: If you want to include your own jQuery UI theme disable this checkbox.
 	includeJqueryUiTheme=1
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable SYSTEM / SETTINGS for admin users: Optional field. When this checkbox is enabled the SYSTEM / SETTINGS link in the front-end admin panel will be shown to admin users.
@@ -46,7 +44,7 @@ plugin.multishop {
 	show_powered_by_multishop =1
 	# cat=plugin.multishop - optional/ajax; type=int+; label= Ajax server pagetype ID: Ajax server pagetype ID
 	ajax_pagetype_id_server=2002
-	# cat=plugin.multishop - optional/enable; type=boolean; label= Include jQuery Autocomplete: 
+	# cat=plugin.multishop - optional/enable; type=boolean; label= Include jQuery Autocomplete: Shows direct results when a user is typing a keyword in the products searchform.
 	includejAutocomplete =0
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include jQuery Carousel: 
 	includejCarousel =1	
@@ -112,23 +110,17 @@ plugin.multishop {
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable inclusion of internal meta tags: Disable inclusion of internal meta tags.
 	disableMetatags=0	
 
-	# cat=plugin.multishop - optional/enable; type=boolean; label= Act as master shop: Load complete database and don't care about sub shops.
+	# cat=plugin.multishop - advanced/enable; type=boolean; label= Act as master shop: Load complete database and don't care about sub shops.
 	masterShop=0
 	# OPTIONAL SETTINGS EOF
 
     #TEMPLATE CONSTANTS	
-	# cat=plugin.multishop - templates/file; type=file[html,htm,tmpl,txt]; label= Products Detail Page Template File: Save the HTML-template file of the products detail page as resource object in the TYPO3 template. Use this option OR use the Template File Path option. If both are filled the Template File Path will overrule.
-	product_detail_tmpl = EXT:multishop/templates/products_detail.tmpl
 	# cat=plugin.multishop - templates/file; type=string; label= Products Detail Page Template File Path: Location of the HTML-template file of the products detail page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/products_detail.tmpl.
 	product_detail_tmpl_path =
 
-	# cat=plugin.multishop - templates/file; type=file[html,htm,tmpl,txt]; label= Products Listing Page Template File: Save the HTML-template file of the products listing page as resource object in the TYPO3 template. Use this option OR use the Template File Path option. If both are filled the Template File Path will overrule.
-	products_listing_tmpl =
 	# cat=plugin.multishop - templates/file; type=string; label= Products Listing Page Template File Path: Location of the HTML-template file of the products listing page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/products_listing.tmpl.
 	products_listing_tmpl_path = EXT:multishop/templates/products_listing.tmpl
 
-	# cat=plugin.multishop - templates/file; type=file[html,htm,tmpl,txt]; label= Specials section products Listing Page Template File: Save the HTML-template file of the products listing page as resource object in the TYPO3 template. Use this option OR use the Template File Path option. If both are filled the Template File Path will overrule.
-	specials_sections_products_listing_tmpl =
 	# cat=plugin.multishop - templates/file; type=string; label= Specials section products Listing Page Template File Path: Location of the HTML-template file of the products listing page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/specials_sections.tmpl.
 	specials_sections_products_listing_tmpl_path = EXT:multishop/templates/specials_sections.tmpl
 
@@ -136,15 +128,13 @@ plugin.multishop {
 	email_tmpl_path=		
 
 
-	# cat=plugin.multishop - templates/file; type=file[html,htm,tmpl,txt]; label= HTML Box Template File: Save the HTML-template file of the HTML box element as resource object in the TYPO3 template. Use this option OR use the Template File Path option. If both are filled the Template File Path will overrule.
-	html_box_tmpl =
-	
+
 	# cat=plugin.multishop - templates/file; type=string; label= HTML Box Template File Path: Location of the HTML-template file of the HTML box element. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/html_box.tmpl.
 	html_box_tmpl_path = EXT:multishop/templates/html_box.tmpl
 
-	# cat=plugin.multishop - advanced/enable; type=boolean; label= Cache Multishop Configuration
+	# cat=plugin.multishop - advanced/enable; type=boolean; label= Cache Multishop Configuration: Cache the Multishop settings for faster pages.
 	cacheConfiguration=0	
-	# cat=plugin.multishop - advanced/enable; type=boolean; label= This will improve performance, but the shop should not use VAT rates.
+	# cat=plugin.multishop - advanced/enable; type=boolean; label= Disable frontend from calculating VAT prices: This will improve performance, but the shop will not work with VAT rates.
 	disableFeFromCalculatingVatPrices=0
 	
 	# cat=plugin.multishop - advanced; type=string; label= Unique identifier of the cart: Optional field. The unique identifier of the cart. This way you can seperate carts from shops.
@@ -237,6 +227,6 @@ plugin.multishop {
 	order_details_table_ajaxProductsToBasket_tmpl_path=
 	order_details_table_ajaxGetMethodCosts_tmpl_path=
 
-	# cat=plugin.multishop - advanced; type=string; label= Title of the rootline page. Title of the rootline page. Ie: Home.
-	crumbar_rootline_title =	
+	# cat=plugin.multishop - advanced; type=string; label= Title of the rootline page: Change the root title in the crumbar. Example: Home.
+	crumbar_rootline_title =
 }
