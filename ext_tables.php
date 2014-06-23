@@ -70,6 +70,16 @@ $tempColumns=array(
 			'max'=>'20'
 		)
 	),
+	'page_uid'=>array(
+		'exclude'=>1,
+		'label'=>'Core shop pid:',
+		'config'=>array(
+			'type'=>'input',
+			'eval'=>'trim',
+			'size'=>'20',
+			'max'=>'20'
+		)
+	),
 	'gender'=>array(
 		'exclude'=>1,
 		'label'=>'Gender:',
@@ -90,7 +100,7 @@ $tempColumns=array(
 );
 t3lib_div::loadTCA("fe_users");
 t3lib_extMgm::addTCAcolumns("fe_users", $tempColumns, 1);
-t3lib_extMgm::addToAllTCAtypes("fe_users", '--div--; Multishop, tx_multishop_discount;;;;1-1-1');
+t3lib_extMgm::addToAllTCAtypes("fe_users", '--div--; Multishop, tx_multishop_discount, page_uid;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
 $TCA['fe_users']['palettes']['multishopaddress']=array(
 	'showitem'=>'address,street_name,address_number,address_ext'
@@ -101,6 +111,7 @@ t3lib_extMgm::addToAllTCAtypes('fe_users', 'mobile', '', 'after:telephone');
 t3lib_extMgm::addToAllTCAtypes('fe_users', 'gender', '', 'after:address');
 // FE_USERS EOF
 // PREPARE $TEMPCOLUMNS FOR FE_GROUPS
+unset($tempColumns['page_uid']);
 unset($tempColumns['mobile']);
 unset($tempColumns['gender']);
 unset($tempColumns['street_name']);
@@ -173,10 +184,10 @@ $tempColumns=array(
 );
 t3lib_div::loadTCA("tt_address");
 t3lib_extMgm::addTCAcolumns("tt_address", $tempColumns, 1);
-t3lib_extMgm::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_discount;;;;1-1-1');
+t3lib_extMgm::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
 $TCA['tt_address']['palettes']['multishopaddress']=array(
-	'showitem'=>'address,street_name,address_number,address_ext,tx_multishop_address_type'
+	'showitem'=>'address,street_name,address_number,address_ext'
 );
 t3lib_extMgm::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
 // TT ADDRESS EOF
