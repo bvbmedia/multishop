@@ -1581,7 +1581,7 @@ if ($this->post) {
 							} else {
 								$.ajax(ajax_url, {
 									data: {
-										q: query.term
+										q: query.term + "||optid=" +  $(selector_str).parent().prev().children("input").val()
 									},
 									dataType: "json"
 								}).done(function(data) {
