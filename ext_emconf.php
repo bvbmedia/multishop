@@ -37,9 +37,9 @@ $EM_CONF[$_EXTKEY] = array(
 			'tt_address' => '2.3.4-2.3.99',
 			'static_info_tables' => '0.0.0',
 			'static_info_tables_taxes'=>'0.0.1-0.0.1',
-			't3jquery' => '0.0.0',
-			'rzcolorbox_jquery2' => '0.0.0',
-			'phpexcel_service' => '1.7.6',
+			't3jquery' => '2.7.1-3.9.99',
+			'rzcolorbox_jquery2' => '1.0.0-1.9.99',
+			'phpexcel_service' => '1.7.6-1.7.99',
 		),
 		'conflicts' => array(
 			'dbal' => '0.0.0'
