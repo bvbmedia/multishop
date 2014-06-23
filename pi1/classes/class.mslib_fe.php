@@ -1461,7 +1461,7 @@ class mslib_fe {
 		$query_array['where'][]='popt.language_id = \''.$this->sys_language_uid.'\'';
 		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$query_array['group_by'][]='popt.products_options_id';
-		$query_array['order_by'][]='patrib.sort_order_option_name, patrib.sort_order_option_value';
+		$query_array['order_by'][]='patrib.sort_order_option_name asc, patrib.sort_order_option_value asc';
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNamesQuery'])) {
 			$params=array(
@@ -1488,7 +1488,7 @@ class mslib_fe {
 				while ($options=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 					$returnAsArrayData[$options['products_options_id']]=$options;
 					// now get the values
-					$str="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".(int)$products_id."' and pa.options_id = '".$options['products_options_id']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='".$options['products_options_id']."' and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
+					$str="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".(int)$products_id."' and pa.options_id = '".$options['products_options_id']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='".$options['products_options_id']."' and povp.products_options_values_id=pov.products_options_values_id order by pa.sort_order_option_value asc";
 					$products_options=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$total_values=$GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
 					if ($total_values) {
@@ -1577,7 +1577,7 @@ class mslib_fe {
 						$output_html[$options['products_options_id']].='<ul>';
 					}
 					// now get the values
-					$str="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".(int)$products_id."' and pa.options_id = '".$options['products_options_id']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='".$options['products_options_id']."' and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
+					$str="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".(int)$products_id."' and pa.options_id = '".$options['products_options_id']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='".$options['products_options_id']."' and povp.products_options_values_id=pov.products_options_values_id order by pa.sort_order_option_value asc";
 					//echo $str;
 					//die();
 					$products_options=$GLOBALS['TYPO3_DB']->sql_query($str);
