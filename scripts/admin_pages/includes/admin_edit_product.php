@@ -1957,7 +1957,7 @@ if ($this->post) {
 					<td colspan="5">&nbsp;</td>
 			</tr>';
 			$attributes_tab_block.='<tr id="add_attributes_button">
-					<td colspan="5" align="right"><input id="addAttributes" type="button" class="msadmin_button" value="'.$this->pi_getLL('admin_add_new_value').' [+]"></td>
+					<td colspan="5" align="right"><input id="addAttributes" type="button" class="msadmin_button" value="'.$this->pi_getLL('admin_add_new_attribute').' [+]"></td>
 			</tr>
 			</table>
 			<script>
