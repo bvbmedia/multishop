@@ -118,7 +118,9 @@ cursor:pointer;
 #products_detail .quantity input.qty_plus { width:20px; border:1px solid #cdcdcd; font:bold 12px arial; text-align:center; padding:4px; }
 
 #bottom-navigation { clear:both; overflow:hidden; width:100%; padding:0 0 10px 0; }
-#bottom-navigation .back_button { float:left; border:none; background:#333; color:#fff; padding:4px 10px; font:12px Arial,Helvetica,sans-serif; cursor:pointer; }
+#bottom-navigation .back_button,
+#bottom-navigation .msFrontButton.backState { float:left; width:100px; height:19px; border:none; background:#333; color:#fff; padding:4px 10px; font:bold 12px Arial,Helvetica,sans-serif; text-align:center; cursor:pointer; }
+#bottom-navigation .msFrontButton.backState { padding:5px 0 0; box-sizing:content-box; }
 #bottom-navigation #multishop_add_to_cart { float:right; width:100px; border:none; background:#333; font:12px Arial,Helvetica,sans-serif; color:#fff; text-align:center; padding:4px 10px; cursor:pointer; }
 
 #products_detail_pagination { position:relative; float:right; z-index:9; }
@@ -217,9 +219,10 @@ font:bold 16px Arial,Helvetica,sans-serif;
 #tx_multishop_pi1_core table#shoppingcart_listing .shoppingcart-button { text-align:center; }
 #tx_multishop_pi1_core table#shoppingcart_listing .shoppingcart-button a { overflow:hidden; display:inline-block; width:16px; height:0; background:url(../images/icon_remove.png) left top no-repeat; padding:16px 0 0; }
 
-#tx_multishop_pi1_core .error_msg { width:415px; border:1px solid #999; background:#f6f6f6; margin:0 0 10px; padding:0; }
-#tx_multishop_pi1_core .error_msg h3 { background:none; margin:0; padding:10px 18px; }
-#tx_multishop_pi1_core .error_msg ul { overflow:hidden; width:331px; min-height:60px; height:auto; background:url(../images/icon_warning.png) 10px 10px no-repeat; margin:0; padding:10px 18px 18px 74px; }
+#tx_multishop_pi1_core .error_msg { width:auto; border:1px solid #ebccd1; background:#f2dede; margin:0 0 10px; padding:0; }
+#tx_multishop_pi1_core .error_msg h3 { background:none; font:bold 14px Arial, Helvetica, sans-serif; color:#a94442; margin:0; padding:10px 18px; }
+#tx_multishop_pi1_core .error_msg ul { overflow:hidden; width:auto; min-height:60px; height:auto; background:url(../images/icon_warning.png) 10px 10px no-repeat; color:#a94442; margin:0; padding:10px 0 18px 94px; }
+#tx_multishop_pi1_core .error_msg ul li { margin:0; padding:0; box-sizing:content-box; vertical-align:middle; }
 
 table#shoppingcart_listing input.proceed_to_checkout_button_en { width:100px; height:24px; border:none; background:#333; font:bold 12px Arial, Helvetica, sans-serif; color:#fff; text-align:center; padding:0; cursor:pointer; }
 table#shoppingcart_listing input.proceed_to_checkout_button_en:hover { background-position:left -28px; }
@@ -250,7 +253,7 @@ form#checkout label.adresgegevens { display:block; font:14px Arial, Helvetica, s
 form#checkout .account-field { clear:both; overflow:hidden; width:100%; padding:0; }
 form#checkout .account-field div { float:left; overflow:hidden; width:310px; }
 
-form#checkout .account-field label { display:block; float:left; width:120px; height:30px; font:12px Arial, Helvetica, sans-serif; color:#898b8d; margin:0; padding:1px 10px 0 0; }
+form#checkout .account-field label { display:block; float:left; width:120px; height:30px; font:12px Arial, Helvetica, sans-serif; color:#000; margin:0; padding:1px 10px 0 0; }
 form#checkout .account-field label.account-lastname { clear:left; }
 
 form#checkout .account-field span#ValidRadio,
@@ -332,3 +335,35 @@ form#checkout table#shoppingcart_listing tr#bottomColumnRight td td.label h4 { f
 #msOrderDetailsSubTotalTable .msOrderDetailsSubTotalProductsLabel.msOrderDetailsSubTotalLabel,
 #msOrderDetailsSubTotalTable .msOrderDetailsSubTotalProducts.msOrderDetailsSubTotalValue { font-size:14px; font-weight:bold; }
 #msOrderDetailsSubTotalTable .msOrderDetailsTaxTotalLabel.msOrderDetailsSubTotalLabel { padding:5px 0 !important; }
+
+/* --- new account --- */
+#live-validation-create-account { overflow:hidden; width:100%; margin:0; padding:0 0 20px; }
+#live-validation-create-account .account-field { overflow:hidden; width:100%; padding:0 0 10px; }
+#live-validation-create-account .account-field label { float:left; display:block; width:130px; font:12px Arial, Helvetica, sans-serif; text-align:right; padding:2px 10px 0 0; }
+#live-validation-create-account .account-field input[type="text"],
+#live-validation-create-account .account-field input[type="password"],
+#live-validation-create-account .account-field textarea { width:248px; float:left; border:1px solid #cdcdcd; background:#f6f6f6; font:12px Verdana, Geneva, sans-serif; color:#404040; margin:0 5px 0 0; padding:2px 4px; }
+#live-validation-create-account .account-field select { width:248px; float:left; border:1px solid #cdcdcd; background:#f6f6f6; font:12px Verdana, Geneva, Helvetica, sans-serif; color:#404040; margin:0 5px 0 0; padding:2px; }
+#live-validation-create-account .account-field span.InputGroup label.account-male,
+#live-validation-create-account .account-field span.InputGroup label.account-female { width:auto; padding-right:10px; }
+#live-validation-create-account .account-field span.InputGroup input[type="radio"] { float:left; margin:3px 4px 0 0; }
+
+#live-validation-create-account .account-boxes { padding:0 0 10px; }
+#live-validation-create-account .account-heading h2 { height:auto; background:none; font-size:16px; margin-bottom:10px; }
+#live-validation-create-account .account-desc { float:left; display:block; color:#3366CC; padding:2px 5px 0 0; }
+#live-validation-create-account #live-validation_l { float:left; width:50%; border-right:1px solid #cdcdcd; padding:0 0 20px 0; box-sizing:border-box; }
+#live-validation-create-account #live-validation_r { float:right; width:50%; padding:0 0 10px 20px; }
+#live-validation-create-account #live-validation_r .account-field label { width:150px; }
+#live-validation-create-account #live-validation_r .account-field input[type="text"],
+#live-validation-create-account #live-validation_r .account-field input[type="password"],
+#live-validation-create-account #live-validation_r .account-field textarea { width:158px; }
+#live-validation-create-account #live-validation_r .account-field.newsletter_checkbox_message label { width:18px; text-align:left; padding:0 0 0 5px; }
+#live-validation-create-account #live-validation_r .account-field.newsletter_checkbox_message label[for="tx_multishop_newsletter"] { width:auto; }
+#live-validation-create-account #live-validation_r .account-field.newsletter_checkbox_message input[type="checkbox"] { float:left; margin:1px 0 0 0; }
+
+#live-validation-create-account .account-field.delivery_checkbox_message label { width:auto; padding:0 5px 0 0; }
+#live-validation-create-account .account-field.newsletter_checkbox_message label { width:auto; padding:0 5px 0 0; }
+#live-validation-create-account #bottom-navigation { clear:both; padding:0; }
+#live-validation-create-account #bottom-navigation .continueState { float:right; }
+#live-validation-create-account #bottom-navigation .backState { float:left; }
+/* --- end of new account --- */
