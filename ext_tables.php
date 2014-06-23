@@ -130,7 +130,7 @@ $tempColumns=array(
 			"size"=>"25",
 			"max"=>"75",
 			"checkbox"=>"0",
-			"default"=>0
+			"default"=>''
 		)
 	),
 	"address_number"=>array(
@@ -141,7 +141,7 @@ $tempColumns=array(
 			"size"=>"10",
 			"max"=>"20",
 			"checkbox"=>"0",
-			"default"=>0
+			"default"=>''
 		)
 	),
 	"address_ext"=>array(
@@ -151,6 +151,17 @@ $tempColumns=array(
 			"type"=>"input",
 			"size"=>"5",
 			"max"=>"5",
+			"checkbox"=>"0",
+			"default"=>''
+		)
+	),
+	"tx_multishop_customer_id"=>array(
+		"exclude"=>1,
+		"label"=>"Multishop customer id:",
+		"config"=>array(
+			"type"=>"input",
+			"size"=>"5",
+			"max"=>"11",
 			"checkbox"=>"0",
 			"default"=>0
 		)
@@ -184,7 +195,7 @@ $tempColumns=array(
 );
 t3lib_div::loadTCA("tt_address");
 t3lib_extMgm::addTCAcolumns("tt_address", $tempColumns, 1);
-t3lib_extMgm::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type;;;;1-1-1');
+t3lib_extMgm::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type, tx_multishop_customer_id;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
 $TCA['tt_address']['palettes']['multishopaddress']=array(
 	'showitem'=>'address,street_name,address_number,address_ext'
