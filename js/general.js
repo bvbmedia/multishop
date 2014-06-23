@@ -1,4 +1,3 @@
-window.enableBlockUi = true;
 function CONFIRM(label) {
     if (confirm(label)) {
         return true;
@@ -47,6 +46,33 @@ function ifConfirm(textTitle, textBody, yesFn, noFn) {
         }
     });
 }
+function msDialog(textTitle, textBody) {
+    var dialog = $('<div/>', {
+        id: 'dialog',
+        title: textTitle
+    });
+    dialog.append(textBody);
+    dialog.dialog({
+        width: 900,
+        modal: true,
+        body: "",
+        resizable: false,
+        open: function () {
+            // right button (OK button) must be the default button when user presses enter key
+            $(this).siblings('.ui-dialog-buttonpane').find('.continueState').focus();
+        },
+        buttons: {
+            "ok": {
+                text: "OK",
+                class: 'msOkButton msBackendButton continueState arrowRight arrowPosLeft',
+                click: function () {
+                    $(this).dialog("close");
+                    $(this).hide();
+                }
+            }
+        }
+    });
+}
 function msAdminBlockUi(onBlock) {
     $.blockUI({
         css: {
@@ -65,8 +91,7 @@ function msAdminBlockUi(onBlock) {
 }
 jQuery(document).ready(function ($) {
     $('.blockSubmitForm').submit(function(e) {
-        console.log(window.enableBlockUi);
-        //msAdminBlockUi();
+        msAdminBlockUi();
     });
     $('.blockAhrefLink').click(function(e) {
         msAdminBlockUi();

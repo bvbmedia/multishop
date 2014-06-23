@@ -375,7 +375,7 @@ jQuery(document).ready(function ($) {
     ###LABEL_EXTRA_PLUGIN_TABS###
 </ul>
 <div class="tab_container">
-<form class="admin_product_edit blockSubmitForm" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit_###PRODUCT_PID###" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
+<form class="admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit_###PRODUCT_PID###" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
 <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
 
 <div style="display: block;" id="product_details" class="tab_content">
@@ -609,16 +609,21 @@ jQuery(document).ready(function ($) {
 </div>
 </div>
 <script type="text/javascript">
-    jQuery(document).ready(function ($) {
-        $(".admin_product_edit").submit(function () {
+    jQuery(document).ready(function($) {
+        $(".admin_product_edit").submit(function() {
+            var enableBlockUi='1';
             if ($("#categories_id").val() == "0") {
-                alert("###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###");
-                window.enableBlockUi = false;
+                enableBlockUi='0';
+                msDialog("ERROR","###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###");
                 return false;
             }
             if ($("#products_name_0").val() == "") {
-                alert("###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###");
+                enableBlockUi='0';
+                msDialog("ERROR","###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###");
                 return false;
+            }
+            if (enableBlockUi=='1') {
+                msAdminBlockUi();
             }
         });
         if ($("#products_name_0").val() == "") {
