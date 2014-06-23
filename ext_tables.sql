@@ -741,7 +741,7 @@ CREATE TABLE `tx_multishop_payment_methods` (
   `date` int(11) DEFAULT '0',
   `status` tinyint(1) NULL DEFAULT '0',
   `vars` text NULL,
-  `handling_costs` decimal(24,14) DEFAULT '0.00000000000000',
+  `handling_costs` VARCHAR(25) DEFAULT '0.00000000000000',
   `sort_order` int(11) DEFAULT '0',
   `page_uid` int(11) NULL DEFAULT '0',
   `zone_id` int(11) NULL DEFAULT '0',

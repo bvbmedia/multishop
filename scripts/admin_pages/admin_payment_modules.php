@@ -352,11 +352,26 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 		}
 		$tmpcontent.='
 		<div class="account-field">
+			<label>'.$this->pi_getLL('handling_costs_type').'</label>
+			<div class="msAttribute">
+				<select name="handling_costs_type" id="handling_cost_type">
+					<option value="amount" selected="selected">amount</option>
+					<option value="percentage">percentage</option>
+				</select>
+			</div>
+		</div>
+		<div class="account-field" id="handling_cost_percentage_div" style="display:none">
+			<label>'.$this->pi_getLL('handling_costs').'</label>
+			<div class="msAttribute">
+				<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="0%" disabled="disabled" />
+			</div>
+		</div>
+		<div class="account-field" id="handling_cost_amount_div">
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
 				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
 				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="0" /></div>
+				<div class="msAttributesField hidden"><input name="handling_costs" id="handling_cost_amount_input" type="hidden" value="0" /></div>
 			</div>
 		</div>
 		<div class="account-field">
@@ -461,21 +476,18 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 			}
 									
 			jQuery(document).ready(function($) {
-				jQuery(".msHandlingCostExcludingVat").keyup(function() {
+				$(document).on("keyup", ".msHandlingCostExcludingVat", function() {
 					productPrice(true, jQuery(this));
 				});
-					
-				jQuery("#tax_id").change(function() {
-					jQuery(".msHandlingCostExcludingVat").each(function(i) {
+				$(document).on("change", "#tax_id", function() {
+					$(".msHandlingCostExcludingVat").each(function(i) {
 						productPrice(true, jQuery(this));
 					});
 				});
-					
-				jQuery(".msHandlingCostIncludingVat").keyup(function() {
+				$(document).on("keyup", ".msHandlingCostIncludingVat", function() {
 					productPrice(false, jQuery(this));
-				});	
-
-				$("#add_payment_form").submit(function(e) {
+				});
+				$(document).on("submit", "#add_payment_form", function(e) {
 					if (!$("#name_0").val()) {
 						e.preventDefault();
 						$("#name_0").focus();
@@ -487,7 +499,20 @@ if ($_REQUEST['sub']=='update_payment_method' and $_REQUEST['payment_method_id']
 					} else {
 						return true;
 					}
-				 });							
+				 });
+				 $(document).on("change", "#handling_cost_type", function(){
+					if ($(this).val()=="amount") {
+						$("#handling_cost_amount_div").show();
+						$("#handling_cost_amount_input").removeAttr("disabled");
+						$("#handling_cost_percentage_div").hide();
+						$("#handling_cost_percentage_input").attr("disabled", "disabled");
+					} else if ($(this).val()=="percentage") {
+						$("#handling_cost_amount_div").hide();
+						$("#handling_cost_amount_input").attr("disabled", "disabled");
+						$("#handling_cost_percentage_div").show();
+						$("#handling_cost_percentage_input").removeAttr("disabled");
+					}
+				 });
 			});
 		</script>	
 		';
