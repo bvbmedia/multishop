@@ -498,28 +498,52 @@ if ($this->post) {
 				}
 				// settling down the attributes values
 				$pa_value=$this->post['tx_multishop_pi1']['attributes'][$opt_sort];
-				if ($this->post['tx_multishop_pi1']['is_manual_attributes'][$opt_sort]>0) {
-					if (!empty($pa_value)) {
-						$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_id', // SELECT ...
-							'tx_multishop_products_options_values', // FROM ...
-							"products_options_values_name = '".addslashes($pa_value)."' and language_id = '".$this->sys_language_uid."'", // WHERE...
-							'', // GROUP BY...
-							'', // ORDER BY...
-							'' // LIMIT ...
-						);
-						$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-						if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
-							$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
-							$pa_value=$rs_chk['products_options_values_id'];
-						} else {
-							$insertArray=array();
-							$insertArray['products_options_values_id']='';
-							$insertArray['language_id']=$this->sys_language_uid;
-							$insertArray['products_options_values_name']=$pa_value;
-							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
-							$GLOBALS['TYPO3_DB']->sql_query($query);
-							$pa_value=$GLOBALS['TYPO3_DB']->sql_insert_id();
+				if (!empty($pa_value)) {
+					if ($this->post['tx_multishop_pi1']['is_manual_attributes'][$opt_sort]>0) {
+						if (!empty($pa_value)) {
+							$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_id', // SELECT ...
+								'tx_multishop_products_options_values', // FROM ...
+								"products_options_values_name = '".addslashes($pa_value)."' and language_id = '".$this->sys_language_uid."'", // WHERE...
+								'', // GROUP BY...
+								'', // ORDER BY...
+								'' // LIMIT ...
+							);
+							$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
+								$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
+								$pa_value=$rs_chk['products_options_values_id'];
+							} else {
+								$insertArray=array();
+								$insertArray['products_options_values_id']='';
+								$insertArray['language_id']=$this->sys_language_uid;
+								$insertArray['products_options_values_name']=$pa_value;
+								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
+								$GLOBALS['TYPO3_DB']->sql_query($query);
+								$pa_value=$GLOBALS['TYPO3_DB']->sql_insert_id();
+							}
+							$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_to_products_options_id', // SELECT ...
+								'tx_multishop_products_options_values_to_products_options', // FROM ...
+								"products_options_id = '".$pa_option."' and  products_options_values_id = '".$pa_value."'", // WHERE...
+								'', // GROUP BY...
+								'', // ORDER BY...
+								'' // LIMIT ...
+							);
+							$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+							if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)) {
+								// use microtime as the default sorting
+								$tmp_mtime=explode(" ", microtime());
+								$mtime=array_sum($tmp_mtime);
+								// insert new relations
+								$insertArray=array();
+								$insertArray['products_options_values_to_products_options_id']='';
+								$insertArray['products_options_id']=$pa_option;
+								$insertArray['products_options_values_id']=$pa_value;
+								$insertArray['sort_order']=$mtime;
+								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
+								$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
 						}
+					} else {
 						$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_to_products_options_id', // SELECT ...
 							'tx_multishop_products_options_values_to_products_options', // FROM ...
 							"products_options_id = '".$pa_option."' and  products_options_values_id = '".$pa_value."'", // WHERE...
@@ -541,28 +565,6 @@ if ($this->post) {
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
 							$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
-					}
-				} else {
-					$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_to_products_options_id', // SELECT ...
-						'tx_multishop_products_options_values_to_products_options', // FROM ...
-						"products_options_id = '".$pa_option."' and  products_options_values_id = '".$pa_value."'", // WHERE...
-						'', // GROUP BY...
-						'', // ORDER BY...
-						'' // LIMIT ...
-					);
-					$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-					if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)) {
-						// use microtime as the default sorting
-						$tmp_mtime=explode(" ", microtime());
-						$mtime=array_sum($tmp_mtime);
-						// insert new relations
-						$insertArray=array();
-						$insertArray['products_options_values_to_products_options_id']='';
-						$insertArray['products_options_id']=$pa_option;
-						$insertArray['products_options_values_id']=$pa_value;
-						$insertArray['sort_order']=$mtime;
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
-						$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
 				$pa_prefix=$this->post['tx_multishop_pi1']['prefix'][$opt_sort];
@@ -598,28 +600,30 @@ if ($this->post) {
 				if (!isset($values_sort_order[$opt_id][$pa_value])) {
 					$values_sort_order[$opt_id][$pa_value]=count($values_sort_order[$opt_id])+1;
 				}
-				if ($pa_id>0) {
-					$attributesArray=array();
-					$attributesArray['products_id']=$prodid;
-					$attributesArray['options_id']=$pa_option;
-					$attributesArray['options_values_id']=$pa_value;
-					$attributesArray['price_prefix']=$pa_prefix;
-					$attributesArray['options_values_price']=$pa_price;
-					$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
-					$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$this->post['tx_multishop_pi1']['attributes'][$opt_sort]];
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				} else {
-					$attributesArray=array();
-					$attributesArray['products_id']=$prodid;
-					$attributesArray['options_id']=$pa_option;
-					$attributesArray['options_values_id']=$pa_value;
-					$attributesArray['price_prefix']=$pa_prefix;
-					$attributesArray['options_values_price']=$pa_price;
-					$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
-					$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$this->post['tx_multishop_pi1']['attributes'][$opt_sort]];
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
+					if ($pa_id>0) {
+						$attributesArray=array();
+						$attributesArray['products_id']=$prodid;
+						$attributesArray['options_id']=$pa_option;
+						$attributesArray['options_values_id']=$pa_value;
+						$attributesArray['price_prefix']=$pa_prefix;
+						$attributesArray['options_values_price']=$pa_price;
+						$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
+						$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$this->post['tx_multishop_pi1']['attributes'][$opt_sort]];
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					} else {
+						$attributesArray=array();
+						$attributesArray['products_id']=$prodid;
+						$attributesArray['options_id']=$pa_option;
+						$attributesArray['options_values_id']=$pa_value;
+						$attributesArray['price_prefix']=$pa_prefix;
+						$attributesArray['options_values_price']=$pa_price;
+						$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
+						$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$this->post['tx_multishop_pi1']['attributes'][$opt_sort]];
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
 				}
 			}
 		}
@@ -1323,6 +1327,17 @@ if ($this->post) {
 				});
 
 				jQuery(document).on("click", ".add_new_attributes_values", function(event) {
+					var prev_row_attributes_input=$($(this).parent().prev()).children().last().find("td.product_attribute_value>input[class*=\'product_attribute_values\']");
+					if (prev_row_attributes_input.val()=="") {
+						cn=prev_row_attributes_input.attr("class").split(" ");
+						$.each(cn, function(i, c) {
+							if (c.indexOf("product_attribute_values")!==-1) {
+								select2_class="."+c;
+								$(select2_class).select2("focus");
+							}
+						});
+						return false;
+					}
 					var option_id=$(this).attr("rel");
 					var d = new Date();
 					var n = d.getTime();
@@ -1332,10 +1347,12 @@ if ($this->post) {
 					var element_cloned=$($(this).parent().prev()).children().first().clone();
 					// give the cloned row proper background color
 					if ($($(this).parent().prev()).children().last().hasClass("odd_item_row")) {
-						$(element_cloned).removeClass("odd_item_row").addClass("even_item_row");
+						$(element_cloned).removeClass("odd_item_row").addClass("new_attributes even_item_row");
 					} else {
-						$(element_cloned).removeClass("even_item_row").addClass("odd_item_row");
+						$(element_cloned).removeClass("even_item_row").addClass("new_attributes odd_item_row");
 					}
+					$(element_cloned).removeAttr("id");
+					$(element_cloned).attr("rel", "new");
 					// cleaned up the cloned value
 					$(element_cloned).find("td.product_attribute_option>div").remove();
 					$(element_cloned).find("td.product_attribute_value>div").remove();
@@ -1348,6 +1365,7 @@ if ($this->post) {
 							}
 						});
 						$(this).removeClass(class_name).addClass(new_option_cn);
+						// clear the pa_id
 						$(this).next().next().val("");
 					});
 					$(element_cloned).find("input[class^=\'product_attribute_values\']").attr("class", function(i, c){
@@ -1359,7 +1377,10 @@ if ($this->post) {
 							}
 						});
 						$(this).removeClass(class_name).addClass(new_value_cn);
+						$(this).removeAttr("id");
 						$(this).val("");
+						$(this).next().removeAttr("id");
+						$(this).next().val("");
 					});
 					$(element_cloned).find("div.product_attribute_prefix>select").val("+");
 					$(element_cloned).find("div.msAttributesField>input").val("0.00");
