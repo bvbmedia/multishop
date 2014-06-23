@@ -259,6 +259,7 @@
             <label index="admin_add_option_plus_value">Add Option + Value</label>
             <label index="admin_value">value</label>
             <label index="admin_add_new_option_plus_value">Add new option + value</label>
+            <label index="admin_add_new_attribute">Add new attributes</label>
             <label index="admin_add_new_value">Add new value</label>
             <label index="admin_choose_attribute">choose attribute</label>
             <label index="admin_price">Price</label>
@@ -1154,6 +1155,7 @@
             <label index="admin_add_option_plus_value">Voeg optie en waarde toe</label>
             <label index="admin_value">waarde</label>
             <label index="admin_add_new_option_plus_value">Voeg nieuwe optie en waarde toe</label>
+            <label index="admin_add_new_attribute">Voeg attribuut toe</label>
             <label index="admin_add_new_value">Voeg waarde toe</label>
             <label index="admin_choose_attribute">kies attribuut</label>
             <label index="admin_price">Prijs</label>
