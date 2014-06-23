@@ -609,13 +609,13 @@ jQuery(document).ready(function ($) {
 </div>
 </div>
 <script type="text/javascript">
-    jQuery().ready(function ($) {
+    jQuery(document).ready(function ($) {
         $(".admin_product_edit").submit(function () {
             if ($("#categories_id").val() == "0") {
                 alert("###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###");
+                window.enableBlockUi = false;
                 return false;
             }
-
             if ($("#products_name_0").val() == "") {
                 alert("###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###");
                 return false;

@@ -1,3 +1,4 @@
+window.enableBlockUi = true;
 function CONFIRM(label) {
     if (confirm(label)) {
         return true;
@@ -64,7 +65,8 @@ function msAdminBlockUi(onBlock) {
 }
 jQuery(document).ready(function ($) {
     $('.blockSubmitForm').submit(function(e) {
-        msAdminBlockUi();
+        console.log(window.enableBlockUi);
+        //msAdminBlockUi();
     });
     $('.blockAhrefLink').click(function(e) {
         msAdminBlockUi();
