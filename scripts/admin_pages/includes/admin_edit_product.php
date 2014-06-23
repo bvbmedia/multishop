@@ -1199,7 +1199,7 @@ if ($this->post) {
 					file_type: \'products_image'.$i.'\'
 				},
 				template: \'<div class="qq-uploader">\' +
-						  \'<div class="qq-upload-drop-area"><span>Drop files here to upload</span></div>\' +
+						  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
 						  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 						  \'<ul class="qq-upload-list"></ul>\' +
 						  \'</div>\',
@@ -1321,6 +1321,49 @@ if ($this->post) {
 					select2_values_sb("#tmp_attributes_sb", "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					event.preventDefault();
 				});
+
+				jQuery(document).on("click", ".add_new_attributes_values", function(event) {
+					var option_id=$(this).attr("rel");
+					var d = new Date();
+					var n = d.getTime();
+					var new_option_cn="product_attribute_options" + n;
+					var new_value_cn="product_attribute_values" + n;
+					// cloned the first row of the option group
+					var element_cloned=$($(this).parent().prev()).children().first().clone();
+					// cleaned up the cloned value
+					$(element_cloned).find("td.product_attribute_option>div").remove();
+					$(element_cloned).find("td.product_attribute_value>div").remove();
+					$(element_cloned).find("input[class^=\'product_attribute_options\']").attr("class", function(i, c){
+						var classes_name=c.split(" ");
+						var class_name="";
+						$.each(classes_name, function(i, x){
+							if (x.indexOf("product_attribute_options")!==-1) {
+								class_name=x;
+							}
+						});
+						$(this).removeClass(class_name).addClass(new_option_cn);
+						$(this).next().next().val("");
+					});
+					$(element_cloned).find("input[class^=\'product_attribute_values\']").attr("class", function(i, c){
+						var classes_name=c.split(" ");
+						var class_name="";
+						$.each(classes_name, function(i, x){
+							if (x.indexOf("product_attribute_values")!==-1) {
+								class_name=x;
+							}
+						});
+						$(this).removeClass(class_name).addClass(new_value_cn);
+						$(this).val("");
+					});
+					$(element_cloned).find("div.product_attribute_prefix>select").val("+");
+					$(element_cloned).find("div.msAttributesField>input").val("0.00");
+					// add new shiny cloned attributes row
+					$($(this).parent().prev()).append(element_cloned);
+					// init selec2
+					select2_sb(".product_attribute_options" + n, "'.$this->pi_getLL('admin_label_choose_option').'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+					select2_values_sb(".product_attribute_values" + n, "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+					event.preventDefault();
+				});
 				jQuery(document).on("click", ".save_new_attributes", function(){
 					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
 					var pa_option_sb=$("#tmp_options_sb").select2("data");
@@ -1373,12 +1416,12 @@ if ($this->post) {
 								alt: selected_pa_option_text,
 								class: "products_attributes_item " + li_class
 							});
-							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \' <a href="#" class="items_wrapper_unfolded">fold</a></span><div class="items_wrapper"></div>\');
+							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \' <a href="#" class="items_wrapper_unfolded">fold</a></span><div class="items_wrapper"></div><div class="add_new_attributes"><input type="button" class="msadmin_button add_new_attributes_values" value="'.$this->pi_getLL('admin_add_new_value').' [+]" rel="\' + selected_pa_option_id + \'" /></div>\');
 							$(pa_main_divwrapper).addClass("odd_item_row");
 							// rewrite the button
 							$(this).parent().empty().html(delete_button_html);
 							// flush it to existing li
-							$(new_li).children().last().append(pa_main_divwrapper);
+							$(new_li).children("div.items_wrapper").append(pa_main_divwrapper);
 							// flush new li to the newly created tr > ul
 							$("#products_attributes_items").append(new_li);
 							// activate sorting for li children
@@ -1400,7 +1443,7 @@ if ($this->post) {
 						$("tr#add_attributes_holder > td").html("&nbsp;");
 						$("#add_attributes_button").show();
 					} else {
-						alert("'.$this->pi_getLL('admin_label_please_select_options_and_attributes_value').'");
+						msDialog("ERROR","'.$this->pi_getLL('admin_label_please_select_options_and_attributes_value').'");
 					}
 				});
 				$(document).on("click", "#manual_button", function(event) {
@@ -1409,12 +1452,15 @@ if ($this->post) {
 				$(document).on("click", "span.option_name", function(e){
 					e.preventDefault();
 					var self = $(this).children("a");
+					var li_this=$(self).parent().parent();
 					if($(self).hasClass("items_wrapper_unfolded")) {
-						$(self).parent().next(".items_wrapper").hide();
+						$(li_this).children("div.items_wrapper").hide();
+						$(li_this).children("div.add_new_attributes").hide();
 						$(self).removeClass("items_wrapper_unfolded");
 						$(self).addClass("items_wrapper_folded").html("unfold");
 					} else {
-						$(self).parent().next(".items_wrapper").show();
+						$(li_this).children("div.items_wrapper").show();
+						$(li_this).children("div.add_new_attributes").show();
 						$(self).removeClass("items_wrapper_folded");
 						$(self).addClass("items_wrapper_unfolded").html("fold");
 					}
@@ -1628,20 +1674,10 @@ if ($this->post) {
 				sort_li();
 				sort_li_children();
 				$(".items_wrapper").hide();
+				$(".add_new_attributes").hide();
 				select2_sb(".product_attribute_options", "'.$this->pi_getLL('admin_label_choose_option').'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 				select2_values_sb(".product_attribute_values", "'.$this->pi_getLL('admin_label_choose_attribute').'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 			});
-			/*var updateAttribute = function (b,c) {
-				jQuery.get(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&a=update_attributes&opid=').'\' + b, function(data){ jQuery(\'#attribute_\' + c).empty(); jQuery(\'<option value="">choose attribute</option>\' + data).appendTo(\'#attribute_\' + c); });
-			}
-			var addOption = function (b, c, d) {
-				jQuery.get(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&a=add_option').'&optname=\' + b + \'&optval=\' + c + \'&rowid=\' + d, function(data){
-					var counter_data = parseInt(document.getElementById(\'option_row_counter\').value) + 1;
-					document.getElementById(\'option_row_counter\').value = counter_data;
-					jQuery(\'#add_attributes_button\').before(data);
-					//alert(data);
-				});
-			}*/
 			</script>
 			<h1>'.$this->pi_getLL('admin_product_attributes').'</h1>
 			';
@@ -1894,7 +1930,7 @@ if ($this->post) {
 								$attributes_tab_block.='</table>';
 								$attributes_tab_block.='</div>';
 							}
-							$attributes_tab_block.='</div>';
+							$attributes_tab_block.='</div><div class="add_new_attributes"><input type="button" class="msadmin_button add_new_attributes_values" value="'.$this->pi_getLL('admin_add_new_value').' [+]" rel="'.$option_id.'" /></div>';
 							$attributes_tab_block.='</li>';
 						}
 						$attributes_tab_block.='</ul></td>';
@@ -2241,7 +2277,7 @@ if ($this->post) {
 		}
 		$subpartArray['###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###']=$this->pi_getLL('admin_label_js_please_select_category_for_this_product');
 		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=$this->pi_getLL('admin_label_js_product_name_is_empty');
-		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TAB###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
+		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
 		$subpartArray['###ADMIN_LABEL_PRODUCT_NOT_LOADED_SORRY_WE_CANT_FIND_IT###']=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
 		$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 	} else {

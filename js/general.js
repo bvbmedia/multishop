@@ -53,7 +53,7 @@ function msDialog(textTitle, textBody) {
     });
     dialog.append(textBody);
     dialog.dialog({
-        width: 900,
+        width: 450,
         modal: true,
         body: "",
         resizable: false,
