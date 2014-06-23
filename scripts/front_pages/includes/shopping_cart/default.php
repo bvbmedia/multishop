@@ -209,7 +209,7 @@ if (count($cart['products'])>0) {
 				}
 				$quantity_html.='</select>';
 			} else {
-				$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus" rel="qty_'.$shopping_cart_item.'"><input class="qty_input" name="qty['.$shopping_cart_item.']" type="text" id="qty_'.$shopping_cart_item.'" value="'.$value['qty'].'" size="4" maxlength="4" /><input type="button" value="+" class="qty_plus" rel="qty_'.$shopping_cart_item.'">';
+				$quantity_html.='<div class="quantity buttons_added"><input type="button" value="-" class="qty_minus" rel="qty_'.$shopping_cart_item.'"><input class="qty_input" name="qty['.$shopping_cart_item.']" type="text" id="qty_'.$shopping_cart_item.'" value="'.$value['qty'].'" size="4" maxlength="4" /><input type="button" value="+" class="qty_plus" rel="qty_'.$shopping_cart_item.'"></div>';
 			}
 			// show selectbox by products multiplication or show default input eof
 			if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
