@@ -4003,8 +4003,6 @@ class mslib_fe {
 		}
 		if ($this->conf['html_box_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['html_box_tmpl_path']);
-		} else if ($this->conf['html_box_tmpl']) {
-			$template=$this->cObj->fileResource($this->conf['html_box_tmpl']);
 		} else {
 			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/html_box.tmpl');
 		}

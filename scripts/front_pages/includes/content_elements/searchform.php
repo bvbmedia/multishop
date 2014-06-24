@@ -6,8 +6,6 @@ $output=array();
 // now parse all the objects in the tmpl file
 if ($this->conf['searchform_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['searchform_tmpl_path']);
-} elseif ($this->conf['searchform_tmpl']) {
-	$template=$this->cObj->fileResource($this->conf['searchform_tmpl']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/searchform.tmpl');
 }

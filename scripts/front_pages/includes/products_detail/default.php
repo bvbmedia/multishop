@@ -251,11 +251,7 @@ if (!$product['products_id']) {
 	if ($this->conf['product_detail_tmpl_path']) {
 		$template=$this->cObj->fileResource($this->conf['product_detail_tmpl_path']);
 	} else {
-		if ($this->conf['product_detail_tmpl']) {
-			$template=$this->cObj->fileResource($this->conf['product_detail_tmpl']);
-		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/products_detail.tmpl');
-		}
+		$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/products_detail.tmpl');
 	}
 	$markerArray['###CONTENT###']=$output['content'];
 	$markerArray['###PAGINATION###']=$output['pagination'];

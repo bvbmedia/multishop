@@ -6,8 +6,6 @@ $output=array();
 // now parse all the objects in the tmpl file
 if ($this->conf['crumbar_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['crumbar_tmpl_path']);
-} elseif ($this->conf['crumbar_tmpl']) {
-	$template=$this->cObj->fileResource($this->conf['crumbar_tmpl']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/crumbar.tmpl');
 }

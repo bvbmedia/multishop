@@ -7,8 +7,6 @@ $output=array();
 // now parse all the objects in the tmpl file
 if ($this->conf['shopping_cart_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['shopping_cart_tmpl_path']);
-} elseif ($this->conf['shopping_cart_tmpl']) {
-	$template=$this->cObj->fileResource($this->conf['shopping_cart_tmpl']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/shopping_cart.tmpl');
 }

@@ -10,8 +10,6 @@ if (!$this->imageWidth) {
 // now parse all the objects in the tmpl file
 if ($this->conf['specials_sections_products_listing_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['specials_sections_products_listing_tmpl_path']);
-} elseif ($this->conf['specials_sections_products_listing_tmpl']) {
-	$template=$this->cObj->fileResource($this->conf['specials_sections_products_listing_tmpl']);
 } else {
 	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/specials_sections.tmpl');
 }
