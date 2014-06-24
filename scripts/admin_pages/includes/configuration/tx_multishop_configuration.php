@@ -17,6 +17,17 @@ if (!defined('TYPO3_MODE')) {
 // 12 Invoice Settings
 $records=array();
 $records[]=array(
+	'configuration_title'=>'Admin Edit Customer Username Readonly',
+	'configuration_key'=>'ADMIN_EDIT_CUSTOMER_USERNAME_READONLY',
+	'configuration_value'=>'1',
+	'description'=>'Enable the readonly field for customer username in admin edit customer',
+	'group_id'=>'11',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Use Flat database also in admin products search and edit',
 	'configuration_key'=>'USE_FLAT_DATABASE_ALSO_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT',
 	'configuration_value'=>'0',

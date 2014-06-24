@@ -401,7 +401,11 @@ $subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_m
 switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
-		$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
+		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
+			$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
+		} else {
+			$subpartArray['###USERNAME_READONLY###']='';
+		}
 		$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
 		$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
 		if ($this->masterShop) {
@@ -534,7 +538,11 @@ switch ($_REQUEST['action']) {
 			$mrs_checked='';
 		}
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
-		$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
+		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
+			$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
+		} else {
+			$subpartArray['###USERNAME_READONLY###']='';
+		}
 		$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
 		$subpartArray['###VALUE_PASSWORD###']=htmlspecialchars($this->post['password']);
 		$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
