@@ -284,8 +284,6 @@ if (!$product['products_id']) {
 	// now parse all the objects in the tmpl file
 	if ($this->conf['product_detail_tmpl_path']) {
 		$template=$this->cObj->fileResource($this->conf['product_detail_tmpl_path']);
-	} elseif ($this->conf['product_detail_tmpl']) {
-		$template=$this->cObj->fileResource($this->conf['product_detail_tmpl']);
 	} else {
 		$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/products_detail.tmpl');
 	}
