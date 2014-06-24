@@ -4,7 +4,6 @@
         $(".tab_content").hide();
         $("ul.tabs li:first").addClass("active").show();
         $(".tab_content:first").show();
-
         $("ul.tabs li").click(function () {
             $("ul.tabs li").removeClass("active");
             $(this).addClass("active");
@@ -13,6 +12,18 @@
             $(activeTab).fadeIn(0);
             return false;
         });
+        if ($(".error_msg").length > 0) {
+            var lochash = '#edit_customer';
+            if (lochash != '') {
+                var li_this = $("ul > li").find("a[href='" + lochash + "']").parent();
+                if (li_this.length > 0) {
+                    $("ul.tabs li").removeClass("active");
+                    $(li_this).addClass("active");
+                    $(".tab_content").hide();
+                    $(lochash).fadeIn(0);
+                }
+            }
+        }
     });
 </script>
 <div id="tab-container">
