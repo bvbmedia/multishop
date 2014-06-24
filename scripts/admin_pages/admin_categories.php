@@ -17,7 +17,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	jQuery(".master_categories_ul").sortable({
+	$(".master_categories_ul").sortable({
 		cursor:"move",
 		items:">li.categories_sorting",
 		update: function(e, ui) {
@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
 			});
 		}
 	});
-	jQuery(".sub_categories_ul").sortable({
+	$(".sub_categories_ul").sortable({
 		cursor:"move",
 		items:">li.sub_categories_sorting",
 		update: function(e, ui) {
