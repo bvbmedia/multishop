@@ -906,6 +906,25 @@
             <label index="handling_costs_type">Costs type</label>
             <label index="admin_label_no_admin_group_is_defined">no admin group defined yet. Please add the admin usergroup to the constants field in the TYPO3 template.</label>
             <label index="admin_label_email_html_warning">To view the message, please use an HTML compatible email viewer!</label>
+            <label index="admin_label_shop_not_contain_any_categories">This shop doesn't contain any categories.</label>
+            <label index="admin_label_click_here_to_add_category">Click here to add a category</label>
+            <label index="admin_label_shop_not_contain_any_coutries">This shop doesn't contain any enabled countries.</label>
+            <label index="admin_label_click_here_to_add_country">Click here to add a country</label>
+            <label index="admin_label_shop_not_contain_any_zones">This shop doesn't contain any zones.</label>
+            <label index="admin_label_click_here_to_add_zones">Click here to add a zone</label>
+            <label index="admin_label_shop_no_countries_mapped_to_any_zones">Their are no countries mapped to your zone(s).</label>
+            <label index="admin_label_click_here_to_map_country_to_a_zone">Click here to map a country to a zone</label>
+            <label index="admin_label_warning_disable_exec_is_true">disable_exec_function is true. Multishop can run in Safe Mode, but when exec is not allowed we can't resize images through ImageMagick.</label>
+            <label index="admin_label_store_name_not_defined">The store name isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_to_define_store_name">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_store_email_not_defined">The store e-mail address isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_email">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_meta_tag_title_not_defined">The default meta tag title isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_meta_tag_title">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_meta_tag_description_not_defined">The default meta tag description isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_meta_tag_description">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_meta_tag_keywords_not_defined">The default meta tag keywords isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_meta_tag_keywords">Go to setup modules and edit the appropriate field</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1796,6 +1815,25 @@
             <label index="handling_costs_type">Costs type</label>
             <label index="admin_label_no_admin_group_is_defined">no admin group defined yet. Please add the admin usergroup to the constants field in the TYPO3 template.</label>
             <label index="admin_label_email_html_warning">To view the message, please use an HTML compatible email viewer!</label>
+            <label index="admin_label_shop_not_contain_any_categories">This shop doesn't contain any categories.</label>
+            <label index="admin_label_click_here_to_add_category">Click here to add a category</label>
+            <label index="admin_label_shop_not_contain_any_coutries">This shop doesn't contain any enabled countries.</label>
+            <label index="admin_label_click_here_to_add_country">Click here to add a country</label>
+            <label index="admin_label_shop_not_contain_any_zones">This shop doesn't contain any zones.</label>
+            <label index="admin_label_click_here_to_add_zones">Click here to add a zone</label>
+            <label index="admin_label_shop_no_countries_mapped_to_any_zones">Their are no countries mapped to your zone(s).</label>
+            <label index="admin_label_click_here_to_map_country_to_a_zone">Click here to map a country to a zone</label>
+            <label index="admin_label_warning_disable_exec_is_true">disable_exec_function is true. Multishop can run in Safe Mode, but when exec is not allowed we can't resize images through ImageMagick.</label>
+            <label index="admin_label_store_name_not_defined">The store name isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_to_define_store_name">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_store_email_not_defined">The store e-mail address isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_email">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_meta_tag_title_not_defined">The default meta tag title isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_meta_tag_title">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_meta_tag_description_not_defined">The default meta tag description isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_meta_tag_description">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_meta_tag_keywords_not_defined">The default meta tag keywords isn't defined yet.</label>
+            <label index="admin_label_go_to_setup_modules_and_define_meta_tag_keywords">Go to setup modules and edit the appropriate field</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
