@@ -9,8 +9,8 @@ $compiledWidget['title']=$this->pi_getLL('admin_label_shoppingcart');
 $dates=array();
 $data=array();
 $data[]=array(
-	'Datum',
-	'Winkelwagens'
+	$this->pi_getLL('date'),
+	$this->pi_getLL('admin_label_shoppingcart')
 );
 for ($i=12; $i>=0; $i--) {
 	$time=strtotime(date('Y-m-01').' -'.$i.' MONTH');
@@ -21,7 +21,7 @@ foreach ($dates as $key=>$value) {
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
 	$where=array();
 	$where[]='(f.is_checkout=0 or f.is_checkout=1)';
-	switch($this->dashboardArray['section']) {
+	switch ($this->dashboardArray['section']) {
 		case 'admin_home':
 			break;
 		case 'admin_edit_customer':

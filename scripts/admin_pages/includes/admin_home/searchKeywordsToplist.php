@@ -7,7 +7,7 @@ $compiledWidget['defaultCol']=3;
 $compiledWidget['title']=$this->pi_getLL('search_keywords_toplist', 'Gezochte termen');
 $where=array();
 $where[]='s.keyword <> \'\'';
-switch($this->dashboardArray['section']) {
+switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
@@ -26,8 +26,8 @@ $str=$GLOBALS['TYPO3_DB']->SELECTquery('s.keyword, count(s.keyword) as total, s.
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $data=array();
 $data[]=array(
-	'Zoekwoord',
-	'Aantal'
+	$this->pi_getLL('keyword'),
+	$this->pi_getLL('qty')
 );
 while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$data[$row['keyword']]=array(

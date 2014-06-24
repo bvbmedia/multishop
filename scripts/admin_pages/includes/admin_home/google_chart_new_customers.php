@@ -7,12 +7,11 @@ $key='google_chart_customers';
 $compiledWidget['key']='google_chart';
 $compiledWidget['defaultCol']=2;
 $compiledWidget['title']=$this->pi_getLL('admin_label_users');
-
 $dates=array();
 $data=array();
 $data[]=array(
-	'Datum',
-	'Gebruikers'
+	$this->pi_getLL('date'),
+	$this->pi_getLL('admin_label_users')
 );
 for ($i=12; $i>=0; $i--) {
 	$time=strtotime(date('Y-m-01').' -'.$i.' MONTH');

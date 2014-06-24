@@ -904,6 +904,8 @@
             <label index="included_vat_amount">Included VAT amount</label>
             <label index="admin_invoices_overview_description">Manage invoices here</label>
             <label index="handling_costs_type">Costs type</label>
+            <label index="admin_label_no_admin_group_is_defined">no admin group defined yet. Please add the admin usergroup to the constants field in the TYPO3 template.</label>
+            <label index="admin_label_email_html_warning">To view the message, please use an HTML compatible email viewer!</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1792,6 +1794,8 @@
             <label index="included_vat_amount">Waarvan BTW</label>
             <label index="admin_invoices_overview_description">Beheer hier uw facturen</label>
             <label index="handling_costs_type">Costs type</label>
+            <label index="admin_label_no_admin_group_is_defined">no admin group defined yet. Please add the admin usergroup to the constants field in the TYPO3 template.</label>
+            <label index="admin_label_email_html_warning">To view the message, please use an HTML compatible email viewer!</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>

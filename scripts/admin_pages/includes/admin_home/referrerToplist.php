@@ -7,7 +7,7 @@ $compiledWidget['defaultCol']=3;
 $compiledWidget['title']=$this->pi_getLL('referrer_toplist', 'Verwijzende websites');
 $where=array();
 $where[]='f.http_referer <> \'\' and f.deleted=0';
-switch($this->dashboardArray['section']) {
+switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
@@ -26,8 +26,8 @@ $str=$GLOBALS['TYPO3_DB']->SELECTquery('f.http_referer, count(1) as total', // S
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $data=array();
 $data[]=array(
-	'Referrer',
-	'Aantal'
+	$this->pi_getLL('referrer'),
+	$this->pi_getLL('qty')
 );
 while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$domain=parse_url($row['http_referer']);
