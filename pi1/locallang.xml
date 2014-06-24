@@ -541,8 +541,7 @@
             <label index="personal_details">Personal details</label>
             <label index="personal_details_description">Fields with * are required</label>
             <label index="login_details_description">Your e-mail address and password is required to be able to access your account details. Also we will sent you updates about your orders</label>
-            <label index="subscribe_to_our_newsletter_description">Keep yourself up-to-date about our specials by receiving our newsletter. You will receive the latest news directly through your mailbox and at any moment you can easily unsubscribe
-            </label>
+            <label index="subscribe_to_our_newsletter_description">Keep yourself up-to-date about our specials by receiving our newsletter. You will receive the latest news directly through your mailbox and at any moment you can easily unsubscribe</label>
             <label index="invoice_date">Date of invoice</label>
             <label index="payment_terms">Payment terms</label>
             <label index="update_modified_products">Update modified products</label>
@@ -668,13 +667,9 @@
             <label index="admin_sales_volume_statistics_description">Show turn over by month/year</label>
             <label index="admin_customers_description">Manage customers here</label>
             <label index="admin_orders_description">Manage orders here</label>
-            <label index="ordered_product_qty_exceed_maximum_stock">the quantity you request for this product are exceeding the stock we have, at this moment the maximum quantity you may order for this product is: %d please update the order quantity
-                for this product, and continue the checkout
-            </label>
+            <label index="ordered_product_qty_exceed_maximum_stock">the quantity you request for this product are exceeding the stock we have, at this moment the maximum quantity you may order for this product is: %d please update the order quantity for this product, and continue the checkout</label>
             <label index="ordered_product_not_instock">this product is currently not available</label>
-            <label index="ordered_product_stock_not_available_waiting_for_restock">due to the quantity you order for this product are exceeding the stock we have, we will process the order for this product after the re-stock. you can continue the
-                checkout.
-            </label>
+            <label index="ordered_product_stock_not_available_waiting_for_restock">due to the quantity you order for this product are exceeding the stock we have, we will process the order for this product after the re-stock. you can continue the checkout.</label>
             <label index="admin_stats_products_toplist">Products Toplist</label>
             <label index="admin_stats_products_toplist_description">Display top products</label>
             <label index="admin_stats_customers_toplist">Customers Toplist</label>
@@ -1454,9 +1449,7 @@
             <label index="personal_details">Persoonlijke gegevens</label>
             <label index="personal_details_description">Velden met een markering voor verplicht zijn verplicht</label>
             <label index="login_details_description">Je e-mailadres en wachtwoord is nodig om toegang te krijgen tot je gegevens. Tevens zullen we je via dit e-mailadres op de hoogte houden van de status van uw bestellingen</label>
-            <label index="subscribe_to_our_newsletter_description">Blijf op de hoogte van alle acties en voordelen door onze nieuwsbrief te ontvangen. Je ontvangt het laatste nieuws direct in je mailbox en je kunt je op ieder gewenst moment weer
-                uitschrijven
-            </label>
+            <label index="subscribe_to_our_newsletter_description">Blijf op de hoogte van alle acties en voordelen door onze nieuwsbrief te ontvangen. Je ontvangt het laatste nieuws direct in je mailbox en je kunt je op ieder gewenst moment weer uitschrijven</label>
             <label index="invoice_date">Factuurdatum</label>
             <label index="payment_terms">Betaaltermijn</label>
             <label index="update_modified_products">Wijzig aangepaste producten</label>
