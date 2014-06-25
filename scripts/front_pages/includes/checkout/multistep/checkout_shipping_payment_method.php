@@ -97,7 +97,7 @@ if ($erno or $show_shipping_payment_method) {
 	if (count($shipping_methods)) {
 		$content.='
 		<div id="shipping_payment_method">
-		<div class="shipping_method hide" id="shipping_method">
+		<div class="shipping_method" id="shipping_method">
 		<div class="main-heading"><h2>'.$this->pi_getLL('choose_shipping_method').'</h2></div>
 		<div class="content">
 		 <ul id="multishop_shipping_method">';
