@@ -250,7 +250,7 @@ if (is_numeric($this->get['orders_id'])) {
 						<span class="order_total_value">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0).'</span>
 					</div>';
 				$content_vat='<div class="account-field">
-						<label>'.$this->pi_getLL('vat').'</label>
+						<label>'.$this->pi_getLL('included_vat_amount').'</label>
 						<span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span>
 					</div>';
 				if ($order['shipping_method_costs']>0) {
