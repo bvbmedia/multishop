@@ -1788,9 +1788,9 @@ class tx_mslib_cart extends tslib_pibase {
 				if ($subtotal) {
 					if (strstr($payment_method['handling_costs'], "%")) {
 						$percentage=str_replace("%", '', $payment_method['handling_costs']);
-						$payment_method_costs=($subtotal/100*$percentage);
+						$this->cart['user']['payment_method_costs']=($subtotal/100*$percentage);
 					} else {
-						$payment_method_costs=$payment_method['handling_costs'];
+						$this->cart['user']['payment_method_costs']=$payment_method['handling_costs'];
 					}
 				}
 			}
