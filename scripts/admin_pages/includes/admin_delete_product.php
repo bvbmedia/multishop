@@ -34,7 +34,7 @@ if (is_numeric($_REQUEST['pid'])) {
 		<input name="confirm" type="hidden" value="1" />
 		<input name="action" type="hidden" value="delete_product" />
 		<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
-		<input name="Submit" type="submit" value="'.$this->pi_getLL('delete').': '.htmlspecialchars($row['products_name']).'" class="submit" />
+		 <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('delete').': '.htmlspecialchars($row['products_name']).'" /></span>
 	</div>	
 ';
 			$content.='</form>';

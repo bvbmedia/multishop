@@ -33,7 +33,7 @@ if (is_numeric($_REQUEST['cid'])) {
 		<input name="confirm" type="hidden" value="1" />
 		<input name="action" type="hidden" value="delete_category" />
 		<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
-		<input name="Submit" type="submit" value="'.$this->pi_getLL('delete').': '.htmlspecialchars($row['categories_name']).'" class="submit" />
+		<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('delete').': '.htmlspecialchars($row['categories_name']).'" /></span>
 	</div>	
 ';
 			$content.='</form>';
