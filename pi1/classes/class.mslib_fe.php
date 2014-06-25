@@ -6814,7 +6814,7 @@ class mslib_fe {
 		}
 		if (!$CACHE_FRONT_END or ($CACHE_FRONT_END and !$data=$Cache_Lite->get($string))) {
 			if ($type=='shop') {
-				$sql_tt_address="select *, sc.cn_iso_nr from tt_address tta, static_countries sc where tta.uid='".addslashes($this->conf['tt_address_record_id_store'])."' and tta.country=sc.cn_short_en";
+				$sql_tt_address="select *, sc.cn_iso_nr from tt_address tta, static_countries sc where tta.deleted=0 and tta.hidden=0 and tta.uid='".addslashes($this->conf['tt_address_record_id_store'])."' and tta.country=sc.cn_short_en";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
@@ -6829,7 +6829,7 @@ class mslib_fe {
 							exit();
 						}
 						echo 'System could not fetch the store tt address record id. Maybe the value of tt_address_record_id_store is incorrect?<br />Query: '.$sql_tt_address;
-						$sql_tt_address="select * from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+						$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 						$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 						if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 							$item=array();
@@ -6846,13 +6846,13 @@ class mslib_fe {
 						exit();
 					} else {
 						// old fallback mode to bypass bugs
-						$sql_tt_address="select * from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+						$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 						$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 						$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address);
 					}
 				}
 			} elseif ($type=='customer') {
-				$sql_tt_address="select * from tt_address where tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+				$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				while ($row_tt_address=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tt_address)) {
 					if ($row_tt_address['tx_multishop_default']==1) {
@@ -6880,7 +6880,7 @@ class mslib_fe {
 	}
 	public function getFeUserTTaddressDetails($customer_id, $tx_multishop_address_type='billing') {
 		if (is_numeric($customer_id)) {
-			$sql_tt_address="select * from tt_address where tx_multishop_address_type = '".$tx_multishop_address_type."' and tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf ['fe_customer_pid']."'";
+			$sql_tt_address="select * from tt_address where deleted=0 and hidden=0 and tx_multishop_address_type = '".$tx_multishop_address_type."' and tx_multishop_customer_id=".$customer_id." and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf ['fe_customer_pid']."'";
 //			$sql_tt_address = "select * from tt_address where tx_multishop_address_type = '" . $tx_multishop_address_type . "' and tx_multishop_customer_id=" . $customer_id . " and pid='" . $this->conf ['fe_customer_pid'] . "'";
 			$qry_tt_address=$GLOBALS ['TYPO3_DB']->sql_query($sql_tt_address);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
