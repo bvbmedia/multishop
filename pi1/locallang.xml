@@ -920,6 +920,7 @@
             <label index="admin_label_go_to_setup_modules_and_define_meta_tag_description">Go to setup modules and edit the appropriate field</label>
             <label index="admin_label_meta_tag_keywords_not_defined">The default meta tag keywords isn't defined yet.</label>
             <label index="admin_label_go_to_setup_modules_and_define_meta_tag_keywords">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_nothing_updated_already_using_latest_version">Nothing updated. You are already using the latest version.</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1827,6 +1828,7 @@
             <label index="admin_label_go_to_setup_modules_and_define_meta_tag_description">Go to setup modules and edit the appropriate field</label>
             <label index="admin_label_meta_tag_keywords_not_defined">The default meta tag keywords isn't defined yet.</label>
             <label index="admin_label_go_to_setup_modules_and_define_meta_tag_keywords">Go to setup modules and edit the appropriate field</label>
+            <label index="admin_label_nothing_updated_already_using_latest_version">Nothing updated. You are already using the latest version.</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
