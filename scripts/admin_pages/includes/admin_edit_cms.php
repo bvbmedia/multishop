@@ -331,6 +331,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
+		$(document).on("click", ".tooltipMarker", function(e){ e.preventDefault(); });
 		$(".tooltipMarker").tooltip({
 			position: "bottom",
 			onBeforeShow: function() {
