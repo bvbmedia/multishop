@@ -1,5 +1,5 @@
 
-#tx_multishop_admin_header_wrapper { position:fixed; left:0;top:0; min-width:990px; width:100%; text-align:left; margin:0; padding:0; z-index:10003; }
+#tx_multishop_admin_header_wrapper { position:fixed; left:0;top:0; min-width:990px; width:100%; text-align:left; margin:0; padding:0; z-index:10004; }
 #tx_multishop_admin_header_wrapper *,
 #tx_multishop_admin_header_wrapper *:after,
 #tx_multishop_admin_header_wrapper *:before { box-sizing:content-box; }
@@ -115,7 +115,7 @@ background-image   :-ms-linear-gradient(top, rgba(240,240,240,1), rgba(255,255,2
 .se2lect2-results li:hover ul li .select2-result-label .ajax_products_name,
 .s2elect2-results li:hover ul li .select2-result-label .ajax_products_name a { color:#fff !important; }
 .select2-drop.select2-drop-active.bigdrop,
-.select2-drop.select2-drop-active.adminpanel-search-bigdrop { width:402px !important; border-color:#444 !important; z-index:10003 !important; }
+.select2-drop.select2-drop-active.adminpanel-search-bigdrop { width:402px !important; border-color:#444 !important; z-index:10004 !important; }
 .select2-search input { font:13px Arial, Helvetica, sans-serif !important; }
 .select2-results { max-height:360px !important; }
 .select2-results .select2-no-results { background:none !important; font-size:12px; }
@@ -154,7 +154,7 @@ ul#ms_admin_maximize li { background:none; margin:0; padding:0; list-style:none;
 ul#ms_admin_maximize li a { display:block; float:left; width:85px; height:24px; background:url(../images/admin_maximize.png) left top no-repeat; font:11px Arial, Helvetica, sans-serif; color:#fff; margin:0; padding:5px 0 0 48px; }
 /* --- end of admin menu --- */
 
-#tx_multishop_admin_footer_wrapper { position:fixed; left:0;bottom:0;  min-width:990px; width:100%; height:42px; background:url(../images/admin_bar_footer_shadow.png) left top repeat-x; text-align:left; margin:0; z-index:10003; }
+#tx_multishop_admin_footer_wrapper { position:fixed; left:0;bottom:0;  min-width:990px; width:100%; height:42px; background:url(../images/admin_bar_footer_shadow.png) left top repeat-x; text-align:left; margin:0; z-index:10004; }
 #tx_multishop_admin_footer_wrapper *,
 #tx_multishop_admin_footer_wrapper *:after,
 #tx_multishop_admin_footer_wrapper *:before { box-sizing:content-box; }

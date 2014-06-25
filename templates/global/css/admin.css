@@ -419,7 +419,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 	text-align:right;
 }
 
-.msadmin_balloon_wrapper { position:fixed; bottom:40px; left:20px; z-index:10001; }
+.msadmin_balloon_wrapper { position:fixed; bottom:40px; left:20px; z-index:10003; }
 .msadmin_balloon_wrapper *,
 .msadmin_balloon_wrapper *:after,
 .msadmin_balloon_wrapper *:before { box-sizing:content-box; }
