@@ -4960,9 +4960,9 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['label']=$this->pi_getLL('admin_payment_methods');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping', 'PAYMENT ZONE MAPPING');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_zone_payment_mappings');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['label']=$this->pi_getLL('admin_shipping_zone_mapping', 'SHIPPING ZONE MAPPING');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['label']=$this->pi_getLL('admin_shipping_zone_mapping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_zone_shipping_mappings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['label']=$this->pi_getLL('admin_mappings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_payment_mappings');
@@ -4983,48 +4983,48 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_reset_the_cooluri_cache').'?\')"';
 			}
 			if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSortCatalog']) {
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['label']=$this->pi_getLL('admin_sort_catalog', 'Sort catalog');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['description']=$this->pi_getLL('admin_sort_catalog_description', 'Re-order your catalog by one mouse click').'.';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['label']=$this->pi_getLL('admin_sort_manufacturers', 'Manufacturers');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_asc']['label']=$this->pi_getLL('admin_sort_manufacturers_alphabet_asc', 'sort on alfabet (asc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['label']=$this->pi_getLL('admin_sort_catalog');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['description']=$this->pi_getLL('admin_sort_catalog_description').'.';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['label']=$this->pi_getLL('manufacturers');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_asc']['label']=$this->pi_getLL('admin_sort_alphabet_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=manufacturers&tx_multishop_pi1[sortByField]=name&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_manufacturers_asc', 'Are you sure want to sort manufacturers name ascending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_desc']['label']=$this->pi_getLL('admin_sort_manufacturers_alphabet_desc', 'sort on alfabet (desc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_manufacturers_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_desc']['label']=$this->pi_getLL('admin_sort_alphabet_desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=manufacturers&tx_multishop_pi1[sortByField]=name&tx_multishop_pi1[orderBy]=desc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_manufacturers_desc', 'Are you sure want to sort manufacturers name descending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['label']=$this->pi_getLL('admin_sort_categories', 'Categories');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_asc']['label']=$this->pi_getLL('admin_sort_categories_alphabet_asc', 'sort on alfabet (asc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_manufacturers']['subs']['admin_sort_manufacturers_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_manufacturers_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['label']=$this->pi_getLL('categories');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_asc']['label']=$this->pi_getLL('admin_sort_alphabet_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=categories&tx_multishop_pi1[sortByField]=categories_name&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_categories_asc', 'Are you sure want to sort categories name ascending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_desc']['label']=$this->pi_getLL('admin_sort_categories_alphabet_desc', 'sort on alfabet (desc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_categories_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_desc']['label']=$this->pi_getLL('admin_sort_alphabet_desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=categories&tx_multishop_pi1[sortByField]=categories_name&tx_multishop_pi1[orderBy]=desc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_categories_desc', 'Are you sure want to sort categories name descending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['label']=$this->pi_getLL('admin_sort_products', 'Products');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_asc']['label']=$this->pi_getLL('admin_sort_products_alphabet_asc', 'sort on alfabet (asc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_categories']['subs']['admin_sort_categories_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_categories_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['label']=$this->pi_getLL('products');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_asc']['label']=$this->pi_getLL('admin_sort_alphabet_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_name&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_asc', 'Are you sure want to sort products name ascending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_desc']['label']=$this->pi_getLL('admin_sort_products_alphabet_desc', 'sort on alfabet (desc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_desc']['label']=$this->pi_getLL('admin_sort_alphabet_desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_name&tx_multishop_pi1[orderBy]=desc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_desc', 'Are you sure want to sort products name descending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_asc']['label']=$this->pi_getLL('admin_sort_products_price_asc', 'sort on price (asc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_asc']['label']=$this->pi_getLL('admin_sort_price_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_price&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_asc', 'Are you sure want to sort products price ascending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_desc']['label']=$this->pi_getLL('admin_sort_products_price_desc', 'sort on price (desc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_desc']['label']=$this->pi_getLL('admin_sort_price_desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_price&tx_multishop_pi1[orderBy]=desc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_desc', 'Are you sure want to sort products price descending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_asc']['label']=$this->pi_getLL('admin_sort_by_date_ascending', 'sort on date available (asc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_price_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_asc']['label']=$this->pi_getLL('admin_sort_date_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_date_added&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_date_asc', 'Are you sure want to sort products date added ascending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['label']=$this->pi_getLL('admin_sort_by_date_descending', 'sort on date available (desc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_date_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['label']=$this->pi_getLL('admin_sort_date_desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_date_added&tx_multishop_pi1[orderBy]=desc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_date_desc', 'Are you sure want to sort products date added descending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['label']=$this->pi_getLL('admin_sort_products_attributes', 'Products attributes');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['label']=$this->pi_getLL('admin_sort_products_attributes_alphabet_asc', 'sort on alfabet (asc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_date_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['label']=$this->pi_getLL('products_attributes');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['label']=$this->pi_getLL('admin_sort_alphabet_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_options_values_name&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_asc', 'Are you sure want to sort products attributes ascending').'?\')"';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['label']=$this->pi_getLL('admin_sort_products_attributes_alphabet_desc', 'sort on alfabet (desc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_attributes_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['label']=$this->pi_getLL('admin_sort_alphabet_desc', 'sort on alfabet (desc)');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_options_values_name&tx_multishop_pi1[orderBy]=desc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_desc', 'Are you sure want to sort products attributes descending').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_attributes_desc').'?\')"';
 				/*
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['label']=$this->pi_getLL('admin_sort_products_attributes_price_asc', 'sort on price (asc)');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_price&tx_multishop_pi1[orderBy]=asc');
@@ -5033,7 +5033,7 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_price&tx_multishop_pi1[orderBy]=desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_desc', 'Are you sure want to sort products attributes price descending').'?\')"';
 				*/
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_complete']['label']=$this->pi_getLL('admin_sort_complete', 'Sort all on alphabet');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_complete']['label']=$this->pi_getLL('admin_sort_complete');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_complete']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=catalog&tx_multishop_pi1[sortByField]=name&tx_multishop_pi1[orderBy]=asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_complete']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_catalog').'?\')"';
 				/*
@@ -5055,13 +5055,13 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_compare_database']['link_params']='id="multishop_update_button"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['label']=$this->pi_getLL('admin_consistency_checker');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_consistency_checker');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['link_params']='onClick="return CONFIRM(\'Are you sure you want to run the consistency checker?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_run_consistency_checker').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_delete_disabled_products']['label']=$this->pi_getLL('admin_delete_disabled_products');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_delete_disabled_products']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_delete_disabled_products');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_delete_disabled_products']['link_params']='onClick="return CONFIRM(\'Are you sure you want to delete the disabled products?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_delete_disabled_products']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_delete_the_disabled_products').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['label']=$this->pi_getLL('admin_clear_whole_database');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_clear_database');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['link_params']='onClick="return CONFIRM(\'This will destroy the whole catalog and cannot be restored. Are you sure you want to start all over again?\');"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_all_over_again').'?\');"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_scan_for_orphan_files']['label']=$this->pi_getLL('admin_scan_for_orphan_files');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_scan_for_orphan_files']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_orphan_files');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_scan_for_orphan_files']['link_params']='';
@@ -5069,11 +5069,11 @@ class mslib_fe {
 			if ($this->ms['MODULES']['FLAT_DATABASE'] and ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelRebuildFlatDatabase'])) {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['label']=$this->pi_getLL('admin_rebuild_flat_database');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_rebuild_flat_database');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['link_params']='onClick="return CONFIRM(\'Are you sure you want to rebuild the flat databases?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_rebuild_flat_database').'?\')"';
 			}
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['label']=$this->pi_getLL('admin_sitemap_generator');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_sitemap_generator');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link_params']='onClick="return CONFIRM(\'Are you sure you want to start this?\')"';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
 			// footer eof
 		} // end if enableAdminPanelSystem
 		// hook
@@ -5220,23 +5220,38 @@ class mslib_fe {
 	}
 	public function tep_get_categories_edit($categories_id='', $aid='') {
 		if ($categories_id) {
-			$parent_categories_query=$GLOBALS['TYPO3_DB']->sql_query("SELECT cd.categories_name as name, cd.categories_id as id, c.parent_id as parent from tx_multishop_categories c, tx_multishop_categories_description cd where c.parent_id='".$categories_id."' and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$GLOBALS['TSFE']->sys_language_uid."' and c.status=1 and c.categories_id=cd.categories_id order by c.sort_order, cd.categories_name");
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name as name, cd.categories_id as id, c.parent_id as parent', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'c.parent_id=\''.$categories_id.'\' and c.page_uid=\''.$this->showCatalogFromPage.'\' and cd.language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\' and c.status=1 and c.categories_id=cd.categories_id', // WHERE...
+				'', // GROUP BY...
+				'c.sort_order, cd.categories_name', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$parent_categories_query=$GLOBALS['TYPO3_DB']->sql_query($query);
 		} else {
-			$parent_categories_query=$GLOBALS['TYPO3_DB']->sql_query("SELECT cd.categories_name as name, cd.categories_id as id, c.parent_id as parent from tx_multishop_categories c, tx_multishop_categories_description cd where c.parent_id='0' and c.status=1 and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$GLOBALS['TSFE']->sys_language_uid."' and c.categories_id=cd.categories_id order by c.sort_order, cd.categories_name");
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name as name, cd.categories_id as id, c.parent_id as parent', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'c.parent_id=\'0\' and c.status=1 and c.page_uid=\''.$this->showCatalogFromPage.'\' and cd.language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\' and c.categories_id=cd.categories_id', // WHERE...
+				'', // GROUP BY...
+				'c.sort_order, cd.categories_name', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$parent_categories_query=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 		$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($parent_categories_query);
+		$html='';
 		if ($rows) {
 			$html.='<ul>';
 		}
 		while ($parent_categories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($parent_categories_query)) {
-			$html.='<li><div class="float-right-bold"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id']).'&action=delete_category" alt="Remove" class="admin_menu_remove" title="Remove"></a>';
+			$html.='<li><div class="float-right-bold"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id']).'&action=delete_category" alt="'.$this->pi_getLL('admin_label_alt_remove').'" class="admin_menu_remove" title="'.$this->pi_getLL('admin_label_alt_remove').'"></a>';
 			$strchk="select * from tx_multishop_categories where parent_id='".$parent_categories['id']."'";
 			$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
-				$html.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id'].'&action=add_product').'" class="admin_menu_add" title="Add Product"></a>';
+				$html.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id'].'&action=add_product').'" class="admin_menu_add" title="'.$this->pi_getLL('admin_label_add_product').'"></a>';
 			}
 			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
-				$html.=' <a href="#" cid="'.$parent_categories['id'].'" class="admin_menu_upload_productfeed" title="Upload Productfeed"></a>';
+				$html.=' <a href="#" cid="'.$parent_categories['id'].'" class="admin_menu_upload_productfeed" title="'.$this->pi_getLL('admin_label_upload_productfeed').'"></a>';
 			}
 			$html.='</div><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$parent_categories['id']).'&action=edit_category">'.$parent_categories['name'].'</a></strong>';
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
@@ -5382,6 +5397,7 @@ class mslib_fe {
 	public function generateInvoiceId() {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['generateInvoiceId'])) {
 			$invoice_id='';
+			$ms='';
 			// hook
 			$params=array(
 				'ms'=>$ms,
@@ -5393,8 +5409,13 @@ class mslib_fe {
 			// hook oef
 			return $invoice_id;
 		} else {
-			//$sql	= "select invoice_id from tx_multishop_invoices where page_uid='".$this->shop_pid."' order by id desc limit 1";
-			$sql="select invoice_id from tx_multishop_invoices where page_uid='".$this->showCatalogFromPage."' order by id desc limit 1";
+			$sql=$GLOBALS['TYPO3_DB']->SELECTquery('invoice_id', // SELECT ...
+				'tx_multishop_invoices', // FROM ...
+				'page_uid=\''.$this->showCatalogFromPage.'\'', // WHERE...
+				'', // GROUP BY...
+				'id desc', // ORDER BY...
+				'1' // LIMIT ...
+			);
 			$query=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			$rs_inv=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);
 			$prefix=$this->ms['MODULES']['INVOICE_PREFIX'].date("Y");
@@ -5473,7 +5494,13 @@ class mslib_fe {
 		if (!is_numeric($orders_id)) {
 			return false;
 		}
-		$sql="select invoice_id,hash from tx_multishop_invoices where orders_id = ".$orders_id;
+		$sql=$GLOBALS['TYPO3_DB']->SELECTquery('invoice_id, hash', // SELECT ...
+			'tx_multishop_invoices', // FROM ...
+			'orders_id=\''.$orders_id.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)==0) {
 			if ($create_if_not_exists) {
@@ -5495,14 +5522,26 @@ class mslib_fe {
 		}
 		if (is_numeric($id)) {
 			// check if this invoice hasnt be reversed already
-			$sql="select count(1) as total from tx_multishop_invoices where reversal_related_id='".$id."'";
+			$sql=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
+				'tx_multishop_invoices', // FROM ...
+				'reversal_related_id=\''.$id.'\'', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
 			$query=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);
 			if ($row['total']==0) {
-				$sql="select * from tx_multishop_invoices where id='".$id."'";
+				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+					'tx_multishop_invoices', // FROM ...
+					'id=\''.$id.'\'', // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+				);
 				$query=$GLOBALS['TYPO3_DB']->sql_query($sql);
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);
-				if (!$invoice['reversal_invoice']) {
+				if (!$row['reversal_invoice']) {
 					$new_invoice_id=mslib_fe::generateInvoiceId();
 					if ($new_invoice_id) {
 						unset($row['id']);
@@ -5513,11 +5552,11 @@ class mslib_fe {
 						$row['invoice_id']=$new_invoice_id;
 						$row['hash']=md5(uniqid('', true));
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $row);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$GLOBALS['TYPO3_DB']->sql_query($query);
 						// update old invoice to paid so its gone from the unpaid list						
 						$updateArray=array('paid'=>1);
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$id, $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
 			}
@@ -5603,42 +5642,42 @@ class mslib_fe {
 			$offset=0;
 		}
 		// do normal search (join the seperate tables)
-		$select_clause="SELECT ";
+		$select_clause='SELECT ';
 		if (count($select)>0) {
-			$select_clause.=implode(",", $select);
+			$select_clause.=implode(',', $select);
 		}
-		$from_clause.="	from tx_multishop_cms c, tx_multishop_cms_description cd";
+		$from_clause=' from tx_multishop_cms c, tx_multishop_cms_description cd';
 		if (count($from)>0) {
-			$from_clause.=", ";
+			$from_clause.=', ';
 			$from_clause.=implode(",", $from);
 		}
-		$where_clause.=" where c.id=cd.id and cd.language_id='".$this->sys_language_uid."'";
+		$where_clause=' where c.id=cd.id and cd.language_id=\''.$this->sys_language_uid.'\'';
 		if (count($where)>0) {
 			$where_clause.='and ';
 			$where_clause.=implode($where, ",");
 		}
 		if (is_array($filter) and count($filter)>0) {
-			$where_clause.=' and ('.implode($filter, " and ").')';
+			$where_clause.=' and ('.implode($filter, ' and ').')';
 		} else if ($filter) {
 			$where_clause.=' and ('.$filter.')';
 		}
 		if (count($having)>0) {
-			$having_clause.=" having ";
+			$having_clause=' having ';
 			foreach ($having as $item) {
 				$having_clause.=$item;
 			}
 		}
 		if (is_array($orderby) and count($orderby)>0) {
-			$str_order_by.=implode($orderby, ",");
+			$str_order_by=implode($orderby, ',');
 		} else if ($orderby) {
-			$str_order_by.=$orderby;
+			$str_order_by=$orderby;
 		} else {
-			$str_order_by.="";
+			$str_order_by="";
 		}
 		if ($str_order_by) {
-			$orderby_clause.=" order by ".$str_order_by;
+			$orderby_clause=' order by '.$str_order_by;
 		}
-		$limit_clause.=' LIMIT '.$offset.','.$limit;
+		$limit_clause=' LIMIT '.$offset.','.$limit;
 		$array=array();
 		$str='SELECT count(1) as total '.$from_clause.$where_clause.$having_clause;
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -5725,42 +5764,42 @@ class mslib_fe {
 			$offset=0;
 		}
 		// do normal search (join the seperate tables)
-		$select_clause="SELECT ";
+		$select_clause='SELECT ';
 		if (count($select)>0) {
 			$select_clause.=implode(",", $select);
 		}
-		$from_clause.="	from tx_multishop_configuration c left join tx_multishop_configuration_values cv on c.configuration_key=cv.configuration_key ";
+		$from_clause=' from tx_multishop_configuration c left join tx_multishop_configuration_values cv on c.configuration_key=cv.configuration_key ';
 		if (count($from)>0) {
-			$from_clause.=", ";
-			$from_clause.=implode(",", $from);
+			$from_clause.=', ';
+			$from_clause.=implode(',', $from);
 		}
-		$where_clause.=" where 1 ";
+		$where_clause=' where 1 ';
 		if (count($where)>0) {
 			$where_clause.='and ';
 			$where_clause.=implode($where, ",");
 		}
 		if (is_array($filter) and count($filter)>0) {
-			$where_clause.=' and ('.implode($filter, " and ").')';
+			$where_clause.=' and ('.implode($filter, ' and ').')';
 		} else if ($filter) {
 			$where_clause.=' and ('.$filter.')';
 		}
 		if (count($having)>0) {
-			$having_clause.=" having ";
+			$having_clause=' having ';
 			foreach ($having as $item) {
 				$having_clause.=$item;
 			}
 		}
 		if (is_array($orderby) and count($orderby)>0) {
-			$str_order_by.=implode($orderby, ",");
+			$str_order_by=implode($orderby, ',');
 		} else if ($orderby) {
-			$str_order_by.=$orderby;
+			$str_order_by=$orderby;
 		} else {
-			$str_order_by.="";
+			$str_order_by='';
 		}
 		if ($str_order_by) {
-			$orderby_clause.=" order by ".$str_order_by;
+			$orderby_clause=' order by '.$str_order_by;
 		}
-		$limit_clause.=' LIMIT '.$offset.','.$limit;
+		$limit_clause=' LIMIT '.$offset.','.$limit;
 		$array=array();
 		$str='SELECT count(1) as total '.$from_clause.$where_clause.$having_clause;
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -5790,42 +5829,42 @@ class mslib_fe {
 			$offset=0;
 		}
 		// do normal search (join the seperate tables)
-		$select_clause="SELECT ";
+		$select_clause='SELECT ';
 		if (count($select)>0) {
-			$select_clause.=implode(",", $select);
+			$select_clause.=implode(',', $select);
 		}
-		$from_clause.="	from tx_multishop_categories c, tx_multishop_categories_description cd";
+		$from_clause=' from tx_multishop_categories c, tx_multishop_categories_description cd';
 		if (count($from)>0) {
-			$from_clause.=", ";
+			$from_clause.=', ';
 			$from_clause.=implode(",", $from);
 		}
-		$where_clause.=" where c.status=1 and cd.language_id='".$this->sys_language_uid."' and c.categories_id=cd.categories_id";
+		$where_clause=' where c.status=1 and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id=cd.categories_id';
 		if (count($where)>0) {
 			$where_clause.='and ';
-			$where_clause.=implode($where, ",");
+			$where_clause.=implode($where, ',');
 		}
 		if (is_array($filter) and count($filter)>0) {
-			$where_clause.=' and ('.implode($filter, " and ").')';
+			$where_clause.=' and ('.implode($filter, ' and ').')';
 		} else if ($filter) {
 			$where_clause.=' and ('.$filter.')';
 		}
 		if (count($having)>0) {
-			$having_clause.=" having ";
+			$having_clause=' having ';
 			foreach ($having as $item) {
 				$having_clause.=$item;
 			}
 		}
 		if (is_array($orderby) and count($orderby)>0) {
-			$str_order_by.=implode($orderby, ",");
+			$str_order_by=implode($orderby, ',');
 		} else if ($orderby) {
-			$str_order_by.=$orderby;
+			$str_order_by=$orderby;
 		} else {
-			$str_order_by.="";
+			$str_order_by="";
 		}
 		if ($str_order_by) {
-			$orderby_clause.=" order by ".$str_order_by;
+			$orderby_clause=' order by '.$str_order_by;
 		}
-		$limit_clause.=' LIMIT '.$offset.','.$limit;
+		$limit_clause=' LIMIT '.$offset.','.$limit;
 		$array=array();
 		$str='SELECT count(1) as total '.$from_clause.$where_clause.$having_clause;
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -5855,43 +5894,43 @@ class mslib_fe {
 			$offset=0;
 		}
 		// do normal search (join the seperate tables)
-		$select_clause="SELECT ";
+		$select_clause='SELECT ';
 		if (count($select)>0) {
-			$select_clause.=implode(",", $select);
+			$select_clause.=implode(',', $select);
 		}
 //		$from_clause.="	from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id ";
-		$from_clause.="	from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) ";
+		$from_clause=' from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) ';
 		if (count($from)>0) {
-			$from_clause.=", ";
-			$from_clause.=implode(",", $from);
+			$from_clause.=', ';
+			$from_clause.=implode(',', $from);
 		}
-		$where_clause.=" where o.deleted=0";
+		$where_clause=' where o.deleted=0';
 		if (count($where)>0) {
 			$where_clause.='and ';
-			$where_clause.=implode($where, ",");
+			$where_clause.=implode($where, ',');
 		}
 		if (is_array($filter) and count($filter)>0) {
-			$where_clause.=' and ('.implode($filter, " and ").')';
+			$where_clause.=' and ('.implode($filter, ' and ').')';
 		} else if ($filter) {
 			$where_clause.=' and ('.$filter.')';
 		}
 		if (count($having)>0) {
-			$having_clause.=" having ";
+			$having_clause=' having ';
 			foreach ($having as $item) {
 				$having_clause.=$item;
 			}
 		}
 		if (is_array($orderby) and count($orderby)>0) {
-			$str_order_by.=implode($orderby, ",");
+			$str_order_by=implode($orderby, ',');
 		} else if ($orderby) {
-			$str_order_by.=$orderby;
+			$str_order_by=$orderby;
 		} else {
-			$str_order_by.="";
+			$str_order_by='';
 		}
 		if ($str_order_by) {
-			$orderby_clause.=" order by ".$str_order_by;
+			$orderby_clause=' order by '.$str_order_by;
 		}
-		$limit_clause.=' LIMIT '.$offset.','.$limit;
+		$limit_clause=' LIMIT '.$offset.','.$limit;
 		$array=array();
 		$str='SELECT count(1) as total '.$from_clause.$where_clause.$having_clause;
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -5909,7 +5948,7 @@ class mslib_fe {
 		return $array;
 	}
 	/*
-		this method is used to request the orders page set
+		this method is used to request the invoices page set
 		$filter can be an string or (multiple) array:	
 		string example: o.orders_id=12
 		array example:  $filter[]='o.orders_id=12'	
@@ -5922,42 +5961,42 @@ class mslib_fe {
 			$offset=0;
 		}
 		// do normal search (join the seperate tables)
-		$select_clause="SELECT ";
+		$select_clause='SELECT ';
 		if (count($select)>0) {
-			$select_clause.=implode(",", $select);
+			$select_clause.=implode(',', $select);
 		}
-		$from_clause.=",i.crdate,i.paid from tx_multishop_invoices i left join tx_multishop_orders o on o.orders_id=i.orders_id";
+		$from_clause=',i.crdate,i.paid from tx_multishop_invoices i left join tx_multishop_orders o on o.orders_id=i.orders_id';
 		if (count($from)>0) {
-			$from_clause.=", ";
-			$from_clause.=implode(",", $from);
+			$from_clause.=', ';
+			$from_clause.=implode(',', $from);
 		}
-		$where_clause.=" where 1 ";
+		$where_clause=' where 1 ';
 		if (count($where)>0) {
 			$where_clause.='and ';
-			$where_clause.=implode($where, ",");
+			$where_clause.=implode($where, ',');
 		}
 		if (is_array($filter) and count($filter)>0) {
-			$where_clause.=' and ('.implode($filter, " and ").')';
+			$where_clause.=' and ('.implode($filter, ' and ').')';
 		} else if ($filter) {
 			$where_clause.=' and ('.$filter.')';
 		}
 		if (count($having)>0) {
-			$having_clause.=" having ";
+			$having_clause=' having ';
 			foreach ($having as $item) {
 				$having_clause.=$item;
 			}
 		}
 		if (is_array($orderby) and count($orderby)>0) {
-			$str_order_by.=implode($orderby, ",");
+			$str_order_by=implode($orderby, ',');
 		} else if ($orderby) {
-			$str_order_by.=$orderby;
+			$str_order_by=$orderby;
 		} else {
-			$str_order_by.="";
+			$str_order_by="";
 		}
 		if ($str_order_by) {
-			$orderby_clause.=" order by ".$str_order_by;
+			$orderby_clause=' order by '.$str_order_by;
 		}
-		$limit_clause.=' LIMIT '.$offset.','.$limit;
+		$limit_clause=' LIMIT '.$offset.','.$limit;
 		$array=array();
 		$str='SELECT count(1) as total '.$from_clause.$where_clause.$having_clause;
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -5974,7 +6013,7 @@ class mslib_fe {
 		return $array;
 	}
 	public function getShopByPageUid($page_uid) {
-		if (!is_numeric($page_id)) {
+		if (!is_numeric($page_uid)) {
 			return false;
 		}
 		if (is_numeric($page_uid)) {
@@ -6258,6 +6297,7 @@ class mslib_fe {
 			$display_fields[]='products_shortdescription';
 		}
 		// cats
+		$content='';
 		if (count($dataArray['subs'])) {
 //			$content.='<ul>';	
 			foreach ($dataArray['subs'] as $item) {
@@ -6370,6 +6410,7 @@ class mslib_fe {
 	}
 	public function displayAdminCategories($dataArray, $selectbox=false, $level=0, $parent_id=0, $admin_mode=1) {
 		// cats
+		$content='';
 		if (count($dataArray['subs'])) {
 			foreach ($dataArray['subs'] as $item) {
 				// cats
@@ -6472,7 +6513,7 @@ class mslib_fe {
 		setcookie($name, $value, $lifetime, $path, $domain, $secure);
 	}
 	public function displayAdminNotificationPopup() {
-		$content.='<script language="javascript" type="text/javascript">
+		$content='<script language="javascript" type="text/javascript">
 			function displayAdminNotificationMessage() {
 				jQuery.ajax({
 				  url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=retrieveAdminNotificationMessage').'\',
