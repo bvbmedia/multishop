@@ -240,5 +240,5 @@ ul#ms_admin_maximize li a { display:block; float:left; width:85px; height:24px; 
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li:hover ul li>a:hover,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li:hover ul li:hover ul li>span:hover { background:#111; border-right-color:#111; border-left-color:#111; color:#fff; }
 
-.ul.multishop_block_message { margin:0; padding:0; list-style:none; }
-.ul.multishop_block_message li { background:none; margin:0; padding:0; }
+ul.multishop_block_message { margin:0; padding:0; list-style:none; }
+ul.multishop_block_message li { background:none; margin:0; padding:0; }
