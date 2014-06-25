@@ -541,40 +541,17 @@ if ($invoice['orders_id']) {
 		$this->pi_getLL('subtotal'),
 		$pdfdata['subtotal']
 	);
-	if ($order['orders_tax_data']['shipping_tax']) {
-		if ($pdfdata['shipping_method_costs']) {
-			$array[]=array(
-				utf8_decode($this->pi_getLL('shipping_costs')),
-				$pdfdata['shipping_method_costs']
-			);
-		}
-		if ($pdfdata['payment_method_costs']) {
-			$array[]=array(
-				utf8_decode($this->pi_getLL('payment_costs')),
-				$pdfdata['payment_method_costs']
-			);
-		}
+	if ($pdfdata['shipping_method_costs']) {
 		$array[]=array(
-			$this->pi_getLL('vat'),
-			$pdfdata['vat']
+			utf8_decode($this->pi_getLL('shipping_costs')),
+			$pdfdata['shipping_method_costs']
 		);
-	} else {
+	}
+	if ($pdfdata['payment_method_costs']) {
 		$array[]=array(
-			$this->pi_getLL('vat'),
-			$pdfdata['vat']
+			utf8_decode($this->pi_getLL('payment_costs')),
+			$pdfdata['payment_method_costs']
 		);
-		if ($pdfdata['shipping_method_costs']) {
-			$array[]=array(
-				utf8_decode($this->pi_getLL('shipping_costs')),
-				$pdfdata['shipping_method_costs']
-			);
-		}
-		if ($pdfdata['payment_method_costs']) {
-			$array[]=array(
-				utf8_decode($this->pi_getLL('payment_costs')),
-				$pdfdata['payment_method_costs']
-			);
-		}
 	}
 	if ($pdfdata['discount']) {
 		$array[]=array(
@@ -585,6 +562,10 @@ if ($invoice['orders_id']) {
 	$array[]=array(
 		$this->pi_getLL('total'),
 		$pdfdata['total']
+	);
+	$array[]=array(
+		$this->pi_getLL('included_vat_amount'),
+		$pdfdata['vat']
 	);
 	$pdf->SetLeftMargin($this->subtotal_left_margin);
 	$pdf->SubtotalTable('', $array);
