@@ -2131,8 +2131,8 @@ class tx_mslib_cart extends tslib_pibase {
 			$key='TAX_COSTS_WRAPPER';
 			if ($this->cart['summarize']['grand_total_vat']) {
 				$markerArray=array();
-				$markerArray['TAX_RATE_LABEL']=$this->pi_getLL('vat').':';
-				$markerArray['INCLUDED_TAX_RATE_LABEL']=$this->pi_getLL('included_vat_amount').':';
+				$markerArray['TAX_RATE_LABEL']=$this->pi_getLL('vat');
+				$markerArray['INCLUDED_TAX_RATE_LABEL']=$this->pi_getLL('included_vat_amount');
 				$markerArray['TAX_COSTS']=mslib_fe::amount2Cents($this->cart['summarize']['grand_total_vat']);
 				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 			} else {
