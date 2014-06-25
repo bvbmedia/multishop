@@ -419,7 +419,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 	text-align:right;
 }
 
-.msadmin_balloon_wrapper { position:fixed; bottom:40px; left:20px; z-index:9999; }
+.msadmin_balloon_wrapper { position:fixed; bottom:40px; left:20px; z-index:10001; }
 .msadmin_balloon_wrapper *,
 .msadmin_balloon_wrapper *:after,
 .msadmin_balloon_wrapper *:before { box-sizing:content-box; }
@@ -546,7 +546,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 .msadmin_balloon_item table#msOrderDetailsSubTotalTable { width:520px; border-collapse:collapse; }
 .msadmin_balloon_item table#msOrderDetailsSubTotalTable td { font-weight:bold; }
 .msadmin_balloon_item table#msOrderDetailsSubTotalTable td.msOrderDetailsSubTotalLabel { width:95%; text-align:right; padding:0 10px 0 0; }
-.msadmin_balloon_item table#msOrderDetailsSubTotalTable td.msOrderDetailsSubTotalValue { border:none; margin:0; padding:0 5px 0 0; }
+.msadmin_balloon_item table#msOrderDetailsSubTotalTable td.msOrderDetailsSubTotalValue { border:none; margin:0; padding:0 0 0 12px !important; }
 .msadmin_balloon_item table#msOrderDetailsSubTotalTable td.msOrderDetailsSubTotalProducts.msOrderDetailsSubTotalValue { white-space:nowrap; }
 
 .formfield-container-wrapper { overflow:hidden; width:100%; /* min-width:724px; */ min-width:702px; white-space:normal; }
