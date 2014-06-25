@@ -331,7 +331,7 @@ if ($this->ADMIN_USER) {
 	$html.='
 $(document).on("click", "#multishop_update_button", function(e) {
 	e.preventDefault();
-	if (CONFIRM(\'Are you sure you want to run the Multishop updater?\')) {
+	if (CONFIRM(\''.addslashes($this->pi_getLL('admin_label_are_you_sure_you_want_to_run_the_multishop_update_script')).'?\')) {
 			$.blockUI({ css: {
 				width: \'350\',
 				border: \'none\',
@@ -352,8 +352,7 @@ $(document).on("click", "#multishop_update_button", function(e) {
 					  success: function (j){
 						$.unblockUI();
 						var string=j.html;
-						if (string)
-						{
+						if (string) {
 							$.blockUI({
 								message: \'<h1>Multishop Update</h1><div class="growl_message">\'+string+\'</div>\',
 								fadeIn: 700,

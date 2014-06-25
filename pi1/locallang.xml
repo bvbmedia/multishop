@@ -921,6 +921,7 @@
             <label index="admin_label_meta_tag_keywords_not_defined">The default meta tag keywords isn't defined yet.</label>
             <label index="admin_label_go_to_setup_modules_and_define_meta_tag_keywords">Go to setup modules and edit the appropriate field</label>
             <label index="admin_label_nothing_updated_already_using_latest_version">Nothing updated. You are already using the latest version.</label>
+            <label index="admin_label_are_you_sure_you_want_to_run_the_multishop_update_script">Are you sure you want to run the Multishop update script</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1829,6 +1830,7 @@
             <label index="admin_label_meta_tag_keywords_not_defined">De standaard META sleutelwoorden zijn nog niet ingesteld.</label>
             <label index="admin_label_go_to_setup_modules_and_define_meta_tag_keywords">Ga naar instellingen om het veld in te stellen</label>
             <label index="admin_label_nothing_updated_already_using_latest_version">Er is niets ge-update. De webshop database is up-to-date.</label>
+            <label index="admin_label_are_you_sure_you_want_to_run_the_multishop_update_script">Weet u zeker dat u het Multishop update script wilt draaien</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
