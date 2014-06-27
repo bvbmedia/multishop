@@ -106,7 +106,7 @@ if ($this->ADMIN_USER) {
 					<td class="align_right">'.round($product['qty'], 13).'</td>
 					<td><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>';
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$jsonData['html'].='<td class="align_right">'.mslib_fe::amount2Cents($product['final_price']+$product['products_tax_data']['total_tax']).'</td>';
+						$jsonData['html'].='<td class="align_right">'.mslib_fe::amount2Cents($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])).'</td>';
 					} else {
 						$jsonData['html'].='<td class="align_right">'.mslib_fe::amount2Cents($product['final_price']).'</td>';
 					}
@@ -185,14 +185,14 @@ if ($this->ADMIN_USER) {
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="3" class="align_right">'.htmlspecialchars($this->pi_getLL('discount')).'</td>
 						<td class="align_right">'.mslib_fe::amount2Cents($order['discount']).'</td>
-					</tr>		
+					</tr>
 					';
 				}
-				$jsonData['html'].='					
+				$jsonData['html'].='
 				<tr class="removeTableCellBorder msAdminSubtotalRow">
 					<td colspan="3" class="align_right">&nbsp;</td>
 					<td class="align_right"><div class="hr"></div></td>
-				</tr>						
+				</tr>
 				<tr class="removeTableCellBorder msAdminSubtotalRow">
 					<td colspan="3" class="align_right"><strong>'.ucfirst($this->pi_getLL('total')).'</strong></td>
 					<td class="align_right"><strong>'.mslib_fe::amount2Cents($order['grand_total']).'</strong></td>
