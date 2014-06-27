@@ -314,7 +314,7 @@ table.multishop_table input[type="text"],
 #tx_multishop_pi1_core .orders_status_button_gray { overflow:hidden; display:block; width:100px; height:18px; background:url(../images/status_btn_gray.png) left top no-repeat; font:bold 12px Arial,Helvetica,sans-serif; color:#fff; text-align:center; margin:0; padding:2px 0 0; cursor:pointer; }
 #tx_multishop_pi1_core .orders_status_button_orange { overflow:hidden; display:block; width:100px; height:18px; background:url(../images/status_btn_orange.png) left top no-repeat; font:bold 12px Arial,Helvetica,sans-serif; color:#fff; text-align:center; margin:0; padding:2px 0 0; cursor:pointer; }
 
-#msadmin_section #msadmin_content #tx_multishop_pi1_core a.admin_menu_add.label { width:auto; height:15px; margin:0; padding:1px 0 0 20px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core a.admin_menu_add.label { width:auto; height:15px; margin:0 0 10px; padding:1px 0 0 20px; }
 
 #tx_multishop_pi1_core input.msadmin_button { border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-transform:uppercase; margin:0 3px; padding:2px 6px; cursor:pointer; }
 #tx_multishop_pi1_core input.msadmin_button:hover { background:#e2e2e2; text-decoration:none; }
