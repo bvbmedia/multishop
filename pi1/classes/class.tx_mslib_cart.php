@@ -61,7 +61,7 @@ class tx_mslib_cart extends tslib_pibase {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
 					}
 				}
-				// products				
+				// products
 				if (is_array($this->cart['products'])) {
 					// redirect if products stock are negative or quantity ordered is greater than the stock itself
 					$redirect_to_cart_page=false;
@@ -111,14 +111,14 @@ class tx_mslib_cart extends tslib_pibase {
 						}
 					}
 				}
-				// get shipping tax rate	
+				// get shipping tax rate
 				$shipping_method=mslib_fe::getShippingMethod($this->cart['user']['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
 				$tax_rate=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
 				if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
 					$tax_rate['total_tax_rate']=0;
 				}
 				$shipping_tax_rate=($tax_rate['total_tax_rate']/100);
-				// get payment tax rate	
+				// get payment tax rate
 				$payment_method=mslib_fe::getPaymentMethod($this->cart['user']['payment_method'], 'p.code', $iso_customer['cn_iso_nr']);
 				$tax_rate=mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
 				if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
@@ -251,7 +251,7 @@ class tx_mslib_cart extends tslib_pibase {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			// custom hook that can be controlled by third-party plugin eof			
+			// custom hook that can be controlled by third-party plugin eof
 			$GLOBALS['dont_update_cart']=1;
 			$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 			if (is_numeric($this->get['products_id']) and $this->get['tx_multishop_pi1']['action']=='add_to_cart') {
@@ -335,7 +335,7 @@ class tx_mslib_cart extends tslib_pibase {
 							t3lib_div::callUserFunction($funcRef, $params, $this);
 						}
 					}
-					// custom hook that can be controlled by third-party plugin eof						
+					// custom hook that can be controlled by third-party plugin eof
 					// add product to the cart (through form on products_detail page)
 					$product['description']='';
 					$product['country_tax']=mslib_fe::taxDecimalCrop($product['final_price']*$product['country_tax_rate']);
@@ -357,7 +357,7 @@ class tx_mslib_cart extends tslib_pibase {
 						$cart['products'][$shopping_cart_item]['file_remote_location']=$row['file_remote_location'];
 						$cart['products'][$shopping_cart_item]['file_number_of_downloads']=$row['file_number_of_downloads'];
 					}
-					// add possible micro download eof					
+					// add possible micro download eof
 					$attributes_tax=0;
 					if (is_array($this->post['attributes'])) {
 						foreach ($this->post['attributes'] as $key=>$value) {
@@ -432,7 +432,7 @@ class tx_mslib_cart extends tslib_pibase {
 												} else {
 													$row['tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']));
 												}
-//											$attributes_tax += $row['tax'] * $product['qty']; 
+//											$attributes_tax += $row['tax'] * $product['qty'];
 												$attributes_tax+=$row['tax'];
 												if ($multiple) {
 													$cart['products'][$shopping_cart_item]['attributes'][$key][]=$row;
@@ -499,7 +499,7 @@ class tx_mslib_cart extends tslib_pibase {
 							t3lib_div::callUserFunction($funcRef, $params, $this);
 						}
 					}
-					// custom hook that can be controlled by third-party plugin eof							
+					// custom hook that can be controlled by third-party plugin eof
 					$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 					if ($this->ms['eID']) {
 						$GLOBALS['TSFE']->fe_user->storeSessionData();
@@ -545,7 +545,7 @@ class tx_mslib_cart extends tslib_pibase {
 									}
 									$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 									if (mslib_fe::ProductHasAttributes($product['products_id'])) {
-										// Product has attributes. We need to redirect the customer to the product detail page so the attributes can be selected										
+										// Product has attributes. We need to redirect the customer to the product detail page so the attributes can be selected
 										header("Location: ".$this->FULL_HTTP_URL.$link);
 										exit;
 									}
@@ -674,7 +674,7 @@ class tx_mslib_cart extends tslib_pibase {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			// custom hook that can be controlled by third-party plugin eof			
+			// custom hook that can be controlled by third-party plugin eof
 			if ($product['products_id'] and $this->ms['MODULES']['REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART']) {
 				$where='';
 				if ($product['categories_id']) {
@@ -823,7 +823,7 @@ class tx_mslib_cart extends tslib_pibase {
 			$grand_total['payment_cost']=$address['payment_method_costs'];
 			$total_price=$total_price+$address['payment_method_costs'];
 		}
-		// first the account	
+		// first the account
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$customer_id=$GLOBALS['TSFE']->fe_user->user['uid'];
 		} else {
@@ -1011,7 +1011,7 @@ class tx_mslib_cart extends tslib_pibase {
 				$insertArray['tx_multishop_default']=0;
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				// ADD TT_ADDRESS RECORD EOF				
+				// ADD TT_ADDRESS RECORD EOF
 				//hook to let other plugins further manipulate the create table query
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'])) {
 					$params=array(
@@ -1349,7 +1349,7 @@ class tx_mslib_cart extends tslib_pibase {
 								$i++;
 							}
 						}
-						// get all cats eof						
+						// get all cats eof
 						if (isset($value['manufacturers_id']) && !empty($value['manufacturers_id'])) {
 							$insertArray['manufacturers_id']=$value['manufacturers_id'];
 						} else {
@@ -1376,7 +1376,7 @@ class tx_mslib_cart extends tslib_pibase {
 						$insertArray['products_model']=$value['products_model'];
 						$insertArray['products_description']=$value['products_shortdescription'];
 						if (is_array($value['attributes'])) {
-							// loading the attributes	
+							// loading the attributes
 							$insertArray['products_description'].="\n".strip_tags(mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1));
 							// loading the attributes eof
 						}
@@ -1394,7 +1394,7 @@ class tx_mslib_cart extends tslib_pibase {
 							$insertArray['file_number_of_downloads']=$value['file_number_of_downloads'];
 							$insertArray['file_download_code']=md5(uniqid(rand()).uniqid(rand()));
 						}
-						// micro download eof						
+						// micro download eof
 						/*
 						 * always use total_tax and total_tax_rate, unless need different calc for country/region
 						 * WARNING: country_* and region_* not always have value, depends on the tax ruleset
@@ -1408,7 +1408,6 @@ class tx_mslib_cart extends tslib_pibase {
 						$product_tax['region_tax']=(string)$value['region_tax'];
 						$product_tax['total_tax']=(string)$value['tax'];
 						$product_tax['total_attributes_tax']=(string)$value['total_attributes_tax'];
-						$product_tax['total_tax']=$product_tax['total_tax'];
 						// -----------------------------------------------------------------------------------------
 						// bugfixes bas
 						$sub_total_excluding_vat['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);

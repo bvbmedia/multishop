@@ -70,7 +70,7 @@ class tx_mslib_order extends tslib_pibase {
 				}
 				$shipping_tax_rate=($tax_rate['total_tax_rate']/100);
 				// get payment tax rate
-				$payment_method=mslib_fe::getPaymentMethod($row['payment_method'], 's.code', $iso_customer['cn_iso_nr']);
+				$payment_method=mslib_fe::getPaymentMethod($row['payment_method'], 'p.code', $iso_customer['cn_iso_nr']);
 				$tax_rate=mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
 				if (!$tax_rate['total_tax_rate']) {
 					$tax_rate['total_tax_rate']=$this->ms['MODULES']['INCLUDE_VAT_OVER_METHOD_COSTS'];
@@ -252,8 +252,8 @@ class tx_mslib_order extends tslib_pibase {
 			}
 		}
 		if ($page[0]['content']) {
-			// loading the email confirmation letter eof			
-			// replacing the variables with dynamic values			
+			// loading the email confirmation letter eof
+			// replacing the variables with dynamic values
 			$array1=array();
 			$array2=array();
 			// full billing name
@@ -504,18 +504,18 @@ class tx_mslib_order extends tslib_pibase {
 			if ($orders['shipping_method_costs']) 	{
 				$extra_vat += $orders['orders_tax_data']['shipping_tax'];
 			}
-			
+
 			if ($orders['payment_method_costs']) {
 				$extra_vat += $orders['orders_tax_data']['payment_tax'];
 			}
-			
+
 			$orders['subtotal_tax'] = ($orders['subtotal_tax'] + $extra_vat);
 		} */
 		$orders['total_amount']=round($orders['orders_tax_data']['grand_total'], 2);
 		if ($orders['total_amount']<0.01) {
 			$orders['total_amount']=0;
 		}
-		//round($orders['subtotal_amount']+$orders['subtotal_tax']+$orders['payment_method_costs']+$orders['shipping_method_costs']-$orders['discount'],2);		
+		//round($orders['subtotal_amount']+$orders['subtotal_tax']+$orders['payment_method_costs']+$orders['shipping_method_costs']-$orders['discount'],2);
 		return $orders;
 	}
 	function createOrder($address) {
@@ -573,7 +573,7 @@ class tx_mslib_order extends tslib_pibase {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
 					}
 				}
-				// if store country is different than customer country change VAT rate to zero eof			
+				// if store country is different than customer country change VAT rate to zero eof
 			}
 			// now add the order
 			$insertArray=array();
@@ -662,7 +662,7 @@ class tx_mslib_order extends tslib_pibase {
 			$insertArray['hash']=md5(uniqid('', true));
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			// now add the order eof		
+			// now add the order eof
 			$orders_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 			if ($orders_id) {
 				return $orders_id;
@@ -896,15 +896,15 @@ class tx_mslib_order extends tslib_pibase {
 		} else {
 			$subpartArray['###'.$key.'###']='';
 		}
-		//PAYMENT_COSTS_WRAPPER EOF		
+		//PAYMENT_COSTS_WRAPPER EOF
 		//GRAND_TOTAL_WRAPPER
 		$key='GRAND_TOTAL_WRAPPER';
 		$markerArray=array();
 		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total')).':';
-//		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);		
+//		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
 		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total']);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		//GRAND_TOTAL_WRAPPER EOF			
+		//GRAND_TOTAL_WRAPPER EOF
 		//DISCOUNT_WRAPPER
 		$key='DISCOUNT_WRAPPER';
 		if ($order['discount']>0) {
@@ -915,7 +915,7 @@ class tx_mslib_order extends tslib_pibase {
 		} else {
 			$subpartArray['###'.$key.'###']='';
 		}
-		//DISCOUNT_WRAPPER EOF			
+		//DISCOUNT_WRAPPER EOF
 		//TAX_COSTS_WRAPPER
 		$key='TAX_COSTS_WRAPPER';
 		if ($order['orders_tax_data']['total_orders_tax']) {

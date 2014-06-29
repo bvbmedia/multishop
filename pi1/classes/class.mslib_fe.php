@@ -246,7 +246,7 @@ class mslib_fe {
 						$tbl='p.';
 					}
 					if ($oldsearch) {
-						// do normal indexed search	
+						// do normal indexed search
 						$filter[]="(".$tbl."products_model like '".addslashes($product['products_model'])."%')";
 					} else {
 						// do fulltext search
@@ -319,7 +319,7 @@ class mslib_fe {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		// hook eof		
+		// hook eof
 		if ($product['staffel_price']) {
 			$final_price=(mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity)/$quantity);
 		} else {
@@ -1383,7 +1383,7 @@ class mslib_fe {
 			$markerArray=array();
 			$markerArray['###BODY###']=$content;
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
-			// try to change URL images to embedded		
+			// try to change URL images to embedded
 			$mail->SetFrom($from_address, $from_name);
 			if (count($attachments)) {
 				foreach ($attachments as $path) {
@@ -1649,7 +1649,7 @@ class mslib_fe {
 						break;
 					case 'hidden_field':
 						$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-textarea" id="attribute_item_wrapper_'.$options['products_options_id'].'">
-						<input type="hidden" name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" />						
+						<input type="hidden" name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" />
 						</div>';
 						$load_default=0;
 						break;
@@ -1755,7 +1755,7 @@ class mslib_fe {
 									case 'radio':
 										$items.="\n".'
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'"><span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span></label>										
+										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'"><span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span></label>
 										<input name="attributes['.$options['products_options_id'].'][]" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
 										if (count($sessionData['attributes'][$options['products_options_id']])) {
 											foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
@@ -1774,7 +1774,7 @@ class mslib_fe {
 									case 'checkbox':
 										$items.="\n".'
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">'.$products_options_values['products_options_values_name'].'</label>										
+										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">'.$products_options_values['products_options_values_name'].'</label>
 										<input name="attributes['.$options['products_options_id'].'][]" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="checkbox" value="'.$products_options_values['products_options_values_id'].'"';
 										if (count($sessionData['attributes'][$options['products_options_id']])) {
 											foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
@@ -1878,7 +1878,7 @@ class mslib_fe {
 							t3lib_div::callUserFunction($funcRef, $params, $this);
 						}
 					}
-					// hook	
+					// hook
 				}
 			}
 			$output.='<div class="products_attributes"><h2>'.$this->pi_getLL('product_options').'</h2>';
@@ -2172,9 +2172,9 @@ class mslib_fe {
 	}
 	/*
 		this method is used to request the products page set
-		$filter can be an string or (multiple) array:	
+		$filter can be an string or (multiple) array:
 		string example: p2c.categories_id=12
-		array example:  $filter[]='p2c.categories_id=12'	
+		array example:  $filter[]='p2c.categories_id=12'
 	*/
 	public function getProductsPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $redirect_if_one_product=0, $extra_from=array(), $groupby=array(), $search_section='products_search', $select_total_count='', $returnTotalCountOnly=0, $enableFetchTaxRate=1, $extra_join=array()) {
 		if (!is_array($filter) and $filter) {
@@ -2211,7 +2211,7 @@ class mslib_fe {
 			$groupby[]=$prefix.'products_id';
 		}
 		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
-			// do normal search (join the seperate tables)					
+			// do normal search (join the seperate tables)
 			$required_cols=array();
 			$required_cols[]='p.products_status';
 			$required_cols[]='p.products_id';
@@ -2275,7 +2275,7 @@ class mslib_fe {
 				$from_clause.=implode(" ", $extra_join);
 			}
 			$from_clause.=', tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd ';
-			//hook to let other plugins further manipulate the query eof					
+			//hook to let other plugins further manipulate the query eof
 			if (count($extra_from)) {
 				$from_clause.=", ";
 				$from_clause.=implode(",", $extra_from);
@@ -2318,7 +2318,7 @@ class mslib_fe {
 			}
 		} else {
 			// flat mode database mode. This module is used on LARGE catalogs, so the joins of individual tables are minimized
-			// do the flat search (without having to join the seperate tables)                      
+			// do the flat search (without having to join the seperate tables)
 			// temporary fix, cause hot products sometimes show products double
 			if (!$orderby) {
 				$orderby[]='NULL';
@@ -2401,7 +2401,7 @@ class mslib_fe {
 				$from_clause.=' ';
 				$from_clause.=implode(" ", $extra_join);
 			}
-			//hook to let other plugins further manipulate the query eof					
+			//hook to let other plugins further manipulate the query eof
 			if (count($extra_from)) {
 				$from_clause.=', ';
 				$from_clause.=implode(',', $extra_from);
@@ -2676,9 +2676,9 @@ class mslib_fe {
 	}
 	/*
 		this method is used to request the admin customers page set
-		$filter can be an string or (multiple) array:	
+		$filter can be an string or (multiple) array:
 		string example: p2c.categories_id=12
-		array example:  $filter[]='p2c.categories_id=12'	
+		array example:  $filter[]='p2c.categories_id=12'
 	*/
 	public function getCustomersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array()) {
 		if (!$limit) {
@@ -3255,7 +3255,7 @@ class mslib_fe {
 		}
 		if (count($psp['additional_info'])>0) {
 			$content.='
-			<div class="account-field">						
+			<div class="account-field">
 				<strong>Parameters that are needed for configuring this PSP</strong>
 			</div>
 			';
@@ -3540,7 +3540,7 @@ class mslib_fe {
 						}
 						$where.='categories_id['.$level.']='.$categories['categories_id'];
 						$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
-						// get all cats to generate multilevel fake url eof				
+						// get all cats to generate multilevel fake url eof
 						$name='<a href="'.$link.'" class="ajax_link">'.$categories['categories_name'].'</a>';
 					} else {
 						$name='<span>'.$categories['categories_name'].'</span>';
@@ -3764,9 +3764,9 @@ class mslib_fe {
 				if (strstr($price,",")) {
 					$steps=explode(",",$price);
 					// calculate total costs
-					$subtotal=mslib_fe::countCartTotalPrice();							
+					$subtotal=mslib_fe::countCartTotalPrice();
 					$count=0;
-					foreach ($steps as $step) {							
+					foreach ($steps as $step) {
 						// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
 						// example setting: 0:6.95,50:0
 						$split=explode(":",$step);
@@ -3779,17 +3779,17 @@ class mslib_fe {
 									next();
 								}
 							}
-							
+
 							if ($subtotal > $split[0] and isset($split[1])) {
 								$price=$split[1];
 								next();
 							}
 						}
-						
+
 						$count++;
 					}
-				}				
-			}				
+				}
+			}
 */
 			if ($shipping_cost) {
 				if ($shipping_method['tax_id'] && $shipping_cost) {
@@ -4179,7 +4179,7 @@ class mslib_fe {
 		$string=preg_replace('#([a-z]*)[\x00-\x20\/]*=[\x00-\x20\/]*([\`\'\"]*)[\x00-\x20\/]*v[\x00-\x20]*b[\x00-\x20]*s[\x00-\x20]*c[\x00-\x20]*r[\x00-\x20]*i[\x00-\x20]*p[\x00-\x20]*t[\x00-\x20]*:#iUu', '$1=$2novbscript...', $string);
 		$string=preg_replace('#([a-z]*)[\x00-\x20\/]*=[\x00-\x20\/]*([\`\'\"]*)[\x00-\x20\/]*-moz-binding[\x00-\x20]*:#Uu', '$1=$2nomozbinding...', $string);
 		$string=preg_replace('#([a-z]*)[\x00-\x20\/]*=[\x00-\x20\/]*([\`\'\"]*)[\x00-\x20\/]*data[\x00-\x20]*:#Uu', '$1=$2nodata...', $string);
-		//<span style="width: expression(alert('Ping!'));"></span> 
+		//<span style="width: expression(alert('Ping!'));"></span>
 		// only works in ie...
 		$string=preg_replace('#(<[^>]+)style[\x00-\x20\/]*=[\x00-\x20\/]*([\`\'\"]*).*expression[\x00-\x20\/]*\([^>]*>#iU', "$1>", $string);
 		$string=preg_replace('#(<[^>]+)style[\x00-\x20\/]*=[\x00-\x20\/]*([\`\'\"]*).*behaviour[\x00-\x20\/]*\([^>]*>#iU', "$1>", $string);
@@ -4329,7 +4329,7 @@ class mslib_fe {
 		$markerArray=array();
 		$markerArray['HEADER']=$header_label;
 		$markerArray['CONTENT']=$content;
-		// custom hook that can be controlled by third-party plugin eof		
+		// custom hook that can be controlled by third-party plugin eof
 		$header_wrapper=$this->cObj->substituteMarkerArray($subparts['header_wrapper'], $markerArray, '###|###');
 		$content_wrapper=$this->cObj->substituteMarkerArray($subparts['content_wrapper'], $markerArray, '###|###');
 		if (!$header_label) {
@@ -4343,7 +4343,7 @@ class mslib_fe {
 		$subpartArray['###CONTENT_WRAPPER###']=$content_wrapper;
 		$subpartArray['###TEMPLATE_CLASS###']='';
 		$subpartArray['###TEMPLATE_ATTRIBUTES###']='';
-		// completed the template expansion by replacing the "item" marker in the template 
+		// completed the template expansion by replacing the "item" marker in the template
 		// custom hook that can be controlled by third-party plugin eof
 		$content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 		return $content;
@@ -4384,7 +4384,7 @@ class mslib_fe {
 		<div class="dyna_button">
 		'.$content.'
 		</div>
-		</div>	
+		</div>
 		';
 		return $content;
 	}
@@ -4525,29 +4525,29 @@ class mslib_fe {
 				if ($tmpcontent) {
 					$html='
 					<script type="text/javascript">
-					jQuery(document).ready(function($) { 
-						jQuery.blockUI({ 
-							message: \'<h1>'.$this->conf['admin_development_company_name'].' warning'.($total_warnings==1 ? '' : 's').'</h1><div class="growl_message">'.addslashes(str_replace("\n", "", $tmpcontent)).'</div>\', 
-							fadeIn: 700, 
-							fadeOut: 700, 
-							timeout: 5000, 
-							showOverlay: false, 
-							centerY: false, 
-							css: { 
-								width: \'350px\', 
-								top: \'50px\', 
-								left: \'\', 
-								right: \'10px\', 
-								border: \'none\', 
-								padding: \'5px\', 
-								backgroundColor: \'#000\', 
-								\'-webkit-border-radius\': \'10px\', 
-								\'-moz-border-radius\': \'10px\', 
-								opacity: .9, 
-								color: \'#fff\' 
-							} 
-						}); 												
-					}); 
+					jQuery(document).ready(function($) {
+						jQuery.blockUI({
+							message: \'<h1>'.$this->conf['admin_development_company_name'].' warning'.($total_warnings==1 ? '' : 's').'</h1><div class="growl_message">'.addslashes(str_replace("\n", "", $tmpcontent)).'</div>\',
+							fadeIn: 700,
+							fadeOut: 700,
+							timeout: 5000,
+							showOverlay: false,
+							centerY: false,
+							css: {
+								width: \'350px\',
+								top: \'50px\',
+								left: \'\',
+								right: \'10px\',
+								border: \'none\',
+								padding: \'5px\',
+								backgroundColor: \'#000\',
+								\'-webkit-border-radius\': \'10px\',
+								\'-moz-border-radius\': \'10px\',
+								opacity: .9,
+								color: \'#fff\'
+							}
+						});
+					});
 					</script>
 					';
 					return $html;
@@ -4555,7 +4555,7 @@ class mslib_fe {
 			}
 		}
 	}
-	// checking if the required extensions are loaded eof	
+	// checking if the required extensions are loaded eof
 	public function TypoBox($header='', $content='', $id_name='', $heading_type='h2') {
 		return mslib_fe::htmlBox($header, $content);
 	}
@@ -4582,10 +4582,10 @@ class mslib_fe {
 	}
 	public function shadowBox($content) {
 		$output='
-		<div class="shadowbox-outer"> 
-			<div class="shadowbox-inner"> 
-				<div class="shadowbox-container">					
-					<div class="shadowbox"> 	
+		<div class="shadowbox-outer">
+			<div class="shadowbox-inner">
+				<div class="shadowbox-container">
+					<div class="shadowbox">
 						'.$content.'
 					</div>
 				</div>
@@ -4657,45 +4657,45 @@ class mslib_fe {
 	public function jQueryBlockUI() {
 		$html='
 		<script type="text/javascript">
-		jQuery(document).ready(function($) { 
-			jQuery(\'.submit_block\').click(function() { 
-				jQuery.blockUI({ css: { 
-					width: \'350\', 
-					border: \'none\', 
-					padding: \'15px\', 
-					backgroundColor: \'#000\', 
-					\'-webkit-border-radius\': \'10px\', 
-					\'-moz-border-radius\': \'10px\', 
-					opacity: .5, 
+		jQuery(document).ready(function($) {
+			jQuery(\'.submit_block\').click(function() {
+				jQuery.blockUI({ css: {
+					width: \'350\',
+					border: \'none\',
+					padding: \'15px\',
+					backgroundColor: \'#000\',
+					\'-webkit-border-radius\': \'10px\',
+					\'-moz-border-radius\': \'10px\',
+					opacity: .5,
 					color: \'#fff\'
-					}, 
+					},
 					message:  \'<ul class="multishop_block_message"><li>'.$this->pi_getLL('handling_in_progress_one_moment_please').'</li></ul>\',
-					onBlock: function() { 
+					onBlock: function() {
 //						this.form.submit();
 						return true;
-					} 
-				}); 
-			});    
-		   jQuery(\'.link_block\').click(function() { 
-				jQuery.blockUI({ css: { 
-					width: \'350\', 
-					border: \'none\', 
-					padding: \'15px\', 
-					backgroundColor: \'#000\', 
-					\'-webkit-border-radius\': \'10px\', 
-					\'-moz-border-radius\': \'10px\', 
-					opacity: .5, 
+					}
+				});
+			});
+		   jQuery(\'.link_block\').click(function() {
+				jQuery.blockUI({ css: {
+					width: \'350\',
+					border: \'none\',
+					padding: \'15px\',
+					backgroundColor: \'#000\',
+					\'-webkit-border-radius\': \'10px\',
+					\'-moz-border-radius\': \'10px\',
+					opacity: .5,
 					color: \'#fff\'
-					}, 
+					},
 					message:  \'<ul class="multishop_block_message"><li>'.$this->pi_getLL('handling_in_progress_one_moment_please').'</li></ul>\',
-					onBlock: function() { 
+					onBlock: function() {
 						jQuery.unblockUI();
 						return true;
-					} 
-				}); 
-			});    	
-		});	
-		</script>	
+					}
+				});
+			});
+		});
+		</script>
 		';
 		return $html;
 	}
@@ -4945,7 +4945,7 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_taxes']['label']=$this->pi_getLL('admin_taxes', 'Taxes');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_taxes']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_taxes');
 //			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rules']['label']='TAX RULES';
-//			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rules']['link']=mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=admin_tax_rules');		
+//			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rules']['link']=mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=admin_tax_rules');
 			$ms_menu['footer']['ms_admin_system']['label']=$this->pi_getLL('admin_system');
 			$ms_menu['footer']['ms_admin_system']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
 			if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
@@ -5028,7 +5028,7 @@ class mslib_fe {
 				/*
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['label']=$this->pi_getLL('admin_sort_products_attributes_price_asc', 'sort on price (asc)');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_price&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_asc', 'Are you sure want to sort products attributes price ascending').'?\')"';	
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_asc', 'Are you sure want to sort products attributes price ascending').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_desc']['label']=$this->pi_getLL('admin_sort_products_attributes_price_desc', 'sort on price (desc)');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_price&tx_multishop_pi1[orderBy]=desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_price_desc', 'Are you sure want to sort products attributes price descending').'?\')"';
@@ -5039,14 +5039,14 @@ class mslib_fe {
 				/*
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_alphabet']['label']=$this->pi_getLL('admin_sort_by_alphabet');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_alphabet']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=catalog&tx_multishop_pi1[sortByField]=name&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_alphabet']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_catalog').'?\')"';	
-		
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_alphabet']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_catalog').'?\')"';
+
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_asc']['label']=$this->pi_getLL('admin_sort_by_date_ascending');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_date_added&tx_multishop_pi1[orderBy]=asc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_catalog').'?\')"';	
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_catalog').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_desc']['label']=$this->pi_getLL('admin_sort_by_date_descending');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_date_added&tx_multishop_pi1[orderBy]=desc');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_catalog').'?\')"';	
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_sort']['subs']['admin_sort_on_date_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_catalog').'?\')"';
 				*/
 			}
 			if ($this->ROOTADMIN_USER) {
@@ -5144,7 +5144,7 @@ class mslib_fe {
 			}
 			$ms_menu['footer']['ms_admin_language']['description'].='
 				</select>
-			</form>			
+			</form>
 			';
 		}
 		return $ms_menu;
@@ -5553,7 +5553,7 @@ class mslib_fe {
 						$row['hash']=md5(uniqid('', true));
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $row);
 						$GLOBALS['TYPO3_DB']->sql_query($query);
-						// update old invoice to paid so its gone from the unpaid list						
+						// update old invoice to paid so its gone from the unpaid list
 						$updateArray=array('paid'=>1);
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id='.$id, $updateArray);
 						$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -5630,9 +5630,9 @@ class mslib_fe {
 	}
 	/*
 		this method is used to request the categories page set
-		$filter can be an string or (multiple) array:	
+		$filter can be an string or (multiple) array:
 		string example: o.orders_id=12
-		array example:  $filter[]='o.orders_id=12'	
+		array example:  $filter[]='o.orders_id=12'
 	*/
 	public function getCMSPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array()) {
 		if (!$limit) {
@@ -5752,9 +5752,9 @@ class mslib_fe {
 	}
 	/*
 		this method is used to request the categories page set
-		$filter can be an string or (multiple) array:	
+		$filter can be an string or (multiple) array:
 		string example: o.orders_id=12
-		array example:  $filter[]='o.orders_id=12'	
+		array example:  $filter[]='o.orders_id=12'
 	*/
 	public function getAdminSettingsPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array()) {
 		if (!$limit) {
@@ -5817,9 +5817,9 @@ class mslib_fe {
 	}
 	/*
 		this method is used to request the categories page set
-		$filter can be an string or (multiple) array:	
+		$filter can be an string or (multiple) array:
 		string example: o.orders_id=12
-		array example:  $filter[]='o.orders_id=12'	
+		array example:  $filter[]='o.orders_id=12'
 	*/
 	public function getCategoriesPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array()) {
 		if (!$limit) {
@@ -5882,9 +5882,9 @@ class mslib_fe {
 	}
 	/*
 		this method is used to request the orders page set
-		$filter can be an string or (multiple) array:	
+		$filter can be an string or (multiple) array:
 		string example: o.orders_id=12
-		array example:  $filter[]='o.orders_id=12'	
+		array example:  $filter[]='o.orders_id=12'
 	*/
 	public function getOrdersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array()) {
 		if (!$limit) {
@@ -5949,9 +5949,9 @@ class mslib_fe {
 	}
 	/*
 		this method is used to request the invoices page set
-		$filter can be an string or (multiple) array:	
+		$filter can be an string or (multiple) array:
 		string example: o.orders_id=12
-		array example:  $filter[]='o.orders_id=12'	
+		array example:  $filter[]='o.orders_id=12'
 	*/
 	public function getInvoicesPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array()) {
 		if (!$limit) {
@@ -6156,7 +6156,7 @@ class mslib_fe {
 					}
 					$where.='categories_id['.$level.']='.$categories['categories_id'];
 					$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
-					// get all cats to generate multilevel fake url eof				
+					// get all cats to generate multilevel fake url eof
 					$name='<a href="'.$link.'" class="ajax_link">'.$categories['categories_name'].'</a>';
 				} else {
 					$name='<span>'.$categories['categories_name'].'</span>';
@@ -6230,7 +6230,7 @@ class mslib_fe {
 						curl_setopt($ch, CURLOPT_POST, 0);
 						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 						//curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // does not work when safe mode is activated or open_base restriction has been set. Below we bypass the redirect problem
-						//curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */      
+						//curl_setopt($ch, CURLOPT_MAXREDIRS, 10); /* Max redirection to follow */
 						$file_content=curl_exec($ch);
 						$http_code=curl_getinfo($ch, CURLINFO_HTTP_CODE);
 						if ($http_code==301 || $http_code==302) {
@@ -6251,7 +6251,7 @@ class mslib_fe {
 	}
 	public function convertXMLtoPHPArray($xml) {
 		$xmlstr=urldecode(rawurldecode($xml));
-//		$template_obj = new SimpleXMLElement($xmlstr);				
+//		$template_obj = new SimpleXMLElement($xmlstr);
 		$template_obj=simplexml_load_string($xmlstr, 'SimpleXMLElement', LIBXML_NOCDATA|LIBXML_NOBLANKS);
 		$json=json_encode($template_obj);
 		$template_array=json_decode($json, true);
@@ -6299,7 +6299,7 @@ class mslib_fe {
 		// cats
 		$content='';
 		if (count($dataArray['subs'])) {
-//			$content.='<ul>';	
+//			$content.='<ul>';
 			foreach ($dataArray['subs'] as $item) {
 				if (!count($item['products'])) {
 					// cats
@@ -6346,7 +6346,7 @@ class mslib_fe {
 							}
 //							$where.='categories_id['.$level.']='.$item['categories_id'];
 							$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
-							// get all cats to generate multilevel fake url eof											
+							// get all cats to generate multilevel fake url eof
 							//							$content.=$item['categories_name'];
 							if ($link) {
 								$content.='<a href="'.$link.'" class="ajax_link"'.$target.'>';
@@ -6404,7 +6404,7 @@ class mslib_fe {
 					}
 				}
 			}
-//			$content.='</ul>';					
+//			$content.='</ul>';
 		}
 		return $content;
 	}
@@ -6522,14 +6522,14 @@ class mslib_fe {
 				  type: \'post\',
 				  success: function (j) {
 					  if (j.length > 0) {
-							if (jQuery(\'.msadmin_balloon_wrapper\').length != 0) jQuery(\'.msadmin_balloon_wrapper\').remove();							
+							if (jQuery(\'.msadmin_balloon_wrapper\').length != 0) jQuery(\'.msadmin_balloon_wrapper\').remove();
 						    var content=\'\';
 							content+=\'<div class="msadmin_balloon_wrapper">\';
 							jQuery.each(j, function(i, val) {
 								var title=\'\';
 								var message=\'\';
 								if (val.title) title=\'<h2>\'+val.title+\'</h2><i class="crdate">\'+val.crdate+\'</i>\';
-								if (val.message) message=\'<p>\'+val.message+\'</p>\';																
+								if (val.message) message=\'<p>\'+val.message+\'</p>\';
 								content+=\'<div class="msadmin_balloon_item"><div class="msadmin_balloon">\'+title+message+\'<em></em></div></div>\';
 							});
 							content+=\'</div>\';
@@ -6538,7 +6538,7 @@ class mslib_fe {
 					  }
 				  }
 				});
-				setTimeout("displayAdminNotificationMessage()", 45000);	
+				setTimeout("displayAdminNotificationMessage()", 45000);
 			}
 			jQuery(document).ready(function($) {
 				displayAdminNotificationMessage();
@@ -6547,7 +6547,7 @@ class mslib_fe {
 		return $content;
 	}
 
-	// attributes stock front view 
+	// attributes stock front view
 	/*
 	 * this method is used to request the products based on attributes stock
 	*/
@@ -6804,7 +6804,7 @@ class mslib_fe {
 					$data['total_tax_rate']=$total_tax_rate;
 				} else {
 					//reverse convert
-					// number_format is needed otherwise PHP limits the decimals to 12, but we need 14 to bypass cents problems					
+					// number_format is needed otherwise PHP limits the decimals to 12, but we need 14 to bypass cents problems
 					$price_excluding_tax=number_format(($current_price/(100+$total_tax_rate))*100, 14);
 					$data['price_excluding_tax']=$price_excluding_tax;
 					$data['total_tax']=$state_tax;
