@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+
 $total_pages=ceil(($pageset['total_rows']/$limit_per_page));
 $tmp='';
 $tmp.='<div id="pagenav_container_list_wrapper">
