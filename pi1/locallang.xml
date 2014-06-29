@@ -3139,7 +3139,28 @@
             <label index="checkout_review">Bestellung Bestätigen</label>
             <label index="checkout_finished">Bestellung Erhalten</label>
             <label index="step">Schritt</label>
-            <label index="checkout_shipping_payment_method">Shipping and Payment Method</label>
+
+            <label index="first">erste</label>
+            <label index="previous">früher</label>
+            <label index="next">nächste</label>
+            <label index="last">letzte</label>
+            <label index="mobile">Handy</label>
+            <label index="suppliers">Lieferanten</label>
+            <label index="number_of_hooks">Anzahl der Haken</label>
+            <label index="color">Farbe</label>
+            <label index="from">aus</label>
+            <label index="to">zu</label>
+            <label index="birthday">Geburtstag</label>
+            <label index="company">Firma</label>
+            <label index="product_relatives">Produkt Verwandten</label>
+            <label index="excluding_vat">Ohne MwSt.</label>
+            <label index="products">Produkte</label>
+            <label index="price">Preis</label>
+            <label index="amount">Betrag</label>
+            <label index="buy_now">Jetzt kaufen</label>
+            <label index="stock">Lager</label>
+
+            <label index="checkout_shipping_payment_method">Versand-und Zahlungsmethode</label>
             <label index="delivery_address">Lieferadresse</label>
             <label index="billing_address">Rechnungsadresse</label>
             <label index="click_here_if_you_agree_the_general_conditions">Hier klicken wenn Sie mit den AGBs einverstanden sind</label>
@@ -3401,6 +3422,9 @@
             <label index="descending">absteigend</label>
             <label index="filter_by_date_status_last_modified">Nach Datum filtern Status zuletzt geändert</label>
             <label index="modified_on">Geändert am</label>
+            <label index="description">Beschreibung</label>
+
+
         </languageKey>
         <languageKey index="es" type="array">
             <label index="list_mode_1">Mode 1</label>
