@@ -59,7 +59,7 @@ if ($this->post and $_FILES) {
 								}
 							}
 						}
-						// digital download eof					
+						// digital download eof
 						break;
 					default:
 						// product image
@@ -109,7 +109,7 @@ if ($this->post and $_FILES) {
 										}
 									}
 								}
-								// products image eof								
+								// products image eof
 							}
 						}
 						break;
@@ -355,13 +355,13 @@ if ($this->post) {
 						$updateArray['products_description_tab_content_'.$i]=$this->post['products_description_tab_content_'.$i][$key];
 					}
 				}
-				// EXTRA TAB CONTENT EOF				
+				// EXTRA TAB CONTENT EOF
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 					// if product is originally coming from products importer we have to define that the merchant changed it
 					$filter=array();
 					$filter[]='products_id='.$prodid;
 					if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-						// lock changed columns				
+						// lock changed columns
 						mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_description', $updateArray);
 					}
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and language_id=\''.$key.'\'', $updateArray);
@@ -408,7 +408,7 @@ if ($this->post) {
 				{
 					// we have to substract the vat so the price is excl. vat
 					$tax_rate=mslib_fe::getTaxRate($this->post['tax_id']);
-					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);		
+					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);
 				}	 */
 				$updateArray['status']=1;
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id=\''.$prodid.'\'', $updateArray);
@@ -423,7 +423,7 @@ if ($this->post) {
 				{
 					// we have to substract the vat so the price is excl. vat
 					$tax_rate=mslib_fe::getTaxRate($this->post['tax_id']);
-					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);								
+					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);
 				} */
 				$updateArray['status']=1;
 				$updateArray['page_uid']=$this->showCatalogFromPage;
@@ -689,7 +689,7 @@ if ($this->post) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			// custom hook that can be controlled by third-party plugin eof			
+			// custom hook that can be controlled by third-party plugin eof
 		} else {
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['insertProductPostHook'])) {
@@ -700,7 +700,7 @@ if ($this->post) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			// custom hook that can be controlled by third-party plugin eof				
+			// custom hook that can be controlled by third-party plugin eof
 		}
 		// OLD OBSOLUTE HOOK
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_product.php']['saveProductPostHook'])) {
@@ -938,7 +938,7 @@ if ($this->post) {
 					jQuery("#add_staffel_input").click(function(event) {
 						var counter_data = parseInt(jQuery(\'#sp_row_counter\').val());
 						var counter_col = parseInt(jQuery(\'#sp_row_counter\').val());
-		
+
 						//if (document.getElementById(\'sp_\' + counter_col + \'_qty_2\').value == \'\') {
 						//	var next_qty_col_1 = 0;
 						//} else {
@@ -1021,7 +1021,7 @@ if ($this->post) {
 							<table cellpadding="0" cellspacing="0">
 								<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="0" /></td></tr>
 							</table>
-				
+
 						</div>';
 			} else {
 				$staffel_price_block.='
@@ -1643,7 +1643,7 @@ if ($this->post) {
 						} else {
 							$(this).next().val("0");
 						}
-					});;
+					});
 				}
 				var sort_li = function () {
 					jQuery("#products_attributes_items").sortable({
@@ -2004,7 +2004,7 @@ if ($this->post) {
 					<td>
 						<input type="button" id="filter" value="'.$this->pi_getLL('admin_search').'" />
 					<td>
-			
+
 				</tr>
 			</table>';
 			$product_relatives_block='<h1>'.$this->pi_getLL('admin_related_products').'</h1>'.$form_category_search.'<div id="load"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/loading2.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
@@ -2017,7 +2017,7 @@ if ($this->post) {
 			$product_copy_block.='
 				<h1>'.$this->pi_getLL('admin_copy_duplicate_product').'</h1>
 				<div class="account-field" id="msEditProductInputDuplicateProduct">
-		
+
 				<label for="cid">'.$this->pi_getLL('admin_select_category').'</label>
 				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"').'
 				</div>

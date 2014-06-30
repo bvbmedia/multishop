@@ -99,6 +99,7 @@ class tx_mslib_order extends tslib_pibase {
 				$qry_prod=$GLOBALS['TYPO3_DB']->sql_query($sql_prod);
 				while ($row_prod=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_prod)) {
 					$tax_rate=$row_prod['products_tax']/100;
+					$product_tax=unserialize($row_prod['products_tax_data']);
 					// attributes tax
 					$sql_attr="select * from tx_multishop_orders_products_attributes where orders_products_id = ".$row_prod['orders_products_id']." and orders_id = ".$row_prod['orders_id'];
 					$qry_attr=$GLOBALS['TYPO3_DB']->sql_query($sql_attr);
@@ -108,6 +109,18 @@ class tx_mslib_order extends tslib_pibase {
 						$sub_total+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						$sub_total_excluding_vat+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						$grand_total+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
+						// set the attributes tax data
+						$attributes_tax_data=array();
+						$attributes_tax_data['country_tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['country_tax_rate']);
+						$attributes_tax_data['region_tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['region_tax_rate']);
+						if ($attributes_tax_data['country_tax'] && $attributes_tax_data['region_tax']) {
+							$attributes_tax_data['tax']=$attributes_tax_data['country_tax']+$attributes_tax_data['region_tax'];
+						} else {
+							$attributes_tax_data['tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
+						}
+						$serial_product_attributes_tax=serialize($attributes_tax_data);
+						$sql_update="update tx_multishop_orders_products_attributes set attributes_tax_data = '".$serial_product_attributes_tax."' where orders_products_attributes_id='".$row_attr['orders_products_attributes_id']."' and orders_products_id = ".$row_attr['orders_products_id']." and orders_id = ".$row_attr['orders_id'];
+						$GLOBALS['TYPO3_DB']->sql_query($sql_update);
 					}
 					$total_tax+=$attributes_tax*$row_prod['qty'];
 					$sub_total+=$attributes_tax*$row_prod['qty']; // subtotal including vat
