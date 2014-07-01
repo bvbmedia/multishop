@@ -61,13 +61,13 @@ if ($this->post['submit']) {
 			$filter=array();
 			$filter[]='products_id='.$pid;
 			if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-				// lock changed columns				
+				// lock changed columns
 				mslib_befe::updateImportedProductsLockedFields($pid, 'tx_multishop_products', $updateArray);
 			}
 			/*
 			// if product is originally coming from products importer we have to define that the merchant changed it
 			$str="select products_id from tx_multishop_products where imported_product=1 and lock_imported_product=0 and products_id='".$pid."'";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);			
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry) > 0) {
 				$updateArray['lock_imported_product']=1;
 			}
@@ -599,9 +599,15 @@ if ($pageset['total_rows']>0) {
 		}
 		$cat_crumbar.='</ul>';
 		$status='';
-		if (!$rs['products_status']) {
-			$status.='<span class="admin_status_red" alt="Disable"></span>';
-			$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+		// fix for the flat table
+		if (isset($rs['products_status'])) {
+			if (!$rs['products_status']) {
+				$status.='<span class="admin_status_red" alt="Disable"></span>';
+				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+			} else {
+				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$status.='<span class="admin_status_green" alt="Enable"></span>';
+			}
 		} else {
 			$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
 			$status.='<span class="admin_status_green" alt="Enable"></span>';
@@ -663,7 +669,7 @@ if ($pageset['total_rows']>0) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		// custom page hook that can be controlled by third-party plugin eof		
+		// custom page hook that can be controlled by third-party plugin eof
 		$productsItem.=$this->cObj->substituteMarkerArray($subparts['products_item'], $markerArray, '###|###');
 		$s++;
 	}
@@ -680,7 +686,7 @@ if ($pageset['total_rows']>0) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	// custom page hook that can be controlled by third-party plugin eof			
+	// custom page hook that can be controlled by third-party plugin eof
 	$action_selectbox.='<select name="tx_multishop_pi1[action]" id="products_search_action"><option value="">'.$this->pi_getLL('choose_action').'</option>';
 	foreach ($actions as $key=>$value) {
 		$action_selectbox.='<option value="'.$key.'">'.$value.'</option>';
