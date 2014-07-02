@@ -1,6 +1,6 @@
 @import "jcarousel/slider.css";
 
-.tx-multishop-pi1 { /*width:417px;*/ width:100%; font:11px Verdana,Geneva,sans-serif; color:#000000; margin:0 auto; }
+.tx-multishop-pi1 { /*width:417px;*/ width:100%; font:12px Arial, Helvetica, sans-serif; color:#000; margin:0 auto; padding:20px 0; }
 .tx-multishop-pi1 img a,
 .tx-multishop-pi1 a img { border:none; }
 .tx-multishop-pi1 h1,
@@ -41,7 +41,7 @@
 #tx_multishop_pi1_core ul#product_listing li .image { display:table; width:100%; height:181px; margin:0; } 
 #tx_multishop_pi1_core ul#product_listing li .image a { display:table-cell; width:100%; height:181px; vertical-align:middle; text-align:center; box-sizing:border-box; }
 #tx_multishop_pi1_core ul#product_listing li .image a img { display:inline-block; vertical-align:middle; }
-#tx_multishop_pi1_core ul#product_listing li .image .no_image { width:181px; height:181px; background-position:center center; }
+#tx_multishop_pi1_core ul#product_listing li .image .no_image { width:100%; height:181px; background-position:center center; }
 #tx_multishop_pi1_core ul#product_listing li .category { overflow:hidden; height:30px; }
 #tx_multishop_pi1_core ul#product_listing li .old_price { color:#999; text-decoration:line-through; }
 #tx_multishop_pi1_core ul#product_listing li .price,
@@ -337,22 +337,22 @@ form#checkout table#shoppingcart_listing tr#bottomColumnRight td td.label h4 { f
 #msOrderDetailsSubTotalTable .msOrderDetailsTaxTotalLabel.msOrderDetailsSubTotalLabel { padding:5px 0 !important; }
 
 /* --- new account --- */
-#live-validation-create-account { overflow:hidden; width:100%; margin:0; padding:0 0 20px; }
+#live-validation-create-account { overflow:hidden; width:100%; margin:0; padding:0; }
 #live-validation-create-account .account-field { overflow:hidden; width:100%; padding:0 0 10px; }
-#live-validation-create-account .account-field label { float:left; display:block; width:130px; font:12px Arial, Helvetica, sans-serif; text-align:right; padding:2px 10px 0 0; }
+#live-validation-create-account .account-field label { float:left; display:block; width:20%; font:12px Arial, Helvetica, sans-serif; text-align:right; margin:0; padding:6px 10px 0 0; }
 #live-validation-create-account .account-field input[type="text"],
 #live-validation-create-account .account-field input[type="password"],
-#live-validation-create-account .account-field textarea { width:248px; float:left; border:1px solid #cdcdcd; background:#f6f6f6; font:12px Verdana, Geneva, sans-serif; color:#404040; margin:0 5px 0 0; padding:2px 4px; }
-#live-validation-create-account .account-field select { width:248px; float:left; border:1px solid #cdcdcd; background:#f6f6f6; font:12px Verdana, Geneva, Helvetica, sans-serif; color:#404040; margin:0 5px 0 0; padding:2px; }
+#live-validation-create-account .account-field textarea { width:70%; float:left; border:1px solid #cdcdcd; background:#f6f6f6; font:12px Arial, Helvetica, sans-serif; color:#333; margin:0; padding:5px; }
+#live-validation-create-account .account-field select { width:70%; float:left; border:1px solid #cdcdcd; background:#f6f6f6; font:12px Arial, Helvetica, Helvetica, sans-serif; color:#333; margin:0; padding:4px 1px; }
 #live-validation-create-account .account-field span.InputGroup label.account-male,
 #live-validation-create-account .account-field span.InputGroup label.account-female { width:auto; padding-right:10px; }
-#live-validation-create-account .account-field span.InputGroup input[type="radio"] { float:left; margin:3px 4px 0 0; }
+#live-validation-create-account .account-field span.InputGroup input[type="radio"] { float:left; margin:7px 4px 0 0; }
 
 #live-validation-create-account .account-boxes { padding:0 0 10px; }
 #live-validation-create-account .account-heading h2 { height:auto; background:none; font-size:16px; margin-bottom:10px; }
 #live-validation-create-account .account-desc { float:left; display:block; color:#3366CC; padding:2px 5px 0 0; }
 #live-validation-create-account #live-validation_l { float:left; width:50%; border-right:1px solid #cdcdcd; padding:0 0 20px 0; box-sizing:border-box; }
-#live-validation-create-account #live-validation_r { float:right; width:50%; padding:0 0 10px 20px; }
+#live-validation-create-account #live-validation_r { float:right; width:50%; padding:0 0 10px 20px; box-sizing:border-box; }
 #live-validation-create-account #live-validation_r .account-field label { width:150px; }
 #live-validation-create-account #live-validation_r .account-field input[type="text"],
 #live-validation-create-account #live-validation_r .account-field input[type="password"],
@@ -361,9 +361,16 @@ form#checkout table#shoppingcart_listing tr#bottomColumnRight td td.label h4 { f
 #live-validation-create-account #live-validation_r .account-field.newsletter_checkbox_message label[for="tx_multishop_newsletter"] { width:auto; }
 #live-validation-create-account #live-validation_r .account-field.newsletter_checkbox_message input[type="checkbox"] { float:left; margin:1px 0 0 0; }
 
+@media (max-width: 992px) {
+#live-validation-create-account #live-validation_l,
+#live-validation-create-account #live-validation_r { float:none; width:100%; border-right:0; padding:0; }
+}
+
 #live-validation-create-account .account-field.delivery_checkbox_message label { width:auto; padding:0 5px 0 0; }
 #live-validation-create-account .account-field.newsletter_checkbox_message label { width:auto; padding:0 5px 0 0; }
 #live-validation-create-account #bottom-navigation { clear:both; padding:0; }
 #live-validation-create-account #bottom-navigation .continueState { float:right; }
 #live-validation-create-account #bottom-navigation .backState { float:left; }
+
+#live-validation-create-account .error-space { display:none; }
 /* --- end of new account --- */
