@@ -27,6 +27,12 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'admin_ajax_edit_order':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/admin_ajax_edit_order.php');
+		}
+		exit();
+		break;
 	case 'downloadCategoryTree':
 		if ($this->ADMIN_USER) {
 			$multishop_category_array=array();
@@ -261,7 +267,7 @@ switch ($this->ms['page']) {
 		if ($_REQUEST['tx_multishop_pi1']['payment_lib']) {
 			$mslib_payment=t3lib_div::makeInstance('mslib_payment');
 			$mslib_payment->init($this);
-//			$payment_methods=$mslib_payment->getInstalledPaymentMethods($this);			
+//			$payment_methods=$mslib_payment->getInstalledPaymentMethods($this);
 			if ($mslib_payment->setPaymentMethod($_REQUEST['tx_multishop_pi1']['payment_lib'])) {
 				// psp installed and is activated
 				$extkey='multishop_'.$_REQUEST['tx_multishop_pi1']['payment_lib'];
@@ -272,7 +278,7 @@ switch ($this->ms['page']) {
 					$paymentMethod->paymentNotificationHandler();
 				}
 			} else {
-//				error_log("no");				
+//				error_log("no");
 			}
 		}
 		exit();
@@ -1144,7 +1150,7 @@ switch ($this->ms['page']) {
 			}
 			if (count($sections)) {
 				$content.='
-					<label for="specials_portleds">'.$this->pi_getLL('admin_show_in_section').'</label>		
+					<label for="specials_portleds">'.$this->pi_getLL('admin_show_in_section').'</label>
 					<div class="label_value_container">
 					<ul class="twocols_ul">
 				';
@@ -1360,7 +1366,7 @@ switch ($this->ms['page']) {
 					$body_data='';
 					// download action is valid. lets proceed
 					if ($row['file_remote_location']) {
-						// file is stored on remote location. lets download it and send it to the browser	
+						// file is stored on remote location. lets download it and send it to the browser
 						$body_data=mslib_fe::file_get_contents($row['file_remote_location']);
 						if (!$row['file_label']) {
 							$row['file_label']=basename($row['file_remote_location']);

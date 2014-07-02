@@ -48,150 +48,84 @@ if (is_numeric($this->get['orders_id'])) {
 				$this->post['manual_product_tax']=$tr['rate'];
 			}
 			if (!empty($this->post['product_name']) || !empty($this->post['manual_product_name'])) {
-				if ($this->post['manual_products_id']>0 && $this->post['manual_product_name']) {
-					$this->post['manual_product_qty']=str_replace(',', '.', $this->post['manual_product_qty']);
-					if (empty($this->post['manual_product_price'])) {
-						$this->post['manual_product_price']='0';
-					}
-					$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."')";
-					$GLOBALS['TYPO3_DB']->sql_query($sql);
-					$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-					if (count($this->post['option'])>0) {
-						foreach ($this->post['option'] as $optid=>$optval) {
-							// get price and price prefix
-							$sql="select pov.products_options_values_name, po.products_options_name, pa.price_prefix, pa.options_values_price from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id = pov.products_options_values_id where po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_id = '".$optid."' and pa.options_values_id = '".$optval."' and pa.products_id = ".$this->post['manual_products_id'];
-							$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
-							$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-							if (strpos($this->post['predef_price'][$optid], '-')!==false) {
-								$price_prefix='-';
-								$this->post['predef_price'][$optid]=str_replace('-', '', $this->post['predef_price'][$optid]);
-								$price=$this->post['predef_price'][$optid];
-							} else {
-								$price_prefix='+';
-								$this->post['predef_price'][$optid]=str_replace('+', '', $this->post['predef_price'][$optid]);
-								$price=$this->post['predef_price'][$optid];
-							}
-							if (empty($this->post['predef_price'][$optid])) {
-								$price=$rs['options_values_price'];
-								$price_prefix=$rs['price_prefix'];
-							}
-							$option=$rs['products_options_name'];
-							$option_value=$rs['products_options_values_name'];
-							$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$option."', '".$option_value."', '".$price."', '".$price_prefix."', NULL, '".$optid."', '".$optval."')";
-							$GLOBALS['TYPO3_DB']->sql_query($sql);
+				if (is_numeric($this->post['orders_products_id'])>0) {
+					if ($this->post['product_name']) {
+						$this->post['product_qty']=str_replace(',', '.', $this->post['product_qty']);
+						if (empty($this->post['product_price'])) {
+							$this->post['product_price']='0';
 						}
-					}
-					for ($y=0; $y<count($this->post['manual_option']); $y++) {
-						if (strpos($this->post['manual_price'][$y], '-')!==false) {
-							$price_prefix='-';
-							$this->post['manual_price'][$y]=str_replace('-', '', $this->post['manual_price'][$y]);
-						} else {
-							$price_prefix='+';
-							$this->post['manual_price'][$y]=str_replace('+', '', $this->post['manual_price'][$y]);
-						}
-						if (!empty($this->post['manual_option'][$y]) && !empty($this->post['manual_values'][$y])) {
-							$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$this->post['manual_option'][$y]."', '".$this->post['manual_values'][$y]."', '".$this->post['manual_price'][$y]."', '".$price_prefix."', NULL, '0', '0')";
-							$GLOBALS['TYPO3_DB']->sql_query($sql);
+						$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."', products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
+						$GLOBALS['TYPO3_DB']->sql_query($sql);
+						// clean up the order product attributes to prepare the update
+						$sql="delete from tx_multishop_orders_products_attributes where orders_id = ".$this->get['orders_id']." and orders_products_id = ".$this->post['orders_products_id'];
+						$GLOBALS['TYPO3_DB']->sql_query($sql);
+						// insert the update attributes
+						$count_manual_attributes=count($this->post['edit_manual_option']);
+						if ($count_manual_attributes>0) {
+							for ($x=0; $x<$count_manual_attributes; $x++) {
+								if (strpos($this->post['edit_manual_price'][$x], '-')!==false) {
+									$price_prefix='-';
+									$this->post['edit_manual_price'][$x]=str_replace('-', '', $this->post['edit_manual_price'][$x]);
+								} else {
+									$price_prefix='+';
+									$this->post['edit_manual_price'][$x]=str_replace('+', '', $this->post['edit_manual_price'][$x]);
+								}
+								if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
+									$optname=$this->post['edit_manual_option'][$x];
+									$optid=0;
+									$optvalname=$this->post['edit_manual_values'][$x];;
+									$optvalid=0;
+									if (!$this->post['is_manual_option'][$x]) {
+										$optid=$this->post['edit_manual_option'][$x];
+										$optname=mslib_fe::getRealNameOptions($optid);
+									}
+									if (!$this->post['is_manual_value'][$x]) {
+										$optvalid=$this->post['edit_manual_values'][$x];
+										$optvalname=mslib_fe::getNameOptions($optvalid);
+									}
+									$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
+									$GLOBALS['TYPO3_DB']->sql_query($sql);
+								}
+							}
 						}
 					}
 				} else {
-					if ($this->post['manual_products_id']==0 && $this->post['manual_product_name']) {
+					if ($this->post['manual_product_name']) {
 						$this->post['manual_product_qty']=str_replace(',', '.', $this->post['manual_product_qty']);
 						if (empty($this->post['manual_product_price'])) {
 							$this->post['manual_product_price']='0';
 						}
-						$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax) values ('".$this->get['orders_id']."', '0', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."')";
+						$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."')";
 						$GLOBALS['TYPO3_DB']->sql_query($sql);
 						$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-						if (count($this->post['option'])>0) {
-							foreach ($this->post['option'] as $optid=>$optval) {
-								// get price and price prefix
-								$sql="select pov.products_options_values_name, po.products_options_name, pa.price_prefix, pa.options_values_price from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id = pov.products_options_values_id where po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_id = '".$optid."' and pa.options_values_id = '".$optval."' and pa.products_id = ".$this->post['manual_products_id'];
-								$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
-								$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-								if (strpos($this->post['predef_price'][$optid], '-')!==false) {
+						// insert the update attributes
+						$count_manual_attributes=count($this->post['edit_manual_option']);
+						if ($count_manual_attributes>0) {
+							for ($x=0; $x<$count_manual_attributes; $x++) {
+								if (strpos($this->post['edit_manual_price'][$x], '-')!==false) {
 									$price_prefix='-';
-									$this->post['predef_price'][$optid]=str_replace('-', '', $this->post['predef_price'][$optid]);
-									$price=$this->post['predef_price'][$optid];
+									$this->post['edit_manual_price'][$x]=str_replace('-', '', $this->post['edit_manual_price'][$x]);
 								} else {
 									$price_prefix='+';
-									$this->post['predef_price'][$optid]=str_replace('+', '', $this->post['predef_price'][$optid]);
-									$price=$this->post['predef_price'][$optid];
+									$this->post['edit_manual_price'][$x]=str_replace('+', '', $this->post['edit_manual_price'][$x]);
 								}
-								if (empty($this->post['predef_price'][$optid])) {
-									$price=$rs['options_values_price'];
-									$price_prefix=$rs['price_prefix'];
+								if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
+									$optname=$this->post['edit_manual_option'][$x];
+									$optid=0;
+									$optvalname=$this->post['edit_manual_values'][$x];;
+									$optvalid=0;
+									if (!$this->post['is_manual_option'][$x]) {
+										$optid=$this->post['edit_manual_option'][$x];
+										$optname=mslib_fe::getRealNameOptions($optid);
+									}
+									if (!$this->post['is_manual_value'][$x]) {
+										$optvalid=$this->post['edit_manual_values'][$x];
+										$optvalname=mslib_fe::getNameOptions($optvalid);
+									}
+									$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
+									$GLOBALS['TYPO3_DB']->sql_query($sql);
 								}
-								$option=$rs['products_options_name'];
-								$option_value=$rs['products_options_values_name'];
-								$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$option."', '".$option_value."', '".$price."', '".$price_prefix."', NULL, '".$optid."', '".$optval."')";
-								$GLOBALS['TYPO3_DB']->sql_query($sql);
 							}
-						}
-						for ($y=0; $y<count($this->post['manual_option']); $y++) {
-							if (strpos($this->post['manual_price'][$y], '-')!==false) {
-								$price_prefix='-';
-								$this->post['manual_price'][$y]=str_replace('-', '', $this->post['manual_price'][$y]);
-							} else {
-								$price_prefix='+';
-								$this->post['manual_price'][$y]=str_replace('+', '', $this->post['manual_price'][$y]);
-							}
-							if (!empty($this->post['manual_option'][$y]) && !empty($this->post['manual_values'][$y])) {
-								$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$this->post['manual_option'][$y]."', '".$this->post['manual_values'][$y]."', '".$this->post['manual_price'][$y]."', '".$price_prefix."', NULL, '0', '0')";
-								$GLOBALS['TYPO3_DB']->sql_query($sql);
-							}
-						}
-					}
-				}
-				if (is_numeric($this->post['orders_products_id'])>0 && $this->post['product_name']) {
-					$this->post['product_qty']=str_replace(',', '.', $this->post['product_qty']);
-					if (empty($this->post['product_price'])) {
-						$this->post['product_price']='0';
-					}
-					$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."', products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
-					$GLOBALS['TYPO3_DB']->sql_query($sql);
-					// clean up the order product attributes to prepare the update
-					$sql="delete from tx_multishop_orders_products_attributes where orders_id = ".$this->get['orders_id']." and orders_products_id = ".$this->post['orders_products_id'];
-					$GLOBALS['TYPO3_DB']->sql_query($sql);
-					// insert the update attributes
-					if (count($this->post['option'])>0) {
-						foreach ($this->post['option'] as $optid=>$optval) {
-							// get price and price prefix
-							$sql="select pov.products_options_values_name, po.products_options_name, pa.price_prefix, pa.options_values_price from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id = pov.products_options_values_id where po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_id = '".$optid."' and pa.options_values_id = '".$optval."' and pa.products_id = ".$this->post['products_id'];
-							$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
-							$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-							if (strpos($this->post['option_price'][$optid], '-')!==false) {
-								$man_price_prefix='-';
-								$this->post['option_price'][$optid]=str_replace('-', '', $this->post['option_price'][$optid]);
-							} else {
-								$man_price_prefix='+';
-								$this->post['option_price'][$optid]=str_replace('+', '', $this->post['option_price'][$optid]);
-							}
-							$price_prefix=$rs['price_prefix'];
-							if ($price_prefix!=$man_price_prefix) {
-								$price_prefix=$man_price_prefix;
-							}
-							$price=$rs['options_values_price'];
-							if ($this->post['option_price'][$optid]!=$rs['options_values_price']) {
-								$price=$this->post['option_price'][$optid];
-							}
-							$option=$rs['products_options_name'];
-							$option_value=$rs['products_options_values_name'];
-							$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$option."', '".$option_value."', '".$price."', '".$price_prefix."', NULL, '".$optid."', '".$optval."')";
-							$GLOBALS['TYPO3_DB']->sql_query($sql);
-						}
-					}
-					for ($x=0; $x<count($this->post['edit_manual_option']); $x++) {
-						if (strpos($this->post['edit_manual_price'][$x], '-')!==false) {
-							$price_prefix='-';
-							$this->post['edit_manual_price'][$x]=str_replace('-', '', $this->post['edit_manual_price'][$x]);
-						} else {
-							$price_prefix='+';
-							$this->post['edit_manual_price'][$x]=str_replace('+', '', $this->post['edit_manual_price'][$x]);
-						}
-						if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
-							$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$this->post['edit_manual_option'][$x]."', '".$this->post['edit_manual_values'][$x]."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '0', '0')";
-							$GLOBALS['TYPO3_DB']->sql_query($sql);
 						}
 					}
 				}
@@ -404,19 +338,24 @@ if (is_numeric($this->get['orders_id'])) {
 		$mslib_order=t3lib_div::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		$mslib_order->repairOrder($this->get['orders_id']);
+		//is proposal
+		$is_proposal_params='';
+		if ($order['is_proposal']==1) {
+			$is_proposal_params='&tx_multishop_pi1[is_proposal]=1';
+		}
 		if ($redirect_after_delete) {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order', 1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
 			exit();
 		} else {
 			if ($close_window) {
 				if ($this->post['tx_multishop_pi1']['referrer']) {
 					if (strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_product')!==false || strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_order')!==false) {
-						$this->post['tx_multishop_pi1']['referrer']=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
+						$this->post['tx_multishop_pi1']['referrer']=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders'.$is_proposal_params);
 					}
 					header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 					exit();
 				} else {
-					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders', 1));
+					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders'.$is_proposal_params, 1));
 					exit();
 				}
 			}
@@ -439,7 +378,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orders_products[]=$row;
 			$total_amount=($row['qty']*$row['final_price'])+$total_amount;
 			// now count the attributes
-			$str3="SELECT * from tx_multishop_orders_products_attributes where orders_products_id='".$row['orders_products_id']."'";
+			$str3="SELECT * from tx_multishop_orders_products_attributes where orders_products_id='".$row['orders_products_id']."' order by orders_products_attributes_id asc";
 			$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 			while (($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3))!=false) {
 				if ($row3['price_prefix']=='+') {
@@ -510,73 +449,73 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container" style="display:none">';
 			}
 			$tmpcontent.='<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('company')).':</label>
-	<input name="tx_multishop_pi1[billing_company]" type="text" id="edit_billing_company" value="'.$orders['billing_company'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('name')).'*:</label>
-	<input name="tx_multishop_pi1[billing_name]" type="text" id="edit_billing_name" value="'.$orders['billing_name'].'" required="required" />
-	</div>
-	<div class="account-field">
-	<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
-	<input name="tx_multishop_pi1[billing_street_name]" type="text" id="edit_billing_street_name" value="'.$orders['billing_street_name'].'" required="required" />
-	<span  class="error-space left-this"></span>
-	</div>
-	<div class="account-field">
-	<label class="billing_account-addressnumber" for="billing_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
-	<input name="tx_multishop_pi1[billing_address_number]" type="text" id="edit_billing_address_number" value="'.$orders['billing_address_number'].'" required="required" /><span class="error-space left-this"></span>
-	</div>
-	<div class="account-field">
-	<label class="billing_account-address_ext" for="billing_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-	<input name="tx_multishop_pi1[billing_address_ext]" type="text" id="edit_billing_address_ext" value="'.$orders['billing_address_ext'].'" /><span class="error-space left-this"></span>
-	</div>
-	<div class="account-field">
-	<label class="billing_account-building" for="billing_building">&nbsp;</label>
-	<input name="tx_multishop_pi1[billing_building]" type="text" id="edit_billing_building" value="'.$orders['billing_building'].'" /><span class="error-space left-this"></span>
-	</div>
-	<div class="account-field">
-	<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
-	<input name="tx_multishop_pi1[billing_zip]" type="text" id="edit_billing_zip" value="'.$orders['billing_zip'].'" required="required" /><span class="error-space"></span>
-	</div>
-	<div class="account-field">
-	<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
-	<input name="tx_multishop_pi1[billing_city]" type="text" id="edit_billing_city" value="'.$orders['billing_city'].'" required="required" /><span class="error-space"></span>
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('country')).'*:</label>
-	'.$billing_countries_sb.'
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('email')).'*:</label>
-	<input name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" required="required" />
-	</div>
-	<div class="account-field">';
+			<label>'.ucfirst($this->pi_getLL('company')).':</label>
+			<input name="tx_multishop_pi1[billing_company]" type="text" id="edit_billing_company" value="'.$orders['billing_company'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('name')).'*:</label>
+			<input name="tx_multishop_pi1[billing_name]" type="text" id="edit_billing_name" value="'.$orders['billing_name'].'" required="required" />
+			</div>
+			<div class="account-field">
+			<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
+			<input name="tx_multishop_pi1[billing_street_name]" type="text" id="edit_billing_street_name" value="'.$orders['billing_street_name'].'" required="required" />
+			<span  class="error-space left-this"></span>
+			</div>
+			<div class="account-field">
+			<label class="billing_account-addressnumber" for="billing_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+			<input name="tx_multishop_pi1[billing_address_number]" type="text" id="edit_billing_address_number" value="'.$orders['billing_address_number'].'" required="required" /><span class="error-space left-this"></span>
+			</div>
+			<div class="account-field">
+			<label class="billing_account-address_ext" for="billing_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+			<input name="tx_multishop_pi1[billing_address_ext]" type="text" id="edit_billing_address_ext" value="'.$orders['billing_address_ext'].'" /><span class="error-space left-this"></span>
+			</div>
+			<div class="account-field">
+			<label class="billing_account-building" for="billing_building">&nbsp;</label>
+			<input name="tx_multishop_pi1[billing_building]" type="text" id="edit_billing_building" value="'.$orders['billing_building'].'" /><span class="error-space left-this"></span>
+			</div>
+			<div class="account-field">
+			<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+			<input name="tx_multishop_pi1[billing_zip]" type="text" id="edit_billing_zip" value="'.$orders['billing_zip'].'" required="required" /><span class="error-space"></span>
+			</div>
+			<div class="account-field">
+			<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
+			<input name="tx_multishop_pi1[billing_city]" type="text" id="edit_billing_city" value="'.$orders['billing_city'].'" required="required" /><span class="error-space"></span>
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('country')).'*:</label>
+			'.$billing_countries_sb.'
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('email')).'*:</label>
+			<input name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" required="required" />
+			</div>
+			<div class="account-field">';
 			if (!empty($orders['billing_telephone'])) {
 				$tmpcontent.='<label>'.ucfirst($this->pi_getLL('telephone')).'*:</label>
-		<input name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" required="required" />';
+				<input name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" required="required" />';
 			} else {
 				$tmpcontent.='<label>'.ucfirst($this->pi_getLL('telephone')).':</label>
-		<input name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" />';
+				<input name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" />';
 			}
 			$tmpcontent.='</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('mobile')).':</label>
-	<input name="tx_multishop_pi1[billing_mobile]" type="text" id="edit_billing_mobile" value="'.$orders['billing_mobile'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('fax')).':</label>
-	<input name="tx_multishop_pi1[billing_fax]" type="text" id="edit_billing_fax" value="'.$orders['billing_fax'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
-	<input name="tx_multishop_pi1[billing_vat_id]" type="text" id="edit_billing_vat_id" value="'.$orders['billing_vat_id'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')).'</label>
-	<input name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
-	</div>
-	<a href="#" id="close_edit_billing_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
-	</div>';
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('mobile')).':</label>
+			<input name="tx_multishop_pi1[billing_mobile]" type="text" id="edit_billing_mobile" value="'.$orders['billing_mobile'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('fax')).':</label>
+			<input name="tx_multishop_pi1[billing_fax]" type="text" id="edit_billing_fax" value="'.$orders['billing_fax'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
+			<input name="tx_multishop_pi1[billing_vat_id]" type="text" id="edit_billing_vat_id" value="'.$orders['billing_vat_id'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')).'</label>
+			<input name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
+			</div>
+			<a href="#" id="close_edit_billing_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
+			</div>';
 		}
 		if ($hide_billing_vcard) {
 			$tmpcontent.='<div class="address_details_container" id="billing_details_container" style="display:none">';
@@ -587,9 +526,9 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 		}
 		$tmpcontent.=$orders['billing_name'].'<br />
-	'.$orders['billing_address'].'<br />
-	'.$orders['billing_zip'].' '.$orders['billing_city'].' <br />
-	'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $orders['billing_country']).'<br /><br />';
+		'.$orders['billing_address'].'<br />
+		'.$orders['billing_zip'].' '.$orders['billing_city'].' <br />
+		'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $orders['billing_country']).'<br /><br />';
 		if ($orders['billing_email']) {
 			$tmpcontent.=$this->pi_getLL('email').': <a href="mailto:'.$orders['billing_email'].'">'.$orders['billing_email'].'</a><br />';
 		}
@@ -621,8 +560,7 @@ if (is_numeric($this->get['orders_id'])) {
 	<table>
 	<tr>
 		<td align="left" valign="top">
-		<h3>'.$this->pi_getLL('delivery_details').'</h3>
-';
+		<h3>'.$this->pi_getLL('delivery_details').'</h3>';
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 			$hide_delivery_vcard=false;
 			if (empty($orders['billing_telephone']) || empty($orders['delivery_name']) || empty($orders['delivery_street_name']) || empty($orders['delivery_address_number']) || empty($orders['delivery_zip']) || empty($orders['delivery_city']) || empty($orders['delivery_country']) || empty($orders['delivery_email']) || empty($orders['delivery_telephone'])) {
@@ -632,60 +570,59 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
 			}
 			$tmpcontent.='<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('company')).':</label>
-	<input name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="'.$orders['delivery_company'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('name')).'*:</label>
-	<input name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" />
-	</div>
-	<div class="account-field">
-	<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
-	<input name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" />
-	<span  class="error-space left-this"></span>
-	</div>
-	<div class="account-field">
-	<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
-	<input name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" /><span class="error-space left-this"></span></div>
-	<div class="account-field">
-	<label class="delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-	<input name="tx_multishop_pi1[delivery_address_ext]" type="text" id="edit_delivery_address_ext" value="'.$orders['delivery_address_ext'].'" /><span class="error-space left-this"></span>
-	</div>
-	<div class="account-field">
-	<label class="delivery_account-building" for="delivery_building">&nbsp;</label>
-	<input name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="'.$orders['delivery_building'].'" /><span class="error-space left-this"></span>
-	</div>
-	<div class="account-field">
-	<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
-	<input name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" /><span class="error-space"></span>
-	</div>
-	<div class="account-field">
-	<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
-	<input name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" /><span class="error-space"></span>
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('country')).'*:</label>
-	'.$delivery_countries_sb.'
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('email')).'*:</label>
-	<input name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('telephone')).'*:</label>
-	<input name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('mobile')).':</label>
-	<input name="tx_multishop_pi1[delivery_mobile]" type="text" id="edit_delivery_mobile" value="'.$orders['delivery_mobile'].'" />
-	</div>
-	<div class="account-field">
-	<label>'.ucfirst($this->pi_getLL('fax')).':</label>
-	<input name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
-	</div>
-	<a href="#" id="close_edit_delivery_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
-	</div>
-	';
+			<label>'.ucfirst($this->pi_getLL('company')).':</label>
+			<input name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="'.$orders['delivery_company'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('name')).'*:</label>
+			<input name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" />
+			</div>
+			<div class="account-field">
+			<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
+			<input name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" />
+			<span  class="error-space left-this"></span>
+			</div>
+			<div class="account-field">
+			<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+			<input name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" /><span class="error-space left-this"></span></div>
+			<div class="account-field">
+			<label class="delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+			<input name="tx_multishop_pi1[delivery_address_ext]" type="text" id="edit_delivery_address_ext" value="'.$orders['delivery_address_ext'].'" /><span class="error-space left-this"></span>
+			</div>
+			<div class="account-field">
+			<label class="delivery_account-building" for="delivery_building">&nbsp;</label>
+			<input name="tx_multishop_pi1[delivery_building]" type="text" id="edit_delivery_building" value="'.$orders['delivery_building'].'" /><span class="error-space left-this"></span>
+			</div>
+			<div class="account-field">
+			<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+			<input name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" /><span class="error-space"></span>
+			</div>
+			<div class="account-field">
+			<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
+			<input name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" /><span class="error-space"></span>
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('country')).'*:</label>
+			'.$delivery_countries_sb.'
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('email')).'*:</label>
+			<input name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('telephone')).'*:</label>
+			<input name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('mobile')).':</label>
+			<input name="tx_multishop_pi1[delivery_mobile]" type="text" id="edit_delivery_mobile" value="'.$orders['delivery_mobile'].'" />
+			</div>
+			<div class="account-field">
+			<label>'.ucfirst($this->pi_getLL('fax')).':</label>
+			<input name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
+			</div>
+			<a href="#" id="close_edit_delivery_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
+			</div>';
 		}
 		if ($hide_delivery_vcard) {
 			$tmpcontent.='<div class="address_details_container" id="delivery_details_container" style="display:none">';
@@ -735,28 +672,41 @@ if (is_numeric($this->get['orders_id'])) {
 		});
 	}
 	jQuery(document).ready(function($) {
-		$(document).on("change", "#display_shipping_method_cost", function(){
+		$(document).on("keyup", "#display_shipping_method_cost, #display_payment_method_cost, #display_product_price, .edit_manual_price", function(){
 			var self=$(this);
-			$.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $(this).val(), to_tax_include: false, tax_group_id: $("#shipping_method_tax_id").val() }, function (json) {
-                $(self).next().val(json.price_excluding_tax);
-            });
-		});
-		$(document).on("change", "#display_payment_method_cost", function(){
-			var self=$(this);
-			$.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $(this).val(), to_tax_include: false, tax_group_id: $("#payment_method_tax_id").val() }, function (json) {
-                $(self).next().val(json.price_excluding_tax);
-            });
-		});
-		$(document).on("change", "#display_product_price", function(){
-			var self=$(this);
-			$.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $(this).val(), to_tax_include: false, tax_group_id: $("#product_tax").val() }, function (json) {
-                $(self).next().val(json.price_excluding_tax);
-            });
+			var tax_id=0;
+			if ($(self).attr("id")=="display_shipping_method_cost") {
+				tax_id=$("#shipping_method_tax_id").val();
+			} else if ($(self).attr("id")=="display_payment_method_cost") {
+				tax_id=$("#payment_method_tax_id").val();
+			} else if ($(self).attr("id")=="display_product_price" || $(self).hasClass("edit_manual_price")) {
+				tax_id=$("#product_tax").val();
+			}
+			if ($(this).val()!="") {
+				if(tax_id!=0 || tax_id!="") {
+					$.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $(this).val(), to_tax_include: false, tax_group_id: tax_id }, function (json) {
+						if (json.price_excluding_tax!="") {
+							$(self).next().val(json.price_excluding_tax);
+						} else {
+							$(self).next().val($(self).val());
+						}
+					});
+				} else {
+					$(self).next().val($(self).val());
+				}
+            } else {
+            	$(self).next().val("0");
+            }
 		});
 		$(document).on("change", "#product_tax", function(){
 			var self=$(this);
-			$.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $("#display_product_price").val(), to_tax_include: false, tax_group_id: $(this).val() }, function (json) {
+			$.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $("#display_product_price").val(), to_tax_include: false, tax_group_id: $(self).val() }, function (json) {
                 $("#display_product_price").next().val(json.price_excluding_tax);
+            });
+            $(".edit_manual_price").each(function(i, v){
+            	$.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $(v).val(), to_tax_include: false, tax_group_id: $(self).val() }, function (json) {
+                	$(v).next().val(json.price_excluding_tax);
+            	});
             });
 		});
 		$(document).on("click", ".submit_button", function() {
@@ -1007,6 +957,21 @@ if (is_numeric($this->get['orders_id'])) {
 	</ul>
 </fieldset>
 </div>';
+		// order products
+		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			$js_select2_cache='';
+			$js_select2_cache_products=array();
+			$js_select2_cache_options=array();
+			$js_select2_cache_values=array();
+			$js_select2_cache='
+			<script type="text/javascript">
+				var productsSearch=[];
+				var attributesSearchOptions=[];
+				var attributesSearchValues=[];
+				var Products=[];
+				var attributesOptions=[];
+				var attributesValues=[];'."\n";
+		}
 		$tmpcontent.='
 <div class="clear_both"></div>
 <div class="tabs-fieldset" id="product_details">
@@ -1059,6 +1024,11 @@ if (is_numeric($this->get['orders_id'])) {
 		$total_tax=0;
 		if (is_array($orders_products) and count($orders_products)) {
 			foreach ($orders_products as $order) {
+				if ($order['products_id']>0) {
+					$js_select2_cache_products[$order['products_id']]='Products['.$order['products_id'].']={id:"'.$order['products_id'].'", text:"'.$order['products_name'].'"}';
+				} else {
+					$js_select2_cache_products[$order['products_name']]='Products[\''.$order['products_name'].'\']={id:"'.$order['products_name'].'", text:"'.$order['products_name'].'"}';
+				}
 				$order_products_tax_data=unserialize($order['products_tax_data']);
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -1089,19 +1059,23 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					$vat_sb.='</select>';
 					$vat_input_row_col='<td align="right" class="cell_products_vat">'.$vat_sb.'</td>';
-					$total_product_row_col='<td align="right" class="cell_products_final_price">'.mslib_fe::amount2Cents($order['final_price'], 0).'</td>';
+					$total_product_row_col='<td align="right" class="cell_products_final_price" id="edit_order_product_final_price">'.mslib_fe::amount2Cents($order['final_price'], 0).'</td>';
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$total_product_row_col='<td align="right" class="cell_products_final_price">'.mslib_fe::amount2Cents($order['qty']*($order['final_price']+$order_products_tax_data['total_tax']), 0).'</td>';
+						$total_product_row_col='<td align="right" class="cell_products_final_price" id="edit_order_product_final_price">'.mslib_fe::amount2Cents($order['qty']*($order['final_price']+$order_products_tax_data['total_tax']), 0).'</td>';
 					}
 					// cols
-					$tmpcontent.='<td align="right" class="cell_products_products_id">'.$order['products_id'].'<input type="hidden" id="edit_product_row_counter" value="0"></td>';
+					$tmpcontent.='<td align="right" class="cell_products_products_id" id="edit_order_product_id">'.$order['products_id'].'</td>';
 					$tmpcontent.='<td align="right" class="cell_products_qty">';
-					$tmpcontent.='<input type="hidden" name="products_id" id="products_id" value="'.$order['products_id'].'">';
+					$tmpcontent.='<input type="hidden" name="product_name" id="product_name" value="'.$order['products_name'].'">';
 					$tmpcontent.='<input type="hidden" name="orders_products_id" value="'.$order['orders_products_id'].'">';
-					$tmpcontent.='<input class="text" style="width:25px" type="text" name="product_qty" value="'.round($order['qty'], 13).'" />';
+					$tmpcontent.='<input class="text" style="width:25px" type="text" id="product_qty" name="product_qty" value="'.round($order['qty'], 13).'" />';
 					$tmpcontent.='</td>';
 					$tmpcontent.='<td align="left" class="cell_products_name">';
-					$tmpcontent.='<input class="product_name_input" type="text" name="product_name" value="'.$order['products_name'].'" />';
+					if ($order['products_id']>0) {
+						$tmpcontent.='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:400px" />';
+					} else {
+						$tmpcontent.='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:400px" />';
+					}
 					$tmpcontent.='</td>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 						$tmpcontent.='<td align="center" class="cell_products_status">';
@@ -1119,7 +1093,7 @@ if (is_numeric($this->get['orders_id'])) {
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						$tmpcontent.=$vat_input_row_col;
 					}
-					$tmpcontent.='<td align="right" class="cell_products_normal_price">';
+					$tmpcontent.='<td align="right" class="cell_products_normal_price" id="edit_order_product_price">';
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						$tmpcontent.='<input class="text" style="width:44px" type="text" id="display_product_price" value="'.($order['final_price']+$order_products_tax_data['total_tax']).'" />
 						<input type="hidden" name="product_price" id="product_price" value="'.($order['final_price']).'" />';
@@ -1153,11 +1127,15 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					$row[0]=$order['products_id'];
 					$row[1]=number_format($order['qty'], 2);
-					if ($this->ms['MODULES']['DISPLAY_PRODUCT_IMAGE_IN_ADMIN_ORDER_DETAILS'] and $product['products_image']) {
-						$row[2]='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">';
-						$row[2].='<a href="'.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$order['products_id'].'&tx_multishop_pi1[page_section]=products_detail').'" target="_blank">'.$order['products_name'].'</a>'.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
+					if ($order['products_id']>0) {
+						if ($this->ms['MODULES']['DISPLAY_PRODUCT_IMAGE_IN_ADMIN_ORDER_DETAILS'] and $product['products_image']) {
+							$row[2]='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">';
+							$row[2].='<a href="'.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$order['products_id'].'&tx_multishop_pi1[page_section]=products_detail').'" target="_blank">'.$order['products_name'].'</a>'.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
+						} else {
+							$row[2]='<a href="'.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$order['products_id'].'&tx_multishop_pi1[page_section]=products_detail').'" target="_blank">'.$order['products_name'].'</a>'.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
+						}
 					} else {
-						$row[2]='<a href="'.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$order['products_id'].'&tx_multishop_pi1[page_section]=products_detail').'" target="_blank">'.$order['products_name'].'</a>'.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
+						$row[2]=$order['products_name'].' '.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
 					}
 					$row[3]=mslib_fe::amount2Cents($order['final_price'], 0);
 					$row[4]=number_format($order['products_tax'], 2);
@@ -1207,12 +1185,12 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 					if (!$this->get['edit_product'] || ($this->get['edit_product'] && $this->get['order_pid']!=$order['orders_products_id'])) {
 						$tmpcontent.='<td align="right" class="cell_products_action">';
-						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="msadmin_button">';
-						$tmpcontent.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="msadmin_button"></a>';
+						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="msadmin_button order_product_action">';
+						$tmpcontent.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="msadmin_button order_product_action"></a>';
 						$tmpcontent.='</td>';
 					} else {
 						$tmpcontent.='<td align="right" class="cell_products_action">';
-						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button submit_button">';
+						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button order_product_action">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button submit_button order_product_action">';
 						$tmpcontent.='</td>';
 					}
 				}
@@ -1220,97 +1198,60 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($orders_products_attributes[$order['orders_products_id']]) {
 					$attr_counter=0;
 					if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
-						$selected_attr=array();
 						$manual_attr=array();
 						foreach ($orders_products_attributes[$order['orders_products_id']] as $tmpkey=>$options) {
-							if ($options['products_options_id']>0 && $options['products_options_values_id']>0) {
-								$selected_attr[$options['products_options_id']]=$options['products_options_values_id'];
+							$options['qty']=$order['qty'];
+							$manual_attr['optname'][]=$options['products_options'];
+							$manual_attr['optvalue'][]=$options['products_options_values'];
+							$manual_attr['optprice'][]=$options['options_values_price'];
+							$manual_attr['attributes_data'][]=$options;
+							if ($options['products_options_id']>0) {
+								$js_select2_cache_options[$options['products_options_id']]='attributesOptions['.$options['products_options_id'].']={id:"'.$options['products_options_id'].'", text:"'.$options['products_options'].'"}';
 							} else {
-								$manual_attr['optname'][]=$options['products_options'];
-								$manual_attr['optvalue'][]=$options['products_options_values'];
-								$manual_attr['optprice'][]=$options['options_values_price'];
+								$js_select2_cache_options[$options['products_options']]='attributesOptions[\''.$options['products_options'].'\']={id:"'.$options['products_options'].'", text:"'.$options['products_options'].'"}';
 							}
-						}
-						$sql_option=$GLOBALS['TYPO3_DB']->SELECTquery('po.products_options_name, po.products_options_id', // SELECT ...
-							'tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id', // FROM ...
-							'(po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id = \''.$this->sys_language_uid.'\' and pa.products_id = \''.$order['products_id'].'\'', // WHERE...
-							'pa.options_id', // GROUP BY...
-							'', // ORDER BY...
-							'' // LIMIT ...
-						);
-						$qry_option=$GLOBALS['TYPO3_DB']->sql_query($sql_option);
-						while (($rs_option=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_option))!=false) {
-							$tmpcontent.='<tr class="'.$tr_type.'">';
-							$tmpcontent.='<td>&nbsp;</td>';
-							$tmpcontent.='<td>&nbsp;</td>';
-							$tmpcontent.='<td align="left"><div id="product_attributes_wrapper">';
-							$tmpcontent.='<label for="edit_option_'.$rs_option['products_options_id'].'">'.$rs_option['products_options_name'].':</label> ';
-							$tmpcontent.='<select name="option['.$rs_option['products_options_id'].']" id="edit_option_'.$rs_option['products_options_id'].'">';
-							$sql_optval=$GLOBALS['TYPO3_DB']->SELECTquery('pa.options_values_id, pov.products_options_values_name', // SELECT ...
-								'tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id=po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id=pov.products_options_values_id', // FROM ...
-								'pov.language_id = \''.$this->sys_language_uid.'\' and pa.options_id = \''.$rs_option['products_options_id'].'\' and pa.products_id = \''.$order['products_id'].'\'', // WHERE...
-								'', // GROUP BY...
-								'', // ORDER BY...
-								'' // LIMIT ...
-							);
-							$qry_optval=$GLOBALS['TYPO3_DB']->sql_query($sql_optval);
-							while (($rs_optval=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_optval))!=false) {
-								if ($selected_attr[$rs_option['products_options_id']]==$rs_optval['options_values_id']) {
-									$tmpcontent.='<option value="'.$rs_optval['options_values_id'].'" selected="selected">'.$rs_optval['products_options_values_name'].'</option>';
-								} else {
-									$tmpcontent.='<option value="'.$rs_optval['options_values_id'].'">'.$rs_optval['products_options_values_name'].'</option>';
-								}
+							if ($options['products_options_values_id']>0) {
+								$js_select2_cache_values[$options['products_options_values_id']]='attributesValues['.$options['products_options_values_id'].']={id:"'.$options['products_options_values_id'].'", text:"'.$options['products_options_values'].'"}';
+							} else {
+								$js_select2_cache_values[$options['products_options_values']]='attributesValues[\''.$options['products_options_values'].'\']={id:"'.$options['products_options_values'].'", text:"'.$options['products_options_values'].'"}';
 							}
-							$tmpcontent.='</select>';
-							$sql_pap=$GLOBALS['TYPO3_DB']->SELECTquery('opa.options_values_price, opa.price_prefix', // SELECT ...
-								'tx_multishop_orders_products_attributes opa', // FROM ...
-								'products_options_id=\''.$rs_option['products_options_id'].'\' and products_options_values_id=\''.$selected_attr[$rs_option['products_options_id']].'\' and orders_products_id=\''.$order['orders_products_id'].'\'', // WHERE...
-								'', // GROUP BY...
-								'', // ORDER BY...
-								'' // LIMIT ...
-							);
-							$qry_pap=$GLOBALS['TYPO3_DB']->sql_query($sql_pap);
-							$rs_pap=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_pap);
-							$opt_price='';
-							if ($rs_pap['options_values_price']>0) {
-								if ($rs_pap['price_prefix']=='-') {
-									$opt_price='-'.$rs_pap['options_values_price'];
-								} else {
-									$opt_price=$rs_pap['options_values_price'];
-								}
-							}
-							$tmpcontent.='</div></td>';
-							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-								$tmpcontent.='<td align="right">&nbsp;</td>';
-							}
-							$attr_price_row_col='<td align="right"><input class="text" style="width:44px" type="text" name="option_price['.$rs_option['products_options_id'].']" id="option_price_'.$rs_option['products_options_id'].'" value="'.$opt_price.'" /></td>';
-							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$tmpcontent.=$attr_price_row_col;
-							}
-							$tmpcontent.='<td align="right">&nbsp;</td>';
-							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$tmpcontent.=$attr_price_row_col;
-							}
-							$tmpcontent.='<td align="right">&nbsp;</td>';
-							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-								$tmpcontent.='<td align="right">&nbsp;</td>';
-							}
-							$tmpcontent.='</tr>';
-							$attr_counter++;
 						}
 						if (count($manual_attr['optname'])>0) {
 							foreach ($manual_attr['optname'] as $idx=>$optname) {
+								$attributes_data=$manual_attr['attributes_data'][$idx];
+								$attributes_tax_data=unserialize($attributes_data['attributes_tax_data']);
+								$attributes_qty=$attributes_data['qty'];
 								$optvalue=$manual_attr['optvalue'][$idx];
-								$optprice='';
+								$optprice=0;
 								if ($manual_attr['optprice'][$idx]>0) {
 									$optprice=$manual_attr['optprice'][$idx];
 								}
-								$tmpcontent.='<tr class="'.$tr_type.'" id="edit_product_row_'.$attr_counter.'">';
+								$tmpcontent.='<tr class="'.$tr_type.' manual_new_attributes">';
 								$tmpcontent.='<td>&nbsp;</td>';
 								$tmpcontent.='<td>&nbsp;</td>';
-								$tmpcontent.='<td align="left"><div class="optionWrapper"><div id="product_attributes_wrapper"><input type="text" class="text" name="edit_manual_option[]" style="width:90px" value="'.$optname.'" /> <span>:</span> ';
-								$tmpcontent.='<input type="text" class="manual_values_input text" name="edit_manual_values[]" value="'.$optvalue.'" />&nbsp;<input type="button" class="msadmin_button" value="-" onclick="edit_remove_manual_row(\''.$attr_counter.'\')">';
-								$tmpcontent.='</div></div></td>';
+								$tmpcontent.='<td align="left">';
+								$tmpcontent.='<div class="product_attributes_wrapper">';
+								$tmpcontent.='<span class="products_attributes_option">';
+								if ($attributes_data['products_options_id']>0) {
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$attributes_data['products_options_id'].'"/> ';
+									$tmpcontent.='<input type="hidden" name="is_manual_option[]"value="0"/>';
+								} else {
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$optname.'"/> ';
+									$tmpcontent.='<input type="hidden" name="is_manual_option[]"value="1"/>';
+								}
+								$tmpcontent.='</span>';
+								$tmpcontent.='<span> : </span>';
+								$tmpcontent.='<span class="products_attributes_values">';
+								if ($attributes_data['products_options_values_id']>0) {
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
+									$tmpcontent.='<input type="hidden" name="is_manual_value[]"value="0"/>';
+								} else {
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
+									$tmpcontent.='<input type="hidden" name="is_manual_value[]"value="1"/>';
+								}
+								$tmpcontent.='</span>';
+								$tmpcontent.='</div>';
+								$tmpcontent.='</td>';
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 									$tmpcontent.='<td align="right">&nbsp;</td>';
 								}
@@ -1320,13 +1261,15 @@ if (is_numeric($this->get['orders_id'])) {
 								$tmpcontent.='<td align="right">&nbsp;</td>';
 								if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 									$tmpcontent.='<td align="right">';
-									$tmpcontent.='<input type="text" class="text edit_manual_price" style="width:44px" value="'.$optprice.'">';
+									$tmpcontent.='<input type="text" class="text edit_manual_price" style="width:44px" value="'.($optprice+$attributes_tax_data['tax']).'">';
 									$tmpcontent.='<input type="hidden" name="edit_manual_price[]" value="'.$optprice.'">';
 									$tmpcontent.='</td>';
+									$tmpcontent.='<td align="right">'.mslib_fe::amount2Cents(($optprice+$attributes_tax_data['tax'])*$attributes_qty, 0).'</td>';
+								} else {
+									$tmpcontent.='<td align="right">'.mslib_fe::amount2Cents($optprice, 0).'</td>';
 								}
-								$tmpcontent.='<td align="right">&nbsp;</td>';
 								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-									$tmpcontent.='<td align="right">&nbsp;</td>';
+									$tmpcontent.='<td align="left"><input type="button" class="msadmin_button remove_attributes" value="-"></td>';
 								}
 								$tmpcontent.='</tr>';
 								$attr_counter++;
@@ -1336,7 +1279,13 @@ if (is_numeric($this->get['orders_id'])) {
 						foreach ($orders_products_attributes[$order['orders_products_id']] as $tmpkey=>$options) {
 							$options_attributes_tax_data=unserialize($options['attributes_tax_data']);
 							if (is_numeric($options['products_options_id'])) {
-								$str="SELECT listtype from tx_multishop_products_options o where o.products_options_id='".$options['products_options_id']."' and language_id='".$this->sys_language_uid."'";
+								$str=$GLOBALS['TYPO3_DB']->SELECTquery('listtype', // SELECT ...
+									'tx_multishop_products_options o', // FROM ...
+									'o.products_options_id=\''.$options['products_options_id'].'\' and language_id=\''.$this->sys_language_uid.'\'', // WHERE...
+									'', // GROUP BY...
+									'', // ORDER BY...
+									'' // LIMIT ...
+								);
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								$rowCheck=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 							}
@@ -1390,11 +1339,11 @@ if (is_numeric($this->get['orders_id'])) {
 								$tmpcontent.='<td align="right">&nbsp;</td>';
 							}
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
+								$tmpcontent.='<td align="right" class="cell_products_vat">&nbsp;</td>';
 							}
 							$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
 							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
+								$tmpcontent.='<td align="right" class="cell_products_vat">&nbsp;</td>';
 							}
 							$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
 							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
@@ -1465,87 +1414,70 @@ if (is_numeric($this->get['orders_id'])) {
 			$colspan=8;
 			$tmpcontent.='<tr class="manual_add_new_product" style="display:none"><th colspan="'.$colspan.'" style="text-align:left;">'.$this->pi_getLL('add_item_to_order').'</th></tr>';
 			$tmpcontent.='<tr class="odd manual_add_new_product" style="display:none">';
-			$tmpcontent.='<td align="right">
-							<input type="hidden" value="0" id="product_row_counter">
-						  </td>
-
+			$tmpcontent.='<td align="right">&nbsp;</td>
 				<td align="right" valign="top">
-					<table width="100%" cellspacing="0" cellpadding="0" style="border:0px;">
-						<tr>
-							<td style="border:0px solid #fff">
-								<input type="hidden" name="manual_products_id" id="manual_products_id" value="">
-								<input class="text" style="width:25px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />
-							</td>
-						</tr>
-					</table>
+					<input type="hidden" name="manual_product_name" id="product_name" value="">
+					<input class="text" style="width:25px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />
 				</td>';
 			$tmpcontent.='<td align="left" valign="top" id="manual_add_product">
-				<table width="100%" cellspacing="0" cellpadding="0" style="border:0px;">
-					<tr id="product_row_start">
-						<td style="border:0px solid #fff">
-							<input class="product_name_input" type="text" name="manual_product_name" id="skeyword" value="" tabindex="2" />
-							<input type="hidden" name="page" id="page" value="1" />
-						</td>
-					</tr>
-
-					<tr id="product_row_end">
-						<td style="border:0px solid #fff">
-							<input type="button" class="msadmin_button" value="add attribute" id="add_attributes" />
-						</td>
-					</tr>
-				</table>
+				<input class="product_name" type="hidden" name="manual_products_id" value="" style="width:400px" tabindex="2" />
 			</td>';
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 				$tmpcontent.='<td align="right">&nbsp;</td>';
 			}
-			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$tmpcontent.='<td align="right" class="cell_products_vat" valign="top">
-					<table width="100%" cellspacing="0" cellpadding="0" style="border:0px;">
-						<tr id="vat_row_start">
-							<td style="border:0px solid #fff">
-								<input class="text" style="width:40px" type="text" name="manual_product_tax" id="manual_product_tax" value="" tabindex="4" /> %
-							</td>
-						</tr>
-
-						<tr id="vat_row_end" style="display:none">
-							<td>&nbsp;</td>
-						</tr>
-					</table>
-				</td>';
+			$customer_country=mslib_fe::getCountryByName($orders['billing_country']);
+			$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
+				'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
+				't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\''.$customer_country['cn_iso_nr'].'\'', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$qry_tax_sb=$GLOBALS['TYPO3_DB']->sql_query($sql_tax_sb);
+			$vat_sb='<select name="manual_product_tax" id="product_tax">';
+			$vat_sb.='<option value="">'.$this->pi_getLL('admin_label_no_tax').'</option>';
+			while ($rs_tx_sb=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb)) {
+				$sb_tax_rate=($rs_tx_sb['rate']/100);
+				if ($current_product_tax==$sb_tax_rate) {
+					$vat_sb.='<option value="'.$rs_tx_sb['tax_id'].'" selected="selected">'.$rs_tx_sb['name'].'</option>';
+				} else {
+					$vat_sb.='<option value="'.$rs_tx_sb['tax_id'].'">'.$rs_tx_sb['name'].'</option>';
+				}
 			}
-			$tmpcontent.='<td align="right" valign="top">
-				<table width="100%" cellspacing="0" cellpadding="0" style="border:0px;">
-					<tr id="price_row_start">
-						<td style="border:0px solid #fff">
-							<input class="text" style="width:44px" type="text" name="manual_product_price" id="manual_product_price" value="" tabindex="3" />
-						</td>
-					</tr>
-
-					<tr id="price_row_end" style="display:none">
-						<td>&nbsp;</td>
-					</tr>
-				</table>
-			</td>';
+			$vat_sb.='</select>';
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$tmpcontent.='<td align="right" class="cell_products_vat" valign="top">'.$vat_sb.'</td>';
+			}
+			$tmpcontent.='<td align="right" valign="top">';
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$tmpcontent.='<input class="text" style="width:44px" type="text" id="display_product_price" value="" tabindex="3"/>';
+				$tmpcontent.='<input type="hidden" name="manual_product_price" id="product_price" value=""/>';
+			} else {
+				$tmpcontent.='<input class="text" style="width:44px" type="text" name="manual_product_price" id="product_price" value="" tabindex="3"/>';
+			}
+			$tmpcontent.='</td>';
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$tmpcontent.='<td align="right" class="cell_products_vat" valign="top">
-					<table width="100%" cellspacing="0" cellpadding="0" style="border:0px;">
-						<tr id="vat_row_start">
-							<td style="border:0px solid #fff">
-								<input class="text" style="width:40px" type="text" name="manual_product_tax" id="manual_product_tax" value="" tabindex="4" /> %
-							</td>
-						</tr>
-
-						<tr id="vat_row_end" style="display:none">
-							<td>&nbsp;</td>
-						</tr>
-					</table>
-				</td>';
+				$tmpcontent.='<td align="right" class="cell_products_vat" valign="top">'.$vat_sb.'</td>';
 			}
 			$tmpcontent.='<td align="right" id="manual_final_price">&nbsp;</td>';
-			$tmpcontent.='<td align="right"><input type="submit" value="'.$this->pi_getLL('add').'" class="msadmin_button submit_button"></td>';
+			$tmpcontent.='<td align="right" class="cell_products_action">';
+			$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button">&nbsp;';
+			$tmpcontent.='<input type="submit" value="'.$this->pi_getLL('add').'" class="msadmin_button submit_button">';
+			$tmpcontent.='</td>';
 			$tmpcontent.='';
 			$tmpcontent.='</tr>';
-			$tmpcontent.='<tr><td colspan="'.$colspan.'" style="text-align:left;"><a href="#" id="button_manual_new_product" class="msadmin_button">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a></td></tr>';
+			$tmpcontent.='<tr class="manual_add_new_product" id="last_edit_product_row" style="display:none">';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td style="border:0px solid #fff"><input type="button" class="msadmin_button" value="add attribute" id="add_attributes" /></td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='</tr>';
+			if (!isset($this->get['edit_product'])) {
+				$tmpcontent.='<tr><td colspan="'.$colspan.'" style="text-align:left;"><a href="#" id="button_manual_new_product" class="msadmin_button">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a></td></tr>';
+			}
 		} else {
 			$colspan=7;
 		}
@@ -1654,366 +1586,316 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='<script type="text/javascript">';
 			$tmpcontent.='
 			// autocomplete for options val
-			var option_ac = function (o) {
-				var optSendData;
-				var elemIdSplitter = o.id;
-				var elemIdSplitterArray = new Array();
-				elemIdSplitterArray = elemIdSplitter.split(\'_\');
-				var fetchType = elemIdSplitterArray[1];
-				var ctrNumber = elemIdSplitterArray[2];
-				var optId = 0;
-				if (fetchType == \'values\') {
-					optId = jQuery(\'#manual_option_id_\' + ctrNumber).val();
-				}
-				var elemId = \'#\' + o.id;
-				jQuery("#page").val(0);
-				jQuery(elemId).bind("keydown.autocomplete",function(e){
-					// dont process special keys
-					var skipKeys = [ 13,38,40,37,39,27,32,17,18,9,16,20,91,93,8,36,35,45,46,33,34,144,145,19 ];
-					if (jQuery.inArray(e.keyCode, skipKeys) != -1) optSendData = false;
-					else optSendData = true;
-				});
-				jQuery(elemId).autocomplete({
-					//console.log(this);
-					minLength: 1,
-					delay: 100,
-					open: function(event, ui){
-						jQuery(".ui-autocomplete li.ui-menu-item:odd a").addClass("ui-menu-item-alternate");
-						jQuery(".ui-autocomplete").attr("id", "ui-menu-manual-option");
-					},
-					source: function( request, response ) {
-						if (optSendData){
-							jQuery.ajax({
-								url: "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_attributes_option_value_search&tx_multishop_pi1[type]=edit_order').'",
-								dataType: "json",
-								data: {
-									q: jQuery(elemId).val(), page: jQuery("#page").val(), ftype: fetchType, optid: optId
-								},
-								success: function( data ) {
-									var index = 1;
-									if (data.options != null) {
-										response( jQuery.map( data.options, function( item ) {
-											index = index + 1;
-											if (index == 6) {
-												return {
-													label: item.Title,
-													link: item.Link,
-													value: \'\',
-													skeyword: item.skeyword,
-													page: item.Page,
-													prod: false
-												}
-											} else {
-												return {
-													label: "<div class=\"ajax_options_search_item\">" + item.Title + "</div>",
-													link: item.Link,
-													value: item.Name,
-													skeyword: item.skeyword,
-													page: item.Page,
-													prod: true,
-													options_id : item.products_options_id
-												}
-											}
-
-										})
-										);
-									} //end if data
-									//alert(index);
-								}
-							});
-						} // and if optSendData
-					},
-					select: function(event, ui ) {
-						jQuery(elemId).val(ui.item.skeyword);
-						jQuery("#page").val(ui.item.page);
-						//console.log(ui);
-						var link = \'\';
-						if (ui.item.link) {
-							link = "'.$this->FULL_HTTP_URL.'" + ui.item.link ;
+			var select2_pn = function(selector_str, placeholder, dropdowncss, ajax_url) {
+				$(selector_str).select2({
+					placeholder: placeholder,
+					createSearchChoice:function(term, data) {
+						if (productsSearch[term] === undefined) {
+							productsSearch[term]={id: term, text: term};
 						}
-						if (fetchType == \'option\') {
-							jQuery("#manual_option_id_" + ctrNumber).val(ui.item.options_id);
-						}
-						if (ui.item.prod == true){
-							//open(link,\'_self\',\'resizable,location,menubar,toolbar,scrollbars,status\');
+						return {id:term, text:term};
+					},
+					minimumInputLength: 0,
+					query: function(query) {
+						if (productsSearch[query.term] !== undefined) {
+							query.callback({results: productsSearch[query.term]});
 						} else {
-							if (ui.item.value == \'\') {
-								jQuery(elemId).autocomplete("search");
+							$.ajax(ajax_url, {
+								data: {
+									q: query.term
+								},
+								dataType: "json"
+							}).done(function(data) {
+								productsSearch[query.term]=data;
+								query.callback({results: data});
+							});
+						}
+					},
+					initSelection: function(element, callback) {
+						var id=$(element).val();
+						if (id!=="") {
+							if (Products[id] !== undefined) {
+								callback(Products[id]);
+							} else {
+								$.ajax(ajax_url, {
+									data: {
+										preselected_id: id
+									},
+									dataType: "json"
+								}).done(function(data) {
+									Products[data.id]={id: data.id, text: data.text};
+									callback(data);
+								});
 							}
 						}
 					},
-					focus: function(event, ui) {
-						jQuery(elemId).val(ui.item.skeyword);
-						jQuery("#page").val(0);
-						return false;
+					formatResult: function(data){
+						if (data.text === undefined) {
+							$.each(data, function(i,val){
+								return val.text;
+							});
+						} else {
+							return data.text;
+						}
+					},
+					formatSelection: function(data){
+						if (data.text === undefined) {
+							return data[0].text;
+						} else {
+							return data.text;
+						}
+					},
+					dropdownCssClass: dropdowncss,
+					escapeMarkup: function (m) { return m; }
+				}).on("select2-selecting", function(e) {
+					if (e.object.id == e.object.text) {
+						$("#product_tax").val("");
+						$("#display_product_price").val("0.00");
+						$("#product_price").val("0.00");
+					} else {
+						$("#edit_order_product_id").html(e.object.id);
+						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, qty: 1}, function(d){
+							if (d.tax_id) {
+								$("#product_tax").val(d.tax_id);
+							}
+							if (d.price_include_vat) {
+								$("#display_product_price").val(d.price_include_vat);
+							} else {
+								$("#display_product_price").val(d.price);
+							}
+							$("#product_price").val(d.price);
+						});
+						// get the pre-def attributes
+						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: 0}, function(j){
+							$(".manual_new_attributes").remove();
+							jQuery.each(j, function(key, val) {
+								jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: val.optid}, function(k){
+									var valid=0;
+									jQuery.each(k, function(idx, optvalid) {
+										valid=optvalid.valid;
+									});
+									add_new_attributes(val.optid, valid);
+								});
+							});
+						});
 					}
-				}).data(\'ui-autocomplete\')._renderItem = function (ul, item) {
-					return jQuery("<li></li>").data("item.autocomplete", item).append(jQuery("<a></a>").html(item.label)).appendTo(ul);
-				};
+					$("#product_name").val(e.object.text);
+					$("#product_qty").val("1");
+				});
+			}
+			var select2_sb = function(selector_str, placeholder, dropdowncss, ajax_url) {
+				$(selector_str).select2({
+					placeholder: placeholder,
+					createSearchChoice:function(term, data) {
+						if (attributesOptions[term] === undefined) {
+							attributesOptions[term]={id: term, text: term};
+						}
+						return {id:term, text:term};
+					},
+					minimumInputLength: 0,
+					query: function(query) {
+						if (attributesSearchOptions[query.term] !== undefined) {
+							query.callback({results: attributesSearchOptions[query.term]});
+						} else {
+							$.ajax(ajax_url, {
+								data: {
+									q: query.term
+								},
+								dataType: "json"
+							}).done(function(data) {
+								attributesSearchOptions[query.term]=data;
+								query.callback({results: data});
+							});
+						}
+					},
+					initSelection: function(element, callback) {
+						var id=$(element).val();
+						if (id!=="") {
+							if (attributesOptions[id] !== undefined) {
+								callback(attributesOptions[id]);
+							} else {
+								$.ajax(ajax_url, {
+									data: {
+										preselected_id: id
+									},
+									dataType: "json"
+								}).done(function(data) {
+									attributesOptions[data.id]={id: data.id, text: data.text};
+									callback(data);
+								});
+							}
+						}
+					},
+					formatResult: function(data){
+						if (data.text === undefined) {
+							$.each(data, function(i,val){
+								return val.text;
+							});
+						} else {
+							return data.text;
+						}
+					},
+					formatSelection: function(data){
+						if (data.text === undefined) {
+							return data[0].text;
+						} else {
+							return data.text;
+						}
+					},
+					dropdownCssClass: dropdowncss,
+					escapeMarkup: function (m) {
+						return m;
+					}
+				}).on("select2-selecting", function(e) {
+					if (e.object.id == e.object.text) {
+						$(this).next().val("1");
+					} else {
+						$(this).next().val("0");
+					}
+				});
+			}
+			var select2_values_sb = function(selector_str, placeholder, dropdowncss, ajax_url) {
+				$(selector_str).select2({
+					placeholder: placeholder,
+					createSearchChoice:function(term, data) {
+						if ($(data).filter(function() {
+							return this.text.localeCompare(term)===0;
+						}).length===0) {
+							if (attributesValues[term] === undefined) {
+								attributesValues[term]={id: term, text: term};
+							}
+							return {id:term, text:term};
+						}
+					},
+					minimumInputLength: 0,
+					query: function(query) {
+						if (attributesSearchValues[query.term] !== undefined) {
+							query.callback({results: attributesSearchValues[query.term]});
+						} else {
+							$.ajax(ajax_url, {
+								data: {
+									q: query.term
+								},
+								dataType: "json"
+							}).done(function(data) {
+								attributesSearchValues[query.term]=data;
+								query.callback({results: data});
+							});
+						}
+					},
+					initSelection: function(element, callback) {
+						var id=$(element).val();
+						if (id!=="") {
+							if (attributesValues[id] !== undefined) {
+								callback(attributesValues[id]);
+							} else {
+								$.ajax(ajax_url, {
+									data: {
+										preselected_id: id,
+									},
+									dataType: "json"
+								}).done(function(data) {
+									attributesValues[data.id]={id: data.id, text: data.text};
+									callback(data);
+								});
+							}
+						}
+					},
+					formatResult: function(data){
+						var tmp_data=data.text.split("||");
+						return tmp_data[0];
+					},
+					formatSelection: function(data){
+						if (data.text === undefined) {
+							return data[0].text;
+						} else {
+							return data.text;
+						}
+					},
+					dropdownCssClass: dropdowncss,
+					escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+				}).on("select2-selecting", function(e) {
+					if (e.object.id == e.object.text) {
+						$(this).next().val("1");
+					} else {
+						$(this).next().val("0");
+					}
+					$.each($(this).parent().parent().parent().next().next().children(), function(i, v){
+						$(v).val("");
+					});
+				});
 			}
 			// eof autocomplete for option
-			// manual function for removing the manual attributes
-			var remove_manual_row = function (id) {
-				jQuery(\'#product_row_\' + id).remove();
-				jQuery(\'#price_row_\' + id).remove();
-				//jQuery(\'#vat_row_\' + id).remove();
-
-				jQuery(\'#product_row_counter\').val(parseInt(jQuery(\'#product_row_counter\').val()) - 1);
-			}
-			var edit_remove_manual_row = function (id) {
-				jQuery(\'#edit_product_row_\' + id).remove();
-
-				jQuery(\'#edit_product_row_counter\').val(parseInt(jQuery(\'#edit_product_row_counter\').val()) - 1);
-			}
-			jQuery(document).ready(function($) {';
-			if ($this->get['edit_product']) {
-				$tmpcontent.='jQuery(\'#edit_product_row_counter\').val(\''.$attr_counter.'\');';
-			}
-			$tmpcontent.='
-				jQuery(\'#edit_add_attributes\').click(function() {
-					var pr_counter = jQuery(\'#edit_product_row_counter\').val();
+			'.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
+			select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+			select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+			select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+			' : '').'
+			var add_new_attributes = function(optid_value, optvalid_value) {
+				var d = new Date();
+					var n = d.getTime();
+					var row_class=$(\'#last_edit_product_row\').prev("tr").attr("class");
 					// option: values
 					var selectbox = \'\';
-					selectbox += \'<tr id="edit_product_row_\' + pr_counter + \'">\';
+					selectbox += \'<tr class="\' + row_class + \' manual_new_attributes">\';
 					selectbox += \'<td>&nbsp;</td>\';
 					selectbox += \'<td>&nbsp;</td>\';
 					selectbox += \'<td>\';
-					selectbox += \'<div id="product_attributes_wrapper"><input type="text" class="text" name="edit_manual_option[]" style="width:90px" /> <span>:</span> \';
-					selectbox += \'<input type="text" class="manual_values_input text" name="edit_manual_values[]" />&nbsp;<input type="button" class="msadmin_button" value="-" onclick="edit_remove_manual_row(\' + pr_counter + \')">\';
+					selectbox += \'<div class="product_attributes_wrapper">\';
+					selectbox += \'<span class="product_attributes_option">\';
+					if (optid_value != "") {
+						selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \'" name="edit_manual_option[]" style="width:195px" value="\' + optid_value + \'"/>\';
+					} else {
+						selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \'" name="edit_manual_option[]" style="width:195px" value=""/>\';
+					}
+					selectbox += \'<input type="hidden" name="is_manual_option[]"value="0"/>\';
+					selectbox += \'</span>\';
+					selectbox += \'<span> : </span>\';
+					selectbox += \'<span class="product_attributes_values">\';
+					if (optvalid_value != "") {
+						selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \'" name="edit_manual_values[]" style="width:195px" value="\' + optvalid_value + \'"/>\';
+					} else {
+						selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \'" name="edit_manual_values[]" style="width:195px"/>\';
+					}
+					selectbox += \'<input type="hidden" name="is_manual_value[]"value="0"/>\';
+					selectbox += \'</span>\';
 					selectbox += \'</div>\';
 					selectbox += \'</td>\';'."\n";
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$tmpcontent.='selectbox += \'<td align="right">\';
-				selectbox += \'<div id="product_attributes_wrapper">\';
-				selectbox += \'<input type="text" name="edit_manual_price[]" class="text" style="width:44px" value="">\';
-				selectbox += \'</div>\';
-				selectbox += \'</td>\';'."\n";
-			}
-			$tmpcontent.='selectbox += \'<td align="right">&nbsp;\';
-					/* selectbox += \'<div id="product_attributes_wrapper">\';
-					selectbox += \'<input type="text" name="edit_manual_vat[]" class="text" style="width:40px" value=""> %\';
-					selectbox += \'</div>\'; */
+					selectbox += \'<div id="product_attributes_wrapper">\';
+					selectbox += \'<input type="text" name="edit_manual_price[]" class="text" style="width:44px" value="">\';
+					selectbox += \'</div>\';
 					selectbox += \'</td>\';'."\n";
+			}
+			$tmpcontent.='selectbox += \'<td align="right">&nbsp;</td>\';'."\n";
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$tmpcontent.='selectbox += \'<td align="right">\';
-				selectbox += \'<div id="product_attributes_wrapper">\';
-				selectbox += \'<input type="text" name="edit_manual_price[]" class="text" style="width:44px" value="">\';
-				selectbox += \'<input type="text" name="edit_manual_price[]" class="text" style="width:44px" value="">\';
-				selectbox += \'</div>\';
-				selectbox += \'</td>\';'."\n";
+					selectbox += \'<div id="product_attributes_wrapper">\';
+					selectbox += \'<input type="text" class="text edit_manual_price" value="" style="width:44px">\';
+					selectbox += \'<input type="hidden" name="edit_manual_price[]" class="text" value="">\';
+					selectbox += \'</div>\';
+					selectbox += \'</td>\';'."\n";
 			}
 			$tmpcontent.='selectbox += \'<td>&nbsp;</td>\';
-					selectbox += \'<td>&nbsp;</td>\';
-					selectbox += \'</tr>\';
-					jQuery(\'#last_edit_product_row\').before(selectbox);
-					jQuery(\'#edit_product_row_counter\').val(parseInt(jQuery(\'#edit_product_row_counter\').val()) + 1);
+				selectbox+=\'<td>\';
+				selectbox+=\'<input type="button" class="msadmin_button remove_attributes" value="-">\';
+				selectbox+=\'</td>\';
+				selectbox+=\'</tr>\';
+				$(\'#last_edit_product_row\').before(selectbox);
+
+				select2_sb(".edit_product_manual_option" + n, "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+				select2_values_sb(".edit_product_manual_values" + n, "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+			}
+			// manual function for removing the manual attributes
+			jQuery(document).ready(function($) {';
+			$tmpcontent.='
+				$(document).on("click", \'#edit_add_attributes, #add_attributes\', function() {
+					add_new_attributes("", "");
 				});
-				// for adding manual attribute
-				jQuery(\'#add_attributes\').click(function() {
-					var pr_counter = jQuery(\'#product_row_counter\').val();
-					// option: values
-					var selectbox = \'\';
-					selectbox += \'<tr id="product_row_\'+ pr_counter +\'">\';
-					selectbox += \'<td style="border:0px solid #fff">\';
-					selectbox += \'<div id="product_attributes_wrapper"><div class="optionWrapper"><input type="hidden" name="manual_option_id[]" id="manual_option_id_\'+ pr_counter +\'" /><input type="text" class="text" name="manual_option[]" id="manual_option_\'+ pr_counter +\'" style="width:90px" onclick="option_ac(this);" /> <span>:</span> \';
-					selectbox += \'<input type="hidden" name="manual_values_id[]" id="manual_values_id_\'+ pr_counter +\'" /><input type="text" class="manual_values_input text" name="manual_values[]" id="manual_values_\'+ pr_counter +\'" onclick="option_ac(this)" />&nbsp;<input type="button" class="msadmin_button" value="-" onclick="remove_manual_row(\' + pr_counter + \')">\';
-					selectbox += \'</div></div>\';
-					selectbox += \'</td>\';
-					selectbox += \'</tr>\';
-					jQuery(\'#product_row_end\').before(selectbox);
-
-					var pricebox = \'\';
-					pricebox += \'<tr id="price_row_\'+ pr_counter +\'">\';
-					pricebox += \'<td style="border:0px solid #fff">\';
-					pricebox += \'<div id="product_attributes_wrapper"><div class="optionWrapper">\';
-					pricebox += \'<input type="text" name="manual_price[]" class="text" style="width:44px">\';
-					pricebox += \'</div></div>\';
-					pricebox += \'</td>\';
-					pricebox += \'</tr>\';
-					jQuery(\'#price_row_end\').before(pricebox);
-
-					/* var vatbox = \'\';
-					vatbox += \'<tr id="vat_row_\'+ pr_counter +\'">\';
-					vatbox += \'<td style="border:0px solid #fff">\';
-					vatbox += \'<div id="product_attributes_wrapper"><div class="optionWrapper">\';
-					vatbox += \'<input type="text" name="manual_vat[]" class="text" style="width:40px"> %\';
-					vatbox += \'</div></div>\';
-					vatbox += \'</td>\';
-					vatbox += \'</tr>\';
-					jQuery(\'#vat_row_end\').before(vatbox); */
-
-					jQuery(\'#product_row_counter\').val(parseInt(jQuery(\'#product_row_counter\').val()) + 1);
+				$(document).on("click", ".remove_attributes", function(){
+					$(this).parent().parent().remove();
 				});
-				jQuery("#manual_product_qty").bind("keyup",function(){
-					if (jQuery("#manual_products_id").val() > 0) {
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: jQuery("#manual_products_id").val(), qty: jQuery("#manual_product_qty").val()}, function(d){
-							jQuery("#manual_product_price").val(d["price"]);
-						});
-					}
-				});
-				var sendData;
-				jQuery("#skeyword").bind("focus",function(){
-					jQuery("#page").val(0);
-				});
-				jQuery("#skeyword").bind("keydown.autocomplete",function(e){
-					// dont process special keys
-					var skipKeys = [ 13,38,40,37,39,27,32,17,18,9,16,20,91,93,8,36,35,45,46,33,34,144,145,19 ];
-					if (jQuery.inArray(e.keyCode, skipKeys) != -1) sendData = false;
-					else sendData = true;
-				});
-				jQuery("#skeyword").autocomplete({
-					//console.log(this);
-					minLength: 1,
-					delay: 250,
-					open: function(event, ui){
-						jQuery(".ui-autocomplete li.ui-menu-item:odd a").addClass("ui-menu-item-alternate");
-						jQuery(".ui-autocomplete").attr("id", "ui-menu-manual-product");
-					},
-					source: function( request, response ) {
-						if (sendData){
-							jQuery.ajax({
-								url: "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_search&tx_multishop_pi1[type]=edit_order').'",
-								dataType: "json",
-								data: {
-									q: jQuery("#skeyword").val(), page: jQuery("#page").val()
-								},
-								success: function( data ) {
-									var index = 1;
-									if(data.products != null){
-										response( jQuery.map( data.products, function( item ) {
-											index = index + 1;
-
-											if (index == 6) {
-												return {
-													label: item.Title,
-													value: item.Name,
-													link: item.Link,
-													skeyword: item.skeyword,
-													page: item.Page,
-													priceNum: item.final_price,
-													tax_rate: item.tax_rate,
-													prod: item.Product
-
-												}
-											} else {
-												return {
-													label: "<div class=\"ajax_products_image_wrapper\">"+item.Image + "</div><div class=\"ajax_products_search_item\">" + item.Title  + item.Price + "</div>",
-													value: item.Name,
-													link: item.Link,
-													skeyword: item.skeyword,
-													page: item.Page,
-													prod: item.Product,
-													priceNum: item.final_price,
-													tax_rate: item.tax_rate,
-													products_id : item.products_id
-												}
-											}
-
-										})
-										);
-									} //end if data
-									//alert(index);
-								}
-							});
-						} // and if sendData
-					},
-					select: function(event, ui ) {
-						jQuery("#skeyword").val(ui.item.skeyword);
-						jQuery("#page").val(ui.item.page);
-						//console.log(ui);
-						//alert(ui.toSource());
-
-						var link = "'.$this->FULL_HTTP_URL.'" + ui.item.link ;
-
-						jQuery("#manual_products_id").val(ui.item.products_id);
-						jQuery("#manual_product_tax").val(ui.item.tax_rate);
-
-
-						if (jQuery("#manual_product_qty").val() > 0) {
-							jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: ui.item.products_id, qty: jQuery("#manual_product_qty").val()}, function(d){
-								jQuery("#manual_product_price").val(d["price"]);
-							});
-						} else {
-							jQuery("#manual_product_price").val(ui.item.priceNum);
-						}
-						if (ui.item.prod == true){
-							//open(link,\'_self\',\'resizable,location,menubar,toolbar,scrollbars,status\');
-						} else {
-							jQuery("#skeyword").autocomplete("search");
-						}
-						// fetch the attributes for the selected products on autocomplete list
-						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: ui.item.products_id, optid: 0}, function(j){
-							jQuery(\'.optionWrapper\').remove();
-							// clearing the existing row
-							for (var i = 0; i < jQuery(\'#product_row_counter\').val(); i++) {
-								jQuery(\'#product_row_\' + i).remove();
-								jQuery(\'#price_row_\' + i).remove();
-								jQuery(\'#vat_row_\' + i).remove();
-							}
-							// reset the row counter
-							jQuery(\'#product_row_counter\').val(\'0\');
-							jQuery.each(j, function(key, val) {
-								var pr_counter = jQuery(\'#product_row_counter\').val();
-								// option: values
-								var selectbox = \'\';
-								selectbox += \'<tr id="product_row_\'+ pr_counter +\'">\';
-								selectbox += \'<td style="border:0px solid #fff">\';
-								selectbox += \'<div id="product_attributes_wrapper"><div class="optionWrapper"><label for="option_\' + val.optid + \'">\' + val.optname + \':</label>\';
-								selectbox += \'<select name="option[\' + val.optid + \']" id="option_\' + val.optid + \'">\';
-								selectbox += \'</select></div></div>\';
-								selectbox += \'</td>\';
-								selectbox += \'</tr>\';
-								jQuery(\'#product_row_end\').before(selectbox);
-
-								var pricebox = \'\';
-								pricebox += \'<tr id="price_row_\'+ pr_counter +\'">\';
-								pricebox += \'<td style="border:0px solid #fff">\';
-								pricebox += \'<div id="product_attributes_wrapper"><div class="optionWrapper">\';
-								pricebox += \'<input type="text" name="predef_price[\' + val.optid + \']" class="text" style="width:100px">\';
-								pricebox += \'</div></div>\';
-								pricebox += \'</td>\';
-								pricebox += \'</tr>\';
-								jQuery(\'#price_row_end\').before(pricebox);
-
-								/* var vatbox = \'\';
-								vatbox += \'<tr id="vat_row_\'+ pr_counter +\'">\';
-								vatbox += \'<td style="border:0px solid #fff">\';
-								vatbox += \'<div id="product_attributes_wrapper"><div class="optionWrapper">\';
-								vatbox += \'<input type="text" name="predef_vat[\' + val.optid + \']" class="text" style="width:40px"> %\';
-								vatbox += \'</div></div>\';
-								vatbox += \'</td>\';
-								vatbox += \'</tr>\';
-								jQuery(\'#vat_row_end\').before(vatbox); */
-
-
-								jQuery(\'#product_row_counter\').val(parseInt(jQuery(\'#product_row_counter\').val()) + 1);
-								jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: ui.item.products_id, optid: val.optid}, function(d){
-									var optionbox = \'\';
-
-									jQuery.each(d, function(key2, val2){
-										if (val2.valprice != undefined)
-										{
-											optionbox += \'<option value="\' + val2.valid + \'">\' + val2.valname + val2.valprice + \'</option>\';
-										}
-										else
-										{
-											optionbox += \'<option value="\' + val2.valid + \'">\' + val2.valname + \'</option>\';
-										}
-									})
-
-									jQuery(optionbox).appendTo(\'#option_\' + val.optid);
-								})
-							});
-						})
-					},
-					focus: function(event, ui) {
-						jQuery("#skeyword").val(ui.item.skeyword);
-						jQuery("#page").val(0);
-						return false;
-					}
-				}).data(\'ui-autocomplete\')._renderItem = function (ul, item) {
-					return jQuery("<li></li>").data("item.autocomplete", item).append(jQuery("<a></a>").html(item.label)).appendTo(ul);
-				};
 			});
 			</script>';
 		}
@@ -2021,6 +1903,20 @@ if (is_numeric($this->get['orders_id'])) {
 	$tmpcontent.='
 	</fieldset>
 	</div>';
+	$count_js_cache_options=count($js_select2_cache_options);
+	$count_js_cache_values=count($js_select2_cache_values);
+	if ($count_js_cache_options) {
+		$js_select2_cache.=implode(";\n", $js_select2_cache_options);
+	}
+	if ($count_js_cache_values) {
+		if ($count_js_cache_options) {
+			$js_select2_cache.=";\n";
+		}
+		$js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
+	}
+	$js_select2_cache.='</script>'."\n";
+	$GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
+	// order products eol
 	$editOrderFormFieldset[]=$tmpcontent;
 	$tmpcontent='';
 	// hook for adding new fieldsets into edit_order
@@ -2188,16 +2084,17 @@ if (is_numeric($this->get['orders_id'])) {
 	$tmpcontent='';
 	if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 		$new_manual_product_js='
-$("#button_manual_new_product").click(function(e) {
-	e.preventDefault();
-	if ($(".manual_add_new_product").is(":hidden")) {
-		$(".manual_add_new_product").show();
-		$("#button_manual_new_product").hide();
-	} else {
-		$(".manual_add_new_product").hide();
-	}
-});
-		';
+		$(document).on("click", "#button_manual_new_product", function(e) {
+			e.preventDefault();
+			if ($(".manual_add_new_product").is(":hidden")) {
+				$(".manual_add_new_product").show();
+				$("#button_manual_new_product").hide();
+			} else {
+				$(".manual_add_new_product").hide();
+			}
+			$(".order_product_action").hide();
+			select2_pn(".product_name", "product", "product_name", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+		});';
 	}
 	$content.='
 	<script type="text/javascript">
@@ -2218,33 +2115,33 @@ $("#button_manual_new_product").click(function(e) {
 			}
 		});
 		var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
-		jQuery(".tab_content").hide();
-		jQuery("ul.tabs li:first").addClass("active").show();
-		jQuery(".tab_content:first").show();
-		jQuery("ul.tabs li").click(function() {
-			jQuery("ul.tabs li").removeClass("active");
-			jQuery(this).addClass("active");
-			jQuery(".tab_content").hide();
+		$(".tab_content").hide();
+		$("ul.tabs li:first").addClass("active").show();
+		$(".tab_content:first").show();
+		$("ul.tabs li").click(function() {
+			$("ul.tabs li").removeClass("active");
+			$(this).addClass("active");
+			$(".tab_content").hide();
 			var activeTab = jQuery(this).find("a").attr("href");
-			jQuery(activeTab).fadeIn(0);
+			$(activeTab).fadeIn(0);
 			return false;
 		});
-		jQuery("#load").hide();
-		jQuery().ajaxStart(function() {
-			jQuery("#load").show();
-			jQuery("#has").hide();
+		$("#load").hide();
+		$().ajaxStart(function() {
+			$("#load").show();
+			$("#has").hide();
 		}).ajaxStop(function() {
-			jQuery("#load").hide();
-			jQuery("#has").show();
+			$("#load").hide();
+			$("#has").show();
 		});
-		jQuery("#filter").click(function(){
-			if(jQuery("#key").val().length === 0 ){
+		$("#filter").click(function(){
+			if($("#key").val().length === 0 ){
 				var keywords = 2;
 				//alert("hore");
 			} else {
-				var keywords = jQuery("#key").val();
+				var keywords = $("#key").val();
 			}
-			jQuery.ajax({
+			$.ajax({
 				type: "POST",
 				url: url_relatives,
 				data: {keypas:keywords,pid:"'.$_REQUEST['pid'].'"},
@@ -2256,18 +2153,15 @@ $("#button_manual_new_product").click(function(e) {
 	});
 	</script>
 	<div id="tab-container">
-		<ul class="tabs">
-	';
+		<ul class="tabs">';
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 	}
-	$content.='
-		</ul>
+	$content.='</ul>
 		<div class="tab_container">
-	<form class="admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
-		<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
-		';
+		<form class="admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
+		<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;

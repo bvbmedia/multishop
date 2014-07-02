@@ -91,7 +91,11 @@ foreach ($tmporders as $order) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['ORDER_ID']=$order['orders_id'];
-	$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+	if (isset($this->get['tx_multishop_pi1']['is_proposal'])) {
+		$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
+	} else {
+		$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+	}
 	$markerArray['EDIT_ORDER_POPUP_WIDTH']=$edit_order_popup_width;
 	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
 	$markerArray['ORDER_CUSTOMER_NAME']=$customer_name;
@@ -114,7 +118,7 @@ foreach ($tmporders as $order) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	// custom page hook that can be controlled by third-party plugin eof	
+	// custom page hook that can be controlled by third-party plugin eof
 	$orderItem.=$this->cObj->substituteMarkerArray($subparts['orders_listing'], $markerArray, '###|###');
 }
 $actions=array();
@@ -284,11 +288,11 @@ $headerData.='
 			var orders_status_id=$("option:selected", this).val();
 			var orders_status_label=$("option:selected", this).text();
 			if (confirm("'.$this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x').')) {
-				$.ajax({ 
-					type:   "POST", 
+				$.ajax({
+					type:   "POST",
 					url:    "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
 					dataType: \'json\',
-					data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id, 
+					data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
 					success: function(msg) {}
 				});
 			}
@@ -312,21 +316,21 @@ $headerData.='});
 			onBeforeShow: function() {
 				var that=this;
 				var orders_id=this.getTrigger().attr(\'rel\');
-				$.ajax({ 
-					type:   "POST", 
+				$.ajax({
+					type:   "POST",
 					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails').'\',
-					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id, 
+					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
 					dataType: "json",
-					success: function(data) { 
+					success: function(data) {
 						that.getTip().html(data.html);
-					} 
+					}
 				});
 			}
 		});
-		$(\'#check_all_1\').click(function(){			
+		$(\'#check_all_1\').click(function(){
 			checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
-		});	
-	});	
+		});
+	});
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 $headerData='';
