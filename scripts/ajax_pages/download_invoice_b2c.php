@@ -6,8 +6,7 @@ $hash=$this->get['tx_multishop_pi1']['hash'];
 $invoice=mslib_fe::getInvoice($hash, 'hash');
 $pdf_filename = 'invoice_'.$hash.'.pdf';
 $pdfoutput = $this->DOCUMENT_ROOT.'uploads/tx_multishop/invoice_'.$hash.'.pdf';
-//if ($invoice['orders_id'] && !file_exists($pdfoutput)) {
-if ($invoice['orders_id']) {
+if ($invoice['orders_id'] && !file_exists($pdfoutput)) {
 	if ($invoice['reversal_invoice']) {
 		$prefix='-';
 	} else {
