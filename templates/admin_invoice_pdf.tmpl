@@ -1,0 +1,71 @@
+<!-- ###TEMPLATE### begin -->
+<html>
+<head>
+    <style>
+        @page {margin:0}
+        #invoice_header { position: fixed; top:0; height: 150px}
+        #invoice_footer { position: fixed; bottom:148px; height: 100px; background-color: #CC0000}
+        #invoice_content { font-family:arial, helvetica, sans-serif; font-size: 13px; margin:130px 60px 0px 60px; z-index:0 }
+        .orderDetailsPDFInvoice { page-break-before:always; top:500px }
+    </style>
+</head>
+<body>
+<div id="invoice_header">
+    ###INVOICE_HEADER_BACKGROUND_IMAGE###
+</div>
+<div id="invoice_footer">
+    ###INVOICE_FOOTER_BACKGROUND_IMAGE###
+</div>
+<div id="invoice_content">
+    <table width="100%" border="0">
+        <tr>
+            <td width="50%">&nbsp;</td>
+            <td width="50%" align="center" style="font-size:34px"><strong>###LABEL_INVOICE_HEADER###</strong></td>
+        </tr>
+        <tr>
+            <td>
+                <table style="margin-left:53px; margin-top:40px">
+                    <tr>
+                        <td>
+                            ###DELIVERY_COMPANY###
+                            <strong>###DELIVERY_NAME###</strong><br/>
+                            <strong>###DELIVERY_ADDRESS###</strong><br/>
+                            <strong>###DELIVERY_ZIP### ###DELIVERY_CITY###</strong><br/>
+                            <strong>###DELIVERY_COUNTRY###</strong><br/><br/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td>
+                <table style="margin-right:190px; margin-top:40px" align="right">
+                    <tr>
+                        <td width="150px"><strong>###LABEL_CUSTOMER_ID###</strong></td>
+                        <td>###CUSTOMER_ID###</td>
+                    </tr>
+                    <tr>
+                        <td><strong>###LABEL_ORDER_ID###</strong></td>
+                        <td>###ORDER_ID###</td>
+                    </tr>
+                    <tr>
+                        <td><strong>###LABEL_ORDER_DATE###</strong></td>
+                        <td>###ORDER_DATE###</td>
+                    </tr>
+                    <tr>
+                        <td><strong>###LABEL_INVOICE_DATE###</strong></td>
+                        <td>###INVOICE_DATE###</td>
+                    </tr>
+                    <tr>
+                        <td><strong>###LABEL_INVOICE_PAYMENT_METHOD###</strong></td>
+                        <td>###INVOICE_PAYMENT_METHOD###</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    ###INVOICE_CONTENT_HEADER_MESSAGE###
+    ###INVOICE_ORDER_DETAILS###
+    ###INVOICE_CONTENT_FOOTER_MESSAGE###
+</div>
+</body>
+</html>
+<!-- ###TEMPLATE### end -->

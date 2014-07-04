@@ -91,7 +91,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$types['psp_declineurl']='PSP: '.htmlspecialchars($this->pi_getLL('payment_declined_page'));
 	$types['psp_exceptionurl']='PSP: '.htmlspecialchars($this->pi_getLL('payment_exception_page'));
 	$types['psp_cancelurl']='PSP: '.htmlspecialchars($this->pi_getLL('payment_cancelled_page'));
-	// psp pages eof	
+	// psp pages eof
 	$types['email_order_proposal']=htmlspecialchars($this->pi_getLL('email_order_proposal_letter'));
 	$types['email_order_confirmation']=htmlspecialchars($this->pi_getLL('email_order_confirmation_letter'));
 	if (is_array($payment_methods)) {
@@ -131,6 +131,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$types['email_create_account_confirmation']=$this->pi_getLL('email_create_account_confirmation');
 	$types['create_account_thank_you_page']=$this->pi_getLL('create_account_thank_you_page');
 	$types['email_alert_quantity_threshold_letter']=$this->pi_getLL('email_alert_quantity_threshold_letter', 'Alert quantity threshold e-mail content');
+	// invoice pdf
+	$types['pdf_invoice_header_message']=$this->pi_getLL('pdf_invoice_header_message', 'PDF Invoice header message before order details table');
+	$types['pdf_invoice_footer_message']=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Invoice footer message after order details table');
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
 		$params=array('types'=>&$types);
@@ -142,7 +145,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			<label for="type">Type
 			<span class="multishop_help_icon">
 				<a href="http://www.typo3multishop.com/help/english/multishop-owners/setting-up-your-multishop/catalog/content-management/e-mail-order-confirmation-letter/" target="_blank"></a>
-			</span>						
+			</span>
 			</label>
 			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="" data-title="'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
@@ -151,7 +154,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	}
 	$tmpcontent.='</select>
 		</div>
-		<div class="account-field custom_type">			
+		<div class="account-field custom_type">
 			<label>custom type</label>
 			<div><input name="tx_multishop_pi1[custom_type]" type="text" value="'.htmlspecialchars($cms[0]['type']).'" class="text" /></div>
 		</div>
@@ -165,10 +168,10 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 				}
 			}
 			$("#selected_type").change(function(){
-				updateForm();								
+				updateForm();
 			});
 			jQuery(document).ready(function($) {
-				updateForm();								
+				updateForm();
 			});
 		</script>
 		<div class="account-field" style="display:none" id="msadminMarkersBox">
@@ -241,7 +244,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		$tmpcontent.='<tr class="'.$tr_subtype.'"><td class="marker_key">###'.$key.'###</td><td class="marker_description">'.htmlspecialchars($label).'</td></tr>'."\n";
 	}
 	$tmpcontent.='</table>
-				</div>			
+				</div>
 			</div>';
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
@@ -251,7 +254,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
 		$tmpcontent.=''.$language['title'].'
-		</div>		
+		</div>
 		<div class="account-field">
 			<label for="cms_name['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 			<input spellcheck="true" type="text" class="text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
@@ -271,12 +274,12 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$content.='<script type="text/javascript">
 	jQuery(document).ready(function($) {
 	 	var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
-		jQuery(".tab_content").hide(); 
+		jQuery(".tab_content").hide();
 		jQuery("ul.tabs li:first").addClass("active").show();
 		jQuery(".tab_content:first").show();
 		jQuery("ul.tabs li").click(function() {
 			jQuery("ul.tabs li").removeClass("active");
-			jQuery(this).addClass("active"); 
+			jQuery(this).addClass("active");
 			jQuery(".tab_content").hide();
 			var activeTab = jQuery(this).find("a").attr("href");
 			jQuery(activeTab).show();
@@ -289,7 +292,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		}).ajaxStop(function() {
 			jQuery("#load").hide();
 			jQuery("#has").show();
-			
+
 		});
 		$(\'#selected_type\').select2({
 			width:\'650px\',

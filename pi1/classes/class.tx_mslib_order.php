@@ -486,7 +486,7 @@ class tx_mslib_order extends tslib_pibase {
 			$product_amount=0;
 			$product_amount=($row['qty']*$row['final_price']);
 			// now count the attributes
-			$str3="SELECT * from tx_multishop_orders_products_attributes where orders_products_id='".$row['orders_products_id']."'";
+			$str3="SELECT * from tx_multishop_orders_products_attributes where orders_products_id='".$row['orders_products_id']."' order by orders_products_attributes_id asc";
 			$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 			while ($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) {
 				$row3['attributes_tax_data']=unserialize($row3['attributes_tax_data']);

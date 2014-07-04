@@ -10,7 +10,7 @@ key.field = list_type
 	# Usually just render the default stdHeader
 default = < lib.stdheader
 
-	# Do nothing (empty "TEXT" object) for "my_plugin_pi1" 		
+	# Do nothing (empty "TEXT" object) for "my_plugin_pi1"
 	# and "kb_plugin_pi1". Both wont get a header rendered
 multishop_pi1 = TEXT
 multishop_pi1.value =
@@ -28,7 +28,7 @@ plugin.tx_multishop_pi1 {
 	fe_rootadmin_usergroup={$plugin.multishop.fe_rootadmin_usergroup}
 	show_powered_by_multishop={$plugin.multishop.show_powered_by_multishop}
 	exampleCSS={$plugin.multishop.exampleCSS}
-	ajax_pagetype_id_server={$plugin.multishop.ajax_pagetype_id_server}	
+	ajax_pagetype_id_server={$plugin.multishop.ajax_pagetype_id_server}
 	ajax_pagetype_id_left_column={$plugin.multishop.ajax_pagetype_id_left_column}
 	ajax_pagetype_id_normal_column={$plugin.multishop.ajax_pagetype_id_normal_column}
 	fe_customer_pid={$plugin.multishop.fe_customer_pid}
@@ -51,15 +51,15 @@ plugin.tx_multishop_pi1 {
 	enableAdminPanelSortCatalog={$plugin.multishop.enableAdminPanelSortCatalog}
 	enableAdminPanelRebuildFlatDatabase={$plugin.multishop.enableAdminPanelRebuildFlatDatabase}
 	customSettings={$plugin.multishop.customSettings}
-	email_tmpl_path={$plugin.multishop.email_tmpl_path}	
+	email_tmpl_path={$plugin.multishop.email_tmpl_path}
 	jQueryPopup_rel={$plugin.multishop.jQueryPopup_rel}
 	fe_statisticsadmin_usergroup={$plugin.multishop.fe_statisticsadmin_usergroup}
 	fe_catalogadmin_usergroup={$plugin.multishop.fe_catalogadmin_usergroup}
 	fe_ordersadmin_usergroup={$plugin.multishop.fe_ordersadmin_usergroup}
-	enableAdminPanelSystem={$plugin.multishop.enableAdminPanelSystem}	
-	fe_cmsadmin_usergroup={$plugin.multishop.fe_cmsadmin_usergroup}	
-	fe_customersadmin_usergroup={$plugin.multishop.fe_customersadmin_usergroup}	
-	fe_storesadmin_usergroup={$plugin.multishop.fe_storesadmin_usergroup}	
+	enableAdminPanelSystem={$plugin.multishop.enableAdminPanelSystem}
+	fe_cmsadmin_usergroup={$plugin.multishop.fe_cmsadmin_usergroup}
+	fe_customersadmin_usergroup={$plugin.multishop.fe_customersadmin_usergroup}
+	fe_storesadmin_usergroup={$plugin.multishop.fe_storesadmin_usergroup}
 	fe_searchadmin_usergroup={$plugin.multishop.fe_searchadmin_usergroup}
 	fe_systemadmin_usergroup={$plugin.multishop.fe_systemadmin_usergroup}
 	disableMetatags={$plugin.multishop.disableMetatags}
@@ -104,13 +104,14 @@ plugin.tx_multishop_pi1 {
 	admin_orders_tmpl_path={$plugin.multishop.admin_orders_tmpl_path}
 	admin_useragents_tmpl_path={$plugin.multishop.admin_useragents_tmpl_path}
 	admin_home_tmpl_path={$plugin.multishop.admin_home_tmpl_path}
+	admin_invoice_pdf_tmpl_path={$plugin.multishop.admin_invoice_pdf_tmpl_path}
 	tt_address_record_id_store={$plugin.multishop.tt_address_record_id_store}
 	disableFeFromCalculatingVatPrices={$plugin.multishop.disableFeFromCalculatingVatPrices}
 	cart_uid={$plugin.multishop.cart_uid}
-	
+
 	order_details_table_ajaxProductsToBasket_tmpl_path={$plugin.multishop.order_details_table_ajaxProductsToBasket_tmpl_path}
 	order_details_table_ajaxGetMethodCosts_tmpl_path={$plugin.multishop.order_details_table_ajaxGetMethodCosts_tmpl_path}
-	crumbar_rootline_title={$plugin.multishop.crumbar_rootline_title}	
+	crumbar_rootline_title={$plugin.multishop.crumbar_rootline_title}
 }
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)
 
@@ -160,17 +161,17 @@ multishop_ajax_server {
 #  renderer = ajax
 #  renderer.format = json
   typeNum = 2002
-  1 = USER    
-  1.userFunc = tx_t3jquery->addJS   
+  1 = USER
+  1.userFunc = tx_t3jquery->addJS
   # not compatible with TYPO3 v6
   5 = USER_INT
   5 =< plugin.tx_multishop_pi1
   #works in TYPO3 v6, but then its cached :(
   #5 < plugin.tx_multishop_pi1
   #5 = USER
-  5.userFunc = tx_multishop_pi1->ajax_main 
+  5.userFunc = tx_multishop_pi1->ajax_main
 #  10 = CONTENT
-#  10 < temp.contentMiddle  
+#  10 < temp.contentMiddle
 }
 # LOAD THE AJAX SERVER EOF
 [globalVar = LIT:1 = {$plugin.multishop.includeCSS}]
@@ -178,25 +179,25 @@ page {
   includeCSS {
     jqueryTab = EXT:multishop/templates/global/css/tab.css
     jqueryTab {
-      media = 
+      media =
       import = 0
       compress=1
-    }    
+    }
     jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
     jqueryAutocomplete {
-      media = 
+      media =
       import = 0
       compress=1
-    }  
+    }
     core = EXT:multishop/templates/global/css/core.css
     core {
-      media = 
+      media =
       import = 0
       compress=1
     }
     prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
     prettycheckboxes {
-      media = 
+      media =
       import = 0
       compress=1
     }
@@ -206,37 +207,37 @@ multishop_admin_page {
   includeCSS {
     jqueryTab = EXT:multishop/templates/global/css/tab.css
     jqueryTab {
-      media = 
+      media =
       import = 0
       compress=1
-    }    
+    }
     jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
     jqueryAutocomplete {
-      media = 
+      media =
       import = 0
       compress=1
-    }  
+    }
     core = EXT:multishop/templates/global/css/core.css
     core {
-      media = 
+      media =
       import = 0
       compress=1
     }
     prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
     prettycheckboxes {
-      media = 
+      media =
       import = 0
       compress=1
     }
   }
 }
 [end]
-[globalVar = LIT:1 = {$plugin.multishop.includeJqueryUiTheme}] 
+[globalVar = LIT:1 = {$plugin.multishop.includeJqueryUiTheme}]
 page {
   includeCSS {
     jqueryui = EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
     jqueryui {
-      media = 
+      media =
       import = 0
       compress=1
     }
@@ -246,30 +247,30 @@ multishop_admin_page {
   includeCSS {
     jqueryui = EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
     jqueryui {
-      media = 
+      media =
       import = 0
       compress=1
     }
   }
 }
 [end]
-[globalVar = LIT:1 = {$plugin.multishop.includeJS}] 
+[globalVar = LIT:1 = {$plugin.multishop.includeJS}]
 page {
   includeJS {
     msGeneral = EXT:multishop/js/general.js
     msGeneral.compress=1
-    #jquerymigrate = EXT:multishop/js/jquery-migrate-1.2.1.js		
-    #jquerymigrate.compress=1	
+    #jquerymigrate = EXT:multishop/js/jquery-migrate-1.2.1.js
+    #jquerymigrate.compress=1
     jqueryvalidate = EXT:multishop/js/jquery.h5validate.js
-    jqueryvalidate.compress=1	
+    jqueryvalidate.compress=1
     #jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
-    #jqueryvalidatefunctions.compress=1	
-    prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js	
+    #jqueryvalidatefunctions.compress=1
+    prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
     prettycheckboxes.compress=1
     #webshim for fallback html5 attributes support, bugged when including through compressor
-    #webshimsJs = EXT:multishop/js/js-webshim/extras/modernizr-custom.js	
+    #webshimsJs = EXT:multishop/js/js-webshim/extras/modernizr-custom.js
     #webshimsJs.compress=0
-    #pollyfillerJs = EXT:multishop/js/js-webshim/polyfiller.js	
+    #pollyfillerJs = EXT:multishop/js/js-webshim/polyfiller.js
     #pollyfillerJs.compress=0
   }
 }
@@ -282,12 +283,12 @@ page.headerData.2482825.value = <script type="text/javascript" src="typo3conf/ex
 multishop_admin_page {
   includeJS {
     msGeneral = EXT:multishop/js/general.js
-    msGeneral.compress=1	
+    msGeneral.compress=1
     jqueryvalidate = EXT:multishop/js/jquery.h5validate.js
-    jqueryvalidate.compress=1	
+    jqueryvalidate.compress=1
     #jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
-    #jqueryvalidatefunctions.compress=1	
-    prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js	
+    #jqueryvalidatefunctions.compress=1
+    prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
     prettycheckboxes.compress=1
   }
 }
@@ -331,13 +332,13 @@ page {
   includeCSS {
     adminglobalCSS = EXT:multishop/templates/global/css/admin.css
     adminglobalCSS {
-      media = 
+      media =
       import = 0
       compress=1
-    }  
+    }
     adminCSS = {$plugin.multishop.admin_template_folder}/css/admin_frontend.css
     adminCSS {
-      media = 
+      media =
       import = 0
       compress=1
     }
@@ -352,13 +353,13 @@ page {
 multishop_admin_page {
   includeJS {
   	msAdminPanel = EXT:multishop/js/admin/admin_panel.js
-	msAdminPanel.compress=1	
+	msAdminPanel.compress=1
 	msAdminAutoComplete = EXT:multishop/js/admin/admin_auto_complete.js
-	msAdminAutoComplete.compress=1	
+	msAdminAutoComplete.compress=1
 	msAdminMisc = EXT:multishop/js/admin/misc.js
-	msAdminMisc.compress=1	    
+	msAdminMisc.compress=1
 	msUiSliderAccess = EXT:multishop/js/jquery.timepicker/jquery-ui-sliderAccess.js
-	msUiSliderAccess.compress=1	 
+	msUiSliderAccess.compress=1
 	msUiTimePicker = EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.js
 	msUiTimePicker.compress=1
 	jquerySelect2 = EXT:multishop/js/select2/select2.min.js
@@ -367,19 +368,19 @@ multishop_admin_page {
   includeCSS {
     adminglobalCSS = EXT:multishop/templates/global/css/admin.css
     adminglobalCSS {
-      media = 
+      media =
       import = 0
       compress=1
-    }  
+    }
     adminCSS = {$plugin.multishop.admin_template_folder}/css/admin_frontend.css
     adminCSS {
-      media = 
+      media =
       import = 0
       compress=1
     }
     msUiTimePickerCSS = EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.css
     msUiTimePickerCSS {
-      media = 
+      media =
       import = 0
       compress=1
     }
@@ -397,7 +398,7 @@ page {
   includeCSS {
     exampleCSS = EXT:multishop/templates/introduction/css/core.css
     exampleCSS {
-      media = 
+      media =
       import = 0
       compress=1
     }
@@ -424,7 +425,7 @@ multishop_admin_page {
   typeNum = 2003
   # copy the t3jquery
   1442 < page.1442
-  
+
   10 = TEMPLATE
   10.template = FILE
   10.template.file = EXT:multishop/templates/admin_dashboard/index.html
@@ -442,7 +443,7 @@ multishop_admin_page {
 	FACEBOOK = TEXT
 	FACEBOOK.value (
 	<iframe class="align-center" allowtransparency="yes" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; OVERFLOW: hidden; BORDER-TOP: medium none; BORDER-RIGHT: medium none;" frameborder="0" hspace="0" vspace="0" marginheight="0" marginwidth="0" width="185" height="410" scrolling="no" src="https://www.facebook.com/plugins/likebox.php?id=127486630606749&amp;width=185&amp;connections=10&amp;stream=false&amp;header=true&amp;height=410&amp;colorscheme=dark"></iframe>
-	)		
+	)
   }
   includeCSS.adminDashboard=EXT:multishop/templates/admin_dashboard/css/core.css
   # loading application top (meta tags + admin panel)

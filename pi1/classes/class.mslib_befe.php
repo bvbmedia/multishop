@@ -79,7 +79,7 @@ class mslib_befe {
 				$settings[$key]=$value;
 			}
 		}
-		// merge global with local front-end module config eof	
+		// merge global with local front-end module config eof
 		if ($this->tta_shop_info['cn_iso_nr']) {
 			// pass the ISO number of the store country from tt address record to Multishop
 			$settings['COUNTRY_ISO_NR']=$this->tta_shop_info['cn_iso_nr'];
@@ -126,11 +126,11 @@ class mslib_befe {
 		}
 		return $settings;
 	}
-	/* this method resizes the thumbnail images for the category	
+	/* this method resizes the thumbnail images for the category
 	example input:
 	/var/www/vhosts/multishop.com/httpdocs/upload/tx_multishop/images/categories/original/my,
 	my-photo.jpg,
-	PATH_site.t3lib_extMgm::siteRelPath($this->extKey)	
+	PATH_site.t3lib_extMgm::siteRelPath($this->extKey)
 	example output: my-photo.jpg
 	*/
 	public function resizeCategoryImage($original_path, $filename, $module_path, $run_in_background=0) {
@@ -180,7 +180,7 @@ class mslib_befe {
 //				print_r($commands);
 //				die();
 				if (count($commands)) {
-					// background running is not working on all boxes well, so we reverted it				
+					// background running is not working on all boxes well, so we reverted it
 					//				$final_command="(".implode($commands," && ").") ".$suffix_exec_param;
 					//				t3lib_utility_Command::exec($final_command);
 					foreach ($commands as $command) {
@@ -283,7 +283,7 @@ class mslib_befe {
 		$folder=$this->ms['image_paths'][$type][$width].'/'.mslib_befe::getImagePrefixFolder($filename);
 		return $folder.'/'.$filename;
 	}
-	/* this method returns a substracted prefix folder.	
+	/* this method returns a substracted prefix folder.
 	example input: my-photo.jpg
 	example output: my
 	*/
@@ -538,7 +538,7 @@ class mslib_befe {
 		return $row['total'];
 	}
 	public function countManufacturers($page_uid) {
-//		$data	= $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total','tx_multishop_manufacturers','page_uid=\''.$page_uid.'\'','');		
+//		$data	= $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total','tx_multishop_manufacturers','page_uid=\''.$page_uid.'\'','');
 		$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total', 'tx_multishop_manufacturers', '', '');
 		$row=$data[0];
 		if (!isset($row['total'])) {
@@ -1024,7 +1024,7 @@ class mslib_befe {
 								// backup original
 								$target=PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
 								copy($tmpfile, $target);
-								// backup original eof										
+								// backup original eof
 								$products_image_name=mslib_befe::resizeProductImage($target, $filename, PATH_site.t3lib_extMgm::siteRelPath($this->extKey), 1);
 								$item['img'][$i]=$products_image_name;
 								if ($log_file) {
@@ -1140,7 +1140,7 @@ class mslib_befe {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			// custom hook that can be controlled by third-party plugin eof		
+			// custom hook that can be controlled by third-party plugin eof
 			$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($select) ? implode(",", $select) : ''), // SELECT ...
 				(is_array($from) ? implode(",", $from) : ''), // FROM ...
 				(is_array($where) ? implode(" AND ", $where) : ''), // WHERE...
@@ -1271,7 +1271,7 @@ class mslib_befe {
 							t3lib_div::callUserFunction($funcRef, $params, $this);
 						}
 					}
-					// custom hook that can be controlled by third-party plugin eof					
+					// custom hook that can be controlled by third-party plugin eof
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery($table_name, $flat_product);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					if ($this->debug) {
@@ -1289,7 +1289,7 @@ class mslib_befe {
 							t3lib_div::callUserFunction($funcRef, $params, $this);
 						}
 					}
-					// custom hook that can be controlled by third-party plugin eof						
+					// custom hook that can be controlled by third-party plugin eof
 				}
 			}
 			return $flat_product['products_id'];
@@ -1509,7 +1509,7 @@ class mslib_befe {
 		  `order_unit_code` varchar(15) default '',
 		  `order_unit_name` varchar(25) default '',
 		  `products_condition` varchar(20) default 'new',
-		  `vendor_code` varchar(25) default '',		  
+		  `vendor_code` varchar(25) default '',
 		";
 		if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
 			$additional_indexes='';
@@ -1564,8 +1564,8 @@ class mslib_befe {
 		  FULLTEXT KEY `products_name` (`products_name`),
 		  FULLTEXT KEY `products_model_2` (`products_model`),
 		  FULLTEXT KEY `products_model_3` (`products_model`,`products_name`)
-		  
-		) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; 
+
+		) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 		";
 		//hook to let other plugins further manipulate the create table query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePreHook'])) {
@@ -1619,9 +1619,9 @@ class mslib_befe {
 		if (!mb_check_encoding($content, 'UTF-8') or !($content===mb_convert_encoding(mb_convert_encoding($content, 'UTF-32', 'UTF-8'), 'UTF-8', 'UTF-32'))) {
 			$content=mb_convert_encoding($content, 'UTF-8');
 			if (mb_check_encoding($content, 'UTF-8')) {
-				// log('Converted to UTF-8'); 
+				// log('Converted to UTF-8');
 			} else {
-				// log('Could not convert to UTF-8'); 
+				// log('Could not convert to UTF-8');
 			}
 		}
 		return $content;
@@ -1829,7 +1829,7 @@ class mslib_befe {
 				$settings[$key]=$value;
 			}
 		}
-		// merge global with local front-end module config eof	
+		// merge global with local front-end module config eof
 		if ($settings['COUNTRY_ISO_NR']) {
 			$country=mslib_fe::getCountryByIso($settings['COUNTRY_ISO_NR']);
 			$settings['CURRENCY_ARRAY']=mslib_befe::loadCurrency($country['cn_currency_iso_nr']);
@@ -2403,7 +2403,7 @@ class mslib_befe {
 		$array2[]=strftime("%x", $order['expected_delivery_date']);
 		$array1[]='###TRACK_AND_TRACE_CODE###';
 		$array2[]=$order['track_and_trace_code'];
-		// dynamic variablese eof							
+		// dynamic variablese eof
 		if ($this->post['comments']) {
 			$this->post['comments']=str_replace($array1, $array2, $this->post['comments']);
 		}
@@ -3098,6 +3098,233 @@ class mslib_befe {
 			} else {
 			}
 		}
+	}
+	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='') {
+		$orders_tax_data=$order['orders_tax_data'];
+		$tmpcontent='<table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" id="orderDetailsPDFInvoice">';
+		$tmpcontent.='<tr>';
+		$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
+		$tmpcontent.='</tr>';
+		$tmpcontent.='<tr style="background-color:#000; color:#fff;">
+					  <td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
+					  <td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
+						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
+						  <td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+		} else {
+			$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
+						  <td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
+						  <td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+		}
+		$tmpcontent.='</tr>';
+		$total_tax=0;
+		$tr_type='even';
+		$od_rows_count=0;
+		foreach ($order['products'] as $product) {
+			$od_rows_count++;
+			if (!$tr_type or $tr_type=='even') {
+				$tr_type='odd';
+			} else {
+				$tr_type='even';
+			}
+			$tmpcontent.='<tr class="'.$tr_type.'">';
+			$tmpcontent.='<td align="right" class="cell_products_qty">'.number_format($product['qty']).'</td>';
+			$product_tmp=mslib_fe::getProduct($product['products_id']);
+			if ($this->ms['MODULES']['DISPLAY_PRODUCT_IMAGE_IN_ADMIN_PACKING_SLIP'] and $product_tmp['products_image']) {
+				$tmpcontent.='<td align="left" class="cell_products_name"><strong>';
+				$tmpcontent.='<img src="'.mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50').'"> ';
+				$tmpcontent.=$product['products_name'];
+			} else {
+				$tmpcontent.='<td align="left" class="cell_products_name" style="padding-left:10px"><strong>'.$product['products_name'];
+			}
+			if ($product['products_article_number']) {
+				$tmpcontent.=' ('.$product['products_article_number'].')';
+			}
+			$tmpcontent.='</strong>';
+			if ($product['products_model']) {
+				$tmpcontent.='<br/>Model: '.$product['products_model'];
+			}
+			if (!empty($product['ean_code'])) {
+				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
+			}
+			if (!empty($product['sku_code'])) {
+				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
+			}
+			if (!empty($product['vendor_code'])) {
+				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
+			}
+			$tmpcontent.='</td>';
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$tmpcontent.='<td align="right" class="cell_products_vat">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
+				$tmpcontent.='<td align="right" class="cell_products_normal_price">'.mslib_fe::amount2Cents($product['final_price']+$product['products_tax_data']['total_tax'], 0).'</td>';
+				$tmpcontent.='<td align="right" class="cell_products_final_price">'.mslib_fe::amount2Cents(($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0).'</td>';
+			} else {
+				$tmpcontent.='<td align="right" class="cell_products_normal_price">'.mslib_fe::amount2Cents($product['final_price'], 0).'</td>';
+				$tmpcontent.='<td align="right" class="cell_products_vat">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
+				$tmpcontent.='<td align="right" class="cell_products_final_price">'.mslib_fe::amount2Cents(($product['qty']*$product['final_price']), 0).'</td>';
+			}
+			$tmpcontent.='</tr>';
+			// start for new page
+			if ($od_rows_count%20==0) {
+				$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" style="page-break-before: always; margin-top:200px">';
+				$tmpcontent.='<tr>';
+				$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
+				$tmpcontent.='</tr>';
+				$tmpcontent.='<tr style="background-color:#000; color:#fff;">
+					  <td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
+					  <td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
+				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
+						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
+						  <td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+				} else {
+					$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
+						  <td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
+						  <td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+				}
+				$tmpcontent.='</tr>';
+			}
+			if (count($product['attributes'])) {
+				foreach ($product['attributes'] as $tmpkey=>$options) {
+					if ($options['products_options_values']) {
+						$od_rows_count++;
+						$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td align="left" style="padding-left:10px">'.$options['products_options'].': '.$options['products_options_values'].'</td>';
+						$cell_products_normal_price='';
+						$cell_products_vat='';
+						$cell_products_final_price='';
+						if ($options['options_values_price']>0) {
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$attributes_price=$options['price_prefix'].$options['options_values_price']+$options['attributes_tax_data']['tax'];
+								$total_attributes_price=$attributes_price*$product['qty'];
+								$cell_products_normal_price=mslib_fe::amount2Cents(($attributes_price), 0);
+								$cell_products_final_price=mslib_fe::amount2Cents(($total_attributes_price), 0);
+							} else {
+								$cell_products_normal_price=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price']), 0);
+								$cell_products_final_price=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price'])*$product['qty'], 0);
+							}
+						}
+						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
+							$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
+							$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
+						} else {
+							$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
+							$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
+							$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
+						}
+						$tmpcontent.='</tr>';
+						// start for new page
+						if ($od_rows_count%20==0) {
+							$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" style="page-break-before: always; margin-top:200px">';
+							$tmpcontent.='<tr>';
+							$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
+							$tmpcontent.='</tr>';
+							$tmpcontent.='<tr style="background-color:#000; color:#fff;">
+							<td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
+							<td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
+						  		<td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
+						  		<td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+							} else {
+								$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
+						  		<td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
+						  		<td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+							}
+							$tmpcontent.='</tr>';
+						}
+					}
+				}
+			}
+			// count the vat
+			if ($order['final_price'] and $order['products_tax']) {
+				$item_tax=$order['qty']*($order['final_price']*$order['products_tax']/100);
+				$total_tax=$total_tax+$item_tax;
+			}
+		}
+		$colspan=5;
+		$tmpcontent.='<tr>';
+		$tmpcontent.='<td align="right" colspan="2">&nbsp;</td>';
+		$tmpcontent.='<td align="right" colspan="3"><hr/></td>';
+		$tmpcontent.='</tr>';
+		$tmpcontent.='<tr><td align="right" colspan="'.$colspan.'">';
+		$tmpcontent.='<div class="order_total">';
+		$tmpcontent.='<table width="100%" cellpadding="2" cellspacing="2">';
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$tmpcontent.='<tr>
+						<td align="right"><label>'.$this->pi_getLL('sub_total').'</label></td>
+						<td align="right" width="70px"><span class="order_total_value">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0).'</span></td>
+					</tr>';
+			$content_vat='<tr>
+						<td align="right"><label><strong>'.$this->pi_getLL('included_vat_amount').'</strong></label></td>
+						<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span></td>
+					</tr>';
+			if ($order['shipping_method_costs']>0) {
+				$content_shipping_costs='<tr>
+							<td align="right"><label>'.$this->pi_getLL('shipping_costs').'</label></td>
+							<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0).'</span></td>
+						</tr>';
+			}
+			if ($order['payment_method_costs']>0) {
+				$content_payment_costs='<tr>
+							<td align="right"><label>'.$this->pi_getLL('payment_costs').'</label></td>
+							<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0).'</span></td>
+						</tr>';
+			}
+		} else {
+			$tmpcontent.='<tr>
+						<td align="right"><label>'.$this->pi_getLL('sub_total').'</label></td>
+						<td align="right" width="70px"><span class="order_total_value">'.mslib_fe::amount2Cents($order['subtotal_amount'], 0).'</span></td>
+					</tr>';
+			$content_vat='<tr>
+						<td align="right"><label>'.$this->pi_getLL('vat').'</label></td>
+						<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span></td>
+					</tr>';
+			if ($order['shipping_method_costs']>0) {
+				$content_shipping_costs='<tr>
+							<td align="right"><label>'.$this->pi_getLL('shipping_costs').'</label></td>
+							<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs'], 0).'</span></td>
+						</tr>';
+			}
+			if ($order['payment_method_costs']>0) {
+				$content_payment_costs='<tr>
+							<td align="right"><label>'.$this->pi_getLL('payment_costs').'</label></td>
+							<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs'], 0).'</span></td>
+						</tr>';
+			}
+		}
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$tmpcontent.=$content_shipping_costs;
+			$tmpcontent.=$content_payment_costs;
+		} else {
+			if ($order['orders_tax_data']['shipping_tax'] || $order['orders_tax_data']['payment_tax']) {
+				$tmpcontent.=$content_shipping_costs;
+				$tmpcontent.=$content_payment_costs;
+				$tmpcontent.=$content_vat;
+			} else {
+				$tmpcontent.=$content_vat;
+				$tmpcontent.=$content_shipping_costs;
+				$tmpcontent.=$content_payment_costs;
+			}
+		}
+		if ($order['discount']>0) {
+			$tmpcontent.='<tr>
+					<td align="right"><label>'.$this->pi_getLL('discount').'</label></td>
+					<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($order['discount'], 0).'</span></td>
+				</tr>';
+		}
+		$tmpcontent.='<tr>
+				<td align="right"><label>'.$this->pi_getLL('total').'</label></td>
+				<td align="right"><span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</span></td>
+			</tr>';
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$tmpcontent.=$content_vat;
+		}
+		$tmpcontent.='</table>';
+		$tmpcontent.='</div>';
+		$tmpcontent.='</td></tr></table>';
+		return $tmpcontent;
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
