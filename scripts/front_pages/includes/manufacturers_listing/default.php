@@ -26,9 +26,9 @@ if (count($manufacturers)>0) {
 	foreach ($manufacturers as $row) {
 		$link=mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=manufacturers_products_listing&manufacturers_id='.$row['manufacturers_id']);
 		if ($this->ADMIN_USER) {
-			$output['admin_manufacturers_sortable_id']='id="sortable_manufacturer_'.$row['manufacturers_id'].'" ';
+			$output['admin_manufacturers_sortable_id']='sortable_manufacturer_'.$row['manufacturers_id'].'';
 		}
-		$output['class_active']=(($row['manufacturers_id']==$this->get['manufacturers_id']) ? 'class="active"' : '');
+		$output['class_active']=(($row['manufacturers_id']==$this->get['manufacturers_id']) ? 'active': '');
 		$output['manufacturers_link']=$link;
 		$output['manufacturers_name']=htmlspecialchars($row['manufacturers_name']);
 		$markerArray=array();
