@@ -429,18 +429,6 @@ jQuery(document).ready(function ($) {
 </div>
 <div style="display: block;" id="product_options" class="tab_content">
     <h1>###LABEL_HEADING_TAB_OPTION###</h1>
-    <div class="account-field" id="msEditProductInputExcludeFromFeeds">
-        <label>###LABEL_EXCLUDE_FROM_FEED###</label>
-        ###FEEDS_LIST###
-    </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputStartEndTime">
-        <label for="starttime" class="starttime">Starttime</label>
-        <input type="text" name="starttime_visitor" class="starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
-        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">
-        <label for="endtime" class="endtime">Endtime</label>
-        <input type="text" name="endtime_visitor" class="endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
-        <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
-    </div>
     <div class="account-field">
         <label for="tax_id">###LABEL_VAT_RATE###</label>
         ###INPUT_VATE_RATE###
@@ -492,9 +480,13 @@ jQuery(document).ready(function ($) {
         ###LABEL_THRESHOLD_QTY###
         <input type="text" name="alert_quantity_threshold" class="alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
     </div>
-    <div class="account-field" id="msEditProductInputExcludeStockFromFeeds">
-        <label>###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
-        ###STOCK_FEEDS_LIST###
+    <div class="account-field toggle_advanced_option" id="msEditProductInputStartEndTime">
+        <label for="starttime" class="starttime">Starttime</label>
+        <input type="text" name="starttime_visitor" class="starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
+        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">
+        <label for="endtime" class="endtime">Endtime</label>
+        <input type="text" name="endtime_visitor" class="endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
+        <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
     </div>
     <div class="account-field toggle_advanced_option" id="msEditProductInputDateAvailable">
         <label for="products_date_available">###LABEL_DATE_AVAILABLE###</label>
@@ -539,6 +531,14 @@ jQuery(document).ready(function ($) {
     <div class="account-field toggle_advanced_option" id="msEditProductInputManufacturerCode">
         <label for="manufacturers_products_id">###LABEL_MANUFACTURER_CODE###</label>
         <input type="text" class="text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
+    </div>
+    <div class="account-field" id="msEditProductInputExcludeStockFromFeeds">
+        <label>###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
+        ###STOCK_FEEDS_LIST###
+    </div>
+    <div class="account-field" id="msEditProductInputExcludeFromFeeds">
+        <label>###LABEL_EXCLUDE_FROM_FEED###</label>
+        ###FEEDS_LIST###
     </div>
     <div class="account-field toggle_advanced_option" id="msEditProductInputUnit">
         <strong>###LABEL_PRODUCT_UNIT###</strong>
