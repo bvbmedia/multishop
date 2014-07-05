@@ -1127,15 +1127,36 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					$row[0]=$order['products_id'];
 					$row[1]=number_format($order['qty'], 2);
+					$row[2]='';
 					if ($order['products_id']>0) {
+						if ($product['products_id']) {
+							// product still exists in database so lets add anchor link to products detail page
+							$row[2].='<a href="'.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$order['products_id'].'&tx_multishop_pi1[page_section]=products_detail').'" target="_blank">';
+						}
 						if ($this->ms['MODULES']['DISPLAY_PRODUCT_IMAGE_IN_ADMIN_ORDER_DETAILS'] and $product['products_image']) {
-							$row[2]='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">';
-							$row[2].='<a href="'.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$order['products_id'].'&tx_multishop_pi1[page_section]=products_detail').'" target="_blank">'.$order['products_name'].'</a>'.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
-						} else {
-							$row[2]='<a href="'.mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$order['products_id'].'&tx_multishop_pi1[page_section]=products_detail').'" target="_blank">'.$order['products_name'].'</a>'.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
+							$row[2].='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '50').'">';
+						}
+						$row[2].=$order['products_name'];
+						if ($order['products_model']) {
+							$row[2].='('.$order['products_model'].')';
+						}
+						if ($product['ean_code']) {
+							$row[2].='<br />EAN: '.$product['ean_code'];
+						}
+						if ($product['sku_code']) {
+							$row[2].='<br />SKU: '.$product['sku_code'];
+						}
+						if ($product['vendor_code']) {
+							$row[2].='<br />Vendor code: '.$product['vendor_code'];
+						}
+						if ($product['products_id']) {
+							$row[2].='</a>';
 						}
 					} else {
-						$row[2]=$order['products_name'].' '.($order['products_model'] ? ' ('.$order['products_model'].')' : '').($product['ean_code'] ? '<br />EAN: '.$product['ean_code'].'' : '').($product['sku_code'] ? '<br />SKU: '.$product['sku_code'].'' : '').($product['vendor_code'] ? '<br />Vendor code: '.$product['vendor_code'].'' : '');
+						$row[2].=$order['products_name'];
+						if ($order['products_model']) {
+							$row[2].='('.$order['products_model'].')';
+						}
 					}
 					$row[3]=mslib_fe::amount2Cents($order['final_price'], 0);
 					$row[4]=number_format($order['products_tax'], 2);
