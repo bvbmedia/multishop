@@ -30,7 +30,7 @@
 #tx_multishop_pi1_core ul#category_listing li .image { display:table; width:100%; height:181px; border:1px solid #cdcdcd; background:#fff; margin:0 0 5px; padding:10px; box-sizing:border-box; }
 #tx_multishop_pi1_core ul#category_listing li .image a { display:table-cell; width:100%; height:181px; vertical-align:middle; text-align:center; }
 #tx_multishop_pi1_core ul#category_listing li .image a img { display:inline-block; vertical-align:middle; }
-#tx_multishop_pi1_core ul#category_listing li h2 { overflow:hidden; height:30px; font:bold 12px Arial,Helvetica,sans-serif; text-align:center; }
+#tx_multishop_pi1_core ul#category_listing li strong { overflow:hidden; display:block; height:30px; font:bold 12px Arial,Helvetica,sans-serif; text-align:center; }
 /* --- end listing category list --- */
 
 #tx_multishop_pi1_core #category_listing > div { position:relative; }
