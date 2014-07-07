@@ -281,17 +281,26 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 .option_id { color:#fff; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span { float:none; display:inline-block; vertical-align:middle; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span a { vertical-align:middle !important; margin:0 3px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 .option_id { padding-top:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span input[type="checkbox"] { display:inline-block; margin:0; vertical-align:middle; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-item.odd_item_row,
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li.odd { background:#dedede; padding-left:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li.odd,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox .option_settings { background:#dedede; padding-left:10px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-item.even_item_row,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li.even { background:#f0f0f0; padding-left:10px; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li { padding-top:8px; padding-bottom:8px; }  
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox .option_settings { padding-top:8px; padding-bottom:8px; }  
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox .option_settings * { display:inline-block; padding-right:10px; vertical-align:middle;}
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox .option_settings input[type="checkbox"] { margin:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox .option_settings select { margin-left:10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li input { margin-bottom:0 !important; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h3 { background:#999; color:#fff; padding-left:10px; padding-top:10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li .admin_menu_remove { vertical-align:middle; line-height: 28px; margin-bottom:1px; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul ul > a.msadmin_button { margin-top:10px; margin-bottom:10px; margin-left:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul ul > a.msadmin_button,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a.msadmin_button.fetch_attributes_values { margin-top:10px; margin-bottom:10px; margin-left:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a { vertical-align:middle; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a.edit_options_values.admin_menu_edit { margin-left:10px; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table ul li.products_attributes_item .add_new_attributes { margin-top:10px; margin-bottom:10px; margin-left:10px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table ul li.products_attributes_item .add_new_attributes input {
