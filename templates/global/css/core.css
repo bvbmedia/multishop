@@ -409,11 +409,10 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 .ui-dialog .ui-button-icon-only.ui-dialog-titlebar-close { width:20px; height:20px; border:1px solid transparent; background:none; }
 .ui-dialog .ui-button-icon-only.ui-dialog-titlebar-close:hover { border:1px solid #666; background:#333; }
 .ui-dialog .ui-dialog-titlebar-close span.ui-button-icon-primary.ui-icon-closethick { top:0; margin-left:-8px; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options { overflow:hidden; padding:0 0 10px; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options label { font-weight:bold; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input * { display:inline-block; vertical-align:top; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options label { display:inline-block; padding:0 0 3px; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options { overflow:hidden; border-bottom:1px solid #f0f0f0; margin:0 0 10px; padding:0 0 10px; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options label { float:left; width:116px; display:block; font-weight:bold; padding:0 0 3px; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input { padding:0 0 0 116px; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input * { display:block; }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input input[type="text"],
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input textarea { border:1px solid #cdcdcd; font:12px Arial, Helvetica, sans-serif; padding:2px 4px; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input textarea { width:190px; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input span { padding:2px 10px 0;  }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input textarea { width:300px; border:1px solid #cdcdcd; font:12px Arial, Helvetica, sans-serif; padding:2px 4px; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input span { padding:5px 0;  }
