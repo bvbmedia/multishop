@@ -3257,7 +3257,7 @@ class mslib_befe {
 						<td align="right" width="70px"><span class="order_total_value">'.$prefix.' '.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0).'</span></td>
 					</tr>';
 			$content_vat='<tr>
-						<td align="right"><label><strong>'.$this->pi_getLL('included_vat_amount').'</strong></label></td>
+						<td align="right"><label>'.$this->pi_getLL('included_vat_amount').'</label></td>
 						<td align="right"><span class="order_total_value">'.$prefix.' '.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span></td>
 					</tr>';
 			if ($order['shipping_method_costs']>0) {
@@ -3315,7 +3315,7 @@ class mslib_befe {
 				</tr>';
 		}
 		$tmpcontent.='<tr>
-				<td align="right"><label>'.$this->pi_getLL('total').'</label></td>
+				<td align="right"><label><strong>'.$this->pi_getLL('total').'</strong></label></td>
 				<td align="right"><span class="order_total_value">'.$prefix.' '.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</span></td>
 			</tr>';
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
