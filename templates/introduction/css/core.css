@@ -38,6 +38,7 @@
 #tx_multishop_pi1_core #category_listing > div .image a { display:table-cell; width:100%; height:181px; vertical-align:middle; text-align:center; }
 #tx_multishop_pi1_core #category_listing > div .image a img { display:inline-block; vertical-align:middle; }
 #tx_multishop_pi1_core #category_listing > div h2 { overflow:hidden; height:30px; font:bold 12px Arial,Helvetica,sans-serif; text-align:center; }
+#tx_multishop_pi1_core #category_listing .admin_menu { top:1px; right:16px; }
 
 /* --- listing product list --- */
 #tx_multishop_pi1_core ul#product_listing { overflow:hidden; width:100%; margin:0; padding:0; list-style:none; }
