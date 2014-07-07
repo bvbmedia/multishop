@@ -54,6 +54,14 @@
 #tx_multishop_pi1_core ul#product_listing li .specials_price { font:bold 12px Arial,Helvetica,sans-serif; color:#000; }
 /* --- end listing product list --- */
 
+#tx_multishop_pi1_core #product_listing .productlisting_item { position:relative; height:246px; border:1px solid #cdcdcd; background:#fff; margin:0 0 15px; padding:10px; list-style:none; box-sizing:border-box; }
+#tx_multishop_pi1_core #product_listing .productlisting_item strong { overflow:hidden; display:block; font:bold 12px Arial,Helvetica,sans-serif; height:30px; }
+#tx_multishop_pi1_core #product_listing .productlisting_item .category { display:none; }
+#tx_multishop_pi1_core #product_listing .productlisting_item .image { display:table; width:100%; height:181px; margin:0; } 
+#tx_multishop_pi1_core #product_listing .productlisting_item .image a { display:table-cell; width:100%; height:181px; vertical-align:middle; text-align:center; box-sizing:border-box; }
+#tx_multishop_pi1_core #product_listing .productlisting_item .image a img { display:inline-block; vertical-align:middle; }
+#tx_multishop_pi1_core #product_listing .productlisting_item .image .no_image { width:100%; height:181px; background-position:center center; }
+
 /* --- login --- */
 .tx-felogin-pi1 {
 overflow:hidden;
