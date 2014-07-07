@@ -381,6 +381,11 @@ form#checkout table#shoppingcart_listing tr#bottomColumnRight td td.label h4 { f
 @media (max-width: 992px) {
 #live-validation-create-account #live-validation_l,
 #live-validation-create-account #live-validation_r { float:none; width:100%; border-right:0; padding:0; }
+form#checkout .account-field > label { clear:left; }
+form#checkout .account-field input[type="text"] { width:500px; }
+form#checkout .account-field select#country,
+form#checkout .account-field select#delivery_country { width:500px; }
+form#checkout .account-field.delivery_checkbox_message > label { clear:none; }
 }
 
 #live-validation-create-account .account-field.delivery_checkbox_message label { width:auto; padding:0 5px 0 0; }
