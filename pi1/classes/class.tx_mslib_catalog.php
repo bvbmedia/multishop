@@ -214,10 +214,18 @@ class tx_mslib_catalog {
 									$updateArray['sort_order']=$no;
 									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id='.$row['products_id'].' and categories_id='.$row['categories_id'], $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									if ($this->conf['debugEnabled']=='1') {
+										$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
+										t3lib_div::devLog($logString, 'multishop',0);
+									}
 									$updateArray=array();
 									$updateArray['sort_order']=$no;
 									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id='.$row['products_id'], $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									if ($this->conf['debugEnabled']=='1') {
+										$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
+										t3lib_div::devLog($logString, 'multishop',0);
+									}
 									if ($this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION']=='desc') {
 										$no--;
 									} else {
