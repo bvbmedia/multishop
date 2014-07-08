@@ -1149,7 +1149,8 @@ class mslib_befe {
 				(is_array($limit) ? implode(",", $limit) : '') // LIMIT ...
 			);
 			if ($this->debug) {
-				error_log($str);
+				$logString=$str;
+				t3lib_div::devLog($logString, 'multishop', 3);
 			}
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
@@ -1274,8 +1275,14 @@ class mslib_befe {
 					// custom hook that can be controlled by third-party plugin eof
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery($table_name, $flat_product);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					if (!$res) {
+						$logString='Query failed! Query: '.$query;
+						t3lib_div::devLog($logString, 'multishop', 3);
+					}
 					if ($this->debug) {
 						error_log($query);
+						$logString=$query;
+						t3lib_div::devLog($logString, 'multishop', -1);
 					}
 					// custom hook that can be controlled by third-party plugin
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlatProcInsert'])) {
