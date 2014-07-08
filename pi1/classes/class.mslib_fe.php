@@ -2484,6 +2484,10 @@ class mslib_fe {
 			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 			$array['total_rows']=$row['total'];
 		}
+		if ($this->conf['debugEnabled']=='1') {
+			$logString='getProductsPageSet query 1 number of records: '.$array['total_rows'].'. Query: '.$str.'.';
+			t3lib_div::devLog($logString, 'multishop',0);
+		}
 		if ($this->msDebug) {
 			$this->msDebugInfo.=$str."\n\n";
 		}
@@ -2498,6 +2502,10 @@ class mslib_fe {
 			$orderby_clause, // ORDER BY...
 			$limit_clause // LIMIT ...
 		);
+		if ($this->conf['debugEnabled']=='1') {
+			$logString='getProductsPageSet query 2: '.$str.'.';
+			t3lib_div::devLog($logString, 'multishop',0);
+		}
 		if ($this->msDebug) {
 			$this->msDebugInfo.=$str."\n\n";
 		}
