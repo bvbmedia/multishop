@@ -1595,6 +1595,10 @@ class mslib_befe {
 			'' // LIMIT ...
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if ($this->conf['debugEnabled']=='1') {
+			$logString='rebuildFlatDatabase query: '.$str;
+			t3lib_div::devLog($logString, 'multishop',-1);
+		}
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$products[]=$row['products_id'];
 		}

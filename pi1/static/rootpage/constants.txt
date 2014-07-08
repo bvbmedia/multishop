@@ -112,6 +112,9 @@ plugin.multishop {
 
 	# cat=plugin.multishop - advanced/enable; type=boolean; label= Act as master shop: Load complete database and don't care about sub shops.
 	masterShop=0
+
+	# cat=plugin.multishop - advanced/enable; type=boolean; label= Enable debug mode: Enable on development server for debugging with Devlog plugin.
+	debugEnabled=0
 	# OPTIONAL SETTINGS EOF
 
     #TEMPLATE CONSTANTS
