@@ -1150,10 +1150,18 @@ class mslib_befe {
 			);
 			if ($this->debug) {
 				$logString=$str;
-				t3lib_div::devLog($logString, 'multishop', 3);
+				t3lib_div::devLog($logString, 'multishop',0);
 			}
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+			if ($this->conf['debugEnabled']=='1') {
+				$logString='convertProductToFlat query: '.$str.'.';
+				t3lib_div::devLog($logString, 'multishop',0);
+			}
+			if (!$rows) {
+				$logString='convertProductToFlat fetch query returned zero results. Query: '.$str;
+				t3lib_div::devLog($logString, 'multishop',3);
+			}
 			if ($rows) {
 				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 					// retrieving the categories path
@@ -1277,12 +1285,12 @@ class mslib_befe {
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					if (!$res) {
 						$logString='Query failed! Query: '.$query;
-						t3lib_div::devLog($logString, 'multishop', 3);
+						t3lib_div::devLog($logString, 'multishop',3);
 					}
 					if ($this->debug) {
 						error_log($query);
 						$logString=$query;
-						t3lib_div::devLog($logString, 'multishop', -1);
+						t3lib_div::devLog($logString, 'multishop',0);
 					}
 					// custom hook that can be controlled by third-party plugin
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlatProcInsert'])) {
