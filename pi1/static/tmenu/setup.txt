@@ -92,5 +92,10 @@ lib.multishop_itemArrayProcFunc {
 	admin_home_tmpl_path={$plugin.multishop.admin_home_tmpl_path}
 	tt_address_record_id_store={$plugin.multishop.tt_address_record_id_store}
 	disableFeFromCalculatingVatPrices={$plugin.multishop.disableFeFromCalculatingVatPrices}
+	cart_uid={$plugin.multishop.cart_uid}
+	order_details_table_ajaxProductsToBasket_tmpl_path={$plugin.multishop.order_details_table_ajaxProductsToBasket_tmpl_path}
+	order_details_table_ajaxGetMethodCosts_tmpl_path={$plugin.multishop.order_details_table_ajaxGetMethodCosts_tmpl_path}
+	crumbar_rootline_title={$plugin.multishop.crumbar_rootline_title}
+	debugEnabled={$plugin.multishop.debugEnabled}
 	#COPY ALL THE MULTISHOP SETTINGS, SO THEY ARE ALSO ACCESSIBLE IN THE msMenuFunc CLASS EOF
 }
