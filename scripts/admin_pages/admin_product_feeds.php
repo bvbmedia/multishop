@@ -68,6 +68,15 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']='Attribute option name: '.$row['products_options_name'].' (values with price)';
 	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']='Attribute option name: '.$row['products_options_name'].' (values with price incl. VAT)';
 }
+//hook to let other plugins add more columns
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'])) {
+	$params=array(
+		'array'=>&$array
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'] as $funcRef) {
+		t3lib_div::callUserFunction($funcRef, $params, $this);
+	}
+}
 asort($array);
 if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	if ($this->post) {
