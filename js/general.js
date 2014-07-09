@@ -19,6 +19,13 @@ function ifConfirm(textTitle, textBody, yesFn, noFn) {
         id: 'dialog',
         title: textTitle
     });
+    // if there is no form function defined create a default one
+    if (typeof yesFn == 'function' && typeof noFn != 'function') {
+        noFn=function() {
+            $(this).dialog("close");
+            $(this).hide();
+        }
+    }
     dialog.append(textBody);
     dialog.dialog({
         width: 900,
@@ -33,10 +40,7 @@ function ifConfirm(textTitle, textBody, yesFn, noFn) {
             "no": {
                 text: "No",
                 class: 'msCancelButton msBackendButton prevState arrowLeft arrowPosLeft',
-                click: function () {
-                    $(this).dialog("close");
-                    $(this).hide();
-                }
+                click: noFn
             },
             "yes": {
                 text: "Yes",
