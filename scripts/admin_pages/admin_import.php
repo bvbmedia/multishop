@@ -106,6 +106,7 @@ for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
 	$coltypes['products_image'.$x2]='Products image '.($x+1);
 }
 for ($x=1; $x<=$max_category_level; $x++) {
+	$coltypes['categories_id'.$x]='Categories id (level: '.$x.')';
 	$coltypes['categories_name'.$x]='Categories name (level: '.$x.')';
 	$coltypes['categories_image'.$x]='Categories image (level: '.$x.')';
 	$coltypes['categories_content'.$x]='Categories content (level: '.$x.')';
