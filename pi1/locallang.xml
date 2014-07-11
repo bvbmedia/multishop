@@ -570,8 +570,8 @@
             <label index="locale_date_format">m/d/Y</label>
             <label index="locale_time_format">H:i:s</label>
             <label index="locale_datetime_format">m/d/Y H:i:s</label>
-            <label index="locale_date_format_js">yy/mm/dd</label>
-            <label index="locale_datetime_format_js">yy/mm/dd HH:mm:ss</label>
+            <label index="locale_date_format_js">mm/dd/yy</label>
+            <label index="locale_datetime_format_js">mm/dd/yy HH:mm:ss</label>
             <label index="click_to_pay">Click to Pay</label>
             <label index="admin_new_order">New order</label>
             <label index="admin_orders_overview">Orders overview</label>
