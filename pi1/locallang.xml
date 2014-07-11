@@ -954,6 +954,8 @@
             <label index="pdf_invoice_header_message">PDF Invoice header message before order details table</label>
             <label index="pdf_invoice_footer_message">PDF Invoice footer message after order details table</label>
             <label index="admin_label_edit_option">Edit option</label>
+            <label index="admin_label_save_attribute">Save attribute</label>
+            <label index="admin_label_select_value_or_type_new_value">select value or type new value</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1893,6 +1895,8 @@
             <label index="admin_label_upload_productfeed">Upload Productfeed</label>
             <label index="final_price_inc_vat">Totaal (incl. BTW)</label>
             <label index="admin_label_edit_option">Edit option</label>
+            <label index="admin_label_save_attribute">Save attribute</label>
+            <label index="admin_label_select_value_or_type_new_value">selecteer waarde of type nieuwe waarde</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
