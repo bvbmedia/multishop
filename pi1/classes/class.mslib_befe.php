@@ -1592,6 +1592,10 @@ class mslib_befe {
 			}
 		}
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry || $this->conf['debugEnabled']=='1') {
+			$logString='rebuildFlatDatabase query: '.$str;
+			t3lib_div::devLog($logString, 'multishop',-1);
+		}
 		$products=array();
 		//$str="truncate tx_multishop_products_flat";
 		//$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
