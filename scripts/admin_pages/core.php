@@ -360,16 +360,18 @@ switch ($this->ms['page']) {
 		}
 		break;
 	case 'custom_page':
-		// custom page hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'])) {
-			$params=array(
-				'content'=>&$content
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+		if ($this->ADMIN_USER) {
+			// custom page hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'])) {
+				$params=array(
+					'content'=>&$content
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAdminPage'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
 			}
+			// custom page hook that can be controlled by third-party plugin eof
 		}
-		// custom page hook that can be controlled by third-party plugin eof
 		break;
 }
 if (!$this->ADMIN_USER) {
