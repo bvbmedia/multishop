@@ -127,3 +127,5 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container { margin-top:10px; padding-top:10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container * { display:inline-block; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container input[type="text"] { margin-right:0; }
+
+.wrap-attributes-item .information_select2_label { color:#777; text-transform:uppercase; }
