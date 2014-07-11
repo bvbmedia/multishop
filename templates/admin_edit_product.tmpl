@@ -377,7 +377,6 @@ jQuery(document).ready(function ($) {
 <div class="tab_container">
 <form class="admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit_###PRODUCT_PID###" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
 <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
-
 <div style="display: block;" id="product_details" class="tab_content">
     <div style="float:right;">
         <div class="save_block">
@@ -436,23 +435,16 @@ jQuery(document).ready(function ($) {
     </div>
     <div class="account-field" id="msEditProductInputPrice">
         <label>###LABEL_PRICE###</label>
-
         <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputNormalPrice">
             <label for="products_price">###LABEL_NORMAL_PRICE###</label>
-
-            <div class="msAttributesField">###LABEL_CURRENCY0### <input type="text" name="products_price_excl_vat" class="price small_input msPriceExcludingVat" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###"><label
-                    for="products_price_excl_vat">Excl. VAT</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY1### <input type="text" name="products_price_incl_vat" class="price small_input msPriceIncludingVat" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###"><label
-                    for="products_price_incl_vat">Incl. VAT</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY0### <input type="text" name="products_price_excl_vat" class="price small_input msPriceExcludingVat" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###"><label for="products_price_excl_vat">Excl. VAT</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY1### <input type="text" name="products_price_incl_vat" class="price small_input msPriceIncludingVat" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###"><label for="products_price_incl_vat">Incl. VAT</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="products_price" value="###VALUE_ORIGINAL_PRICE###" /></div>
         </div>
         <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputSpecialPrice">
             <label for="products_price">###LABEL_SPECIAL_PRICE###</label>
-
-            <div class="msAttributesField">###LABEL_CURRENCY2### <input type="text" name="specials_new_products_price_excl_vat" class="price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat"
-                                                                        value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_excl_vat">Excl. VAT</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY3### <input type="text" name="specials_new_products_price_incl_vat" class="price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat"
-                                                                        value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_incl_vat">Incl. VAT</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY2### <input type="text" name="specials_new_products_price_excl_vat" class="price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_excl_vat">Excl. VAT</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY3### <input type="text" name="specials_new_products_price_incl_vat" class="price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_incl_vat">Incl. VAT</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
             <div class="special_price_timer">
                 <label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
@@ -465,11 +457,8 @@ jQuery(document).ready(function ($) {
         </div>
         <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputCapitalPrice">
             <label for="product_capital_price">###LABEL_CAPITAL_PRICE###</label>
-
-            <div class="msAttributesField">###LABEL_CURRENCY4### <input type="text" name="product_capital_price_excl_vat" class="price small_input msPriceExcludingVat" id="product_capital_price_excl_vat"
-                                                                        value="###VALUE_EXCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_excl_vat">Excl. VAT</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY5### <input type="text" name="product_capital_price_incl_vat" class="price small_input msPriceIncludingVat" id="product_capital_price_incl_vat"
-                                                                        value="###VALUE_INCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_incl_vat">Incl. VAT</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY4### <input type="text" name="product_capital_price_excl_vat" class="price small_input msPriceExcludingVat" id="product_capital_price_excl_vat" value="###VALUE_EXCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_excl_vat">Excl. VAT</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY5### <input type="text" name="product_capital_price_incl_vat" class="price small_input msPriceIncludingVat" id="product_capital_price_incl_vat" value="###VALUE_INCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_incl_vat">Incl. VAT</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="product_capital_price" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" /></div>
         </div>
         <div class="account-field" id="specials_sections"></div>
@@ -513,12 +502,9 @@ jQuery(document).ready(function ($) {
     <div class="account-field toggle_advanced_option" id="msEditProductInputCondition">
         <label for="products_condition">###LABEL_PRODUCT_CONDITION###</label>
         <select name="products_condition">
-            <option value="new"
-            ###CONDITION_NEW_SELECTED###>###LABEL_CONDITION_NEW###</option>
-            <option value="used"
-            ###CONDITION_USED_SELECTED###>###LABEL_CONDITION_USED###</option>
-            <option value="refurbished"
-            ###CONDITION_REFURBISHED_SELECTED###>###LABEL_CONDITION_REFURBISHED###</option>
+            <option value="new" ###CONDITION_NEW_SELECTED###>###LABEL_CONDITION_NEW###</option>
+            <option value="used" ###CONDITION_USED_SELECTED###>###LABEL_CONDITION_USED###</option>
+            <option value="refurbished" ###CONDITION_REFURBISHED_SELECTED###>###LABEL_CONDITION_REFURBISHED###</option>
         </select>
     </div>
     <div class="account-field toggle_advanced_option" id="msEditProductInputEANCode">
