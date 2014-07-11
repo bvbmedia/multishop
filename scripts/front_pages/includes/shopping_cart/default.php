@@ -331,7 +331,7 @@ if (count($cart['products'])>0) {
 } else {
 	$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 	$content.='
-	<div id="bottom-navigation"><a href="'.mslib_fe::typolink($this->shop_pid).'" class="msFrontButton prevState arrowLeft arrowPosLeft proceed_to_shop"><span>'.$this->pi_getLL('go_to_catalog').'</span></a>
+	<div id="bottom-navigation"><a href="'.mslib_fe::typolink($this->shop_pid).'" class="msFrontButton continueState arrowRight arrowPosLeft proceed_to_shop"><span>'.$this->pi_getLL('go_to_catalog').'</span></a>
 		<div class="cart"></div>
 	</div>';
 }
