@@ -246,18 +246,26 @@ $select[]='*, i.hash';
 $orderby[]='i.id desc';
 $pageset=mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
 $invoices=$pageset['invoices'];
+$listing_content='';
 if ($pageset['total_rows']>0) {
 	$this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/invoices/invoices_listing_table.php');
 	// pagination
 	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
+		// reassign the listing table content to $listing_content, because the pagination also use $tmp and cleared the variable before use
+		$listing_content=$tmp;
 		//require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/invoices/pagination.php');
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
-		$content.=$tmp;
+		// concate it again
+		$listing_content.=$tmp;
 	}
-	// pagination eof	
+	// pagination eof
 } else {
 	$tmp=$this->pi_getLL('no_invoices_found').'.';
+}
+if (!empty($listing_content)) {
+	$tmp='';
+	$tmp=$listing_content;
 }
 $tabs=array();
 $tabs['Invoices_By_Date']=array(
@@ -279,18 +287,18 @@ jQuery(document).ready(function($) {
 		$(activeTab).fadeIn(0);
 		return false;
 	});
- 
+
 });
 </script>
 <div id="tab-container">
-    <ul class="tabs" id="admin_invoices">	
+    <ul class="tabs" id="admin_invoices">
 ';
 $count=0;
 foreach ($tabs as $key=>$value) {
 	$count++;
 	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 }
-$content.='        
+$content.='
     </ul>
     <div class="tab_container">
 	<form action="index.php" method="get">
@@ -305,7 +313,7 @@ foreach ($tabs as $key=>$value) {
 	';
 }
 $content.='
-	</form>	
+	</form>
     </div>
 </div>
 

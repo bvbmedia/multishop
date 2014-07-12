@@ -25,6 +25,7 @@ $headercol.='
 </tr>';
 $cb_ctr=0;
 $tmp.=$headercol;
+
 foreach ($invoices as $invoice) {
 	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
@@ -95,16 +96,16 @@ $tmp.='
 			});
 			'.($this->get['tx_multishop_pi1']['action']!='mail_invoices' ? '$("#msadmin_invoices_mailto").hide();' : '').'
 		});
-	</script>	
+	</script>
 	';
 $tmp.='
 <script>
 	jQuery(".tooltip").tooltip({position: "bottom"});
 	jQuery(function($){
-		$(\'#check_all_1\').click(function(){			
+		$(\'#check_all_1\').click(function(){
 			checkAllPrettyCheckboxes(this,$(\'.msadmin_invoices_listing\'));
-		});	
-	});	
+		});
+	});
 </script>
 ';
 ?>
