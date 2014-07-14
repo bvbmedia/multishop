@@ -263,23 +263,31 @@ jQuery(document).ready(function ($) {
         altFormat: "yy-mm-dd",
         altTimeFormat: "HH:mm:ss"
     });
-    $("#specials_price_start_visitor").datepicker({
+    $("#specials_price_start_visitor").datetimepicker({
         dateFormat: "###DATE_FORMAT###",
         altField: "#specials_price_start",
         altFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
         showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###"
+        yearRange: "###YEAR_RANGE###",
+        timeFormat: 'HH:mm:ss',
+        altFieldTimeOnly: false,
+        altFormat: "yy-mm-dd",
+        altTimeFormat: "HH:mm:ss"
     });
-    $("#specials_price_expired_visitor").datepicker({
+    $("#specials_price_expired_visitor").datetimepicker({
         dateFormat: "###DATE_FORMAT###",
         altField: "#specials_price_expired",
         altFormat: "yy-mm-dd",
         changeMonth: true,
         changeYear: true,
         showOtherMonths: true,
-        yearRange: "###YEAR_RANGE###"
+        yearRange: "###YEAR_RANGE###",
+        timeFormat: 'HH:mm:ss',
+        altFieldTimeOnly: false,
+        altFormat: "yy-mm-dd",
+        altTimeFormat: "HH:mm:ss"
     });
     // related product ajax server
     var url_relatives = "###AJAX_URL_PRODUCT_RELATIVE###";

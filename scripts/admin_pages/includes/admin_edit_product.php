@@ -389,11 +389,19 @@ if ($this->post) {
 		if ($this->post['specials_new_products_price']) {
 			$specials_start_date=0;
 			$specials_expired_date=0;
+			$current_tstamp=time();
+			$special_status='1';
 			if ($this->post['specials_price_start']>0) {
 				$specials_start_date=strtotime($this->post['specials_price_start']);
+				if ($specials_start_date>$current_tstamp) {
+					$special_status='0';
+				}
 			}
 			if ($this->post['specials_price_expired']>0) {
 				$specials_expired_date=strtotime($this->post['specials_price_expired']);
+				if ($specials_expired_date<=$current_tstamp) {
+					$special_status='0';
+				}
 			}
 			$str="SELECT * from tx_multishop_specials where products_id='".$prodid."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -410,7 +418,7 @@ if ($this->post) {
 					$tax_rate=mslib_fe::getTaxRate($this->post['tax_id']);
 					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);
 				}	 */
-				$updateArray['status']=1;
+				$updateArray['status']=$special_status;
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id=\''.$prodid.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			} else {
@@ -425,7 +433,7 @@ if ($this->post) {
 					$tax_rate=mslib_fe::getTaxRate($this->post['tax_id']);
 					$updateArray['specials_new_products_price']=round($updateArray['specials_new_products_price']/(1+$tax_rate),4);
 				} */
-				$updateArray['status']=1;
+				$updateArray['status']=$special_status;
 				$updateArray['page_uid']=$this->showCatalogFromPage;
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -911,7 +919,7 @@ if ($this->post) {
 		}
 		$input_vat_rate.='</select>';
 		if ($_REQUEST['action']=='edit_product') {
-			$str="SELECT * from tx_multishop_specials where products_id='".$_REQUEST['pid']."' and status=1";
+			$str="SELECT * from tx_multishop_specials where products_id='".$_REQUEST['pid']."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$specials_price=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 			if ($specials_price['specials_new_products_price']) {
@@ -2130,15 +2138,15 @@ if ($this->post) {
 			$product['specials_start_date_sys']='';
 			$product['specials_start_date_visual']='';
 		} else {
-			$product['specials_start_date_visual']=date($this->pi_getLL('locale_date_format'), $product['specials_start_date']);
-			$product['specials_start_date_sys']=date("Y-m-d", $product['specials_start_date']);
+			$product['specials_start_date_visual']=date($this->pi_getLL('locale_datetime_format'), $product['specials_start_date']);
+			$product['specials_start_date_sys']=date("Y-m-d H:i:s", $product['specials_start_date']);
 		}
 		if ($product['specials_expired_date']==0 || empty($product['specials_expired_date'])) {
 			$product['specials_expired_date_sys']='';
 			$product['specials_expired_date_visual']='';
 		} else {
-			$product['specials_expired_date_visual']=date($this->pi_getLL('locale_date_format'), $product['specials_expired_date']);
-			$product['specials_expired_date_sys']=date("Y-m-d", $product['specials_expired_date']);
+			$product['specials_expired_date_visual']=date($this->pi_getLL('locale_datetime_format'), $product['specials_expired_date']);
+			$product['specials_expired_date_sys']=date("Y-m-d H:i:s", $product['specials_expired_date']);
 		}
 		$subpartArray['###LABEL_HEADING_TAB_OPTION###']=$this->pi_getLL('admin_product_options');
 		$subpartArray['###LABEL_VAT_RATE###']=$this->pi_getLL('admin_vat_rate');

@@ -1095,6 +1095,7 @@ class mslib_befe {
 			// retrieving the products record
 			$select=array();
 			$select[]='*';
+			$select[]='s.status as special_status';
 			$select[]='pd.language_id';
 			$select[]='p2c.sort_order';
 			$select[]='p.staffel_price as staffel_price';
@@ -1182,7 +1183,7 @@ class mslib_befe {
 					$flat_product['order_unit_id']=$row['order_unit_id'];
 					$flat_product['order_unit_code']=$row['order_unit_code'];
 					$flat_product['order_unit_name']=$row['order_unit_name'];
-					if ($row['specials_new_products_price']) {
+					if ($row['specials_new_products_price'] && $row['special_status']>0) {
 						$flat_product['final_price']=$row['specials_new_products_price'];
 						$flat_product['sstatus']=1;
 					} else {

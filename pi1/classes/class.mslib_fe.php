@@ -1951,6 +1951,7 @@ class mslib_fe {
 			$select[]='s.specials_new_products_price';
 			$select[]='s.start_date as special_start_date';
 			$select[]='s.expires_date as special_expired_date';
+			$select[]='s.status as special_status';
 			$select[]='IF(s.status, s.specials_new_products_price, p.products_price) as final_price';
 			$select[]='oud.name as order_unit_name';
 			if ($extra_fields) {
@@ -2009,16 +2010,44 @@ class mslib_fe {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($product['specials_new_products_price']>0) {
+			$disable_special_price=false;
+			$current_tstamp=time();
 			if ($product['special_start_date']>0) {
-				if ($product['special_start_date']>time()) {
+				if ($product['special_start_date']>$current_tstamp) {
 					$product['specials_new_products_price']=0;
 					$product['final_price']=$product['products_price'];
+					$disable_special_price=true;
 				}
 			}
-			if ($product['special_expired_date']>0) {
-				if ($product['special_expired_date']<time()) {
+			if ($product['special_expired_date']>0 && $product['special_expired_date']>0) {
+				if ($product['special_expired_date']<=$current_tstamp) {
 					$product['specials_new_products_price']=0;
 					$product['final_price']=$product['products_price'];
+					$disable_special_price=true;
+				}
+			}
+			$check_special_status='0';
+			$set_special_status='1';
+			if ($disable_special_price) {
+				$check_special_status='1';
+				$set_special_status='0';
+			}
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery('status', // SELECT ...
+				'tx_multishop_specials', // FROM ...
+				'products_id=\'' . $products_id . '\' and status=\'' . $check_special_status . '\'', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+				$updateArray=array();
+				$updateArray['status']=$set_special_status;
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials', 'products_id=\''.$products_id.'\'', $updateArray);
+				$GLOBALS['TYPO3_DB']->sql_query($query);
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					// update the flat table
+					mslib_befe::convertProductToFlat($products_id);
 				}
 			}
 		}
@@ -2035,8 +2064,9 @@ class mslib_fe {
 			}
 		}
 		if ($product['products_id']) {
-			// check every cat status
 			$disable_product=false;
+			$current_tstamp=time();
+			// check every cat status
 			if ($product['categories_id']) {
 				// get all cats to generate multilevel fake url
 				$level=0;
