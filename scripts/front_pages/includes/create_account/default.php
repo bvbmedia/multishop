@@ -198,7 +198,7 @@ if (mslib_fe::loggedin()) {
 			  <div class="account-field" id="input-company">
 				<label for="company" id="account-company">'.$this->pi_getLL('company').'</label>
 				<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($this->post['company']).'" />
-				<span class="error-space"></span></div>							
+				<span class="error-space"></span></div>
 		';
 		// load enabled countries to array
 		$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
@@ -213,7 +213,7 @@ if (mslib_fe::loggedin()) {
 		} else {
 			$content.='
 					  <div class="account-field" id="input-country">
-						<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label> 						
+						<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 					';
 			$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
 			if (!$this->post) {
@@ -231,7 +231,7 @@ if (mslib_fe::loggedin()) {
 						';
 			}
 			$content.='
-					  </div>				
+					  </div>
 					  ';
 		}
 		$content.='
@@ -251,7 +251,7 @@ if (mslib_fe::loggedin()) {
 				<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
 				<input type="text" name="zip" class="zip" id="zip" value="'.htmlspecialchars($this->post['zip']).'">
 				<span class="error-space"></span>
-			  </div>		
+			  </div>
 			  <div class="account-field" id="input-city">
 				<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
 				<input id="city" name="city" type="text" value="'.htmlspecialchars($this->post['city']).'" />
@@ -263,7 +263,7 @@ if (mslib_fe::loggedin()) {
 			  <div class="account-field" id="input-mobile">
 				<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 				<input type="text" name="mobile" id="mobile" class="mobile" value="'.htmlspecialchars($this->post['mobile']).'" />
-				<span class="error-space"></span></div>  
+				<span class="error-space"></span></div>
 			</div>
 			<div id="live-validation_r">
 			  <div class="account-boxes">
@@ -293,19 +293,21 @@ if (mslib_fe::loggedin()) {
 				  <h2>'.$this->pi_getLL('newsletter').'</h2>
 				</div>
 				<div class="account-boxes">'.$this->pi_getLL('subscribe_to_our_newsletter_description').'.</div>
-			  </div>
-			  <div class="account-field newsletter_checkbox_message">
+			  </div>';
+		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
+			$content.='<div class="account-field newsletter_checkbox_message">
 				<label class="account-label">
 				  <input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($this->post['tx_multishop_newsletter'] ? ' checked="checked"' : '').' />
 				</label>
 				<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
-				</div>
-			  	<div class="account-field security">
+				</div>';
+		}
+		$content.='<div class="account-field security">
 					<label>
 					  <img src="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=captcha').'">
-					</label>				
+					</label>
 					  <input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" />
-				</div>			
+				</div>
 			</div>
 			<div id="bottom-navigation">
 				<a href="" onClick="history.back();return false;" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>

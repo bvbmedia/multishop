@@ -17,6 +17,28 @@ if (!defined('TYPO3_MODE')) {
 // 12 Invoice Settings
 $records=array();
 $records[]=array(
+	'configuration_title'=>'Display subscribe to newsletter in checkout',
+	'configuration_key'=>'DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT',
+	'configuration_value'=>'1',
+	'description'=>'Enable the subscribe to newsletter in checkout',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Display subscribe to newsletter in create account',
+	'configuration_key'=>'DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT',
+	'configuration_value'=>'1',
+	'description'=>'Enable the subscribe to newsletter in create account',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Admin Edit Customer Username Readonly',
 	'configuration_key'=>'ADMIN_EDIT_CUSTOMER_USERNAME_READONLY',
 	'configuration_value'=>'1',
@@ -82,7 +104,7 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
-/*		
+/*
 $records[]=array(
 		'configuration_title'=>'Webshop Country ISO Number',
 		'configuration_key'=>'COUNTRY_ISO_NR',
@@ -215,7 +237,7 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
-/*		
+/*
 $records[]=array(
 		'configuration_title'=>'Google Analytics Account',
 		'configuration_key'=>'GOOGLE_ANALYTICS_ACCOUNT',
@@ -1295,7 +1317,7 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
-/*		
+/*
 $records[]=array(
 		'configuration_title'=>'Attributes Stock',
 		'configuration_key'=>'PRODUCT_ATTRIBUTES_STOCK',
@@ -1634,5 +1656,5 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
-// custom hook that can be controlled by third-party plugin eof		
+// custom hook that can be controlled by third-party plugin eof
 ?>

@@ -117,8 +117,8 @@ if (count($cart['products'])<1) {
 			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($this->post['tx_multishop_vat_id'])) {
 				$user['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
 			}
-			// billing details eof	
-			// delivery details	
+			// billing details eof
+			// delivery details
 			if (!$this->post['different_delivery_address']) {
 				$user['different_delivery_address']=0;
 			} else {
@@ -143,7 +143,7 @@ if (count($cart['products'])<1) {
 				$user['delivery_telephone']=$this->post['delivery_telephone'];
 				$user['delivery_state']=$this->post['delivery_state'];
 			}
-			// delivery details eof	
+			// delivery details eof
 			$cart['user']=$user;
 			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 			$GLOBALS['TSFE']->storeSessionData();
@@ -182,16 +182,16 @@ if (count($cart['products'])<1) {
 			$GLOBALS['TSFE']->additionalHeaderData[]='
 			<script type="text/javascript">
 				jQuery(document).ready(function ($) {
-					$("#birthday_visitor").datepicker({ 
+					$("#birthday_visitor").datepicker({
 						dateFormat: "'.$this->pi_getLL('locale_date_format', 'mm-d-yy').'",
 						altField: "#birthday",
 						altFormat: "yy-mm-dd",
 						changeMonth: true,
 						changeYear: true,
-						showOtherMonths: true,  
+						showOtherMonths: true,
 						yearRange: "-100:+0"
-					});									
-				});			
+					});
+				});
 			 </script>';
 		}
 		// birthday validation eof
@@ -212,7 +212,7 @@ if (count($cart['products'])<1) {
 		$content.='
 		<div id="live-validation">
 		<form action="'.mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]=checkout&tx_multishop_pi1[previous_checkout_section]='.current($stepCodes)).'" method="post" name="checkout" class="AdvancedForm" id="checkout">
-		<div class="main-heading"><h2>'.$this->pi_getLL('billing_address').'</h2></div>		
+		<div class="main-heading"><h2>'.$this->pi_getLL('billing_address').'</h2></div>
 		<div class="step">
 			<div class="account-field">
 				<span id="ValidRadio" class="InputGroup">
@@ -248,7 +248,7 @@ if (count($cart['products'])<1) {
 			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($user['tx_multishop_vat_id']).'"/>';
 		}
 		$content.='
-		</div>		
+		</div>
 		<div class="account-field">
 			<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
 			<input type="text" name="street_name" id="address" class="address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
@@ -258,7 +258,7 @@ if (count($cart['products'])<1) {
 		<div class="account-field">
 			<label class="account-address_ext" for="address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
 			<input type="text" name="address_ext" id="address_ext" class="address_ext" value="'.htmlspecialchars($user['address_ext']).'" >
-        </div>		
+        </div>
         </div>
 		<div class="account-field">
 			<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
@@ -267,7 +267,7 @@ if (count($cart['products'])<1) {
 			<input type="text" name="city" id="city" class="city" value="'.htmlspecialchars($user['city']).'" required="required" data-h5-errorid="invalid-city" title="'.$this->pi_getLL('city_is_required').'"><div id="invalid-city" class="error-space" style="display:none"></div>
 			'.($this->ms['MODULES']['CHECKOUT_ENABLE_STATE'] ? '
 			<label class="account-state" for="state">'.ucfirst($this->pi_getLL('state')).'*</label>
-			<input type="text" name="state" id="state" class="state" value="'.htmlspecialchars($user['state']).'" >			
+			<input type="text" name="state" id="state" class="state" value="'.htmlspecialchars($user['state']).'" >
 			' : '').'</div>';
 		// load countries
 		if (count($enabled_countries)==1) {
@@ -294,7 +294,7 @@ if (count($cart['products'])<1) {
 				'.$tmpcontent_con.'
 				</select>
 				<div id="invalid-country" class="error-space" style="display:none"></div>
-		        </div>				
+		        </div>
 				';
 			}
 		}
@@ -320,11 +320,15 @@ if (count($cart['products'])<1) {
 			<input type="text" name="telephone" id="telephone" class="telephone" value="'.htmlspecialchars($user['telephone']).'"'.$telephone_validation.'><div id="invalid-telephone" class="error-space" style="display:none"></div>
 			<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 			<input type="text" name="mobile" id="mobile" class="mobile" value="'.htmlspecialchars($user['mobile']).'">
-		</div>
-		<div class="account-field delivery_checkbox_message">
-			<label class="checkbox_label"><input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" '.(($user['tx_multishop_newsletter']) ? 'checked' : '').' value="1" /></label>
-			<label class="checkbox_label_two" for="tx_multishop_newsletter">'.ucfirst($this->pi_getLL('subscribe_to_our_newsletter')).'</label>
-		</div>		
+		</div>';
+		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT']) {
+			$content.='
+			<div class="account-field delivery_checkbox_message">
+				<label class="checkbox_label"><input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" '.(($user['tx_multishop_newsletter']) ? 'checked' : '').' value="1" /></label>
+				<label class="checkbox_label_two" for="tx_multishop_newsletter">'.ucfirst($this->pi_getLL('subscribe_to_our_newsletter')).'</label>
+			</div>';
+		}
+		$content.='
 		<div class="account-field delivery_checkbox_message">
 		<label class="checkbox_label">
 		<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" '.(($user['different_delivery_address']) ? 'checked' : '').' value="1" /></label>
@@ -340,161 +344,161 @@ if (count($cart['products'])<1) {
 					$(\'#radio_delivery_gender_mr\').attr(\'required\', \'required\');
 					$(\'#radio_delivery_gender_mr\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
 					$(\'#radio_delivery_gender_mr\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_first_name\').attr(\'required\', \'required\');
 					$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
 					$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_last_name\').attr(\'required\', \'required\');
 					$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
 					$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_address\').attr(\'required\', \'required\');
 					$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
 					$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_address_number\').attr(\'required\', \'required\');
 					$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
 					$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_zip\').attr(\'required\', \'required\');
 					$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
 					$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_city\').attr(\'required\', \'required\');
 					$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
 					$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_country\').attr(\'required\', \'required\');
 					$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
 					$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+
 					$(\'#delivery_telephone\').attr(\'required\', \'required\');
 					$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
 					$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-				
+
 					jQuery(\'#delivery_address_category\').show();
 				} else {
 					// remove the h5validate attributes
 					$(\'#radio_delivery_gender_mr\').removeAttr(\'required\');
 					$(\'#radio_delivery_gender_mr\').removeAttr(\'data-h5-errorid\');
 					$(\'#radio_delivery_gender_mr\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_first_name\').removeAttr(\'required\');
 					$(\'#delivery_first_name\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_first_name\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_last_name\').removeAttr(\'required\');
 					$(\'#delivery_last_name\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_last_name\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_address\').removeAttr(\'required\');
 					$(\'#delivery_address\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_address\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_address_number\').removeAttr(\'required\');
 					$(\'#delivery_address_number\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_address_number\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_zip\').removeAttr(\'required\');
 					$(\'#delivery_zip\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_zip\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_city\').removeAttr(\'required\');
 					$(\'#delivery_city\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_city\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_country\').removeAttr(\'required\');
 					$(\'#delivery_country\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_country\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_telephone\').removeAttr(\'required\');
 					$(\'#delivery_telephone\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_telephone\').removeAttr(\'title\');
-					
+
 					jQuery(\'#delivery_address_category\').hide();
 				}
-				
+
 				jQuery("#checkboxdifferent_delivery_address").click(function(event) {
 					jQuery(\'#delivery_address_category\').slideToggle(\'slow\', function(){});
-							
+
 					if ($("#checkboxdifferent_delivery_address").is(\':checked\')) {
 						// set the h5validate attributes for required delivery data
 						$(\'#radio_delivery_gender_mr\').attr(\'required\', \'required\');
 						$(\'#radio_delivery_gender_mr\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
 						$(\'#radio_delivery_gender_mr\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_first_name\').attr(\'required\', \'required\');
 						$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
 						$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_last_name\').attr(\'required\', \'required\');
 						$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
 						$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_address\').attr(\'required\', \'required\');
 						$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
 						$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_address_number\').attr(\'required\', \'required\');
 						$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
 						$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_zip\').attr(\'required\', \'required\');
 						$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
 						$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_city\').attr(\'required\', \'required\');
 						$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
 						$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_country\').attr(\'required\', \'required\');
 						$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
 						$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_telephone\').attr(\'required\', \'required\');
 						$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
 						$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+
 						$(\'#delivery_address_category\').show();
 					} else {
 						// remove the h5validate attributes
 						$(\'#radio_delivery_gender_mr\').removeAttr(\'required\');
 						$(\'#radio_delivery_gender_mr\').removeAttr(\'data-h5-errorid\');
 						$(\'#radio_delivery_gender_mr\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_first_name\').removeAttr(\'required\');
 						$(\'#delivery_first_name\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_first_name\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_last_name\').removeAttr(\'required\');
 						$(\'#delivery_last_name\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_last_name\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_address\').removeAttr(\'required\');
 						$(\'#delivery_address\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_address\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_address_number\').removeAttr(\'required\');
 						$(\'#delivery_address_number\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_address_number\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_zip\').removeAttr(\'required\');
 						$(\'#delivery_zip\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_zip\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_city\').removeAttr(\'required\');
 						$(\'#delivery_city\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_city\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_country\').removeAttr(\'required\');
 						$(\'#delivery_country\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_country\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_telephone\').removeAttr(\'required\');
 						$(\'#delivery_telephone\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_telephone\').removeAttr(\'title\');
-					
+
 						$(\'#delivery_address_category\').hide();
 					}
 				});
@@ -510,7 +514,7 @@ if (count($cart['products'])<1) {
 					<label class="account-female" for="radio_delivery_gender_mrs">'.ucfirst($this->pi_getLL('mrs')).'</label>
 					<div id="invalid-delivery_gender" class="error-space" style="display:none"></div>
 				</span>
-				
+
 			</div>
 		 </div>
 		 <div class="step">
@@ -525,29 +529,29 @@ if (count($cart['products'])<1) {
 			<div class="account-field">
 				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).':</label>
 				<input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="'.htmlspecialchars($user['delivery_company']).'">
-				
-			</div>			
-		   </div>	
+
+			</div>
+		   </div>
 			<div class="account-field">
 				<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
 				<input  type="text" name="delivery_street_name" id="delivery_address" class="delivery_address left-this" value="'.htmlspecialchars($user['delivery_street_name']).'"><div id="invalid-delivery_address" class="error-space" style="display:none"></div>
-				
+
 				<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
 				<input type="text" name="delivery_address_number" id="delivery_address_number" class="delivery_address-number" value="'.htmlspecialchars($user['delivery_address_number']).'" ><div id="invalid-delivery_address_number" class="error-space" style="display:none"></div>
 			</div>
 			<div class="account-field">
 				<label class="delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
 				<input type="text" name="delivery_address_ext" id="delivery_address_ext" class="delivery_address_ext" value="'.htmlspecialchars($user['delivery_address_ext']).'" >
-			</div>					
+			</div>
 			<div class="account-field">
 				<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
 				<input type="text" name="delivery_zip" id="delivery_zip" class="delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'"><div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
-				
+
 				<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'*</label>
 				<input type="text" name="delivery_city" id="delivery_city" class="delivery_city" value="'.htmlspecialchars($user['delivery_city']).'" ><div id="invalid-delivery_city" class="error-space" style="display:none"></div>
 				'.($this->ms['MODULES']['CHECKOUT_ENABLE_STATE'] ? '
 				<label class="account-state" for="delivery_state">'.ucfirst($this->pi_getLL('state')).'*</label>
-				<input type="text" name="delivery_state" id="delivery_state" class="delivery_state" value="'.htmlspecialchars($user['delivery_state']).'" >	
+				<input type="text" name="delivery_state" id="delivery_state" class="delivery_state" value="'.htmlspecialchars($user['delivery_state']).'" >
 				' : '').'</div>';
 		if ($tmpcontent_con) {
 			$tmpcontent.='
@@ -565,19 +569,19 @@ if (count($cart['products'])<1) {
 			<label for="delivery_email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'</label>
 			<input type="text" name="delivery_email" id="delivery_email" class="delivery_email" value="'.htmlspecialchars($user['delivery_email']).'"/>
 		</div>
-		
+
 		<div class="account-field">
 			<label for="delivery_telephone">'.ucfirst($this->pi_getLL('telephone')).'*</label>
-			<input type="text" name="delivery_telephone" id="delivery_telephone" class="delivery_telephone" value="'.htmlspecialchars($user['delivery_telephone']).'"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>	
-			 
+			<input type="text" name="delivery_telephone" id="delivery_telephone" class="delivery_telephone" value="'.htmlspecialchars($user['delivery_telephone']).'"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>
+
 			<label for="delivery_mobile" class="account_mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 			<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile" value="'.htmlspecialchars($user['delivery_mobile']).'">
-			
+
 		</div>';
 		$content.='<div id="delivery_address_category" class="hide"><h2>'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'</div>';
 		$content.='<div id="bottom-navigation">
 					<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart').'" class="back_button">'.$this->pi_getLL('back').'</a>
-					<div id="navigation"> 							
+					<div id="navigation">
  						<input type="submit" id="submit" value="'.$this->pi_getLL('proceed_to_checkout').'" />
  					</div>
 				</div>
