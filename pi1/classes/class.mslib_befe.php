@@ -297,7 +297,7 @@ class mslib_befe {
 		if (!$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']) {
 			$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']=75;
 		}
-		if ($filename) {
+		if (file_exists($original_path) && $filename) {
 			//hook to let other plugins further manipulate the method
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImage'])) {
 				$params=array(
@@ -317,6 +317,11 @@ class mslib_befe {
 				$params='';
 				if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5']=='im6') {
 					$params.='-strip';
+				}
+				if (filesize($original_path) > 16384) {
+					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT
+					$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+					exec($command);
 				}
 				$folder=mslib_befe::getImagePrefixFolder($filename);
 				$dirs=array();
@@ -372,6 +377,7 @@ class mslib_befe {
 				$maxwidth=$this->ms['product_image_formats']['enlarged']['width'];
 				$maxheight=$this->ms['product_image_formats']['enlarged']['height'];
 				$commands[]=t3lib_div::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+
 				$params=array(
 					'original_path'=>$original_path,
 					'target'=>$target,
