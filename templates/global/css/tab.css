@@ -28,6 +28,8 @@ div.tooltip .msAdminTooltipBillingAddressDetails,
 div.tooltip .msAdminTooltipDeliveryAddressDetails { float:left; width:49.8%; font:12px Arial, Helvetica, sans-serif; }
 div.tooltip .msAdminTooltipOrderDetailsAddressWrapper h3 { font:bold 12px Arial, Helvetica, sans-serif; padding:0 0 3px; }
 
+div.tooltip.fade { position:absolute !important; overflow:visible; margin-left:300px; max-width:100px; margin-top:-10px; border:none; box-shadow:0 4px 10px #999; }
+div.tooltip.fade:after { position:absolute; left:10px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; }
 
 .align_left { text-align:left; }
 .align_right { text-align:right; }
