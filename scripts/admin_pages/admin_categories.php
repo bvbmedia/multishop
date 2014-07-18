@@ -138,7 +138,7 @@ foreach ($categories as $category) {
 		$where=substr($where, 0, (strlen($where)-1));
 	}
 	$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
-	$cat_selectbox.='<option value="'.$category['categories_id'].'" id="sl-cat_'.$category['categories_id'].'">+ '.$category['categories_name'].'</option>';
+	$cat_selectbox.='<option value="'.$category['categories_id'].'" id="sl-cat_'.$category['categories_id'].'">+ '.$category['categories_name'].' (ID: '.$category['categories_id'].')</option>';
 	$category_action_icon='<div class="action_icons">
 	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category" class="msadmin_edit_icon"><span>'.$this->pi_getLL('admin_label_link_edit').'</span></a>
 	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category').'" class="msadmin_delete_icon" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><span>delete</span></a>
@@ -160,7 +160,7 @@ foreach ($categories as $category) {
 	$markerArray['EXTRA_CLASS']=(!$category['status'] ? 'msAdminCategoryDisabled' : '');
 	$markerArray['CATEGORY_ID']=$category['categories_id'];
 	$markerArray['CATEGORY_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category';
-	$markerArray['CATEGORY_NAME']=$category['categories_name'];
+	$markerArray['CATEGORY_NAME']=$category['categories_name'].' (ID: '.$category['categories_id'].')';
 	$markerArray['CATEGORY_STATUS']=(!$category['status'] ? '(disabled)' : '');
 	$markerArray['CATEGORY_ACTION_ICON']=$category_action_icon;
 	$markerArray['SUB_CATEGORY_LIST']=$subcat_list;

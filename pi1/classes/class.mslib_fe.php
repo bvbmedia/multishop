@@ -6475,7 +6475,7 @@ class mslib_fe {
 						$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 						//						$where.='categories_id['.$level.']='.$category['categories_id'];
 						// get all cats to generate multilevel fake url eof
-						$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category">'.$item['categories_name'].'</a>';
+						$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category">'.$item['categories_name'].' (ID: '.$item['categories_id'].')</a>';
 						$content.='<div class="action_icons">
 							<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id']).'&action=edit_category" class="msadmin_edit_icon"><span>edit</span></a>
 							<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$item['categories_id'].'&action=delete_category').'" class="msadmin_delete_icon" alt="Remove"><span>delete</span></a>
