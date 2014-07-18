@@ -2029,10 +2029,8 @@ if ($this->post) {
 			$product_copy_block.='
 				<h1>'.$this->pi_getLL('admin_copy_duplicate_product').'</h1>
 				<div class="account-field" id="msEditProductInputDuplicateProduct">
-
 				<label for="cid">'.$this->pi_getLL('admin_select_category').'</label>
 				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"').'
-				<small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 				</div>
 				<div id="cp_buttons">
 					<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
