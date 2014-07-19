@@ -98,7 +98,7 @@ if ($rows) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$content.='<li id="options_'.$row['products_options_id'].'">';
 		$content.='<h2>';
-		$content.='<span class="option_id">'.$this->pi_getLL('admin_label_option_name').': '.$row['products_options_name'].'</span>';
+		$content.='<span class="option_id">'.$this->pi_getLL('admin_label_option_name').': '.$row['products_options_name'].' (ID: '.$row['products_options_id'].')</span>';
 		$content.='<span class="option_edit">';
 		$content.='<a href="#" class="edit_options admin_menu_edit" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('edit').'</a>&nbsp;';
 		$content.='<a href="#" class="delete_options admin_menu_remove" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
