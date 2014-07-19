@@ -700,13 +700,7 @@ if ($this->post['action']=='category-insert') {
 		<input name="database_name" type="hidden" value="'.$this->post['database_name'].'" />
 		<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($this->post)).'" />
 		</fieldset>
-		<table cellspacing="0" id="nositenav" width="100%">
-			<tr>
-				<td align="right">
-					<input type="submit" class="msadmin_button" name="AdSubmit" value="'.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'">
-				</td>
-			</tr>
-		</table>
+		<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" class="msadmin_button" name="AdSubmit" value="'.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'"></span>
 		<p class="extra_padding_bottom"></p>
 		';
 	$combinedContent.='</form>';
