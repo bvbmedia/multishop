@@ -118,7 +118,9 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				TRUNCATE `tx_multishop_products_options`;
 				TRUNCATE `tx_multishop_products_options_values`;
 				TRUNCATE `tx_multishop_products_options_values_extra`;
-				TRUNCATE `tx_multishop_products_options_values_to_products_options`				
+				TRUNCATE `tx_multishop_products_options_values_to_products_options`
+				TRUNCATE `tx_multishop_attributes_options_groups`
+				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`
 				';
 				$array=explode("\n", $string);
 				foreach ($array as $item) {
@@ -152,6 +154,10 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				TRUNCATE `tx_multishop_products_undo`;
 				TRUNCATE `tx_multishop_specials`;
 				TRUNCATE `tx_multishop_specials_sections`;
+				TRUNCATE `tx_multishop_attributes_options_groups`;
+				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`;
+
+
 				';
 				/*
 				TRUNCATE `tx_multishop_coupons`;
