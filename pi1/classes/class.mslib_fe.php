@@ -162,7 +162,7 @@ class mslib_fe {
 				$product_ids=array();
 				$orders=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('orders_id', 'tx_multishop_orders_products', "products_id = '".$product['products_id']."'", 'orders_id');
 				foreach ($orders as $order) {
-					$products=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id', 'tx_multishop_orders_products', "orders_id = '".$order['orders_id']."' and products_id !='".$product['products_id']."'", '', $limit);
+					$products=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id', 'tx_multishop_orders_products', "orders_id = '".$order['orders_id']."' and products_id !='".$product['products_id']."'", '', '', $limit);
 					if (is_array($products) && count($products)) {
 						foreach ($products as $product) {
 							$product_ids[]=$product['products_id'];
