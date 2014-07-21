@@ -1876,8 +1876,8 @@ if ($this->post['action']=='category-insert') {
 									}
 									if ($item['products_specials_section'] and $specials_id) {
 										$sections=array();
-										if (strstr($item['products_specials_section'],'|')) {
-											$sections=explode('|',$item['products_specials_section']);
+										if ($this->post['input'][$i] && strstr($item['products_specials_section'],$this->post['input'][$i])) {
+											$sections=explode($this->post['input'][$i],$item['products_specials_section']);
 										} else {
 											$sections[]=$item['products_specials_section'];
 										}
