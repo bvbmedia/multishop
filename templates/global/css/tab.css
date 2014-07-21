@@ -764,7 +764,10 @@ span.viewfront a:hover { background:#e2e2e2; }
 .redactor_box { float:left; width:639px; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul { list-style:none; margin:10px 0; padding:0; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul li { background:none; margin:0; padding:0 0 5px; } 
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul li { background:none; margin:0; padding:0 0 5px; }
+
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor_mceEditor.redactor_editor ul { margin:0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor_mceEditor.redactor_editor ul li { list-style-type:disc; padding:0; line-height: 1.6em; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul { margin:10px 0 0; list-style:none; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul li { background:none; margin:0; padding:0; line-height:20px; }

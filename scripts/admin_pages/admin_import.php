@@ -1875,13 +1875,21 @@ if ($this->post['action']=='category-insert') {
 										$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 									}
 									if ($item['products_specials_section'] and $specials_id) {
-										$updateArray=array();
-										$updateArray['specials_id']=$specials_id;
-										$updateArray['date']=time();
-										$updateArray['name']=$item['products_specials_section'];
-										$updateArray['status']=1;
-										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials_sections', $updateArray);
-										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										$sections=array();
+										if (strstr($item['products_specials_section'],'|')) {
+											$sections=explode('|',$item['products_specials_section']);
+										} else {
+											$sections[]=$item['products_specials_section'];
+										}
+										foreach ($sections as $section) {
+											$updateArray=array();
+											$updateArray['specials_id']=$specials_id;
+											$updateArray['date']=time();
+											$updateArray['name']=$section;
+											$updateArray['status']=1;
+											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials_sections', $updateArray);
+											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										}
 									}
 								}
 							} elseif ($item['products_price'] && $item['updated_products_id']) {
