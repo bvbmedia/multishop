@@ -65,7 +65,7 @@ if ($rows) {
 				$content.=$this->languages[$key]['title'].' <input name="option_groups_names['.$row['attributes_options_groups_id'].']['.$key.']" type="text" value="'.$value.'"  />';
 			}
 		}
-		$content.='<a href="#" class="delete_options admin_menu_remove" rel="'.$row['attribbutes_options_groups_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
+		$content.='<a href="#" class="delete_options admin_menu_remove" rel="'.$row['attributes_options_groups_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
 		$content.='</h2>
 		</li>';
 	}
@@ -76,21 +76,42 @@ if ($rows) {
 	// now load the sortables jQuery code
 	$content.='<script type="text/javascript">
 		var result 	= jQuery(".attribute_options_groups_sortable").sortable({
-			cursor:     "move", 
-			//axis:       "y", 
-			update: function(e, ui) { 
+			cursor:     "move",
+			//axis:       "y",
+			update: function(e, ui) {
 				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=update_attributes_options_groups_sortable&tx_multishop_pi1[type]=options_groups').'";
-				jQuery(this).sortable("refresh"); 
-				sorted = jQuery(this).sortable("serialize","id"); 
-				jQuery.ajax({ 
+				jQuery(this).sortable("refresh");
+				sorted = jQuery(this).sortable("serialize","id");
+				jQuery.ajax({
 					type:   "POST",
 					url:    href,
 					data:   sorted,
 					success: function(msg) {
 						//do something with the sorted data
 					}
-				}); 
-			} 
+				});
+			}
+		});
+		jQuery(document).ready(function($) {
+			$(document).on("click", ".delete_options", function(e) {
+				if (confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')) {
+					e.preventDefault();
+					var li_obj=$(this).parent().parent();
+					var group_id=$(this).attr("rel");
+					href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=delete_options_group').'";
+					jQuery.ajax({
+						type: "POST",
+						url: href,
+						dataType: "json",
+						data: "tx_multishop_pi1[group_id]=" + group_id,
+						success: function(e) {
+							if (e.result=="OK") {
+								$(li_obj).remove();
+							}
+						}
+					});
+				}
+			});
 		});
 	  </script>';
 } else {

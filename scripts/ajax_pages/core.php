@@ -4,6 +4,22 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'delete_options_group':
+		if ($this->ADMIN_USER) {
+			if (isset($this->post['tx_multishop_pi1']['group_id']) && $this->post['tx_multishop_pi1']['group_id'] > 0) {
+				$group_id=$this->post['tx_multishop_pi1']['group_id'];
+				$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_groups', 'attributes_options_groups_id='.$group_id);
+				if ($qry) {
+					$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_groups_to_products_options', 'attributes_options_groups_id='.$group_id);
+					$data=array();
+					$data['result']='OK';
+					echo json_encode($data);
+					exit();
+				}
+			}
+		}
+		exit();
+		break;
 	case 'admin_categories_sorting':
 		if ($this->ADMIN_USER) {
 			$no=1;
