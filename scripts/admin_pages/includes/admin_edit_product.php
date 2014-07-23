@@ -1862,8 +1862,8 @@ if ($this->post) {
 						$options_data[$row['products_options_id']]=$row['products_options_name'];
 						$attributes_data[$row['products_options_id']][]=$row;
 						// js cache
-						$js_select2_cache_options[$row['products_options_id']]='attributesOptions['.$row['products_options_id'].']={id:"'.$row['products_options_id'].'", text:"'.$row['products_options_name'].'"}';
-						$js_select2_cache_values[$row['options_values_id']]='attributesValues['.$row['options_values_id'].']={id:"'.$row['options_values_id'].'", text:"'.$row['options_values_name'].'"}';
+						$js_select2_cache_options[$row['products_options_id']]='attributesOptions['.$row['products_options_id'].']={id:"'.$row['products_options_id'].'", text:"'.htmlentities($row['products_options_name'], ENT_QUOTES).'"}';
+						$js_select2_cache_values[$row['options_values_id']]='attributesValues['.$row['options_values_id'].']={id:"'.$row['options_values_id'].'", text:"'.htmlentities($row['options_values_name'], ENT_QUOTES).'"}';
 					}
 					if (count($options_data)) {
 						$attributes_tab_block.='<tr id="product_attributes_content_row">';
