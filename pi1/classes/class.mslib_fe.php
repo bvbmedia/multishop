@@ -1274,7 +1274,7 @@ class mslib_fe {
 		return $url;
 	}
 	public function loggedin() {
-		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
+		if (is_array($GLOBALS['TSFE']->fe_user->user) && $GLOBALS['TSFE']->fe_user->user['uid']) {
 			return 1;
 		} else {
 			return 0;
