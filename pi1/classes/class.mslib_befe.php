@@ -2870,7 +2870,7 @@ class mslib_befe {
 		if ($value and $field) {
 			$queryArray['where'][]=addslashes($field).'=\''.addslashes($value).'\'';
 		}
-		if (count($additional_where)) {
+		if (is_array($additional_where) && count($additional_where)) {
 			foreach ($additional_where as $where) {
 				if ($where) {
 					$queryArray['where'][]=$where;
@@ -2899,7 +2899,7 @@ class mslib_befe {
 		if ($value and $field) {
 			$queryArray['where'][]=addslashes($field).'=\''.addslashes($value).'\'';
 		}
-		if (count($additional_where)) {
+		if (is_array($additional_where) && count($additional_where)) {
 			foreach ($additional_where as $where) {
 				if ($where) {
 					$queryArray['where'][]=$where;
