@@ -2867,7 +2867,7 @@ class mslib_befe {
 	public function getRecord($value='', $table, $field='', $additional_where=array()) {
 		$queryArray=array();
 		$queryArray['from']=$table;
-		if ($value and $field) {
+		if (isset($value) and isset($field)) {
 			$queryArray['where'][]=addslashes($field).'=\''.addslashes($value).'\'';
 		}
 		if (is_array($additional_where) && count($additional_where)) {
@@ -2896,7 +2896,7 @@ class mslib_befe {
 	public function getRecords($value='', $table, $field='', $additional_where=array(), $groupBy='', $orderBy='', $limit='') {
 		$queryArray=array();
 		$queryArray['from']=$table;
-		if ($value and $field) {
+		if (isset($value) and isset($field)) {
 			$queryArray['where'][]=addslashes($field).'=\''.addslashes($value).'\'';
 		}
 		if (is_array($additional_where) && count($additional_where)) {
