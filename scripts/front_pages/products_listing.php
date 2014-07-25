@@ -131,28 +131,30 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 			}
 			// category listing eof
 			if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
-				$content.='
-				<script>
-				jQuery(document).ready(function($) {
-				var result = jQuery("#category_listing").sortable({
-				 cursor:     "move",
-					//axis:       "y",
-					update: function(e, ui) {
-						href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=subcatlisting').'";
-						jQuery(this).sortable("refresh");
-						sorted = jQuery(this).sortable("serialize", "id");
-						jQuery.ajax({
-								type:   "POST",
-								url:    href,
-								data:   sorted,
-								success: function(msg) {
-										//do something with the sorted data
-								}
-						});
-					}
-				});
-				});
-				</script>';
+				if (!isset($output_array['meta']['sortables'])) {
+					$output_array['meta']['sortables']='
+					<script>
+					jQuery(document).ready(function($) {
+					var result = jQuery("#category_listing").sortable({
+					 cursor:     "move",
+						//axis:       "y",
+						update: function(e, ui) {
+							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=subcatlisting').'";
+							jQuery(this).sortable("refresh");
+							sorted = jQuery(this).sortable("serialize", "id");
+							jQuery.ajax({
+									type:   "POST",
+									url:    href,
+									data:   sorted,
+									success: function(msg) {
+											//do something with the sorted data
+									}
+							});
+						}
+					});
+					});
+					</script>';
+				}
 			}
 		} else {
 			if ($this->productsLimit) {

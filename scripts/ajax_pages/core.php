@@ -1066,6 +1066,13 @@ switch ($this->ms['page']) {
 					$updateArray=array(
 						'sort_order'=>$no
 					);
+					// FOR PROJECTS WHERE YOU WANT TO GROUP BY COLUMN NUMBER
+					if ($this->post['tx_multishop_pi1']['col']) {
+						$col=str_replace('msCol','',$this->post['tx_multishop_pi1']['col']);
+						if(is_numeric($col)) {
+							$updateArray['col_position']=$col;
+						}
+					}
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					$no++;

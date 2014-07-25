@@ -4100,6 +4100,14 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		$str="select col_position from tx_multishop_categories limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE `tx_multishop_categories` ADD `col_position` tinyint(1) default '0', ADD KEY col_position (col_position)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+
 		// first fix the already working v3 shops
 		$str="select uid from tt_address where tx_multishop_address_type='billing' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
