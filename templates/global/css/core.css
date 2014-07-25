@@ -416,3 +416,5 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input input[type="text"],
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input textarea { width:300px; border:1px solid #cdcdcd; font:12px Arial, Helvetica, sans-serif; padding:2px 4px; }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input span { padding:5px 0;  }
+
+ul.normalListContent li { background:url(../images/bullet_black.gif) left 6px no-repeat; padding-left:10px; }
