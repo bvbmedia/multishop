@@ -3359,6 +3359,26 @@ class mslib_befe {
 		$tmpcontent.='</td></tr></table>';
 		return $tmpcontent;
 	}
+	function strstr_array( $haystack, $needle ) {
+		if ( !is_array( $haystack ) ) {
+			return false;
+		}
+		foreach ( $haystack as $element ) {
+			if ( strstr( $element, $needle ) ) {
+				return $element;
+			}
+		}
+	}
+	function stristr_array( $haystack, $needle ) {
+		if ( !is_array( $haystack ) ) {
+			return false;
+		}
+		foreach ( $haystack as $element ) {
+			if ( stristr( $element, $needle ) ) {
+				return $element;
+			}
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
