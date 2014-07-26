@@ -3359,23 +3359,23 @@ class mslib_befe {
 		$tmpcontent.='</td></tr></table>';
 		return $tmpcontent;
 	}
-	function strstr_array( $haystack, $needle ) {
-		if ( !is_array( $haystack ) ) {
+	function strstr_array($string,$needleArray) {
+		if (!is_array( $needleArray)) {
 			return false;
 		}
-		foreach ( $haystack as $element ) {
-			if ( strstr( $element, $needle ) ) {
-				return $element;
+		foreach ($needleArray as $needle) {
+			if ( strstr( $string, $needle ) ) {
+				return $needle;
 			}
 		}
 	}
-	function stristr_array( $haystack, $needle ) {
-		if ( !is_array( $haystack ) ) {
+	function stristr_array($string,$needleArray) {
+		if ( !is_array( $needleArray ) ) {
 			return false;
 		}
-		foreach ( $haystack as $element ) {
-			if ( stristr( $element, $needle ) ) {
-				return $element;
+		foreach ($needleArray as $needle) {
+			if ( stristr( $string, $needle ) ) {
+				return $needle;
 			}
 		}
 	}
