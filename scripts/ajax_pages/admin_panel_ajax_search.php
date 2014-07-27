@@ -3,7 +3,10 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 if ($this->ADMIN_USER) {
-	$page=($this->get['context']['next_page']);
+	$page='';
+	if (isset($this->get['context']['next_page'])) {
+		$page=($this->get['context']['next_page']);
+	}
 	$p=!$page ? 0 : $this->get['context']['next_page'];
 	if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) {
 		$this->ms['MODULES']['CACHE_FRONT_END']=0;
@@ -19,7 +22,7 @@ if ($this->ADMIN_USER) {
 	}
 	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
 		$data=array();
-		if ($_REQUEST['q']) {
+		if (isset($_REQUEST['q'])) {
 			$this->get['q']=$_REQUEST['q'];
 			$this->get['q']=trim($this->get['q']);
 			$this->get['q']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['q'], $GLOBALS['TSFE']->metaCharset);
@@ -202,8 +205,8 @@ if ($this->ADMIN_USER) {
 			}
 		}
 		// admin_settings search
-		if ($modules[$section] && $section=='admin_settings') {
-			if ($move_next_section && ($this->get['context']['section']!=$section || !isset($this->get['context']['section']))) {
+		if (isset($section) && $modules[$section] && $section=='admin_settings') {
+			if (isset($move_next_section) && ((isset($this->get['context']['section']) && $this->get['context']['section']!=$section) || !isset($this->get['context']['section']))) {
 				$p=0;
 				$offset=$p*$limit;
 			}
