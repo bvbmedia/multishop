@@ -958,6 +958,8 @@
             <label index="admin_label_select_value_or_type_new_value">select value or type new value</label>
             <label index="admin_sort_alphabet_natural_asc">sort on alfabet natural (asc)</label>
             <label index="admin_sort_alphabet_natural_desc">sort on alfabet natural (desc)</label>
+            <label index="page">page</label>
+            <label index="of">of</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1901,6 +1903,8 @@
             <label index="admin_label_select_value_or_type_new_value">selecteer waarde of type nieuwe waarde</label>
             <label index="admin_sort_alphabet_natural_asc">sorteer op basis van alfabet natuurlijk (oplopend)</label>
             <label index="admin_sort_alphabet_natural_desc">sorteer op basis van alfabet natuurlijk (aflopend)</label>
+            <label index="page">pagina</label>
+            <label index="of">van</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>

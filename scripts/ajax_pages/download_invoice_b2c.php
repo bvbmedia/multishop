@@ -80,11 +80,11 @@ if ($invoice['orders_id']) {
 		$dompdf->set_paper('a4');
 		$dompdf->load_html($content);
 		$dompdf->render();
-		// add the page numbering in footer
+		// ADD PAGE NUMBER IN FOOTER
 		$canvas = $dompdf->get_canvas();
 		$font = Font_Metrics::get_font("arial", "bold");
-		$canvas->page_text(500, 795, "page: {PAGE_NUM} of {PAGE_COUNT}", $font, 11, array(0,0,0));
-		// save to real file
+		$canvas->page_text(500, 795, $this->pi_getLL('page','page').' {PAGE_NUM} '.$this->pi_getLL('of','of').' {PAGE_COUNT}', $font, 11, array(0,0,0));
+		// SAVE AS FILE
 		file_put_contents($pdfoutput, $dompdf->output(array('compress' => 0)));
 	}
 }
