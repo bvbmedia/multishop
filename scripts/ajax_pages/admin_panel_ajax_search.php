@@ -654,10 +654,6 @@ if ($this->ADMIN_USER) {
 		}
 		// product search eof
 		// now build up the listing
-		$page_marker=array();
-		$page_marker['context']['section']=$section;
-		$page_marker['context']['next_page']=$p+1;
-		$page_marker['context']['next']=$next_page;
 		$data_json=array();
 		if (count($data['listing']['cms'])>0) {
 			$data_json[]=array(
@@ -701,6 +697,21 @@ if ($this->ADMIN_USER) {
 				'children'=>$data['listing']['products']
 			);
 		}
+		// custom page hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'])) {
+			$params=array(
+				'data_json'=>&$data_json,
+				'next_page'=>&$next_page
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		$page_marker=array();
+		$page_marker['context']['section']=$section;
+		$page_marker['context']['next_page']=$p+1;
+		$page_marker['context']['next']=$next_page;
+		// custom page hook that can be controlled by third-party plugin eof
 		$content=array(
 			"products"=>$data_json,
 			"total_rows"=>$results_counter,
