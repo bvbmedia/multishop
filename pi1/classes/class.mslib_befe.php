@@ -3164,17 +3164,10 @@ class mslib_befe {
 			$tmpcontent.='<tr class="'.$tr_type.'">';
 			$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.number_format($product['qty']).'</td>';
 			$product_tmp=mslib_fe::getProduct($product['products_id']);
-			if ($this->ms['MODULES']['DISPLAY_PRODUCT_IMAGE_IN_ADMIN_PACKING_SLIP'] and $product_tmp['products_image']) {
-				$tmpcontent.='<td align="left" class="cell_products_name valign_top"><strong>';
-				$tmpcontent.='<img src="'.mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50').'"> ';
-				$tmpcontent.=$product['products_name'];
-			} else {
-				$tmpcontent.='<td align="left" class="cell_products_name valign_top" style="padding-left:10px"><strong>'.$product['products_name'];
-			}
+			$tmpcontent.='<td align="left" class="cell_products_name valign_top" style="padding-left:10px">'.$product['products_name'];
 			if ($product['products_article_number']) {
 				$tmpcontent.=' ('.$product['products_article_number'].')';
 			}
-			$tmpcontent.='</strong>';
 			if ($product['products_model']) {
 				$tmpcontent.='<br/>Model: '.$product['products_model'];
 			}
