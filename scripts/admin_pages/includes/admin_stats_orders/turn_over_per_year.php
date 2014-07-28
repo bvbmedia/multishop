@@ -20,10 +20,12 @@ if ($row_year['crdate']>0) {
 	$oldest_year=date("Y");
 }
 $current_year=date("Y");
-$content.='<div class="order_stats_mode_wrapper" style="width:250px">';
-$content.='<span class="float_right">[<span><strong>'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</strong></span>]</span>';
-$content.='<span>[<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</a>]</span>';
-$content.='</div>';
+$content.='<div class="order_stats_mode_wrapper">
+<ul class="horizontal_list">
+	<li><strong class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</strong></li>
+	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</a>
+</ul>
+</div>';
 $content.='
 <form method="get" id="orders_stats_form" class="float_right">
 <input name="type" type="hidden" value="2003" />
