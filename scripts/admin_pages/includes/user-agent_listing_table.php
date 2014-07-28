@@ -40,8 +40,11 @@ foreach ($tmporders as $order) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['CUSTOMER_NAME']=$customer_name;
-	$markerArray['IPADDRESS']=$order['ip_address'];
-	$markerArray['USERAGENTS']=$order['user_agent'];
+	$markerArray['CUSTOMER_NAME_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$order['customer_id'].'&action=edit_customer',1);
+
+	$markerArray['IP_ADDRESS']=$order['ip_address'];
+	$markerArray['ORDERS_ID']=$order['orders_id'];
+	$markerArray['USER_AGENT']=$order['user_agent'];
 	// custom page hook that can be controlled by third-party plugin eof	
 	$orderItem.=$this->cObj->substituteMarkerArray($subparts['useragents_listing'], $markerArray, '###|###');
 }
@@ -57,12 +60,14 @@ $query_string=mslib_fe::tep_get_all_get_params(array(
 	'clearcache'
 ));
 $subpartArray=array();
+$subpartArray['###LABEL_HEADER_ORDERS_ID###']=$this->pi_getLL('orders_id');
+$subpartArray['###LABEL_FOOTER_ORDERS_ID###']=$this->pi_getLL('orders_id');
 $subpartArray['###LABEL_HEADER_CUSTOMER###']=$this->pi_getLL('customer');
-$subpartArray['###LABEL_HEADER_IPADDRESS###']=$this->pi_getLL('ip_address');
-$subpartArray['###LABEL_HEADER_USERAGENTS###']=$this->pi_getLL('user_agent', 'user agents');
 $subpartArray['###LABEL_FOOTER_CUSTOMER###']=$this->pi_getLL('customer');
-$subpartArray['###LABEL_FOOTER_IPADDRESS###']=$this->pi_getLL('ip_address');
-$subpartArray['###LABEL_FOOTER_USERAGENTS###']=$this->pi_getLL('user_agent', 'user agents');
+$subpartArray['###LABEL_HEADER_IP_ADDRESS###']=$this->pi_getLL('ip_address');
+$subpartArray['###LABEL_FOOTER_IP_ADDRESS###']=$this->pi_getLL('ip_address');
+$subpartArray['###LABEL_HEADER_USER_AGENT###']=$this->pi_getLL('user_agent', 'user agents');
+$subpartArray['###LABEL_FOOTER_USER_AGENT###']=$this->pi_getLL('user_agent', 'user agents');
 $subpartArray['###ADMIN_LABEL_LINK_DOWNLOAD_AS_EXCEL###']=$this->pi_getLL('admin_label_link_download_as_excel');
 // pagination
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];

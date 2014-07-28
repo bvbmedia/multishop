@@ -7,11 +7,15 @@
         <form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="post">
             <div id="search-orders">
                 <input name="id" type="hidden" value="###SHOP_PID###" />
-                <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
+                <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_user_agent" />
                 <table width="100%">
                     <tr>
                         <td valign="top">
-                            &nbsp;
+                            <div class="formfield-wrapper">
+                                <label>###LABEL_KEYWORD###</label>
+                                <input type="text" name="skeyword" value="###VALUE_KEYWORD###">
+                                <input type="submit" name="Search" value="###VALUE_SEARCH###" />
+                            </div>
                         </td>
                         <td nowrap valign="top" align="right" class="searchLimit">
                             <div style="float:right;">
@@ -22,27 +26,29 @@
                     </tr>
                 </table>
             </div>
-
             <div style="display: block;" id="Orders_By_Date" class="tab_content">
                 <!-- ###RESULTS### begin -->
                 <div class="msHorizontalOverflowWrapper">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
                         <tr>
+                            <th width="100" class="cell_orders_id align_right">###LABEL_HEADER_ORDERS_ID###</th>
                             <th width="250" class="cell_customer_name">###LABEL_HEADER_CUSTOMER###</th>
-                            <th width="110" class="cell_ipaddress">###LABEL_HEADER_IPADDRESS###</th>
-                            <th class="cell_useragents">###LABEL_HEADER_USERAGENTS###</th>
+                            <th width="110" class="cell_ipaddress">###LABEL_HEADER_IP_ADDRESS###</th>
+                            <th class="cell_useragents">###LABEL_HEADER_USER_AGENT###</th>
                         </tr>
                         <!-- ###ORDERS_LISTING### begin -->
                         <tr class="###ROW_TYPE###">
-                            <td align="left" nowrap>###CUSTOMER_NAME###</a></td>
-                            <td align="left" nowrap>###IPADDRESS###</td>
-                            <td align="left" nowrap>###USERAGENTS###</td>
+                            <td align="left" class="align_right" nowrap>###ORDERS_ID###</td>
+                            <td align="left" nowrap><a href="###CUSTOMER_NAME_LINK###">###CUSTOMER_NAME###</a></td>
+                            <td align="left" nowrap>###IP_ADDRESS###</td>
+                            <td align="left" nowrap>###USER_AGENT###</td>
                         </tr>
                         <!-- ###ORDERS_LISTING### end -->
                         <tr>
+                            <th width="100" class="cell_orders_id align_right">###LABEL_FOOTER_ORDERS_ID###</th>
                             <th width="250" class="cell_customer_name">###LABEL_FOOTER_CUSTOMER###</th>
-                            <th width="110" class="cell_ipaddress">###LABEL_FOOTER_IPADDRESS###</th>
-                            <th class="cell_useragents">###LABEL_FOOTER_USERAGENTS###</th>
+                            <th width="110" class="cell_ipaddress">###LABEL_FOOTER_IP_ADDRESS###</th>
+                            <th class="cell_useragents">###LABEL_FOOTER_USER_AGENT###</th>
                         </tr>
                     </table>
                 </div>
