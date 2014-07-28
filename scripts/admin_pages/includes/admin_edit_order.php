@@ -525,7 +525,8 @@ if (is_numeric($this->get['orders_id'])) {
 		if ($orders['billing_company']) {
 			$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 		}
-		$tmpcontent.=$orders['billing_name'].'<br />
+		$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer',1);
+		$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
 		'.$orders['billing_address'].'<br />
 		'.$orders['billing_zip'].' '.$orders['billing_city'].' <br />
 		'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $orders['billing_country']).'<br /><br />';
