@@ -87,7 +87,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 		}
 		if (!empty($product['products_name'])) {
-			$output['product_name']='<li class="crumbar_product_level"><strong>'.substr($product['products_name'], 0, 60).'</strong></li>';
+			$output['product_name']='<li class="crumbar_product_level"><strong>'.$product['products_name'].'</strong></li>';
 		}
 		// fill the row marker with the expanded rows
 		$subpartArray['###LABEL_YOU_ARE_CURRENTLY_HERE###']=$output['label_you_are_currently_here'];
