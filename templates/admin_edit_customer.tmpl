@@ -12,7 +12,7 @@
             $(activeTab).fadeIn(0);
             return false;
         });
-        if ($(".error_msg").length > 0) {
+        if ($(".error_msg ul.ul-display-error li").length > 0) {
             var lochash = '#edit_customer';
             if (lochash != '') {
                 var li_this = $("ul > li").find("a[href='" + lochash + "']").parent();
