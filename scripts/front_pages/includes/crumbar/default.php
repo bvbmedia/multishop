@@ -29,7 +29,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	}
 	if ($categories_id) {
 		$output['label_you_are_currently_here']=$this->pi_getLL('you_are_currently_here');
-		$output['homepage_link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=home');
+		if ($this->conf['crumbar_rootline_pid'] && is_numeric($this->conf['crumbar_rootline_pid'])) {
+			$output['homepage_link']=mslib_fe::typolink($this->conf['crumbar_rootline_pid']);
+		} else {
+			$output['homepage_link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=home');
+		}
 		if ($this->conf['crumbar_rootline_title']) {
 			$output['homepage_title']=$this->conf['crumbar_rootline_title'];
 		} else {

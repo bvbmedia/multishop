@@ -111,6 +111,7 @@ plugin.tx_multishop_pi1 {
 	order_details_table_ajaxProductsToBasket_tmpl_path={$plugin.multishop.order_details_table_ajaxProductsToBasket_tmpl_path}
 	order_details_table_ajaxGetMethodCosts_tmpl_path={$plugin.multishop.order_details_table_ajaxGetMethodCosts_tmpl_path}
 	crumbar_rootline_title={$plugin.multishop.crumbar_rootline_title}
+	crumbar_rootline_pid={$plugin.multishop.crumbar_rootline_pid}
 	debugEnabled={$plugin.multishop.debugEnabled}
 }
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

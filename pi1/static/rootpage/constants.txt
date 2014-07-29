@@ -235,4 +235,7 @@ plugin.multishop {
 
 	# cat=plugin.multishop - advanced; type=string; label= Title of the rootline page: Change the root title in the crumbar. Example: Home.
 	crumbar_rootline_title =
+
+	# cat=plugin.multishop - advanced; type=string; label= Pid of the rootline page: Change the target link of the root page in the crumbar. Leave empty for default target. Example: 1.
+	crumbar_rootline_pid =
 }
