@@ -160,7 +160,7 @@ if ($this->conf['fe_systemadmin_usergroup']) {
 if ($this->conf['fe_statisticsadmin_usergroup']) {
 	$this->excluded_userGroups[]=$this->conf['fe_statisticsadmin_usergroup'];
 }
-if ($this->conf['cacheConfiguration']=='1') {
+if ($this->conf['cacheConfiguration']=='1' and !$this->ADMIN_USER) {
 	$this->ms['MODULES']['CACHE_FRONT_END']=1;
 }
 if ($this->ms['MODULES']['CACHE_FRONT_END']) {
