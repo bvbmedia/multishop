@@ -624,7 +624,7 @@ jQuery(document).ready(function ($) {
             $(".qq-uploader").before('<span class="file-upload-hidden">###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###</span>');
             $(".qq-uploader").hide();
         }
-        $("#products_name_0").keyup(function () {
+        $(document).on("keyup", "#products_name_0", function () {
             if ($("#products_name_0").val() != "") {
                 $(".file-upload-hidden").hide();
                 $(".qq-uploader").show();
@@ -633,7 +633,25 @@ jQuery(document).ready(function ($) {
                 $(".file-upload-hidden").show();
             }
         });
-	###JS_ADVANCED_OPTION_TOGGLE###
+        $(document).on("click", ".payment_method_cb", function() {
+            var current_cb_id=$(this).attr("id");
+            var current_id=$(this).attr("rel");
+            var target_cb="#disable_payment_method_" + current_id;
+            if (current_cb_id.indexOf("disable")>-1) {
+                target_cb="#enable_payment_method_" + current_id;
+            }
+            $(target_cb).prop("checked", false);
+        });
+        $(document).on("click", ".shipping_method_cb", function() {
+            var current_cb_id=$(this).attr("id");
+            var current_id=$(this).attr("rel");
+            var target_cb="#disable_shipping_method_" + current_id;
+            if (current_cb_id.indexOf("disable")>-1) {
+                target_cb="#enable_shipping_method_" + current_id;
+            }
+            $(target_cb).prop("checked", false);
+        });
+	    ###JS_ADVANCED_OPTION_TOGGLE###
     });
 </script>
 <!-- ###TEMPLATE### end -->

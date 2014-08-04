@@ -21,6 +21,19 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		$(\'#admin_shipping_methods_list\').slideToggle(\'slow\', function(){});
 	});
+	$(document).on("change", "#handling_cost_type", function(){
+		if ($(this).val()=="amount") {
+			$("#handling_cost_amount_div").show();
+			$("#handling_cost_amount_input").removeAttr("disabled");
+			$("#handling_cost_percentage_div").hide();
+			$("#handling_cost_percentage_input").attr("disabled", "disabled");
+		} else if ($(this).val()=="percentage") {
+			$("#handling_cost_amount_div").hide();
+			$("#handling_cost_amount_input").attr("disabled", "disabled");
+			$("#handling_cost_percentage_div").show();
+			$("#handling_cost_percentage_input").removeAttr("disabled");
+		}
+	});
 });
 </script>
 ';
@@ -113,7 +126,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 	}
 	if ($erno or !$this->post) {
 		$shipping_method=$shipping_methods[$_REQUEST['shipping_method_code']];
-		$tmpcontent.='<form id="add_shipping_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
+		$tmpcontent.='<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='
 				<div class="account-field">
@@ -122,15 +135,15 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$tmpcontent.=''.$language['title'].'
-				</div>	
+				</div>
 				<div class="account-field">
 					<label for="name">'.$this->pi_getLL('admin_name').'</label>
 					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
-				</div>		
+				</div>
 				<div class="account-field">
 					<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
-					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>			
-				</div>		
+					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
+				</div>
 				';
 		}
 		$tmpcontent.='
@@ -151,8 +164,27 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 		} else {
 			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
 		}
+		$percentage_cost=false;
+		if (strpos($row['handling_costs'], '%')!==false) {
+			$percentage_cost=true;
+		}
 		$tmpcontent.='
 		<div class="account-field">
+			<label>'.$this->pi_getLL('handling_costs_type').'</label>
+			<div class="msAttribute">
+				<select name="handling_costs_type" id="handling_cost_type">
+					<option value="amount"'.(!$percentage_cost ? ' selected="selected"' : '').'>amount</option>
+					<option value="percentage"'.($percentage_cost ? ' selected="selected"' : '').'>percentage</option>
+				</select>
+			</div>
+		</div>
+		<div class="account-field" id="handling_cost_percentage_div"'.(!$percentage_cost ? ' style="display:none"' : '').'>
+			<label>'.$this->pi_getLL('handling_costs').'</label>
+			<div class="msAttribute">
+				<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="'.$percentage_handling_cost.'"'.(!$percentage_cost ? ' disabled="disabled"' : '').' />
+			</div>
+		</div>
+		<div class="account-field" id="handling_cost_amount_div"'.($percentage_cost ? ' style="display:none"' : '').'>
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
 				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
@@ -161,7 +193,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 			</div>
 		</div>
 		<div class="account-field">
-		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
+		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
 		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -185,96 +217,96 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 				var original_val	= o.val();
 				var current_value 	= parseFloat(o.val());
 				var tax_id 			= jQuery("#tax_id").val();
-				
+
 				if (current_value > 0) {
 					if (to_include_vat) {
 						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     						if (json && json.price_including_tax) {
 								var incl_tax_crop = decimalCrop(json.price_including_tax);
-								
+
 								o.parent().next().first().children().val(incl_tax_crop);
 							} else {
 								o.parent().next().first().children().val(current_value);
 							}
     					});
-							
+
 						// update the hidden excl vat
 						o.parent().next().next().first().children().val(original_val);
-						
+
 					} else {
 						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     						if (json && json.price_excluding_tax) {
 								var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-								
+
 								// update the excl. vat
 								o.parent().prev().first().children().val(excl_tax_crop);
-								
+
 								// update the hidden excl vat
 								o.parent().next().first().children().val(json.price_excluding_tax);
-									
+
 							} else {
 								// update the excl. vat
 								o.parent().prev().first().children().val(original_val);
-								
+
 								// update the hidden excl vat
 								o.next().parent().first().next().first().children().val(original_val);
 							}
     					});
 					}
-					
+
 				} else {
 					if (to_include_vat) {
 						// update the incl. vat
 						o.parent().next().first().children().val(0);
-						
+
 						// update the hidden excl vat
 						o.parent().next().next().first().children().val(0);
-					
+
 					} else {
 						// update the excl. vat
 						o.parent().prev().first().children().next().val(0);
-						
+
 						// update the hidden excl vat
 						o.next().parent().first().next().first().children().val(0);
 					}
 				}
 			}
-				
+
 			function decimalCrop(float) {
 				var numbers = float.toString().split(".");
 				var prime 	= numbers[0];
-									
+
 				if (numbers[1] > 0 && numbers[1] != "undefined") {
 					var decimal = new String(numbers[1]);
 				} else {
-					var decimal = "00";			
+					var decimal = "00";
 				}
-									
+
 				var number = prime + "." + decimal.substr(0, 2);
-					
+
 				return number;
 			}
-					
+
 			function mathRound(float) {
 				//return float;
 				return Math.round(float*100)/100;
 			}
-								
+
 			jQuery(document).ready(function($) {
 				jQuery(".msHandlingCostExcludingVat").keyup(function() {
 					productPrice(true, jQuery(this));
 				});
-					
+
 				jQuery("#tax_id").change(function() {
 					jQuery(".msHandlingCostExcludingVat").each(function(i) {
 						productPrice(true, jQuery(this));
 					});
 				});
-					
+
 				jQuery(".msHandlingCostIncludingVat").keyup(function() {
 					productPrice(false, jQuery(this));
 				});
-								
+
 				$("#add_shipping_form").submit(function(e) {
 					if (!$("#name_0").val()) {
 						e.preventDefault();
@@ -287,7 +319,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 					} else {
 						return true;
 					}
-				 });							
+				 });
 			});
 		</script>';
 		$content.=mslib_fe::returnBoxedHTML($shipping_method['name'], $tmpcontent);
@@ -304,7 +336,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 	$psp=$shipping_methods[$row['provider']];
 	$inner_content=mslib_fe::parseShippingMethodEditForm($psp, unserialize($row['vars']), 1);
 	$tmpcontent.='
-	<form id="add_shipping_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+	<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 	<input name="sub" type="hidden" value="update_shipping_method" />
 	<input name="shipping_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
@@ -315,22 +347,23 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
 		$tmpcontent.=$language['title'].'
-			</div>	
+			</div>
 			<div class="account-field">
 				<label for="name">'.$this->pi_getLL('admin_name').'</label>';
 		$tmpcontent.='<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">';
 		$tmpcontent.='</div>
 			<div class="account-field">
 				<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
-				<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>			
+				<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 			</div>';
 	}
 	$cost_tax_rate=0;
-	$data=mslib_fe::getTaxRuleSet($row['tax_id'], $row['handling_costs']);
+	$amount_handling_cost=str_replace('%', '', $row['handling_costs']);
+	$data=mslib_fe::getTaxRuleSet($row['tax_id'], $amount_handling_cost);
 	$cost_tax_rate=$data['total_tax_rate'];
-	$cost_tax=mslib_fe::taxDecimalCrop(($row['handling_costs']*$cost_tax_rate)/100);
-	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($row['handling_costs'], 2, false);
-	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($row['handling_costs']+$cost_tax, 2, false);
+	$cost_tax=mslib_fe::taxDecimalCrop(($amount_handling_cost*$cost_tax_rate)/100);
+	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost, 2, false);
+	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost+$cost_tax, 2, false);
 	$tmpcontent.='
 	<div class="account-field">
 		<label>'.$this->pi_getLL('code').'</label>
@@ -348,17 +381,36 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 	} else {
 		$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
 	}
+	$percentage_cost=false;
+	if (strpos($row['handling_costs'], '%')!==false) {
+		$percentage_cost=true;
+	}
 	$tmpcontent.='
 	<div class="account-field">
+		<label>'.$this->pi_getLL('handling_costs_type').'</label>
+		<div class="msAttribute">
+			<select name="handling_costs_type" id="handling_cost_type">
+				<option value="amount"'.(!$percentage_cost ? ' selected="selected"' : '').'>amount</option>
+				<option value="percentage"'.($percentage_cost ? ' selected="selected"' : '').'>percentage</option>
+			</select>
+		</div>
+	</div>
+	<div class="account-field" id="handling_cost_percentage_div"'.(!$percentage_cost ? ' style="display:none"' : '').'>
+		<label>'.$this->pi_getLL('handling_costs').'</label>
+		<div class="msAttribute">
+			<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="'.$percentage_handling_cost.'"'.(!$percentage_cost ? ' disabled="disabled"' : '').' />
+		</div>
+	</div>
+	<div class="account-field" id="handling_cost_amount_div"'.($percentage_cost ? ' style="display:none"' : '').'>
 		<label>'.$this->pi_getLL('handling_costs').'</label>
 		<div class="msAttribute">
 			<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
 			<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-			<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$row['handling_costs'].'" /></div>
+			<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$amount_handling_cost.'" /></div>
 		</div>
 	</div>
 	<div class="account-field">
-	<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
+	<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
 	<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -367,12 +419,12 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 	}
 	$tmpcontent.='
 	</select>
-	</div>							
+	</div>
 	'.$inner_content.'
 	<div class="account-field">
 		<label for="">&nbsp;</label>
 		<input name="Submit" type="submit" class="msadmin_button" value="'.$this->pi_getLL('save').'" />
-	</div>				
+	</div>
 	</form>';
 	$tmpcontent.='
 	<script type="text/javascript" language="JavaScript">
@@ -380,13 +432,13 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 			var original_val	= o.val();
 			var current_value 	= parseFloat(o.val());
 			var tax_id 			= jQuery("#tax_id").val();
-		
+
 			if (current_value > 0) {
 				if (to_include_vat) {
 					jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     					if (json && json.price_including_tax) {
 							var incl_tax_crop = decimalCrop(json.price_including_tax);
-		
+
 							o.parent().next().first().children().val(incl_tax_crop);
 						} else {
 							o.parent().next().first().children().val(current_value);
@@ -398,7 +450,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 					jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: jQuery("#tax_id").val() }, function(json) {
     					if (json && json.price_excluding_tax) {
 							var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-		
+
 							// update the excl. vat
 							o.parent().prev().first().children().val(excl_tax_crop);
 							// update the hidden excl vat
@@ -417,7 +469,7 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 					o.parent().next().first().children().val(0);
 					// update the hidden excl vat
 					o.parent().next().next().first().children().val(0);
-		
+
 				} else {
 					// update the excl. vat
 					o.parent().prev().first().children().next().val(0);
@@ -429,15 +481,15 @@ if ($_REQUEST['sub']=='add_shipping_method' and $_REQUEST['shipping_method_code'
 		function decimalCrop(float) {
 			var numbers = float.toString().split(".");
 			var prime 	= numbers[0];
-		
+
 			if (numbers[1] > 0 && numbers[1] != "undefined") {
 				var decimal = new String(numbers[1]);
 			} else {
 				var decimal = "00";
 			}
-		
+
 			var number = prime + "." + decimal.substr(0, 2);
-	
+
 			return number;
 		}
 		function mathRound(float) {
@@ -540,22 +592,22 @@ if ($this->ms['show_main']) {
 	jQuery(document).ready(function($) {
 		// sortables
 		var result2	= jQuery("#admin_modules_listing tbody.sortable_content").sortable({
-				cursor:     "move", 
-			//axis:       "y", 
-			update: function(e, ui) { 
+				cursor:     "move",
+			//axis:       "y",
+			update: function(e, ui) {
 				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
-				jQuery(this).sortable("refresh"); 
-				sorted = jQuery(this).sortable("serialize", "id"); 
-				jQuery.ajax({ 
-						type:   "POST", 
-						url:    href, 
-						data:   sorted, 
-						success: function(msg) { 
-								//do something with the sorted data 
-						} 
-				}); 
-			} 
-		});	
+				jQuery(this).sortable("refresh");
+				sorted = jQuery(this).sortable("serialize", "id");
+				jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
+						success: function(msg) {
+								//do something with the sorted data
+						}
+				});
+			}
+		});
 		// sortables eof
 	});
 	</script>';

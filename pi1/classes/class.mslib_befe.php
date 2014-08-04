@@ -1907,6 +1907,7 @@ class mslib_befe {
 				$array=array();
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 					$array[$row['type']][]=$row['method_id'];
+					$array[$row['type']]['method_data'][$row['method_id']]=$row;
 				}
 				return $array;
 			}

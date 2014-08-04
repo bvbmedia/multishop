@@ -305,21 +305,23 @@ if ($this->post) {
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_method_mappings', 'products_id=\''.$prodid.'\'');
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-				foreach ($this->post['payment_method'] as $value) {
+				foreach ($this->post['payment_method'] as $payment_method_id => $value) {
 					$updateArray=array();
 					$updateArray['products_id']=$prodid;
-					$updateArray['method_id']=$value;
+					$updateArray['method_id']=$payment_method_id;
 					$updateArray['type']='payment';
+					$updateArray['negate']=$value;
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_method_mappings', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}
 			}
 			if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-				foreach ($this->post['shipping_method'] as $value) {
+				foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
 					$updateArray=array();
 					$updateArray['products_id']=$prodid;
-					$updateArray['method_id']=$value;
+					$updateArray['method_id']=$shipping_method_id;
 					$updateArray['type']='shipping';
+					$updateArray['negate']=$value;
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_method_mappings', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}
@@ -1117,6 +1119,8 @@ if ($this->post) {
 			// loading shipping methods eof
 			$shipping_methods=mslib_fe::loadShippingMethods();
 			if (count($payment_methods) or count($shipping_methods)) {
+				// the value is are the negate value
+				// negate 1 mean the shipping/payment are excluded
 				$shipping_payment_method.='
 						<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
 							<label>'.$this->pi_getLL('admin_mapped_methods').'</label>
@@ -1138,11 +1142,13 @@ if ($this->post) {
 							$tr_type='even';
 						}
 						$count++;
-						$shipping_payment_method.='<li class="'.$tr_type.'"  id="multishop_payment_method_'.$item['id'].'">';
+						$shipping_payment_method.='<li class="'.$tr_type.'"  id="multishop_payment_method_'.$item['id'].'"><span>'.$item['name'].'</span>&nbsp;';
 						if ($price_wrap) {
 							$tmpcontent.=$price_wrap;
 						}
-						$shipping_payment_method.='<input name="payment_method[]" id="payment_method_'.$item['id'].'" type="checkbox" value="'.htmlspecialchars($item['id']).'"'.((is_array($method_mappings['payment']) and in_array($item['id'], $method_mappings['payment'])) ? ' checked' : '').' /><span>'.$item['name'].'</span></li>';
+						$shipping_payment_method.='<input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="enable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && !$method_mappings['payment']['method_data'][$item['id']]['negate']) ? ' checked' : '').' /><label for="enable_payment_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label>';
+						$shipping_payment_method.='<input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="disable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && $method_mappings['payment']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').' /><label for="disable_payment_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label>';
+						$shipping_payment_method.='</li>';
 					}
 				}
 				$shipping_payment_method.='
@@ -1156,11 +1162,12 @@ if ($this->post) {
 				if (count($shipping_methods)) {
 					foreach ($shipping_methods as $code=>$item) {
 						$count++;
-						$shipping_payment_method.='<li>';
+						$shipping_payment_method.='<li><span>'.$item['name'].'</span>';
 						if ($price_wrap) {
 							$shipping_payment_method.=$price_wrap;
 						}
-						$shipping_payment_method.='<input name="shipping_method[]" id="shipping_method_'.$item['id'].'" type="checkbox" value="'.htmlspecialchars($item['id']).'"'.((is_array($method_mappings['shipping']) and in_array($item['id'], $method_mappings['shipping'])) ? ' checked' : '').'  /><span>'.$item['name'].'</span>';
+						$shipping_payment_method.='<input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="enable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && !$method_mappings['shipping']['method_data'][$item['id']]['negate']) ? ' checked' : '').'  /><label for="enable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label>';
+						$shipping_payment_method.='<input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="disable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && $method_mappings['shipping']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').'  /><label for="enable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label>';
 						$shipping_payment_method.='</li>';
 					}
 				}
