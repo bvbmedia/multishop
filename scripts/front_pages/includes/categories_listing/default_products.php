@@ -1,7 +1,7 @@
 <?php
-// THIS CATEGORIES LISTING DIRECTLY PRINTS THE PRODUCTS
+// THIS CATEGORIES LISTING TYPE DIRECTLY PRINTS THE PRODUCTS
 if (!is_array($current) || !$current['categories_id']) {
-	// FALL BACK TO NORMAL CATEGORIES LISTING
+	// FALLBACK TO NORMAL CATEGORIES LISTING
 	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/categories_listing/default.php');
 } else {
 	// get all subcategories
