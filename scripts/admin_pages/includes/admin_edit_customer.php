@@ -85,6 +85,7 @@ if ($this->post) {
 			$updateArray['page_uid']=$this->post['page_uid'];
 		}
 		if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
+			$customer_id=$this->post['tx_multishop_pi1']['cid'];
 			// update mode
 			if (count($this->post['tx_multishop_pi1']['groups'])) {
 				$updateArray['usergroup']=implode(",", $this->post['tx_multishop_pi1']['groups']);
@@ -117,7 +118,7 @@ if ($this->post) {
 				$continue=1;
 			}
 			if ($continue) {
-				// custom hook that can be controlled by third-party plugin eof				
+				// custom hook that can be controlled by third-party plugin eof
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$this->post['tx_multishop_pi1']['cid'], $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				// custom hook that can be controlled by third-party plugin
@@ -130,7 +131,36 @@ if ($this->post) {
 					}
 				}
 			}
-			// custom hook that can be controlled by third-party plugin eof				
+			// custom hook that can be controlled by third-party plugin eof
+			// customer shipping/payment method mapping
+			if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+				// shipping/payment methods
+				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\''.$customer_id.'\'');
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
+					foreach ($this->post['payment_method'] as $payment_method_id => $value) {
+						$updateArray=array();
+						$updateArray['customers_id']=$customer_id;
+						$updateArray['method_id']=$payment_method_id;
+						$updateArray['type']='payment';
+						$updateArray['negate']=$value;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				}
+				if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
+					foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
+						$updateArray=array();
+						$updateArray['customers_id']=$customer_id;
+						$updateArray['method_id']=$shipping_method_id;
+						$updateArray['type']='shipping';
+						$updateArray['negate']=$value;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				}
+				// shipping/payment methods eof
+			}
 		} else {
 			// insert mode
 			if (count($this->post['tx_multishop_pi1']['groups'])) {
@@ -154,7 +184,7 @@ if ($this->post) {
 				$updateArray['page_uid']=$this->shop_pid;
 			}
 			$updateArray['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
-//			$updateArray['tx_multishop_newsletter']			=	$address['tx_multishop_newsletter'];			
+//			$updateArray['tx_multishop_newsletter']			=	$address['tx_multishop_newsletter'];
 			$updateArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPreProc'])) {
@@ -166,7 +196,7 @@ if ($this->post) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			// custom hook that can be controlled by third-party plugin eof		
+			// custom hook that can be controlled by third-party plugin eof
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$customer_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -224,6 +254,35 @@ if ($this->post) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
+			// customer shipping/payment method mapping
+			if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+				// shipping/payment methods
+				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\''.$customer_id.'\'');
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
+					foreach ($this->post['payment_method'] as $payment_method_id => $value) {
+						$updateArray=array();
+						$updateArray['customers_id']=$customer_id;
+						$updateArray['method_id']=$payment_method_id;
+						$updateArray['type']='payment';
+						$updateArray['negate']=$value;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				}
+				if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
+					foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
+						$updateArray=array();
+						$updateArray['customers_id']=$customer_id;
+						$updateArray['method_id']=$shipping_method_id;
+						$updateArray['type']='shipping';
+						$updateArray['negate']=$value;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				}
+				// shipping/payment methods eof
+			}
 		}
 		if ($this->post['tx_multishop_pi1']['referrer']) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
@@ -252,23 +311,23 @@ $head.='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
 		jQuery(\'#edit_customer\').h5Validate();
-		$("#birthday_visitor").datepicker({ 
+		$("#birthday_visitor").datepicker({
 			dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
 			altField: "#birthday",
 			altFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
-			showOtherMonths: true,  
-			yearRange: "'.(date("Y")-100).':'.date("Y").'" 
+			showOtherMonths: true,
+			yearRange: "'.(date("Y")-100).':'.date("Y").'"
 			});
-		$("#delivery_birthday_visitor").datepicker({ 
+		$("#delivery_birthday_visitor").datepicker({
 			dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
 			altField: "#delivery_birthday",
 			altFormat: "yy-mm-dd",
 			changeMonth: true,
 			changeYear: true,
-			showOtherMonths: true,  
-			yearRange: "'.(date("Y")-100).':'.date("Y").'" 
+			showOtherMonths: true,
+			yearRange: "'.(date("Y")-100).':'.date("Y").'"
 		});
 	}); //end of first load
 </script>';
@@ -334,7 +393,7 @@ if ($this->post['image']) {
 	';
 }
 $images_tab_block.='
-	
+
 	<input name="tx_multishop_pi1[image]" id="ajax_fe_user_image" type="hidden" value="" />';
 if ($_REQUEST['action']=='edit_product' and $this->post['image']) {
 	$images_tab_block.='<img src="'.mslib_befe::getImagePath($this->post['image'], 'products', '50').'">';
@@ -387,7 +446,7 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 } else {
 	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 }
-// global fields 
+// global fields
 $subpartArray['###LABEL_VAT_ID###']=ucfirst($this->pi_getLL('vat_id', 'VAT ID'));
 $subpartArray['###VALUE_VAT_ID###']=htmlspecialchars($this->post['tx_multishop_vat_id']);
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
@@ -398,6 +457,73 @@ $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
 $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
 $subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
+// customer to shipping/payment method mapping
+$shipping_payment_method='';
+if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+	$payment_methods=mslib_fe::loadPaymentMethods();
+	// loading shipping methods eof
+	$shipping_methods=mslib_fe::loadShippingMethods();
+	if (count($payment_methods) or count($shipping_methods)) {
+		// the value is are the negate value
+		// negate 1 mean the shipping/payment are excluded
+		$shipping_payment_method.='
+						<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
+							<label>'.$this->pi_getLL('admin_mapped_methods').'</label>
+							<div class="innerbox_methods">
+								<div class="innerbox_payment_methods">
+									<h4>'.$this->pi_getLL('admin_payment_methods').'</h4>
+									<ul>';
+		// load mapped ids
+		$method_mappings=array();
+		if ($this->get['tx_multishop_pi1']['cid']) {
+			$method_mappings=mslib_befe::getMethodsByCustomer($this->get['tx_multishop_pi1']['cid']);
+		}
+		$tr_type='';
+		if (count($payment_methods)) {
+			foreach ($payment_methods as $code=>$item) {
+				if (!$tr_type or $tr_type=='even') {
+					$tr_type='odd';
+				} else {
+					$tr_type='even';
+				}
+				$count++;
+				$shipping_payment_method.='<li class="'.$tr_type.'"  id="multishop_payment_method_'.$item['id'].'"><span>'.$item['name'].'</span>';
+				if ($price_wrap) {
+					$tmpcontent.=$price_wrap;
+				}
+				$shipping_payment_method.='<input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="enable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && !$method_mappings['payment']['method_data'][$item['id']]['negate']) ? ' checked' : '').' /><label for="enable_payment_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label>';
+				$shipping_payment_method.='<input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="disable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && $method_mappings['payment']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').' /><label for="disable_payment_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label>';
+				$shipping_payment_method.='</li>';
+			}
+		}
+		$shipping_payment_method.='
+									</ul>
+								</div>
+								<div class="innerbox_shipping_methods" id="msEditProductInputShippingMethod">
+									<h4>'.$this->pi_getLL('admin_shipping_methods').'</h4>
+							 		<ul id="multishop_shipping_method">';
+		$count=0;
+		$tr_type='';
+		if (count($shipping_methods)) {
+			foreach ($shipping_methods as $code=>$item) {
+				$count++;
+				$shipping_payment_method.='<li><span>'.$item['name'].'</span>';
+				if ($price_wrap) {
+					$shipping_payment_method.=$price_wrap;
+				}
+				$shipping_payment_method.='<input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="enable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && !$method_mappings['shipping']['method_data'][$item['id']]['negate']) ? ' checked' : '').'  /><label for="enable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label>';
+				$shipping_payment_method.='<input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="disable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && $method_mappings['shipping']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').'  /><label for="enable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label>';
+				$shipping_payment_method.='</li>';
+			}
+		}
+		$shipping_payment_method.='
+					 				</ul>
+								</div>
+							</div>
+						</div>';
+	}
+}
+
 switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
@@ -528,6 +654,7 @@ switch ($_REQUEST['action']) {
 		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
 		$subpartArray['###DETAILS_TAB###']='<li class="active"><a href="#view_customer">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
 		$subpartArray['###DETAILS###']=$customer_details;
+		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		break;
 	default:
 		if ($this->post['gender']=='1') {
@@ -587,6 +714,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###LOGIN_AS_THIS_USER_LINK###']='';
 		$subpartArray['###DETAILS_TAB###']='';
 		$subpartArray['###DETAILS###']='';
+		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		break;
 }
 // h5validate message
@@ -619,7 +747,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
-// custom page hook that can be controlled by third-party plugin eof	
+// custom page hook that can be controlled by third-party plugin eof
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 
 

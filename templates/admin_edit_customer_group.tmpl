@@ -21,10 +21,33 @@
 			<!-- ###MEMBERS_OPTION### end -->
 			</select>
 		</div>
+        ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
 		<div class="account-field">
 			<label>&nbsp;</label>
 			<span class="msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" name="Submit" value="###LABEL_BUTTON_SAVE###" /></span>
 		</div>
 	</form>
 </div>
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+    $(document).on("click", ".payment_method_cb", function() {
+        var current_cb_id=$(this).attr("id");
+        var current_id=$(this).attr("rel");
+        var target_cb="#disable_payment_method_" + current_id;
+        if (current_cb_id.indexOf("disable")>-1) {
+            target_cb="#enable_payment_method_" + current_id;
+        }
+        $(target_cb).prop("checked", false);
+    });
+    $(document).on("click", ".shipping_method_cb", function() {
+        var current_cb_id=$(this).attr("id");
+        var current_id=$(this).attr("rel");
+        var target_cb="#disable_shipping_method_" + current_id;
+        if (current_cb_id.indexOf("disable")>-1) {
+            target_cb="#enable_shipping_method_" + current_id;
+        }
+        $(target_cb).prop("checked", false);
+    });
+});
+</script>
 <!-- ###TEMPLATE### end -->

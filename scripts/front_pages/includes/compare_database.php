@@ -2618,6 +2618,34 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		$str="select products_id from tx_multishop_customers_method_mappings";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="CREATE TABLE  `tx_multishop_customers_method_mappings` (
+				`id` INT( 11 ) NULL AUTO_INCREMENT PRIMARY KEY ,
+				`customers_id` INT( 11 ) NULL DEFAULT '0',
+				`method_id` INT( 11 ) NULL DEFAULT '0' ,
+				`type` varchar( 25 ) NULL ,
+				`negate` tinyint( 1 ) NULL DEFAULT '0' ,
+				INDEX (  `customers_id` ,  `method_id` ,  `type` , `negate` )
+			) ENGINE=MYISAM;";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+		$str="select products_id from tx_multishop_customers_groups_method_mappings";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="CREATE TABLE  `tx_multishop_customers_groups_method_mappings` (
+				`id` INT( 11 ) NULL AUTO_INCREMENT PRIMARY KEY ,
+				`customers_groups_id` INT( 11 ) NULL DEFAULT '0',
+				`method_id` INT( 11 ) NULL DEFAULT '0' ,
+				`type` varchar( 25 ) NULL ,
+				`negate` tinyint( 1 ) NULL DEFAULT '0' ,
+				INDEX (  `customers_groups_id` ,  `method_id` ,  `type` , `negate` )
+			) ENGINE=MYISAM;";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 		$str="select sort_order from tx_multishop_products_options_values_to_products_options";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
