@@ -576,13 +576,22 @@ ul#ui-menu-manual-option li.ui-menu-item span#more-results:hover { background:#0
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td #product_attributes_wrapper input[type="button"] { float:left; width:24px; margin:0 -3px 0 10px; }
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border tr#product_row_end .msadmin_button { margin:10px 0 0; }
 
+#tx_multishop_pi1_core .innerbox_methods,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods { padding-left:200px; }
+#tx_multishop_pi1_core .innerbox_methods h4,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods h4 { margin:0 0 10px; padding:3px 0 0; }
+#tx_multishop_pi1_core .innerbox_methods ul,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul { margin:0 0 10px; padding:0; list-style:none; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li { overflow:hidden; width:100%; border-bottom:none; background:none; margin:0; padding:0 0 7px; line-height:15px; }
+#tx_multishop_pi1_core .innerbox_methods ul li,
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li,
+#tx_multishop_pi1_core .innerbox_methods .innerbox_shipping_methods ul#multishop_shipping_method li { overflow:hidden; width:100%; border-bottom:none; background:none; line-height:15px; margin:0; padding:0 0 7px; }
+#tx_multishop_pi1_core .innerbox_methods ul li:hover,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li:hover { border-bottom:none; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .innerbox_methods ul li label,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li label { clear:none; float:left; display:block; width:auto; text-align:left; padding:0 20px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .innerbox_methods ul li input[type="checkbox"],
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li input[type="checkbox"] { clear:none; float:left; margin:1px 5px 0 0; }
+#tx_multishop_pi1_core .innerbox_methods ul li span,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li span { float:left; display:block; width:250px; font-weight:bold; padding:0 0 0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container form#admin_product_edit_ table.msadmin_border td table { margin:0; }
