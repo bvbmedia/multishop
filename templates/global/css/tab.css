@@ -579,9 +579,11 @@ ul#ui-menu-manual-option li.ui-menu-item span#more-results:hover { background:#0
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods { padding-left:200px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods h4 { margin:0 0 10px; padding:3px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul { margin:0 0 10px; padding:0; list-style:none; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li { overflow:hidden; width:100%; background:none; margin:0; padding:0 0 5px; line-height:15px; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li input { float:left; margin:0 5px 0 0; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li span { float:left; color:#dedede; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li { overflow:hidden; width:100%; border-bottom:none; background:none; margin:0; padding:0 0 10px; line-height:15px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li:hover { border-bottom:none; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li label { clear:none; float:none; display:block; width:auto; text-align:left; padding:2px 0 0 18px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li input { clear:left; float:left; margin:0 5px 0 0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li span { display:block; font-weight:bold; }
 
 #tx_multishop_pi1_core #tab-container .tab_container form#admin_product_edit_ table.msadmin_border td table { margin:0; }
 #tx_multishop_pi1_core #tab-container .tab_container form#admin_product_edit_ table.msadmin_border td table td { padding:0; }
