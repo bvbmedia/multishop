@@ -3054,6 +3054,96 @@ class mslib_fe {
 			return $allmethods;
 		}
 	}
+	public function getCustomerGroupMappedMethods($groups_id=array(), $type='', $user_country='0') {
+		if (is_array($groups_id) and count($groups_id)) {
+			switch ($type) {
+				case 'payment':
+					// first we load all options
+					$allmethods=mslib_fe::loadPaymentMethods($user_country);
+					foreach ($groups_id as $gid) {
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
+							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_payment_methods s', // FROM ...
+							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.negate=0 and cgmm.method_id=s.id', // WHERE...
+							'', // GROUP BY...
+							'', // ORDER BY...
+							'' // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$array=array();
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$array[]=$row['code'];
+						}
+						foreach ($allmethods as $key=>$value) {
+							if (!in_array($key, $array)) {
+								unset($allmethods[$key]);
+							}
+						}
+					}
+					break;
+				case 'shipping':
+					// first we load all options
+					$allmethods=array();
+					foreach ($groups_id as $gid) {
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
+							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
+							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.method_id=s.id and cgmm.negate=0 and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
+							'', // GROUP BY...
+							's.sort_order', // ORDER BY...
+							'' // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$allmethods[$row['code']]=$row;
+						}
+					}
+					break;
+			}
+			return $allmethods;
+		}
+	}
+	public function getCustomerMappedMethods($user_id, $type='', $user_country='0') {
+		if (is_numeric($user_id)) {
+			switch ($type) {
+				case 'payment':
+					// first we load all options
+					$allmethods=mslib_fe::loadPaymentMethods($user_country);
+					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
+						'tx_multishop_customers_method_mappings cmm, tx_multishop_payment_methods s', // FROM ...
+						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.negate=0 and cmm.method_id=s.id', // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$array=array();
+					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+						$array[]=$row['code'];
+					}
+					foreach ($allmethods as $key=>$value) {
+						if (!in_array($key, $array)) {
+							unset($allmethods[$key]);
+						}
+					}
+					break;
+				case 'shipping':
+					// first we load all options
+					$allmethods=array();
+					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
+						'tx_multishop_customers_method_mappings cmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
+						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.method_id=s.id and cmm.negate=0 and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
+						'', // GROUP BY...
+						's.sort_order', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+						$allmethods[$row['code']]=$row;
+					}
+					break;
+			}
+			return $allmethods;
+		}
+	}
 	public function loadShippingMethods($include_hidden_items=0, $user_country=0) {
 		$select=array();
 		$from=array();

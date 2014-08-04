@@ -822,6 +822,28 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
+	'configuration_title'=>'Customer edit method filter',
+	'configuration_key'=>'CUSTOMER_EDIT_METHOD_FILTER',
+	'configuration_value'=>'0',
+	'description'=>'Enables the shipping / payment methods filter on the customer edit page.',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Group edit method filter',
+	'configuration_key'=>'GROUP_EDIT_METHOD_FILTER',
+	'configuration_value'=>'0',
+	'description'=>'Enables the shipping / payment methods filter on the group edit page.',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Admin Edit Order Type',
 	'configuration_key'=>'ADMIN_EDIT_ORDER_TYPE',
 	'configuration_value'=>'',

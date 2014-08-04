@@ -966,6 +966,28 @@ CREATE TABLE `tx_multishop_products_method_mappings` (
   KEY `products_id` (`products_id`,`method_id`,`type`)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `tx_multishop_customers_method_mappings` (
+  `id` int(11) auto_increment,
+  `customers_id` int(11) default '0',
+  `method_id` int(11) default '0',
+  `type` varchar(25) default '',
+  `negate` tinyint(1) default '0',
+  PRIMARY KEY (`id`),
+  KEY `negate` (`negate`),
+  KEY `customers_id` (`customers_id`,`method_id`,`type`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `tx_multishop_customers_groups_method_mappings` (
+  `id` int(11) auto_increment,
+  `customers_groups_id` int(11) default '0',
+  `method_id` int(11) default '0',
+  `type` varchar(25) default '',
+  `negate` tinyint(1) default '0',
+  PRIMARY KEY (`id`),
+  KEY `negate` (`negate`),
+  KEY `customers_groups_id` (`customers_groups_id`,`method_id`,`type`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `tx_multishop_products_options` (
   `products_options_id` int(11) auto_increment,
   `language_id` int(5) default '0',

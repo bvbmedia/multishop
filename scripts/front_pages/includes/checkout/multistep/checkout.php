@@ -29,16 +29,52 @@ if (is_array($cart['products']) and count($cart['products'])) {
 	}
 	$payment_methods=array();
 	$shipping_methods=array();
-	if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
-		$pids=array();
-		foreach ($cart['products'] as $key=>$array) {
-			if (is_numeric($array['products_id'])) {
-				$pids[]=$array['products_id'];
-			}
-		}
-		if (count($pids)) {
-			$payment_methods=mslib_fe::getProductMappedMethods($pids, 'payment', $user_country);
-			$shipping_methods=mslib_fe::getProductMappedMethods($pids, 'shipping');
+	$load_mappings_order=array();
+	$load_mappings_order[]='products';
+	$load_mappings_order[]='customers_groups';
+	$load_mappings_order[]='customers';
+	foreach ($load_mappings_order as $mapping) {
+		switch ($mapping) {
+			case 'products':
+				if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
+					$payment_methods=array();
+					$shipping_methods=array();
+					$pids=array();
+					foreach ($cart['products'] as $key=>$array) {
+						if (is_numeric($array['products_id'])) {
+							$pids[]=$array['products_id'];
+						}
+					}
+					if (count($pids)) {
+						$payment_methods=mslib_fe::getProductMappedMethods($pids, 'payment', $user_country);
+						$shipping_methods=mslib_fe::getProductMappedMethods($pids, 'shipping');
+					}
+				}
+				break;
+			case 'customers_groups':
+				if ($this->ms['MODULES']['GROUP_EDIT_METHOD_FILTER']) {
+					$payment_methods=array();
+					$shipping_methods=array();
+					$user_groups=array();
+					$user_groups=explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+					if (count($user_groups)) {
+						$payment_methods=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'payment', $user_country);
+						$shipping_methods=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'shipping');
+					}
+				}
+				break;
+			case 'customers':
+				if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+					$payment_methods=array();
+					$shipping_methods=array();
+					$user_id=array();
+					$user_id=$GLOBALS['TSFE']->fe_user->user['uid'];
+					if (is_numeric($user_id)) {
+						$payment_methods=mslib_fe::getCustomerMappedMethods($user_id, 'payment', $user_country);
+						$shipping_methods=mslib_fe::getCustomerMappedMethods($user_id, 'shipping');
+					}
+				}
+				break;
 		}
 	}
 	if (!count($payment_methods) and !count($shipping_methods)) {
