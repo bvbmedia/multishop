@@ -13,6 +13,7 @@ $match=array();
 $orderby=array();
 $where=array();
 $select=array();
+$extrajoin=array();
 if ($contentType=='specials_listing_page') {
 	if (is_numeric($this->get['p'])) {
 		$p=$this->get['p'];
@@ -164,21 +165,46 @@ if ($contentType=='specials_listing_page') {
 	}
 	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 		if ($this->section_code) {
-			$str="SELECT p.products_id FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by rand() limit ".$limit;
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$product_ids=array();
-			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$product_ids[]=$row['products_id'];
-			}
-			if ($this->ms['MODULES']['FLAT_DATABASE']) {
-				$tbl='';
+			if ($contentType=='specials_section') {
+				$str="SELECT p.products_id FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by ss.sort_order limit ".$limit;
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+					$this->no_database_results=1;
+				} else {
+					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+						$product_ids[]=$row['products_id'];
+					}
+					if ($this->ms['MODULES']['FLAT_DATABASE']) {
+						$tbl='pf.';
+					} else {
+						$tbl='p.';
+					}
+					$filter[]="(".$tbl."products_id IN (".implode(",", $product_ids)."))";
+					if ($this->ms['MODULES']['FLAT_DATABASE']) {
+						$extrajoin[]='left join tx_multishop_specials s on s.products_id='.$tbl.'products_id left join tx_multishop_specials_sections ss on s.specials_id=ss.specials_id';
+						$orderby[]='ss.sort_order';
+					} else {
+						$extrajoin[]='left join tx_multishop_specials_sections ss on s.specials_id=ss.specials_id';
+						$orderby[]='ss.sort_order';
+					}
+				}
 			} else {
-				$tbl='p.';
-			}
-			if (count($product_ids)) {
-				$filter[]="(".$tbl."products_id IN (".implode(",", $product_ids)."))";
-			} else {
-				$this->no_database_results=1;
+				$str="SELECT p.products_id FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by rand() limit ".$limit;
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$product_ids=array();
+				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+					$product_ids[]=$row['products_id'];
+				}
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$tbl='';
+				} else {
+					$tbl='p.';
+				}
+				if (count($product_ids)) {
+					$filter[]="(".$tbl."products_id IN (".implode(",", $product_ids)."))";
+				} else {
+					$this->no_database_results=1;
+				}
 			}
 		} else {
 			if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -192,7 +218,7 @@ if ($contentType=='specials_listing_page') {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$product_ids=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				
+
 				$all_cat_enabled = true;
 				$cats=mslib_fe::Crumbar($row['categories_id']);
 				$cats=array_reverse($cats);
@@ -228,7 +254,7 @@ if ($contentType=='specials_listing_page') {
 		if ($this->no_database_results) {
 			return '';
 		}
-		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_specials');
+		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_specials', '', 0, 1, $extrajoin);
 		$products=$pageset['products'];
 		if (!count($products)) {
 			// return nothing
@@ -361,7 +387,7 @@ if ($contentType=='specials_listing_page') {
 			}
 			if ($oldsearch) {
 				if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='%keyword') {
-					// do normal indexed search	
+					// do normal indexed search
 					$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."')";
 				} else {
 					if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='keyword%') {

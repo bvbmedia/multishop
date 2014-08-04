@@ -73,6 +73,19 @@ foreach ($products as $product) {
 			</form>
 		</div>
 	';
+	// get the specials id
+	$str=$GLOBALS['TYPO3_DB']->SELECTquery('specials_id', // SELECT ...
+		'tx_multishop_specials', // FROM ...
+		'products_id="'.$product['products_id'].'"', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	$res=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+
+	$markerArray['SPECIALS_SECTIONS_ID']=$res['specials_id'];
+	$markerArray['SPECIALS_SECTIONS_CODE']=$this->section_code;
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'])) {
 		$params=array(
@@ -89,6 +102,7 @@ foreach ($products as $product) {
 }
 $subpartArray=array();
 $subpartArray['###ITEM###']=$contentItem;
+$subpartArray['###SPECIALS_SECTIONS_CODE_ID###']=$this->section_code;
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsPostHook'])) {
 	$params=array(
@@ -99,5 +113,32 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 	}
 }
 // custom hook that can be controlled by third-party plugin eof
+
+
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
+if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+	$content.='
+	<script type="text/javascript">
+	  jQuery(document).ready(function($) {
+		var result = jQuery("#specialssections_listing_'.$this->section_code.'").sortable({
+			cursor:     "move",
+			//axis:       "y",
+			update: function(e, ui) {
+				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=sort_specials_sections&tx_multishop_pi1[sort_specials_sections]=' . $this->section_code).'";
+				jQuery(this).sortable("refresh");
+				sorted = jQuery(this).sortable("serialize", "id");
+				jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
+						success: function(msg) {
+								//do something with the sorted data
+						}
+				});
+			}
+		});
+	  });
+	  </script>
+	';
+}
 ?>

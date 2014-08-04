@@ -4,6 +4,27 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'sort_specials_sections':
+		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+			$no=1;
+			foreach ($this->post['specialssections'] as $special_id) {
+				if (is_numeric($special_id)) {
+					$where="specials_id = ".$special_id." and name='".addslashes($this->get['tx_multishop_pi1']['sort_specials_sections'])."'";
+					$updateArray=array(
+						'sort_order'=>$no
+					);
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials_sections', $where, $updateArray);
+
+
+					var_dump($query);
+
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$no++;
+				}
+			}
+		}
+		exit();
+		break;
 	case 'delete_options_group':
 		if ($this->ADMIN_USER) {
 			if (isset($this->post['tx_multishop_pi1']['group_id']) && $this->post['tx_multishop_pi1']['group_id'] > 0) {

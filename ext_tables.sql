@@ -1134,7 +1134,7 @@ CREATE TABLE `tx_multishop_shipping_methods` (
   `provider` varchar(50) default '',
   `date` int(11) default '0',
   `status` tinyint(1) default '0',
-  `handling_costs` decimal(24,14) default '0.00000000000000',
+  `handling_costs` varchar(25) default '0.00000000000000',
   `shipping_costs_type` varchar(25) default '',
   `sort_order` int(11) default '0',
   `vars` text,
@@ -1216,11 +1216,13 @@ CREATE TABLE `tx_multishop_specials_sections` (
   `specials_id` int(11) default '0',
   `date` int(11) default '0',
   `name` varchar(30) default '',
+  `sort_order` int(11) default '0',
   `status` tinyint(1) default '0',
   PRIMARY KEY (`id`),
   KEY `date` (`date`),
   KEY `specials_id` (`specials_id`),
   KEY `name` (`name`),
+  KEY `sort_order` (`sort_order`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB ;
 

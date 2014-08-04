@@ -46,7 +46,7 @@ if (!$skipMultishopUpdates) {
 		$str="ALTER TABLE  `tx_multishop_products` ADD `foreign_source_name` varchar(30) default '', ADD KEY `foreign_source_name` (`foreign_source_name`)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
-	}	
+	}
 	$str="select id from tx_multishop_products_locked_fields limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -55,9 +55,9 @@ if (!$skipMultishopUpdates) {
   `cruser_id` int(11) NULL default '0',
   `original_value` text,
   PRIMARY KEY (`id`),
-  KEY cruser_id (cruser_id),  
-  KEY crdate (crdate),  
-  KEY field_key (field_key),  
+  KEY cruser_id (cruser_id),
+  KEY crdate (crdate),
+  KEY field_key (field_key),
   KEY products_id (products_id)
 ) ENGINE=InnoDB;";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -350,7 +350,7 @@ if (!$skipMultishopUpdates) {
   `ip_address` varchar(127) DEFAULT '',
   `crdate` int(11) DEFAULT '0',
   `title` varchar(127) DEFAULT '',
-  `description` text,  
+  `description` text,
   `is_error` tinyint(1) DEFAULT '0',
   `status_type` varchar(127) DEFAULT '',
   `raw_data` mediumtext NULL,
@@ -1049,10 +1049,10 @@ if (!$skipMultishopUpdates) {
 		  id int(11) NULL AUTO_INCREMENT,
 		  `code` varchar(15) NULL DEFAULT '',
 		  crdate int(11) NULL default '0',
-		  `page_uid` INT( 11 ) NULL DEFAULT  '0',  
+		  `page_uid` INT( 11 ) NULL DEFAULT  '0',
 		  PRIMARY KEY (id),
 		  KEY `code` (`code`),
-		  KEY `page_uid` (`page_uid`)  
+		  KEY `page_uid` (`page_uid`)
 		) ENGINE=MyISAM;";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
@@ -1329,7 +1329,7 @@ if (!$skipMultishopUpdates) {
 		  `status` tinyint(1) NULL DEFAULT '1',
 		  PRIMARY KEY (`rules_group_id`)
 		) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
-		
+
 		CREATE TABLE `tx_multishop_tax_rules` (
 		  `rule_id` int(11) NULL AUTO_INCREMENT,
 		  `name` varchar(50) DEFAULT NULL,
@@ -1427,8 +1427,8 @@ if (!$skipMultishopUpdates) {
 					  `crdate` int(11) NULL default '0',
 					  PRIMARY KEY (`id`),
 					  INDEX ( `unread` ),
-					  INDEX ( `customer_id` ),			  
-					  INDEX ( `message_type` )			  
+					  INDEX ( `customer_id` ),
+					  INDEX ( `message_type` )
 				   ) ENGINE=MyISAM";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
@@ -1944,18 +1944,18 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$str;
 		}
 		// rebuild all invoices
-		/*			
+		/*
 		$query="select orders_id from tx_multishop_orders where paid=1 order by orders_id asc";
 		$res = $GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0)
 		{
 			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))
 			{
-				$tmp=mslib_fe::createOrderInvoice($row['orders_id']);					
-			}	
-		}			
+				$tmp=mslib_fe::createOrderInvoice($row['orders_id']);
+			}
+		}
 		*/
-		// rebuild all invoices eof		
+		// rebuild all invoices eof
 		$str="describe `tx_multishop_products_description`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -2579,7 +2579,7 @@ if (!$skipMultishopUpdates) {
 		if (isset($settings['GLOBAL_MODULES'][$key]))
 		{
 			$str="delete from `tx_multishop_configuration` where configuration_key='".$key."';";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);					
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		*/
@@ -2718,6 +2718,13 @@ if (!$skipMultishopUpdates) {
 					$messages[]=$str;
 				}
 			}
+		}
+		$str="select sort_order from tx_multishop_specials_sections";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD `sort_order` int( 11 ) NOT NULL DEFAULT '0', ADD INDEX (`sort_order`)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
 		}
 		$str="select file_label from tx_multishop_orders_products";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -2962,7 +2969,7 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
-		// old updates			
+		// old updates
 		$str="describe tx_multishop_products_options";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -3004,7 +3011,7 @@ if (!$skipMultishopUpdates) {
 					tx_multishop_undo_products.products_date_added
 					tx_multishop_undo_products.products_date_available
 					tx_multishop_coupons.startdate
-					tx_multishop_coupons.enddate			
+					tx_multishop_coupons.enddate
 					tx_multishop_shipping_methods.date
 					tx_multishop_shipping_options.date
 					tx_multishop_specials_sections.date
@@ -3792,7 +3799,7 @@ if (!$skipMultishopUpdates) {
 			`status` tinyint( 1 ) NULL DEFAULT '0' ,
 			`page_uid` INT( 11 ) NULL DEFAULT '0',
 			`categories_id` INT( 5 ) NULL DEFAULT '0',
-			INDEX ( `last_run` , `status` , `page_uid`,`categories_id` ) 
+			INDEX ( `last_run` , `status` , `page_uid`,`categories_id` )
 			) ;";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
@@ -4223,7 +4230,7 @@ if (!$skipMultishopUpdates) {
 		}
 		// now fix the V2 orders to V3 eof
 		// FIXING V1 IMAGES TO V3
-		// V1 had images without subdirectory. lets verify if this site has this file structure, so we can fix it dynamically			
+		// V1 had images without subdirectory. lets verify if this site has this file structure, so we can fix it dynamically
 		$imageTypes=array();
 		$imageTypes[]='categories';
 		$imageTypes[]='products';
@@ -4422,6 +4429,6 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$query2;
 		}
 	}
-	// CREATE / UPDATE MULTISHOP SETTINGS EOF	
+	// CREATE / UPDATE MULTISHOP SETTINGS EOF
 }
 ?>
