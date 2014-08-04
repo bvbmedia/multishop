@@ -1142,7 +1142,7 @@ if ($this->post) {
 							$tr_type='even';
 						}
 						$count++;
-						$shipping_payment_method.='<li class="'.$tr_type.'"  id="multishop_payment_method_'.$item['id'].'"><span>'.$item['name'].'</span>&nbsp;';
+						$shipping_payment_method.='<li class="'.$tr_type.'"  id="multishop_payment_method_'.$item['id'].'"><span>'.$item['name'].'</span>';
 						if ($price_wrap) {
 							$tmpcontent.=$price_wrap;
 						}
