@@ -3782,7 +3782,7 @@ class mslib_fe {
 		if (!is_numeric($shipping_method_id)) {
 			return false;
 		}
-		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, c.price, c.zone_id', // SELECT ...
+		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 			'c.shipping_method_id=\''.$shipping_method_id.'\' and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 			'', // GROUP BY...
@@ -3944,10 +3944,53 @@ class mslib_fe {
 						$shipping_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['tax_rate']));
 					}
 				}
-				$shipping_method['shipping_costs']=$shipping_cost;
-				$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
-				return $shipping_method;
 			}
+			$handling_cost=0;
+			$handling_tax=0;
+			if (!empty($row3['handling_costs'])) {
+				$handling_cost=$row3['handling_costs'];
+				$percentage_handling_cost=false;
+				if (strpos($handling_cost, '%') !== false) {
+					$handling_cost=str_replace('%', '', $handling_cost);
+					$percentage_handling_cost=true;
+				}
+				if ($percentage_handling_cost) {
+					$tmp_handling_cost=$handling_cost;
+					$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+					if ($subtotal) {
+						$handling_cost=($subtotal/100*$tmp_handling_cost);
+					}
+				}
+				if ($shipping_method['tax_id'] && $handling_cost) {
+					$handling_total_tax_rate=$shipping_method['tax_rate'];
+					if ($shipping_method['country_tax_rate']) {
+						$handling_country_tax_rate=$shipping_method['country_tax_rate'];
+						$handling_country_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['country_tax_rate']));
+					} else {
+						$handling_country_tax_rate=0;
+						$handling_country_tax=0;
+					}
+					if ($shipping_method['region_tax_rate']) {
+						$handling_region_tax_rate=$shipping_method['region_tax_rate'];
+						$handling_region_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['region_tax_rate']));
+					} else {
+						$handling_region_tax_rate=0;
+						$handling_region_tax=0;
+					}
+					if ($handling_region_tax && $handling_country_tax) {
+						$handling_tax=$handling_country_tax+$handling_region_tax;
+					} else {
+						$handling_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['tax_rate']));
+					}
+				}
+			}
+			$shipping_cost+=$handling_cost;
+			$shipping_tax+=$handling_tax;
+			$shipping_method['shipping_costs']=$shipping_cost;
+			$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
+			return $shipping_method;
+		} else {
+			return false;
 		}
 	}
 	public function countCartWeight() {
