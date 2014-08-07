@@ -56,7 +56,6 @@ jQuery().ready(function($){
 	});
 });			
 </script>
-<link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/tab.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/print.css" media="print" />
 ';
 /*

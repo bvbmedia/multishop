@@ -3054,6 +3054,96 @@ class mslib_fe {
 			return $allmethods;
 		}
 	}
+	public function getCustomerGroupMappedMethods($groups_id=array(), $type='', $user_country='0') {
+		if (is_array($groups_id) and count($groups_id)) {
+			switch ($type) {
+				case 'payment':
+					// first we load all options
+					$allmethods=mslib_fe::loadPaymentMethods($user_country);
+					foreach ($groups_id as $gid) {
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
+							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_payment_methods s', // FROM ...
+							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.negate=0 and cgmm.method_id=s.id', // WHERE...
+							'', // GROUP BY...
+							'', // ORDER BY...
+							'' // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$array=array();
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$array[]=$row['code'];
+						}
+						foreach ($allmethods as $key=>$value) {
+							if (!in_array($key, $array)) {
+								unset($allmethods[$key]);
+							}
+						}
+					}
+					break;
+				case 'shipping':
+					// first we load all options
+					$allmethods=array();
+					foreach ($groups_id as $gid) {
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
+							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
+							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.method_id=s.id and cgmm.negate=0 and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
+							'', // GROUP BY...
+							's.sort_order', // ORDER BY...
+							'' // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$allmethods[$row['code']]=$row;
+						}
+					}
+					break;
+			}
+			return $allmethods;
+		}
+	}
+	public function getCustomerMappedMethods($user_id, $type='', $user_country='0') {
+		if (is_numeric($user_id)) {
+			switch ($type) {
+				case 'payment':
+					// first we load all options
+					$allmethods=mslib_fe::loadPaymentMethods($user_country);
+					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
+						'tx_multishop_customers_method_mappings cmm, tx_multishop_payment_methods s', // FROM ...
+						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.negate=0 and cmm.method_id=s.id', // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$array=array();
+					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+						$array[]=$row['code'];
+					}
+					foreach ($allmethods as $key=>$value) {
+						if (!in_array($key, $array)) {
+							unset($allmethods[$key]);
+						}
+					}
+					break;
+				case 'shipping':
+					// first we load all options
+					$allmethods=array();
+					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
+						'tx_multishop_customers_method_mappings cmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
+						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.method_id=s.id and cmm.negate=0 and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
+						'', // GROUP BY...
+						's.sort_order', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+						$allmethods[$row['code']]=$row;
+					}
+					break;
+			}
+			return $allmethods;
+		}
+	}
 	public function loadShippingMethods($include_hidden_items=0, $user_country=0) {
 		$select=array();
 		$from=array();
@@ -3692,7 +3782,7 @@ class mslib_fe {
 		if (!is_numeric($shipping_method_id)) {
 			return false;
 		}
-		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, c.price, c.zone_id', // SELECT ...
+		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 			'c.shipping_method_id=\''.$shipping_method_id.'\' and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 			'', // GROUP BY...
@@ -3854,10 +3944,53 @@ class mslib_fe {
 						$shipping_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['tax_rate']));
 					}
 				}
-				$shipping_method['shipping_costs']=$shipping_cost;
-				$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
-				return $shipping_method;
 			}
+			$handling_cost=0;
+			$handling_tax=0;
+			if (!empty($row3['handling_costs'])) {
+				$handling_cost=$row3['handling_costs'];
+				$percentage_handling_cost=false;
+				if (strpos($handling_cost, '%') !== false) {
+					$handling_cost=str_replace('%', '', $handling_cost);
+					$percentage_handling_cost=true;
+				}
+				if ($percentage_handling_cost) {
+					$tmp_handling_cost=$handling_cost;
+					$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+					if ($subtotal) {
+						$handling_cost=($subtotal/100*$tmp_handling_cost);
+					}
+				}
+				if ($shipping_method['tax_id'] && $handling_cost) {
+					$handling_total_tax_rate=$shipping_method['tax_rate'];
+					if ($shipping_method['country_tax_rate']) {
+						$handling_country_tax_rate=$shipping_method['country_tax_rate'];
+						$handling_country_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['country_tax_rate']));
+					} else {
+						$handling_country_tax_rate=0;
+						$handling_country_tax=0;
+					}
+					if ($shipping_method['region_tax_rate']) {
+						$handling_region_tax_rate=$shipping_method['region_tax_rate'];
+						$handling_region_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['region_tax_rate']));
+					} else {
+						$handling_region_tax_rate=0;
+						$handling_region_tax=0;
+					}
+					if ($handling_region_tax && $handling_country_tax) {
+						$handling_tax=$handling_country_tax+$handling_region_tax;
+					} else {
+						$handling_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['tax_rate']));
+					}
+				}
+			}
+			$shipping_cost+=$handling_cost;
+			$shipping_tax+=$handling_tax;
+			$shipping_method['shipping_costs']=$shipping_cost;
+			$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
+			return $shipping_method;
+		} else {
+			return false;
 		}
 	}
 	public function countCartWeight() {

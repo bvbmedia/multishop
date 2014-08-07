@@ -51,7 +51,7 @@ if ($erno or $show_shipping_payment_method) {
 		$content.='
 		<div class="payment_method">
 		<div class="main-heading"><h2>'.$this->pi_getLL('choose_payment_method').'</h2></div>
-		<div class="content">	
+		<div class="content">
 		<ul id="multishop_payment_method">';
 		$count=0;
 		$tr_type='even';
@@ -134,7 +134,7 @@ if ($erno or $show_shipping_payment_method) {
 		 {
 			$content.='
 			<script>
-			  jQuery(document).ready(function($) {			 
+			  jQuery(document).ready(function($) {
 				 //$("#shipping_payment_method").hide();
 			  });
 			 </script>
@@ -147,48 +147,48 @@ if ($erno or $show_shipping_payment_method) {
 			<a href="'.$back_button_link.'" class="back_button">'.$this->pi_getLL('back').'</a>
 			<div class="cart"><input name="Submit" type="submit" class="float_right proceed_to_checkout_button_en" value="'.$this->pi_getLL('proceed_to_checkout').'" /></div>
 		</div>
-	</form>	
+	</form>
 	';
 	if ($this->ADMIN_USER) {
-		$content.='					
+		$content.='
 		<script>
 		  jQuery(document).ready(function($) {
 			var result 	= jQuery("#multishop_payment_method").sortable({
-					cursor:     "move", 
-			    //axis:       "y", 
-			    update: function(e, ui) { 
+					cursor:     "move",
+			    //axis:       "y",
+			    update: function(e, ui) {
 			        href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
-			        jQuery(this).sortable("refresh"); 
-			        sorted = jQuery(this).sortable("serialize", "id"); 
-			        jQuery.ajax({ 
-			                type:   "POST", 
-			                url:    href, 
-			                data:   sorted, 
-			                success: function(msg) { 
-			                        //do something with the sorted data 
-			                } 
-			        }); 
-			    } 
+			        jQuery(this).sortable("refresh");
+			        sorted = jQuery(this).sortable("serialize", "id");
+			        jQuery.ajax({
+			                type:   "POST",
+			                url:    href,
+			                data:   sorted,
+			                success: function(msg) {
+			                        //do something with the sorted data
+			                }
+			        });
+			    }
 			});
 			var result2	= jQuery("#multishop_shipping_method").sortable({
-					cursor:     "move", 
-			    //axis:       "y", 
-			    update: function(e, ui) { 
+					cursor:     "move",
+			    //axis:       "y",
+			    update: function(e, ui) {
 			        href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
-			        jQuery(this).sortable("refresh"); 
-			        sorted = jQuery(this).sortable("serialize", "id"); 
-			        jQuery.ajax({ 
-			                type:   "POST", 
-			                url:    href, 
-			                data:   sorted, 
-			                success: function(msg) { 
-			                        //do something with the sorted data 
-			                } 
-			        }); 
-			    } 
-			});			
+			        jQuery(this).sortable("refresh");
+			        sorted = jQuery(this).sortable("serialize", "id");
+			        jQuery.ajax({
+			                type:   "POST",
+			                url:    href,
+			                data:   sorted,
+			                success: function(msg) {
+			                        //do something with the sorted data
+			                }
+			        });
+			    }
+			});
 		  });
-		  </script>					
+		  </script>
 		';
 	}
 // jquery mapping table
@@ -245,16 +245,16 @@ if ($erno or $show_shipping_payment_method) {
 								';
 				*/
 				$jquery_content.='
-				jQuery(\'#shipping_method\').show();	
+				jQuery(\'#shipping_method\').show();
 				var shipping_methods= $(\'.shipping_method li\').length;
 				var hidden_shipping_methods= $(\'.shipping_method li :hidden\').length;
 				if ($(\'.shipping_method li :visible\').length == 0) {
-					jQuery(\'#shipping_method\').hide();				
+					jQuery(\'#shipping_method\').hide();
 				}
 				';
 			}
 			$jquery_content.='
-			
+
 				jQuery("#payment_method_'.$mapping_payment_method_id.'").click(function(event)
 				{
 					$("#shipping_payment_method").show();
@@ -292,8 +292,8 @@ if ($erno or $show_shipping_payment_method) {
 		}
 	}
 	$jquery_content.='
-	});			
-	</script>			
+	});
+	</script>
 	';
 	$content.=$jquery_content;
 // jquery mapping table eof

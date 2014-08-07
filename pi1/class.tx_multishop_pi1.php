@@ -262,6 +262,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 				} else {
 					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/categories_default.php');			
 				}
+
 			break;
 			case 'crumbar':
 				if (strstr($this->ms['MODULES']['CRUMBAR_TYPE'],"/")) {
@@ -334,12 +335,11 @@ class tx_multishop_pi1 extends tslib_pibase {
 						if ($this->productsID and !$this->get['products_id']) {
 							$this->get['products_id']=$this->productsID;
 						}
-						$content.='<div id="tx_multishop_pi1_core">';
 						if (!$this->ms['MODULES']['DISABLE_CRUMBAR'] and $GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html']) {
 							$content.=$GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html'];
 						}
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_detail.php');						
-						$content.='</div>';
+						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_detail.php');
+						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 					break;					
 					case 'products_listing':					
 						if ($this->categoriesID and !$this->get['categories_id']) {
@@ -359,7 +359,6 @@ class tx_multishop_pi1 extends tslib_pibase {
 				}			
 				switch ($this->contentMisc) {		
 					case 'shopping_cart':
-						$content.='<div id="tx_multishop_pi1_core">';
 						if (strstr($this->ms['MODULES']['SHOPPING_CART_TYPE'],"..")) {
 							die('error in SHOPPING_CART_TYPE value');
 						} else {
@@ -369,12 +368,11 @@ class tx_multishop_pi1 extends tslib_pibase {
 							} else {
 								require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/shopping_cart/default.php');	
 							}
-						}										
-						$content.='</div>';
+						}
+						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 					break;
 					case 'checkout':
 						$this->ms['page']='checkout';
-						$content.='<div id="tx_multishop_pi1_core">';					
 						if (strstr($this->ms['MODULES']['CHECKOUT_TYPE'],"..")) {
 							die('error in CHECKOUT_TYPE value');
 						} else {
@@ -384,8 +382,8 @@ class tx_multishop_pi1 extends tslib_pibase {
 							} else {
 								require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/checkout/'.$this->ms['MODULES']['CHECKOUT_TYPE'].'/checkout.php');	
 							}
-						}						
-						$content.='</div>';
+						}
+						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 					break;
 					case 'create_account':
 						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/create_account.php');
@@ -397,7 +395,6 @@ class tx_multishop_pi1 extends tslib_pibase {
 						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/store_locator.php');
 					break;
 					case 'order_history':
-						$content.='<div id="tx_multishop_pi1_core">';					
 						if (mslib_fe::loggedin()) {
 							if (strstr($this->ms['MODULES']['ORDER_HISTORY_TYPE'],"..")) {
 								die('error in ORDER_HISTORY_TYPE value');
@@ -410,7 +407,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 								}
 							}
 						}
-						$content.='</div>';
+						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 					break;					
 					case 'currency_selector':
 						require_once(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/currency_selector.php');	

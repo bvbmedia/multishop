@@ -1913,6 +1913,46 @@ class mslib_befe {
 			}
 		}
 	}
+	public function getMethodsByCustomer($customer_id) {
+		if (is_numeric($customer_id)) {
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+				'tx_multishop_customers_method_mappings', // FROM ...
+				'customers_id='.$customer_id, // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+				$array=array();
+				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$array[$row['type']][]=$row['method_id'];
+					$array[$row['type']]['method_data'][$row['method_id']]=$row;
+				}
+				return $array;
+			}
+		}
+	}
+	public function getMethodsByGroup($group_id) {
+		if (is_numeric($group_id)) {
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+				'tx_multishop_customers_groups_method_mappings', // FROM ...
+				'customers_groups_id='.$group_id, // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+				$array=array();
+				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+					$array[$row['type']][]=$row['method_id'];
+					$array[$row['type']]['method_data'][$row['method_id']]=$row;
+				}
+				return $array;
+			}
+		}
+	}
 	/**
 	 * Gets information for an extension, eg. version and
 	 * most-recently-edited-script
@@ -2810,7 +2850,7 @@ class mslib_befe {
 	public function ifExists($value='', $table, $field='', $additional_where=array()) {
 		if ($table) {
 			$filter=array();
-			if ($field and $value) {
+			if (isset($value) and isset($field) && $field != '') {
 				$filter[]=$field.'="'.addslashes($value).'"';
 			}
 			if (count($additional_where)) {
@@ -2838,7 +2878,7 @@ class mslib_befe {
 		if ($table) {
 			$queryArray=array();
 			$queryArray['from']=$table;
-			if ($value and $field) {
+			if (isset($value) and isset($field) && $field != '') {
 				$queryArray['where'][]=$field.'=\''.addslashes($value).'\'';
 			}
 			if (count($additional_where)) {
@@ -2868,7 +2908,7 @@ class mslib_befe {
 	public function getRecord($value='', $table, $field='', $additional_where=array()) {
 		$queryArray=array();
 		$queryArray['from']=$table;
-		if (isset($value) and isset($field)) {
+		if (isset($value) && isset($field) && $field !='') {
 			$queryArray['where'][]=addslashes($field).'=\''.addslashes($value).'\'';
 		}
 		if (is_array($additional_where) && count($additional_where)) {
@@ -2897,7 +2937,7 @@ class mslib_befe {
 	public function getRecords($value='', $table, $field='', $additional_where=array(), $groupBy='', $orderBy='', $limit='') {
 		$queryArray=array();
 		$queryArray['from']=$table;
-		if (isset($value) and isset($field)) {
+		if (isset($value) && isset($field) && $field !='') {
 			$queryArray['where'][]=addslashes($field).'=\''.addslashes($value).'\'';
 		}
 		if (is_array($additional_where) && count($additional_where)) {

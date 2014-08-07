@@ -689,8 +689,8 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			if ($row['Field']=='handling_costs') {
-				if ($row['Type']=='decimal(10,4)') {
-					$str2="ALTER TABLE  `tx_multishop_shipping_methods` CHANGE  `handling_costs`  `handling_costs` decimal(24,14) DEFAULT  '0.00000000000000'";
+				if ($row['Type']=='decimal(10,4)' || $row['Type']=='decimal(24,14)') {
+					$str2="ALTER TABLE  `tx_multishop_shipping_methods` CHANGE  `handling_costs`  `handling_costs` varchar(25) DEFAULT  '0.00000000000000'";
 					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 					$messages[]=$str2;
 				}
@@ -2615,6 +2615,34 @@ if (!$skipMultishopUpdates) {
 		INDEX (  `products_id` ,  `method_id` ,  `type` , `negate` )
 		) ENGINE = MYISAM ;
 		";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+		$str="select customers_id from tx_multishop_customers_method_mappings";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="CREATE TABLE  `tx_multishop_customers_method_mappings` (
+				`id` INT( 11 ) NULL AUTO_INCREMENT PRIMARY KEY ,
+				`customers_id` INT( 11 ) NULL DEFAULT '0',
+				`method_id` INT( 11 ) NULL DEFAULT '0' ,
+				`type` varchar( 25 ) NULL ,
+				`negate` tinyint( 1 ) NULL DEFAULT '0' ,
+				INDEX (  `customers_id` ,  `method_id` ,  `type` , `negate` )
+			) ENGINE=MYISAM;";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+		$str="select customers_groups_id from tx_multishop_customers_groups_method_mappings";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="CREATE TABLE  `tx_multishop_customers_groups_method_mappings` (
+				`id` INT( 11 ) NULL AUTO_INCREMENT PRIMARY KEY ,
+				`customers_groups_id` INT( 11 ) NULL DEFAULT '0',
+				`method_id` INT( 11 ) NULL DEFAULT '0' ,
+				`type` varchar( 25 ) NULL ,
+				`negate` tinyint( 1 ) NULL DEFAULT '0' ,
+				INDEX (  `customers_groups_id` ,  `method_id` ,  `type` , `negate` )
+			) ENGINE=MYISAM;";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
