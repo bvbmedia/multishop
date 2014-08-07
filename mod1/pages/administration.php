@@ -346,6 +346,7 @@ switch ($_REQUEST['action']) {
 					$source_file=$fullpath.'/'.$this->post['custom_file'];
 				}
 				$files=$this->zipUnpack($source_file);
+
 				$import_files=array();
 				if (in_array('bvbshop.txt', $files)) {
 					$mode='bvbshop';

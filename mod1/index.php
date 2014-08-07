@@ -358,13 +358,15 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 	 * @return    array        Files unpacked
 	 */
 	function zipUnpack($file) {
+		/*
 		if (!(isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']))) {
 			return array();
 		}
+		*/
 		$path=dirname($file);
 		chdir($path);
 		// Unzip without overwriting existing files
-		$unzip=$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip_path'] ? $GLOBALS['TYPO3_CONF_VARS']['BE']['unzip_path'] : 'unzip';
+		$unzip=$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip_path'] ? $GLOBALS['TYPO3_CONF_VARS']['BE']['unzip_path'].'/unzip' : 'unzip';
 		if ($this->overwrite) {
 			$cmd=$unzip.' -o '.escapeshellarg($file);
 		} else {
@@ -372,7 +374,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 		}
 		exec($cmd, $list, $ret);
 		if ($ret) {
-//						return array();
+			//	return array();
 		}
 		$result=$this->getFileResult($list, 'unzip');
 		return $result;
@@ -389,6 +391,16 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 		$pre=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['pre_lines']);
 		$post=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['post_lines']);
 		$pos=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['file_pos']);
+
+		if ($sc=='') {
+			$sc=':';
+		}
+		if ($pre=='') {
+			$pre='1';
+		}
+		if ($pos=='') {
+			$pos='1';
+		}
 		// Removing trailing lines
 		while ($post--) {
 			array_pop($list);
