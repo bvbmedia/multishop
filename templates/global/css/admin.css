@@ -584,3 +584,6 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 #netops_domain_action_buttons { text-align:center; }
 
 .cell_orders_id { white-space:nowrap; }
+
+.msAdminTableWrapper ul { display:table; width:100%; }
+.msAdminTableWrapper ul li { display:table-cell; padding:5px 10px; }
