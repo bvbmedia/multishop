@@ -537,7 +537,7 @@ switch ($_REQUEST['action']) {
 					$db_ms2bvb['specials']='tx_multishop_specials';
 					// here we will flip the keys with the values so we can easily compare 2 ways
 					$db_bvb2ms=array_flip($db_ms2bvb);
-					// first we load the column names of the multishop tables so we can pre-setuo every new record with those columns
+					// first we load the column names of the multishop tables so we can pre-setup every new record with those columns
 					$final_db=array();
 					foreach ($db_ms2bvb as $bvb_table=>$multishop_table) {
 						$sql="describe ".$multishop_table;
@@ -782,6 +782,16 @@ switch ($_REQUEST['action']) {
 //			print_r($database['tx_multishop_orders_status_description']);
 //			die();
 				foreach ($database as $key=>$records) {
+					// first we load the column names of the multishop tables so we can pre-setup every new record with those columns
+					$final_db=array();
+					$sql="describe ".$key;
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+					while (($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+						if ($rs['Field']) {
+							$final_db[$key][$rs['Field']]='';
+						}
+					}
+
 					$insert_records=0;
 					$content.='<strong>'.$key.'</strong>';
 					// FULL IMPORT
@@ -830,6 +840,7 @@ switch ($_REQUEST['action']) {
 							// older multishop versions has sometimes columnes that are not existing in the newer version. lets filter them out EOF
 							$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=true;
 							$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
+
 							if ($GLOBALS['TYPO3_DB']->sql_insert_id() or $GLOBALS['TYPO3_DB']->sql_affected_rows()) {
 								$insert_records++;
 							} else {
@@ -984,7 +995,7 @@ switch ($_REQUEST['action']) {
 									$old_id=$record['products_id'];
 									$record['products_id']='';
 									$record['products_status']=1;
-									$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
+									$res =$GLOBALS['TYPO3_DB']->INSERTquery($key, $record);
 									$new_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									if ($new_id) {
 										$tx_multishop_products_ids[$old_id]=$new_id;
