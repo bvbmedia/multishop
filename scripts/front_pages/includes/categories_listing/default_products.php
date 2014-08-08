@@ -1,12 +1,18 @@
 <?php
 // THIS CATEGORIES LISTING TYPE DIRECTLY PRINTS THE PRODUCTS
-if (!is_array($current) || !$current['categories_id']) {
+if (is_array($current) && $current['categories_id']==$this->conf['categoriesStartingPoint']) {
+	$categories_id=$current['categories_id'];
+	$current['categories_name']='';
+} else {
+	$categories_id=$this->conf['categoriesStartingPoint'];
+}
+if (!is_numeric($categories_id)) {
 	// FALLBACK TO NORMAL CATEGORIES LISTING
 	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/categories_listing/default.php');
 } else {
 	// get all subcategories
 	$cats=array();
-	mslib_fe::getSubcats($cats, $current['categories_id']);
+	mslib_fe::getSubcats($cats, $categories_id);
 	if ($this->productsLimit) {
 		$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=$this->productsLimit;
 	}
