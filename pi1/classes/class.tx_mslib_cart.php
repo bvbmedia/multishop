@@ -1639,6 +1639,18 @@ class tx_mslib_cart extends tslib_pibase {
 				$orders_tax['total_orders_tax']=(string)array_sum($total_order_tax);
 				$orders_tax['total_orders_tax_including_discount']=$orders_tax['total_orders_tax'];
 				$grand_total['sub_total']=array_sum($sub_total);
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersTotalProc'])) {
+					// hook
+					$params=array(
+						'orders_tax'=>&$orders_tax,
+						'grand_total'=>&$grand_total,
+						'cart'=>$cart
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersTotalProc'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+					// hook eof
+				}
 				if ($cart['discount_type']) {
 					switch ($cart['discount_type']) {
 						case 'percentage':
