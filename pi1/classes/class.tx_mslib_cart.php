@@ -1642,6 +1642,9 @@ class tx_mslib_cart extends tslib_pibase {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersTotalProc'])) {
 					// hook
 					$params=array(
+						'sub_total_excluding_vat'=>&$sub_total_excluding_vat,
+						'sub_total'=>&$sub_total,
+						'total_order_tax'=>&$total_order_tax,
 						'orders_tax'=>&$orders_tax,
 						'grand_total'=>&$grand_total,
 						'cart'=>$cart
