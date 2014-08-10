@@ -454,7 +454,7 @@ $records[]=array(
 	'description'=>'Enable staffel prices to your webshop.',
 	'group_id'=>'3',
 	'use_function'=>'',
-	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'yes_with_stepping\', \'yes_without_stepping\'),',
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );

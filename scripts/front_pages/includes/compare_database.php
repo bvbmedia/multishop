@@ -3748,7 +3748,7 @@ if (!$skipMultishopUpdates) {
 		}
 		$key='STAFFEL_PRICE_MODULE';
 		if (!isset($settings['GLOBAL_MODULES'][$key])) {
-			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Staffel Prices', '".$key."', '0', 'Enable staffel prices to your webshop.', 3, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''1'', ''0''),');";
+			$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Staffel Prices', '".$key."', '0', 'Enable staffel prices to your webshop.', 3, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''0'', ''yes_with_stepping'', ''yes_without_stepping''),');";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$key='ULTRASEARCH_FIELDS';
@@ -4343,6 +4343,12 @@ if (!$skipMultishopUpdates) {
 				}
 			}
 		}
+	}
+	$key='STAFFEL_PRICE_MODULE';
+	$str="UPDATE tx_multishop_configuration set set_function='tep_cfg_select_option(array(''0'', ''yes_with_stepping'', ''yes_without_stepping''),' where configuration_key='".$key."' AND set_function='tep_cfg_select_option(array(''1'', ''0''),'";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if ($GLOBALS['TYPO3_DB']->sql_affected_rows($qry)) {
+		$messages[]=$str;
 	}
 	// MOVE SEVERAL SETTINGS TO DIFFERENT GROUPS
 	$keys=array();
