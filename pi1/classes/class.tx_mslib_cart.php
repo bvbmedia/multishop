@@ -178,7 +178,7 @@ class tx_mslib_cart extends tslib_pibase {
 						t3lib_div::callUserFunction($funcRef, $params, $this);
 					}
 				}
-				// custom hook that can be controlled by third-party plugin eofq
+				// custom hook that can be controlled by third-party plugin eof
 				// calculate totals
 				$this->cart['summarize']['grand_total_excluding_vat']=($this->cart['summarize']['sub_total']+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs']-$this->cart['discount_amount']);
 				$this->cart['summarize']['grand_total']=($this->cart['summarize']['sub_total_including_vat']+$this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']-$this->cart['discount_amount']);
