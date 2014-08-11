@@ -226,6 +226,9 @@ if ($this->post) {
 	if (isset($this->post['maximum_quantity'])) {
 		$updateArray['maximum_quantity']=$this->post['maximum_quantity'];
 	}
+	if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
+		$updateArray['specials_price_percentage']=$this->post['specials_price_percentage'];
+	}
 	if ($_REQUEST['action']=='edit_product' and $this->post['pid']) {
 		if (isset($this->post['save_as_new'])) {
 			if (!$updateArray['products_image']) {
@@ -388,6 +391,9 @@ if ($this->post) {
 			}
 		}
 		// specials price
+		if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
+			$this->post['specials_new_products_price']=($this->post['products_price']*$this->post['specials_price_percentage'])/100;
+		}
 		if ($this->post['specials_new_products_price']) {
 			$specials_start_date=0;
 			$specials_expired_date=0;
@@ -2287,6 +2293,20 @@ if ($this->post) {
 		*/
 		$subpartArray['###INPUT_PRODUCT_COPY_BLOCK###']=$product_copy_block;
 		$subpartArray['###INFORMATION_SELECT2_LABEL1###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
+		/*
+		 * special price percentage
+		 */
+		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" id="specials_price_percentage"><option value="">select percentage</option>';
+		for ($i=1; $i <= 100; $i++) {
+			if ($product['specials_price_percentage']==$i) {
+				$special_price_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
+			} else {
+				$special_price_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
+			}
+		}
+		$special_price_percentage_value_selectbox.='</select>';
+		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
+		//
 		// plugin marker place holder
 		$plugins_extra_tab=array();
 		$plugins_extra_tab['tabs_header']=array();

@@ -453,6 +453,10 @@ jQuery(document).ready(function ($) {
             <div class="msAttributesField">###LABEL_CURRENCY2### <input type="text" name="specials_new_products_price_excl_vat" class="price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_excl_vat">Excl. VAT</label></div>
             <div class="msAttributesField">###LABEL_CURRENCY3### <input type="text" name="specials_new_products_price_incl_vat" class="price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_incl_vat">Incl. VAT</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
+            <div class="special_price_percentage">
+                <label for="special_price_percentage">OR</label>
+                ###PERCENTAGE_SELECTBOX###
+            </div>
             <div class="special_price_timer">
                 <label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
                 <input type="text" name="specials_price_start_visitor" class="price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###">
@@ -651,6 +655,7 @@ jQuery(document).ready(function ($) {
             }
             $(target_cb).prop("checked", false);
         });
+        $("#specials_price_percentage").select2();
 	    ###JS_ADVANCED_OPTION_TOGGLE###
     });
 </script>
