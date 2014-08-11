@@ -477,6 +477,13 @@ class tx_mslib_user {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($res) {
 			$customer_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+			// ADD CUSTOMER_ID TO THE CART CONTENTS
+			if ($customer_id && $GLOBALS['TSFE']->fe_user->id) {
+				$updateArray=array();
+				$updateArray['customer_id']=$customer_id;
+				$str=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cart_contents', 'session_id=\''.$GLOBALS['TSFE']->fe_user->id.'\'', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+			}
 			//hook to let other plugins further manipulate the create table query
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'])) {
 				$params=array(
