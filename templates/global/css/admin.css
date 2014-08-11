@@ -297,9 +297,10 @@ table.multishop_table input[type="text"],
 #tx_multishop_pi1_core .admin_menu_add { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/add.png) left top no-repeat; margin:0 3px; padding-top:16px; }
 #tx_multishop_pi1_core .admin_menu_view { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/icons_view.png) left top no-repeat; margin:0 3px; padding-top:16px; }
 #tx_multishop_pi1_core .admin_menu_edit,
-.msAdmin_edit_customer { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/icon_edit.png) left top no-repeat; margin:0 3px; padding-top:16px; }
+.msAdmin_edit_btn { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/icon_edit.png) left top no-repeat; margin:0 3px; padding-top:16px; }
 #tx_multishop_pi1_core .admin_menu_remove,
-.msAdmin_delete_customer { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/delete.png) left top no-repeat; margin:0 3px; padding-top:16px; }
+.msAdmin_delete_btn { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/delete.png) left top no-repeat; margin:0 3px; padding-top:16px; }
+.msAdmin_save_btn { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/save.png) left top no-repeat; margin:0 3px; padding-top:16px; }
 /* #tx_multishop_pi1_core #admin_modules_listing .admin_menu_remove { float:none; display:inline-block; } */
 #tx_multishop_pi1_core .admin_menu_upload_productfeed { float:none; display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/up-alt.png) left top no-repeat; margin:0 3px; padding-top:16px; }
 /* --- end of icons --- */
