@@ -2646,6 +2646,13 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		$str="select specials_price_percentage from tx_multishop_products";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE  `tx_multishop_products` ADD  `specials_price_percentage` VARCHAR( 4 ) NULL DEFAULT '0', ADD INDEX (  `specials_price_percentage` )";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 		$str="select sort_order from tx_multishop_products_options_values_to_products_options";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {

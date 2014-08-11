@@ -841,6 +841,7 @@ CREATE TABLE `tx_multishop_products` (
   `cruser_id` int(11) default '0',
   `starttime` int(11) default '0',
   `endtime` int(11) default '0',
+  `specials_price_percentage` varchar(4) default '0',
   PRIMARY KEY (`products_id`),
   KEY `products_price` (`products_price`),
   KEY `products_model` (`products_model`),
@@ -867,7 +868,8 @@ CREATE TABLE `tx_multishop_products` (
   KEY `products_last_modified` (`products_last_modified`),
   KEY `products_date_available` (`products_date_available`),
   KEY `foreign_source_name` (`foreign_source_name`),
-  KEY `foreign_products_id` (`foreign_products_id`)
+  KEY `foreign_products_id` (`foreign_products_id`),
+  KEY `specials_price_percentage` (`specials_price_percentage`)
 ) ENGINE=MyISAM ;
 
 
