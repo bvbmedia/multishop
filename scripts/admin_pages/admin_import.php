@@ -132,6 +132,7 @@ $coltypes['products_meta_title']='Products meta title';
 $coltypes['products_meta_description']='Products meta description';
 $coltypes['products_meta_keywords']='Products meta keywords';
 $coltypes['products_delivery_time']='Products delivery time';
+$coltypes['products_condition']='Products condition';
 $str="SELECT * FROM `tx_multishop_products_options` where language_id='".$language_id."' order by products_options_id asc";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -148,7 +149,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $total_coltypes=count($coltypes);
 natsort($coltypes);
-// define the different columns eof	
+// define the different columns eof
 if ($this->get['delete'] and is_numeric($this->get['job_id'])) {
 	// delete job
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_import_jobs', 'id='.$this->get['job_id']);
@@ -188,10 +189,10 @@ $this->ms['upload_productfeed_form'].='<div class="extra_parameters">';
 if ($tmpcontent) {
 	$this->ms['upload_productfeed_form'].=$this->pi_getLL('datafeed_parser_template').': <select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>'.$tmpcontent.'</select><br />';
 }
-$this->ms['upload_productfeed_form'].='	
+$this->ms['upload_productfeed_form'].='
   '.ucfirst($this->pi_getLL('format')).':
   <input name="format" type="radio" value="excel" checked class="hide_advanced_import_radio" /> Excel
-  <input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML  
+  <input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML
   <input name="format" type="radio" value="txt" class="advanced_import_radio" /> TXT/CSV
 <div class="hide">
 '.$this->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
@@ -260,7 +261,7 @@ if ($this->post['action']=='category-insert') {
 		// copy the previous post data to the current post so it can run the job again
 		$this->post=$data[1];
 		$this->post['cid']=$row['categories_id'];
-		// enable file logging		
+		// enable file logging
 		if ($this->get['relaxed_import']) {
 			$this->post['relaxed_import']=$this->get['relaxed_import'];
 		}
@@ -354,7 +355,7 @@ if ($this->post['action']=='category-insert') {
 					$i++;
 				}
 			} elseif ($this->post['format']=='excel') {
-				// try the generic way	
+				// try the generic way
 				if (!$this->ms['mode']=='edit') {
 					$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$this->post['cid'].'-'.time().'.txt';
 					if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
@@ -365,7 +366,7 @@ if ($this->post['action']=='category-insert') {
 					}
 					fclose($handle);
 				}
-				// excel				
+				// excel
 				require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 				$phpexcel=PHPExcel_IOFactory::load($file_location);
 				foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
@@ -387,7 +388,7 @@ if ($this->post['action']=='category-insert') {
 				}
 				// excel eof
 			} elseif ($this->post['format']=='xml') {
-				// try the generic way	
+				// try the generic way
 				if (!$this->ms['mode']=='edit') {
 					$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$this->post['cid'].'-'.time().'.txt';
 					if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
@@ -413,7 +414,7 @@ if ($this->post['action']=='category-insert') {
 //					{
 //						$rows[$i][$s] = $value;
 //						$s++;
-//					}		
+//					}
 					$i++;
 					$s=0;
 				}
@@ -463,7 +464,7 @@ if ($this->post['action']=='category-insert') {
 				}
 				// csv
 			}
-			// try the generic way eof			
+			// try the generic way eof
 		}
 		$tmpcontent='';
 		if (!$rows) {
@@ -502,8 +503,8 @@ if ($this->post['action']=='category-insert') {
 						<div class="form-field">
 							<span>aux</span>
 							<input name="input['.$i.']" type="text" style="width:150px;" value="'.htmlspecialchars($this->post['input'][$i]).'" />
-						</div>	
-					</fieldset>				
+						</div>
+					</fieldset>
 				</td>
 				<td class="column_name"><strong>'.htmlspecialchars($table_cols[$i]).'</strong></td>
 				';
@@ -564,7 +565,7 @@ if ($this->post['action']=='category-insert') {
 				<label>aux</label>
 				<input name="aux_input[]" type="text" value="'.htmlspecialchars($this->post['aux_input']).'" />
 				<input name="delete" class="delete_property" type="button" value="delete" /><input name="disable" type="button" value="enable" />
-			</div>		
+			</div>
 			';
 			$importer_add_aux_input=str_replace(array(
 				"\r\n",
@@ -576,26 +577,26 @@ if ($this->post['action']=='category-insert') {
 				var add_property_html=\''.addslashes($importer_add_aux_input).'\';
 				$(document).on("click", ".delete_property", function() {
 					$(this).parent().hide("fast");
-				});	
+				});
 				$(".importer_add_property").click(function(event) {
-					$(this).prev().append(add_property_html);			
-				});			
+					$(this).prev().append(add_property_html);
+				});
 				$(".importer_advanced_settings").click(function(event) {
-					$(this).next().toggle();			
+					$(this).next().toggle();
 				});
 				$(\'.select_columns_fields\').select2({
 					dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
 					width:\'220px\'
 				});
-			});			
-			</script>			
+			});
+			</script>
 			';
 			$tmpcontent.=$header.'</table>';
 		}
 	} else {
 		$tmpcontent.='<strong>Products cannot be retrieved.</strong>';
 	}
-	// print form 
+	// print form
 	$combinedContent='<form id="product_import_form" class="blockSubmitForm" name="form1" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'">
 	<input name="consolidate" type="hidden" value="'.$this->post['consolidate'].'" />
 	<input name="os" type="hidden" value="'.$this->post['os'].'" />
@@ -623,27 +624,27 @@ if ($this->post['action']=='category-insert') {
 			<br />
 			<fieldset>
 			<legend>'.$this->pi_getLL('save_import_task').'</legend>
-			<div class="account-field">					
+			<div class="account-field">
 				<label for="cron_name">'.$this->pi_getLL('name').'</label>
 				<input name="cron_name" type="text" value="'.htmlspecialchars($this->post['cron_name']).'" size="125" />
 			</div>
 		';
 	if ($this->get['action']=='edit_job') {
 		$combinedContent.='
-			<div class="account-field">					
+			<div class="account-field">
 				<label for="duplicate">'.$this->pi_getLL('duplicate_task').'</label>
 				<input name="duplicate" type="checkbox" value="1" />
 				<input name="skip_import" type="hidden" value="1" />
 				<input name="job_id" type="hidden" value="'.$this->get['job_id'].'" />
 			</div>
-			<div class="account-field">					
+			<div class="account-field">
 				<label for="duplicate">URL</label>
 				<input name="file_url" type="text" value="'.$this->post['file_url'].'" size="125" />
-			</div>			
+			</div>
 			';
 	}
 	$combinedContent.='
-		<div class="account-field">					
+		<div class="account-field">
 		<label for="cron_period">'.$this->pi_getLL('schedule').'</label>
 		<select name="cron_period" id="cron_period">
 		<option value=""'.(!$this->post['cron_period'] ? ' selected' : '').'>'.$this->pi_getLL('manual').'</option>
@@ -652,11 +653,11 @@ if ($this->post['action']=='category-insert') {
 		<option value="'.(3600*24*30).'"'.($this->post['cron_period']==(3600*24*30) ? ' selected' : '').'>'.$this->pi_getLL('monthly').'</option>
 		</select>
 		</div>
-		<div class="account-field">					
+		<div class="account-field">
 		<label for="prefix_source_name">'.$this->pi_getLL('source_name').'</label>
 		<input name="prefix_source_name" type="text" value="'.htmlspecialchars($this->post['prefix_source_name']).'" />
-		</div>	
-		<div class="account-field multiselect_horizontal">				
+		</div>
+		<div class="account-field multiselect_horizontal">
 		<label for="locked_fields">'.$this->pi_getLL('lock_following_fields_when_adjusted', 'lock the following fields if the product is being adjusted (in edit product)').'</label>
 		<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[locked_fields][]">
 		';
@@ -675,9 +676,9 @@ if ($this->post['action']=='category-insert') {
 		}
 	}
 	$combinedContent.='
-		</select>		
-		</div>		
-		<div class="account-field">				
+		</select>
+		</div>
+		<div class="account-field">
 		<label for="">'.$this->pi_getLL('default_vat_rate', 'Default VAT Rate').'</label>
 		<select name="tx_multishop_pi1[default_vat_rate]"><option value="">skip</option>
 		';
@@ -687,16 +688,16 @@ if ($this->post['action']=='category-insert') {
 		$combinedContent.='<option value="'.$row['rules_group_id'].'"'.($this->post['tx_multishop_pi1']['default_vat_rate']==$row['rules_group_id'] ? ' selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
 	}
 	$combinedContent.='
-		</select>	
-		</div>						
-		<div class="account-field">					
+		</select>
+		</div>
+		<div class="account-field">
 		<label>&nbsp;</label>
 		<input name="incremental_update" type="checkbox" value="1" '.(($this->post['incremental_update']==1) ? 'checked' : '').' /> '.$this->pi_getLL('import_incremental').' (only use this when you upload partial data. For example when you have 2 feeds that contains the values of 1 attribute then you have to enable this checkbox. Products will always be inserted on incremental basis, so you allmost never have to enable this checkbox)
 		</div>
-		<div class="account-field">					
+		<div class="account-field">
 		<label>&nbsp;</label>
 		<input name="fetch_existing_product_by_direct_field" type="checkbox" value="1" '.(($this->post['fetch_existing_product_by_direct_field']==1) ? 'checked' : '').' /> '.$this->pi_getLL('fetch_existing_product_by_direct_field', 'Fetch existing product by db field (i.e. products_id, products_sku, products_ean) instead of hashed extid field.').'
-		</div>			
+		</div>
 		<input name="database_name" type="hidden" value="'.$this->post['database_name'].'" />
 		<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($this->post)).'" />
 		</fieldset>
@@ -786,7 +787,7 @@ if ($this->post['action']=='category-insert') {
 					exit("Script halted, because the target category id of the import job is not existing.");
 				}
 			}
-			//update the last run time		
+			//update the last run time
 			$updateArray=array();
 			$updateArray['last_run']=time();
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$row['id'], $updateArray);
@@ -851,11 +852,11 @@ if ($this->post['action']=='category-insert') {
 						}
 					}
 					$total_datarows=count($datarows);
-					/*					
+					/*
 					// debug
-					print_r($GLOBALS['TYPO3_DB']->debug_lastBuiltQuery);				
-					$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = false;				
-					die();					
+					print_r($GLOBALS['TYPO3_DB']->debug_lastBuiltQuery);
+					$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = false;
+					die();
 					*/
 					$i=0;
 					$rows=array();
@@ -994,7 +995,7 @@ if ($this->post['action']=='category-insert') {
 				if ($skipRow) {
 					continue;
 				}
-				// custom hook that can be controlled by third-party plugin eof					
+				// custom hook that can be controlled by third-party plugin eof
 				$item=array();
 				foreach ($row as $key=>$col) {
 					if (!mb_detect_encoding($col, 'UTF-8', true)) {
@@ -1660,6 +1661,9 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['products_capital_price'])) {
 								$updateArray['product_capital_price']=$item['products_capital_price'];
 							}
+							if (isset($item['products_condition'])) {
+								$updateArray['products_condition']=$item['products_condition'];
+							}
 							if (isset($item['products_minimum_quantity'])) {
 								$updateArray['minimum_quantity']=$item['products_minimum_quantity'];
 							}
@@ -1982,6 +1986,9 @@ if ($this->post['action']=='category-insert') {
 							}
 							if ($item['products_capital_price']) {
 								$updateArray['product_capital_price']=$item['products_capital_price'];
+							}
+							if (isset($item['products_condition'])) {
+								$updateArray['products_condition']=$item['products_condition'];
 							}
 							if ($item['products_minimum_quantity']) {
 								$updateArray['minimum_quantity']=$item['products_minimum_quantity'];
@@ -2444,7 +2451,7 @@ if ($this->post['action']=='category-insert') {
 				if ($log_file) {
 					$content='';
 				}
-				// end foreach			
+				// end foreach
 			}
 //			if ($file_location and file_exists($file_location)) @unlink($file_location);
 		}
@@ -2458,7 +2465,7 @@ if ($this->post['action']=='category-insert') {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		// custom hook that can be controlled by third-party plugin eof				
+		// custom hook that can be controlled by third-party plugin eof
 		if ($log_file) {
 			$end_time=microtime(TRUE);
 			$global_ms_string=number_format(($end_time-$global_start_time), 3, '.', '');
@@ -2519,7 +2526,7 @@ if ($this->post['action']!='product-import-preview') {
 			<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
 			<input name="type" type="hidden" value="2003" />
 			<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_import" />
-		
+
 		'.mslib_fe::tx_multishop_draw_pull_down_menu('update_category_for_job['.$job['id'].']', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, $this->pi_getLL('admin_main_category')), $job['categories_id'], 'onchange="if (CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure')).'?\')) this.form.submit();"').'</form>';
 				$schedule_content.='<td>'.$category_name;
 				$schedule_content.='
@@ -2558,12 +2565,12 @@ if ($this->post['action']!='product-import-preview') {
 				</td>
 				<td>
 					 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="blockSubmitForm">
-						<input type="file" name="file" />		
+						<input type="file" name="file" />
 						<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 						<input name="skip_import" type="hidden" value="1" />
 						<input name="preProcExistingTask" type="hidden" value="1" />
 						<input name="job_id" type="hidden" value="'.$job['id'].'" />
-						<input name="action" type="hidden" value="edit_job" />								
+						<input name="action" type="hidden" value="edit_job" />
 					</form>
 					</td>
 				';
@@ -2573,17 +2580,17 @@ if ($this->post['action']!='product-import-preview') {
 			</fieldset>
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				$(".copy_to_clipboard").click(function(event) {				
+				$(".copy_to_clipboard").click(function(event) {
 					event.preventDefault();
-					var string=$(this).attr("rel");	
-					$.blockUI({ 
-						theme:     true, 
+					var string=$(this).attr("rel");
+					$.blockUI({
+						theme:     true,
 						title:    \''.addslashes($this->pi_getLL('copy_below_text_and_add_it_to_crontab')).'\',
-						message:  \'<p>\'+string+\'</p>\', 
-						timeout:   8000 
-					}); 
-				});	
-			});	
+						message:  \'<p>\'+string+\'</p>\',
+						timeout:   8000
+					});
+				});
+			});
 			</script>
 			';
 			$tmptab='';
@@ -2595,14 +2602,14 @@ if ($this->post['action']!='product-import-preview') {
 		// load the jobs templates eof
 		$content.='
 		<h2>'.ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_import_products'))).'</h2>
-		<script type="text/javascript"> 
+		<script type="text/javascript">
 		jQuery(document).ready(function($) {
-			jQuery(".tab_content").hide(); 
+			jQuery(".tab_content").hide();
 			jQuery("ul.tabs li:first").addClass("active").show();
 			jQuery(".tab_content:first").show();
 			jQuery("ul.tabs li").click(function() {
 				jQuery("ul.tabs li").removeClass("active");
-				jQuery(this).addClass("active"); 
+				jQuery(this).addClass("active");
 				jQuery(".tab_content").hide();
 				var activeTab = jQuery(this).find("a").attr("href");
 				jQuery(activeTab).fadeIn(0);
@@ -2618,7 +2625,7 @@ if ($this->post['action']!='product-import-preview') {
 					$(lochash).fadeIn(0);
 				}
 			}
-		 
+
 		});
 		</script>
 		<div id="tab-container">
@@ -2632,7 +2639,7 @@ if ($this->post['action']!='product-import-preview') {
 		$content.='
 			</ul>
 			<div class="tab_container">
-		
+
 			';
 		$count=0;
 		foreach ($tabs as $key=>$value) {
