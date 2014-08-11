@@ -129,3 +129,13 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container input[type="text"] { margin-right:0; }
 
 .wrap-attributes-item .information_select2_label { color:#777; text-transform:uppercase; }
+
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper { display:table; width:100%; border-left:1px solid #999; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul { display:table-row; margin:0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul li { border-right:1px solid #999; border-bottom:1px solid #999; display:table-cell; color:#333; padding:7px 10px; vertical-align:middle;  }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul li input[type="checkbox"],
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul li label { display:inline-block; vertical-align:top; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul li label { padding-left:5px; padding-right:10px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul li .edit_customer { }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul.odd li { background:#f5f5f5; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul.msAdminTableHeading li { background:#333 url(../../global/images/importer_th.gif) left top repeat-x; font-weight:bold; color:#fff; }
