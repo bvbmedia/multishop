@@ -1263,7 +1263,7 @@ if ($this->post['action']=='category-insert') {
 								$hashed_id.=' / ';
 							}
 							$hashed_id.=$item['categories_name'.$x];
-							$strchk="SELECT categories_id from tx_multishop_categories c where c.hashed_id='".addslashes(md5($hashed_id))."'";
+							$strchk="SELECT categories_id from tx_multishop_categories c where c.hashed_id='".addslashes(md5($hashed_id))."' and c.page_uid='".$this->showCatalogFromPage."'";
 							$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 							if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
 								$strchk="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where cd.categories_name='".addslashes($item['categories_name'.$x])."' and c.parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$language_id."' and c.categories_id=cd.categories_id";
@@ -1276,7 +1276,7 @@ if ($this->post['action']=='category-insert') {
 									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', "categories_id=".$rowchk['categories_id'], $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									// now rerun original query
-									$strchk="SELECT categories_id from tx_multishop_categories c where c.hashed_id='".addslashes(md5($hashed_id))."'";
+									$strchk="SELECT categories_id from tx_multishop_categories c where c.hashed_id='".addslashes(md5($hashed_id))."' and c.page_uid='".$this->showCatalogFromPage."'";
 									$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 								}
 							}

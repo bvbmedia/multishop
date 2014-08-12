@@ -320,7 +320,8 @@ if ($this->get['feed_hash']) {
 					foreach ($pageset['products'] as $row) {
 						$product=mslib_fe::getProduct($row['products_id']);
 						if ($product['products_id']) {
-							if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+							// TEMPORARY DISABLE THIS IF CONDITION, CAUSE PRODUCTFEED WAS MISSING ATTRIBUTE VALUES IN FLAT ENABLED SHOP
+							//if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 								// fetch the attributes manually
 								$loadAttributeValues=0;
 								foreach ($fields as $field) {
@@ -374,7 +375,7 @@ if ($this->get['feed_hash']) {
 										}
 									}
 								}
-							}
+							//}
 							$cats=mslib_fe::Crumbar($product['categories_id']);
 							$cats=array_reverse($cats);
 							$product['categories_crum']=$cats;
@@ -841,6 +842,9 @@ if ($this->get['feed_hash']) {
 									$field_name=$field;
 								} else {
 									$field_name="a_".str_replace("-", "_", mslib_fe::rewritenamein($attributes[$field]));
+									if (!$row[$field_name]) {
+										$field_name=$field;
+									}
 								}
 								$tmpcontent.=$row[$field_name];
 							}
