@@ -1584,7 +1584,7 @@
             <label index="default">Standaard</label>
             <label index="admin_normal_price">Normale prijs</label>
             <label index="included_vat">Waarvan BTW</label>
-            <label index="categories">Rubrieken</label>
+            <label index="categories">Categorieën</label>
             <label index="reset">Reset</label>
             <label index="ascending">oplopend</label>
             <label index="descending">aflopend</label>
