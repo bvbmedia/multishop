@@ -1027,32 +1027,42 @@ switch ($this->ms['page']) {
 		break;
 	case 'product':
 		if ($this->ADMIN_USER) {
-			$cat_id=mslib_fe::RemoveXSS(t3lib_div::_GET('catid'));
-			$getPost=$this->post['productlisting'];
-			$sort_type=$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
-			if ($sort_type=='desc') {
-				$no=time();
+			// custom page hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'])) {
+				$params=array(
+					'content'=>&$content
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
 			} else {
-				$no=1;
-			}
-			foreach ($getPost as $prod_id) {
-				if (is_numeric($prod_id) and is_numeric($cat_id)) {
-					$where="categories_id = $cat_id and products_id = $prod_id";
-					$updateArray=array(
-						'sort_order'=>$no
-					);
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', $where, $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "products_id = $prod_id", $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					if ($this->ms['MODULES']['FLAT_DATABASE']) {
-						// if the flat database module is enabled we have to sync the changes to the flat table
-						mslib_befe::convertProductToFlat($prod_id);
-					}
-					if ($sort_type=='desc') {
-						$no--;
-					} else {
-						$no++;
+				$cat_id=mslib_fe::RemoveXSS(t3lib_div::_GET('catid'));
+				$getPost=$this->post['productlisting'];
+				$sort_type=$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
+				if ($sort_type=='desc') {
+					$no=time();
+				} else {
+					$no=1;
+				}
+				foreach ($getPost as $prod_id) {
+					if (is_numeric($prod_id) and is_numeric($cat_id)) {
+						$where='categories_id = '.$cat_id.' and products_id = '.$prod_id;
+						$updateArray=array(
+							'sort_order'=>$no
+						);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', $where, $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "products_id = $prod_id", $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						if ($this->ms['MODULES']['FLAT_DATABASE']) {
+							// if the flat database module is enabled we have to sync the changes to the flat table
+							mslib_befe::convertProductToFlat($prod_id);
+						}
+						if ($sort_type=='desc') {
+							$no--;
+						} else {
+							$no++;
+						}
 					}
 				}
 			}
