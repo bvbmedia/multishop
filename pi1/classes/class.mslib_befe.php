@@ -1470,7 +1470,8 @@ class mslib_befe {
 		$str="DROP TABLE IF EXISTS `tx_multishop_products_flat_tmp`;";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$str="CREATE TABLE `tx_multishop_products_flat_tmp` (
-			`products_id` int(11) NULL AUTO_INCREMENT,
+			`id` int(11) auto_increment,
+			`products_id` int(11),
 			`language_id` tinyint(2)  NULL DEFAULT '0',
 			`products_name` varchar(255) NULL,
 			`products_model` varchar(128) NULL,
@@ -1554,7 +1555,8 @@ class mslib_befe {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		$str.="PRIMARY KEY (`products_id`,`language_id`),
+		$str.="PRIMARY KEY (`id`),
+		  UNIQUE KEY (`products_id`,`language_id`),
 		  KEY `language_id` (`language_id`),
 		  KEY `products_name_2` (`products_name`),
 		  KEY `products_model` (`products_model`),
@@ -1615,6 +1617,7 @@ class mslib_befe {
 			'sort_order '.$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'], // ORDER BY...
 			'' // LIMIT ...
 		);
+		//error_log($str);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($this->conf['debugEnabled']=='1') {
 			$logString='rebuildFlatDatabase query: '.$str;

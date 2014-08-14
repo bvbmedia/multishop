@@ -2353,7 +2353,8 @@ class mslib_fe {
 			// do the flat search (without having to join the seperate tables)
 			// temporary fix, cause hot products sometimes show products double
 			if (!$orderby) {
-				$orderby[]='NULL';
+				//$orderby[]='NULL';
+				$orderby[]='pf.id';
 			}
 			$required_cols=array();
 			$required_cols[]='pf.products_multiplication';

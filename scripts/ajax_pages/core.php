@@ -1029,9 +1029,7 @@ switch ($this->ms['page']) {
 		if ($this->ADMIN_USER) {
 			// custom page hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'])) {
-				$params=array(
-					'content'=>&$content
-				);
+				$params=array();
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'] as $funcRef) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
