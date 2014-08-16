@@ -165,6 +165,9 @@ if ($this->conf['cacheConfiguration']=='1' and !$this->ADMIN_USER) {
 }
 if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	$string='loadConfiguration_'.$this->HTTP_HOST.'_'.$this->shop_pid.'_'.$this->cObj->data['uid'].'_'.md5(serialize($this->conf));
+	if ($this->get['categories_id'] && is_numeric($this->get['categories_id'])) {
+		$string.='_'.$this->get['categories_id'];
+	}
 }
 $lifetime=36000;
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$tmp=mslib_befe::cacheLite('get', $string, $lifetime, 1))) {
