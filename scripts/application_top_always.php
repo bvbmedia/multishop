@@ -167,6 +167,8 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	$string='loadConfiguration_'.$this->HTTP_HOST.'_'.$this->shop_pid.'_'.$this->cObj->data['uid'].'_'.md5(serialize($this->conf));
 	if ($this->get['categories_id'] && is_numeric($this->get['categories_id'])) {
 		$string.='_'.$this->get['categories_id'];
+	} elseif ($this->get['categories_id'] && is_array($this->get['categories_id']) && count($this->get['categories_id'])) {
+		$string.='_'.implode('_',$this->get['categories_id']);
 	}
 }
 $lifetime=36000;
