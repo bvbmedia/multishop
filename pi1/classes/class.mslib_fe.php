@@ -7122,12 +7122,16 @@ class mslib_fe {
 		}
 		return $enabled_countries;
 	}
-	public function buildAttributesOptionsGroupSelectBox($options_id) {
+	public function buildAttributesOptionsGroupSelectBox($options_id, $element_class='') {
 		if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
 			$str="SELECT * from tx_multishop_attributes_options_groups";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-				$content='<select name="options_groups['.$options_id.']">';
+				if (!empty($element_class)) {
+					$content='<select name="options_groups['.$options_id.']" '.$element_class.'>';
+				} else {
+					$content='<select name="options_groups['.$options_id.']">';
+				}
 				$content.='<option value="">select group</option>';
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 					$str2="select attributes_options_groups_to_products_options_id from tx_multishop_attributes_options_groups_to_products_options where attributes_options_groups_id = '".$row['attributes_options_groups_id']."' and products_options_id = '".$options_id."'";

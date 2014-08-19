@@ -960,6 +960,10 @@
             <label index="admin_sort_alphabet_natural_desc">sort on alfabet natural (desc)</label>
             <label index="page">page</label>
             <label index="of">of</label>
+            <label index="admin_label_add_new_attribute_options">Add new attribute options</label>
+            <label index="admin_label_new_option_name">New option name</label>
+            <label index="admin_label_error_option_name_empty">Option name empty</label>
+            <label index="admin_label_error_option_name_exist">Attribute option name already exist</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
