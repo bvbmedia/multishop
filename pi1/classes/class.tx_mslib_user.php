@@ -472,7 +472,6 @@ class tx_mslib_user {
 			$updateArray['crdate']=time();
 			$updateArray['page_uid']=$this->ref->shop_pid;
 			$updateArray['tx_multishop_quick_checkout']=0;
-			$updateArray['tx_multishop_optin_crdate']='';
 			if (isset($this->ref->cookie['HTTP_REFERER']) && !empty($this->ref->cookie['HTTP_REFERER'])) {
 				$updateArray['http_referer']=$this->ref->cookie['HTTP_REFERER'];
 			} else {
