@@ -27,49 +27,40 @@ if ($this->post) {
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
-			if (isset($this->post['options_groups'][$products_options_id]) && !empty($this->post['options_groups'][$products_options_id])) {
-				$updateArray=array();
-				$updateArray['attributes_options_groups_id']=$this->post['options_groups'][$products_options_id];
-				$updateArray['products_options_id']=$products_options_id;
-				$str=$GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
-					'tx_multishop_attributes_options_groups_to_products_options', // FROM ...
-					'products_options_id=\''.$products_options_id.'\' and attributes_options_groups_id=\''.$this->post['options_groups'][$products_options_id].'\'', // WHERE...
-					'', // GROUP BY...
-					'', // ORDER BY...
-					'' // LIMIT ...
-				);
-				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_groups_to_products_options', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				} else {
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups_to_products_options', 'products_options_id=\''.$products_options_id.'\'', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+				if (isset($this->post['options_groups'][$products_options_id]) && !empty($this->post['options_groups'][$products_options_id])) {
+					$updateArray=array();
+					$updateArray['attributes_options_groups_id']=$this->post['options_groups'][$products_options_id];
+					$updateArray['products_options_id']=$products_options_id;
+					$str=$GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
+						'tx_multishop_attributes_options_groups_to_products_options', // FROM ...
+						'products_options_id=\''.$products_options_id.'\' and attributes_options_groups_id=\''.$this->post['options_groups'][$products_options_id].'\'', // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_groups_to_products_options', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					} else {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups_to_products_options', 'products_options_id=\''.$products_options_id.'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
 				}
 			}
 		}
-	}
-	if (is_array($this->post['option_values']) and count($this->post['option_values'])) {
-		foreach ($this->post['option_values'] as $products_options_values_id=>$array) {
-			foreach ($array as $language_id=>$value) {
-				$updateArray=array();
-				$updateArray['language_id']=$language_id;
-				$updateArray['products_options_values_id']=$products_options_values_id;
-				$updateArray['products_options_values_name']=$value;
-				$str="select 1 from tx_multishop_products_options_values where products_options_values_id='".$products_options_values_id."' and language_id='".$language_id."'";
-				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values', 'products_options_values_id=\''.$products_options_values_id.'\' and language_id=\''.$language_id.'\'', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				} else {
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				}
-			}
-		}
+		// redirect to current page after done saving an option settings
+		header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes'));
 	}
 }
-
+// select2 cache
+$js_select2_cache='';
+$js_select2_cache_values=array();
+$js_select2_cache='<script type="text/javascript">
+	var attributesSearchValues=[];
+	var attributesValues=[];'."\n";
+// load the interface
 mslib_befe::loadLanguages();
 $selects=array();
 $selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
@@ -81,7 +72,7 @@ $selects['textarea']=$this->pi_getLL('admin_label_option_type_textarea');
 $selects['hidden_field']=$this->pi_getLL('admin_label_option_type_hidden_field');
 $selects['file']=$this->pi_getLL('admin_label_option_type_file_input');
 $selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
-
+// load options
 $str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 	'tx_multishop_products_options', // FROM ...
 	'language_id=\'0\'', // WHERE...
@@ -93,15 +84,16 @@ $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
 	$content.='<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
+	$content.='<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
 	//$content.='<form role="form" class="msadminFromFancybox" name="admin_product_attributes">';
-	$content.='<ul class="attribute_options_sortable">';
+	$content.='<ul class="attribute_options_sortable" id="attribute_listings">';
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$content.='<li id="options_'.$row['products_options_id'].'">';
 		$content.='<h2>';
 		$content.='<span class="option_id">'.$this->pi_getLL('admin_label_option_name').': '.$row['products_options_name'].' (ID: '.$row['products_options_id'].')</span>';
 		$content.='<span class="option_edit">';
-		$content.='<a href="#" class="edit_options admin_menu_edit" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('edit').'</a>&nbsp;';
-		$content.='<a href="#" class="delete_options admin_menu_remove" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
+		$content.='<a href="#" class="edit_options msadmin_button" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('edit').'</a>&nbsp;';
+		$content.='<a href="#" class="delete_options msadmin_button" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
 		$content.='</span>';
 		$content.='</h2>';
 		$options_group='';
@@ -134,6 +126,7 @@ if ($rows) {
 		$content.='<a href="#" class="msadmin_button fetch_attributes_values" id="button_label_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>&nbsp;';
 		//$content.='<a href="#" class="msadmin_button fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
 		$content.='<ul class="attribute_option_values_sortable" rel="'.$row['products_options_id'].'" id="vc_'.$row['products_options_id'].'" style="display:none">';
+		$content.='<li><a href="#" class="msadmin_button add_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>';
 		$content.='</ul>';
 		$content.='<input type="hidden" name="values_fetched_'.$row['products_options_id'].'" id="values_fetched_'.$row['products_options_id'].'" value="0" />';
 		$content.='</div>';
@@ -142,6 +135,58 @@ if ($rows) {
 	$content.='</ul>';
 	$content.='<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
 	$content.='</form>';
+	// new options
+	$content.='<form method="post" class="msadminFromFancybox" name="admin_product_new_attribute_options">';
+	$content.='<ul>';
+	$content.='<li>';
+	$content.='<h2>';
+	$content.='<span class="option_id">'.$this->pi_getLL('admin_label_add_new_attribute_options').'</span>';
+	$content.='</h2>';
+	$options_group='';
+	if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+		$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="add_new_attributes_options"');
+		if (!empty($options_group)) {
+			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$options_group.'</span>';
+		} else {
+			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$this->pi_getLL('admin_label_no_groups_defined').'</span>';
+		}
+	}
+	// settings related to options
+	$content.='<div class="option_settings">';
+	$content.='<span class="options_name"><label for="new_option_name">'.$this->pi_getLL('admin_label_new_option_name').':</label> <input type="text" id="new_option_name" name="new_option_name" class="add_new_attributes_options"> </span>';
+	$content.=$options_group;
+	$content.='<span class="listing_type">';
+	$content.=$this->pi_getLL('admin_label_listing_type').': <select name="listtype" id="new_listtype" class="add_new_attributes_options">';
+	foreach ($selects as $key=>$value) {
+		$content.='<option value="'.$key.'"'.($key==$row['listtype'] ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
+	}
+	$content.='</select>';
+	$content.='</span>';
+	$content.='<span class="required">
+		<input name="required" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('required').'
+	</span>';
+	$content.='<span class="hide_in_cart">
+		<input name="hide_in_cart" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
+	</span>';
+	$content.='</div>';
+	$content.='<div class="option_values">';
+	$content.='<a href="#" class="msadmin_button msadmin_button_save" id="save_new_attribute_options">'.$this->pi_getLL('admin_label_add_new_attribute_options').'</a>';
+	$content.='</div>';
+	$content.='</li>';
+	$content.='</ul>';
+	$content.='</form>';
+
+
+
+
+	$count_js_cache_values=count($js_select2_cache_values);
+	if ($count_js_cache_values) {
+		$js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
+	}
+	$js_select2_cache.='</script>';
+	if (!empty($js_select2_cache)) {
+		$GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
+	}
 	$content.='<div id="dialog-confirm" title="'.$this->pi_getLL('admin_label_warning_this_action_is_not_reversible').'">
 	  		<p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>'.sprintf($this->pi_getLL('admin_label_are_you_sure_want_to_delete_x_attributes'), '<span id="attributes-name0"></span>').'</p>
 		</div>
@@ -212,7 +257,7 @@ if ($rows) {
 			data:"option_id=" + optid,
 			dataType:"json",
 			success: function(s) {
-				var dialog_title="Edit option: " + s.options_title;
+				var dialog_title="'.$this->pi_getLL('admin_label_edit_option').': " + s.options_title;
 				var dialog_body=\'<div class="edit_dialog_input_wrapper">\';
 				dialog_body+=\'<input type="hidden" value="\' + optid + \'" name="option_id">\';
 				$.each(s.options, function(i, v){
@@ -238,16 +283,16 @@ if ($rows) {
 			data:"relation_id=" + relation_id,
 			dataType:"json",
 			success: function(s) {
-				var dialog_title="Edit option: " + s.options_name + " - value: " + s.options_values_name;
+				var dialog_title="'.$this->pi_getLL('admin_label_edit_option').': " + s.options_name + " - '.$this->pi_getLL('admin_value').': " + s.options_values_name;
 				var dialog_body=\'<div class="edit_dialog_input_wrapper">\';
 				dialog_body+=\'<input type="hidden" class="edit_option_values_inputs" value="\' + relation_id + \'" name="data_id">\';
-				$.each(s.results, function(i, v){
+				$.each(s.results, function(i, v) {
 					dialog_body+=\'<div class="edit_dialog_input_options">\';
 					dialog_body+=\'<label>\' + v.lang_title + \' : </label>\';
 					dialog_body+=\'<div class="edit_dialog_input">\';
 					dialog_body+=\'<input type="text" class="edit_option_values_inputs" name="option_values[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_values + \'"/>\';
 					dialog_body+=\'<span class="option_description_label">'.$this->pi_getLL('description').'</span>\';
-					dialog_body+=\'<textarea class="edit_option_values_inputs" name="ov_desc[\' + s.options_values_id + \'][\' + i + \']">\' + v.lang_description + \'</textarea>\';
+					dialog_body+=\'<textarea class="edit_option_values_inputs" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']">\' + v.lang_description + \'</textarea>\';
 					dialog_body+=\'</div>\';
 					dialog_body+=\'</div>\';
 				});
@@ -270,182 +315,215 @@ if ($rows) {
 			success: function(s) {}
 		});
 	}
+	var select2_options_value = function(selector_str, placeholder, dropdowncss, ajax_url) {
+		$(selector_str).select2({
+			placeholder: placeholder,
+			createSearchChoice:function(term, data) {
+				if (attributesValues[term] === undefined) {
+					attributesValues[term]={id: term, text: term};
+				}
+				return {id:term, text:term};
+			},
+			minimumInputLength: 0,
+			query: function(query) {
+				if (attributesSearchValues[query.term] !== undefined) {
+					query.callback({results: attributesSearchValues[query.term]});
+				} else {
+					$.ajax(ajax_url, {
+						data: {
+							q: query.term
+						},
+						dataType: "json"
+					}).done(function(data) {
+						attributesSearchValues[query.term]=data;
+						query.callback({results: data});
+					});
+				}
+			},
+			initSelection: function(element, callback) {
+				var id=$(element).val();
+				if (id!=="") {
+					if (attributesValues[id] !== undefined) {
+						callback(attributesValues[id]);
+					} else {
+						$.ajax(ajax_url, {
+							data: {
+								preselected_id: id
+							},
+							dataType: "json"
+						}).done(function(data) {
+							attributesValues[data.id]={id: data.id, text: data.text};
+							callback(data);
+						});
+					}
+				}
+			},
+			formatResult: function(data){
+				if (data.text === undefined) {
+					$.each(data, function(i,val){
+						return val.text;
+					});
+				} else {
+					return data.text;
+				}
+			},
+			formatSelection: function(data){
+				if (data.text === undefined) {
+					return data[0].text;
+				} else {
+					return data.text;
+				}
+			},
+			dropdownCssClass: dropdowncss,
+			escapeMarkup: function (m) { return m; }
+		}).on("select2-selecting", function(e) {
+			if (e.object.id == e.object.text) {
+				$(this).next().val("1");
+			} else {
+				$(this).next().val("0");
+			}
+		});
+	}
 	jQuery(document).ready(function($) {
-	  	$(document).on("click", ".edit_options", function(e) {
-	  		e.preventDefault();
+		$("#dialog-confirm").hide();
+		$("#dialog-confirm-force").hide();
+		$(document).on("click", "a", function(e) {
+			if ($(this).attr("href")=="#") {
+				e.preventDefault();
+			}
+		});
+		// save new option
+		$(document).on("click", "#save_new_attribute_options", function() {
+			if ($("#new_option_name").val()!="") {
+				var serial_value=$(".add_new_attributes_options").serialize();
+
+				// save new option
+				href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=add_new_options').'";
+				$.ajax({
+					type:"POST",
+					url:href,
+					data:serial_value,
+					dataType:"json",
+					success: function(s) {
+						var ul_option_listings=$("#attribute_listings");
+						var new_option_html=\'\';
+						console.log(s);
+						if (s.status=="OK") {
+							new_option_html+=\'<li id="options_\' + s.option_id + \'">\';
+							new_option_html+=\'<h2>\';
+							new_option_html+=\'<span class="option_id">'.$this->pi_getLL('admin_label_option_name').': \' + s.option_name + \' (ID: \' + s.option_id + \')</span>\';
+							new_option_html+=\'<span class="option_edit">\';
+							new_option_html+=\'<a href="#" class="edit_options msadmin_button" rel="\' + s.option_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
+							new_option_html+=\'<a href="#" class="delete_options msadmin_button" rel="\' + s.option_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
+							new_option_html+=\'</span>\';
+							new_option_html+=\'</h2>\';
+							// settings related to options
+							new_option_html+=\'<div class="option_settings">\';
+							new_option_html+=s.options_groups
+							new_option_html+=\'<span class="listing_type">\';
+							new_option_html+=\''.$this->pi_getLL('admin_label_listing_type').': \';
+							new_option_html+=s.listtype;
+							new_option_html+=\'</span>\';
+							new_option_html+=\'<span class="required">\';
+							if (s.required=="1") {
+								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.$this->pi_getLL('required').'\';
+							} else {
+								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" /> '.$this->pi_getLL('required').'\';
+							}
+							new_option_html+=\'</span>\';
+							new_option_html+=\'<span class="hide_in_cart">\';
+							if (s.hide_in_cart=="1") {
+								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'\';
+							} else {
+								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" /> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'\';
+							}
+							new_option_html+=\'</span>\';
+							new_option_html+=\'</div>\';
+							new_option_html+=\'<div class="option_values">\';
+							new_option_html+=\'<a href="#" class="msadmin_button fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'">'.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>&nbsp;\';
+							new_option_html+=\'<ul class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
+							new_option_html+=\'<li><a href="#" class="msadmin_button add_attributes_values" rel="\' + s.option_id + \'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + s.option_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
+							new_option_html+=\'</ul>\';
+							new_option_html+=\'<input type="hidden" name="values_fetched_\' + s.option_id + \'" id="values_fetched_\' + s.option_id + \'" value="0" />\';
+							new_option_html+=\'</div>\';
+							new_option_html+=\'</li>\';
+							$(ul_option_listings).append(new_option_html);
+						} else {
+							msDialog("ERROR", s.reason);
+						}
+					}
+				});
+			} else {
+				msDialog("ERROR", "'.$this->pi_getLL('admin_label_error_option_name_empty').'");
+			}
+		});
+	  	$(document).on("click", ".edit_options", function() {
 	  		var optid=$(this).attr("rel");
 	  		getOptionData(optid);
 	  	});
-	  	$(document).on("click", ".edit_options_values", function(e) {
-	  		e.preventDefault();
+	  	$(document).on("click", ".edit_options_values", function() {
 	  		var tmp_relation_id=$(this).attr("rel");
 	  		getOptionValuesData(tmp_relation_id);
 	  	});
-		$("#dialog-edit-description").hide();
-		$("#dialog-edit-options-values-description").hide();
-		$("#dialog-confirm").hide();
-		$("#dialog-confirm-force").hide();
-
-		$(".fetch_options_description").click(function(e) {
-			e.preventDefault();
-			var opt_id = $(this).attr("rel");
-			var dialog_box_id = "#dialog-edit-description";
-			var dialog_box_content_holder = "#description_editor";
-			var dialog_height = "400";
-			var dialog_width = "500";
-
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=fetch_options_description').'";
+	  	$(document).on("click", ".add_attributes_values", function(){
+	  		var d = new Date();
+			var n = d.getTime();
+			var new_values_input=\'new_options_values\' + n;
+			var optid=$(this).attr("rel");
+			var ul_parent=$(this).parent().parent();
+			var last_content_li=$(ul_parent).children().last().prev();
+			var li_class="odd";
+			if ($(last_content_li).hasClass("odd")) {
+				li_class="even";
+			}
+			var new_li=\'<li class="\' + li_class + \' new_options_values" id="\' + new_values_input + \'">\';
+			new_li+=\'<span class="values_id">'.$this->pi_getLL('admin_label_option_value').': <input type="hidden" style="width:200px" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>\';
+			new_li+=\'<span class="values_edit">\';
+			new_li+=\'<a href="#" class="cancel_new_options_values msadmin_button">'.$this->pi_getLL('cancel').'</a>&nbsp;\';
+			new_li+=\'<a href="#" class="save_new_options_values msadmin_button" rel="\' + optid + \'">'.$this->pi_getLL('save').'</a>&nbsp;\';
+			new_li+=\'</span>\';
+			new_li+="</li>";
+			$(new_li).insertBefore($(ul_parent).children().last());
+			select2_options_value("." + new_values_input, "new options values", "new_values_input_drop", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_attributes_values').'");
+	  	});
+	  	$(document).on("click", ".cancel_new_options_values", function() {
+	  		$(this).parent().parent().remove();
+	  	});
+	  	$(document).on("click", ".save_new_options_values", function () {
+	  		var optid=$(this).attr("rel");
+	  		var parent_li=$(this).parent().parent();
+	  		var select2_class="." + $(parent_li).attr("id");
+	  		$(select2_class).select2("destroy");
+	  		// gather value
+	  		var hidden_input=$(this).parent().parent().children("span.values_id").children("input.new_input_values_hidden");
+	  		var serial_value="optid=" + optid + "&" + $(hidden_input).serialize();
+			// save new values
+			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=save_options_values_data').'";
 			$.ajax({
-				type:   "POST",
-				url:    href,
-				data:   \'data_id=\' + opt_id,
-				dataType: "json",
-				success: function(r) {
-					if (r.results) {
-						if (r.options_name != "") {
-							$("#description_editor_header").html("");
-							$("#description_editor_header").html("<strong>'.$this->pi_getLL('admin_label_option').': " + r.options_name + "</strong>");
-						}
-						var values_data = "";
-
-						if (r.results.length > 1) {
-							dialog_height = parseInt(170 * r.results.length);
-						}
-						$.each(r.results, function(i, v){
-							values_data += \'<li class="description_content">\';
-							values_data += \'<span>\' + v.lang_title + \': </span>\';
-							values_data += \'<textarea name="opt_desc[\' + v.option_id + \'][\' + v.lang_id + \']" id="opt_desc_\' + v.option_id + \'_\' + v.lang_id + \'" rows="8" cols="50">\' + v.description + \'</textarea>\';
-							values_data += \'</li>\';
-						});
-
-						if (values_data != "") {
-							values_data = "<ul>" + values_data + "</ul>";
-							$(dialog_box_content_holder).html(values_data);
-							$(dialog_box_id).show();
-							$(dialog_box_id).dialog({
-								resizable: true,
-								height: dialog_height,
-								width: dialog_width,
-								modal: true,
-								buttons: {
-									"Cancel":{
-										text: "'.$this->pi_getLL('cancel').'",
-										class: \'msCancelButton msBackendButton prevState arrowLeft arrowPosLeft\',
-										click: function() {
-											$("#description_editor_header").html("");
-											$(dialog_box_content_holder).html("");
-											$(this).dialog("close");
-											$(this).hide();
-										}
-									},
-									"Save":{
-										text: "'.$this->pi_getLL('save').'",
-										class: \'msOkButton msBackendButton continueState arrowRight arrowPosLeft\',
-										click: function() {
-											href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=save_options_description').'";
-											$.ajax({
-													type:   "POST",
-													url:    href,
-													data:   $("[id^=opt_desc_]").serialize(),
-													dataType: "json",
-													success: function(s) {
-
-													}
-											});
-
-											$("#description_editor_header").html("");
-											$( dialog_box_content_holder ).html("");
-
-											$(this).dialog("close");
-											$(this).hide();
-										}
-									}
-								}
-							});
-						}
+				type:"POST",
+				url:href,
+				data:serial_value,
+				dataType:"json",
+				success: function(s) {
+					var li_class=\'even\';
+					if ($(parent_li).hasClass("odd")) {
+						li_class=\'odd\';
 					}
+					var values_data=\'\';
+					values_data+=\'<li id="option_values_\' + s.values_id + \'" class="option_values_\' + optid + \'_\' + s.values_id + \' \'+li_class+\'">\';
+					values_data+=\'<span class="values_id">\';
+					values_data+=\''.$this->pi_getLL('admin_label_option_value').': \';
+					values_data+=s.values_name;
+					values_data+=\'</span>\';
+					values_data+=\'<span class="values_edit">\';
+					values_data += \'<a href="#" class="edit_options_values msadmin_button" rel="\' + s.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
+					values_data += \'<a href="#" class="delete_options_values msadmin_button" rel="\' + optid + \':\' + s.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
+					values_data+=\'</span>\';
+					values_data += \'</li>\';
+					$("#" + $(parent_li).attr("id")).replaceWith(values_data);
 				}
 			});
-		});
-		$(document).on("click", ".fetch_options_values_description", function(e) {
-			e.preventDefault();
-			var opt_id = $(this).attr("rel");
-			var dialog_box_id = "#dialog-edit-options-values-description";
-			var dialog_box_content_holder = "#description_ov_editor";
-			var dialog_height = "300";
-			var dialog_width = "500";
-
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=fetch_options_values_description').'";
-			$.ajax({
-				type:   "POST",
-				url:    href,
-				data:   \'data_id=\' + opt_id,
-				dataType: "json",
-				success: function(r) {
-					if (r.results) {
-						if (r.options_name != "") {
-							$("#description_ov_editor_header").html("");
-							$("#description_ov_editor_header").html("<strong>" + r.options_name + ": " + r.options_values_name + "</strong>");
-						}
-						var values_data = "";
-
-						if (r.results.length > 1) {
-							dialog_height = parseInt(170 * r.results.length);
-						}
-
-						$.each(r.results, function(i, v){
-							values_data += \'<li class="ov_description_content">\';
-							values_data += \'<span>\' + v.lang_title + \': </span>\';
-							values_data += \'<textarea name="ov_desc[\' + v.pov2po_id + \'][\' + v.lang_id + \']" id="ov_desc_\' + v.pov2po_id + \'_\' + v.lang_id + \'" rows="8" cols="50">\' + v.description + \'</textarea>\';
-							values_data += \'</li>\';
-						});
-						if (values_data != "") {
-							values_data = "<ul>" + values_data + "</ul>";
-							$(dialog_box_content_holder).html(values_data);
-							$(dialog_box_id).show();
-							$(dialog_box_id).dialog({
-								resizable: true,
-								height: dialog_height,
-								width: dialog_width,
-								modal: true,
-								buttons: {
-									"Cancel":{
-										text: "'.$this->pi_getLL('cancel').'",
-										class: \'msCancelButton msBackendButton prevState arrowLeft arrowPosLeft\',
-										click: function() {
-											$("#description_ov_editor_header").html("");
-											$(dialog_box_content_holder).html("");
-											$(this).dialog("close");
-											$(this).hide();
-										}
-									},
-									"save":{
-										text: "'.$this->pi_getLL('save').'",
-										class: \'msOkButton msBackendButton continueState arrowRight arrowPosLeft\',
-										click: function() {
-											href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=save_options_values_description').'";
-											$.ajax({
-													type:   "POST",
-													url:    href,
-													data:   $("[id^=ov_desc_]").serialize(),
-													dataType: "json",
-													success: function(s) {
-
-													}
-											});
-											$("#description_ov_editor_header").html("");
-											$(dialog_box_content_holder).html("");
-											$(this).dialog("close");
-											$(this).hide();
-										}
-									}
-								}
-							});
-						}
-					}
-				}
-			});
-		});
+	  	});
 		$(document).on("click", ".fetch_attributes_values", function(e) {
 			e.preventDefault();
 			var opt_id = $(this).attr("rel");
@@ -469,21 +547,26 @@ if ($rows) {
 								} else {
 									classItem=\'even\';
 								}
+								attributesValues[v.values_id]={id: v.values_id, text: v.values_name}
 								values_data+=\'<li id="option_values_\' + v.values_id + \'" class="option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">\';
+								values_data+=\'<span class="values_id">\';
 								values_data+=\''.$this->pi_getLL('admin_label_option_value').': \';
 								values_data+=v.values_name;
-								values_data += \'<a href="#" class="edit_options_values admin_menu_edit" rel="\' + v.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
-								values_data += \'<a href="#" class="delete_options_values admin_menu_remove" rel="\' + opt_id + \':\' + v.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
-								//values_data += \'<a href="#" class="fetch_options_values_description msadmin_button" rel="\' + v.pov2po_id + \'">'.$this->pi_getLL('show_options_description', 'EDIT VALUES DESCRIPTION').'</a>\';
+								values_data+=\'</span>\';
+								values_data+=\'<span class="values_edit">\';
+								values_data += \'<a href="#" class="edit_options_values msadmin_button" rel="\' + v.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
+								values_data += \'<a href="#" class="delete_options_values msadmin_button" rel="\' + opt_id + \':\' + v.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
+								values_data+=\'</span>\';
 								values_data += \'</li>\';
 							});
-							values_data += \'<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a>\';
+							values_data += \'<li><a href="#" class="msadmin_button add_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
 							$(container_id).html(values_data);
 							$(fetched_id).val("1");
 							$(container_id).show();
 							$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
 						} else {
-							$(button_label_id).html("'.$this->pi_getLL('admin_label_no_values').'");
+							$(container_id).show();
+							$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
 						}
 					}
 				});
@@ -565,6 +648,82 @@ if ($rows) {
 									class: \'msOkButton msBackendButton continueState arrowRight arrowPosLeft\',
 									click: function() {
 										href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_attributes&force_delete=1').'";
+										$.ajax({
+												type:   "POST",
+												url:    href,
+												data:   \'data_id=\' + r.data_id,
+												dataType: "json",
+												success: function(s) {
+													if (s.delete_status == "ok"){
+														$(s.delete_id).remove();
+													}
+												}
+										});
+										$(this).dialog("close");
+										$(this).hide();
+									}
+								}
+							}
+						});
+					}
+				}
+			});
+		});
+		$(document).on("click", ".delete_options_values", function(e) {
+			e.preventDefault();
+			var opt_id = $(this).attr("rel");
+			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_options_values').'";
+			$.ajax({
+				type:   "POST",
+				url:    href,
+				data:   \'data_id=\' + opt_id,
+				dataType: "json",
+				success: function(r) {
+					if (r.delete_status == "notok") {
+						//var products_used = parseInt(r.products_used);
+						var dialog_box_id = "#dialog-confirm";
+
+						if (parseInt(r.products_used) > 0) {
+							dialog_box_id = "#dialog-confirm-force";
+
+							// add product list that mapped to attributes
+							$("#used-product-number").html("<strong>" + r.products_used + "</strong>");
+
+							var product_list = "<ul>";
+							$.each(r.products, function(i, v){
+								product_list += "<li>"+ parseInt(i+1) +". <a href=\""+v.link+"\" target=\"_blank\" alt=\"Edit\">"+ v.name +"</a></li>";
+							});
+							product_list += "<ul>";
+							$("#products-used-attributes-list").html(product_list);
+						}
+
+						if (r.option_value_id != null) {
+							$("#attributes-name0").html("<strong>" + r.option_name + ": " + r.option_value_name + "</strong>");
+							$("#attributes-name1").html("<strong>" + r.option_name + ": " + r.option_value_name + "</strong>");
+						} else {
+							$("#attributes-name0").html("<strong>Option: " + r.option_name + "</strong>");
+							$("#attributes-name1").html("<strong>Option: " + r.option_name + "</strong>");
+						}
+						$(dialog_box_id).show();
+						$(dialog_box_id).dialog({
+							resizable: false,
+							height:400,
+							width:500,
+							modal: true,
+							buttons: {
+								"Cancel":{
+									text: "'.$this->pi_getLL('cancel').'",
+									class: \'msCancelButton msBackendButton prevState arrowLeft arrowPosLeft\',
+									click: function() {
+										$(this).dialog("close");
+										$(this).hide();
+									}
+								},
+								"delete":{
+									text: "'.$this->pi_getLL('delete').'",
+									class: \'msOkButton msBackendButton continueState arrowRight arrowPosLeft\',
+									click: function() {
+										href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_options_values&force_delete=1').'";
 										$.ajax({
 												type:   "POST",
 												url:    href,

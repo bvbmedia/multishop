@@ -82,6 +82,7 @@ CREATE TABLE `fe_users` (
   `ip_address` text,
   `tx_multishop_vat_id` varchar(127) default '',
   `tx_multishop_coc_id` varchar(127) default '',
+  `tx_multishop_quick_checkout` tinyint(1) default '0',
   PRIMARY KEY (`uid`),
   KEY `username` (`username`),
   KEY `is_online` (`is_online`),
@@ -108,7 +109,8 @@ CREATE TABLE `fe_users` (
   KEY `middle_name` (`middle_name`),
   KEY `last_name` (`last_name`),
   KEY `vat_id` (`tx_multishop_vat_id`),
-  KEY `coc_id` (`tx_multishop_coc_id`)
+  KEY `coc_id` (`tx_multishop_coc_id`),
+  KEY `quick_checkout` (`tx_multishop_quick_checkout`)
 ) ENGINE=InnoDB ;
 
 CREATE TABLE `tx_multishop_cart_contents` (

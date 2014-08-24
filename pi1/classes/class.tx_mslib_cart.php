@@ -880,6 +880,7 @@ class tx_mslib_cart extends tslib_pibase {
 			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($address['tx_multishop_vat_id'])) {
 				$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
 			}
+			$insertArray['tx_multishop_quick_checkout']=1;
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {

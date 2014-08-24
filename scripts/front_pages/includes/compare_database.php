@@ -2806,6 +2806,13 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+		$str="select tx_multishop_quick_checkout from fe_users";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE  `fe_users` ADD  `tx_multishop_quick_checkout` TINYINT( 1 ) NOT NULL DEFAULT '0',ADD INDEX (  `tx_multishop_quick_checkout` )";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 		$str="select languages_id from tx_multishop_reviews_description limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($qry) {

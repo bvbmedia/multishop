@@ -67,6 +67,7 @@
 #msadmin_section #msadmin_content #tx_multishop_pi1_core input[type="checkbox"] { margin:3px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core input[type="text"],
 #msadmin_section #msadmin_content #tx_multishop_pi1_core textarea { border:1px solid #999; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; padding:3px 4px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor_box textarea { background:#f0f0f0; color:#000; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core input[type="text"] { margin:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core select { border:1px solid #999; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; padding:2px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core option { padding:0 10px 0 0; }

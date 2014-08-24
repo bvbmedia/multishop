@@ -2,7 +2,6 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-
 if ($this->post) {
 	if ($this->post['sub']=='update_shipping_method' && $this->post['shipping_method_id']) {
 		// update shipping method
@@ -301,7 +300,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		$tmpcontent.='
 		<div class="account-field">
 			<label>&nbsp;</label>
-			<input name="shipping_method_code" type="hidden" value="'.htmlspecialchars($this->post['shipping_method_code']).'" />
+			<input name="shipping_method_code" type="hidden" value="'.htmlspecialchars($this->get['shipping_method_code']).'" />
 			<input name="sub" type="hidden" value="add_shipping_method" />
 			<input name="Submit" class="msadmin_button" type="submit" value="'.$this->pi_getLL('save').'" />
 		</div>
