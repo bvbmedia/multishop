@@ -25,15 +25,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 		$this->get['categories_id']=$this->categoriesStartingPoint;
 	}
 	$subcats=array();
-	// current cat
-	if ($parent_id>0) {
-		$str="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.status=1 and c.categories_id='".addslashes($parent_id)."' and cd.language_id='".$this->sys_language_uid."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$current=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-	} else {
-		// default root has no current category. this is a bad query (bas)
-		//$str="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.status=1 and c.parent_id='".$parent_id."' and cd.language_id='".$this->sys_language_uid."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
-	}
+		// current cat
+		if ($parent_id>0) {
+			$str="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.status=1 and c.categories_id='".addslashes($parent_id)."' and cd.language_id='".$this->sys_language_uid."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$current=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		} else {
+			// default root has no current category. this is a bad query (bas)
+			//$str="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.status=1 and c.parent_id='".$parent_id."' and cd.language_id='".$this->sys_language_uid."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
+		}
 	// first check if the meta_title exists
 	$display_listing=false;
 	$output_array=array();
