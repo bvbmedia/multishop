@@ -227,7 +227,7 @@ class Cache_Lite
     *
     * @var int $_hashedDirectoryLevel
     */
-    var $_hashedDirectoryLevel = 0;
+    var $_hashedDirectoryLevel = 2;
     
     /**
     * Umask for hashed directory structure
