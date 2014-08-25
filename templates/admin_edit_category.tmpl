@@ -1,19 +1,20 @@
 <!-- ###TEMPLATE### begin -->
 <script type="text/javascript">
-    jQuery(document).ready(function ($) {
+###JS_FUNCTIONS_EXTRA###
+jQuery(document).ready(function ($) {
+    $(".tab_content").hide();
+    $("ul.tabs li:first").addClass("active").show();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function () {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
         $(".tab_content").hide();
-        $("ul.tabs li:first").addClass("active").show();
-        $(".tab_content:first").show();
-        $("ul.tabs li").click(function () {
-            $("ul.tabs li").removeClass("active");
-            $(this).addClass("active");
-            $(".tab_content").hide();
-            var activeTab = $(this).find("a").attr("href");
-            $(activeTab).fadeIn(0);
-            return false;
-        });
-
+        var activeTab = $(this).find("a").attr("href");
+        $(activeTab).fadeIn(0);
+        return false;
     });
+    ###JS_TRIGGERS_EXTRA###
+});
 </script>
 ###HEADING_PAGE###
 <form class="admin_category_edit blockSubmitForm" name="admin_categories_edit_###CATEGORIES_ID0###" id="admin_categories_edit_###CATEGORIES_ID1###" method="post" action="###FORM_POST_URL###" enctype="multipart/form-data">
@@ -24,6 +25,7 @@
             <li class=""><a href="#category_content">###ADMIN_LABEL_TABS_CONTENT###</a></li>
             <li class=""><a href="#category_meta">###ADMIN_LABEL_TABS_META###</a></li>
             <li class=""><a href="#category_advanced">###ADMIN_LABEL_TABS_ADVANCED###</a></li>
+            ###LABEL_EXTRA_PLUGIN_TABS###
         </ul>
         <div class="tab_container">
             <div style="display: block;" id="category_main" class="tab_content">
@@ -110,6 +112,7 @@
                     <textarea name="custom_settings" class="expand20-200" cols="" rows="15">###VALUE_ADVANCED_SETTINGS###</textarea>
                 </div>
             </div>
+            ###CONTENT_EXTRA_PLUGIN_TABS###
             <div class="save_block">
                 <a href="###LINK_BUTTON_CANCEL_FOOTER###" class="msBackendButton backState arrowLeft arrowPosLeft"><span>###LABEL_BUTTON_CANCEL_FOOTER###</span></a>
                 <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="###LABEL_BUTTON_SAVE_FOOTER###" /></span>
