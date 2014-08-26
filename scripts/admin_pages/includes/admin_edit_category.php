@@ -450,14 +450,14 @@ if ($this->post) {
 			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
 		}
 		if (!count($js_extra['functions'])) {
-			$subpartArray['JS_FUNCTIONS_EXTRA']='';
+			$subpartArray['###JS_FUNCTIONS_EXTRA###']='';
 		} else {
-			$subpartArray['JS_FUNCTIONS_EXTRA']=implode("\n", $js_extra['functions']);
+			$subpartArray['###JS_FUNCTIONS_EXTRA###']=implode("\n", $js_extra['functions']);
 		}
 		if (!count($js_extra['triggers'])) {
-			$subpartArray['JS_TRIGGERS_EXTRA']='';
+			$subpartArray['###JS_TRIGGERS_EXTRA###']='';
 		} else {
-			$subpartArray['JS_TRIGGERS_EXTRA']=implode("\n", $js_extra['triggers']);
+			$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
 		}
 		$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 	}
