@@ -10,13 +10,17 @@ if (strpos($current_price, ':')!==false) {
 	$price_list_incl_tax=array();
 	foreach ($price_list_format as $price_format) {
 		$price_excl=explode(':', $price_format);
-		$data=mslib_fe::getTaxRuleSet($tax_group_id, $price_excl[0], $to_tax_include);
-		if ($to_tax_include=='true') {
-			$price_excl[0]=str_replace(',', '', $data['price_including_tax']);
+		if ($price_excl[1]>0) {
+			$data=mslib_fe::getTaxRuleSet($tax_group_id, $price_excl[1], $to_tax_include);
+			if ($to_tax_include=='true') {
+				$price_excl[1]=str_replace(',', '', $data['price_including_tax']);
+			} else {
+				$price_excl[1]=str_replace(',', '', $data['price_excluding_tax']);
+			}
 		} else {
-			$price_excl[0]=str_replace(',', '', $data['price_excluding_tax']);
+			$price_excl[1]=0;
 		}
-		$price_excl[0]=mslib_fe::taxDecimalCrop($price_excl[0]);
+		$price_excl[1]=mslib_fe::taxDecimalCrop($price_excl[1]);
 		$price_list_incl_tax[]=implode(':', $price_excl);
 	}
 	//$sc_price_display_incl 	= $row3['price'];

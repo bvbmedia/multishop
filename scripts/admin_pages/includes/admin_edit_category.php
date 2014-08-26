@@ -255,11 +255,11 @@ if ($this->post) {
 				$category_name_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$category_name_block.=''.$language['title'].'
-			</div>	
+			</div>
 			<div class="account-field" id="msEditCategoryInputCategoryName_'.$language['uid'].'">
 				<label for="categories_name">'.$this->pi_getLL('admin_name').'</label>
 				<input spellcheck="true" type="text" class="text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'">
-			</div>		
+			</div>
 			';
 		}
 		// when editing the current category we must prevent the user to chain the selected category to it's childs.
@@ -276,7 +276,7 @@ if ($this->post) {
 		}
 		$category_tree='
 		<div class="account-field" id="msEditCategoryInputParent">
-			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>	
+			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>
 			'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
 		</div>';
 		$categories_image='';
@@ -304,11 +304,11 @@ if ($this->post) {
 				$categories_content_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$categories_content_block.=''.$language['title'].'
-			</div>	
+			</div>
 			<div class="account-field" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
 						<label for="content">'.t3lib_div::strtoupper($this->pi_getLL('content')).' '.t3lib_div::strtoupper($this->pi_getLL('top')).'</label>
 						<textarea spellcheck="true" name="content['.$language['uid'].']" id="content['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content']).'</textarea>
-					</div>		
+					</div>
 					<div class="account-field" id="msEditCategoryInputContentFooter_'.$language['uid'].'">
 						<label for="content_footer">'.t3lib_div::strtoupper($this->pi_getLL('content')).' '.t3lib_div::strtoupper($this->pi_getLL('bottom')).'</label>
 						<textarea spellcheck="true" name="content_footer['.$language['uid'].']" id="content_footer['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content_footer']).'</textarea>
@@ -323,15 +323,15 @@ if ($this->post) {
 				$categories_meta_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$categories_meta_block.=''.$language['title'].'
-			</div>						
+			</div>
 			<div class="account-field" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
 				<label for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
 				<input type="text" class="text" name="meta_title['.$language['uid'].']" id="meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_title']).'">
-			</div>				
+			</div>
 			<div class="account-field" id="msEditCategoryInputMetaKeywords_'.$language['uid'].'">
 				<label for="meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
 				<input type="text" class="text" name="meta_keywords['.$language['uid'].']" id="meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_keywords']).'">
-			</div>				
+			</div>
 			<div class="account-field" id="msEditCategoryInputMetaDesc_'.$language['uid'].'">
 				<label for="meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
 				<input type="text" class="text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
@@ -424,17 +424,41 @@ if ($this->post) {
 		$subpartArray['###ADMIN_LABEL_TABS_CONTENT###']=$this->pi_getLL('admin_label_tabs_content');
 		$subpartArray['###ADMIN_LABEL_TABS_META###']=$this->pi_getLL('admin_label_tabs_meta');
 		$subpartArray['###ADMIN_LABEL_TABS_ADVANCED###']=$this->pi_getLL('admin_label_tabs_advanced');
+		// plugin marker place holder
+		$plugins_extra_tab=array();
+		$js_extra=array();
+		$plugins_extra_tab['tabs_header']=array();
+		$plugins_extra_tab['tabs_content']=array();
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'])) {
 			$params=array(
 				'subpartArray'=>&$subpartArray,
-				'category'=>&$category
+				'category'=>&$category,
+				'plugins_extra_tab'=>&$plugins_extra_tab,
+				'js_extra'=>&$js_extra
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'] as $funcRef) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
+		if (!count($plugins_extra_tab['tabs_header']) && !count($plugins_extra_tab['tabs_content'])) {
+			$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']='';
+			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']='';
+		} else {
+			$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_header']);
+			$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
+		}
+		if (!count($js_extra['functions'])) {
+			$subpartArray['###JS_FUNCTIONS_EXTRA###']='';
+		} else {
+			$subpartArray['###JS_FUNCTIONS_EXTRA###']=implode("\n", $js_extra['functions']);
+		}
+		if (!count($js_extra['triggers'])) {
+			$subpartArray['###JS_TRIGGERS_EXTRA###']='';
+		} else {
+			$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
+		}
 		$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 	}
 }
