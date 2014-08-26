@@ -108,7 +108,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 			$filter[]="(".$tbl."manufacturers_id='".addslashes($this->get['manufacturers_id'])."')";
 		}
-		if (strlen($this->get['skeyword'])>2) {
+		if (strlen($this->get['skeyword'])>1) {
 			if ((!is_array($this->get['tx_multishop_pi1']['search_by']) and $this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_ID']) or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('products_id', $this->get['tx_multishop_pi1']['search_by']))) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='pf.';
