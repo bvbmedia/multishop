@@ -43,7 +43,7 @@ if (!$product['products_id']) {
 		if ($product['products_meta_keywords']) {
 			$output_array['meta']['keywords']='<meta name="keywords" content="'.htmlspecialchars($product['products_meta_keywords']).'" />';
 		}
-		// meta tags eof	
+		// meta tags eof
 	}
 	// facebook image and open graph
 	$where='';
@@ -228,7 +228,7 @@ if (!$product['products_id']) {
 	if ($tmpoutput) {
 		$output['products_image_more'].='<div class="more_product_images">'.$tmpoutput.'</div>';
 	}
-	// loading the attributes	
+	// loading the attributes
 	$output['product_attributes']=mslib_fe::showAttributes($product['products_id'], $product['tax_rate']);
 	// loading the attributes eof
 	// add to basket
@@ -246,7 +246,7 @@ if (!$product['products_id']) {
 		}
 	}
 	$output['add_to_cart_button'].='<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="products_id" id="products_id" type="hidden" value="'.$product['products_id'].'" />'.$order_now_button.'</span>';
-	// add to basket eof	
+	// add to basket eof
 	// now parse all the objects in the tmpl file
 	if ($this->conf['product_detail_tmpl_path']) {
 		$template=$this->cObj->fileResource($this->conf['product_detail_tmpl_path']);
@@ -272,23 +272,30 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_EAN###']=$product['ean_code'];
 	$markerArray['###PRODUCTS_SPECIAL_PRICE###']=$output['special_price'];
 	$markerArray['###OTHER_CUSTOMERS_BOUGHT###']=$output['customers_also_bought'];
-	// new 
+	// new
 	$markerArray['###QUANTITY###']=$output['quantity'];
 	$markerArray['###BACK_BUTTON###']=$output['back_button'];
 	$markerArray['###ADD_TO_CART_BUTTON###']=$output['add_to_cart_button'];
 	$markerArray['###PRODUCTS_META_DESCRIPTION###']=$product['products_meta_description'];
 	$markerArray['###PRODUCTS_META_KEYWORDS###']=$product['products_meta_keywords'];
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
+	$plugins_extra_content=array();
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'])) {
 		$params=array(
 			'markerArray'=>&$markerArray,
 			'product'=>&$product,
-			'output'=>&$output
+			'output'=>&$output,
+			'plugins_extra_content'=>&$plugins_extra_content
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
+	}
+	$markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###']='';
+	if (count($plugins_extra_content)) {
+		$plugin_extra_content=implode("\n", $plugins_extra_content);
+		$markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###']=$plugin_extra_content;
 	}
 	// custom hook that can be controlled by third-party plugin eof
 	$content.=$output['top_content'].'<form action="'.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart&products_id='.$product['products_id']).'" method="post" name="shopping_cart" id="add_to_shopping_cart_form" enctype="multipart/form-data"><div id="products_detail">'.$this->cObj->substituteMarkerArray($template, $markerArray).'</div><input name="tx_multishop_pi1[cart_item]" type="hidden" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['cart_item']).'" /></form>';
