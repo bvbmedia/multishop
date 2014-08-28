@@ -98,7 +98,7 @@ foreach ($dates as $key=>$value) {
 	} else {
 		$where[]='(c.is_checkout=0 or c.is_checkout=1)';
 	}
-	$str="SELECT c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") group by c.session_id ";
+	$str="SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") group by c.session_id ";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$content.='<td align="right">'.number_format($rows).'</td>';
@@ -120,6 +120,9 @@ foreach ($dates as $key=>$value) {
 					$content.='<table cellspacing="0" cellpadding="0" border="0" id="product_import_table" class="msZebraTable '.(!$row['is_checkout'] ? 'is_not_checkout' : '').'">';
 					$tr_rows=array();
 					$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('date').'</th><td>'.strftime("%x %X", $row['crdate']).'</td>';
+					if ($row['ip_address']) {
+						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('ip_address').'</th><td>'.$row['ip_address'].'</td>';
+					}
 					if ($row['is_checkout']) {
 						// lets find out how long the user did to finish the checkout
 						$str2="SELECT crdate FROM tx_multishop_cart_contents c where c.session_id='".$row['session_id']."' and c.id < '".$row['id']."' order by c.id asc limit 1";
