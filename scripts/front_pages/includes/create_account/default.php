@@ -6,103 +6,97 @@ if (mslib_fe::loggedin()) {
 	// user is already signed in
 	$content.=$this->pi_getLL('you_are_already_signed_in');
 } else {
-	$erno=array();
-	if ($this->post) {
-		$mslib_user=t3lib_div::makeInstance('tx_mslib_user');
-		$mslib_user->init($this);
-		$mslib_user->setUsername($this->post['email']);
-		$mslib_user->setEmail($this->post['email']);
-		$mslib_user->setConfirmation_email($this->post['email_confirm']);
-		$mslib_user->setGender($this->post['gender']);
-		$mslib_user->setPassword($this->post['password']);
-		$mslib_user->setConfirmation_password($this->post['password_confirm']);
-		$mslib_user->setFirst_name($this->post['first_name']);
-		$mslib_user->setMiddle_name($this->post['middle_name']);
-		$mslib_user->setLast_name($this->post['last_name']);
-		$mslib_user->setName($this->post['first_name'].' '.$this->post['middle_name'].' '.$this->post['last_name']);
-		$mslib_user->setCompany($this->post['company']);
-		$mslib_user->setCountry($this->post['country']);
-		$mslib_user->setAddress($this->post['address']);
-		$mslib_user->setAddress_number($this->post['address_number']);
-		$mslib_user->setAddress_ext($this->post['address_ext']);
-		$mslib_user->setZip($this->post['zip']);
-		$mslib_user->setCity($this->post['city']);
-		$mslib_user->setTelephone($this->post['telephone']);
-		$mslib_user->setMobile($this->post['mobile']);
-		$mslib_user->setNewsletter($this->post['tx_multishop_newsletter']);
-		$mslib_user->setCaptcha_code($this->post['tx_multishop_pi1']['captcha_code']);
-		$mslib_user->setBirthday($this->post['birthday']);
-		$erno=$mslib_user->checkUserData();
-		if (!count($erno)) {
-			$customer_id=$mslib_user->saveUserData();
-			if ($customer_id) {
-				$newCustomer=mslib_fe::getUser($customer_id);
-				// save as billing address and default address, later on
-				// customer can edit the profile
-				$res=$mslib_user->saveUserBillingAddress($customer_id);
-				if ($res) {
-					$page=mslib_fe::getCMScontent('email_create_account_confirmation', $GLOBALS['TSFE']->sys_language_uid);
-					if ($page[0]['content']) {
-						// loading the email confirmation letter eof
-						// replacing the variables with dynamic values
-						$array1=array();
-						$array2=array();
-						$array1[]='###BILLING_COMPANY###';
-						$array2[]=$newCustomer['company'];
-						$array1[]='###FULL_NAME###';
-						$array2[]=$newCustomer['name'];
-						$array1[]='###BILLING_NAME###';
-						$array2[]=$newCustomer['name'];
-						$array1[]='###BILLING_FIRST_NAME###';
-						$array2[]=$newCustomer['first_name'];
-						$array1[]='###BILLING_LAST_NAME###';
-						$last_name=$newCustomer['last_name'];
-						if ($newCustomer['middle_name']) {
-							$last_name=$newCustomer['middle_name'].' '.$last_name;
-						}
-						$array2[]=$last_name;
-						$array1[]='###CUSTOMER_EMAIL###';
-						$array2[]=$newCustomer['email'];
-						$array1[]='###BILLING_EMAIL###';
-						$array2[]=$newCustomer['email'];
-						$array1[]='###BILLING_ADDRESS###';
-						$array2[]=$newCustomer['address'];
-						$array1[]='###BILLING_TELEPHONE###';
-						$array2[]=$newCustomer['telephone'];
-						$array1[]='###BILLING_MOBILE###';
-						$array2[]=$newCustomer['mobile'];
-						$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
-						$long_date=strftime($this->pi_getLL('full_date_format'));
-						$array2[]=$long_date;
-						$array1[]='###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
-						$long_date=strftime($this->pi_getLL('full_date_format'));
-						$array2[]=$long_date;
-						$array1[]='###STORE_NAME###';
-						$array2[]=$this->ms['MODULES']['STORE_NAME'];
-						$array1[]='###CUSTOMER_ID###';
-						$array2[]=$customer_id;
-						$link=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=confirm_create_account&tx_multishop_pi1[hash]='.$newCustomer['tx_multishop_code']);
-						$array1[]='###LINK###';
-						$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
-						$array1[]='###CONFIRMATION_LINK###';
-						$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
-						if ($page[0]['content']) {
-							$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-						}
-						if ($page[0]['name']) {
-							$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-						}
-						$user=array();
-						$user['name']=$newCustomer['first_name'];
-						$user['email']=$newCustomer['email'];
-						mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
-						// mail a copy to the merchant
-						$merchant=array();
-						$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
-						$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-						mslib_fe::mailUser($merchant, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
-						// display the thank you page
-						$page=mslib_fe::getCMScontent('create_account_thank_you_page', $GLOBALS['TSFE']->sys_language_uid);
+	if ($this->get['tx_multishop_pi1']['createAccountNonOptInCompleted']) {
+		$customerSession=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_customer');
+		$customer_id=$customerSession['customer_id'];
+		$newCustomer=mslib_fe::getUser($customer_id);
+		$page=mslib_fe::getCMScontent('create_account_thank_you_page', $GLOBALS['TSFE']->sys_language_uid);
+		if ($page[0]['content']) {
+			// loading the email confirmation letter eof
+			// replacing the variables with dynamic values
+			$array1=array();
+			$array2=array();
+			$array1[]='###BILLING_COMPANY###';
+			$array2[]=$newCustomer['company'];
+			$array1[]='###FULL_NAME###';
+			$array2[]=$newCustomer['name'];
+			$array1[]='###BILLING_NAME###';
+			$array2[]=$newCustomer['name'];
+			$array1[]='###BILLING_FIRST_NAME###';
+			$array2[]=$newCustomer['first_name'];
+			$array1[]='###BILLING_LAST_NAME###';
+			$last_name=$newCustomer['last_name'];
+			if ($newCustomer['middle_name']) {
+				$last_name=$newCustomer['middle_name'].' '.$last_name;
+			}
+			$array2[]=$last_name;
+			$array1[]='###CUSTOMER_EMAIL###';
+			$array2[]=$newCustomer['email'];
+			$array1[]='###BILLING_EMAIL###';
+			$array2[]=$newCustomer['email'];
+			$array1[]='###BILLING_ADDRESS###';
+			$array2[]=$newCustomer['address'];
+			$array1[]='###BILLING_TELEPHONE###';
+			$array2[]=$newCustomer['telephone'];
+			$array1[]='###BILLING_MOBILE###';
+			$array2[]=$newCustomer['mobile'];
+			$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
+			$long_date=strftime($this->pi_getLL('full_date_format'));
+			$array2[]=$long_date;
+			$array1[]='###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
+			$long_date=strftime($this->pi_getLL('full_date_format'));
+			$array2[]=$long_date;
+			$array1[]='###STORE_NAME###';
+			$array2[]=$this->ms['MODULES']['STORE_NAME'];
+			$array1[]='###CUSTOMER_ID###';
+			$array2[]=$customer_id;
+			if ($page[0]['name']) {
+				$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
+				$content.='<div class="main-heading"><h3>'.$page[0]['name'].'</h3></div>';
+			}
+			if ($page[0]['content']) {
+				$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
+				$content.=$page[0]['content'];
+			}
+		}
+	} else {
+		$erno=array();
+		if ($this->post) {
+			$mslib_user=t3lib_div::makeInstance('tx_mslib_user');
+			$mslib_user->init($this);
+			$mslib_user->setUsername($this->post['email']);
+			$mslib_user->setEmail($this->post['email']);
+			$mslib_user->setConfirmation_email($this->post['email_confirm']);
+			$mslib_user->setGender($this->post['gender']);
+			$mslib_user->setPassword($this->post['password']);
+			$mslib_user->setConfirmation_password($this->post['password_confirm']);
+			$mslib_user->setFirst_name($this->post['first_name']);
+			$mslib_user->setMiddle_name($this->post['middle_name']);
+			$mslib_user->setLast_name($this->post['last_name']);
+			$mslib_user->setName($this->post['first_name'].' '.$this->post['middle_name'].' '.$this->post['last_name']);
+			$mslib_user->setCompany($this->post['company']);
+			$mslib_user->setCountry($this->post['country']);
+			$mslib_user->setAddress($this->post['address']);
+			$mslib_user->setAddress_number($this->post['address_number']);
+			$mslib_user->setAddress_ext($this->post['address_ext']);
+			$mslib_user->setZip($this->post['zip']);
+			$mslib_user->setCity($this->post['city']);
+			$mslib_user->setTelephone($this->post['telephone']);
+			$mslib_user->setMobile($this->post['mobile']);
+			$mslib_user->setNewsletter($this->post['tx_multishop_newsletter']);
+			$mslib_user->setCaptcha_code($this->post['tx_multishop_pi1']['captcha_code']);
+			$mslib_user->setBirthday($this->post['birthday']);
+			$erno=$mslib_user->checkUserData();
+			if (!count($erno)) {
+				$customer_id=$mslib_user->saveUserData();
+				if ($customer_id) {
+					// SAVE CUSTOMER
+					$newCustomer=mslib_fe::getUser($customer_id);
+					// save as billing address and default address, later on
+					// customer can edit the profile
+					$res=$mslib_user->saveUserBillingAddress($customer_id);
+					if ($res) {
+						$page=mslib_fe::getCMScontent('email_create_account_confirmation', $GLOBALS['TSFE']->sys_language_uid);
 						if ($page[0]['content']) {
 							// loading the email confirmation letter eof
 							// replacing the variables with dynamic values
@@ -142,31 +136,53 @@ if (mslib_fe::loggedin()) {
 							$array2[]=$this->ms['MODULES']['STORE_NAME'];
 							$array1[]='###CUSTOMER_ID###';
 							$array2[]=$customer_id;
-							if ($page[0]['name']) {
-								$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-								$content.='<div class="main-heading"><h3>'.$page[0]['name'].'</h3></div>';
-							}
+							$link=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=confirm_create_account&tx_multishop_pi1[hash]='.$newCustomer['tx_multishop_code']);
+							$array1[]='###LINK###';
+							$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
+							$array1[]='###CONFIRMATION_LINK###';
+							$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
 							if ($page[0]['content']) {
 								$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-								$content.=$page[0]['content'];
 							}
+							if ($page[0]['name']) {
+								$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
+							}
+							$user=array();
+							$user['name']=$newCustomer['first_name'];
+							$user['email']=$newCustomer['email'];
+							mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+							// mail a copy to the merchant
+							$merchant=array();
+							$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
+							$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
+							mslib_fe::mailUser($merchant, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+							// save customer id in session and redirect to thank you page
+							$customerSession=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_customer');
+							$customerSession['customer_id']=$customer_id;
+							$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_customer', $customerSession);
+							$GLOBALS['TSFE']->storeSessionData();
+							// redirect to the thank you page
+							$link=mslib_fe::typolink('', '&tx_multishop_pi1[createAccountNonOptInCompleted]=1', 1);
+							if ($link) {
+								header("Location: ".$this->FULL_HTTP_URL.$link);
+							}
+							exit();
 						}
 					}
 				}
 			}
 		}
-	}
-	if (!$this->post or count($erno)) {
-		if (count($erno)>0) {
-			$content.='<div class="error_msg">';
-			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
-			foreach ($erno as $item) {
-				$content.='<li>'.$item.'</li>';
+		if (!$this->post or count($erno)) {
+			if (count($erno)>0) {
+				$content.='<div class="error_msg">';
+				$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
+				foreach ($erno as $item) {
+					$content.='<li>'.$item.'</li>';
+				}
+				$content.='</ul>';
+				$content.='</div>';
 			}
-			$content.='</ul>';
-			$content.='</div>';
-		}
-		$content.='
+			$content.='
 		<div id="live-validation-create-account">
 		  <form action="'.mslib_fe::typolink().'" method="post" name="create_account" class="AdvancedForm" id="create-account">
 			<div id="live-validation_l">
@@ -200,41 +216,41 @@ if (mslib_fe::loggedin()) {
 				<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($this->post['company']).'" />
 				<span class="error-space"></span></div>
 		';
-		// load enabled countries to array
-		$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
-		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-		$enabled_countries=array();
-		while ($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
-			$enabled_countries[]=$row2;
-		}
-		// load enabled countries to array eof
-		if (count($enabled_countries)==1) {
-			$content.='<input name="country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
-		} else {
-			$content.='
+			// load enabled countries to array
+			$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+			$enabled_countries=array();
+			while ($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
+				$enabled_countries[]=$row2;
+			}
+			// load enabled countries to array eof
+			if (count($enabled_countries)==1) {
+				$content.='<input name="country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+			} else {
+				$content.='
 					  <div class="account-field" id="input-country">
 						<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 					';
-			$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
-			if (!$this->post) {
-				$this->post['country']=$default_country['cn_short_en'];
-			}
-			foreach ($enabled_countries as $country) {
-				$tmpcontent.='<option value="'.t3lib_div::strtoupper($country['cn_short_en']).'" '.((t3lib_div::strtolower($this->post['country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
-			}
-			if ($tmpcontent) {
-				$content.='
+				$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
+				if (!$this->post) {
+					$this->post['country']=$default_country['cn_short_en'];
+				}
+				foreach ($enabled_countries as $country) {
+					$tmpcontent.='<option value="'.t3lib_div::strtoupper($country['cn_short_en']).'" '.((t3lib_div::strtolower($this->post['country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+				}
+				if ($tmpcontent) {
+					$content.='
 						<select name="country" class="country">
 							<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 							'.$tmpcontent.'
 						</select>
 						';
-			}
-			$content.='
+				}
+				$content.='
 					  </div>
 					  ';
-		}
-		$content.='
+			}
+			$content.='
 			  <div class="account-field" id="input-address">
 				<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
 				<input type="text" name="address" id="address" class="address" value="'.htmlspecialchars($this->post['address']).'" />
@@ -294,15 +310,15 @@ if (mslib_fe::loggedin()) {
 				</div>
 				<div class="account-boxes">'.$this->pi_getLL('subscribe_to_our_newsletter_description').'.</div>
 			  </div>';
-		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
-			$content.='<div class="account-field newsletter_checkbox_message">
+			if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
+				$content.='<div class="account-field newsletter_checkbox_message">
 				<label class="account-label">
 				  <input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($this->post['tx_multishop_newsletter'] ? ' checked="checked"' : '').' />
 				</label>
 				<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
 				</div>';
-		}
-		$content.='<div class="account-field security">
+			}
+			$content.='<div class="account-field security">
 					<label>
 					  <img src="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=captcha').'">
 					</label>
@@ -318,6 +334,7 @@ if (mslib_fe::loggedin()) {
 		  </form>
 		</div>
 		';
+		}
 	}
 }
 $content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
