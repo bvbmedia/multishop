@@ -47,16 +47,25 @@ if ($this->cookie['stats_year_sb']>0) {
 $order_status_sb='<label for="order_status">'.$this->pi_getLL('order_status').': </label>';
 $all_orders_status=mslib_fe::getAllOrderStatus();
 if (is_array($all_orders_status) and count($all_orders_status)) {
-	$order_status_sb.='<select name="order_status" id="admin_sales_stats_order_status">';
-	$order_status_sb.='<option value="">'.$this->pi_getLL('choose').'</option>';
+	$order_status_sb.='<div class="order_status_checkbox" id="admin_sales_stats_order_status">';
 	foreach ($all_orders_status as $row) {
-		if ($this->get['tx_multishop_pi1']['status']==$row['id']) {
-			$order_status_sb.='<option value="'.$row['id'].'" selected>'.$row['name'].'</option>'."\n";
+		if (in_array($row['id'], $this->get['tx_multishop_pi1']['status'])) {
+			$order_status_sb.='<label for="sales_stats_status_'.$row['id'].'"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" checked="checked" class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /> '.$row['name'].'</label>';
 		} else {
-			$order_status_sb.='<option value="'.$row['id'].'">'.$row['name'].'</option>'."\n";
+			$order_status_sb.='<label for="sales_stats_status_'.$row['id'].'"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /> '.$row['name'].'</label>';
 		}
 	}
-	$order_status_sb.='</select>';
+	$order_status_sb.='</div>';
+}
+if (isset($this->get['tx_multishop_pi1']['status']) && count($this->get['tx_multishop_pi1']['status'])>0) {
+	$status_where='';
+	$tmp=array();
+	foreach ($this->get['tx_multishop_pi1']['status'] as $order_status) {
+		$tmp[]='o.status='.$order_status;
+	}
+	if (count($tmp)) {
+		$status_where='('.implode(' or ', $tmp).')';
+	}
 }
 $content.='<div class="order_stats_mode_wrapper">
 <ul class="horizontal_list">
@@ -81,8 +90,13 @@ $content.='
 		$(document).on("change", "#stats_year_sb", function(e) {
 			$("#orders_stats_form").submit();
 		});
-		$(document).on("change", "#admin_sales_stats_order_status", function() {
-			location.href = "'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'&tx_multishop_pi1[status]=" + jQuery(this).val();
+		$(document).on("click", ".admin_sales_stats_order_status", function() {
+			var serial=$(".admin_sales_stats_order_status").serialize();
+			if (serial!="") {
+				location.href = "'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'&" + serial;
+			} else {
+				location.href = "'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'";
+			}
 		});
 	});
 </script>';
@@ -113,8 +127,8 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
-	if (isset($this->get['tx_multishop_pi1']['status']) && $this->get['tx_multishop_pi1']['status']>0) {
-		$where[]='(o.status='.$this->get['tx_multishop_pi1']['status'].')';
+	if (!empty($status_where)) {
+		$where[]=$status_where;
 	}
 	$str="SELECT o.orders_id, o.grand_total FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -172,7 +186,6 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';
@@ -180,8 +193,8 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
-	if (isset($this->get['tx_multishop_pi1']['status']) && $this->get['tx_multishop_pi1']['status']>0) {
-		$where[]='(o.status='.$this->get['tx_multishop_pi1']['status'].')';
+	if (!empty($status_where)) {
+		$where[]=$status_where;
 	}
 	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -257,8 +270,8 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
-	if (isset($this->get['tx_multishop_pi1']['status']) && $this->get['tx_multishop_pi1']['status']>0) {
-		$where[]='(o.status='.$this->get['tx_multishop_pi1']['status'].')';
+	if (!empty($status_where)) {
+		$where[]=$status_where;
 	}
 	$str="SELECT o.customer_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
