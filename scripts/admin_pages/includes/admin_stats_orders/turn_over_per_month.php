@@ -44,10 +44,34 @@ $selected_year='Y-';
 if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
 }
+$order_status_sb='<label for="order_status">'.$this->pi_getLL('order_status').': </label>';
+$all_orders_status=mslib_fe::getAllOrderStatus();
+if (is_array($all_orders_status) and count($all_orders_status)) {
+	$order_status_sb.='<div class="order_status_checkbox" id="admin_sales_stats_order_status">';
+	foreach ($all_orders_status as $row) {
+		if (in_array($row['id'], $this->get['tx_multishop_pi1']['status'])) {
+			$order_status_sb.='<label for="sales_stats_status_'.$row['id'].'"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" checked="checked" class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /> '.$row['name'].'</label>';
+		} else {
+			$order_status_sb.='<label for="sales_stats_status_'.$row['id'].'"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /> '.$row['name'].'</label>';
+		}
+	}
+	$order_status_sb.='</div>';
+}
+if (isset($this->get['tx_multishop_pi1']['status']) && count($this->get['tx_multishop_pi1']['status'])>0) {
+	$status_where='';
+	$tmp=array();
+	foreach ($this->get['tx_multishop_pi1']['status'] as $order_status) {
+		$tmp[]='o.status='.$order_status;
+	}
+	if (count($tmp)) {
+		$status_where='('.implode(' or ', $tmp).')';
+	}
+}
 $content.='<div class="order_stats_mode_wrapper">
 <ul class="horizontal_list">
 	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
 	<li><strong class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</strong></li>
+	<li>'.$order_status_sb.'</li>
 </ul>
 </div>';
 $content.='
@@ -60,12 +84,19 @@ $content.='
 </form>
 <script type="text/javascript" language="JavaScript">
 	jQuery(document).ready(function($) {
-		$("#checkbox_paid_orders_only").click(function(e) {
+		$(document).on("click", "#checkbox_paid_orders_only", function(e) {
 			$("#orders_stats_form").submit();
 		});
-
-		$("#stats_year_sb").change(function(e) {
+		$(document).on("change", "#stats_year_sb", function(e) {
 			$("#orders_stats_form").submit();
+		});
+		$(document).on("click", ".admin_sales_stats_order_status", function() {
+			var serial=$(".admin_sales_stats_order_status").serialize();
+			if (serial!="") {
+				location.href = "'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'&" + serial;
+			} else {
+				location.href = "'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'";
+			}
 		});
 	});
 </script>';
@@ -89,7 +120,6 @@ foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';
@@ -97,6 +127,9 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
+	if (!empty($status_where)) {
+		$where[]=$status_where;
+	}
 	$str="SELECT o.orders_id, o.grand_total FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -153,7 +186,6 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-
 	$where=array();
 	if ($this->cookie['paid_orders_only']) {
 		$where[]='(o.paid=1)';
@@ -161,6 +193,9 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
+	if (!empty($status_where)) {
+		$where[]=$status_where;
+	}
 	$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$total_orders=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
@@ -213,7 +248,7 @@ $content.='<table width="100%" class="msZebraTable" cellpadding="0" cellspacing=
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('amount')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('average', 'average')).'</th>
-	<th>'.htmlspecialchars($this->pi_getLL('orders_id')).'</th>	
+	<th>'.htmlspecialchars($this->pi_getLL('orders_id')).'</th>
 </tr>';
 foreach ($dates as $key=>$value) {
 	$total_daily_orders=0;
@@ -235,6 +270,9 @@ foreach ($dates as $key=>$value) {
 		$where[]='(o.paid=1 or o.paid=0)';
 	}
 	$where[]='(o.deleted=0)';
+	if (!empty($status_where)) {
+		$where[]=$status_where;
+	}
 	$str="SELECT o.customer_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$uids=array();
@@ -282,25 +320,23 @@ $content.='
 $headerData='';
 $headerData.='
 <script type="text/javascript">
-	function downloadOrdersExcelParam() {
-		var href = "/'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_orders_stats_dl_xls').'";
-		var form_ser = jQuery("form").serializeArray();
-		var form_param = "";
-		jQuery.each(form_ser, function(i, v) {
-			if (v.name == "stats_year_sb" ||
-				v.name == "paid_orders_only") {
-
-				if (form_param == "") {
-					form_param += v.name + "=" + v.value;
-				} else {
-					form_param += "&" + v.name + "=" + v.value;
-				}
+function downloadOrdersExcelParam() {
+	var href = "/'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_orders_stats_dl_xls').'";
+	var form_ser = jQuery("form").serializeArray();
+	var form_param = "";
+	jQuery.each(form_ser, function(i, v) {
+		if (v.name == "stats_year_sb" ||
+			v.name == "paid_orders_only") {
+			if (form_param == "") {
+				form_param += v.name + "=" + v.value;
+			} else {
+				form_param += "&" + v.name + "=" + v.value;
 			}
-		});
-		return location.href = href + "?" + form_param;
-	}
-</script>
-';
+		}
+	});
+	return location.href = href + "?" + form_param;
+}
+</script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 $headerData='';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
