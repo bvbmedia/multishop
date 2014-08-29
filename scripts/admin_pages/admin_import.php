@@ -1832,7 +1832,7 @@ if ($this->post['action']=='category-insert') {
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'], $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
-							if (isset($item['products_specials_price']) && $item['products_specials_price'] > 0 && ($item['products_specials_price']<$item['products_price'])) {
+							if (isset($item['products_specials_price']) && ($item['products_specials_price']<$item['products_price'] && $item['products_specials_price'] > 0)) {
 								$updateArray=array();
 								$updateArray['specials_new_products_price']=$item['products_specials_price'];
 								if (strstr($updateArray['specials_new_products_price'], ",")) {
