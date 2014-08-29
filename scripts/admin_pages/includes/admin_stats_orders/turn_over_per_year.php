@@ -20,10 +20,25 @@ if ($row_year['crdate']>0) {
 	$oldest_year=date("Y");
 }
 $current_year=date("Y");
+$order_status_sb='<label for="order_status">'.$this->pi_getLL('order_status').': </label>';
+$all_orders_status=mslib_fe::getAllOrderStatus();
+if (is_array($all_orders_status) and count($all_orders_status)) {
+	$order_status_sb.='<select name="order_status" id="admin_sales_stats_order_status">';
+	$order_status_sb.='<option value="">'.$this->pi_getLL('choose').'</option>';
+	foreach ($all_orders_status as $row) {
+		if ($this->get['tx_multishop_pi1']['status']==$row['id']) {
+			$order_status_sb.='<option value="'.$row['id'].'" selected>'.$row['name'].'</option>'."\n";
+		} else {
+			$order_status_sb.='<option value="'.$row['id'].'">'.$row['name'].'</option>'."\n";
+		}
+	}
+	$order_status_sb.='</select>';
+}
 $content.='<div class="order_stats_mode_wrapper">
 <ul class="horizontal_list">
 	<li><strong class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</strong></li>
 	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerMonth').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</a>
+	<li>'.$order_status_sb.'</li>
 </ul>
 </div>';
 $content.='
@@ -34,11 +49,14 @@ $content.='
 <div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only_py" type="checkbox" value="1" '.($this->cookie['paid_orders_only_py'] ? 'checked' : '').' /> '.$this->pi_getLL('show_paid_orders_only').'</div>
 </form>
 <script type="text/javascript" language="JavaScript">
-	jQuery(document).ready(function($) {
-		$("#checkbox_paid_orders_only").click(function(e) {
-			$("#orders_stats_form").submit();
-		});
+jQuery(document).ready(function($) {
+	$(document).on("click", "#checkbox_paid_orders_only", function(e) {
+		$("#orders_stats_form").submit();
 	});
+	$(document).on("change", "#admin_sales_stats_order_status", function() {
+		location.href = "'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'&tx_multishop_pi1[status]=" + jQuery(this).val();
+	});
+});
 </script>
 ';
 $year_total_amount=array();
@@ -65,6 +83,9 @@ for ($yr=$current_year; $yr>=$oldest_year; $yr--) {
 			$where[]='(o.paid=1 or o.paid=0)';
 		}
 		$where[]='(o.deleted=0)';
+		if (isset($this->get['tx_multishop_pi1']['status']) && $this->get['tx_multishop_pi1']['status']>0) {
+			$where[]='(o.status='.$this->get['tx_multishop_pi1']['status'].')';
+		}
 		$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
