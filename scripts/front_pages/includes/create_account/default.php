@@ -152,10 +152,12 @@ if (mslib_fe::loggedin()) {
 							$user['email']=$newCustomer['email'];
 							mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
 							// mail a copy to the merchant
+							/*
 							$merchant=array();
 							$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 							$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-							mslib_fe::mailUser($merchant, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+							mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+							*/
 							// save customer id in session and redirect to thank you page
 							$customerSession=$GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_customer');
 							$customerSession['customer_id']=$customer_id;

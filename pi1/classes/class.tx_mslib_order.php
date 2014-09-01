@@ -408,7 +408,7 @@ class tx_mslib_order extends tslib_pibase {
 					$merchant=array();
 					$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 					$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-					mslib_fe::mailUser($merchant, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+					mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
 					if ($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO']) {
 						$email=array();
 						if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO'], ",")) {
@@ -421,7 +421,7 @@ class tx_mslib_order extends tslib_pibase {
 								$merchant=array();
 								$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 								$merchant['email']=$item;
-								mslib_fe::mailUser($merchant, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+								mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
 							}
 						}
 					}
