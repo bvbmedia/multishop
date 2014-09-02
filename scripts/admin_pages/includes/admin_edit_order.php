@@ -890,7 +890,7 @@ if (is_numeric($this->get['orders_id'])) {
 				} else {
 					$optionItems=array_merge(array('<option value="">'.($orders['shipping_method_label'] ? $orders['shipping_method_label'] : $orders['shipping_method']).'</option>'), $optionItems);
 				}
-				$orderDetailsItem.='<select name="shipping_method">'.implode("\n", $optionItems).'</select>';
+				$orderDetailsItem.='<select name="shipping_method" id="shipping_method_sb">'.implode("\n", $optionItems).'</select>';
 			} else {
 				$orderDetailsItem.='<span>'.($orders['shipping_method_label'] ? $orders['shipping_method_label'] : $orders['shipping_method']).'</span>';
 			}
@@ -920,7 +920,7 @@ if (is_numeric($this->get['orders_id'])) {
 				} else {
 					$optionItems=array_merge(array('<option value="">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</option>'), $optionItems);
 				}
-				$orderDetailsItem.='<select name="payment_method">'.implode("\n", $optionItems).'</select>';
+				$orderDetailsItem.='<select name="payment_method" id="payment_method_sb">'.implode("\n", $optionItems).'</select>';
 			} else {
 				$orderDetailsItem.='<span>'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</span>';
 			}
@@ -1560,12 +1560,12 @@ if (is_numeric($this->get['orders_id'])) {
 			</div>';
 		}
 		$content_shipping_costs='
-		<div class="account-field">
+		<div class="account-field" id="shipping_cost_input_wrapper" style="display:none">
 			<label>'.$this->pi_getLL('shipping_costs').'</label>
 			<span class="order_total_value">'.$shipping_costs.'</span>
 		</div>';
 		$content_payment_costs='
-		<div class="account-field">
+		<div class="account-field" id="payment_cost_input_wrapper" style="display:none">
 			<label>'.$this->pi_getLL('payment_costs').'</label>
 			<span class="order_total_value">'.$payment_costs.'</span>
 		</div>';
@@ -2122,6 +2122,26 @@ if (is_numeric($this->get['orders_id'])) {
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
 		'.$new_manual_product_js.'
+		if ($(\'#shipping_method_sb\').val()!=\'\') {
+			$(\'#shipping_cost_input_wrapper\').show();
+		}
+		if ($(\'#payment_method_sb\').val()!=\'\') {
+			$(\'#payment_cost_input_wrapper\').show();
+		}
+		$(document).on(\'change\', \'#shipping_method_sb\', function(){
+			if ($(this).val()!=\'\') {
+				$(\'#shipping_cost_input_wrapper\').show();
+			} else {
+				$(\'#shipping_cost_input_wrapper\').hide();
+			}
+		});
+		$(document).on(\'change\', \'#payment_method_sb\', function(){
+			if ($(this).val()!=\'\') {
+				$(\'#payment_cost_input_wrapper\').show();
+			} else {
+				$(\'#payment_cost_input_wrapper\').hide();
+			}
+		});
 		$(\'.change_order_product_status\').change(function() {
 			var order_pid = $(this).attr("rel");
 			var orders_status_id = $("option:selected", this).val();
