@@ -820,8 +820,6 @@ switch ($this->ms['page']) {
 				$keys[]='telephone';
 				$keys[]='mobile';
 				$keys[]='fax';
-				$keys[]='vat_id';
-				$keys[]='coc_id';
 				$updateArray=array();
 				switch ($details_type) {
 					case "delivery_details":
@@ -832,6 +830,8 @@ switch ($this->ms['page']) {
 						$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
 						break;
 					case "billing_details":
+						$keys[]='vat_id';
+						$keys[]='coc_id';
 						foreach ($keys as $key) {
 							$string='billing_'.$key;
 							$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
