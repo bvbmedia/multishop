@@ -72,11 +72,13 @@ class mslib_befe {
 		}
 		// load global front-end module config eof
 		// merge global with local front-end module config
-		foreach ($settings['GLOBAL_MODULES'] as $key=>$value) {
-			if (isset($settings['LOCAL_MODULES'][$key])) {
-				$settings[$key]=$settings['LOCAL_MODULES'][$key];
-			} else {
-				$settings[$key]=$value;
+		if (is_array($settings['GLOBAL_MODULES'])) {
+			foreach ($settings['GLOBAL_MODULES'] as $key=>$value) {
+				if (isset($settings['LOCAL_MODULES'][$key])) {
+					$settings[$key]=$settings['LOCAL_MODULES'][$key];
+				} else {
+					$settings[$key]=$value;
+				}
 			}
 		}
 		// merge global with local front-end module config eof
