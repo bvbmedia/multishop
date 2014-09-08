@@ -871,8 +871,8 @@
             <label index="payment_to_zone_mapping">Payment to Zone Mappings</label>
             <label index="vat_id">VAT number:</label>
             <label index="user_agent">Browser</label>
-            <label index="admin_label_choose_option">choose option</label>
-            <label index="admin_label_choose_attribute">choose attribute</label>
+            <label index="admin_label_choose_option">choose attribute option</label>
+            <label index="admin_label_choose_attribute">choose attribute value</label>
             <label index="admin_label_add_new_product_attributes">Add new product attributes</label>
             <label index="admin_label_please_select_options_and_attributes_value">Please select options and attributes value!</label>
             <label index="admin_label_options_group">options group</label>
@@ -965,6 +965,8 @@
             <label index="admin_label_error_option_name_empty">Option name empty</label>
             <label index="admin_label_error_option_name_exist">Attribute option name already exist</label>
             <label index="add_manual_product">Add item</label>
+            <label index="select_percentage">select percentage</label>
+            <label index="admin_edit_view_front_product">view in front</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1823,8 +1825,8 @@
             <label index="payment_to_zone_mapping">Betaalmethodes per zone</label>
             <label index="vat_id">BTW nummer:</label>
             <label index="user_agent">Browser</label>
-            <label index="admin_label_choose_option">selecteer optie</label>
-            <label index="admin_label_choose_attribute">selecteer attribuut</label>
+            <label index="admin_label_choose_option">selecteer attribuut optie</label>
+            <label index="admin_label_choose_attribute">selecteer attribuut waarde</label>
             <label index="admin_label_add_new_product_attributes">Voeg nieuwe productattribuut toe</label>
             <label index="admin_label_please_select_options_and_attributes_value">U dient eerst een optie en waarde selecteren!</label>
             <label index="admin_label_options_group">optie groep</label>
@@ -1904,7 +1906,7 @@
             <label index="admin_label_upload_productfeed">Upload productbestand</label>
             <label index="final_price_inc_vat">Totaal (incl. BTW)</label>
             <label index="admin_label_edit_option">Bewerk optie</label>
-            <label index="admin_label_save_attribute">Sla attribute op</label>
+            <label index="admin_label_save_attribute">Sla attribuut op</label>
             <label index="admin_label_select_value_or_type_new_value">selecteer waarde of type nieuwe waarde</label>
             <label index="admin_sort_alphabet_natural_asc">sorteer op basis van alfabet natuurlijk (oplopend)</label>
             <label index="admin_sort_alphabet_natural_desc">sorteer op basis van alfabet natuurlijk (aflopend)</label>
@@ -1915,6 +1917,8 @@
             <label index="admin_label_error_option_name_empty">Attribuutoptie is leeg leeg</label>
             <label index="admin_label_error_option_name_exist">Naam van attribuutoptie bestaat al</label>
             <label index="add_manual_product">Regel toevoegen</label>
+            <label index="select_percentage">selecteer percentage</label>
+            <label index="admin_edit_view_front_product">bekijk aan de voorkant</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>

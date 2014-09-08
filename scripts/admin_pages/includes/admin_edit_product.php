@@ -2076,8 +2076,8 @@ if ($this->post) {
 		$subpartArray['###FOOTER_LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
 		if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
-			$subpartArray['###BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';
-			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='<input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" />';
+			$subpartArray['###BUTTON_SAVE_AS_NEW###']='<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" /></span>';
+			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" /></span>';
 		} else {
 			$subpartArray['###BUTTON_SAVE_AS_NEW###']='';
 			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='';
@@ -2296,7 +2296,7 @@ if ($this->post) {
 		/*
 		 * special price percentage
 		 */
-		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" id="specials_price_percentage"><option value="">select percentage</option>';
+		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" id="specials_price_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
 		for ($i=1; $i <= 100; $i++) {
 			if ($product['specials_price_percentage']==$i) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
@@ -2305,6 +2305,8 @@ if ($this->post) {
 			}
 		}
 		$special_price_percentage_value_selectbox.='</select>';
+
+		$subpartArray['###LABEL_PERCENTAGE_SELECTBOX###']=$this->pi_getLL('admin_label_or');
 		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
 		//
 		// plugin marker place holder
