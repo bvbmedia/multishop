@@ -18,10 +18,13 @@ if (is_numeric($this->get['orders_id'])) {
 
 						$(".multishop_print_icon").click(function(e){
 							e.preventDefault();
-//							$("#msadmin_tools_nav").hide();
+							$("#msadmin_tools_nav").hide();
+							$("#tx_multishop_admin_header_wrapper").hide();
+							$("#tx_multishop_admin_footer_wrapper").hide();
+							$("#msadmin_footer").hide();
 							$("#barkode_image").show();
 							window.print();
-//							return false;
+							return false;
 					 	});
 					});
 					</script>
