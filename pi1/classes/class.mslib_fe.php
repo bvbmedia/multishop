@@ -1014,63 +1014,6 @@ class mslib_fe {
 		$user_date=strtotime($sqldatetime);
 		return $user_date;
 	}
-	public function getTax($customer_landen_id, $bu_landen_id) {
-		if ($customer_landen_id) {
-			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-				'static_countries', // FROM ...
-				'id=\''.$customer_landen_id.'\'', // WHERE...
-				'', // GROUP BY...
-				'', // ORDER BY...
-				'' // LIMIT ...
-			);
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-			$customer_landnaam=$row['naam'];
-		}
-		if ($bu_landen_id) {
-			// new static_info_tables
-			//$str="SELECT st.*, str.tx_rate FROM static_taxes st, static_tax_rates str, static_countries sc WHERE st.tx_rate_id=str.uid and sc.cn_iso_2=st.tx_country_iso_2 and sc.cn_iso_nr ='".$bu_landen_id."'";
-			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-				'static_taxes', // FROM ...
-				'tx_country_iso_nr=\''.$bu_landen_id.'\'', // WHERE...
-				'', // GROUP BY...
-				'', // ORDER BY...
-				'' // LIMIT ...
-			);
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-			$tax=$row['tx_rate']*100;
-		}
-		return $tax;
-	}
-	public function getTaxById($id) {
-		$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-			'static_taxes', // FROM ...
-			'uid=\''.$id.'\'', // WHERE...
-			'', // GROUP BY...
-			'', // ORDER BY...
-			'' // LIMIT ...
-		);
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		$tax=($row['tx_rate']*100);
-		return $tax;
-	}
-	public function getTaxByPercentage($value) {
-		//TODO: needs v3 update
-		$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-			'static_taxes', // FROM ...
-			'tx_country_iso_nr=\''.addslashes($this->ms['MODULES']['COUNTRY_ISO_NR']).'\' and tx_rate=\''.($value/100).'\'', // WHERE...
-			'', // GROUP BY...
-			'', // ORDER BY...
-			'' // LIMIT ...
-		);
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-			return $row['uid'];
-		}
-	}
 	public function getTaxGroupByName($string) {
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_tax_rule_groups', // FROM ...
@@ -1921,21 +1864,6 @@ class mslib_fe {
 				return false;
 			}
 		}
-	}
-	public function getTaxRate($tax_id) {
-		if (!is_numeric($tax_id)) {
-			return false;
-		}
-		$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-			'static_taxes', // FROM ...
-			'uid=\''.$tax_id.'\'', // WHERE...
-			'', // GROUP BY...
-			'', // ORDER BY...
-			'' // LIMIT ...
-		);
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		return $row['tx_rate'];
 	}
 	public function getProduct($products_id, $categories_id='', $extra_fields='', $include_disabled_products=0, $skipFlatDatabase=0) {
 		if (!is_numeric($products_id)) {
@@ -6290,13 +6218,13 @@ class mslib_fe {
 		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 			//pd.products_meta_title, pd.products_shortdescription, pd.products_meta_keywords,
 			if ($products_id) {
-				$str="SELECT *,p.staffel_price as staffel_price, tr.tx_rate as tax_rate, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join static_taxes tr on p.tax_id = tr.uid, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_status=1 and pd.language_id='".$this->sys_language_uid."' and cd.language_id='".$this->sys_language_uid."' and p.products_id='".$products_id."' and p.products_id=pd.products_id and  p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id ";
+				$str="SELECT *,p.staffel_price as staffel_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_status=1 and pd.language_id='".$this->sys_language_uid."' and cd.language_id='".$this->sys_language_uid."' and p.products_id='".$products_id."' and p.products_id=pd.products_id and  p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id ";
 				if ($categories_id) {
 					$str.=" and p2c.categories_id='".$categories_id."'";
 				}
 				$str.=" order by p2c.sort_order";
 			} else if ($categories_id) {
-				$str="SELECT *,p.staffel_price as staffel_price, tr.tx_rate as tax_rate, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join static_taxes tr on p.tax_id = tr.uid, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_status=1 and p2c.categories_id='".$categories_id."' and pd.language_id='".$this->sys_language_uid."' and cd.language_id='".$this->sys_language_uid."' and p.products_id=pd.products_id and  p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id order by p2c.sort_order";
+				$str="SELECT *,p.staffel_price as staffel_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_status=1 and p2c.categories_id='".$categories_id."' and pd.language_id='".$this->sys_language_uid."' and cd.language_id='".$this->sys_language_uid."' and p.products_id=pd.products_id and  p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id order by p2c.sort_order";
 			}
 		} else {
 			if ($products_id) {
@@ -6734,7 +6662,7 @@ class mslib_fe {
 	*/
 	public function getProductsAttributesStockGroup($filter) {
 		// do normal search (join the seperate tables)
-		$required_cols='asg.attributes_stock, asg.group_id as as_group_id, p.minimum_quantity, pd.products_viewed,pd.products_url,p.products_id,p.products_image,p.products_image1,p.products_date_added,p.products_model,p.products_quantity,p.products_price,p.staffel_price as staffel_price,IF(s.status, s.specials_new_products_price, p.products_price) as final_price,p.products_date_available,p.tax_id,tr.tx_rate as tax_rate,p.manufacturers_id,pd.products_name,pd.products_shortdescription,c.categories_id,cd.categories_name';
+		$required_cols='asg.attributes_stock, asg.group_id as as_group_id, p.minimum_quantity, pd.products_viewed,pd.products_url,p.products_id,p.products_image,p.products_image1,p.products_date_added,p.products_model,p.products_quantity,p.products_price,p.staffel_price as staffel_price,IF(s.status, s.specials_new_products_price, p.products_price) as final_price,p.products_date_available,p.tax_id,p.manufacturers_id,pd.products_name,pd.products_shortdescription,c.categories_id,cd.categories_name';
 		if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
 			$required_cols.=',pd.products_description';
 		}
@@ -6743,7 +6671,7 @@ class mslib_fe {
 			$select_clause.=', ';
 			$select_clause.=implode(",", $select);
 		}
-		$from_clause.=" from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join static_taxes tr on p.tax_id = tr.uid, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd, tx_multishop_products_attributes_stock_group asg ";
+		$from_clause.=" from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd, tx_multishop_products_attributes_stock_group asg ";
 		$where_clause.=" where p.products_status=1 ";
 		if (!$this->masterShop) {
 			$where_clause.=" and p.page_uid='".$this->showCatalogFromPage."' ";

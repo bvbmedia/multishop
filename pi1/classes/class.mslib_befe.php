@@ -1115,7 +1115,6 @@ class mslib_befe {
 			$select[]='p2c.sort_order';
 			$from=array();
 			// old v2 code
-//			$from[]='tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id=m.manufacturers_id left join static_taxes tr on p.tax_id = tr.uid';
 			$from[]='tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id=m.manufacturers_id left join tx_multishop_order_units o on p.order_unit_id=o.id left join tx_multishop_order_units_description od on o.id=od.order_unit_id and od.language_id=0 ';
 			$from[]='tx_multishop_products_description pd';
 			$from[]='tx_multishop_products_to_categories p2c';
