@@ -964,6 +964,7 @@
             <label index="admin_label_new_option_name">New option name</label>
             <label index="admin_label_error_option_name_empty">Option name empty</label>
             <label index="admin_label_error_option_name_exist">Attribute option name already exist</label>
+            <label index="add_manual_product">Add item</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1909,6 +1910,11 @@
             <label index="admin_sort_alphabet_natural_desc">sorteer op basis van alfabet natuurlijk (aflopend)</label>
             <label index="page">pagina</label>
             <label index="of">van</label>
+            <label index="admin_label_add_new_attribute_options">Voeg attribuutopties toe</label>
+            <label index="admin_label_new_option_name">Nieuwe attribuutoptie</label>
+            <label index="admin_label_error_option_name_empty">Attribuutoptie is leeg leeg</label>
+            <label index="admin_label_error_option_name_exist">Naam van attribuutoptie bestaat al</label>
+            <label index="add_manual_product">Regel toevoegen</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
