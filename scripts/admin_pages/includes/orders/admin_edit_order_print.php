@@ -24,6 +24,12 @@ if (is_numeric($this->get['orders_id'])) {
 							$("#msadmin_footer").hide();
 							$("#barkode_image").show();
 							window.print();
+							// revert previous state after print
+							$("#msadmin_tools_nav").show();
+							$("#tx_multishop_admin_header_wrapper").show();
+							$("#tx_multishop_admin_footer_wrapper").show();
+							$("#msadmin_footer").show();
+							$("#barkode_image").hide();
 							return false;
 					 	});
 					});
