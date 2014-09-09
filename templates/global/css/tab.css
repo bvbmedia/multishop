@@ -274,7 +274,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-header { margin:0; padding:0;}
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table ul { margin:0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul { margin:0 0 20px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul { clear:both; overflow:hidden; margin:0 0 20px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table ul li.products_attributes_item,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li { overflow:hidden; width:auto; border:1px solid #666; margin:10px 0 0; padding:0; border-radius:6px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .option_name,
