@@ -749,12 +749,12 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 // custom page hook that can be controlled by third-party plugin eof
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-
-
-require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
-$mslib_dashboard=t3lib_div::makeInstance('tx_mslib_dashboard');
-$mslib_dashboard->init($this);
-$mslib_dashboard->setSection('admin_edit_customer');
-$mslib_dashboard->renderWidgets();
-$content.=$mslib_dashboard->displayDashboard();
+if ($customer_id) {
+	require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
+	$mslib_dashboard=t3lib_div::makeInstance('tx_mslib_dashboard');
+	$mslib_dashboard->init($this);
+	$mslib_dashboard->setSection('admin_edit_customer');
+	$mslib_dashboard->renderWidgets();
+	$content.=$mslib_dashboard->displayDashboard();
+}
 ?>
