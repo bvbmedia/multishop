@@ -94,7 +94,7 @@ if (count($this->searchKeywords)) {
 	}
 	$queryData['where'][]="(".implode(" OR ", $keywordOr).")";
 }
-$queryData['select'][]='n.ip_address, n.title, n.message, n.message_type, n.crdate, f.name, f.company, f.username';
+$queryData['select'][]='n.session_id, n.ip_address, n.title, n.message, n.message_type, n.crdate, n.customer_id, f.name, f.company, f.username';
 $queryData['from'][]='tx_multishop_notification n left join fe_users f on n.customer_id=f.uid';
 $queryData['order_by'][]='id desc';
 $queryData['limit']=$this->ms['MODULES']['PAGESET_LIMIT'];
@@ -115,7 +115,10 @@ if (!count($pageset['dataset'])) {
 	$headercol.='		
 	<th width="100" nowrap>'.$this->pi_getLL('date').'</th>
 	<th width="100" nowrap>'.$this->pi_getLL('title', 'Title').'</th>
-	<th width="100" nowrap>'.$this->pi_getLL('ip_address').'</th>
+	<th width="100" nowrap align="right">'.$this->pi_getLL('admin_customer_id').'</th>
+	<th width="100" nowrap>'.$this->pi_getLL('admin_customer_name').'</th>
+	<th width="100" nowrap align="right">'.$this->pi_getLL('ip_address').'</th>
+	<th width="100" nowrap>'.$this->pi_getLL('session_id','Session ID').'</th>
 	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
 	<th>'.$this->pi_getLL('content').'</th>
 	';
@@ -132,8 +135,20 @@ if (!count($pageset['dataset'])) {
 		<td valign="top" nowrap>
 			'.htmlspecialchars($row['title']).'
 		</td>
+		<td valign="top" nowrap align="right">
+			'.($row['customer_id'] >0?htmlspecialchars($row['customer_id']):'').'
+		</td>
 		<td valign="top" nowrap>
+			'.htmlspecialchars(($row['company']?$row['company']:$row['name'])).'
+		</td>
+		<td valign="top" nowrap align="right">
 			'.htmlspecialchars($row['ip_address']).'
+		</td>
+		<td valign="top" nowrap>
+			'.htmlspecialchars($row['session_id']).'
+		</td>
+		<td valign="top" nowrap>
+			'.htmlspecialchars($row['message_type']).'
 		</td>
 		<td valign="top">
 			'.$row['message'].'
