@@ -129,3 +129,7 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.advanced_settings_container input[type="text"] { margin-right:0; }
 
 .wrap-attributes-item .information_select2_label { color:#777; text-transform:uppercase; }
+
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li > label { display:block; font:bold 16px Arial,Helvetica,sans-serif; color:#c50000; margin:10px 0; padding:0; line-height:100%; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li .order_status_checkbox label { float:left; width:20%; padding:0 20px 10px 0; vertical-align:bottom; box-sizing:border-box; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li .order_status_checkbox label input { margin-top:0; vertical-align:top; }
