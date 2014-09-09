@@ -302,7 +302,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul ul > a.msadmin_button,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a.msadmin_button.fetch_attributes_values,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values .msadmin_button.msadmin_button_save,
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values #save_new_attribute_options { margin-top:10px; margin-bottom:10px; margin-left:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values #save_new_attribute_options { margin-top:10px !important; margin-bottom:10px !important; margin-left:10px !important; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a { vertical-align:middle; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a.edit_options_values.admin_menu_edit { margin-left:10px; }
 
