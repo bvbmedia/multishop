@@ -110,7 +110,7 @@ CREATE TABLE `fe_users` (
   KEY `last_name` (`last_name`),
   KEY `vat_id` (`tx_multishop_vat_id`),
   KEY `coc_id` (`tx_multishop_coc_id`),
-  KEY `quick_checkout` (`tx_multishop_quick_checkout`),
+  KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`),
   KEY `ip_address` (`ip_address`)
 );
 
@@ -605,8 +605,8 @@ CREATE TABLE `tx_multishop_orders_products` (
   `categories_name_4` varchar(150) default '',
   `categories_id_5` int(5) default '0',
   `categories_name_5` varchar(150) default '',
-  `ean_code`    varchar(50) default '',
-  `sku_code`    varchar(50) default '',
+  `ean_code` varchar(50) default '',
+  `sku_code` varchar(50) default '',
   `vendor_code` varchar(50) default '',
   PRIMARY KEY (`orders_products_id`),
   KEY `orders_id` (`orders_id`),
@@ -972,7 +972,9 @@ CREATE TABLE `tx_multishop_products_method_mappings` (
   `negate` tinyint(1) default '0',
   PRIMARY KEY (`id`),
   KEY `negate` (`negate`),
-  KEY `products_id` (`products_id`,`method_id`,`type`)
+  KEY `products_id` (`products_id`),
+  KEY `method_id` (`method_id`),
+  KEY `type` (`type`)
 );
 
 CREATE TABLE `tx_multishop_customers_method_mappings` (
@@ -983,7 +985,9 @@ CREATE TABLE `tx_multishop_customers_method_mappings` (
   `negate` tinyint(1) default '0',
   PRIMARY KEY (`id`),
   KEY `negate` (`negate`),
-  KEY `customers_id` (`customers_id`,`method_id`,`type`)
+  KEY `customers_id` (`customers_id`),
+  KEY `method_id` (`method_id`),
+  KEY `type` (`type`)
 );
 
 CREATE TABLE `tx_multishop_customers_groups_method_mappings` (
@@ -994,7 +998,9 @@ CREATE TABLE `tx_multishop_customers_groups_method_mappings` (
   `negate` tinyint(1) default '0',
   PRIMARY KEY (`id`),
   KEY `negate` (`negate`),
-  KEY `customers_groups_id` (`customers_groups_id`,`method_id`,`type`)
+  KEY `customers_groups_id` (`customers_groups_id`),
+  KEY `method_id` (`method_id`),
+  KEY `type` (`type`)
 );
 
 CREATE TABLE `tx_multishop_products_options` (
@@ -1419,7 +1425,7 @@ CREATE TABLE `tx_multishop_products_locked_fields` (
 );
 
 CREATE TABLE `tx_multishop_attributes_options_groups` (
-  `attributes_options_groups_id` int(11) auto_increment,
+  `attributes_options_groups_id` int(11),
   `language_id` int(5) default '0',
   `attributes_options_groups_name` varchar(64) default '',
   `sort_order` int(11) default '0',
@@ -1441,7 +1447,7 @@ CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
   `zone_id` int(4) default '0',
   `shipping_method_id` int(11) default '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `zone_id` (`zone_id`, `shipping_method_id`)
+  UNIQUE unique_zone_id (zone_id,shipping_method_id)
 );
 
 CREATE TABLE `tx_multishop_feeds_excludelist` (

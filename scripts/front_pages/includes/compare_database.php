@@ -66,14 +66,14 @@ if (!$skipMultishopUpdates) {
 	$str="select sort_order_option_name from tx_multishop_products_attributes limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
-		$str="ALTER TABLE `tx_multishop_products_attributes` ADD `sort_order_option_name` int(11) DEFAULT '0'";
+		$str="ALTER TABLE `tx_multishop_products_attributes` ADD `sort_order_option_name` int(11) DEFAULT '0', ADD KEY `sort_order_option_name` (sort_order_option_name)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
 	$str="select sort_order_option_value from tx_multishop_products_attributes limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
-		$str="ALTER TABLE `tx_multishop_products_attributes` ADD `sort_order_option_value` int(11) DEFAULT '0'";
+		$str="ALTER TABLE `tx_multishop_products_attributes` ADD `sort_order_option_value` int(11) DEFAULT '0', ADD KEY `sort_order_option_value` (sort_order_option_value)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
@@ -116,7 +116,7 @@ if (!$skipMultishopUpdates) {
 	}
 	foreach ($required_indexes as $required_index) {
 		if (!in_array($required_index, $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD INDEX `".$required_index."` (`".$required_index."`)";
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -146,7 +146,7 @@ if (!$skipMultishopUpdates) {
 			}
 			foreach ($required_indexes as $required_index) {
 				if (!in_array($required_index, $indexes)) {
-					$str="ALTER TABLE  `".$table_name."` ADD INDEX `".$required_index."` (`".$required_index."`)";
+					$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$messages[]=$str;
 				}
@@ -160,7 +160,7 @@ if (!$skipMultishopUpdates) {
 				if ($rs['Key_name']=='params') {
 					if ($rs['Sub_part']=='64') {
 						// cooluri default key length on parameters field is way too short. lets optimize it.
-						$str2="ALTER TABLE link_cache DROP INDEX `params`, ADD INDEX  `params` (`params` (250))";
+						$str2="ALTER TABLE link_cache DROP INDEX `params`, ADD KEY  `params` (`params` (250))";
 						$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 						$messages[]=$str2;
 					}
@@ -168,7 +168,7 @@ if (!$skipMultishopUpdates) {
 				if ($rs['Key_name']=='url') {
 					if ($rs['Sub_part']=='64') {
 						// cooluri default key length on parameters field is way too short. lets optimize it.
-						$str2="ALTER TABLE link_cache DROP INDEX `url`, ADD INDEX  `url` (`url` (128))";
+						$str2="ALTER TABLE link_cache DROP INDEX `url`, ADD KEY  `url` (`url` (128))";
 						$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 						$messages[]=$str2;
 					}
@@ -188,7 +188,7 @@ if (!$skipMultishopUpdates) {
 		}
 		foreach ($required_indexes as $required_index) {
 			if (!in_array($required_index, $indexes)) {
-				$str="ALTER TABLE  `".$table_name."` ADD INDEX `".$required_index."` (`".$required_index."`)";
+				$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
 			}
@@ -294,21 +294,21 @@ if (!$skipMultishopUpdates) {
 		$str="select ean_code from tx_multishop_orders_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `ean_code` varchar(50) DEFAULT  ''";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `ean_code` varchar(50) DEFAULT '', ADD KEY `ean_code` (ean_code)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select sku_code from tx_multishop_orders_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `sku_code` varchar(50) DEFAULT  ''";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `sku_code` varchar(50) DEFAULT '', ADD KEY `sku_code` (sku_code)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select vendor_code from tx_multishop_orders_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `vendor_code` varchar(50) DEFAULT  ''";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `vendor_code` varchar(50) DEFAULT '', ADD KEY `vendor_code` (vendor_code)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -393,7 +393,7 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
 			$str="CREATE TABLE IF NOT EXISTS `tx_multishop_attributes_options_groups` (
-				`attributes_options_groups_id` int(11) NULL AUTO_INCREMENT,
+				`attributes_options_groups_id` int(11),
 				`language_id` int(5) NULL DEFAULT '0',
 				`attributes_options_groups_name` varchar(64) DEFAULT '',
 				`sort_order` int(11) DEFAULT '0',
@@ -416,6 +416,9 @@ if (!$skipMultishopUpdates) {
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
 			}
+		} else {
+			$str="ALTER TABLE  `tx_multishop_customers_groups_method_mappings` CHANGE  `id`  `id` INT( 11 ) NOT NULL";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$str="select street_name from fe_users limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -439,7 +442,7 @@ if (!$skipMultishopUpdates) {
 		$str="select order_unit_id from tx_multishop_orders_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `order_unit_id` int(11) NULL DEFAULT '0',ADD INDEX (  `order_unit_id` )";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `order_unit_id` int(11) NULL DEFAULT '0',ADD KEY (  `order_unit_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -468,21 +471,21 @@ if (!$skipMultishopUpdates) {
 		$str="select categories_id from tx_multishop_orders_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `categories_id` int(11) NULL DEFAULT '0',ADD INDEX (  `categories_id` )";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `categories_id` int(11) NULL DEFAULT '0',ADD KEY (  `categories_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select manufacturers_id from tx_multishop_orders_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `manufacturers_id` int(11) NULL DEFAULT '0',ADD INDEX (  `manufacturers_id` )";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `manufacturers_id` int(11) NULL DEFAULT '0',ADD KEY (  `manufacturers_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select ip_address from tx_multishop_orders limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders` ADD `ip_address` varchar(100) NULL DEFAULT '',ADD INDEX (`ip_address`)";
+			$str="ALTER TABLE  `tx_multishop_orders` ADD `ip_address` varchar(100) NULL DEFAULT '',ADD KEY (`ip_address`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -510,7 +513,7 @@ if (!$skipMultishopUpdates) {
 		$str="select import_job_id from tx_multishop_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD `import_job_id` int(11) NULL DEFAULT '0',ADD INDEX (  `import_job_id` )";
+			$str="ALTER TABLE  `tx_multishop_products` ADD `import_job_id` int(11) NULL DEFAULT '0',ADD KEY (  `import_job_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -571,7 +574,7 @@ if (!$skipMultishopUpdates) {
 		$str="select hashed_id from tx_multishop_categories limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_categories` ADD `hashed_id` varchar(32) NULL default '', ADD INDEX `hashed_id` (`hashed_id`)";
+			$str="ALTER TABLE  `tx_multishop_categories` ADD `hashed_id` varchar(32) NULL default '', ADD KEY `hashed_id` (`hashed_id`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -579,7 +582,7 @@ if (!$skipMultishopUpdates) {
 		$str="select imported_product from tx_multishop_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD `imported_product` tinyint(1) NULL default '0', ADD INDEX `imported_product` (`imported_product`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD `imported_product` tinyint(1) NULL default '0', ADD KEY `imported_product` (`imported_product`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -587,7 +590,7 @@ if (!$skipMultishopUpdates) {
 		$str="select lock_imported_product from tx_multishop_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD `lock_imported_product` tinyint(1) NULL default '0', ADD INDEX `lock_imported_product` (`lock_imported_product`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD `lock_imported_product` tinyint(1) NULL default '0', ADD KEY `lock_imported_product` (`lock_imported_product`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -644,7 +647,7 @@ if (!$skipMultishopUpdates) {
 		}
 		foreach ($required_indexes as $required_index) {
 			if (!in_array($required_index, $indexes)) {
-				$str="ALTER TABLE  `".$table_name."` ADD INDEX `".$required_index."` (`".$required_index."`)";
+				$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
 			}
@@ -729,7 +732,7 @@ if (!$skipMultishopUpdates) {
 		$str="select status_last_modified from tx_multishop_orders limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders` ADD  `status_last_modified` int(11) NULL DEFAULT '0',ADD INDEX (  `status_last_modified` )";
+			$str="ALTER TABLE  `tx_multishop_orders` ADD  `status_last_modified` int(11) NULL DEFAULT '0',ADD KEY (  `status_last_modified` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -905,7 +908,7 @@ if (!$skipMultishopUpdates) {
 		}
 		foreach ($required_indexes as $required_index) {
 			if (!in_array($required_index, $indexes)) {
-				$str="ALTER TABLE  `".$table_name."` ADD INDEX `".$required_index."` (`".$required_index."`)";
+				$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
 			}
@@ -939,7 +942,7 @@ if (!$skipMultishopUpdates) {
 		}
 		foreach ($required_indexes as $required_index) {
 			if (!in_array($required_index, $indexes)) {
-				$str="ALTER TABLE  `".$table_name."` ADD INDEX `".$required_index."` (`".$required_index."`)";
+				$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
 			}
@@ -1139,7 +1142,7 @@ if (!$skipMultishopUpdates) {
 		$str="select default_status from tx_multishop_orders_status limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_status` ADD  `default_status` TINYINT( 1 ) NULL DEFAULT  '0',ADD INDEX (  `default_status` ), ADD `page_uid` int(11) NULL default '0', ADD KEY page_uid (page_uid) ";
+			$str="ALTER TABLE  `tx_multishop_orders_status` ADD  `default_status` TINYINT( 1 ) NULL DEFAULT  '0',ADD KEY (  `default_status` ), ADD `page_uid` int(11) NULL default '0', ADD KEY page_uid (page_uid) ";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 			$str="UPDATE `tx_multishop_orders_status` set `default_status`=1 where id=1";
@@ -2005,7 +2008,7 @@ if (!$skipMultishopUpdates) {
 			$str="ALTER TABLE `tx_multishop_shipping_methods`
 			ADD  `page_uid` INT( 11 ) NULL DEFAULT  '0',
 			ADD  `zone_id` INT( 11 ) NULL DEFAULT  '0',
-			ADD INDEX (  `page_uid` ,  `zone_id` )";
+			ADD KEY (  `page_uid` ,  `zone_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2015,7 +2018,7 @@ if (!$skipMultishopUpdates) {
 			$str="ALTER TABLE `tx_multishop_payment_methods`
 				ADD  `page_uid` INT( 11 ) NULL DEFAULT  '0',
 				ADD  `zone_id` INT( 11 ) NULL DEFAULT  '0',
-				ADD INDEX (  `page_uid` ,  `zone_id` )";
+				ADD KEY (  `page_uid` ,  `zone_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2213,7 +2216,7 @@ if (!$skipMultishopUpdates) {
 		$str="select tx_multishop_code from fe_users limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `fe_users` ADD  `tx_multishop_code` varchar( 50 ) NULL ,ADD INDEX (  `tx_multishop_code` )";
+			$str="ALTER TABLE  `fe_users` ADD  `tx_multishop_code` varchar( 50 ) NULL ,ADD KEY (  `tx_multishop_code` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2255,14 +2258,14 @@ if (!$skipMultishopUpdates) {
 		$str="select tx_multishop_customer_id from tt_address limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tt_address` ADD  `tx_multishop_customer_id` INT( 11 ) NULL, ADD INDEX (`tx_multishop_customer_id`)";
+			$str="ALTER TABLE  `tt_address` ADD  `tx_multishop_customer_id` INT( 11 ) NULL, ADD KEY (`tx_multishop_customer_id`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select tx_multishop_default from tt_address limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tt_address` ADD  `tx_multishop_default` tinyint( 1 ) NULL, ADD INDEX (`tx_multishop_default`)";
+			$str="ALTER TABLE  `tt_address` ADD  `tx_multishop_default` tinyint( 1 ) NULL, ADD KEY (`tx_multishop_default`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2416,7 +2419,7 @@ if (!$skipMultishopUpdates) {
 			$str="ALTER TABLE  `tx_multishop_undo_products` ADD  `sku_code` varchar( 25 ) NULL default ''";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX `sku_code` (  `sku_code` )";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY `sku_code` (  `sku_code` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$str="select shipping_method_label from tx_multishop_orders limit 1";
@@ -2512,40 +2515,40 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('configuration_key', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_configuration_values` ADD INDEX `configuration_key` (  `configuration_key` )";
+			$str="ALTER TABLE  `tx_multishop_configuration_values` ADD KEY `configuration_key` (  `configuration_key` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_configuration_values` ADD INDEX `page_uid` (  `page_uid` )";
+			$str="ALTER TABLE  `tx_multishop_configuration_values` ADD KEY `page_uid` (  `page_uid` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 			$str="ALTER TABLE  `tx_multishop_configuration_values` ADD FULLTEXT `configuration_value` (`configuration_value`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_configuration_values` ADD INDEX  `admin_search` (  `configuration_key` ,  `page_uid` )";
+			$str="ALTER TABLE  `tx_multishop_configuration_values` ADD KEY  `admin_search` (  `configuration_key` ,  `page_uid` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_configuration` ADD INDEX `configuration_title` (  `configuration_title` )";
+			$str="ALTER TABLE  `tx_multishop_configuration` ADD KEY `configuration_title` (  `configuration_title` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 			$str="ALTER TABLE  `tx_multishop_configuration` ADD FULLTEXT `configuration_value` (`configuration_value`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_configuration` ADD INDEX  `admin_search` (  `configuration_title` ,  `configuration_key` )";
+			$str="ALTER TABLE  `tx_multishop_configuration` ADD KEY  `admin_search` (  `configuration_title` ,  `configuration_key` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `fe_users` ADD INDEX  `disable` (`disable`)";
+			$str="ALTER TABLE  `fe_users` ADD KEY  `disable` (`disable`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `fe_users` ADD INDEX  `deleted` (`deleted`)";
+			$str="ALTER TABLE  `fe_users` ADD KEY  `deleted` (`deleted`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `fe_users` ADD INDEX  `admin_search` (`company`,`name`,`email`)";
+			$str="ALTER TABLE  `fe_users` ADD KEY  `admin_search` (`company`,`name`,`email`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_orders` ADD INDEX `deleted` (  `deleted` )";
+			$str="ALTER TABLE  `tx_multishop_orders` ADD KEY `deleted` (  `deleted` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_orders` ADD INDEX `crdate` (  `crdate` )";
+			$str="ALTER TABLE  `tx_multishop_orders` ADD KEY `crdate` (  `crdate` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2564,7 +2567,7 @@ if (!$skipMultishopUpdates) {
 		$str="select hide_in_cart from tx_multishop_products_options";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE `tx_multishop_products_options` ADD  `hide_in_cart` tinyint( 1 ) NULL DEFAULT '0', ADD INDEX (`hide_in_cart`)";
+			$str="ALTER TABLE `tx_multishop_products_options` ADD  `hide_in_cart` tinyint( 1 ) NULL DEFAULT '0', ADD KEY (`hide_in_cart`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2607,14 +2610,17 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
 			$str="CREATE TABLE  `tx_multishop_products_method_mappings` (
-		`id` INT( 11 ) NULL AUTO_INCREMENT PRIMARY KEY ,
-		`products_id` INT( 11 ) NULL DEFAULT '0',
-		`method_id` INT( 11 ) NULL DEFAULT '0' ,
-		`type` varchar( 25 ) NULL ,
-		`negate` tinyint( 1 ) NULL DEFAULT '0' ,
-		INDEX (  `products_id` ,  `method_id` ,  `type` , `negate` )
-		) ENGINE = MYISAM ;
-		";
+			`id` INT( 11 ) NULL AUTO_INCREMENT PRIMARY KEY ,
+			`products_id` INT( 11 ) NULL DEFAULT '0',
+			`method_id` INT( 11 ) NULL DEFAULT '0' ,
+			`type` varchar( 25 ) NULL ,
+			`negate` tinyint( 1 ) NULL DEFAULT '0' ,
+			KEY `products_id` (products_id),
+			KEY `method_id` (method_id),
+			KEY `type` (type),
+			KEY `negate` (negate)
+			);
+			";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2626,9 +2632,12 @@ if (!$skipMultishopUpdates) {
 				`customers_id` INT( 11 ) NULL DEFAULT '0',
 				`method_id` INT( 11 ) NULL DEFAULT '0' ,
 				`type` varchar( 25 ) NULL ,
-				`negate` tinyint( 1 ) NULL DEFAULT '0' ,
-				INDEX (  `customers_id` ,  `method_id` ,  `type` , `negate` )
-			) ENGINE=MYISAM;";
+				`negate` tinyint( 1 ) NULL DEFAULT '0',
+				KEY `customers_id` (customers_id),
+				KEY `method_id` (method_id),
+				KEY `type` (type),
+				KEY `negate` (negate)
+			)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2641,22 +2650,25 @@ if (!$skipMultishopUpdates) {
 				`method_id` INT( 11 ) NULL DEFAULT '0' ,
 				`type` varchar( 25 ) NULL ,
 				`negate` tinyint( 1 ) NULL DEFAULT '0' ,
-				INDEX (  `customers_groups_id` ,  `method_id` ,  `type` , `negate` )
-			) ENGINE=MYISAM;";
+				KEY `customers_groups_id` (customers_groups_id),
+				KEY `method_id` (method_id),
+				KEY `type` (type),
+				KEY `negate` (negate)
+			)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select specials_price_percentage from tx_multishop_products";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD  `specials_price_percentage` VARCHAR( 4 ) NULL DEFAULT '0', ADD INDEX (  `specials_price_percentage` )";
+			$str="ALTER TABLE  `tx_multishop_products` ADD  `specials_price_percentage` VARCHAR(4) NULL DEFAULT '0', ADD KEY (`specials_price_percentage`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select sort_order from tx_multishop_products_options_values_to_products_options";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_products_options_values_to_products_options` ADD  `sort_order` INT( 11 ) NULL DEFAULT '0', ADD INDEX (  `sort_order` )";
+			$str="ALTER TABLE  `tx_multishop_products_options_values_to_products_options` ADD  `sort_order` INT( 11 ) NULL DEFAULT '0', ADD KEY (  `sort_order` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2706,12 +2718,12 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('pid_to_relative_id', $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD INDEX `pid_to_relative_id` (  `products_id`,`relative_product_id` )	";
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `pid_to_relative_id` (  `products_id`,`relative_product_id` )	";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		if (!in_array('relative_to_pid_id', $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD INDEX `relative_to_pid_id` (  `relative_product_id`,`products_id` )	";
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `relative_to_pid_id` (  `relative_product_id`,`products_id` )	";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2757,14 +2769,14 @@ if (!$skipMultishopUpdates) {
 		$str="select sort_order from tx_multishop_specials_sections";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD `sort_order` int( 11 ) NOT NULL DEFAULT '0', ADD INDEX (`sort_order`)";
+			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD `sort_order` int( 11 ) NOT NULL DEFAULT '0', ADD KEY (`sort_order`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select file_label from tx_multishop_orders_products";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `file_label` varchar( 250 ) NULL DEFAULT '', ADD `file_location` varchar( 250 ) NULL DEFAULT '', ADD `file_downloaded` INT(11) NULL DEFAULT '0', ADD `file_download_code` varchar( 32 ) NULL DEFAULT '0', ADD `file_locked` tinyint(1) NULL DEFAULT '0', ADD INDEX (`file_download_code`)";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD `file_label` varchar( 250 ) NULL DEFAULT '', ADD `file_location` varchar( 250 ) NULL DEFAULT '', ADD `file_downloaded` INT(11) NULL DEFAULT '0', ADD `file_download_code` varchar( 32 ) NULL DEFAULT '0', ADD `file_locked` tinyint(1) NULL DEFAULT '0', ADD KEY (`file_download_code`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2788,28 +2800,28 @@ if (!$skipMultishopUpdates) {
 		$str="select tx_multishop_discount from fe_groups";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `fe_groups` ADD  `tx_multishop_discount` INT( 2 ) NULL DEFAULT '0',ADD INDEX (  `tx_multishop_discount` )";
+			$str="ALTER TABLE  `fe_groups` ADD  `tx_multishop_discount` INT( 2 ) NULL DEFAULT '0',ADD KEY (  `tx_multishop_discount` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select code from tx_multishop_payment_transactions";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_payment_transactions` ADD `code` varchar( 35 ) NULL";
+			$str="ALTER TABLE `tx_multishop_payment_transactions` ADD `code` varchar(35) NULL";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select tx_multishop_discount from fe_users";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `fe_users` ADD  `tx_multishop_discount` INT( 2 ) NULL DEFAULT '0',ADD INDEX (  `tx_multishop_discount` )";
+			$str="ALTER TABLE `fe_users` ADD  `tx_multishop_discount` INT( 2 ) NULL DEFAULT '0', ADD KEY tx_multishop_discount (`tx_multishop_discount`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select tx_multishop_quick_checkout from fe_users";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `fe_users` ADD  `tx_multishop_quick_checkout` TINYINT( 1 ) NOT NULL DEFAULT '0',ADD INDEX (  `tx_multishop_quick_checkout` )";
+			$str="ALTER TABLE `fe_users` ADD `tx_multishop_quick_checkout` TINYINT(1) NOT NULL DEFAULT '0', ADD KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -2973,17 +2985,17 @@ if (!$skipMultishopUpdates) {
 		$str="select start_date from tx_multishop_specials limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_specials` ADD  `start_date` INT( 11 ) NULL DEFAULT '0' AFTER  `specials_last_modified`,ADD INDEX (  `start_date` )";
+			$str="ALTER TABLE  `tx_multishop_specials` ADD  `start_date` INT( 11 ) NULL DEFAULT '0' AFTER  `specials_last_modified`,ADD KEY (  `start_date` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
 		$str="select contains_image from tx_multishop_products limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD  `contains_image` tinyint( 1 ) NULL DEFAULT '0',ADD INDEX (  `contains_image` )";
+			$str="ALTER TABLE  `tx_multishop_products` ADD  `contains_image` tinyint( 1 ) NULL DEFAULT '0',ADD KEY (  `contains_image` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_products_flat` ADD  `contains_image` tinyint( 1 ) NULL DEFAULT '0',ADD INDEX (  `contains_image` )";
+			$str="ALTER TABLE  `tx_multishop_products_flat` ADD  `contains_image` tinyint( 1 ) NULL DEFAULT '0',ADD KEY (  `contains_image` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -3156,7 +3168,7 @@ if (!$skipMultishopUpdates) {
 		)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD INDEX (  `date` ), ADD INDEX (  `specials_id` ), ADD INDEX (  `name` )";
+			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD KEY (  `date` ), ADD KEY (  `specials_id` ), ADD KEY (  `name` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
@@ -3166,7 +3178,7 @@ if (!$skipMultishopUpdates) {
 			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD  `status` tinyint( 1 ) NULL DEFAULT '0'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
-			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD INDEX (  `status` )";
+			$str="ALTER TABLE  `tx_multishop_specials_sections` ADD KEY (  `status` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 			$str="ALTER TABLE  `tx_multishop_specials` CHANGE  `specials_id`  `specials_id` INT( 11 ) NULL AUTO_INCREMENT";
@@ -3247,7 +3259,7 @@ if (!$skipMultishopUpdates) {
 		if (!$qry) {
 			$str="ALTER TABLE `tx_multishop_import_jobs` ADD `prefix_source_name` varchar( 50 ) NULL ";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE `tx_multishop_import_jobs` ADD INDEX ( `prefix_source_name` )";
+			$str="ALTER TABLE `tx_multishop_import_jobs` ADD KEY ( `prefix_source_name` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$str="select `products_model` from tx_multishop_orders_products limit 1";
@@ -3279,7 +3291,7 @@ if (!$skipMultishopUpdates) {
 		if (!$qry) {
 			$str="ALTER TABLE `tx_multishop_import_jobs` ADD `code` varchar( 16 ) NULL ";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE `tx_multishop_import_jobs` ADD INDEX ( `code` ) ";
+			$str="ALTER TABLE `tx_multishop_import_jobs` ADD KEY ( `code` ) ";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$str="SELECT * from tx_multishop_import_jobs order by id desc";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -3338,7 +3350,7 @@ if (!$skipMultishopUpdates) {
 		if (!$qry) {
 			$str="ALTER TABLE `tx_multishop_orders` ADD `paid` tinyint( 1 ) NULL DEFAULT '0' ";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE `tx_multishop_orders` ADD INDEX ( `paid` )";
+			$str="ALTER TABLE `tx_multishop_orders` ADD KEY ( `paid` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$str="select by_phone from tx_multishop_orders limit 1";
@@ -3346,7 +3358,7 @@ if (!$skipMultishopUpdates) {
 		if (!$qry) {
 			$str="ALTER TABLE `tx_multishop_orders` ADD `by_phone` tinyint( 1 ) NULL DEFAULT '0'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE `tx_multishop_orders` ADD INDEX ( `by_phone` )";
+			$str="ALTER TABLE `tx_multishop_orders` ADD KEY ( `by_phone` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$str="select option_attributes from tx_multishop_categories limit 1";
@@ -3903,7 +3915,7 @@ if (!$skipMultishopUpdates) {
 				$index='';
 			}
 			if (!in_array('products_image'.$index, $indexes)) {
-				$str="ALTER TABLE `".$table_name."` ADD INDEX `products_image".$index."` (`products_image".$index."`)";
+				$str="ALTER TABLE `".$table_name."` ADD KEY `products_image".$index."` (`products_image".$index."`)";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			}
 		}
@@ -3916,7 +3928,7 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('products_options_name', $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD INDEX `products_options_name` (  `language_id`,`products_options_name` )	";
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `products_options_name` (  `language_id`,`products_options_name` )	";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		// add full text index to products_model for maxium speed
@@ -3936,7 +3948,7 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('products_options_values_name', $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD INDEX `products_options_values_name` (  `products_options_values_name` )";
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `products_options_values_name` (  `products_options_values_name` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		// delete double keys
@@ -3952,34 +3964,34 @@ if (!$skipMultishopUpdates) {
 				$str="ALTER TABLE  `tx_multishop_coupons` DROP INDEX  `code_".$i."`";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			}
-			$str="ALTER TABLE  `tx_multishop_coupons` ADD INDEX (  `status` )";
+			$str="ALTER TABLE  `tx_multishop_coupons` ADD KEY (  `status` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_coupons` ADD INDEX (  `startdate` )";
+			$str="ALTER TABLE  `tx_multishop_coupons` ADD KEY (  `startdate` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_coupons` ADD INDEX (  `enddate` )";
+			$str="ALTER TABLE  `tx_multishop_coupons` ADD KEY (  `enddate` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_coupons` ADD INDEX (  `times_used` )";
+			$str="ALTER TABLE  `tx_multishop_coupons` ADD KEY (  `times_used` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_invoices` ADD INDEX (  `orders_id` )";
+			$str="ALTER TABLE  `tx_multishop_invoices` ADD KEY (  `orders_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_invoices` ADD INDEX (  `status` )";
+			$str="ALTER TABLE  `tx_multishop_invoices` ADD KEY (  `status` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_invoices` ADD INDEX (  `invoice_id` ) ";
+			$str="ALTER TABLE  `tx_multishop_invoices` ADD KEY (  `invoice_id` ) ";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_invoices` ADD INDEX (  `date` ) ";
+			$str="ALTER TABLE  `tx_multishop_invoices` ADD KEY (  `date` ) ";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_orders_products` ADD INDEX (  `products_name` )";
+			$str="ALTER TABLE  `tx_multishop_orders_products` ADD KEY (  `products_name` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_orders_products_attributes` ADD INDEX (  `orders_id` )";
+			$str="ALTER TABLE  `tx_multishop_orders_products_attributes` ADD KEY (  `orders_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_orders_products_attributes` ADD INDEX (  `orders_products_id` )";
+			$str="ALTER TABLE  `tx_multishop_orders_products_attributes` ADD KEY (  `orders_products_id` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$str="ALTER TABLE  `tx_multishop_orders_status_history` ADD INDEX (  `crdate` )";
+			$str="ALTER TABLE  `tx_multishop_orders_status_history` ADD KEY (  `crdate` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		// delete double keys eof
 		if (!in_array('combined_one', $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD INDEX `combined_one` (`language_id`,`products_options_values_name` )";
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `combined_one` (`language_id`,`products_options_values_name` )";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$indexes=array();
@@ -3990,15 +4002,15 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('combined_one', $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD INDEX `combined_one` (`page_uid`,`status`)";
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `combined_one` (`page_uid`,`status`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_two', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_categories` ADD INDEX  `combined_two` (`page_uid`,`status`,`categories_id`)";
+			$str="ALTER TABLE  `tx_multishop_categories` ADD KEY  `combined_two` (`page_uid`,`status`,`categories_id`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_three', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_categories` ADD INDEX  `combined_three` (`page_uid`,`status`,`parent_id`)	";
+			$str="ALTER TABLE  `tx_multishop_categories` ADD KEY  `combined_three` (`page_uid`,`status`,`parent_id`)	";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$indexes=array();
@@ -4009,15 +4021,15 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('combined_one', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_categories_description` ADD INDEX  `combined_one` (  `language_id`,`categories_name`)";
+			$str="ALTER TABLE  `tx_multishop_categories_description` ADD KEY  `combined_one` (  `language_id`,`categories_name`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_two', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_categories_description` ADD INDEX  `combined_two` (  `language_id`,`categories_id`)";
+			$str="ALTER TABLE  `tx_multishop_categories_description` ADD KEY  `combined_two` (  `language_id`,`categories_id`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_three', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_categories_description` ADD INDEX  `combined_three` (  `language_id`,`categories_id`,`categories_name`)";
+			$str="ALTER TABLE  `tx_multishop_categories_description` ADD KEY  `combined_three` (  `language_id`,`categories_id`,`categories_name`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$indexes=array();
@@ -4028,39 +4040,39 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('combined_one', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_one` (`page_uid`,`products_status`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_one` (`page_uid`,`products_status`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_two', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_two` (`page_uid`,`products_status`,`products_id`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_two` (`page_uid`,`products_status`,`products_id`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_three', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_three` (`page_uid`,`products_status`,`sort_order`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_three` (`page_uid`,`products_status`,`sort_order`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_four', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_four` (`page_uid`,`products_status`,`products_model`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_four` (`page_uid`,`products_status`,`products_model`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_five', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_five` (`page_uid`,`products_status`,`products_date_added`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_five` (`page_uid`,`products_status`,`products_date_added`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_six', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_six` (`page_uid`,`products_status`,`products_last_modified`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_six` (`page_uid`,`products_status`,`products_last_modified`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_seven', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_seven` (`page_uid`,`products_status`,`products_date_available`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_seven` (`page_uid`,`products_status`,`products_date_available`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_eight', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_eight` (`page_uid`,`products_status`,`extid`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_eight` (`page_uid`,`products_status`,`extid`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_nine', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products` ADD INDEX  `combined_nine` (`page_uid`,`products_status`,`products_price`)";
+			$str="ALTER TABLE  `tx_multishop_products` ADD KEY  `combined_nine` (`page_uid`,`products_status`,`products_price`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$indexes=array();
@@ -4071,23 +4083,23 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('combined_one', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products_description` ADD INDEX  `combined_one` (  `language_id`,`products_name`)";
+			$str="ALTER TABLE  `tx_multishop_products_description` ADD KEY  `combined_one` (  `language_id`,`products_name`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_two', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products_description` ADD INDEX  `combined_two` (  `language_id`,`products_id`)";
+			$str="ALTER TABLE  `tx_multishop_products_description` ADD KEY  `combined_two` (  `language_id`,`products_id`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_three', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products_description` ADD INDEX  `combined_three` (  `language_id`,`products_id`,`products_name`)";
+			$str="ALTER TABLE  `tx_multishop_products_description` ADD KEY  `combined_three` (  `language_id`,`products_id`,`products_name`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_seven', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products_description` ADD INDEX  `combined_seven` (  `language_id`,`products_meta_keywords`)";
+			$str="ALTER TABLE  `tx_multishop_products_description` ADD KEY  `combined_seven` (  `language_id`,`products_meta_keywords`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_eight', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_products_description` ADD INDEX  `combined_eight` (  `language_id`,`products_name`,`products_description`)";
+			$str="ALTER TABLE  `tx_multishop_products_description` ADD KEY  `combined_eight` (  `language_id`,`products_name`,`products_description`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$indexes=array();
@@ -4098,19 +4110,19 @@ if (!$skipMultishopUpdates) {
 			$indexes[]=$rs['Key_name'];
 		}
 		if (!in_array('combined_one', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_specials` ADD INDEX  `combined_one` (`page_uid`,`status`)";
+			$str="ALTER TABLE  `tx_multishop_specials` ADD KEY  `combined_one` (`page_uid`,`status`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_two', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_specials` ADD INDEX  `combined_two` (`page_uid`,`status`,`specials_new_products_price`)";
+			$str="ALTER TABLE  `tx_multishop_specials` ADD KEY  `combined_two` (`page_uid`,`status`,`specials_new_products_price`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_three', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_specials` ADD INDEX  `combined_three` (`page_uid`,`status`,`expires_date`)";
+			$str="ALTER TABLE  `tx_multishop_specials` ADD KEY  `combined_three` (`page_uid`,`status`,`expires_date`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		if (!in_array('combined_four', $indexes)) {
-			$str="ALTER TABLE  `tx_multishop_specials` ADD INDEX  `combined_four` (`page_uid`,`status`,`expires_date`,`specials_new_products_price`)";
+			$str="ALTER TABLE  `tx_multishop_specials` ADD KEY  `combined_four` (`page_uid`,`status`,`expires_date`,`specials_new_products_price`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		}
 		$indexes=array();
@@ -4278,7 +4290,7 @@ if (!$skipMultishopUpdates) {
 		}
 		foreach ($required_indexes as $required_index) {
 			if (!in_array($required_index, $indexes)) {
-				$str="ALTER TABLE  `".$table_name."` ADD INDEX `".$required_index."` (`".$required_index."`)";
+				$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
 			}

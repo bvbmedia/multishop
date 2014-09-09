@@ -2,6 +2,59 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
+$selects=array();
+$selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
+$selects['select_multiple']=$this->pi_getLL('admin_label_option_type_selectbox_multiple');
+$selects['radio']=$this->pi_getLL('admin_label_option_type_radio');
+$selects['checkbox']=$this->pi_getLL('admin_label_option_type_checkbox');
+$selects['input']=$this->pi_getLL('admin_label_option_type_text_input');
+$selects['textarea']=$this->pi_getLL('admin_label_option_type_textarea');
+$selects['hidden_field']=$this->pi_getLL('admin_label_option_type_hidden_field');
+$selects['file']=$this->pi_getLL('admin_label_option_type_file_input');
+$selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
+
+// new options
+$content.='<form method="post" class="msadminFromFancybox" name="admin_product_new_attribute_options">';
+$content.='<ul>';
+$content.='<li>';
+$content.='<h2>';
+$content.='<span class="option_id">'.$this->pi_getLL('admin_label_add_new_attribute_options').'</span>';
+$content.='</h2>';
+$options_group='';
+if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
+	$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="add_new_attributes_options"');
+	if (!empty($options_group)) {
+		$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$options_group.'</span>';
+	} else {
+		$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$this->pi_getLL('admin_label_no_groups_defined').'</span>';
+	}
+}
+// settings related to options
+$content.='<div class="option_settings">';
+$content.='<span class="options_name"><label for="new_option_name">'.$this->pi_getLL('admin_label_new_option_name').':</label> <input type="text" id="new_option_name" name="new_option_name" class="add_new_attributes_options"> </span>';
+$content.=$options_group;
+$content.='<span class="listing_type">';
+$content.=$this->pi_getLL('admin_label_listing_type').': <select name="listtype" id="new_listtype" class="add_new_attributes_options">';
+foreach ($selects as $key=>$value) {
+	$content.='<option value="'.$key.'"'.($key==$row['listtype'] ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
+}
+$content.='</select>';
+$content.='</span>';
+$content.='<span class="required">
+		<input name="required" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('required').'
+	</span>';
+$content.='<span class="hide_in_cart">
+		<input name="hide_in_cart" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
+	</span>';
+$content.='</div>';
+$content.='<div class="option_values">';
+$content.='<a href="#" class="msBackendButton continueState arrowRight arrowPosLeft" id="save_new_attribute_options"><span>'.$this->pi_getLL('admin_label_add_new_attribute_options').'</span></a>';
+$content.='</div>';
+$content.='</li>';
+$content.='</ul>';
+$content.='</form>';
+
 if ($this->post) {
 	if (is_array($this->post['listtype']) and count($this->post['listtype'])) {
 		foreach ($this->post['listtype'] as $products_options_id=>$settings_value) {
@@ -62,16 +115,7 @@ $js_select2_cache='<script type="text/javascript">
 	var attributesValues=[];'."\n";
 // load the interface
 mslib_befe::loadLanguages();
-$selects=array();
-$selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
-$selects['select_multiple']=$this->pi_getLL('admin_label_option_type_selectbox_multiple');
-$selects['radio']=$this->pi_getLL('admin_label_option_type_radio');
-$selects['checkbox']=$this->pi_getLL('admin_label_option_type_checkbox');
-$selects['input']=$this->pi_getLL('admin_label_option_type_text_input');
-$selects['textarea']=$this->pi_getLL('admin_label_option_type_textarea');
-$selects['hidden_field']=$this->pi_getLL('admin_label_option_type_hidden_field');
-$selects['file']=$this->pi_getLL('admin_label_option_type_file_input');
-$selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
+
 // load options
 $str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 	'tx_multishop_products_options', // FROM ...
@@ -84,7 +128,7 @@ $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
 	$content.='<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
-	$content.='<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
+//	$content.='<span class="msBackendButton float_right continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
 	//$content.='<form role="form" class="msadminFromFancybox" name="admin_product_attributes">';
 	$content.='<ul class="attribute_options_sortable" id="attribute_listings">';
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -134,46 +178,6 @@ if ($rows) {
 	}
 	$content.='</ul>';
 	$content.='<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
-	$content.='</form>';
-	// new options
-	$content.='<form method="post" class="msadminFromFancybox" name="admin_product_new_attribute_options">';
-	$content.='<ul>';
-	$content.='<li>';
-	$content.='<h2>';
-	$content.='<span class="option_id">'.$this->pi_getLL('admin_label_add_new_attribute_options').'</span>';
-	$content.='</h2>';
-	$options_group='';
-	if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-		$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="add_new_attributes_options"');
-		if (!empty($options_group)) {
-			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$options_group.'</span>';
-		} else {
-			$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$this->pi_getLL('admin_label_no_groups_defined').'</span>';
-		}
-	}
-	// settings related to options
-	$content.='<div class="option_settings">';
-	$content.='<span class="options_name"><label for="new_option_name">'.$this->pi_getLL('admin_label_new_option_name').':</label> <input type="text" id="new_option_name" name="new_option_name" class="add_new_attributes_options"> </span>';
-	$content.=$options_group;
-	$content.='<span class="listing_type">';
-	$content.=$this->pi_getLL('admin_label_listing_type').': <select name="listtype" id="new_listtype" class="add_new_attributes_options">';
-	foreach ($selects as $key=>$value) {
-		$content.='<option value="'.$key.'"'.($key==$row['listtype'] ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
-	}
-	$content.='</select>';
-	$content.='</span>';
-	$content.='<span class="required">
-		<input name="required" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('required').'
-	</span>';
-	$content.='<span class="hide_in_cart">
-		<input name="hide_in_cart" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
-	</span>';
-	$content.='</div>';
-	$content.='<div class="option_values">';
-	$content.='<a href="#" class="msadmin_button msadmin_button_save" id="save_new_attribute_options">'.$this->pi_getLL('admin_label_add_new_attribute_options').'</a>';
-	$content.='</div>';
-	$content.='</li>';
-	$content.='</ul>';
 	$content.='</form>';
 
 
@@ -784,4 +788,4 @@ if ($rows) {
 }
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-?>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+?>
