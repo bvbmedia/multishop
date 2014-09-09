@@ -968,6 +968,7 @@
             <label index="select_percentage">select percentage</label>
             <label index="admin_edit_view_front_product">view in front</label>
             <label index="mail_selected_orders_for_payment_reminder">Mail selected orders for payment reminder</label>
+            <label index="average">Average</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1921,6 +1922,7 @@
             <label index="select_percentage">selecteer percentage</label>
             <label index="admin_edit_view_front_product">bekijk aan de voorkant</label>
             <label index="mail_selected_orders_for_payment_reminder">Mail betaalherinnering voor geselecteerde bestellingen</label>
+            <label index="average">Gemiddeld</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
