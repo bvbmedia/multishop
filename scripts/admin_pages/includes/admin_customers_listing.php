@@ -43,7 +43,7 @@ foreach ($customers as $customer) {
 	} else {
 		$customer['crdate']='';
 	}
-	$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer');
+	$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer',1);
 	$latest_order='';
 	$str="select orders_id from tx_multishop_orders where customer_id='".$customer['uid']."' and deleted=0 order by orders_id desc limit 2";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

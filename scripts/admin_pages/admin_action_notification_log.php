@@ -129,6 +129,10 @@ if (!count($pageset['dataset'])) {
 		} else {
 			$tr_type='even';
 		}
+		$customer_edit_link='';
+		if ($row['customer_id']) {
+			$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$row['customer_id'].'&action=edit_customer',1);
+		}
 		$content.='
 		<tr class="'.$tr_type.'">
 		<td valign="top" align="right" nowrap>'.strftime("%x %X", $row['crdate']).'</td>
@@ -136,10 +140,10 @@ if (!count($pageset['dataset'])) {
 			'.htmlspecialchars($row['title']).'
 		</td>
 		<td valign="top" nowrap align="right">
-			'.($row['customer_id'] >0?htmlspecialchars($row['customer_id']):'').'
+			'.($row['customer_id'] >0?'<a href="'.$customer_edit_link.'">'.$row['customer_id'].'</a>':'').'
 		</td>
 		<td valign="top" nowrap>
-			'.htmlspecialchars(($row['company']?$row['company']:$row['name'])).'
+			'.($row['company']?'<a href="'.$customer_edit_link.'">'.htmlspecialchars($row['company']).'</a>':htmlspecialchars($row['name'])).'
 		</td>
 		<td valign="top" nowrap align="right">
 			'.htmlspecialchars($row['ip_address']).'
