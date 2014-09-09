@@ -2631,6 +2631,8 @@ class mslib_befe {
 		$insertArray['unread']=1;
 		$insertArray['crdate']=time();
 		$insertArray['customer_id']=$customer_id;
+		$insertArray['ip_address']=$this->REMOTE_ADDR;
+		$insertArray['session_id']=$GLOBALS['TSFE']->fe_user->id;
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_notification', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}

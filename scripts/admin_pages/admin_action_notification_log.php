@@ -94,7 +94,7 @@ if (count($this->searchKeywords)) {
 	}
 	$queryData['where'][]="(".implode(" OR ", $keywordOr).")";
 }
-$queryData['select'][]='n.title, n.message, n.message_type, n.crdate, f.name, f.company, f.username';
+$queryData['select'][]='n.ip_address, n.title, n.message, n.message_type, n.crdate, f.name, f.company, f.username';
 $queryData['from'][]='tx_multishop_notification n left join fe_users f on n.customer_id=f.uid';
 $queryData['order_by'][]='id desc';
 $queryData['limit']=$this->ms['MODULES']['PAGESET_LIMIT'];
@@ -115,6 +115,7 @@ if (!count($pageset['dataset'])) {
 	$headercol.='		
 	<th width="100" nowrap>'.$this->pi_getLL('date').'</th>
 	<th width="100" nowrap>'.$this->pi_getLL('title', 'Title').'</th>
+	<th width="100" nowrap>'.$this->pi_getLL('ip_address').'</th>
 	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
 	<th>'.$this->pi_getLL('content').'</th>
 	';
@@ -132,8 +133,8 @@ if (!count($pageset['dataset'])) {
 			'.htmlspecialchars($row['title']).'
 		</td>
 		<td valign="top" nowrap>
-			'.htmlspecialchars($row['message_type']).'
-		</td>			
+			'.htmlspecialchars($row['ip_address']).'
+		</td>
 		<td valign="top">
 			'.$row['message'].'
 		</td>	

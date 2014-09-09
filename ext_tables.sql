@@ -79,7 +79,7 @@ CREATE TABLE `fe_users` (
   `page_uid` int(11) default '0',
   `street_name` varchar(75) default '',
   `http_referer` text,
-  `ip_address` text,
+  `ip_address` varchar(150) default '',
   `tx_multishop_vat_id` varchar(127) default '',
   `tx_multishop_coc_id` varchar(127) default '',
   `tx_multishop_quick_checkout` tinyint(1) default '0',
@@ -110,7 +110,8 @@ CREATE TABLE `fe_users` (
   KEY `last_name` (`last_name`),
   KEY `vat_id` (`tx_multishop_vat_id`),
   KEY `coc_id` (`tx_multishop_coc_id`),
-  KEY `quick_checkout` (`tx_multishop_quick_checkout`)
+  KEY `quick_checkout` (`tx_multishop_quick_checkout`),
+  KEY `ip_address` (`ip_address`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
@@ -431,10 +432,14 @@ CREATE TABLE `tx_multishop_notification` (
   `unread` tinyint(1) default '0',
   `message_type` varchar(35) default '',
   `crdate` int(11) default '0',
+  `ip_address` varchar(150) default '',
+  `session_id` varchar(150) default '',
   PRIMARY KEY (`id`),
   KEY `unread` (`unread`),
   KEY `customer_id` (`customer_id`),
-  KEY `message_type` (`message_type`)
+  KEY `message_type` (`message_type`),
+  KEY `ip_address` (`ip_address`),
+  KEY `session_id` (`session_id`)
 );
 
 CREATE TABLE `tx_multishop_orders` (
@@ -517,7 +522,7 @@ CREATE TABLE `tx_multishop_orders` (
   `grand_total` decimal(24,14) default '0.00000000000000',
   `billing_street_name` varchar(75) default '',
   `delivery_street_name` varchar(75) default '',
-  `ip_address` varchar(100) default '',
+  `ip_address` varchar(150) default '',
   `http_referer` text,
   `user_agent` varchar(255) default '',
   PRIMARY KEY (`orders_id`),
@@ -639,7 +644,7 @@ CREATE TABLE `tx_multishop_orders_products_attributes` (
 CREATE TABLE `tx_multishop_orders_products_downloads` (
   `orders_products_id` int(11) default '0',
   `orders_id` int(11) default '0',
-  `ip_address` varchar(255) default '',
+  `ip_address` varchar(150) default '',
   `date_of_download` int(11) default '0',
   PRIMARY KEY (`orders_products_id`),
   KEY `date_of_download` (`date_of_download`),
@@ -726,7 +731,7 @@ CREATE TABLE `tx_multishop_payment_log` (
   `multishop_transaction_id` varchar(127) default '',
   `provider_transaction_id` varchar(127) default '',
   `provider` varchar(127) default '',
-  `ip_address` varchar(127) default '',
+  `ip_address` varchar(150) default '',
   `crdate` int(11) default '0',
   `title` varchar(127) default '',
   `description` text,

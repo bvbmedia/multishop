@@ -4156,7 +4156,20 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
-
+		$str="select ip_address from tx_multishop_notification limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE `tx_multishop_notification` ADD `ip_address` varchar(150) default '', ADD KEY ip_address (ip_address)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+		$str="select session_id from tx_multishop_notification limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE `tx_multishop_notification` ADD `session_id` varchar(150) default '', ADD KEY session_id (session_id)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 		// first fix the already working v3 shops
 		$str="select uid from tt_address where tx_multishop_address_type='billing' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
