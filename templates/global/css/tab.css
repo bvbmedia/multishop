@@ -592,7 +592,7 @@ ul#ui-menu-manual-option li.ui-menu-item span#more-results:hover { background:#0
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .innerbox_methods ul li input[type="checkbox"],
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li input[type="checkbox"] { clear:none; float:left; margin:1px 5px 0 0; }
 #tx_multishop_pi1_core .innerbox_methods ul li span,
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li span { float:left; display:block; width:250px; font-weight:bold; padding:0 0 0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .innerbox_methods ul li span { float:left; display:block; width:270px; font-weight:bold; padding:0 0 0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container form#admin_product_edit_ table.msadmin_border td table { margin:0; }
 #tx_multishop_pi1_core #tab-container .tab_container form#admin_product_edit_ table.msadmin_border td table td { padding:0; }
@@ -641,7 +641,7 @@ ul#ui-menu-manual-option li.ui-menu-item span#more-results:hover { background:#0
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAttributesField input[type="text"] { display:inline-block; width:70px; margin:0 5px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAttributesField label { float:none; display:inline-block; width:auto; color:#000; margin:0; padding:2px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAttributesField.hidden { padding:0; }
-#tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer { float:left; overflow:hidden; width:170px; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer { float:left; overflow:visible; width:170px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer label { float:none; padding:3px 0 10px 0; text-align:left; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer .msAttributesField { float:none; overflow:visible; display:block; width:auto; padding:0 0 10px 0; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer .msAttributesField label { float:none; display:inline-block; width:auto; margin:0; padding:0; }
