@@ -312,8 +312,8 @@ if ($this->get['edit']) {
 			'.$inner_content.'
 		<div class="account-field">
 			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
-			<div class="enable_on_default_wrapper"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.($row['enable_on_default']>0 ? ' checked="checked"' : '').' /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
-			<div class="enable_on_default_wrapper"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.(!$row['enable_on_default'] ? ' checked="checked"' : '').' /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
+			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.($row['enable_on_default']>0 ? ' checked="checked"' : '').' /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
+			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.(!$row['enable_on_default'] ? ' checked="checked"' : '').' /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
 		</div>
 		<div class="account-field">
 			<label for="">&nbsp;</label>
@@ -409,8 +409,8 @@ if ($this->get['edit']) {
 		$tmpcontent.='
 		<div class="account-field">
 			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
-			<div class="enable_on_default_wrapper"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes" checked="checked" /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
-			<div class="enable_on_default_wrapper"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no" /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
+			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes" checked="checked" /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
+			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no" /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
 		</div>
 		<div class="account-field">
 			<label>&nbsp;</label>
