@@ -2941,7 +2941,7 @@ class mslib_fe {
 			switch ($type) {
 				case 'payment':
 					// first we load all options
-					$allmethods=mslib_fe::loadPaymentMethods($user_country);
+					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_payment_methods s', // FROM ...
@@ -2953,11 +2953,8 @@ class mslib_fe {
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						$array=array();
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-							$array[]=$row['code'];
-						}
-						foreach ($allmethods as $key=>$value) {
-							if (!in_array($key, $array)) {
-								unset($allmethods[$key]);
+							if (!isset($allmethods[$row['code']])) {
+								$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
 							}
 						}
 					}
@@ -2988,7 +2985,7 @@ class mslib_fe {
 			switch ($type) {
 				case 'payment':
 					// first we load all options
-					$allmethods=mslib_fe::loadPaymentMethods($user_country);
+					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
 					foreach ($groups_id as $gid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
 							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_payment_methods s', // FROM ...
@@ -3000,11 +2997,8 @@ class mslib_fe {
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						$array=array();
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-							$array[]=$row['code'];
-						}
-						foreach ($allmethods as $key=>$value) {
-							if (!in_array($key, $array)) {
-								unset($allmethods[$key]);
+							if (!isset($allmethods[$row['code']])) {
+								$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
 							}
 						}
 					}
@@ -3035,7 +3029,7 @@ class mslib_fe {
 			switch ($type) {
 				case 'payment':
 					// first we load all options
-					$allmethods=mslib_fe::loadPaymentMethods($user_country);
+					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
 					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
 						'tx_multishop_customers_method_mappings cmm, tx_multishop_payment_methods s', // FROM ...
 						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.negate=0 and cmm.method_id=s.id', // WHERE...
@@ -3046,11 +3040,8 @@ class mslib_fe {
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$array=array();
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-						$array[]=$row['code'];
-					}
-					foreach ($allmethods as $key=>$value) {
-						if (!in_array($key, $array)) {
-							unset($allmethods[$key]);
+						if (!isset($allmethods[$row['code']])) {
+							$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
 						}
 					}
 					break;
