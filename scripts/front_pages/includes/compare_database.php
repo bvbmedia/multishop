@@ -207,6 +207,7 @@ if (!$skipMultishopUpdates) {
 				$messages[]=$str;
 			}
 		}
+
 		$str="select plain_text from tx_multishop_product_feeds limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
@@ -4204,6 +4205,7 @@ if (!$skipMultishopUpdates) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
+
 		if (!$this->conf['tt_address_record_id_store']) {
 			$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -4402,6 +4404,17 @@ if (!$skipMultishopUpdates) {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if ($GLOBALS['TYPO3_DB']->sql_affected_rows($qry)) {
 		$messages[]=$str;
+	}
+	$str="describe fe_users";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='ip_address') {
+			if ($row['Type']=='text') {
+				$str2="ALTER TABLE  `fe_users` CHANGE `ip_address` `ip_address` varchar(150) DEFAULT '', ADD KEY ip_address (ip_address)";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$messages[]=$str2;
+			}
+		}
 	}
 	// MOVE SEVERAL SETTINGS TO DIFFERENT GROUPS
 	$keys=array();
