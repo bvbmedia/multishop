@@ -668,13 +668,15 @@ if ($this->post) {
 		if (count($this->post['exclude_feed'])) {
 			$sql_check="delete from tx_multishop_feeds_excludelist where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-			foreach ($this->post['exclude_feed'] as $feed_id) {
-				$updateArray=array();
-				$updateArray['feed_id']=$feed_id;
-				$updateArray['exclude_id']=$prodid;
-				$updateArray['exclude_type']='products';
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_feeds_excludelist', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			foreach ($this->post['exclude_feed'] as $feed_id=>$feed_value) {
+				if ($feed_value>0) {
+					$updateArray=array();
+					$updateArray['feed_id']=$feed_id;
+					$updateArray['exclude_id']=$prodid;
+					$updateArray['exclude_type']='products';
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_feeds_excludelist', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
 			}
 		} else {
 			$sql_check="delete from tx_multishop_feeds_excludelist where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
@@ -683,13 +685,15 @@ if ($this->post) {
 		if (count($this->post['exclude_stock_feed'])) {
 			$sql_check="delete from tx_multishop_feeds_stock_excludelist where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
 			$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
-			foreach ($this->post['exclude_stock_feed'] as $feed_id) {
-				$updateArray=array();
-				$updateArray['feed_id']=$feed_id;
-				$updateArray['exclude_id']=$prodid;
-				$updateArray['exclude_type']='products';
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_feeds_stock_excludelist', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			foreach ($this->post['exclude_stock_feed'] as $feed_id=>$feed_value) {
+				if ($feed_value>0) {
+					$updateArray=array();
+					$updateArray['feed_id']=$feed_id;
+					$updateArray['exclude_id']=$prodid;
+					$updateArray['exclude_type']='products';
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_feeds_stock_excludelist', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
 			}
 		} else {
 			$sql_check="delete from tx_multishop_feeds_stock_excludelist where exclude_id='".addslashes($prodid)."' and exclude_type='products'";
@@ -2108,27 +2112,64 @@ if ($this->post) {
 		$feed_stock_checkbox='';
 		$sql_feed='SELECT * from tx_multishop_product_feeds';
 		$qry_feed=$GLOBALS['TYPO3_DB']->sql_query($sql_feed);
+		$feed_checkbox='<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeeds">
+							<label>Feed</label>
+							<div class="innerbox_methods">
+								<div class="innerbox_exclude_feeds">
+									<h4>Exclude feed</h4>
+									<ul>';
+
+		$feed_stock_checkbox='<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeedsStock">
+							<label>Feed</label>
+							<div class="innerbox_methods">
+								<div class="innerbox_exclude_stock_feeds">
+									<h4>Exclude stock feed</h4>
+									<ul>';
+
 		while ($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
 			if ($_REQUEST['action']=='edit_product') {
+				if (!$tr_type or $tr_type=='even') {
+					$tr_type='odd';
+				} else {
+					$tr_type='even';
+				}
 				$sql_check="select id from tx_multishop_feeds_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
 				$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+				$feed_checkbox.='<li class="'.$tr_type.'"  id="multishop_exclude_feed_'.$rs_feed['id'].'"><span>'.$rs_feed['name'].'</span>';
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+					$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_feed_cb" id="enable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" checked="checked" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
+					$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_feed_cb" id="disable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
 				} else {
-					$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+					$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_feed_cb" id="enable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
+					$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_feed_cb" id="disable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" checked="checked" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
 				}
+				$feed_checkbox.='</li>';
+
 				$sql_stock_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
 				$qry_stock_check=$GLOBALS['TYPO3_DB']->sql_query($sql_stock_check);
+				$feed_stock_checkbox.='<li class="'.$tr_type.'"  id="multishop_exclude_stock_feed_'.$rs_feed['id'].'"><span>'.$rs_feed['name'].'</span>';
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_stock_check)) {
-					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" checked="checked" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+					$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="enable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" checked="checked" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
+					$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="disable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
 				} else {
-					$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+					$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="enable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
+					$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="disable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" checked="checked" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
 				}
+				$feed_stock_checkbox.='</li>';
 			} else {
-				$feed_checkbox.='<input type="checkbox" name="exclude_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
-				$feed_stock_checkbox.='<input type="checkbox" name="exclude_stock_feed[]" value="'.$rs_feed['id'].'" />&nbsp;'.$rs_feed['name'].'&nbsp;';
+				$feed_checkbox.='<li class="'.$tr_type.'"  id="multishop_exclude_feed_'.$rs_feed['id'].'"><span>'.$rs_feed['name'].'</span>';
+				$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="feed_cb" id="enable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
+				$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="feed_cb" id="disable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
+				$feed_checkbox.='</li>';
+
+				$feed_stock_checkbox.='<li class="'.$tr_type.'"  id="multishop_exclude_stock_feed_'.$rs_feed['id'].'"><span>'.$rs_feed['name'].'</span>';
+				$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="enable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
+				$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="disable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
+				$feed_stock_checkbox.='</li>';
 			}
 		}
+		$feed_checkbox.='</ul></div></div></div>';
+		$feed_stock_checkbox.='</ul></div></div></div>';
 		$subpartArray['###LABEL_EXCLUDE_FROM_FEED###']=$this->pi_getLL('exclude_from_feeds', 'Exclude from feeds');
 		if (empty($feed_checkbox)) {
 			$subpartArray['###FEEDS_LIST###']=$this->pi_getLL('admin_label_no_feeds');

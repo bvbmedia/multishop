@@ -655,6 +655,24 @@ jQuery(document).ready(function ($) {
             }
             $(target_cb).prop("checked", false);
         });
+        $(document).on("click", ".exclude_feed_cb", function() {
+            var current_cb_id=$(this).attr("id");
+            var current_id=$(this).attr("rel");
+            var target_cb="#disable_exclude_feed_" + current_id;
+            if (current_cb_id.indexOf("disable")>-1) {
+                target_cb="#enable_exclude_feed_" + current_id;
+            }
+            $(target_cb).prop("checked", false);
+        });
+        $(document).on("click", ".exclude_stock_feed_cb", function() {
+            var current_cb_id=$(this).attr("id");
+            var current_id=$(this).attr("rel");
+            var target_cb="#disable_exclude_stock_feed_" + current_id;
+            if (current_cb_id.indexOf("disable")>-1) {
+                target_cb="#enable_exclude_stock_feed_" + current_id;
+            }
+            $(target_cb).prop("checked", false);
+        });
         $("#specials_price_percentage").select2();
 	    ###JS_ADVANCED_OPTION_TOGGLE###
     });
