@@ -110,8 +110,7 @@ CREATE TABLE `fe_users` (
   KEY `last_name` (`last_name`),
   KEY `vat_id` (`tx_multishop_vat_id`),
   KEY `coc_id` (`tx_multishop_coc_id`),
-  KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`),
-  KEY `ip_address` (`ip_address`)
+  KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
@@ -1429,7 +1428,7 @@ CREATE TABLE `tx_multishop_attributes_options_groups` (
   `language_id` int(5) default '0',
   `attributes_options_groups_name` varchar(64) default '',
   `sort_order` int(11) default '0',
-  PRIMARY KEY (`attributes_options_groups_id`, `language_id`),
+  PRIMARY KEY (attributes_options_groups_id,language_id),
   KEY `attributes_options_groups_name` (`attributes_options_groups_name`),
   KEY `attributes_options_groups_id` (`attributes_options_groups_id`),
   KEY `sort_order` (`sort_order`)
