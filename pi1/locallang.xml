@@ -969,7 +969,7 @@
             <label index="admin_edit_view_front_product">view in front</label>
             <label index="mail_selected_orders_for_payment_reminder">Mail selected orders for payment reminder</label>
             <label index="average">Average</label>
-            <label index="admin_label_method_is_enabled_on_default">Method is enabled on default</label>
+            <label index="admin_label_method_is_enabled_on_default">Method is visible</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -1924,6 +1924,7 @@
             <label index="admin_edit_view_front_product">bekijk aan de voorkant</label>
             <label index="mail_selected_orders_for_payment_reminder">Mail betaalherinnering voor geselecteerde bestellingen</label>
             <label index="average">Gemiddeld</label>
+            <label index="admin_label_method_is_enabled_on_default">Methode is zichtbaar</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
