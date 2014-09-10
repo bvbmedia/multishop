@@ -6,7 +6,7 @@ $str3="SELECT * from static_countries where cn_short_en='".addslashes($this->pos
 $qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 $row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
 $countries_id=$row3['cn_iso_nr'];
-$payment_methods=mslib_fe::loadPaymentMethods(0, $countries_id);
+$payment_methods=mslib_fe::loadPaymentMethods(0, $countries_id, true);
 $data=array();
 $k=0;
 foreach ($payment_methods as $payment_name=>$payment_data) {

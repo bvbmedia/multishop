@@ -755,13 +755,15 @@ CREATE TABLE `tx_multishop_payment_methods` (
   `page_uid` int(11) default '0',
   `zone_id` int(11) default '0',
   `tax_id` int(11) default '0',
+  `enable_on_default` tinyint(1) default '1',
   PRIMARY KEY (`id`),
   KEY `code` (`code`),
   KEY `isp` (`provider`),
   KEY `date` (`date`),
   KEY `status` (`status`),
   KEY `sort_order` (`sort_order`),
-  KEY `page_uid` (`page_uid`,`zone_id`)
+  KEY `page_uid` (`page_uid`,`zone_id`),
+  KEY `enable_on_default` (`enable_on_default`)
 );
 
 CREATE TABLE `tx_multishop_payment_methods_description` (
@@ -1178,13 +1180,15 @@ CREATE TABLE `tx_multishop_shipping_methods` (
   `page_uid` int(11) default '0',
   `zone_id` int(11) default '0',
   `tax_id` int(11) default '0',
+  `enable_on_default` tinyint(1) default '1',
   PRIMARY KEY (`id`),
   KEY `code` (`code`),
   KEY `date` (`date`),
   KEY `status` (`status`),
   KEY `provider` (`provider`),
   KEY `sort_order` (`sort_order`),
-  KEY `page_uid` (`page_uid`,`zone_id`)
+  KEY `page_uid` (`page_uid`,`zone_id`),
+  KEY `enable_on_default` (`enable_on_default`)
 );
 
 CREATE TABLE `tx_multishop_shipping_methods_costs` (

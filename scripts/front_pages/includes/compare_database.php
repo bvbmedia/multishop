@@ -128,6 +128,20 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select enable_on_default from tx_multishop_shipping_methods limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_shipping_methods` ADD `enable_on_default` tinyint(1) default '1', ADD KEY `enable_on_default` (`enable_on_default`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select enable_on_default from tx_multishop_payment_methods limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_payment_methods` ADD `enable_on_default` tinyint(1) default '1', ADD KEY `enable_on_default` (`enable_on_default`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	$str="select id from tx_multishop_configuration_group limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);

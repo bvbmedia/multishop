@@ -24,6 +24,7 @@ if ($this->post) {
 			$insertArray['page_uid']=$this->post['related_shop_pid'];
 			$insertArray['provider']=$this->post['payment_method_code'];
 			$insertArray['vars']=serialize($this->post);
+			$updateArray['enable_on_default']=$this->post['enable_on_default'];
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
@@ -57,6 +58,7 @@ if ($this->post) {
 			$updateArray['handling_costs']=$this->post['handling_costs'];
 			$updateArray['tax_id']=$this->post['tax_id'];
 			$updateArray['vars']=serialize($this->post);
+			$updateArray['enable_on_default']=$this->post['enable_on_default'];
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', 'id=\''.$row['id'].'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			foreach ($this->post['name'] as $key=>$value) {
@@ -227,14 +229,14 @@ if ($this->get['edit']) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
 		$tmpcontent.=$language['title'].'
-		</div>	
+		</div>
 		<div class="account-field">
 			<label for="name">'.$this->pi_getLL('admin_name').'</label>
 			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
-		</div>		
+		</div>
 		<div class="account-field">
 			<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
-			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>			
+			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 		</div>';
 	}
 	$cost_tax_rate=0;
@@ -309,9 +311,14 @@ if ($this->get['edit']) {
 	</div>
 			'.$inner_content.'
 		<div class="account-field">
+			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
+			<input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.($row['enable_on_default']>0 ? ' checked="checked"' : '').' /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label>
+			<input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.(!$row['enable_on_default'] ? ' checked="checked"' : '').' /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label>
+		</div>
+		<div class="account-field">
 			<label for="">&nbsp;</label>
 			<input name="Submit" type="submit" class="msadmin_button" value="'.$this->pi_getLL('save').'" />
-		</div>				
+		</div>
 	</form>';
 	$content.=$tmpcontent;
 } else if ($this->get['sub']=='add_payment_method' && $this->get['payment_method_code']) {
@@ -387,7 +394,7 @@ if ($this->get['edit']) {
 			</div>
 		</div>
 		<div class="account-field">
-		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>	
+		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
 		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -400,6 +407,11 @@ if ($this->get['edit']) {
 		';
 		$tmpcontent.=mslib_fe::parsePaymentMethodEditForm($psp, $this->post);
 		$tmpcontent.='
+		<div class="account-field">
+			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
+			<label for="enable_on_default_yes"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes" checked="checked" />'.$this->pi_getLL('yes').'</label>
+			<label for="enable_on_default_no"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no" />'.$this->pi_getLL('no').'</label>
+		</div>
 		<div class="account-field">
 			<label>&nbsp;</label>
 			<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($this->get['payment_method_code']).'" />
@@ -492,22 +504,22 @@ if ($this->ms['show_main']) {
 	jQuery(document).ready(function($) {
 		// sortables
 		var result2	= jQuery("#admin_modules_listing tbody.sortable_content").sortable({
-				cursor:     "move", 
-			//axis:       "y", 
-			update: function(e, ui) { 
+				cursor:     "move",
+			//axis:       "y",
+			update: function(e, ui) {
 				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
-				jQuery(this).sortable("refresh"); 
-				sorted = jQuery(this).sortable("serialize", "id"); 
-				jQuery.ajax({ 
-						type:   "POST", 
-						url:    href, 
-						data:   sorted, 
-						success: function(msg) { 
-								//do something with the sorted data 
-						} 
-				}); 
-			} 
-		});	
+				jQuery(this).sortable("refresh");
+				sorted = jQuery(this).sortable("serialize", "id");
+				jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
+						success: function(msg) {
+								//do something with the sorted data
+						}
+				});
+			}
+		});
 		// sortables eof
 	});
 	</script>

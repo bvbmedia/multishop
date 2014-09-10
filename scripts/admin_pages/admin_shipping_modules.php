@@ -17,6 +17,7 @@ if ($this->post) {
 			$updateArray['handling_costs']=$this->post['handling_costs'];
 			$updateArray['tax_id']=$this->post['tax_id'];
 			$updateArray['vars']=serialize($data);
+			$updateArray['enable_on_default']=$this->post['enable_on_default'];
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', 'id=\''.$this->post['shipping_method_id'].'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			foreach ($this->post['name'] as $key=>$value) {
@@ -56,6 +57,7 @@ if ($this->post) {
 			$insertArray['provider']=$_REQUEST['shipping_method_code'];
 			$insertArray['vars']=serialize($this->post);
 			$insertArray['handling_costs']=$this->post['handling_costs'];
+			$updateArray['enable_on_default']=$this->post['enable_on_default'];
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
@@ -299,6 +301,11 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		$tmpcontent.=mslib_fe::parseShippingMethodEditForm($shipping_method, $this->post);
 		$tmpcontent.='
 		<div class="account-field">
+			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
+			<label for="enable_on_default_yes"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.(!isset($this->post['enable_on_default']) || (isset($this->post['enable_on_default']) && $this->post['enable_on_default']>0) ? ' checked="checked"' : '').' />'.$this->pi_getLL('yes').'</label>
+			<label for="enable_on_default_no"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.($this->post['enable_on_default']==0 ? ' checked="checked"' : '').' />'.$this->pi_getLL('no').'</label>
+		</div>
+		<div class="account-field">
 			<label>&nbsp;</label>
 			<input name="shipping_method_code" type="hidden" value="'.htmlspecialchars($this->get['shipping_method_code']).'" />
 			<input name="sub" type="hidden" value="add_shipping_method" />
@@ -413,6 +420,11 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	</select>
 	</div>
 	'.$inner_content.'
+	<div class="account-field">
+			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
+			<input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.($row['enable_on_default']>0 ? ' checked="checked"' : '').' /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label>
+			<input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.(!$row['enable_on_default'] ? ' checked="checked"' : '').' /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label>
+		</div>
 	<div class="account-field">
 		<label for="">&nbsp;</label>
 		<input name="Submit" type="submit" class="msadmin_button" value="'.$this->pi_getLL('save').'" />

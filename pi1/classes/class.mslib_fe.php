@@ -3073,7 +3073,7 @@ class mslib_fe {
 			return $allmethods;
 		}
 	}
-	public function loadShippingMethods($include_hidden_items=0, $user_country=0) {
+	public function loadShippingMethods($include_hidden_items=0, $user_country=0, $filter=false) {
 		$select=array();
 		$from=array();
 		$where=array();
@@ -3119,12 +3119,18 @@ class mslib_fe {
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			$array=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$array[$row['code']]=$row;
+				if ($filter) {
+					if ($row['enable_on_default']>0) {
+						$array[$row['code']]=$row;
+					}
+				} else {
+					$array[$row['code']]=$row;
+				}
 			}
 			return $array;
 		}
 	}
-	public function loadShippingMethod($code) {
+	public function loadShippingMethod($code, $filter=false) {
 		$select=array();
 		$from=array();
 		$where=array();
@@ -3148,11 +3154,17 @@ class mslib_fe {
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			$array=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				return $row;
+				if ($filter) {
+					if ($row['enable_on_default']>0) {
+						return $row;
+					}
+				} else {
+					return $row;
+				}
 			}
 		}
 	}
-	public function loadPaymentMethods($include_hidden_items=0, $user_country=0) {
+	public function loadPaymentMethods($include_hidden_items=0, $user_country=0, $filter=false) {
 		$select=array();
 		$from=array();
 		$where=array();
@@ -3198,12 +3210,18 @@ class mslib_fe {
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			$array=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$array[$row['code']]=$row;
+				if ($filter) {
+					if ($row['enable_on_default']>0) {
+						$array[$row['code']]=$row;
+					}
+				} else {
+					$array[$row['code']]=$row;
+				}
 			}
 			return $array;
 		}
 	}
-	public function loadPaymentMethod($code) {
+	public function loadPaymentMethod($code, $filter=false) {
 		$select=array();
 		$from=array();
 		$where=array();
@@ -3227,7 +3245,13 @@ class mslib_fe {
 		$array=array();
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				return $row;
+				if ($filter) {
+					if ($row['enable_on_default']>0) {
+						return $row;
+					}
+				} else {
+					return $row;
+				}
 			}
 		}
 	}
@@ -3933,7 +3957,7 @@ class mslib_fe {
 		}
 		return $weight;
 	}
-	public function getShippingMethod($string, $key='s.id', $countries_id=0) {
+	public function getShippingMethod($string, $key='s.id', $countries_id=0, $filter=false) {
 		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
 			$key.'=\''.addslashes($string).'\' and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
@@ -3951,9 +3975,15 @@ class mslib_fe {
 		$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
 		$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
 		$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-		return $row3;
+		if ($filter) {
+			if ($row3['enable_on_default']>0) {
+				return $row3;
+			}
+		} else {
+			return $row3;
+		}
 	}
-	public function getPaymentMethod($string, $key='p.id', $countries_id=0) {
+	public function getPaymentMethod($string, $key='p.id', $countries_id=0, $filter=false) {
 		if ($string) {
 			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 				'tx_multishop_payment_methods p, tx_multishop_payment_methods_description d', // FROM ...
@@ -3972,7 +4002,13 @@ class mslib_fe {
 			$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
 			$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
 			$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-			return $row3;
+			if ($filter) {
+				if ($row3['enable_on_default']>0) {
+					return $row3;
+				}
+			} else {
+				return $row3;
+			}
 		}
 	}
 	public function getNameProductById($id) {

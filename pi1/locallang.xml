@@ -969,6 +969,7 @@
             <label index="admin_edit_view_front_product">view in front</label>
             <label index="mail_selected_orders_for_payment_reminder">Mail selected orders for payment reminder</label>
             <label index="average">Average</label>
+            <label index="admin_label_method_is_enabled_on_default">Method is enabled on default</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

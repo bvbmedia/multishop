@@ -15,7 +15,7 @@ $countries_id=$mslib_cart->setCountry($this->post['cc']);
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart=$mslib_cart->getCart();
-$payment_method=mslib_fe::getPaymentMethod($this->post['tx_multishop_pi1']['pid'], 'p.id', $countries_id);
+$payment_method=mslib_fe::getPaymentMethod($this->post['tx_multishop_pi1']['pid'], 'p.id', $countries_id, true);
 if ($payment_method['handling_costs']) {
 	if (!strstr($payment_method['handling_costs'], "%")) {
 		$payment_method_costs=$payment_method['handling_costs'];
@@ -70,7 +70,7 @@ if (count($available_sid)>0) {
 			$this->post['tx_multishop_pi1']['sid']=$available_sid[0];
 		}
 	}
-	$shipping_method=mslib_fe::getShippingMethod($this->post['tx_multishop_pi1']['sid'], 's.id', $countries_id);
+	$shipping_method=mslib_fe::getShippingMethod($this->post['tx_multishop_pi1']['sid'], 's.id', $countries_id, true);
 	$shipping_method_code=$shipping_method['code'];
 	if (strlen($shipping_method['name'])>1) {
 		$char=substr($shipping_method['name'], 1, 1);
