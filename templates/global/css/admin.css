@@ -51,6 +51,10 @@
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField input.msHandlingCostExcludingVat { margin-bottom:10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField label { clear:none; float:left; width:auto; }
 
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper { float:left; padding-top:3px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper label { clear:none; float:left;  width:auto; padding:0 10px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper input[type="radio"] { float:left; margin-right:3px; }
+
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field small { display:block; color:#777; text-transform:uppercase; padding:0 0 0 200px; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core table { border-collapse:collapse; margin:0 0 10px; padding:0; }
