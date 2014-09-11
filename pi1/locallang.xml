@@ -970,6 +970,9 @@
             <label index="mail_selected_orders_for_payment_reminder">Mail selected orders for payment reminder</label>
             <label index="average">Average</label>
             <label index="admin_label_method_is_enabled_on_default">Method is visible</label>
+            <label index="admin_label_store_tt_address_id_not_exist">tt_address id you supplied in plugin.multishop.tt_address_record_id_store constant are invalid</label>
+            <label index="admin_label_store_tt_address_not_found">tt_address for the store are not yet created, please run compare database and paste the id into plugin.multishop.tt_address_record_id_store</label>
+            <label index="admin_label_store_tt_address_id_found">please fill in the plugin.multishop.tt_address_record_id_store value with this tt_address id: %d</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

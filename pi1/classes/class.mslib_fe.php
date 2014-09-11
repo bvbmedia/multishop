@@ -4662,6 +4662,24 @@ class mslib_fe {
 			if (!$this->ms['MODULES'][$key]) {
 				$messages[]=$this->pi_getLL('admin_label_meta_tag_keywords_not_defined').' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_modules').'"><br /><strong>'.$this->pi_getLL('admin_label_go_to_setup_modules_and_define_meta_tag_keywords').'</strong></a>';
 			}
+			// check tt_address
+			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
+				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."'";
+				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
+				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
+					$message[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
+				}
+			} else {
+				$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+					$message[]=$this->pi_getLL('admin_label_store_tt_address_not_found');
+				} else {
+					$res=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+					$message[]=sprintf($this->pi_getLL('admin_label_store_tt_address_id_found'), $res['uid']);
+				}
+			}
+
 			// now some constants eof
 			$total_warnings=count($messages);
 			if ($total_warnings>0) {
