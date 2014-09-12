@@ -212,6 +212,17 @@ switch ($this->ms['page']) {
 				$content.=$this->pi_getLL('your_payment_has_not_been_completed');
 			}
 		}
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentFallback'])) {
+			$params=array(
+				'page'=>$this->ms['page'],
+				'content'=>&$content
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentFallback'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		break;
 	// psp thank you or error pages eof
 	case 'payment_reminder_checkout':
@@ -473,7 +484,7 @@ switch ($this->ms['page']) {
 			}
 			$content.=$tmp;
 		}
-		// load cms bottom eof	
+		// load cms bottom eof
 		break;
 }
 if (!$this->ms['MODULES']['DISABLE_CRUMBAR'] and $GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html']) {
