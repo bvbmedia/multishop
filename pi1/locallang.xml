@@ -1928,6 +1928,9 @@
             <label index="mail_selected_orders_for_payment_reminder">Mail betaalherinnering voor geselecteerde bestellingen</label>
             <label index="average">Gemiddeld</label>
             <label index="admin_label_method_is_enabled_on_default">Methode is zichtbaar</label>
+            <label index="admin_label_store_tt_address_id_not_exist">Het opgegeven tt_address id (plugin.multishop.tt_address_record_id_store) is niet correct</label>
+            <label index="admin_label_store_tt_address_not_found">tt_address record voor de winkel is nog niet aangemaakt, gaarne systeem/systeem/compare database draaien en stel het aangemaakte record in als plugin.multishop.tt_address_record_id_store (typoscript)</label>
+            <label index="admin_label_store_tt_address_id_found">Gaarne de waarde van veld plugin.multishop.tt_address_record_id_store aanpassen naar tt_address id: %d</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
