@@ -137,7 +137,7 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper .horizontal_list.order_status_checkbox li { width:20%; padding:0 20px 10px 0; vertical-align:bottom; box-sizing:border-box; vertical-align:top; }
 #tx_multishop_pi1_core ul.horizontal_list li label,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core ul.horizontal_list li label,
-.paid-orders label { display:block; font-size:12px; font-weight:normal; color:#000; margin:0; padding:0 0 0 18px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .paid-orders label { display:block; font-size:12px; font-weight:normal; color:#000; margin:0; padding:0 0 0 18px; }
 #tx_multishop_pi1_core ul.horizontal_list li input[type="checkbox"],
 #msadmin_section #msadmin_content #tx_multishop_pi1_core ul.horizontal_list li input[type="checkbox"],
-.paid-orders input[type="checkbox"] { float:left; margin:0; margin-right:5px; vertical-align:top; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .paid-orders input[type="checkbox"] { float:left; margin:0; margin-right:5px; vertical-align:top; }
