@@ -130,10 +130,14 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 
 .wrap-attributes-item .information_select2_label { color:#777; text-transform:uppercase; }
 
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li > label { display:block; font:bold 16px Arial,Helvetica,sans-serif; color:#c50000; margin:10px 0; padding:0; line-height:100%; }
+/* #msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li > label { display:block; font:bold 16px Arial,Helvetica,sans-serif; color:#c50000; margin:10px 0; padding:0; line-height:100%; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li .order_status_checkbox label { display:inline-block;  width:20%; padding:0 20px 10px 0; vertical-align:bottom; box-sizing:border-box; vertical-align:top; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li .order_status_checkbox label input { margin-top:0; vertical-align:top; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper ul li .order_status_checkbox label input { margin-top:0; vertical-align:top; } */
 
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper .horizontal_list.order_status_checkbox li { display:inline-block; width:20%; padding:0 20px 10px 0; vertical-align:bottom; box-sizing:border-box; vertical-align:top; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper .horizontal_list.order_status_checkbox li label { display:block; font-size:12px; font-weight:normal; color:#000; margin:0; padding:1px 0 0 18px; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper .horizontal_list.order_status_checkbox li input { float:left; margin-top:0; margin-right:5px; vertical-align:top; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .order_stats_mode_wrapper .horizontal_list.order_status_checkbox li { width:20%; padding:0 20px 10px 0; vertical-align:bottom; box-sizing:border-box; vertical-align:top; }
+#tx_multishop_pi1_core ul.horizontal_list li label,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core ul.horizontal_list li label,
+.paid-orders label { display:block; font-size:12px; font-weight:normal; color:#000; margin:0; padding:0 0 0 18px; }
+#tx_multishop_pi1_core ul.horizontal_list li input[type="checkbox"],
+#msadmin_section #msadmin_content #tx_multishop_pi1_core ul.horizontal_list li input[type="checkbox"],
+.paid-orders input[type="checkbox"] { float:left; margin:0; margin-right:5px; vertical-align:top; }
