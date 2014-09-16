@@ -1946,6 +1946,21 @@
             <label index="admin_label_store_tt_address_id_not_exist">Het opgegeven tt_address id (plugin.multishop.tt_address_record_id_store) is niet correct</label>
             <label index="admin_label_store_tt_address_not_found">tt_address record voor de winkel is nog niet aangemaakt, gaarne systeem/systeem/compare database draaien en stel het aangemaakte record in als plugin.multishop.tt_address_record_id_store (typoscript)</label>
             <label index="admin_label_store_tt_address_id_found">Gaarne de waarde van veld plugin.multishop.tt_address_record_id_store aanpassen naar tt_address id: %d</label>
+            <label index="admin_export_orders">Exporteer bestellingen</label>
+            <label index="currently_there_are_no_orders_export_created">Op dit moment is er nog geen bestand aangemaakt</label>
+            <label index="order_payment_status">Betaalstatus</label>
+            <label index="unpaid">Niet betaald</label>
+            <label index="order_by">Sorteer op</label>
+            <label index="sort_direction">Sorteervolgorde</label>
+            <label index="sort_direction_asc">Oplopend</label>
+            <label index="sort_direction_desc">Aflopend</label>
+            <label index="status_last_modified">Status laatst gewijzigd</label>
+            <label index="billing_name">Factuurnaam</label>
+            <label index="creation_date">Datum aangemaakt</label>
+            <label index="grand_total">Totaalbedrag</label>
+            <label index="shipping_method_label">Bezorgmethode (label)</label>
+            <label index="payment_method_label">Betaalmethode (label)</label>
+            <label index="order_type">Order type</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
