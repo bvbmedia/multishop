@@ -83,7 +83,7 @@
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #upload_customerfeed_form ul { margin:10px 0 0; padding:0; list-style:none; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #upload_customerfeed_form ul li { background:none; margin:0; padding:0; list-style:none; line-height:100%; }
 
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form#orders_stats_form { font:12px Arial, Helvetica, sans-serif; padding:20px 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form#orders_stats_form { font:12px Arial, Helvetica, sans-serif; padding:0 0 20px; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset br { display:none; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul { overflow:hidden; width:100%; margin:10px 0 0; padding:0; list-style:none; }
