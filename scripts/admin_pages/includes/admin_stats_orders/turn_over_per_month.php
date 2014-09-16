@@ -44,18 +44,16 @@ $selected_year='Y-';
 if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
 }
-$order_status_sb='<label for="order_status">'.$this->pi_getLL('order_status').': </label>';
+$order_status_sb='<h2>'.$this->pi_getLL('order_status').'</h2>';
 $all_orders_status=mslib_fe::getAllOrderStatus();
 if (is_array($all_orders_status) and count($all_orders_status)) {
-	$order_status_sb.='<div class="order_status_checkbox" id="admin_sales_stats_order_status">';
-	foreach ($all_orders_status as $row) {
-		if (in_array($row['id'], $this->get['tx_multishop_pi1']['status'])) {
-			$order_status_sb.='<label for="sales_stats_status_'.$row['id'].'"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" checked="checked" class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /> '.$row['name'].'</label>';
-		} else {
-			$order_status_sb.='<label for="sales_stats_status_'.$row['id'].'"><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /> '.$row['name'].'</label>';
+	if (is_array($all_orders_status) and count($all_orders_status)) {
+		$order_status_sb.='<ul class="horizontal_list order_status_checkbox" id="admin_sales_stats_order_status">';
+		foreach ($all_orders_status as $row) {
+			$order_status_sb.='<li><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" '.(in_array($row['id'], $this->get['tx_multishop_pi1']['status']) ?'checked="checked"':'').' class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /><label for="sales_stats_status_'.$row['id'].'">'.$row['name'].'</label></li>';
 		}
+		$order_status_sb.='</ul>';
 	}
-	$order_status_sb.='</div>';
 }
 if (isset($this->get['tx_multishop_pi1']['status']) && count($this->get['tx_multishop_pi1']['status'])>0) {
 	$status_where='';
@@ -71,8 +69,8 @@ $content.='<div class="order_stats_mode_wrapper">
 <ul class="horizontal_list">
 	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
 	<li><strong class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</strong></li>
-	<li>'.$order_status_sb.'</li>
 </ul>
+'.$order_status_sb.'
 </div>';
 $content.='
 <form method="get" id="orders_stats_form" class="float_right">
@@ -80,7 +78,7 @@ $content.='
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
 <input name="tx_multishop_pi1[stats_section]" type="hidden" value="turnoverPerMonth" />
-<div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /> '.$this->pi_getLL('show_paid_orders_only').'</div>
+<div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /><label for="checkbox_paid_orders_only">'.$this->pi_getLL('show_paid_orders_only').'</label></div>
 </form>
 <script type="text/javascript" language="JavaScript">
 	jQuery(document).ready(function($) {
