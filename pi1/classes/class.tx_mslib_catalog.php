@@ -64,7 +64,8 @@ class tx_mslib_catalog {
 						$query_array=array();
 						$query_array['select'][]='c.categories_id,cd.categories_name';
 						$query_array['from'][]='tx_multishop_categories c, tx_multishop_categories_description cd';
-						$query_array['where'][]='c.status=1 and c.parent_id=\''.$this->categoriesStartingPoint.'\' and c.page_uid=\''.$this->showCatalogFromPage.'\' and c.categories_id=cd.categories_id';
+						//$query_array['where'][]='c.status=1 and c.parent_id=\''.$this->categoriesStartingPoint.'\' and c.page_uid=\''.$this->showCatalogFromPage.'\' and c.categories_id=cd.categories_id';
+						$query_array['where'][]='c.status=1 and c.page_uid=\''.$this->showCatalogFromPage.'\' and c.categories_id=cd.categories_id';
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
 							(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
 							(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
