@@ -220,6 +220,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td.cell_products_final_price,
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td.cell_products_action { white-space:nowrap; }
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td input { margin-bottom:0; }
+#tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td .order_total_value input { margin-right:0; }
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border .cell_products_name { width:90%; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border td#manual_add_product input.product_name_input { width:240px; }
