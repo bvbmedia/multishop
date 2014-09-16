@@ -16,6 +16,25 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 }
 // custom hook that can be controlled by third-party plugin eof
 if (!$skipMultishopUpdates) {
+	$str="select id from tx_multishop_orders_export limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="CREATE TABLE `tx_multishop_orders_export` (
+			  `id` int(11) NULL AUTO_INCREMENT,
+			  `name` varchar(75) NULL,
+			  `page_uid` int(11) NULL DEFAULT '0',
+			  `crdate` int(11) NULL DEFAULT '0',
+			  `fields` text NULL,
+			  `post_data` text NULL,
+			  `code` varchar(150) NULL,
+			  `status` tinyint(1) NULL DEFAULT '0',
+			  PRIMARY KEY (`id`),
+			  KEY `code` (`code`)
+			) ENGINE=MyISAM;
+			";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	$str="select products_id from tx_multishop_products where extid='0' or extid='' or extid is null";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -63,6 +82,7 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+
 	$str="select sort_order_option_name from tx_multishop_products_attributes limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {

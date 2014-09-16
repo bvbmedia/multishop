@@ -4987,6 +4987,9 @@ class mslib_fe {
 			}
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders']['label']=$this->pi_getLL('admin_orders_overview');
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
+			// orders export wizard
+			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['label']=$this->pi_getLL('admin_export_orders');
+			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_orders');
 			if ($this->ms['MODULES']['ADMIN_ORDER_PROPOSAL_MODULE']) {
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['label']=$this->pi_getLL('admin_proposals');
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['description']=$this->pi_getLL('admin_proposals_description').'.';
@@ -6364,6 +6367,22 @@ class mslib_fe {
 				case 'code':
 				case 'id':
 					$str="SELECT * from tx_multishop_product_feeds where ".$type."='".addslashes($string)."'";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+					return $row;
+					break;
+				default:
+					return false;
+					break;
+			}
+		}
+	}
+	public function getOrdersExportWizard($string, $type='id') {
+		if ($string) {
+			switch ($type) {
+				case 'code':
+				case 'id':
+					$str="SELECT * from tx_multishop_orders_export where ".$type."='".addslashes($string)."'";
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 					return $row;

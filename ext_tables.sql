@@ -1126,6 +1126,18 @@ CREATE TABLE `tx_multishop_product_feeds` (
   KEY `code` (`code`)
 );
 
+CREATE TABLE `tx_multishop_orders_export` (
+  `id` int(11) auto_increment,
+  `name` varchar(75) default '',
+  `page_uid` int(11) default '0',
+  `crdate` int(11) default '0',
+  `fields` text,
+  `code` varchar(150) default '',
+  `status` tinyint(1) default '0',
+  PRIMARY KEY (`id`),
+  KEY `code` (`code`)
+);
+
 CREATE TABLE `tx_multishop_product_wishlist` (
   `product_wishlist_id` int(11) auto_increment,
   `wishlist_id` int(11) default '0',

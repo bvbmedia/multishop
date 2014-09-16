@@ -973,6 +973,21 @@
             <label index="admin_label_store_tt_address_id_not_exist">tt_address id you supplied in plugin.multishop.tt_address_record_id_store constant are invalid</label>
             <label index="admin_label_store_tt_address_not_found">tt_address for the store are not yet created, please run compare database and paste the id into plugin.multishop.tt_address_record_id_store</label>
             <label index="admin_label_store_tt_address_id_found">please fill in the plugin.multishop.tt_address_record_id_store value with this tt_address id: %d</label>
+            <label index="admin_export_orders">Export orders wizard</label>
+            <label index="currently_there_are_no_orders_export_created">Currently there are no export orders wizard</label>
+            <label index="order_payment_status">Payment status</label>
+            <label index="unpaid">Not paid</label>
+            <label index="order_by">Order by</label>
+            <label index="sort_direction">Sort direction</label>
+            <label index="sort_direction_asc">Ascending</label>
+            <label index="sort_direction_desc">Descending</label>
+            <label index="status_last_modified">Status last modified</label>
+            <label index="billing_name">Billing name</label>
+            <label index="creation_date">Creation date</label>
+            <label index="grand_total">Grand total</label>
+            <label index="shipping_method_label">Shipping method label</label>
+            <label index="payment_method_label">Payment method label</label>
+            <label index="order_type">Order type</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
