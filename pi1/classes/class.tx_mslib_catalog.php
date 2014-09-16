@@ -61,36 +61,45 @@ class tx_mslib_catalog {
 					case 'categories_name':
 					case 'categories_name_natural':
 						$content.='<div class="main-heading"><h2>Sorting categories on name '.$orderBy.' done</h2></div>';
-						$subcategories_array=array();
-						mslib_fe::getSubcats($subcategories_array, 0);
-						if (count($subcategories_array)) {
-							foreach ($subcategories_array as $item) {
-								$values_name=$item['categories_name'];
-								// if the first char is not alphanumeric we cut it off, so we can sort much better
-								if ($values_name and !preg_match("/^[a-z0-9]/i",$values_name)) {
-									do {
-										$values_name=substr($values_name,1,strlen($values_name));
-									} while ($values_name and !preg_match("/^[a-z0-9]/i",$values_name));
-								}
-								// we now have a name that starts with alphanumeric
-								$valuesArray[$item['categories_id']] = $values_name;
+						$query_array=array();
+						$query_array['select'][]='c.categories_id,cd.categories_name';
+						$query_array['from'][]='tx_multishop_categories c, tx_multishop_categories_description cd';
+						$query_array['where'][]='c.status=1 and c.parent_id=\''.$this->categoriesStartingPoint.'\' and c.page_uid=\''.$this->showCatalogFromPage.'\' and c.categories_id=cd.categories_id';
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
+							(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
+							(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
+							(is_array($query_array['group_by']) ? implode(",", $query_array['group_by']) : ''), // GROUP BY...
+							(is_array($query_array['order_by']) ? implode(",", $query_array['order_by']) : ''), // ORDER BY...
+							(is_array($query_array['limit']) ? implode(",", $query_array['limit']) : '') // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$valuesArray=array();
+						while ($item=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$values_name=$item['categories_name'];
+							// if the first char is not alphanumeric we cut it off, so we can sort much better
+							if ($values_name and !preg_match("/^[a-z0-9]/i",$values_name)) {
+								do {
+									$values_name=substr($values_name,1,strlen($values_name));
+								} while ($values_name and !preg_match("/^[a-z0-9]/i",$values_name));
 							}
-							// now let PHP sort the array
-							natcasesort($valuesArray);
-							switch($orderBy) {
-								case 'desc':
-									$valuesArray=array_reverse($valuesArray);
-									break;
-							}
-							$sort=1;
-							// iterate each value and save the new sort order number to DB
-							foreach ($valuesArray as $categories_id => $values_name) {
-								$updateArray=array();
-								$updateArray['sort_order'] = $sort;
-								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id='.$categories_id, $updateArray);
-								$GLOBALS['TYPO3_DB']->sql_query($query);
-								$sort++;
-							}
+							// we now have a name that starts with alphanumeric
+							$valuesArray[$item['categories_id']] = $values_name;
+						}
+						// now let PHP sort the array
+						natcasesort($valuesArray);
+						switch($orderBy) {
+							case 'desc':
+								$valuesArray=array_reverse($valuesArray);
+								break;
+						}
+						$sort=1;
+						// iterate each value and save the new sort order number to DB
+						foreach ($valuesArray as $categories_id => $values_name) {
+							$updateArray=array();
+							$updateArray['sort_order'] = $sort;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id='.$categories_id, $updateArray);
+							$GLOBALS['TYPO3_DB']->sql_query($query);
+							$sort++;
 						}
 						break;
 					case 'categories_name_old':
