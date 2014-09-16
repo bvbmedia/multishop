@@ -67,6 +67,7 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable th.msOrderDetailsHeadingTotal { text-align:right; }
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable td { border-color:#cdcdcd; background:#fff; }
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable td.msOrderDetailsItemImage { }
+#msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable td.msOrderDetailsItemImage img { max-width:50px; }
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable td.msOrderDetailsItemName { }
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable td.msOrderDetailsItemQuantity { text-align:right; }
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable td.msOrderDetailsItemTotal { text-align:right; }
