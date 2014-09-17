@@ -98,11 +98,29 @@ if ($this->get['orders_export_hash']) {
 		$pageset=mslib_fe::getOrdersPageSet($filter, $offset, 1000, $orderby, $having, $select, $where, $from);
 		$records=$pageset['orders'];
 		// load all products
-		$excelHeaderCols=array();
-		$excelRows[0]=$excelHeaderCols;
 		$excelRows=array();
+		$excelHeaderCols=array();
+		foreach ($fields as $counter=>$field) {
+			if ($field!='order_products') {
+				$excelHeaderCols[$field]=$field;
+			} else {
+				$max_cols_num=($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:25);
+				for ($i=0; $i<$max_cols_num; $i++) {
+					$excelHeaderCols['product_id' . $i]='product_id' . $i;
+					$excelHeaderCols['product_name' . $i]='product_name' . $i;
+					$excelHeaderCols['product_qty' . $i]='product_qty' . $i;
+					$excelHeaderCols['product_final_price_excl_tax' . $i]='product_final_price_excl_tax' . $i;
+					$excelHeaderCols['product_final_price_incl_tax' . $i]='product_final_price_incl_tax' . $i;
+					$excelHeaderCols['product_price_total_excl_tax' . $i]='product_final_price_total_excl_tax' . $i;
+					$excelHeaderCols['product_price_total_incl_tax' . $i]='product_final_price_total_incl_tax' . $i;
+					$excelHeaderCols['product_tax_rate' . $i]='product_tax_rate' . $i;
+				}
+			}
+		}
+		$excelRows[]=$excelHeaderCols;
 		foreach ($records as $row) {
 			$order_tax_data=unserialize($row['orders_tax_data']);
+			$order_tmp=mslib_fe::getOrder($row['orders_id']);
 			if ($this->get['format']=='excel') {
 				$excelCols=array();
 			}
@@ -111,9 +129,6 @@ if ($this->get['orders_export_hash']) {
 			foreach ($fields as $counter=>$field) {
 				$count++;
 				$tmpcontent='';
-				if ($field!='order_products') {
-					$excelHeaderCols[$field]=$field;
-				}
 				switch ($field) {
 					case 'orders_id':
 						$excelCols[]=$row['orders_id'];
@@ -167,10 +182,10 @@ if ($this->get['orders_export_hash']) {
 						$excelCols[]=$row['delivery_country'];
 						break;
 					case 'orders_grand_total_excl_vat':
-						$excelCols[]=($order_tax_data['grand_total']-$order_tax_data['total_orders_tax']);
+						$excelCols[]=number_format($order_tax_data['grand_total']-$order_tax_data['total_orders_tax'], 2, ',', '.');
 						break;
 					case 'orders_grand_total_incl_vat':
-						$excelCols[]=$order_tax_data['grand_total'];
+						$excelCols[]=number_format($order_tax_data['grand_total'], 2, ',', '.');
 						break;
 					case 'payment_status':
 						$excelCols[]=($row['paid'])?$this->pi_getLL('paid'):$this->pi_getLL('unpaid');
@@ -178,37 +193,58 @@ if ($this->get['orders_export_hash']) {
 					case 'shipping_method':
 						$excelCols[]=$row['shipping_method_label'];
 						break;
-					case 'shipping_cost':
-						$excelCols[]=$row['shipping_method_costs'];
+					case 'shipping_cost_excl_vat':
+						$excelCols[]=number_format($row['shipping_method_costs'], 2, ',', '.');
+						break;
+					case 'shipping_cost_incl_vat':
+						$excelCols[]=number_format($row['shipping_method_costs']+$order_tmp['orders_tax_data']['shipping_tax'], 2, ',', '.');
+						break;
+					case 'shipping_cost_vat_rate':
+						$excelCols[]=($order_tmp['orders_tax_data']['shipping_total_tax_rate']*100).'%';
 						break;
 					case 'payment_method':
 						$excelCols[]=$row['payment_method_label'];
 						break;
-					case 'payment_cost':
-						$excelCols[]=$row['payment_method_cost'];
+					case 'payment_cost_excl_vat':
+						$excelCols[]=number_format($row['payment_method_cost'], 2, ',', '.');
+						break;
+					case 'payment_cost_incl_vat':
+						$excelCols[]=number_format($row['payment_method_cost']+$order_tmp['orders_tax_data']['payment_tax'], 2, ',', '.');
+						break;
+					case 'payment_cost_vat_rate':
+						$excelCols[]=($order_tmp['orders_tax_data']['payment_total_tax_rate']*100).'%';
 						break;
 					case 'order_products':
-						$order_tmp=mslib_fe::getOrder($row['orders_id']);
 						$order_products=$order_tmp['products'];
 						$prod_ctr=0;
 						foreach ($order_products as $product_tmp) {
-							$excelHeaderCols['product_id' . $prod_ctr]='product_id' . $prod_ctr;
 							$excelCols[]=$product_tmp['products_id'];
-							$excelHeaderCols['product_name' . $prod_ctr]='product_name' . $prod_ctr;
 							if (!empty($product_tmp['products_model'])) {
 								$excelCols[]=$product_tmp['products_name'] . ' ('.$product_tmp['products_model'].')';
 							} else {
 								$excelCols[]=$product_tmp['products_name'];;
 							}
-							$excelHeaderCols['product_qty' . $prod_ctr]='product_qty' . $prod_ctr;
 							$excelCols[]=$product_tmp['qty'];
-							$excelHeaderCols['product_final_price_excl_tax' . $prod_ctr]='product_final_price_excl_tax' . $prod_ctr;
 							$excelCols[]=number_format($product_tmp['final_price'], 2, ',', '.');
-							$excelHeaderCols['product_tax_rate' . $prod_ctr]='product_tax_rate' . $prod_ctr;
+							$excelCols[]=number_format($product_tmp['final_price']+$product_tmp['products_tax_data']['total_tax'], 2, ',', '.');
+							$excelCols[]=number_format($product_tmp['final_price']*$product_tmp['qty'], 2, ',', '.');
+							$excelCols[]=number_format(($product_tmp['final_price']+$product_tmp['products_tax_data']['total_tax'])*$product_tmp['qty'], 2, ',', '.');
 							$excelCols[]=$product_tmp['products_tax'].'%';
 							$prod_ctr++;
 						}
-						$tmpcontent.=$row['products_quantity'];
+						$max_cols_num=($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:25);
+						if ($prod_ctr<$max_cols_num) {
+							for ($x=$prod_ctr; $x<$max_cols_num; $x++) {
+								$excelCols[]='';
+								$excelCols[]='';
+								$excelCols[]='';
+								$excelCols[]='';
+								$excelCols[]='';
+								$excelCols[]='';
+								$excelCols[]='';
+								$excelCols[]='';
+							}
+						}
 						break;
 				}
 			}
@@ -217,7 +253,6 @@ if ($this->get['orders_export_hash']) {
 				$excelRows[]=$excelCols;
 			}
 		}
-		$excelRows[0]=$excelHeaderCols;
 		if ($this->get['format']=='excel') {
 			require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
 			$objPHPExcel=new PHPExcel();

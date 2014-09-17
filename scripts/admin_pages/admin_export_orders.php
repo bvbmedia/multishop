@@ -12,22 +12,26 @@ $array['customer_billing_email']='Customer billing e-mail';
 $array['customer_billing_name']='Customer billing name';
 $array['customer_billing_address']='Customer billing address';
 $array['customer_billing_city']='Customer billing city';
-$array['customer_billing_zip']='Customer billing postcode/zip';
+$array['customer_billing_zip']='Customer billing zip';
 $array['customer_delivery_telephone']='Customer delivery telephone';
 $array['customer_delivery_email']='Customer delivery e-mail';
 $array['customer_billing_country']='Customer billing country';
 $array['customer_delivery_name']='Customer delivery name';
 $array['customer_delivery_address']='Customer delivery address';
 $array['customer_delivery_city']='Customer delivery city';
-$array['customer_delivery_zip']='Customer delivery postcode/zip';
+$array['customer_delivery_zip']='Customer delivery zip';
 $array['customer_delivery_country']='Customer delivery country';
 $array['orders_grand_total_excl_vat']='Orders grand total (excl. vat)';
 $array['orders_grand_total_incl_vat']='Orders grand total (incl. vat)';
 $array['payment_status']='Orders payment status';
 $array['shipping_method']='Shipping method';
-$array['shipping_cost']='Shipping cost';
+$array['shipping_cost_excl_vat']='Shipping costs (excl. vat)';
+$array['shipping_cost_incl_vat']='Shipping costs (incl. vat)';
+$array['shipping_cost_vat_rate']='Shipping costs tax rate';
 $array['payment_method']='Payment method';
-$array['payment_cost']='Payment cost';
+$array['payment_cost_excl_vat']='Payment costs (excl. vat)';
+$array['payment_cost_incl_vat']='Payment costs (incl. vat)';
+$array['payment_cost_vat_rate']='Payment costs tax rate';
 $array['order_products']='Order products';
 /*
 $array['products_id']='Products id';
@@ -158,7 +162,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			</select>';
 		// order type selectbox
 		$order_type_sb='<select name="order_type">
-				<option value="all"'.($post_data['order_type']=='desc'?' selected="selected"':'').'>'.$this->pi_getLL('all').'</option>
+				<option value="all"'.($post_data['order_type']=='desc'?' selected="selected"':'').'>'.$this->pi_getLL('orders').'</option>
 				<option value="by_phone"'.($post_data['order_type']=='by_phone'?' selected="selected"':'').'>'.ucfirst(strtolower($this->pi_getLL('admin_manual_order'))).'</option>
 				<option value="proposal"'.($post_data['order_type']=='proposal'?' selected="selected"':'').'>'.$this->pi_getLL('admin_proposals').'</option>
 			</select>';
@@ -170,12 +174,12 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
 			<div class="input_label_wrapper">
-				<label for="orders_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>
+				<label for="visual_orders_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>
 				<input name="visual_orders_date_from" id="visual_orders_date_from" type="text" value="'.$post_data['visual_orders_date_from'].'" />
 				<input name="orders_date_from" id="orders_date_from" type="hidden" value="'.$post_data['orders_date_from'].'" />
 			</div>
 			<div class="input_label_wrapper">
-				<label for="orders_date_till">'.htmlspecialchars($this->pi_getLL('admin_till')).'</label>
+				<label for="visual_orders_date_till">'.htmlspecialchars($this->pi_getLL('admin_till')).'</label>
 				<input name="visual_orders_date_till" id="visual_orders_date_till" type="text" value="'.$post_data['visual_orders_date_till'].'" />
 				<input name="orders_date_till" id="orders_date_till" type="hidden" value="'.$post_data['orders_date_till'].'" />
 			</div>
@@ -195,6 +199,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('sort_direction')).'</label>
 			'.$sort_direction_sb.'
+		</div>
+		<div class="account-field">
+			<label>'.htmlspecialchars($this->pi_getLL('maximum_number_of_order_products')).'</label>
+			<input type="text" name="maximum_number_of_order_products" value="'.($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:'25').'" />
 		</div>
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
@@ -258,6 +266,13 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			yearRange: "'.$first_year.':'.(date('Y')+1).'"
 		});
 		jQuery(document).ready(function($) {
+			jQuery("#admin_orders_exports_fields").sortable({
+				cursor:     "move",
+				//axis:       "y",
+				update: function(e, ui) {
+					jQuery(this).sortable("refresh");
+				}
+			});
 			var counter=\''.$counter.'\';
 			$("#feed_type").change(function(){
 				var selected=$("#feed_type option:selected").val();

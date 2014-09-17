@@ -988,6 +988,7 @@
             <label index="shipping_method_label">Shipping method label</label>
             <label index="payment_method_label">Payment method label</label>
             <label index="order_type">Order type</label>
+            <label index="maximum_number_of_order_products">Maximum number of order products</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
