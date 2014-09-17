@@ -43,7 +43,7 @@
 #msadmin_section #msadmin_content #tx_multishop_pi1_core ul.attribute_options_sortable h2 span.option_id { font-size:16px; color:#c50000; padding:2px 20px 0 0; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field { overflow:hidden; width:100%; border-bottom:1px dotted #e0e0e0; background:#fff; font:12px Arial, Helvetica, sans-serif; color:#333; padding:7px 0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field label { clear:left; float:left; display:block; width:180px; color:#333; text-align:right; text-transform:uppercase; padding:3px 20px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field label { clear:left; float:left; display:block; width:180px; color:#333; text-align:right; text-transform:uppercase; padding:4px 20px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .order_total .account-field label { float:none; display:inline-block; width:auto; text-align:right; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttribute { padding:0 0 0 200px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField { overflow:hidden; padding:0px; }
@@ -52,7 +52,7 @@
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField label { clear:none; float:left; width:auto; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper { float:left; padding-top:0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper label { clear:none; float:left;  width:auto; padding:3px 10px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper label { clear:none; float:left;  width:auto; padding:4px 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper input[type="radio"] { float:left; margin-right:3px; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field small { display:block; color:#777; text-transform:uppercase; padding:0 0 0 200px; }
