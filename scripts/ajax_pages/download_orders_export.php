@@ -215,9 +215,13 @@ if ($this->get['orders_export_hash']) {
 						$excelCols[]=($order_tmp['orders_tax_data']['payment_total_tax_rate']*100).'%';
 						break;
 					case 'order_products':
+						$max_cols_num=($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:25);
 						$order_products=$order_tmp['products'];
 						$prod_ctr=0;
 						foreach ($order_products as $product_tmp) {
+							if ($prod_ctr>=$max_cols_num) {
+								break;
+							}
 							$excelCols[]=$product_tmp['products_id'];
 							if (!empty($product_tmp['products_model'])) {
 								$excelCols[]=$product_tmp['products_name'] . ' ('.$product_tmp['products_model'].')';
@@ -232,7 +236,6 @@ if ($this->get['orders_export_hash']) {
 							$excelCols[]=$product_tmp['products_tax'].'%';
 							$prod_ctr++;
 						}
-						$max_cols_num=($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:25);
 						if ($prod_ctr<$max_cols_num) {
 							for ($x=$prod_ctr; $x<$max_cols_num; $x++) {
 								$excelCols[]='';
