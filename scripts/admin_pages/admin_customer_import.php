@@ -21,38 +21,37 @@ $default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR'
 $GLOBALS['TSFE']->additionalHeaderData['tx_multishop_pi1_block_ui']=mslib_fe::jQueryBlockUI();
 // define the different columns
 $coltypes=array();
-$coltypes['first_name']='first name';
-$coltypes['middle_name']='middle name';
-$coltypes['last_name']='last name';
-$coltypes['full_name']='full name';
-$coltypes['email']='e-mail';
-$coltypes['address']='address';
-$coltypes['street_name']='street name';
-$coltypes['address_number']='address number';
-$coltypes['address_ext']='address number extension';
-$coltypes['zip']='zip';
-$coltypes['city']='city';
-$coltypes['country']='country';
-$coltypes['region']='region';
-$coltypes['telephone']='telephone';
-$coltypes['fax']='fax';
-$coltypes['mobile']='mobile';
-$coltypes['company_name']='company name';
-$coltypes['vat_id']='VAT id';
-$coltypes['uid']='user id';
-$coltypes['gender']='gender';
-$coltypes['password']='password';
-$coltypes['password_hashed']='password(MD5 hashed)';
-$coltypes['usergroup']='usergroup';
-$coltypes['birthday']='birthday';
-$coltypes['mobile']='mobile';
-$coltypes['newsletter']='newsletter';
-$coltypes['disable']='disable';
-$coltypes['deleted']='deleted';
-$coltypes['discount']='discount';
-$coltypes['username']='username';
-$coltypes['title']='job title';
-$coltypes['tx_multishop_source_id']='customer id(external id for reference)';
+$coltypes['first_name']=$this->pi_getLL('first_name');
+$coltypes['middle_name']=$this->pi_getLL('middle_name');
+$coltypes['last_name']=$this->pi_getLL('last_name');
+$coltypes['full_name']=$this->pi_getLL('full_name');
+$coltypes['email']=$this->pi_getLL('email');
+$coltypes['address']=$this->pi_getLL('address');
+$coltypes['street_name']=$this->pi_getLL('street_address');
+$coltypes['address_number']=$this->pi_getLL('street_address_number');
+$coltypes['address_ext']=$this->pi_getLL('address_number_extension');
+$coltypes['zip']=$this->pi_getLL('zip');
+$coltypes['city']=$this->pi_getLL('city');
+$coltypes['country']=$this->pi_getLL('country');
+$coltypes['region']=$this->pi_getLL('region');
+$coltypes['telephone']=$this->pi_getLL('telephone');
+$coltypes['fax']=$this->pi_getLL('fax');
+$coltypes['mobile']=$this->pi_getLL('mobile');
+$coltypes['company_name']=$this->pi_getLL('company');
+$coltypes['vat_id']=$this->pi_getLL('vat_id');
+$coltypes['uid']=$this->pi_getLL('user_id');
+$coltypes['gender']=$this->pi_getLL('gender');
+$coltypes['password']=$this->pi_getLL('password');
+$coltypes['password_hashed']=$this->pi_getLL('password_md5_hashed');
+$coltypes['usergroup']=$this->pi_getLL('usergroup');
+$coltypes['birthday']=$this->pi_getLL('birthday');
+$coltypes['newsletter']=$this->pi_getLL('newsletter');
+$coltypes['disable']=$this->pi_getLL('disable');
+$coltypes['deleted']=$this->pi_getLL('deleted');
+$coltypes['discount']=$this->pi_getLL('discount');
+$coltypes['username']=$this->pi_getLL('username');
+$coltypes['title']=$this->pi_getLL('job_title');
+$coltypes['tx_multishop_source_id']=$this->pi_getLL('customer_id_external_id_for_reference');
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
 	$params=array(
@@ -316,8 +315,8 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						<div class="form-field">
 							aux
 							<input name="input['.$i.']" type="text" style="width:150px;" value="'.htmlspecialchars($this->post['input'][$i]).'" />
-						</div>	
-					</fieldset>				
+						</div>
+					</fieldset>
 				</td>
 				<td class="column_name"><strong>'.htmlspecialchars($table_cols[$i]).'</strong></td>
 				';
@@ -368,7 +367,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				<label>aux</label>
 				<input name="aux_input[]" type="text" value="'.htmlspecialchars($this->post['aux_input']).'" />
 				<input name="delete" class="delete_property" type="button" value="delete" /><input name="disable" type="button" value="enable" />
-			</div>		
+			</div>
 			';
 			$importer_add_aux_input=str_replace("\n", '', $importer_add_aux_input);
 			$tmpcontent.='
@@ -377,18 +376,18 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 			var add_property_html=\''.addslashes($importer_add_aux_input).'\';
 			$(document).on("click", ".delete_property", function() {
 				$(this).parent().hide("fast");
-			});	
+			});
 			$(".importer_add_property").click(function(event) {
-				$(this).prev().append(add_property_html);			
-			});			
+				$(this).prev().append(add_property_html);
+			});
 			$(".importer_advanced_settings").click(function(event) {
-				$(this).next().toggle();			
+				$(this).next().toggle();
 			});
 			$(\'.select_columns_fields\').select2({
 				width:\'250px\'
 			});
-		});			
-		</script>			
+		});
+		</script>
 			';
 			$tmpcontent.=$header.'
 		</table>';
@@ -396,24 +395,24 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 		$tmpcontent.='
 				<fieldset>
 					<legend>'.$this->pi_getLL('save_import_task').'</legend>
-					<div class="account-field">					
+					<div class="account-field">
 						<label for="cron_name">'.$this->pi_getLL('name').'</label>
 						<input name="cron_name" type="text" value="'.htmlspecialchars($this->post['cron_name']).'" />
 					</div>
 ';
 		if ($this->get['action']=='edit_job') {
 			$tmpcontent.='
-							<div class="account-field">					
+							<div class="account-field">
 								<label for="duplicate">'.$this->pi_getLL('duplicate').'</label>
 								<input name="duplicate" type="checkbox" value="1" />
 								<input name="skip_import" type="hidden" value="1" />
 								<input name="job_id" type="hidden" value="'.$this->get['job_id'].'" />
 								<input name="file_url" type="hidden" value="'.$this->post['file_url'].'" />
-							</div>	
+							</div>
 			';
 		}
 		$tmpcontent.='
-		<div class="account-field">					
+		<div class="account-field">
 		<label for="cron_period">'.$this->pi_getLL('schedule').'</label>
 		<select name="cron_period" id="cron_period">
 		<option value="" '.(!$this->post['cron_period'] ? 'selected' : '').'>'.$this->pi_getLL('manual').'</option>
@@ -422,10 +421,10 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 		<option value="'.(3600*24*30).'" '.($this->post['cron_period']==(3600*24*30) ? 'selected' : '').'>'.$this->pi_getLL('monthly').'</option>
 		</select>
 		</div>
-		<div class="account-field">					
+		<div class="account-field">
 		<label for="prefix_source_name">'.$this->pi_getLL('source_name').'</label>
 		<input name="prefix_source_name" type="text" value="'.htmlspecialchars($this->post['prefix_source_name']).'" />
-		</div>							
+		</div>
 		<input name="database_name" type="hidden" value="'.$this->post['database_name'].'" />
 		<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($this->post)).'" />
 		</fieldset>
@@ -1024,16 +1023,16 @@ if ($this->ms['show_default_form']) {
 	jQuery(document).ready(function($) {
 		$(document).on("click", ".hide_advanced_import_radio", function() {
 			$(this).parent().find(".hide").hide();
-		});									
+		});
 		$(document).on("click", ".advanced_import_radio", function() {
 			$(this).parent().find(".hide").show();
 		});
 	});
 	</script>
-  <input name="format" type="radio" value="excel" checked class="hide_advanced_import_radio" /> Excel 
-  <input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML  
+  <input name="format" type="radio" value="excel" checked class="hide_advanced_import_radio" /> Excel
+  <input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML
   <input name="format" type="radio" value="txt" class="advanced_import_radio" /> TXT/CSV
-<div class="hide">  
+<div class="hide">
 	'.$this->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
 	  <option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
 	  <option value="comma">'.$this->pi_getLL('comma').'</option>
@@ -1044,7 +1043,7 @@ if ($this->ms['show_default_form']) {
 	<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$this->pi_getLL('ignore_first_line').'
 	<input type="checkbox" name="os" id="os" value="linux" /> '.$this->pi_getLL('unix_file').'
 	<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$this->pi_getLL('consolidate').'
-</div>	
+</div>
 	<input type="submit" name="Submit" class="submit submit_block" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 	<input name="action" type="hidden" value="customer-import-preview" />
 	</fieldset>
@@ -1118,12 +1117,12 @@ if ($this->ms['show_default_form']) {
 			</td>
 			<td>
 				 <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1">
-					<input type="file" name="file" />		
+					<input type="file" name="file" />
 					<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 					<input name="skip_import" type="hidden" value="1" />
 					<input name="preProcExistingTask" type="hidden" value="1" />
-					<input name="job_id" type="hidden" value="'.$job['id'].'" />				
-					<input name="action" type="hidden" value="edit_job" />								
+					<input name="job_id" type="hidden" value="'.$job['id'].'" />
+					<input name="action" type="hidden" value="edit_job" />
 				</form>
 				</td>
 			';
@@ -1135,24 +1134,24 @@ if ($this->ms['show_default_form']) {
 		jQuery(document).ready(function($)
 		{
 			$(".copy_to_clipboard").click(function(event)
-			{				
+			{
 				event.preventDefault();
-				var string=$(this).attr("rel");	
-				$.blockUI({ 
-				theme:     true, 
-				title:    \''.addslashes($this->pi_getLL('copy_below_text_and_add_it_to_crontab')).'\', 
-				message:  \'<p>\'+string+\'</p>\', 
-				timeout:   8000 
-				}); 
-			});	
-		});	
+				var string=$(this).attr("rel");
+				$.blockUI({
+				theme:     true,
+				title:    \''.addslashes($this->pi_getLL('copy_below_text_and_add_it_to_crontab')).'\',
+				message:  \'<p>\'+string+\'</p>\',
+				timeout:   8000
+				});
+			});
+		});
 		</script>
 		';
 		$tmptab='';
 		$content.=$schedule_content;
 //		$tabs['tasks']=array($this->pi_getLL('import_tasks'),$schedule_content);
 	}
-	// load the jobs templates eof		
+	// load the jobs templates eof
 }
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
