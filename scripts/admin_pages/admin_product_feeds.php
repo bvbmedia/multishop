@@ -4,69 +4,69 @@ if (!defined('TYPO3_MODE')) {
 }
 // defining the types
 $array=array();
-$array['categories_name']='Categories name (product category level)';
-$array['categories_content_top']='Categories content top (product category level)';
-$array['categories_content_bottom']='Categories content bottom (product category level)';
-$array['categories_id']='Categories id';
-$array['categories_meta_title']='Categories META title (product category level)';
-$array['categories_meta_keywords']='Categories META keywords (product category level)';
-$array['categories_meta_description']='Categories META description (product category level)';
+$array['categories_name']=$this->pi_getLL('feed_exporter_fields_label_categories_name_product_category_level');
+$array['categories_content_top']=$this->pi_getLL('feed_exporter_fields_label_categories_content_top_product_category_level');
+$array['categories_content_bottom']=$this->pi_getLL('feed_exporter_fields_label_categories_content_bottom_product_category_level');
+$array['categories_id']=$this->pi_getLL('feed_exporter_fields_label_categories_id');
+$array['categories_meta_title']=$this->pi_getLL('feed_exporter_fields_label_categories_meta_title_product_category_level');
+$array['categories_meta_keywords']=$this->pi_getLL('feed_exporter_fields_label_categories_meta_keywords_product_category_level');
+$array['categories_meta_description']=$this->pi_getLL('feed_exporter_fields_label_categories_meta_description_product_category_level');
 for ($i=1; $i<6; $i++) {
-	$array['categories_meta_title_'.$i]='Categories META title (level: '.$i.')';
-	$array['categories_meta_keywords_'.$i]='Categories META keywords (level: '.$i.')';
-	$array['categories_meta_description_'.$i]='Categories META description (level: '.$i.')';
-	$array['categories_image_'.$i]='Categories image (level: '.$i.')';
-	$array['categories_content_top_'.$i]='Categories content top (level: '.$i.')';
-	$array['categories_content_bottom_'.$i]='Categories content bottom (level: '.$i.')';
-	$array['categories_name_'.$i]='Categories name (level: '.$i.')';
+	$array['categories_meta_title_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_title_level_x'), $i);
+	$array['categories_meta_keywords_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_keywords_level_x'), $i);
+	$array['categories_meta_description_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_meta_description_level_x'), $i);
+	$array['categories_image_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_image_level_x'), $i);
+	$array['categories_content_top_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_content_top_level_x'), $i);
+	$array['categories_content_bottom_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_content_bottom_level_x'), $i);
+	$array['categories_name_'.$i]=sprintf($this->pi_getLL('feed_exporter_fields_label_categories_name_level_x'), $i);
 }
-$array['products_id']='Products id';
-$array['products_url']='Products link';
-$array['products_external_url']='Products external URL';
-$array['products_name']='Products name';
-$array['products_model']='Products model';
-$array['products_shortdescription']='Products shortdescription';
-$array['products_description']='Products description';
-$array['products_description_encoded']='Products description (HTML encoded)';
-$array['products_description_strip_tags']='Products description (plain / stripped tags)';
-$array['products_image_50']='Products image (thumbnail 50)';
-$array['products_image_100']='Products image (thumbnail 100)';
-$array['products_image_200']='Products image (thumbnail 200)';
-$array['products_image_normal']='Products image (enlarged)';
-$array['products_image_original']='Products image (biggest / original)';
-$array['products_ean']='Products EAN code';
-$array['products_sku']='Products SKU code';
-$array['foreign_products_id']='Foreign products id (imported product feeds unique identifier)';
-$array['products_quantity']='Products quantity';
-$array['products_old_price']='Products old price (incl. VAT)';
-$array['products_old_price_excluding_vat']='Products old price (excl. VAT)';
-$array['products_price']='Products price (incl. VAT)';
-$array['products_price_excluding_vat']='Products price (excl. VAT)';
-$array['product_capital_price']='Products capital price';
-$array['products_weight']='Products weight';
-$array['products_status']='Products status';
-$array['minimum_quantity']='Products minimum quantity';
-$array['maximum_quantity']='Products maximum quantity';
-$array['order_unit_name']='Products order unit name';
-$array['products_vat_rate']='Products VAT rate';
-$array['category_link']='Category link';
-$array['manufacturers_name']='Manufacturers name';
-$array['manufacturers_id']='Manufacturers id';
-$array['manufacturers_products_id']='Manufacturers products id';
-$array['delivery_time']='Delivery Time';
-$array['products_condition']='Products condition';
-$array['category_crum_path']='Category crum path';
-$array['products_meta_title']='Products meta title';
-$array['products_meta_keywords']='Products meta keywords';
-$array['products_meta_description']='Products meta description';
-$array['custom_field']='Custom field with value';
+$array['products_id']=$this->pi_getLL('feed_exporter_fields_label_products_id');
+$array['products_url']=$this->pi_getLL('feed_exporter_fields_label_products_link');
+$array['products_external_url']=$this->pi_getLL('feed_exporter_fields_label_products_external_url');
+$array['products_name']=$this->pi_getLL('feed_exporter_fields_label_products_name');
+$array['products_model']=$this->pi_getLL('feed_exporter_fields_label_products_model');
+$array['products_shortdescription']=$this->pi_getLL('feed_exporter_fields_label_products_shortdescription');
+$array['products_description']=$this->pi_getLL('feed_exporter_fields_label_products_description');
+$array['products_description_encoded']=$this->pi_getLL('feed_exporter_fields_label_products_description_html_encoded');
+$array['products_description_strip_tags']=$this->pi_getLL('feed_exporter_fields_label_products_description_plain_stripped_tags');
+$array['products_image_50']=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_50');
+$array['products_image_100']=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_100');
+$array['products_image_200']=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_200');
+$array['products_image_normal']=$this->pi_getLL('feed_exporter_fields_label_products_image_enlarged');
+$array['products_image_original']=$this->pi_getLL('feed_exporter_fields_label_products_image_original');
+$array['products_ean']=$this->pi_getLL('feed_exporter_fields_label_products_ean_code');
+$array['products_sku']=$this->pi_getLL('feed_exporter_fields_label_products_sku_code');
+$array['foreign_products_id']=$this->pi_getLL('feed_exporter_fields_label_foreign_products_id');
+$array['products_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_quantity');
+$array['products_old_price']=$this->pi_getLL('feed_exporter_fields_label_products_old_price_incl_vat');
+$array['products_old_price_excluding_vat']=$this->pi_getLL('feed_exporter_fields_label_products_old_price_excl_vat');
+$array['products_price']=$this->pi_getLL('feed_exporter_fields_label_products_price_incl_vat');
+$array['products_price_excluding_vat']=$this->pi_getLL('feed_exporter_fields_label_products_price_excl_vat');
+$array['product_capital_price']=$this->pi_getLL('feed_exporter_fields_label_products_capital_price');
+$array['products_weight']=$this->pi_getLL('feed_exporter_fields_label_products_weight');
+$array['products_status']=$this->pi_getLL('feed_exporter_fields_label_products_status');
+$array['minimum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_minimum_quantity');
+$array['maximum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_maximum_quantity');
+$array['order_unit_name']=$this->pi_getLL('feed_exporter_fields_label_products_order_unit_name');
+$array['products_vat_rate']=$this->pi_getLL('feed_exporter_fields_label_products_vat_rate');
+$array['category_link']=$this->pi_getLL('feed_exporter_fields_label_category_link');
+$array['manufacturers_name']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_name');
+$array['manufacturers_id']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_id');
+$array['manufacturers_products_id']=$this->pi_getLL('feed_exporter_fields_label_manufacturers_products_id');
+$array['delivery_time']=$this->pi_getLL('feed_exporter_fields_label_delivery_time');
+$array['products_condition']=$this->pi_getLL('feed_exporter_fields_label_products_condition');
+$array['category_crum_path']=$this->pi_getLL('feed_exporter_fields_label_category_crum_path');
+$array['products_meta_title']=$this->pi_getLL('feed_exporter_fields_label_products_meta_title');
+$array['products_meta_keywords']=$this->pi_getLL('feed_exporter_fields_label_products_meta_keywords');
+$array['products_meta_description']=$this->pi_getLL('feed_exporter_fields_label_products_meta_description');
+$array['custom_field']=$this->pi_getLL('feed_exporter_fields_label_custom_field_with_values');
 // attributes
 $str="SELECT * FROM `tx_multishop_products_options` where language_id='".$GLOBALS['TSFE']->sys_language_uid."' order by products_options_id asc";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-	$array['attribute_option_name_'.$row['products_options_id']]='Attribute option name: '.$row['products_options_name'].' (values without price)';
-	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']='Attribute option name: '.$row['products_options_name'].' (values with price)';
-	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']='Attribute option name: '.$row['products_options_name'].' (values with price incl. VAT)';
+	$array['attribute_option_name_'.$row['products_options_id']]=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_without_price'), $row['products_options_name']);
+	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price'), $row['products_options_name']);
+	$array['attribute_option_name_'.$row['products_options_id'].'_including_prices_including_vat']=sprintf($this->pi_getLL('feed_exporter_fields_label_attribute_option_name_x_values_with_price_incl_vat'), $row['products_options_name']);
 }
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'])) {
@@ -82,10 +82,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	if ($this->post) {
 		$erno=array();
 		if (!$this->post['name']) {
-			$erno[]='Name is required';
+			$erno[]=$this->pi_getLL('feed_exporter_fields_label_error_name_is_required');
 		} else {
 			if (!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
-				$erno[]='No fields defined';
+				$erno[]=$this->pi_getLL('feed_exporter_fields_label_error_no_fields_defined');
 			}
 		}
 		if (is_array($erno) and count($erno)>0) {
@@ -147,7 +147,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	}
 	if (!$this->ms['show_main']) {
 		$content.='
-		<div class="main-heading"><h2>Product feed Generator</h2></div>
+		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h2></div>
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form">
 			<div class="account-field">
 					<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
