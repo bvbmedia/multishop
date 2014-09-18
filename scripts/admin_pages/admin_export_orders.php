@@ -123,12 +123,12 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_orders_export_wizard').'</h2></div>
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="orders_export_form">
 			<div class="account-field">
-					<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+				<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
 			</div>';
 		// order status selectbox
 		$all_orders_status=mslib_fe::getAllOrderStatus();
 		$order_status_sb='<select name="order_status">
-			<option value="all"'.($post_data['order_status']=='all'?' selected="selected"':'').'>'.$this->pi_getLL('all').'</option>';
+		<option value="all"'.($post_data['order_status']=='all' ? ' selected="selected"' : '').'>'.$this->pi_getLL('all').'</option>';
 		if (is_array($all_orders_status) and count($all_orders_status)) {
 			foreach ($all_orders_status as $row) {
 				if ($post_data['order_status']==$row['id']) {
@@ -144,28 +144,35 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<option value="all"'.($post_data['payment_status']=='all'?' selected="selected"':'').'>'.$this->pi_getLL('all').'</option>
 			<option value="paid"'.($post_data['payment_status']=='paid'?' selected="selected"':'').'>'.$this->pi_getLL('paid').'</option>
 			<option value="unpaid"'.($post_data['payment_status']=='unpaid'?' selected="selected"':'').'>'.$this->pi_getLL('unpaid').'</option>
-			</select>';
+		</select>';
 		// order by selectbox
 		$order_by_sb='<select name="order_by">
-				<option value="orders_id"'.($post_data['order_by']=='orders_id'?' selected="selected"':'').'>'.$this->pi_getLL('orders_id').'</option>
-				<option value="status_last_modified"'.($post_data['order_by']=='status_last_modified'?' selected="selected"':'').'>'.$this->pi_getLL('status_last_modified').'</option>
-				<option value="billing_name"'.($post_data['order_by']=='billing_name'?' selected="selected"':'').'>'.$this->pi_getLL('billing_name').'</option>
-				<option value="crdate"'.($post_data['order_by']=='crdate'?' selected="selected"':'').'>'.$this->pi_getLL('creation_date').'</option>
-				<option value="grand_total"'.($post_data['order_by']=='grand_total'?' selected="selected"':'').'>'.$this->pi_getLL('grand_total').'</option>
-				<option value="shipping_method_label"'.($post_data['order_by']=='shipping_method_label'?' selected="selected"':'').'>'.$this->pi_getLL('shipping_method_label').'</option>
-				<option value="payment_method_label"'.($post_data['order_by']=='payment_method_label'?' selected="selected"':'').'>'.$this->pi_getLL('payment_method_label').'</option>
-			</select>';
+			<option value="orders_id"'.($post_data['order_by']=='orders_id' ? ' selected="selected"' : '').'>'.$this->pi_getLL('orders_id').'</option>
+			<option value="status_last_modified"'.($post_data['order_by']=='status_last_modified' ? ' selected="selected"' : '').'>'.$this->pi_getLL('status_last_modified').'</option>
+			<option value="billing_name"'.($post_data['order_by']=='billing_name' ? ' selected="selected"' : '').'>'.$this->pi_getLL('billing_name').'</option>
+			<option value="crdate"'.($post_data['order_by']=='crdate' ? ' selected="selected"' : '').'>'.$this->pi_getLL('creation_date').'</option>
+			<option value="grand_total"'.($post_data['order_by']=='grand_total' ? ' selected="selected"' : '').'>'.$this->pi_getLL('grand_total').'</option>
+			<option value="shipping_method_label"'.($post_data['order_by']=='shipping_method_label' ? ' selected="selected"' : '').'>'.$this->pi_getLL('shipping_method_label').'</option>
+			<option value="payment_method_label"'.($post_data['order_by']=='payment_method_label' ? ' selected="selected"' : '').'>'.$this->pi_getLL('payment_method_label').'</option>
+		</select>';
 		// sort direction selectbox
 		$sort_direction_sb='<select name="payment_status">
-				<option value="desc"'.($post_data['payment_status']=='desc'?' selected="selected"':'').'>'.$this->pi_getLL('sort_direction_desc').'</option>
-				<option value="asc"'.($post_data['payment_status']=='asc'?' selected="selected"':'').'>'.$this->pi_getLL('sort_direction_asc').'</option>
-			</select>';
+			<option value="desc"'.($post_data['payment_status']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_desc').'</option>
+			<option value="asc"'.($post_data['payment_status']=='asc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('sort_direction_asc').'</option>
+		</select>';
 		// order type selectbox
 		$order_type_sb='<select name="order_type">
-				<option value="all"'.($post_data['order_type']=='desc'?' selected="selected"':'').'>'.$this->pi_getLL('orders').'</option>
-				<option value="by_phone"'.($post_data['order_type']=='by_phone'?' selected="selected"':'').'>'.ucfirst(strtolower($this->pi_getLL('admin_manual_order'))).'</option>
-				<option value="proposal"'.($post_data['order_type']=='proposal'?' selected="selected"':'').'>'.$this->pi_getLL('admin_proposals').'</option>
-			</select>';
+			<option value="all"'.($post_data['order_type']=='desc' ? ' selected="selected"' : '').'>'.$this->pi_getLL('orders').'</option>
+			<option value="by_phone"'.($post_data['order_type']=='by_phone' ? ' selected="selected"' : '').'>'.ucfirst(strtolower($this->pi_getLL('admin_manual_order'))).'</option>
+			<option value="proposal"'.($post_data['order_type']=='proposal' ? ' selected="selected"' : '').'>'.$this->pi_getLL('admin_proposals').'</option>
+		</select>';
+		// delimeter type selectbox
+		$delimeter_type_sb='<select name="delimeter_type">
+			<option value=";"'.($post_data['order_type']==';' ? ' selected="selected"' : '').'>semicolon (;)</option>
+			<option value=","'.($post_data['order_type']==',' ? ' selected="selected"' : '').'>comma (,)</option>
+			<option value="\t"'.($post_data['order_type']=='\t' ? ' selected="selected"' : '').'>tabs (\t)</option>
+			<option value="|"'.($post_data['order_type']=='|' ? ' selected="selected"' : '').'>pipe (|)</option>
+		</select>';
 		$content.='
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('order_type')).'</label>
@@ -199,6 +206,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('sort_direction')).'</label>
 			'.$sort_direction_sb.'
+		</div>
+		<div class="account-field">
+			<label>'.htmlspecialchars($this->pi_getLL('delimited_by')).'</label>
+			'.$delimeter_type_sb.'
 		</div>
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('maximum_number_of_order_products')).'</label>
@@ -346,6 +357,7 @@ if ($this->ms['show_main']) {
 		</tr>
 		';
 		foreach ($orders as $order) {
+			$order['plain_text_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_orders_export&orders_export_hash='.$order['code'];
 			$order['orders_export_link_excel']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_orders_export&orders_export_hash='.$order['code'].'&format=excel';
 			// custom page hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_orders.php']['ordersIterationItem'])) {
@@ -360,7 +372,7 @@ if ($this->ms['show_main']) {
 			$content.='
 			<tr>
 				<td align="right" width="25" nowrap><a href="'.$order['feed_link'].'" target="_blank">'.htmlspecialchars($order['id']).'</a></td>
-				<td><a href="'.$order['orders_export_link_excel'].'" target="_blank">'.htmlspecialchars($order['name']).'</a></td>
+				<td><a href="'.$order['plain_text_link'].'" target="_blank">'.htmlspecialchars($order['name']).'</a></td>
 				<td width="100" align="center" nowrap>'.date("Y-m-d", $order['crdate']).'</td>
 				<td width="50">
 				';
@@ -373,6 +385,7 @@ if ($this->ms['show_main']) {
 			}
 			$content.='</td>
 			<td width="150">
+				<a href="'.$order['plain_text_link'].'" class="admin_menu">Download</a><br/>
 				<a href="'.$order['orders_export_link_excel'].'" class="admin_menu">Download Order export xls</a>
 			</td>
 			<td width="50">

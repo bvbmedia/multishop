@@ -23,6 +23,9 @@ if ($this->get['orders_export_hash']) {
 	if (!$content=$Cache_Lite->get($string)) {
 		$fields=unserialize($orders_export['fields']);
 		$post_data=unserialize($orders_export['post_data']);
+		if (!$post_data['delimeter_type']) {
+			$post_data['delimeter_type']=';';
+		}
 		$fields_values=$post_data['fields_values'];
 		$records=array();
 		// orders record
@@ -118,13 +121,15 @@ if ($this->get['orders_export_hash']) {
 				}
 			}
 		}
-		$excelRows[]=$excelHeaderCols;
+		if ($this->get['format']=='excel') {
+			$excelRows[]=$excelHeaderCols;
+		} else {
+			$excelRows[]=implode($post_data['delimeter_type'], $excelHeaderCols);
+		}
 		foreach ($records as $row) {
 			$order_tax_data=unserialize($row['orders_tax_data']);
 			$order_tmp=mslib_fe::getOrder($row['orders_id']);
-			if ($this->get['format']=='excel') {
-				$excelCols=array();
-			}
+			$excelCols=array();
 			$total=count($fields);
 			$count=0;
 			foreach ($fields as $counter=>$field) {
@@ -255,6 +260,8 @@ if ($this->get['orders_export_hash']) {
 			// new rows
 			if ($this->get['format']=='excel') {
 				$excelRows[]=$excelCols;
+			} else {
+				$excelRows[]=implode($post_data['delimeter_type'], $excelCols);
 			}
 		}
 		if ($this->get['format']=='excel') {
@@ -267,6 +274,8 @@ if ($this->get['orders_export_hash']) {
 			header('Content-Disposition: attachment; filename="orders_export_'.$this->get['orders_export_hash'].'.xlsx"');
 			$ExcelWriter->save('php://output');
 			exit();
+		} else {
+			$content=implode("\n", $excelRows);
 		}
 		$Cache_Lite->save($content);
 	}
