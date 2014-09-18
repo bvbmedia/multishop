@@ -1079,6 +1079,16 @@
             <label index="feed_exporter_fields_label_payment_costs_tax_rate">Payment costs tax rate</label>
             <label index="feed_exporter_fields_label_order_products">Order products</label>
             <label index="feed_exporter_label_orders_export_wizard">Orders export Wizard</label>
+            <label index="full_name">full name</label>
+            <label index="address_number_extension">address number extension</label>
+            <label index="region">region</label>
+            <label index="user_id">user id</label>
+            <label index="gender">gender</label>
+            <label index="password_md5_hashed">password (MD5 hashed)</label>
+            <label index="usergroup">usergroup</label>
+            <label index="deleted">deleted</label>
+            <label index="job_title">job title</label>
+            <label index="customer_id_external_id_for_reference">customer id(external id for reference)</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
