@@ -4,35 +4,35 @@ if (!defined('TYPO3_MODE')) {
 }
 // defining the types
 $array=array();
-$array['orders_id']='Orders ID';
-$array['orders_status']='Orders status';
-$array['customer_id']='Customer ID';
-$array['customer_billing_telephone']='Customer billing telephone';
-$array['customer_billing_email']='Customer billing e-mail';
-$array['customer_billing_name']='Customer billing name';
-$array['customer_billing_address']='Customer billing address';
-$array['customer_billing_city']='Customer billing city';
-$array['customer_billing_zip']='Customer billing zip';
-$array['customer_delivery_telephone']='Customer delivery telephone';
-$array['customer_delivery_email']='Customer delivery e-mail';
-$array['customer_billing_country']='Customer billing country';
-$array['customer_delivery_name']='Customer delivery name';
-$array['customer_delivery_address']='Customer delivery address';
-$array['customer_delivery_city']='Customer delivery city';
-$array['customer_delivery_zip']='Customer delivery zip';
-$array['customer_delivery_country']='Customer delivery country';
-$array['orders_grand_total_excl_vat']='Orders grand total (excl. vat)';
-$array['orders_grand_total_incl_vat']='Orders grand total (incl. vat)';
-$array['payment_status']='Orders payment status';
-$array['shipping_method']='Shipping method';
-$array['shipping_cost_excl_vat']='Shipping costs (excl. vat)';
-$array['shipping_cost_incl_vat']='Shipping costs (incl. vat)';
-$array['shipping_cost_vat_rate']='Shipping costs tax rate';
-$array['payment_method']='Payment method';
-$array['payment_cost_excl_vat']='Payment costs (excl. vat)';
-$array['payment_cost_incl_vat']='Payment costs (incl. vat)';
-$array['payment_cost_vat_rate']='Payment costs tax rate';
-$array['order_products']='Order products';
+$array['orders_id']=$this->pi_getLL('feed_exporter_fields_label_orders_id');
+$array['orders_status']=$this->pi_getLL('feed_exporter_fields_label_orders_status');
+$array['customer_id']=$this->pi_getLL('feed_exporter_fields_label_customer_id');
+$array['customer_billing_telephone']=$this->pi_getLL('feed_exporter_fields_label_customer_billing_telephone');
+$array['customer_billing_email']=$this->pi_getLL('feed_exporter_fields_label_customer_billing_email');
+$array['customer_billing_name']=$this->pi_getLL('feed_exporter_fields_label_customer_billing_name');
+$array['customer_billing_address']=$this->pi_getLL('feed_exporter_fields_label_customer_billing_address');
+$array['customer_billing_city']=$this->pi_getLL('feed_exporter_fields_label_customer_billing_city');
+$array['customer_billing_zip']=$this->pi_getLL('feed_exporter_fields_label_customer_billing_zip');
+$array['customer_billing_country']=$this->pi_getLL('feed_exporter_fields_label_customer_billing_country');
+$array['customer_delivery_telephone']=$this->pi_getLL('feed_exporter_fields_label_customer_delivery_telephone');
+$array['customer_delivery_email']=$this->pi_getLL('feed_exporter_fields_label_customer_delivery_email');
+$array['customer_delivery_name']=$this->pi_getLL('feed_exporter_fields_label_customer_delivery_name');
+$array['customer_delivery_address']=$this->pi_getLL('feed_exporter_fields_label_customer_delivery_address');
+$array['customer_delivery_city']=$this->pi_getLL('feed_exporter_fields_label_customer_delivery_city');
+$array['customer_delivery_zip']=$this->pi_getLL('feed_exporter_fields_label_customer_delivery_zip');
+$array['customer_delivery_country']=$this->pi_getLL('feed_exporter_fields_label_customer_delivery_country');
+$array['orders_grand_total_excl_vat']=$this->pi_getLL('feed_exporter_fields_label_orders_grand_total_excl_vat');
+$array['orders_grand_total_incl_vat']=$this->pi_getLL('feed_exporter_fields_label_orders_grand_total_incl_vat');
+$array['payment_status']=$this->pi_getLL('feed_exporter_fields_label_orders_payment_status');
+$array['shipping_method']=$this->pi_getLL('feed_exporter_fields_label_shipping_method');
+$array['shipping_cost_excl_vat']=$this->pi_getLL('feed_exporter_fields_label_shipping_costs_excl_vat');
+$array['shipping_cost_incl_vat']=$this->pi_getLL('feed_exporter_fields_label_shipping_costs_incl_vat');
+$array['shipping_cost_vat_rate']=$this->pi_getLL('feed_exporter_fields_label_shipping_costs_tax_rate');
+$array['payment_method']=$this->pi_getLL('feed_exporter_fields_label_payment_method');
+$array['payment_cost_excl_vat']=$this->pi_getLL('feed_exporter_fields_label_payment_costs_excl_vat');
+$array['payment_cost_incl_vat']=$this->pi_getLL('feed_exporter_fields_label_payment_costs_incl_vat');
+$array['payment_cost_vat_rate']=$this->pi_getLL('feed_exporter_fields_label_payment_costs_tax_rate');
+$array['order_products']=$this->pi_getLL('feed_exporter_fields_label_order_products');
 /*
 $array['products_id']='Products id';
 $array['products_name']='Products name';
@@ -56,10 +56,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	if ($this->post) {
 		$erno=array();
 		if (!$this->post['name']) {
-			$erno[]='Name is required';
+			$erno[]=$this->pi_getLL('feed_exporter_label_error_name_is_required');
 		} else {
-			if (!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
-				$erno[]='No fields defined';
+			if (!is_array($this->post['fields']) || !count($this->post['fields'])) {
+				$erno[]=$this->pi_getLL('feed_exporter_label_error_no_fields_defined');
 			}
 		}
 		if (empty($this->post['visual_orders_date_from'])) {
@@ -120,7 +120,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$first_year=date('Y', $first_order_rs['crdate']);
 
 		$content.='
-		<div class="main-heading"><h2>Orders export Wizard</h2></div>
+		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_orders_export_wizard').'</h2></div>
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="orders_export_form">
 			<div class="account-field">
 					<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
