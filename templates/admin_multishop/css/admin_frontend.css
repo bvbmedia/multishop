@@ -129,7 +129,7 @@ background-image   :-ms-linear-gradient(top, rgba(240,240,240,1), rgba(255,255,2
 .select2-results li ul li.select2-highlighted .select2-result-label { background:#666; }
 .select2-results li ul li.select2-highlighted .select2-result-label a { color:#fff; }
 .select2-results li a { text-decoration:none; }
-.select2-results ul.select2-result-sub > li .select2-result-label { padding:0 !important; }
+.select2-results ul.select2-result-sub > li .select2-result-label { padding:0 !important;}
 
 
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_search label { display:none; float:left; padding:3px 5px 0 0; }
