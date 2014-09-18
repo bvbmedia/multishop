@@ -431,20 +431,22 @@ class mslib_fe {
 					foreach ($attributes as $attr=>$val) {
 						if ($get_attributes==1) {
 							$result['attr'][$attr]=$val;
-						} //Set all the attributes in a array called 'attr'
-						/**  :TODO: should we change the key name to '_attr'? Someone may use the tagname 'attr'. Same goes for 'value' too */
+						}
 					}
 				}
 			} else if (isset($value)) {
 				$result=$value;
 			}
 			//See tag status and do the needed.
-			if ($type=="open") { //The starting of the tag '<tag>'
+			//The starting of the tag '<tag>'
+			if ($type=="open") {
 				$parent[$level-1]= &$current;
-				if (!is_array($current) or (!in_array($tag, array_keys($current)))) { //Insert New tag
+				//Insert New tag
+				if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
 					$current[$tag]=$result;
 					$current= &$current[$tag];
-				} else { //There was another element with the same tag name
+				} else {
+					//There was another element with the same tag name
 					if (isset($current[$tag][0])) {
 						array_push($current[$tag], $result);
 					} else {
@@ -456,21 +458,26 @@ class mslib_fe {
 					$last=count($current[$tag])-1;
 					$current= &$current[$tag][$last];
 				}
-			} elseif ($type=="complete") { //Tags that ends in 1 line '<tag />'
+			} elseif ($type=="complete") {
+				//Tags that ends in 1 line '<tag />'
 				//See if the key is already taken.
 				if (!isset($current[$tag])) { //New Key
 					$current[$tag]=$result;
-				} else { //If taken, put all things inside a list(array)
+				} else {
+					//If taken, put all things inside a list(array)
 					if ((is_array($current[$tag]) and $get_attributes==0) or (isset($current[$tag][0]) and is_array($current[$tag][0]) and $get_attributes==1)) {
-						array_push($current[$tag], $result); // ...push the new element into that array.
+						array_push($current[$tag], $result);
+						// ...push the new element into that array.
 					} else { //If it is not an array...
 						$current[$tag]=array(
 							$current[$tag],
 							$result
-						); //...Make it an array using using the existing value and the new value
+						);
+						//...Make it an array using using the existing value and the new value
 					}
 				}
-			} elseif ($type=='close') { //End of tag '</tag>'
+			} elseif ($type=='close') {
+				//End of tag '</tag>'
 				$current= &$parent[$level-1];
 			}
 		}
