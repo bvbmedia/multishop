@@ -171,23 +171,25 @@ $this->ms['upload_productfeed_form'].='
 </ul>
 </fieldset>
 ';
-$tmpcontent='';
-if (($handle=opendir($this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates'))!=false) {
-	while (false!==($file=readdir($handle))) {
-		if ($file!="." && $file!="..") {
-			if ($file) {
-				$file=preg_replace("/\.php/", '', $file);
-			}
-			if ($file) {
-				$tmpcontent.='<option value="'.$file.'">'.$file.'</option>'."\n";
-			}
-		}
+// custom hook that can be controlled by third-party plugin
+$importParserTemplateTypes=array();
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateTypesProc'])) {
+	$params=array(
+		'importParserTemplateTypes'=>&$importParserTemplateTypes,
+		'prefix_source_name'=>$this->post['prefix_source_name']
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateTypesProc'] as $funcRef) {
+		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
-	closedir($handle);
 }
+// custom hook that can be controlled by third-party plugin eof
 $this->ms['upload_productfeed_form'].='<div class="extra_parameters">';
-if ($tmpcontent) {
-	$this->ms['upload_productfeed_form'].=$this->pi_getLL('datafeed_parser_template').': <select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>'.$tmpcontent.'</select><br />';
+if (count($importParserTemplateTypes)) {
+	$this->ms['upload_productfeed_form'].=$this->pi_getLL('datafeed_parser_template').': <select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>';
+	foreach ($importParserTemplateTypes as $importParserTemplateType) {
+		$this->ms['upload_productfeed_form'].='<option value="'.$importParserTemplateType['key'].'">'.$importParserTemplateType['label'].'</option>';
+	}
+	$this->ms['upload_productfeed_form'].='</select><br />';
 }
 $this->ms['upload_productfeed_form'].='
   '.ucfirst($this->pi_getLL('format')).':
@@ -321,17 +323,23 @@ if ($this->post['action']=='category-insert') {
 	if ((file_exists($file_location) or $this->post['database_name']) and isset($this->post['cid'])) {
 		if (!$this->post['database_name'] and $file_location) {
 			$str=mslib_fe::file_get_contents($file_location);
-			if (strstr($this->post['file_url'], 'm4n.nl')) {
-				$this->post['parser_template']='m4n';
-			}
 		}
 		if ($this->post['parser_template']) {
-			if (strstr($this->post['parser_template'], "..")) {
-				die();
+			$processed=0;
+			$rows=array();
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'])) {
+				$params=array(
+					'parser_template'=>&$this->post['parser_template'],
+					'prefix_source_name'=>$this->post['prefix_source_name'],
+					'str'=>$str,
+					'rows'=>&$rows,
+					'table_cols'=>&$table_cols,
+					'processed'=>&$processed
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
 			}
-			// include a pre-defined xml to php array converter
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
-			// include a pre-defined xml to php array converter eof
 		} else {
 			if ($this->post['database_name']) {
 				if ($this->ms['mode']=='edit') {
@@ -817,9 +825,21 @@ if ($this->post['action']=='category-insert') {
 				$str=mslib_fe::file_get_contents($file);
 			}
 			if ($this->post['parser_template']) {
-				// include a pre-defined xml to php array way
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
-				// include a pre-defined xml to php array way eof
+				$processed=0;
+				$rows=array();
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'])) {
+					$params=array(
+						'parser_template'=>&$this->post['parser_template'],
+						'prefix_source_name'=>$this->post['prefix_source_name'],
+						'str'=>$str,
+						'rows'=>&$rows,
+						'table_cols'=>&$table_cols,
+						'processed'=>&$processed
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+				}
 			} else {
 				if ($this->post['database_name']) {
 					// get primary key first
