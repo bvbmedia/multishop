@@ -24,7 +24,6 @@ if ($this->get['orders_export_hash']) {
 		$fields=unserialize($orders_export['fields']);
 		$post_data=unserialize($orders_export['post_data']);
 		$fields_values=$post_data['fields_values'];
-
 		$records=array();
 		// orders record
 		$filter=array();
@@ -89,6 +88,8 @@ if ($this->get['orders_export_hash']) {
 		$orderby[]=$order_by.' '.$order;
 		if ($post_data['order_type']=='by_phone') {
 			$filter[]='o.by_phone=1';
+		} else {
+			$filter[]='o.by_phone=0';
 		}
 		if ($post_data['order_type']=='proposal') {
 			$filter[]='o.is_proposal=1';
