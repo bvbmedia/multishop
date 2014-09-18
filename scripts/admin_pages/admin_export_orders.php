@@ -385,7 +385,7 @@ if ($this->ms['show_main']) {
 			}
 			$content.='</td>
 			<td width="150">
-				<a href="'.$order['plain_text_link'].'" class="admin_menu">Download</a><br/>
+				<a href="'.$order['plain_text_link'].'" target="_blank" class="admin_menu">Download</a><br/>
 				<a href="'.$order['orders_export_link_excel'].'" class="admin_menu">Download Order export xls</a>
 			</td>
 			<td width="50">
