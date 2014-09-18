@@ -82,10 +82,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	if ($this->post) {
 		$erno=array();
 		if (!$this->post['name']) {
-			$erno[]=$this->pi_getLL('feed_exporter_fields_label_error_name_is_required');
+			$erno[]=$this->pi_getLL('feed_exporter_label_error_name_is_required');
 		} else {
 			if (!$this->post['feed_type'] and (!is_array($this->post['fields']) || !count($this->post['fields']))) {
-				$erno[]=$this->pi_getLL('feed_exporter_fields_label_error_no_fields_defined');
+				$erno[]=$this->pi_getLL('feed_exporter_label_error_no_fields_defined');
 			}
 		}
 		if (is_array($erno) and count($erno)>0) {
