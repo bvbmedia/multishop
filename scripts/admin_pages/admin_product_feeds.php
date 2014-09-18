@@ -154,16 +154,16 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			</div>
 			<div class="account-field">
 					<label>Google utm_source</label><input type="text" name="utm_source" value="'.htmlspecialchars($this->post['utm_source']).'" />
-			</div>	
+			</div>
 			<div class="account-field">
 					<label>Google utm_medium</label><input type="text" name="utm_medium" value="'.htmlspecialchars($this->post['utm_medium']).'" />
-			</div>	
+			</div>
 			<div class="account-field">
 					<label>Google utm_term</label><input type="text" name="utm_term" value="'.htmlspecialchars($this->post['utm_term']).'" />
-			</div>	
+			</div>
 			<div class="account-field">
 					<label>Google utm_content</label><input type="text" name="utm_content" value="'.htmlspecialchars($this->post['utm_content']).'" />
-			</div>	
+			</div>
 			<div class="account-field">
 					<label>Google utm_campaign</label><input type="text" name="utm_campaign" value="'.htmlspecialchars($this->post['utm_campaign']).'" />
 			</div>';
@@ -191,7 +191,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			}
 			$content.='
 				</select>
-				</div>				
+				</div>
 				';
 		}
 		$content.='
@@ -210,7 +210,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 					<option value="1"'.(($this->post['include_header']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 				</select>
-		</div>		
+		</div>
 		<div class="account-field">
 				<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
 				<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
@@ -222,10 +222,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 				<option value="1"'.(($this->post['plain_text']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 			</select>
-		</div>				
+		</div>
 		<div class="account-field hide_pf">
 			<div class="hr"></div>
-		</div>			
+		</div>
 		<div class="account-field hide_pf">
 				<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
 				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="msadmin_button" />
@@ -252,16 +252,23 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</div>
 		<div class="account-field">
 			<div class="hr"></div>
-		</div>		
+		</div>
 		<div class="account-field">
 				<label>&nbsp;</label>
 				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="msadmin_button" /></span>
-		</div>	
+		</div>
 		<input name="feed_id" type="hidden" value="'.$this->get['feed_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
 		</form>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
+			jQuery("#product_feed_fields").sortable({
+				cursor:     "move",
+				//axis:       "y",
+				update: function(e, ui) {
+					jQuery(this).sortable("refresh");
+				}
+			});
 			var counter=\''.$counter.'\';
 			$("#feed_type").change(function(){
 				var selected=$("#feed_type option:selected").val();
@@ -269,9 +276,9 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 					// hide
 					$(".hide_pf").hide();
 				} else {
-					$(".hide_pf").show();				
+					$(".hide_pf").show();
 				}
-			});		
+			});
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
 				var item=\'<div><div class="account-field"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
@@ -329,10 +336,10 @@ if ($this->ms['show_main']) {
 			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('name')).'</th>
 			<th width="100" nowrap>'.htmlspecialchars($this->pi_getLL('created')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>		
-			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>		
-			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>		
-		</tr>			
+			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>
+			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>
+			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>
+		</tr>
 		';
 		foreach ($feeds as $feed) {
 			$feed['feed_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'];
@@ -346,13 +353,13 @@ if ($this->ms['show_main']) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			// custom page hook that can be controlled by third-party plugin eof			
+			// custom page hook that can be controlled by third-party plugin eof
 			$content.='
 			<tr>
 				<td align="right" width="25" nowrap><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['id']).'</a></td>
 				<td><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['name']).'</a></td>
 				<td width="100" align="center" nowrap>'.date("Y-m-d", $feed['crdate']).'</td>
-				<td width="50">				
+				<td width="50">
 				';
 			if (!$feed['status']) {
 				$content.='<span class="admin_status_red" alt="Disable"></span>';
@@ -365,7 +372,7 @@ if ($this->ms['show_main']) {
 			<td width="150">
 				<a href="'.$feed['feed_link'].'" class="admin_menu">Download feed</a><br />
 				<a href="'.$feed['feed_link_excel'].'" class="admin_menu">Download Excel feed</a>
-			</td>			
+			</td>
 			<td width="50">
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="admin_menu_edit">edit</a>
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';
