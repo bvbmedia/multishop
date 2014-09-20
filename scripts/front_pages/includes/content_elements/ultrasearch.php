@@ -35,14 +35,14 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$this->ultrasearch_javascript_client_file = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_javascript_client_file', 's_search');	
 	}
 	if (!$this->ultrasearch_javascript_client_file or $this->ultrasearch_javascript_client_file=='default.js') {
-		$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop_ultrasearch').'js/ultrasearch.js';
+		$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/default.js';
 	} else if ($this->ultrasearch_javascript_client_file) {
 		if (strstr($this->ultrasearch_javascript_client_file,"/")) {
 			$this->ultrasearch_javascript_client_file=$this->ultrasearch_javascript_client_file;	
 		} else if ($this->ultrasearch_javascript_client_file) {
 			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/'.$this->ultrasearch_javascript_client_file;
 		} else {
-			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop_ultrasearch').'js/ultrasearch.js';
+			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/default.js';
 		}
 	}
 	if (!$this->ultrasearch_target_element) {
