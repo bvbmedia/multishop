@@ -1021,11 +1021,21 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$filter[]="(".$tbl."products_name like '".addslashes($this->post['tx_multishop_pi1']['q'])."%'".$search_in_pd.")";*/
 			// do normal indexed search
 			$innerFilter=array();
+			if ($this->ms['MODULES']['FLAT_DATABASE']) {
+				$tbl='pf.';
+			} else {
+				$tbl='pd.';
+			}
 			$innerFilter[]="(".$tbl."products_name like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$innerFilter[]="(".$tbl."products_description like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
 			}
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_MANUFACTURERS_NAME']) {
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$tbl='pf.';
+				} else {
+					$tbl='m.';
+				}
 				$innerFilter[]="(".$tbl."manufacturers_name like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%')";
 			}
 			if (count($search_in_option_ids)) {
