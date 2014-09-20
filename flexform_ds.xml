@@ -270,7 +270,7 @@
 				</contentType>
 				<ultrasearch_fields>
 					<TCEforms>
-						<label>Ultrasearch Fields (to show all fields in the searchbox fill in: all. If you just want to show a couple of fields you can define them as follow: 1:list;2:radio;3:checkbox;price_filter:0-1000)</label>
+						<label>Ultrasearch Fields (If you just want to show a couple of fields you can define them as follow: input_keywords;submit;sortby_filter;1:checkbox{asc};manufacturers:checkbox;4:checkbox{asc};2:checkbox{asc};</label>
 						<config>
 							<type>input</type>
 							<eval>text</eval>

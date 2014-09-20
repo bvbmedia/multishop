@@ -1,321 +1,196 @@
-var query_string = "";
-var jum_checked = "";
-var checked_category = jQuery(".category_products");
-function filterproducts (page)
-{
-	query_string = "";
-	jQuery(".category_products").each(
-		function()
-		{
-			if(this.checked)
-			{
-				query_string += "&category_products[]=" + this.value;
-				//updateComponent(this.value);
-			}
-		});
-	jQuery(".option-attributes").each(
-			function()
-			{
-				if (jQuery(this).is(':radio') || jQuery(this).is(':checkbox'))
-				{
-					if(jQuery(this).is(':checked'))
-					{
-						query_string += "&" + this.name  + "="+ this.value;
-					}
-				}
-				else if (jQuery(this).is('select'))
-				{
-					var variable_name=this.name+"[]";
-					$("select[name='"+this.name+"'] option:selected").each(function () {
-						if (this.value) query_string += "&" + variable_name + "="+ this.value;
-					});		
-				}				
-				else
-				{
-					if (this.value) query_string += "&" + this.name + "="+ this.value;
-				}
-			});
-		jQuery(".slider_value_left").each(
-			function()
-			{
-				if (this.value) query_string += "&" + this.name + "="+ this.value;
-			});		
-		jQuery(".slider_value_right").each(
-			function()
-			{
-				if (this.value) query_string += "&" + this.name + "="+ this.value;
-			});		
-	 query_string += "&min=" + jQuery("#Filter_5_Min").val();
-	 query_string += "&max=" + jQuery("#Filter_5_Max").val();
-	 
-	 //JIRA 157 ultrasearch update
-	 var brands_val = jQuery("#brands").val(); //for list and list_multiple
-	 if (brands_val != null){
-		 query_string += "&brands=" + brands_val;
-	 }
-	 var categories_id = jQuery("#categories_id_extra").val(); //for list and list_multiple
-	 if (categories_id != null){
-		 query_string += "&categories_id=" + categories_id;
-	 }	 	 
-	
-	 
-	 jQuery(".brands-click").each(
-			
-		function()
-		{
-			if (jQuery(this).is(':radio') || jQuery(this).is(':checkbox'))
-				{
-					if(jQuery(this).is(':checked'))
-					{
-						query_string += "&" + this.name  + "="+ this.value;
-					}
-				}
-			
-		});
-	 //JIRA 157 ultrasearch update eof
-	 
-	 if (ultrasearch_categories_id != null){
-		query_string += "&categories_id=" + ultrasearch_categories_id;  
-	 }
-	 if (page != null){
-		query_string += "&page=" + page;  
-	 }
-	 //var query_string = jQuery(this).serialize();
-	jQuery.ajax({
-		type: "POST",
-		dataType: "json",
-		url: ultrasearch_resultset_server_path,
-		cache :false,
-		data: query_string,
-		success: 
-			function(data) 
-			{
-				// first clear the page
-				jQuery(content_middle).empty();				
-				if (data.products.length==0)
-				{
-					// no results
-					jQuery(content_middle).append(ultrasearch_message_no_results);
-				}
-				else
-				{
-				   //console.log(data);
-				   var listing_products = "";
-				   listing_products += '<ul id="product_listing" class="ui-sortable">';
-				   jQuery.each(data.products, function(i,item){
-					  listing_products += '<li>';
-					  listing_products += '<h2><a class="ajax_link" href="'+ item.link_detail +'">'+ item.products_name +'</a></h2>';
-					  if (item.products_image){
-						listing_products += '<div class="image"><a href="'+ item.link_detail  +'" title="' + item.products_name + '" class="ajax_link"><img src="'+ item.products_image +'"></a></div>';  
-					  } else {
-						listing_products += '<div class="image"><a href="'+ item.link_detail  +'" title="' + item.products_name + '" class="ajax_link"><div class="no_image"></div></a></div>';
-					  }
-					  
-					  listing_products += '<div class="category"><a href="'+ item.catlink +'" class="ajax_link">'+ item.categories_name +'</a></div>';
-					  if (item.price_excluding_vat) {
-						listing_products += '<div class="price_excluding_vat">'+ item.price_excluding_vat +'</div>';  
-					  }
-					  if (item.old_price){
-						listing_products += '<div class="old_price">'+ item.old_price +'</div><div class="specials_price">'+ item.special_price +'</div>';
-					  }
-					  if (item.price) {
-						listing_products += '<div class="price">'+ item.price +'</div>';
-					  }
-					  
-					  listing_products += '</li>';
-				   });
-				   listing_products += '</ul>';
-				   
-				   //start paginations
-				   var pagination_wrapper = '<div id="ajax_pagination"><table id="pagenav_container"><tr>';
-				   if (data.pagination.first){
-					   pagination_wrapper += '<td class="pagenav_first"><table><tr><td><div id="pagenav_first"><div class="dyna_button"><a href="" id="1" class="ajax_link pagination_button">' + data.pagination.first + '</a></div></div></td></tr></table></td>'; 
-				   } else {
-					   pagination_wrapper += '<td class="pagenav_first"><table><tr><td>&nbsp</td></tr></table></td>'; 
-				   }
-				   if (data.pagination.prev){
-					   pagination_wrapper += '<td><table><tr><td><div id="pagenav_prev"><div class="dyna_button"><a href="" id="'+ data.pagination.prev +'" class="ajax_link pagination_button">' + data.pagination.prevText + '</a></div></div></td></tr></table></td>'; 
-				   } else {
-					   pagination_wrapper += '<td><table><tr><td>&nbsp</td></tr></table></td>'; 
-				   }
-				   
-				   if (data.pagination.next){
-					   pagination_wrapper += '<td><table><tr><td><div id="pagenav_next"><div class="dyna_button"><a href="" id="'+ data.pagination.next +'" class="ajax_link pagination_button">' + data.pagination.nextText + '</a></div></div></td></tr></table></td>'; 
-				   }else {
-					   pagination_wrapper += '<td><table><tr><td class="pagenav_next">&nbsp;</td></tr></table></td>';
-				   }
-				   if (data.pagination.last){
-					   pagination_wrapper += '<td><table><tr><td><div id="pagenav_last"><div class="dyna_button"><a href=""  id="'+ data.pagination.totpage +'" class="ajax_link pagination_button">' + data.pagination.last + '</a></div></div></td></tr></table></td>'; 
-				   } else {
-					   pagination_wrapper += '<td><table><tr><td class="pagenav_last">&nbsp;</td></tr></table></td>'; 
-				   }
-				   pagination_wrapper += "</tr></table></div>";
-				   //eof paginations
-				   var content='<div class="tx-multishop-pi1"><div id="tx_multishop_pi1_core">'+ listing_products +'</div></div>'+ pagination_wrapper ;
-				   jQuery(content_middle).append(ultrasearcch_resultset_header+content);
-					if (typeof Cufon != "undefined") {
-						//object exists
-						Cufon.refresh();
-					}				   
-				}
-				jQuery("body,html,document").scrollTop(0);
-			},
-		error:
-			function()
-			{
-				jQuery(content_middle).append("An error occured during processing");
-			}
-	 });	
-	//return false;
-} //end function filterproducts() 		
+// prepare the form when the DOM is ready 
+jQuery(document).ready(function ($) {
+    var options = {
+        target: '#output2',   // target element(s) to be updated with server response
+        beforeSubmit: showRequest,  // pre-submit callback
+        success: showResponse, // post-submit callback
+        resetForm: true,
+        clearForm: true,
+        success: processMsFrontUltraSearchJson,
+        // other available options: 
+        url: ultrasearch_resultset_server_path + "&tx_multishop_pi1[ultrasearch_hash]=" + ultrasearch_fields,         // override for form's 'action' attribute
+        type: 'post', // 'get' or 'post', override for form's 'method' attribute
+        dataType: 'json'        // 'xml', 'script', or 'json' (expected server response type)
+        //clearForm: true        // clear all form fields after successful submit 
+        //resetForm: true        // reset the form after successful submit 
 
+        // $.ajax options can be used here too, for example: 
+        //timeout:   3000 
+    };
 
-jQuery(document).ready(function()
-{
-	//count of checked
-	function countChecked() {
-	  var n = jQuery(".category_products:checked").length;
-	  jum_checked = n ;
-	  if(n > 0){
-		  jQuery("#checkall").attr('checked',true);
-	  } else {
-		  jQuery("#checkall").attr('checked',false);
-	  }
-	}
-	//ajax checkbox	
-	jQuery(".category_products").click(function(){
-		filterproducts();
-		countChecked();
-//		updateComponent();
-	});
-	jQuery("#checkall").click(function(){
-		jqCheckAll2("checkall","category_products");
-		
-	});	
-	function jqCheckAll2( id, name )
-	{
-	   jQuery("INPUT[@name=" + name + "][type='checkbox']").attr('checked', jQuery('#' + id).is(':checked'));
-	   filterproducts();
-	}
-	//start ajax pagging
-	 //Manage click events
-	jQuery('#ajax_pagination #pagenav_container  a').on("click", "selector", function(e) {
-		e.preventDefault();
-		var pageNum = this.id;
-		filterproducts(pageNum);
-	});
-	//ajax pagging EOF
-	jQuery(function() { initslider(); });
-	function initslider() { 
-		var min_slider=jQuery("#Filter_5_Min").val();
-		var max_slider=jQuery("#Filter_5_Max").val();
-		jQuery("#slider_range").slider({
-			orientation: "horizontal",
-			range: true,
-			min: min_slider,
-			max: max_slider,
-			values: [min_slider, max_slider],
-//			change: function(event, ui) { filterproducts(); updateComponent() },
-			change: function(event, ui) { filterproducts(); },
-			slide: function(event, ui) {
-					jQuery("#Filter_5_Min").val(ui.values[0]);
-					jQuery("#Filter_5_Max").val(ui.values[1]);
-					}
-		});
-		jQuery("#Filter_5_Min").val(jQuery("#slider_range").slider("values", 0));
-		jQuery("#Filter_5_Max").val(jQuery("#slider_range").slider("values", 1));
-		// product attributes slider
-		$('.option_slider_range').each(function(){
-			var min_value=jQuery(this).parent().next().find(".slider_value_left").val();
-			var max_value=jQuery(this).parent().next().next().find(".slider_value_right").val();
-			jQuery(this).slider({
-				orientation: "horizontal",
-				range: true,
-				min: 0,
-				max: max_value,
-				values: [0, max_value],
-	//			change: function(event, ui) { filterproducts(); updateComponent() },
-				change: function(event, ui) { filterproducts(); },
-				slide: function(event, ui) {
-						jQuery(this).parent().next().find(".slider_value_left").val(ui.values[0]);
-						jQuery(this).parent().next().next().find(".slider_value_right").val(ui.values[1]);
-	//					jQuery(this).parent().find(".slider_amount_left").val(ui.values[0]);
-	//					jQuery(this).parent().find(".slider_amount_right").val(ui.values[1]);
-				}
-			});			
-		});
-	}
-	//F5
-	 jQuery('#button1').click(function() {
-			location.reload();
-		});
-	 //JIRA 157 ultrasearch update
-	 jQuery('.brands-change').bind("change",function() {
-		 	filterproducts();
-		});
-	 jQuery('.slider_value').bind("change",function() {
-		 	filterproducts();
-		});
-	 jQuery('.brands-click').bind("click",function() {
-		 	filterproducts();
-		}); 
-	 jQuery('.options-attributes').bind("",function() {
-		 	filterproducts();
-		}); 
-	//JIRA 157 ultrasearch update eof 
-});//end first load 
-function updateComponent (value,name) {
-	var  href = ultrasearch_formcomponent_server_path; 
-	value += query_string;
-  	jQuery.ajax({
-		type:   "POST",
-		url:    href,
-		dataType : "jsonp",
-	    timeout : 10000,
-		cache :false,
-		data:"&oneoption_" + name + "=" + value,
-		success: function(data){
-				//alert("ok");
-			  jQuery.each(data.items, function(i,item){
-				 //alert(i);
-					if (i != data.option){
-						if (jQuery("select#" + i).val() == 0){
-							jQuery("select#" + i).find("option").remove().end().append("<option value=\"0\">Select Option</option>");
-							jQuery.each(data.items[i],function(key,val){
-								jQuery("select#" + i).append("<option value="+key+">" + val + "</option>");
-								//alert(val);
-							});
-						}
-						
-					}
-			  });
-			  jQuery.each(data.alloption,function(a,b){
-					var tes = data.items[b];
-					if (data.items[b]==undefined || data.items==undefined){
-						jQuery("select#" + b).find("option").remove().end().append("<option value=\"0\">Select Option</option>");	
-						jQuery("select#" + b).attr("disabled", "disabled");
-					} else {
-						jQuery("select#" + b).removeAttr("disabled");
-					}
-			  });
-			}
-	});
-}
-
-function clear_form_elements(ele) {
-    jQuery(ele).find(':input').each(function() {
-        switch(this.type) {
-            case 'password':
-            case 'select-multiple':
-            case 'select-one':
-            case 'text':
-            case 'textarea':
-                jQuery(this).val('');
-                break;
-            case 'checkbox':
-            case 'radio':
-                this.checked = false;
+    $('#usreset').live('click', function () {
+        var urlloc = window.location;
+        var redirect_url = urlloc.origin;
+        if (urlloc.pathname != undefined) {
+            redirect_url += urlloc.pathname;
         }
-    });  
-    location.href=window.location;
+        if (urlloc.search != undefined) {
+            redirect_url += urlloc.search;
+        }
+        location.href = redirect_url;
+    });
+    // bind to the form's submit event 
+    $('#msFrontUltrasearchForm').submit(function () {
+        // inside event callbacks 'this' is the DOM element so we first 
+        // wrap it in a jQuery object and then invoke ajaxSubmit 
+        $(content_middle).html(jQuery('<p />').attr("id", "msFrontUltraSearchPreLoader").html('<div></div><span>One moment please...</span>'));
+
+        $(this).ajaxSubmit(options);
+        return false;
+    });
+    function processMsFrontUltraSearchJson(data) {
+        $("#msFrontUltrasearchForm").html("");
+        $("#msFrontUltrasearchForm").dform(data.formFields);
+        // make selected checkboxes bold
+//		$("#msFrontUltrasearchForm :checkbox:checked").next().find(".title").css("font-weight","bold");
+        $("#msFrontUltrasearchForm :checkbox:checked").next().find(".title").css("font-weight", "bold");
+        // make selected checkboxes bold
+//		$("#msFrontUltrasearchForm :checkbox:not(:checked)").next().find(".title").css("font-weight","");		
+        $("#msFrontUltrasearchForm :checkbox:not(:checked)").next().find(".title").css("font-weight", "");
+        // add wrappers
+//		$('#msFrontUltrasearchForm .ui-dform-checkboxes input[type="checkbox"]').parent().wrapAll('<div></div>');
+        // update resultset
+        // first clear the page
+        $(content_middle).empty();
+        if (data.resultSet.products.length == 0) {
+            // no results
+            $(content_middle).append(ultrasearch_message_no_results);
+        } else {
+            //console.log(data);
+            var listing_products = "";
+            listing_products += '<ul id="product_listing" class="ui-sortable">';
+            var colCounter = 0;
+            var colClass="";
+            $.each(data.resultSet.products, function (i, item) {
+                colCounter++;
+                switch(colCounter) {
+                    case '1':
+                        colClass='leftItem';
+                        break;
+                    case '2':
+                        colClass='middleItem';
+                        break;
+                    case '3':
+                        colClass='rightItem';
+                        colCounter=0;
+                        break;
+                }
+                listing_products += '<li class="'+colClass+'">';
+                listing_products += '<h2><a class="ajax_link" href="' + item.link_detail + '">' + item.products_name + '</a></h2>';
+                if (item.products_image) {
+                    listing_products += '<div class="image"><a href="' + item.link_detail + '" title="' + item.products_name + '" class="ajax_link"><img src="' + item.products_image + '"></a></div>';
+                } else {
+                    listing_products += '<div class="image"><a href="' + item.link_detail + '" title="' + item.products_name + '" class="ajax_link"><div class="no_image"></div></a></div>';
+                }
+                listing_products += '<div class="category"><a href="' + item.catlink + '" class="ajax_link">' + item.categories_name + '</a></div>';
+                if (item.price_excluding_vat) {
+                    listing_products += '<div class="price_excluding_vat">' + item.price_excluding_vat + '</div>';
+                }
+                if (item.old_price) {
+                    listing_products += '<div class="old_price">' + item.old_price + '</div><div class="specials_price">' + item.special_price + '</div>';
+                }
+                if (item.price) {
+                    listing_products += '<div class="price">' + item.price + '</div>';
+                }
+                listing_products += '</li>';
+            });
+            listing_products += '</ul>';
+            // PAGINATION
+            var pagination_wrapper = '<div id="pagenav_container_list_wrapper"><ul id="pagenav_container_list">';
+            if (data.resultSet.pagination.prev) {
+                pagination_wrapper += '<li class="pagenav_first"><div class="dyna_button"><a href="" id="1" class="ajax_link pagination_button">' + data.resultSet.pagination.firstText + '</a></div></li>';
+            } else {
+                pagination_wrapper += '<li class="pagenav_first"><div class="dyna_button"><span>' + data.resultSet.pagination.firstText + '</span></div></li>';
+            }
+            if (data.resultSet.pagination.prev) {
+                pagination_wrapper += '<li class="pagenav_previous"><div class="dyna_button"><a href="" id="' + data.resultSet.pagination.prev + '" class="ajax_link pagination_button">' + data.resultSet.pagination.prevText + '</a></div></li>';
+            } else {
+                pagination_wrapper += '<li class="pagenav_previous"><div class="dyna_button"><span>' + data.resultSet.pagination.prevText + '</span></div></li>';
+            }
+            // ITERATE PAGE NUMBERS
+            pagination_wrapper += '<li class="pagenav_number"><ul>';
+            $.each(data.resultSet.pagination.page_number, function (idx, pn) {
+                if (pn.link > 0) {
+                    pagination_wrapper += '<li><div class="dyna_button"><a href="" id="' + pn.number + '" class="ajax_link pagination_button">' + pn.number + '</a></div></li>';
+                } else {
+                    pagination_wrapper += '<li><div class="dyna_button"><span>' + pn.number + '</span></div></li>';
+                }
+            });
+            pagination_wrapper += '</ul></li>';
+            // ITERATE PAGE NUMBERS EOF
+            if (data.resultSet.pagination.next) {
+                pagination_wrapper += '<li class="pagenav_next"><div class="dyna_button"><a href="" id="' + data.resultSet.pagination.next + '" class="ajax_link pagination_button">' + data.resultSet.pagination.nextText + '</a></div></li>';
+            } else {
+                pagination_wrapper += '<li class="pagenav_next"><div class="dyna_button"><span>' + data.resultSet.pagination.nextText + '</span></div></li>';
+            }
+            if (data.resultSet.pagination.current_p < data.resultSet.pagination.totpage) {
+                pagination_wrapper += '<li class="pagenav_last"><div class="dyna_button"><a href="" id="' + data.resultSet.pagination.totpage + '" class="ajax_link pagination_button">' + data.resultSet.pagination.lastText + '</a></div></li>';
+            } else {
+                pagination_wrapper += '<li class="pagenav_last"><div class="dyna_button"><span>' + data.resultSet.pagination.lastText + '</span></div></li>';
+            }
+            pagination_wrapper += "</ul></div>";
+            // PAGINATION EOF
+            var content = '<div class="tx-multishop-pi1"><div id="tx_multishop_pi1_core">' + listing_products + '</div></div>' + pagination_wrapper;
+            $(content_middle).append(ultrasearcch_resultset_header + content);
+            if (typeof Cufon != "undefined") {
+                //object exists
+                Cufon.refresh();
+            }
+        }
+//		$("body,html,document").scrollTop(0);
+    }
+
+    $('#msFrontUltrasearchForm').change(function () {
+        $('#msFrontUltrasearchForm #pageNum').val('0');
+        $('#msFrontUltrasearchForm').submit();
+    });
+    $('#pagenav_container_list a').live('click', function (e) {
+        e.preventDefault();
+        var pageNum = this.id;
+        $('#msFrontUltrasearchForm #pageNum').val(pageNum);
+        $('#msFrontUltrasearchForm').submit();
+        $("body,html,document").scrollTop(0);
+    });
+    if (location.hash) {
+        var hash = location.hash;
+        if (hash) {
+            // set the hash value to hidden field and use that to retrieve the post from the back button instead
+            $('#locationHash').val(hash.replace(/^#/, ''));
+        }
+    }
+    $('#msFrontUltrasearchForm').submit();
+});
+
+// pre-submit callback 
+function showRequest(formData, jqForm, options) {
+    formData2 = formData;
+
+    if (typeof(formData2[0]) != "undefined" && formData2[0]['name'] != 'locationHash') {
+        // formData is an array; here we use $.param to convert it to a string to display it
+        // but the form plugin does this for you automatically when it submits the data
+        var queryString = jQuery.param(formData);
+        var queryString2 = jQuery.param(formData2);
+        if (queryString2 != '=undefined') {
+            // set hash so users can press back button
+            if (queryString2 != 'undefined') {
+                location.hash = '#' + encodeURIComponent(queryString2);
+            }
+        }
+    }
 }
+
+// post-submit callback 
+function showResponse(responseText, statusText, xhr, $form) {
+    // for normal html responses, the first argument to the success callback 
+    // is the XMLHttpRequest object's responseText property 
+
+    // if the ajaxSubmit method was passed an Options Object with the dataType 
+    // property set to 'xml' then the first argument to the success callback 
+    // is the XMLHttpRequest object's responseXML property 
+
+    // if the ajaxSubmit method was passed an Options Object with the dataType 
+    // property set to 'json' then the first argument to the success callback 
+    // is the json data object returned by the server 
+
+//    alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +   '\n\nThe output div should have already been updated with the responseText.'); 
+} 
