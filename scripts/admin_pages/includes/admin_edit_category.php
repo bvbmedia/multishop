@@ -282,7 +282,7 @@ if ($this->post) {
 		$categories_image='';
 		if ($_REQUEST['action']=='edit_category' and $category['categories_image']) {
 			$categories_image.='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'">';
-			$categories_image.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&action=edit_category&delete_image=categories_image').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+			$categories_image.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&action=edit_category&delete_image=categories_image').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
 		}
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['addItemsToTabDetails'])) {

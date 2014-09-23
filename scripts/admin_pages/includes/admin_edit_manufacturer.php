@@ -127,7 +127,7 @@ if ($this->post) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 			exit();
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit', 1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers', 1));
 			exit();
 		}
 	}
@@ -163,6 +163,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$markerArray['MANUFACTURER_IMAGES_SRC']=mslib_befe::getImagePath($manufacturer['manufacturers_image'], 'manufacturers', 'normal');
 		$markerArray['MANUFACTURER_IMAGES_DELETE_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image');
 		$markerArray['FULL_HTTP_URL']=$this->FULL_HTTP_URL_MS;
+		$markerArray['ADMIN_LABEL_JS_ARE_YOU_SURE']=$this->pi_getLL('admin_label_js_are_you_sure');
 		$manufacturersImage.=$this->cObj->substituteMarkerArray($subparts['manufacturers_images'], $markerArray, '###|###');
 	}
 	foreach ($this->languages as $key=>$language) {
