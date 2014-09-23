@@ -21,6 +21,9 @@ jQuery(document).ready(function($) {
 </script>';
 $tabs=array();
 $update_category_image='';
+print_r($this->post);
+print_r($file);
+//die();
 if ($this->post and $_FILES) {
 	if ($this->post['products_name'][0]) {
 		$this->post['products_name'][0]=trim($this->post['products_name'][0]);
@@ -1208,7 +1211,7 @@ if ($this->post) {
 				<input name="ajax_products_image'.$i.'" id="ajax_products_image'.$i.'" type="hidden" value="" />';
 			if ($_REQUEST['action']=='edit_product' and $product['products_image'.$i]) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'">';
-				$images_tab_block.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image'.$i).'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+				$images_tab_block.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image'.$i).'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 			}
 			$images_tab_block.='</div>';
 		}

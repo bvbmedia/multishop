@@ -563,6 +563,15 @@ switch ($this->ms['page']) {
 			if (isset($_SERVER["CONTENT_LENGTH"])) {
 				switch ($this->get['file_type']) {
 					case 'categories_image':
+						$tmp_filename=$this->get['categories_name'];
+						if (!$this->ms['MODULES']['ADMIN_AUTORENAME_UPLOADED_IMAGES']) {
+							if (isset($this->get['qqfile']) && !empty($this->get['qqfile'])) {
+								$tmp_arr=explode('.', $this->get['qqfile']);
+								$tmp_arr_count=count($tmp_arr);
+								unset($tmp_arr[$tmp_arr_count-1]);
+								$tmp_filename=implode('.', $tmp_arr);
+							}
+						}
 						$temp_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.uniqid();
 						if (isset($_FILES['qqfile'])) {
 							move_uploaded_file($_FILES['qqfile']['tmp_name'], $temp_file);
@@ -584,7 +593,7 @@ switch ($this->ms['page']) {
 								$ext=image_type_to_extension($imgtype, false);
 								if ($ext) {
 									$i=0;
-									$filename=mslib_fe::rewritenamein($this->get['categories_name']).'.'.$ext;
+									$filename=mslib_fe::rewritenamein($tmp_filename).'.'.$ext;
 									$folder=mslib_befe::getImagePrefixFolder($filename);
 									$array=explode(".", $filename);
 									if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
@@ -594,7 +603,7 @@ switch ($this->ms['page']) {
 									$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
 									if (file_exists($target)) {
 										do {
-											$filename=mslib_fe::rewritenamein($this->get['categories_name']).($i>0 ? '-'.$i : '').'.'.$ext;
+											$filename=mslib_fe::rewritenamein($tmp_filename).($i>0 ? '-'.$i : '').'.'.$ext;
 											$folder_name=mslib_befe::getImagePrefixFolder($filename);
 											$array=explode(".", $filename);
 											$folder=$folder_name;
@@ -624,6 +633,15 @@ switch ($this->ms['page']) {
 						}
 						break;
 					case 'manufacturers_images':
+						$tmp_filename=$this->get['manufacturers_name'];
+						if (!$this->ms['MODULES']['ADMIN_AUTORENAME_UPLOADED_IMAGES']) {
+							if (isset($this->get['qqfile']) && !empty($this->get['qqfile'])) {
+								$tmp_arr=explode('.', $this->get['qqfile']);
+								$tmp_arr_count=count($tmp_arr);
+								unset($tmp_arr[$tmp_arr_count-1]);
+								$tmp_filename=implode('.', $tmp_arr);
+							}
+						}
 						$temp_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.uniqid();
 						if (isset($_FILES['qqfile'])) {
 							move_uploaded_file($_FILES['qqfile']['tmp_name'], $temp_file);
@@ -645,7 +663,7 @@ switch ($this->ms['page']) {
 								$ext=image_type_to_extension($imgtype, false);
 								if ($ext) {
 									$i=0;
-									$filename=mslib_fe::rewritenamein($this->get['manufacturers_name']).'.'.$ext;
+									$filename=mslib_fe::rewritenamein($tmp_filename).'.'.$ext;
 									$folder=mslib_befe::getImagePrefixFolder($filename);
 									$array=explode(".", $filename);
 									if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
@@ -655,7 +673,7 @@ switch ($this->ms['page']) {
 									$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
 									if (file_exists($target)) {
 										do {
-											$filename=mslib_fe::rewritenamein($this->get['manufacturers_name']).($i>0 ? '-'.$i : '').'.'.$ext;
+											$filename=mslib_fe::rewritenamein($tmp_filename).($i>0 ? '-'.$i : '').'.'.$ext;
 											$folder_name=mslib_befe::getImagePrefixFolder($filename);
 											$array=explode(".", $filename);
 											$folder=$folder_name;
@@ -682,6 +700,15 @@ switch ($this->ms['page']) {
 						break;
 					default:
 						for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+							$tmp_filename=$this->get['products_name'];
+							if (!$this->ms['MODULES']['ADMIN_AUTORENAME_UPLOADED_IMAGES']) {
+								if (isset($this->get['qqfile']) && !empty($this->get['qqfile'])) {
+									$tmp_arr=explode('.', $this->get['qqfile']);
+									$tmp_arr_count=count($tmp_arr);
+									unset($tmp_arr[$tmp_arr_count-1]);
+									$tmp_filename=implode('.', $tmp_arr);
+								}
+							}
 							// hidden filename that is retrieved from the ajax upload
 							$i=$x;
 							if ($i==0) {
@@ -710,7 +737,7 @@ switch ($this->ms['page']) {
 										$ext=image_type_to_extension($imgtype, false);
 										if ($ext) {
 											$i=0;
-											$filename=mslib_fe::rewritenamein($this->get['products_name']).'.'.$ext;
+											$filename=mslib_fe::rewritenamein($tmp_filename).'.'.$ext;
 											$folder=mslib_befe::getImagePrefixFolder($filename);
 											$array=explode(".", $filename);
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
@@ -720,7 +747,7 @@ switch ($this->ms['page']) {
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
 											if (file_exists($target)) {
 												do {
-													$filename=mslib_fe::rewritenamein($this->get['products_name']).($i>0 ? '-'.$i : '').'.'.$ext;
+													$filename=mslib_fe::rewritenamein($tmp_filename).($i>0 ? '-'.$i : '').'.'.$ext;
 													$folder_name=mslib_befe::getImagePrefixFolder($filename);
 													$array=explode(".", $filename);
 													$folder=$folder_name;
