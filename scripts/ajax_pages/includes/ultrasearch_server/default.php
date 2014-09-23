@@ -21,7 +21,6 @@ if ($this->post['tx_multishop_pi1']['sortbysb']) {
 	}
 } else {
 	$this->cookie['sortbysb'] = '';
-	
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
@@ -43,16 +42,13 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
 	$select=array();
 	$formFields=array();
-	
 	$ultrasearch_hash = base64_decode($this->get['tx_multishop_pi1']['ultrasearch_hash']);
 	$fields=explode(";",$ultrasearch_hash);
 	$count=0;
-	
 	// counter query init array
 	$totalCountFilter=array();
 	$totalCountFrom=array();
 	$totalCountWhere=array();
-	
 	foreach ($this->post['tx_multishop_pi1']['categories'] as $key => $val) {
 		if ($val == 0) {
 			unset($this->post['tx_multishop_pi1']['categories'][$key]);
@@ -78,16 +74,16 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($string) {
 				$totalCountFilter[]=$string;
 			}
-			// 
+			//
 		} else {
 			$cats=mslib_fe::get_subcategory_ids($parent_id);
 			$cats[]=$parent_id;
 			if(is_array($this->post['categories_id_extra'])){
 				$cats = array();
 				foreach ($this->post['categories_id_extra'] as $key_id=>$catid){
-				   $cats_extra =mslib_fe::get_subcategory_ids($catid);	
-				   $cats[]=$catid;
-				   $cats = array_merge($cats_extra,$cats);				
+					$cats_extra=mslib_fe::get_subcategory_ids($catid);
+					$cats[]=$catid;
+					$cats=array_merge($cats_extra, $cats);
 				}
 			}
 			$totalCountFilter[]="p2c.categories_id IN (".implode(",",$cats).")";
@@ -104,10 +100,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	if (strlen($this->post['tx_multishop_pi1']['q']) >2) {
 		$array=explode(" ",$this->post['tx_multishop_pi1']['q']);
 		$total=count($array);
-		$oldsearch=0;	
+		$oldsearch=0;
 		if (!$this->ms['MODULES']['ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH']) {
 			$oldsearch=1;
-		} else {				
+		} else {
 			foreach ($array as $item) {
 				if (strlen($item) < $this->ms['MODULES']['FULLTEXT_SEARCH_MIN_CHARS']) {
 					$oldsearch=1;
@@ -134,7 +130,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		if ($this->ms['MODULES']['FLAT_DATABASE']) {
 			$tbl='pf.';
 		} else {
-			$tbl='pd.';		
+			$tbl='pd.';
 		}
 		if ($oldsearch) {
 			// do normal indexed search
@@ -171,9 +167,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$totalCountFilter[]="(".implode(" OR ", $innerFilter).")";
 		} else {
 			// do fulltext search
-			// $tmpstr=addslashes(mslib_befe::ms_implode(', ', $array,'"','+',true));				
+			// $tmpstr=addslashes(mslib_befe::ms_implode(', ', $array,'"','+',true));
 			// $select[]	="MATCH (".$tbl."products_name) AGAINST ('".$tmpstr."' in boolean mode) AS score";
-			$tmpstr=addslashes(mslib_befe::ms_implode(', ', $array,'"','+',true));				
+			$tmpstr=addslashes(mslib_befe::ms_implode(', ', $array, '"', '+', true));
 			$ultra_fields=$tbl."products_name";
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$ultra_fields.=",".$tbl."products_description";
@@ -182,12 +178,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='pf.';
 				} else {
-					$tbl='p.';						
+					$tbl='p.';
 				}
 				$ultra_fields.=",".$tbl."products_id";
-			}				
+			}
 			$select[]	="MATCH (".$ultra_fields.") AGAINST ('".$tmpstr."' in boolean mode) AS score";
-			$totalCountFilter[]	="MATCH (".$ultra_fields.") AGAINST ('".$tmpstr."' in boolean mode)";	
+			$totalCountFilter[]="MATCH (".$ultra_fields.") AGAINST ('".$tmpstr."' in boolean mode)";
 		}
 	}
 
@@ -205,7 +201,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($string) {
 				$totalCountSubFilter['categories'][]=$string;
 			}
-			// 
+			//
 		} else {
 			$subs_id_data = array();
 			foreach ($this->post['tx_multishop_pi1']['categories'] as $catsid) {
@@ -217,7 +213,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					}
 				}
 			}
-			
 			$totalCountSubFilter['categories'][]="p2c.categories_id IN (".implode(",",$subs_id_data).")";
 		}
 	}
@@ -248,25 +243,22 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					unset($option_values_id[$ovi_key]);
 				}
 			}
-			
 			if (is_array($option_values_id) and count($option_values_id)) {
 				$totalCountSubFilter['options'][$option_id][]="pa_".$option_id.".options_values_id IN (".implode(",",$option_values_id).")";
 				$totalCountFrom['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
-				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';						
+				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
 			}
 		}
 	}
-	
-	
 	// counter query init eof
 	foreach ($fields as $field) {
 		// reset
 		$key='';
 		if (strstr($field,":")) {
-			$array=explode(":",$field);				
+			$array=explode(":", $field);
 			$key=$array[0];
 		} else {
-			$key=$field;	
+			$key=$field;
 		}
 		$count++;
 		$formField=array();
@@ -279,7 +271,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['type']="submit";
 				$formField['placeholder']="";
 				$formField['value']=ucfirst($this->pi_getLL('search'));
-			break;	
+				break;
 			case 'reset':
 				$formField['caption']='';
 				$formField['name']="tx_multishop_pi1[submit]";
@@ -288,9 +280,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['type']="reset";
 				$formField['placeholder']="";
 				$formField['value']=ucfirst($this->pi_getLL('reset'));
-			break;						
+				break;
 			case 'input_keywords':
-				$formField['caption']='<span class="msFrontUltrasearchInputFieldInfoIcon">info</span>Zoekwoord';
 				$formField['name']="tx_multishop_pi1[q]";
 				$formField['id']="skeyword";
 				$formField['caption']=ucfirst($this->pi_getLL('keyword'));
@@ -315,38 +306,32 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						case 'select':
 							$formField['type']="div";
 							$formField['class']="ui-dform-selectbox";
-							
-							$formFieldItem[$count_select]['type'] = 'select';
+						$formFieldItem[$count_select]['type'] = 'select';
 							$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[categories][]';
 							$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldCategoriesItem';
 							$formFieldItem[$count_select]['options'][0] = 'kies categories';
 							break;
-						
 						case 'multiselect':
 						case 'list_multiple':
 						case 'select_multiple':
 							$formField['type']="div";
 							$formField['class']="ui-dform-selectbox-multiple";
-							
-							$formFieldItem[$count_select]['type'] = 'select';
+						$formFieldItem[$count_select]['type'] = 'select';
 							$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[categories][]';
 							$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldCategoriesItem';
 							$formFieldItem[$count_select]['multiple'] = 'multiple';
 							break;
-						
 						case 'radio':
 							$formField['type']="div";
 							$formField['class']="ui-dform-radiobuttons";
 							break;
-							
 						case 'checkbox':
 						default:
 							$formField['type']="div";
 							$formField['class']="ui-dform-checkboxes";
 							break;
 					}
-					
-					$counter=0;				
+					$counter=0;
 					foreach ($categories as $row) {
 						// count available records
 						$tmpFilter=$totalCountFilter;
@@ -360,7 +345,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							}
 							unset($totalCountSubFilterTmp['options']);
 						}
-						if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {						
+						if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {
 							foreach ($totalCountSubFilterTmp as $key => $items) {
 								foreach ($items as $item) {
 									$tmpFilter[]=$item;
@@ -391,23 +376,19 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						$totalCountFromFlat=array();
 						$totalCountWhereFlat=array();
 						if (is_array($totalCountFrom['options'])) {
-							$totalCountFromFlat=array_values($totalCountFrom['options']);						
+							$totalCountFromFlat=array_values($totalCountFrom['options']);
 						}
 						if (is_array($totalCountWhere['options'])) {
 							$totalCountWhereFlat=array_values($totalCountWhere['options']);
 						}
-						
 						if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 							$prefix='p';
 						} else {
 							$prefix='pf';
 						}
-						
 						//print_r($tmpFilter);
-						
 						$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
-						// count available records eof						
-						
+						// count available records eof
 						switch ($list_type) {
 							case 'list':
 							case 'select':
@@ -423,7 +404,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									}
 								//}
 								break;
-								
 							case 'radio':
 								$formFieldItem[$counter]['type']='div';
 								$formFieldItem[$counter]['class']='ui-dform-radiobuttons-wrapper';
@@ -441,7 +421,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								$formFieldItem[$counter]['elements']['type']='radio';
 								$formFieldItem[$counter]['elements']['class']='ui-dform-radiobutton';
 								break;
-								
 							case 'checkbox':
 							default:
 								$formFieldItem[$counter]['type']='div';
@@ -451,7 +430,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								}
 								$row['categories_name']='<span class="title">'.$row['categories_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
 								if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'],$this->post['tx_multishop_pi1']['categories'])) {
-									$formFieldItem[$counter]['elements']['checked']="checked";					
+									$formFieldItem[$counter]['elements']['checked']="checked";
 								}
 								$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[categories][]";
 								$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Checkbox".$row['categories_id'];
@@ -461,12 +440,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
 								break;
 						}
-						
 						$counter++;
 					}
 					$formField['elements']=$formFieldItem;
 				}
-			break;			
+				break;
 			case 'manufacturers':
 				$formField['caption']='Merk';
 				if ($this->ultrasearch_filtered_by_current_category) {
@@ -477,10 +455,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$tmpfilter[]="categories_id_".$i."='".addslashes($this->post['categories_id'])."'";
 						}
 						$str.=implode(" or ",$tmpfilter).")";
-						$res=$GLOBALS['TYPO3_DB']->sql_query($str);						
+						$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 						if($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
 							$default_query=0;
-							$ids=array();							
+							$ids=array();
 							while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 								$ids[]=$row['manufacturers_id'];
 							}
@@ -494,7 +472,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$man_catsubs_id_data = array();
 							$man_get_subscat = mslib_fe::get_subcategory_ids($parent_id);
 							$man_catsubs_id_data[] = $parent_id;
-							
 							if (count($man_get_subscat)) {
 								foreach ($man_get_subscat as $man_subcat_id_data) {
 									$man_catsubs_id_data[] = $man_subcat_id_data;
@@ -513,53 +490,45 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$options=array();
 				$formFieldItem=array();
-				
 				$count_select = count($formField['elements']);
-				
 				switch ($list_type) {
 					case 'list':
 					case 'select':
 						$formField['type']="div";
 						$formField['class']="ui-dform-selectbox";
-							
-						$formFieldItem[$count_select]['type'] = 'select';
+					$formFieldItem[$count_select]['type'] = 'select';
 						$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[manufacturers][]';
 						$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldManufacturersItem';
-						$formFieldItem[$count_select]['options'][0] = 'kies leveranciers';
-						break;
-				
+					$formFieldItem[$count_select]['options'][0]=$this->pi_getLL('choose_manufacturers');
+					break;
 					case 'multiselect':
 					case 'list_multiple':
 					case 'select_multiple':
 						$formField['type']="div";
 						$formField['class']="ui-dform-selectbox-multiple";
-							
-						$formFieldItem[$count_select]['type'] = 'select';
+					$formFieldItem[$count_select]['type'] = 'select';
 						$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[manufacturers][]';
 						$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldManufacturersItem';
 						$formFieldItem[$count_select]['multiple'] = 'multiple';
 						break;
-				
 					case 'radio':
 						$formField['type']="div";
 						$formField['class']="ui-dform-radiobuttons";
 						break;
-							
 					case 'checkbox':
 					default:
 						$formField['type']="div";
 						$formField['class']="ui-dform-checkboxes";
 						break;
 				}
-								
-				$counter=0;				
+				$counter=0;
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 					// count available records
 					$tmpFilter=$totalCountFilter;
 					$totalCountSubFilterTmp=$totalCountSubFilter;
 					unset($totalCountSubFilterTmp['manufacturers']);
 					$from=array();
-					if (is_array($totalCountSubFilterTmp['options']) and count($totalCountSubFilterTmp['options'])) {					
+					if (is_array($totalCountSubFilterTmp['options']) and count($totalCountSubFilterTmp['options'])) {
 						foreach ($totalCountSubFilterTmp['options'] as $key => $items) {
 							foreach ($items as $item) {
 								$tmpFilter[]=$item;
@@ -567,7 +536,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						}
 						unset($totalCountSubFilterTmp['options']);
 					}
-					if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {					
+					if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {
 						foreach ($totalCountSubFilterTmp as $key => $items) {
 							foreach ($items as $item) {
 								$tmpFilter[]=$item;
@@ -588,19 +557,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					if (is_array($totalCountWhere['options'])) {
 						$totalCountWhereFlat=array_values($totalCountWhere['options']);
 					}
-					
 					if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 						$prefix='p';
 					} else {
 						$prefix='pf';
 					}
-					
 					//error_log(print_r($tmpFilter, 1));
-					
-					
 					$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 					// count available records eof
-					
 					switch ($list_type) {
 						case 'list':
 						case 'select':
@@ -618,7 +582,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							//$formFieldItem[$count]['elements']['options'][$counter]['html'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
 							//$formFieldItem[$count]['options'][$counter]['elements']['caption'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
 							break;
-					
 						case 'radio':
 							$formFieldItem[$counter]['type']='div';
 							$formFieldItem[$counter]['class']='ui-dform-radiobuttons-wrapper';
@@ -627,7 +590,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							}
 							$row['manufacturers_name']='<span class="title">'.$row['manufacturers_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
 							if (is_array($this->post['tx_multishop_pi1']['manufacturers']) and in_array($row['manufacturers_id'],$this->post['tx_multishop_pi1']['manufacturers'])) {
-								$formFieldItem[$counter]['elements']['checked']="checked";					
+								$formFieldItem[$counter]['elements']['checked']="checked";
 							}
 							$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[manufacturers][]";
 							$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldManufacturersItem".$key."Radiobutton".$row['manufacturers_id'];
@@ -636,7 +599,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$formFieldItem[$counter]['elements']['type']='radio';
 							$formFieldItem[$counter]['elements']['class']='ui-dform-radiobutton';
 							break;
-					
 						case 'checkbox':
 						default:
 							$formFieldItem[$counter]['type']='div';
@@ -646,17 +608,16 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							}
 							$row['manufacturers_name']='<span class="title">'.$row['manufacturers_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
 							if (is_array($this->post['tx_multishop_pi1']['manufacturers']) and in_array($row['manufacturers_id'],$this->post['tx_multishop_pi1']['manufacturers'])) {
-								$formFieldItem[$counter]['elements']['checked']="checked";					
+								$formFieldItem[$counter]['elements']['checked']="checked";
 							}
 							$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[manufacturers][]";
-							$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldManufacturersItem".$key."Checkbox".$row['manufacturers_id'];				
+							$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldManufacturersItem".$key."Checkbox".$row['manufacturers_id'];
 							$formFieldItem[$counter]['elements']['caption']=$row['manufacturers_name'];
 							$formFieldItem[$counter]['elements']['value']=$row['manufacturers_id'];
 							$formFieldItem[$counter]['elements']['type']='checkbox';
 							$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
 							break;
 					}
-					
 					$counter++;
 				}
 				$formField['elements']=$formFieldItem;
@@ -667,13 +628,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formFieldItem = array();
 				$default_limit_page = $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
 				$count_select = count($formField['elements']);
-					
 				$formField['type'] = "div";
 				$formField['class'] = "ui-dform-selectbox";
 				$formFieldItem[$count_select]['type'] = 'select';
 				$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[limitsb]';
 				$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldListingLimitItem';
-				
 				$limit_options = array();
 				$limit_options[] = 5;
 				$limit_options[] = 10;
@@ -681,7 +640,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$limit_options[] = 30;
 				$limit_options[] = 50;
 				$limit_options[] = 100;
-				
 				if (!in_array($default_limit_page, $limit_options)) {
 					$formFieldItem[$count_select]['options'][$default_limit_page] = $default_limit_page;
 				}
@@ -704,17 +662,13 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['caption'] = $this->pi_getLL('sort_by', 'Sort by:');
 				$options = array();
 				$formFieldItem = array();
-			
 				$count_select = count($formField['elements']);
-			
 				$formField['type'] = "div";
 				$formField['class'] = "ui-dform-selectbox";
-					
 				$formFieldItem[$count_select]['type'] = 'select';
 				$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[sortbysb]';
 				$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldSortByItem';
 				$formFieldItem[$count_select]['options'][0] = $this->pi_getLL('default');
-				
 				$sortby_options = array();
 				$sortby_options['best_selling_asc'] = $this->pi_getLL('sortby_options_label_bestselling_asc', 'Best selling (asc)');
 				$sortby_options['best_selling_desc'] = $this->pi_getLL('sortby_options_label_bestselling_desc', 'Best selling (desc)');
@@ -722,7 +676,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$sortby_options['price_desc'] = $this->pi_getLL('sortby_options_label_price_desc', 'Price (desc)');
 				$sortby_options['new_asc'] = $this->pi_getLL('sortby_options_label_new_asc', 'New (asc)');
 				$sortby_options['new_desc'] = $this->pi_getLL('sortby_options_label_new_desc', 'New (desc)');
-				
 				foreach ($sortby_options as $sortby_key => $sortby_label) {
 					if (isset($this->cookie['sortbysb']) && $sortby_key == $this->cookie['sortbysb']) {
 						$formFieldItem[$count_select]['options'][$sortby_key]['selected'] = 'selected';
@@ -739,7 +692,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['id']=$key;
 				$formField['caption']=$key;
 				$formField['type']="text";
-				$formField['placeholder']="";			
+			$formField['placeholder']="";
 			break;
 			default:
 				$count_attributes = count($formField['elements']);;
@@ -754,7 +707,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$order_by='desc';
 					$array[1]=str_replace('{desc}','',$array[1]);
 				} else {
-					$order_column='povp.sort_order';					
+					$order_column='povp.sort_order';
 					$order_by='asc';
 				}
 				$option_id=$array[0];
@@ -766,7 +719,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					'',            // GROUP BY...
 					'',    // ORDER BY...
 					''            // LIMIT ...
-				);	
+				);
 				$res = $GLOBALS['TYPO3_DB']->sql_query($query);
 				//if tx_multishop_products_options is not empty/category options is not empty
 				if($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
@@ -780,36 +733,30 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						$order_by='asc';
 					}
 					$formFieldItem=array();
-					
 					switch ($list_type) {
 						case 'list':
 						case 'select':
 							$formField['type']="div";
 							$formField['class']="ui-dform-selectbox";
-								
-							$formFieldItem[$count_attributes]['type'] = 'select';
+						$formFieldItem[$count_attributes]['type'] = 'select';
 							$formFieldItem[$count_attributes]['name'] = "tx_multishop_pi1[options][".$row['products_options_id']."][]";
 							$formFieldItem[$count_attributes]['id'] = 'msFrontUltrasearchFormFieldItemOption'.$option_id;
-							$formFieldItem[$count_attributes]['options'][0] = 'kies ' . $row['products_options_name'];
-							break;
-					
+						$formFieldItem[$count_attributes]['options'][0]=$this->pi_getLL('choose').' '.$row['products_options_name'];
+						break;
 						case 'multiselect':
 						case 'list_multiple':
 						case 'select_multiple':
 							$formField['type']="div";
 							$formField['class']="ui-dform-selectbox-multiple";
-								
-							$formFieldItem[$count_attributes]['type'] = 'select';
+						$formFieldItem[$count_attributes]['type'] = 'select';
 							$formFieldItem[$count_attributes]['name'] = "tx_multishop_pi1[options][".$row['products_options_id']."][]";
 							$formFieldItem[$count_attributes]['id'] = 'msFrontUltrasearchFormFieldItemOption'.$option_id;
 							$formFieldItem[$count_attributes]['multiple'] = 'multiple';
 							break;
-					
 						case 'radio':
 							$formField['type']="div";
 							$formField['class']="ui-dform-radiobuttons";
 							break;
-								
 						case 'checkbox':
 						default:
 							$formField['type']="div";
@@ -817,19 +764,16 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							break;
 					}
 					$formField['caption']=$row['products_options_name'];
-					
 					if ($this->ultrasearch_filtered_by_current_category) {
 						$man_get_subscat = array();
 						$man_catsubs_id_data = array();
 						$man_get_subscat = mslib_fe::get_subcategory_ids($parent_id);
 						$man_catsubs_id_data[] = $parent_id;
-							
 						if (count($man_get_subscat)) {
 							foreach ($man_get_subscat as $man_subcat_id_data) {
 								$man_catsubs_id_data[] = $man_subcat_id_data;
 							}
 						}
-						
 						$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery(
 								'DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
 								'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p, tx_multishop_products_to_categories p2c',     // FROM ...
@@ -849,7 +793,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						);
 					}
 					$res_opt_2_values = $GLOBALS['TYPO3_DB']->sql_query($query_opt_2_values);
-					
 					if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 						$prefix='p';
 					} else {
@@ -886,16 +829,13 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							unset($totalCountFromTmp['options'][$option_id]);
 							unset($totalCountWhereTmp['options'][$option_id]);
 							$totalCountFromTmp['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
-							$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';		
-	
+							$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
 							$totalCountFromFlat=array();
 							$totalCountWhereFlat=array();
 							$totalCountFromFlat=array_values($totalCountFromTmp['options']);
 							$totalCountWhereFlat=array_values($totalCountWhereTmp['options']);
-							
 							$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 							// count available records eof
-							
 							switch ($list_type) {
 								case 'list':
 								case 'select':
@@ -913,7 +853,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									//$formFieldItem[$count]['elements']['options'][$counter]['html'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
 									//$formFieldItem[$count]['options'][$counter]['elements']['caption'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
 									break;
-										
 								case 'radio':
 									$formFieldItem[$counter]['type']='div';
 									$formFieldItem[$counter]['class']='ui-dform-radiobuttons-wrapper';
@@ -922,16 +861,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									}
 									$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
 									if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'],$this->post['tx_multishop_pi1']['options'][$option_id])) {
-										$formFieldItem[$counter]['elements']['checked']="checked";					
+										$formFieldItem[$counter]['elements']['checked']="checked";
 									}
 									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
-									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];				
+									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
 									$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
 									$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
 									$formFieldItem[$counter]['elements']['type']='radio';
 									$formFieldItem[$counter]['elements']['class']='ui-dform-radiobutton';
 									break;
-										
 								case 'checkbox':
 								default:
 									$formFieldItem[$counter]['type']='div';
@@ -941,25 +879,23 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									}
 									$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
 									if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'],$this->post['tx_multishop_pi1']['options'][$option_id])) {
-										$formFieldItem[$counter]['elements']['checked']="checked";					
+										$formFieldItem[$counter]['elements']['checked']="checked";
 									}
 									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
-									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];				
+									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
 									$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
 									$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
 									$formFieldItem[$counter]['elements']['type']='checkbox';
 									$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
 									break;
 							}
-							
 							$counter++;
 						}
 						$formField['elements']=$formFieldItem;
 					}
-				
 				}
 				//end attributs options
-			break;		
+				break;
 		}
 		if (isset($key) && !empty($key)) {
 			$formFields[]=array("type"=>"container","class"=>'ui-dform-container-'.$key,"html"=>$formField);
@@ -977,13 +913,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	$form['action']	='index.html';
 	$form['method']	='get';
 	$form['html']	=$formFields;
-	
 	$data=array();
 	$data['formFields']=$form;
-	
 	//echo json_encode($data);
 	//exit();
-	
 	// product search
 	$filter		=array();
 	$having		=array();
@@ -992,11 +925,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	$where		=array();
 	$orderby	=array();
 	$select_total_count=array();
-	$select		=array();	
+	$select=array();
 	if (strlen($this->post['tx_multishop_pi1']['q']) >2) {
 		$array=explode(" ",$this->post['tx_multishop_pi1']['q']);
 		$total=count($array);
-		$oldsearch=0;	
+		$oldsearch=0;
 		if (!$this->ms['MODULES']['ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH']) {
 			$oldsearch=1;
 		} else {
@@ -1010,11 +943,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		if ($this->ms['MODULES']['FLAT_DATABASE']) {
 			$tbl='pf.';
 		} else {
-			$tbl='pd.';		
+			$tbl='pd.';
 		}
 		if ($oldsearch) {
 			/*// do normal indexed search
-			$search_in_pd = '';	
+			$search_in_pd = '';
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$search_in_pd = " or ".$tbl."products_description like '%".addslashes($this->post['tx_multishop_pi1']['q'])."%'";
 			}
@@ -1053,9 +986,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$filter[]="(".implode(" OR ", $innerFilter).")";
 		} else {
 			// do fulltext search
-			// $tmpstr=addslashes(mslib_befe::ms_implode(', ', $array,'"','+',true));				
+			// $tmpstr=addslashes(mslib_befe::ms_implode(', ', $array,'"','+',true));
 			// $select[]	="MATCH (".$tbl."products_name) AGAINST ('".$tmpstr."' in boolean mode) AS score";
-			$tmpstr=addslashes(mslib_befe::ms_implode(', ', $array,'"','+',true));				
+			$tmpstr=addslashes(mslib_befe::ms_implode(', ', $array, '"', '+', true));
 			$fields=$tbl."products_name";
 			if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 				$fields.=",".$tbl."products_description";
@@ -1064,12 +997,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='pf.';
 				} else {
-					$tbl='p.';						
+					$tbl='p.';
 				}
 				$fields.=",".$tbl."products_id";
-			}				
+			}
 			$select[]	= "MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode) AS score";
-			$filter[]	= "MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode)";	
+			$filter[]="MATCH (".$fields.") AGAINST ('".$tmpstr."' in boolean mode)";
 			$orderby[]	= 'score desc';
 		}
 	}
@@ -1089,16 +1022,16 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($string) {
 				$filter[]=$string;
 			}
-			// 
+			//
 		} else {
 			$cats=mslib_fe::get_subcategory_ids($parent_id);
 			$cats[]=$parent_id;
 			if(is_array($this->post['categories_id_extra'])){
 				$cats = array();
 				foreach ($this->post['categories_id_extra'] as $key_id=>$catid){
-				   $cats_extra =mslib_fe::get_subcategory_ids($catid);	
-				   $cats[]=$catid;
-				   $cats = array_merge($cats_extra,$cats);				
+					$cats_extra=mslib_fe::get_subcategory_ids($catid);
+					$cats[]=$catid;
+					$cats=array_merge($cats_extra, $cats);
 				}
 			}
 			$filter[]="p2c.categories_id IN (".implode(",",$cats).")";
@@ -1111,11 +1044,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$filter[]="(pf.final_price BETWEEN '".addslashes($this->post['min'])."' and '".addslashes($this->post['max'])."')";
 		}
 	}
-		
 	$from=array();
 	if (is_array($this->post['tx_multishop_pi1']['options']) and count($this->post['tx_multishop_pi1']['options'])) {
 		// attributes
-		if (!$this->ms['MODULES']['FLAT_DATABASE'])  {			
+		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 			$prefix='p.';
 		} else {
 			$prefix='pf.';
@@ -1126,7 +1058,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					unset($option_values_id[$ovi_key]);
 				}
 			}
-			
 			if ($option_id=='or') {
 				if (is_array($option_values_id) and count($option_values_id)) {
 					foreach ($option_values_id as $key => $val) {
@@ -1134,27 +1065,26 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							foreach ($val as $option_id => $ranges) {
 								$from_value=$ranges[0];
 								$till_value=$ranges[1];
-	
 								$options_name = "option".$option_id;
 								$options_name = str_replace(array(' ', '-'), '_', $options_name);
 								$options_name = str_replace(array('(', ')', '[', ']', "'", '"', ':', ';', '/', "\\"), '', $options_name);
-								$options_name = str_replace('__', '_', $options_name);							
+								$options_name=str_replace('__', '_', $options_name);
 								$options_name=addslashes($options_name);
 								// this does not work nice with varchar. we need to convert the value to integer first
 //								$between_field=$options_name.'_ov.products_options_values_name';
-								$between_field='CONVERT(SUBSTRING('.$options_name.'_ov.products_options_values_name, LOCATE(\'-\', '.$options_name.'_ov.products_options_values_name) + 1), SIGNED INTEGER)';								
+								$between_field='CONVERT(SUBSTRING('.$options_name.'_ov.products_options_values_name, LOCATE(\'-\', '.$options_name.'_ov.products_options_values_name) + 1), SIGNED INTEGER)';
 								$subquery='SELECT '.$options_name.'.products_id from tx_multishop_products_attributes '.$options_name.', tx_multishop_products_options_values '.$options_name.'_ov where ('.$between_field.' BETWEEN \''.addslashes($from_value).'\' AND \''.addslashes($till_value).'\' and '.$options_name.'.options_id = "'.addslashes($option_id).'" and '.$options_name.'.options_values_id='.$options_name.'_ov.products_options_values_id) group by '.$options_name.'.products_id';
 								$filter[]= $prefix.'products_id IN ('.$subquery.')';
-							}					
+							}
 						}
 						elseif (count($val)) {
 							$ors=implode(",",$val);
-							if ($ors) {							
+							if ($ors) {
 								$options_name = "option".$key;
 								$options_name = str_replace(array(' ', '-'), '_', $options_name);
 								$options_name = str_replace(array('(', ')', '[', ']', "'", '"', ':', ';', '/', "\\"), '', $options_name);
 								$options_name = str_replace('__', '_', $options_name);
-								$from[]= 'tx_multishop_products_attributes '.$options_name;				
+								$from[]='tx_multishop_products_attributes '.$options_name;
 								$filter[]= "(".$prefix."products_id = $options_name.products_id and $options_name.options_id = ".addslashes($key)." and $options_name.options_values_id IN (".$ors."))";
 							}
 						}
@@ -1179,7 +1109,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$options_name = str_replace('__', '_', $options_name);
 				$from[]= 'tx_multishop_products_attributes '.$options_name;
 				$filter[]= "(".$prefix."products_id = $options_name.products_id and $options_name.options_id = ".addslashes($option_id)." and $options_name.options_values_id IN (".implode(",",$option_values_id)."))";
-			}			
+			}
 		}
 	}
 	if (isset($this->cookie['limitsb']) && $this->cookie['limitsb'] > 0) {
@@ -1189,7 +1119,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	}
 	if ($this->post['page']) {
 		$p = $this->post['page'];
-		$offset = $limit * ($p - 1);    
+		$offset=$limit*($p-1);
 	} else {
 		$offset = 0;
 		$p = 1;
@@ -1209,7 +1139,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$filter[]=$prefix."manufacturers_id IN (".implode(",",$this->post['tx_multishop_pi1']['manufacturers']).")";
 		} else {
 			if (strpos($this->post['tx_multishop_pi1']['manufacturers'], ',') === FALSE) {
-				$filter[] = $prefix.'manufacturers_id='.addslashes($this->post['tx_multishop_pi1']['manufacturers']);	
+				$filter[]=$prefix.'manufacturers_id='.addslashes($this->post['tx_multishop_pi1']['manufacturers']);
 			} else {
 				$filter[]=$prefix."manufacturers_id IN (". addslashes($this->post['tx_multishop_pi1']['manufacturers']) .")";
 			}
@@ -1228,24 +1158,24 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($string) {
 					$sub_filter[]=$string;
 				}
-				// 
+				//
 			} else {
 				$cats=mslib_fe::get_subcategory_ids($categories_id);
 				$cats[]=$categories_id;
 				if(is_array($this->post['categories_id_extra'])){
 					$cats = array();
 					foreach ($this->post['categories_id_extra'] as $key_id=>$catid){
-					   $cats_extra =mslib_fe::get_subcategory_ids($catid);	
-					   $cats[]=$catid;
-					   $cats = array_merge($cats_extra,$cats);				
+						$cats_extra=mslib_fe::get_subcategory_ids($catid);
+						$cats[]=$catid;
+						$cats=array_merge($cats_extra, $cats);
 					}
 				}
 				$sub_filter[]="p2c.categories_id IN (".implode(",",$cats).")";
 			}
-		}	
+		}
 		$filter[]='('.implode(" OR ",$sub_filter).')';
-	}		
-	if (is_array($this->post['sort_filter']) and count($this->post['sort_filter']) > 0) {		
+	}
+	if (is_array($this->post['sort_filter']) and count($this->post['sort_filter'])>0) {
 		$test_orderby = $this->post['sort_filter'][0];
 	} else if ($this->post['sort_filter']) {
 		$test_orderby = $this->post['sort_filter'];
@@ -1259,11 +1189,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				} else {
 					$sort='asc';
 				}
-				if (!$this->ms['MODULES']['FLAT_DATABASE']) {			
-					$prefix='p.';
+			if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+				$prefix='p.';
 				} else {
-					$prefix='pf.';			
-				}
+				$prefix='pf.';
+			}
 				$orderby[]=$prefix.'products_name '.$sort;
 			break;
 			case 'final_price ASC':
@@ -1271,13 +1201,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($test_orderby=='final_price DESC') {
 					$sort='desc';
 				} else {
-					$sort='asc';		
+					$sort='asc';
 				}
-				$orderby[]='final_price '.$sort;			
+			$orderby[]='final_price '.$sort;
 			break;
 		}
 	}
-	
 	$extra_join = array();
 	if (isset($this->cookie['sortbysb']) && !empty($this->cookie['sortbysb'])) {
 		if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -1310,7 +1239,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				break;
 		}
 	}
-	
 	$pageset=mslib_fe::getProductsPageSet($filter,$offset,$limit,$orderby,$having,$select,$where,0,$from,array(),'ajax_products_search',$select_total_count,0,1,$extra_join);
 	//	error_log($pageset['total_rows']);
 	//	error_log($this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']);
@@ -1339,18 +1267,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$temp_var_products = array();
 				$link_detail = mslib_fe::typolink($this->conf['products_detail_page_pid'],'&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 				$catlink=mslib_fe::typolink($this->conf['products_listing_page_pid'],'&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
-				$final_price=mslib_fe::final_products_price($product);    
+				$final_price=mslib_fe::final_products_price($product);
 				if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
-					$price_excluding_vat = $this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($product['final_price']) ;		
+					$price_excluding_vat=$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($product['final_price']);
 				} else {
 				   $price_excluding_vat = false;
-				   
-				}			
+				}
 				if ($product['products_price'] <> $product['final_price']) {
-					if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {				
+					if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
 						$old_price=$product['products_price']*(1+$product['tax_rate']);
 					} else {
-						$old_price=$product['products_price'];	
+						$old_price=$product['products_price'];
 					}
 					$old_price = mslib_fe::amount2Cents($old_price);
 					$specials_price = mslib_fe::amount2Cents($final_price);
@@ -1370,12 +1297,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$temp_var_products['categories_name_2'] = $product['categories_name_2'];
 					$temp_var_products['categories_name_3'] = $product['categories_name_3'];
 				}
-				
 				$temp_var_products['link_detail']    = $link_detail;
 				$temp_var_products['link_add_to_cart']    = mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&products_id='.$product['products_id']);
 				$temp_var_products['add_to_basket']	=$this->pi_getLL('add_to_basket');
 				$temp_var_products['catlink']   = $catlink;
-				
 				if ($product['products_image']) 	{
 					$temp_var_products['products_image']=mslib_befe::getImagePath($product['products_image'],'products','100');
 					$temp_var_products['products_image50']=mslib_befe::getImagePath($product['products_image'],'products','50');
@@ -1383,8 +1308,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($product['products_image1']) {
 					$temp_var_products['products_image1']=mslib_befe::getImagePath($product['products_image1'],'products','100');
 				}
-				
-				
 				$temp_var_products['manufacturers_name'] = $product['manufacturers_name'];
 				$temp_var_products['price_excluding_vat'] = $price_excluding_vat;
 				$temp_var_products['old_price'] = $old_price;
@@ -1410,30 +1333,25 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	$results['pagination']['limit'] = $limit;
 	$results['pagination']['totpage'] = $totpage;
 	if ($p == 1) {
-		$results['pagination']['prev'] = false; 
-		$results['pagination']['first'] = false;   
+		$results['pagination']['prev']=false;
+		$results['pagination']['first']=false;
 	} else {
 		$results['pagination']['prev'] = $p - 1;
 	}
-	
 	if ($p == 0 || $p < 9) {
 		$start_page_number 		= 1;
-	
 		if ($totpage <= 10) {
 			$end_page_number 	= $totpage;
 		} else {
 			$end_page_number 	= 10;
 		}
-	
 	} else if ($p >= 9) {
 		$start_page_number 	= ($p - 5) + 1;
 		$end_page_number 	= ($p + 4) + 1;
-	
 		if ($end_page_number > $totpage) {
 			$end_page_number = $totpage;
 		}
 	}
-	
 	for ($x = $start_page_number; $x <= $end_page_number; $x++) {
 		if ($p == $x) {
 			$results['pagination']['page_number'][$x]['link'] = 0;
@@ -1443,24 +1361,23 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$results['pagination']['page_number'][$x]['number'] = $x;
 		}
 	}
-	
-	
 	$results['pagination']['curent_p'] = $p;
 	if ($totpage == $p) {
-		$results['pagination']['next'] = false; 
-		$results['pagination']['last'] = false;    
+		$results['pagination']['next']=false;
+		$results['pagination']['last']=false;
 	} else {
 		$results['pagination']['next'] = $p + 1;
 	}
-	$results['pagination']['firstText'] = t3lib_div::strtoupper($this->pi_getLL('first'));		
-	$results['pagination']['first'] = t3lib_div::strtoupper($this->pi_getLL('first'));		
+	$results['pagination']['firstText']=t3lib_div::strtoupper($this->pi_getLL('first'));
+	$results['pagination']['first']=t3lib_div::strtoupper($this->pi_getLL('first'));
 	$results['pagination']['prevText'] = t3lib_div::strtoupper($this->pi_getLL('previous'));
 	$results['pagination']['nextText'] = t3lib_div::strtoupper($this->pi_getLL('next'));
-	$results['pagination']['last'] = t3lib_div::strtoupper($this->pi_getLL('last'));		
-	$results['pagination']['lastText'] = t3lib_div::strtoupper($this->pi_getLL('last'));		$data['resultSet']=$results;
+	$results['pagination']['last']=t3lib_div::strtoupper($this->pi_getLL('last'));
+	$results['pagination']['lastText']=t3lib_div::strtoupper($this->pi_getLL('last'));
+	$data['resultSet']=$results;
 	$content=json_encode($data);
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
-		$Cache_Lite->save($content);	
+		$Cache_Lite->save($content);
 	}
 }
 echo $content;

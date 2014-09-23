@@ -1089,6 +1089,7 @@
             <label index="deleted">deleted</label>
             <label index="job_title">job title</label>
             <label index="customer_id_external_id_for_reference">customer id(external id for reference)</label>
+            <label index="choose_manufacturers">kies leveranciers</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

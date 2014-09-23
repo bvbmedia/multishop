@@ -1,4 +1,4 @@
-// prepare the form when the DOM is ready 
+// prepare the form when the DOM is ready
 jQuery(document).ready(function ($) {
     var options = {
         target: '#output2',   // target element(s) to be updated with server response
@@ -7,18 +7,18 @@ jQuery(document).ready(function ($) {
         resetForm: true,
         clearForm: true,
         success: processMsFrontUltraSearchJson,
-        // other available options: 
+        // other available options:
         url: ultrasearch_resultset_server_path + "&tx_multishop_pi1[ultrasearch_hash]=" + ultrasearch_fields,         // override for form's 'action' attribute
         type: 'post', // 'get' or 'post', override for form's 'method' attribute
         dataType: 'json'        // 'xml', 'script', or 'json' (expected server response type)
-        //clearForm: true        // clear all form fields after successful submit 
-        //resetForm: true        // reset the form after successful submit 
+        //clearForm: true        // clear all form fields after successful submit
+        //resetForm: true        // reset the form after successful submit
 
-        // $.ajax options can be used here too, for example: 
-        //timeout:   3000 
+        // $.ajax options can be used here too, for example:
+        //timeout:   3000
     };
 
-    $('#usreset').live('click', function () {
+    $(document).on('click', '#usreset', function () {
         var urlloc = window.location;
         var redirect_url = urlloc.origin;
         if (urlloc.pathname != undefined) {
@@ -29,10 +29,10 @@ jQuery(document).ready(function ($) {
         }
         location.href = redirect_url;
     });
-    // bind to the form's submit event 
+    // bind to the form's submit event
     $('#msFrontUltrasearchForm').submit(function () {
-        // inside event callbacks 'this' is the DOM element so we first 
-        // wrap it in a jQuery object and then invoke ajaxSubmit 
+        // inside event callbacks 'this' is the DOM element so we first
+        // wrap it in a jQuery object and then invoke ajaxSubmit
         $(content_middle).html(jQuery('<p />').attr("id", "msFrontUltraSearchPreLoader").html('<div></div><span>One moment please...</span>'));
 
         $(this).ajaxSubmit(options);
@@ -45,7 +45,7 @@ jQuery(document).ready(function ($) {
 //		$("#msFrontUltrasearchForm :checkbox:checked").next().find(".title").css("font-weight","bold");
         $("#msFrontUltrasearchForm :checkbox:checked").next().find(".title").css("font-weight", "bold");
         // make selected checkboxes bold
-//		$("#msFrontUltrasearchForm :checkbox:not(:checked)").next().find(".title").css("font-weight","");		
+//		$("#msFrontUltrasearchForm :checkbox:not(:checked)").next().find(".title").css("font-weight","");
         $("#msFrontUltrasearchForm :checkbox:not(:checked)").next().find(".title").css("font-weight", "");
         // add wrappers
 //		$('#msFrontUltrasearchForm .ui-dform-checkboxes input[type="checkbox"]').parent().wrapAll('<div></div>');
@@ -140,11 +140,11 @@ jQuery(document).ready(function ($) {
 //		$("body,html,document").scrollTop(0);
     }
 
-    $('#msFrontUltrasearchForm').change(function () {
+    $(document).on('change', '#msFrontUltrasearchForm', function () {
         $('#msFrontUltrasearchForm #pageNum').val('0');
         $('#msFrontUltrasearchForm').submit();
     });
-    $('#pagenav_container_list a').live('click', function (e) {
+    $(document).on('click', '#pagenav_container_list a', function (e) {
         e.preventDefault();
         var pageNum = this.id;
         $('#msFrontUltrasearchForm #pageNum').val(pageNum);
@@ -161,7 +161,7 @@ jQuery(document).ready(function ($) {
     $('#msFrontUltrasearchForm').submit();
 });
 
-// pre-submit callback 
+// pre-submit callback
 function showRequest(formData, jqForm, options) {
     formData2 = formData;
 
@@ -179,18 +179,18 @@ function showRequest(formData, jqForm, options) {
     }
 }
 
-// post-submit callback 
+// post-submit callback
 function showResponse(responseText, statusText, xhr, $form) {
-    // for normal html responses, the first argument to the success callback 
-    // is the XMLHttpRequest object's responseText property 
+    // for normal html responses, the first argument to the success callback
+    // is the XMLHttpRequest object's responseText property
 
-    // if the ajaxSubmit method was passed an Options Object with the dataType 
-    // property set to 'xml' then the first argument to the success callback 
-    // is the XMLHttpRequest object's responseXML property 
+    // if the ajaxSubmit method was passed an Options Object with the dataType
+    // property set to 'xml' then the first argument to the success callback
+    // is the XMLHttpRequest object's responseXML property
 
-    // if the ajaxSubmit method was passed an Options Object with the dataType 
-    // property set to 'json' then the first argument to the success callback 
-    // is the json data object returned by the server 
+    // if the ajaxSubmit method was passed an Options Object with the dataType
+    // property set to 'json' then the first argument to the success callback
+    // is the json data object returned by the server
 
-//    alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +   '\n\nThe output div should have already been updated with the responseText.'); 
-} 
+//    alert('status: ' + statusText + '\n\nresponseText: \n' + responseText +   '\n\nThe output div should have already been updated with the responseText.');
+}
