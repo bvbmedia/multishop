@@ -485,13 +485,19 @@ if ($this->get['feed_hash']) {
 						break;
 					case 'categories_content_top':
 						if ($row['content']) {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row['content']);
+							$string=$row['content'];
+							if (!$this->get['format']=='excel') {
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+							}
 							$tmpcontent.=$string;
 						}
 						break;
 					case 'categories_content_bottom':
 						if ($row['content_footer']) {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row['content_footer']);
+							$string=$row['content_footer'];
+							if (!$this->get['format']=='excel') {
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+							}
 							$tmpcontent.=$string;
 						}
 						break;
@@ -557,7 +563,10 @@ if ($this->get['feed_hash']) {
 							$filter[]='language_id='.$GLOBALS['TSFE']->sys_language_uid;
 							$row2=mslib_befe::getRecord($row['categories_crum'][($level-1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
 							if ($row2['content']) {
-								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row2['content']);
+								$string=$row2['content'];
+								if (!$this->get['format']=='excel') {
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+								}
 								$tmpcontent.=$string;
 							}
 						}
@@ -573,7 +582,10 @@ if ($this->get['feed_hash']) {
 							$filter[]='language_id='.$GLOBALS['TSFE']->sys_language_uid;
 							$row2=mslib_befe::getRecord($row['categories_crum'][($level-1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
 							if ($row2['categories_name']) {
-								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row2['categories_name']);
+								$string=$row2['categories_name'];
+								if (!$this->get['format']=='excel') {
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+								}
 								$tmpcontent.=$string;
 							}
 						}
@@ -608,7 +620,10 @@ if ($this->get['feed_hash']) {
 							$filter[]='language_id='.$GLOBALS['TSFE']->sys_language_uid;
 							$row2=mslib_befe::getRecord($row['categories_crum'][($level-1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
 							if ($row2['content_footer']) {
-								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row2['content_footer']);
+								$string=$row2['content_footer'];
+								if (!$this->get['format']=='excel') {
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+								}
 								$tmpcontent.=$string;
 							}
 						}
@@ -722,28 +737,41 @@ if ($this->get['feed_hash']) {
 						$tmpcontent.=$row['delivery_time'];
 						break;
 					case 'products_shortdescription':
-						$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row['products_shortdescription']);
+						$string=$row['products_shortdescription'];
+						if (!$this->get['format']=='excel') {
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
 							$tmpcontent.=$string;
 						}
 						break;
 					case 'products_description':
-						$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row['products_description']);
+						$string=$row['products_description'];
+						if (!$this->get['format']=='excel') {
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
 							$tmpcontent.=$string;
 						}
 						break;
 					case 'products_description_encoded':
-						$string=htmlentities(preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", $row['products_description']));
+						$string=$row['products_description'];
+						if (!$this->get['format']=='excel') {
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+						}
+						$string=htmlentities($string);
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
 							$tmpcontent.=$string;
 						}
 						break;
 					case 'products_description_strip_tags':
-						$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ", strip_tags($row['products_description']));
+						$string=strip_tags($row['products_description']);
+						if (!$this->get['format']=='excel') {
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
 							$tmpcontent.=$string;
