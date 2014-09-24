@@ -26,322 +26,324 @@ if (is_numeric($this->get['orders_id'])) {
 			$zone['zn_country_iso_nr']=0;
 		}
 	}
-	if ($this->ms['MODULES']['ORDER_EDIT'] and !$order['is_locked']) {
-		// delete single item in order
-		$redirect_after_delete=false;
-		if (isset($this->get['delete_product']) && $this->get['delete_product']==1) {
-			if (isset($this->get['order_pid']) && $this->get['order_pid']>0) {
-				$sql="delete from tx_multishop_orders_products where orders_products_id = ".$this->get['order_pid']." limit 1";
-				$GLOBALS['TYPO3_DB']->sql_query($sql);
-				$sql="delete from tx_multishop_orders_products_attributes where orders_products_id = ".$this->get['order_pid'];
-				$GLOBALS['TYPO3_DB']->sql_query($sql);
-				$redirect_after_delete=true;
-			}
-		}
-		if ($this->post) {
-			if (!empty($this->post['product_tax']) && $this->post['product_tax']>0) {
-				$tr=mslib_fe::getTaxes($this->post['product_tax']);
-				$this->post['product_tax']=$tr['rate'];
-			}
-			if (!empty($this->post['manual_product_tax']) && $this->post['manual_product_tax']>0) {
-				$tr=mslib_fe::getTaxes($this->post['manual_product_tax']);
-				$this->post['manual_product_tax']=$tr['rate'];
-			}
-			if (!empty($this->post['product_name']) || !empty($this->post['manual_product_name'])) {
-				if (is_numeric($this->post['orders_products_id'])>0) {
-					if ($this->post['product_name']) {
-						$this->post['product_qty']=str_replace(',', '.', $this->post['product_qty']);
-						if (empty($this->post['product_price'])) {
-							$this->post['product_price']='0';
-						}
-						$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."', products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
-						$GLOBALS['TYPO3_DB']->sql_query($sql);
-						// clean up the order product attributes to prepare the update
-						$sql="delete from tx_multishop_orders_products_attributes where orders_id = ".$this->get['orders_id']." and orders_products_id = ".$this->post['orders_products_id'];
-						$GLOBALS['TYPO3_DB']->sql_query($sql);
-						// insert the update attributes
-						$count_manual_attributes=count($this->post['edit_manual_option']);
-						if ($count_manual_attributes>0) {
-							for ($x=0; $x<$count_manual_attributes; $x++) {
-								if (strpos($this->post['edit_manual_price'][$x], '-')!==false) {
-									$price_prefix='-';
-									$this->post['edit_manual_price'][$x]=str_replace('-', '', $this->post['edit_manual_price'][$x]);
-								} else {
-									$price_prefix='+';
-									$this->post['edit_manual_price'][$x]=str_replace('+', '', $this->post['edit_manual_price'][$x]);
-								}
-								if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
-									$optname=$this->post['edit_manual_option'][$x];
-									$optid=0;
-									$optvalname=$this->post['edit_manual_values'][$x];;
-									$optvalid=0;
-									if (!$this->post['is_manual_option'][$x]) {
-										$optid=$this->post['edit_manual_option'][$x];
-										$optname=mslib_fe::getRealNameOptions($optid);
-									}
-									if (!$this->post['is_manual_value'][$x]) {
-										$optvalid=$this->post['edit_manual_values'][$x];
-										$optvalname=mslib_fe::getNameOptions($optvalid);
-									}
-									$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
-									$GLOBALS['TYPO3_DB']->sql_query($sql);
-								}
-							}
-						}
-					}
-				} else {
-					if ($this->post['manual_product_name']) {
-						$this->post['manual_product_qty']=str_replace(',', '.', $this->post['manual_product_qty']);
-						if (empty($this->post['manual_product_price'])) {
-							$this->post['manual_product_price']='0';
-						}
-						$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."')";
-						$GLOBALS['TYPO3_DB']->sql_query($sql);
-						$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-						// insert the update attributes
-						$count_manual_attributes=count($this->post['edit_manual_option']);
-						if ($count_manual_attributes>0) {
-							for ($x=0; $x<$count_manual_attributes; $x++) {
-								if (strpos($this->post['edit_manual_price'][$x], '-')!==false) {
-									$price_prefix='-';
-									$this->post['edit_manual_price'][$x]=str_replace('-', '', $this->post['edit_manual_price'][$x]);
-								} else {
-									$price_prefix='+';
-									$this->post['edit_manual_price'][$x]=str_replace('+', '', $this->post['edit_manual_price'][$x]);
-								}
-								if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
-									$optname=$this->post['edit_manual_option'][$x];
-									$optid=0;
-									$optvalname=$this->post['edit_manual_values'][$x];;
-									$optvalid=0;
-									if (!$this->post['is_manual_option'][$x]) {
-										$optid=$this->post['edit_manual_option'][$x];
-										$optname=mslib_fe::getRealNameOptions($optid);
-									}
-									if (!$this->post['is_manual_value'][$x]) {
-										$optvalid=$this->post['edit_manual_values'][$x];
-										$optvalname=mslib_fe::getNameOptions($optvalid);
-									}
-									$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
-									$GLOBALS['TYPO3_DB']->sql_query($sql);
-								}
-							}
-						}
-					}
+	if ($this->ms['MODULES']['ORDER_EDIT']) {
+		if (!$order['is_locked']) {
+			// delete single item in order
+			$redirect_after_delete=false;
+			if (isset($this->get['delete_product']) && $this->get['delete_product']==1) {
+				if (isset($this->get['order_pid']) && $this->get['order_pid']>0) {
+					$sql="delete from tx_multishop_orders_products where orders_products_id = ".$this->get['order_pid']." limit 1";
+					$GLOBALS['TYPO3_DB']->sql_query($sql);
+					$sql="delete from tx_multishop_orders_products_attributes where orders_products_id = ".$this->get['order_pid'];
+					$GLOBALS['TYPO3_DB']->sql_query($sql);
+					$redirect_after_delete=true;
 				}
-				$redirect_after_delete=true;
-			} else {
-				$delivery_country=mslib_fe::getCountryByName($this->post['delivery_country']);
-				$updateArray=array();
-				if ($this->post['shipping_method']) {
-					$shipping_method=mslib_fe::getShippingMethod($this->post['shipping_method']);
-					if (empty($order['orders_tax_data'])) {
-						// temporary call, replacing the inner tax_ruleset inside the getShippingMethod
-						$tax_ruleset=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
-						$shipping_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-						$shipping_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-						$shipping_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-					}
-					if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
-						$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
-					} else {
-						$price=mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
-					}
-					if ($price>0) {
-						if (strstr($price, "%")) {
-							// calculate total shipping costs based by %
-							$subtotal=0;
-							foreach ($order['products'] as $products_id=>$value) {
-								if (is_numeric($products_id)) {
-									$subtotal=$subtotal+($value['qty']*$value['final_price']);
-								}
+			}
+			if ($this->post) {
+				if (!empty($this->post['product_tax']) && $this->post['product_tax']>0) {
+					$tr=mslib_fe::getTaxes($this->post['product_tax']);
+					$this->post['product_tax']=$tr['rate'];
+				}
+				if (!empty($this->post['manual_product_tax']) && $this->post['manual_product_tax']>0) {
+					$tr=mslib_fe::getTaxes($this->post['manual_product_tax']);
+					$this->post['manual_product_tax']=$tr['rate'];
+				}
+				if (!empty($this->post['product_name']) || !empty($this->post['manual_product_name'])) {
+					if (is_numeric($this->post['orders_products_id'])>0) {
+						if ($this->post['product_name']) {
+							$this->post['product_qty']=str_replace(',', '.', $this->post['product_qty']);
+							if (empty($this->post['product_price'])) {
+								$this->post['product_price']='0';
 							}
-							if ($subtotal) {
-								$percentage=str_replace("%", '', $price);
-								if ($percentage) {
-									$price=($subtotal/100*$percentage);
-								}
-							}
-						} else {
-							if (!strstr($price, "%")) {
-								if (strstr($price, ",")) {
-									$steps=explode(",", $price);
-									// calculate total costs
-									$subtotal=mslib_fe::getOrderTotalPrice($this->get['orders_id'], 1);
-									$count=0;
-									foreach ($steps as $step) {
-										// the   value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
-										$split=explode(":", $step);
-										if (is_numeric($split[0])) {
-											if ($count==0) {
-												$price=$split[1];
-											}
-											if ($subtotal>$split[0]) {
-												$price=$split[1];
-												next();
-											}
+							$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."', products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
+							$GLOBALS['TYPO3_DB']->sql_query($sql);
+							// clean up the order product attributes to prepare the update
+							$sql="delete from tx_multishop_orders_products_attributes where orders_id = ".$this->get['orders_id']." and orders_products_id = ".$this->post['orders_products_id'];
+							$GLOBALS['TYPO3_DB']->sql_query($sql);
+							// insert the update attributes
+							$count_manual_attributes=count($this->post['edit_manual_option']);
+							if ($count_manual_attributes>0) {
+								for ($x=0; $x<$count_manual_attributes; $x++) {
+									if (strpos($this->post['edit_manual_price'][$x], '-')!==false) {
+										$price_prefix='-';
+										$this->post['edit_manual_price'][$x]=str_replace('-', '', $this->post['edit_manual_price'][$x]);
+									} else {
+										$price_prefix='+';
+										$this->post['edit_manual_price'][$x]=str_replace('+', '', $this->post['edit_manual_price'][$x]);
+									}
+									if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
+										$optname=$this->post['edit_manual_option'][$x];
+										$optid=0;
+										$optvalname=$this->post['edit_manual_values'][$x];;
+										$optvalid=0;
+										if (!$this->post['is_manual_option'][$x]) {
+											$optid=$this->post['edit_manual_option'][$x];
+											$optname=mslib_fe::getRealNameOptions($optid);
 										}
-										$count++;
+										if (!$this->post['is_manual_value'][$x]) {
+											$optvalid=$this->post['edit_manual_values'][$x];
+											$optvalname=mslib_fe::getNameOptions($optvalid);
+										}
+										$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
+										$GLOBALS['TYPO3_DB']->sql_query($sql);
+									}
+								}
+							}
+						}
+					} else {
+						if ($this->post['manual_product_name']) {
+							$this->post['manual_product_qty']=str_replace(',', '.', $this->post['manual_product_qty']);
+							if (empty($this->post['manual_product_price'])) {
+								$this->post['manual_product_price']='0';
+							}
+							$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."')";
+							$GLOBALS['TYPO3_DB']->sql_query($sql);
+							$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+							// insert the update attributes
+							$count_manual_attributes=count($this->post['edit_manual_option']);
+							if ($count_manual_attributes>0) {
+								for ($x=0; $x<$count_manual_attributes; $x++) {
+									if (strpos($this->post['edit_manual_price'][$x], '-')!==false) {
+										$price_prefix='-';
+										$this->post['edit_manual_price'][$x]=str_replace('-', '', $this->post['edit_manual_price'][$x]);
+									} else {
+										$price_prefix='+';
+										$this->post['edit_manual_price'][$x]=str_replace('+', '', $this->post['edit_manual_price'][$x]);
+									}
+									if (!empty($this->post['edit_manual_option'][$x]) && !empty($this->post['edit_manual_values'][$x])) {
+										$optname=$this->post['edit_manual_option'][$x];
+										$optid=0;
+										$optvalname=$this->post['edit_manual_values'][$x];;
+										$optvalid=0;
+										if (!$this->post['is_manual_option'][$x]) {
+											$optid=$this->post['edit_manual_option'][$x];
+											$optname=mslib_fe::getRealNameOptions($optid);
+										}
+										if (!$this->post['is_manual_value'][$x]) {
+											$optvalid=$this->post['edit_manual_values'][$x];
+											$optvalname=mslib_fe::getNameOptions($optvalid);
+										}
+										$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
+										$GLOBALS['TYPO3_DB']->sql_query($sql);
 									}
 								}
 							}
 						}
 					}
-					if ($price) {
-						$updateArray['shipping_method_costs']=$price;
-					} else {
-						$updateArray['shipping_method_costs']=0;
-					}
-					if ($shipping_method['tax_id'] && $updateArray['shipping_method_costs']) {
-						$shipping_tax['shipping_total_tax_rate']=$shipping_method['tax_rate'];
-						if ($shipping_method['country_tax_rate']) {
-							$shipping_tax['shipping_country_tax_rate']=$shipping_method['country_tax_rate'];
-							$shipping_tax['shipping_country_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['country_tax_rate']));
+					$redirect_after_delete=true;
+				} else {
+					$delivery_country=mslib_fe::getCountryByName($this->post['delivery_country']);
+					$updateArray=array();
+					if ($this->post['shipping_method']) {
+						$shipping_method=mslib_fe::getShippingMethod($this->post['shipping_method']);
+						if (empty($order['orders_tax_data'])) {
+							// temporary call, replacing the inner tax_ruleset inside the getShippingMethod
+							$tax_ruleset=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
+							$shipping_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+							$shipping_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+							$shipping_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+						}
+						if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
+							$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
 						} else {
-							$shipping_tax['shipping_country_tax_rate']=0;
+							$price=mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+						}
+						if ($price>0) {
+							if (strstr($price, "%")) {
+								// calculate total shipping costs based by %
+								$subtotal=0;
+								foreach ($order['products'] as $products_id=>$value) {
+									if (is_numeric($products_id)) {
+										$subtotal=$subtotal+($value['qty']*$value['final_price']);
+									}
+								}
+								if ($subtotal) {
+									$percentage=str_replace("%", '', $price);
+									if ($percentage) {
+										$price=($subtotal/100*$percentage);
+									}
+								}
+							} else {
+								if (!strstr($price, "%")) {
+									if (strstr($price, ",")) {
+										$steps=explode(",", $price);
+										// calculate total costs
+										$subtotal=mslib_fe::getOrderTotalPrice($this->get['orders_id'], 1);
+										$count=0;
+										foreach ($steps as $step) {
+											// the   value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+											$split=explode(":", $step);
+											if (is_numeric($split[0])) {
+												if ($count==0) {
+													$price=$split[1];
+												}
+												if ($subtotal>$split[0]) {
+													$price=$split[1];
+													next();
+												}
+											}
+											$count++;
+										}
+									}
+								}
+							}
+						}
+						if ($price) {
+							$updateArray['shipping_method_costs']=$price;
+						} else {
+							$updateArray['shipping_method_costs']=0;
+						}
+						if ($shipping_method['tax_id'] && $updateArray['shipping_method_costs']) {
+							$shipping_tax['shipping_total_tax_rate']=$shipping_method['tax_rate'];
+							if ($shipping_method['country_tax_rate']) {
+								$shipping_tax['shipping_country_tax_rate']=$shipping_method['country_tax_rate'];
+								$shipping_tax['shipping_country_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['country_tax_rate']));
+							} else {
+								$shipping_tax['shipping_country_tax_rate']=0;
+								$shipping_tax['shipping_country_tax']=0;
+							}
+							if ($shipping_method['region_tax_rate']) {
+								$shipping_tax['shipping_region_tax_rate']=$shipping_method['region_tax_rate'];
+								$shipping_tax['shipping_region_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['region_tax_rate']));
+							} else {
+								$shipping_tax['shipping_region_tax_rate']=0;
+								$shipping_tax['shipping_region_tax']=0;
+							}
+							if ($shipping_tax['shipping_region_tax'] && $shipping_tax['shipping_country_tax']) {
+								$shipping_tax['shipping_tax']=$shipping_tax['shipping_country_tax']+$shipping_tax['shipping_region_tax'];
+							} else {
+								$shipping_tax['shipping_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['tax_rate']));
+							}
+						} else {
+							$shipping_tax['shipping_tax']=0;
 							$shipping_tax['shipping_country_tax']=0;
-						}
-						if ($shipping_method['region_tax_rate']) {
-							$shipping_tax['shipping_region_tax_rate']=$shipping_method['region_tax_rate'];
-							$shipping_tax['shipping_region_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['region_tax_rate']));
-						} else {
-							$shipping_tax['shipping_region_tax_rate']=0;
 							$shipping_tax['shipping_region_tax']=0;
+							$shipping_tax['shipping_total_tax_rate']=0;
+							$shipping_tax['shipping_country_tax_rate']=0;
+							$shipping_tax['shipping_region_tax_rate']=0;
 						}
-						if ($shipping_tax['shipping_region_tax'] && $shipping_tax['shipping_country_tax']) {
-							$shipping_tax['shipping_tax']=$shipping_tax['shipping_country_tax']+$shipping_tax['shipping_region_tax'];
-						} else {
-							$shipping_tax['shipping_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['tax_rate']));
+						$updateArray['shipping_method']=$shipping_method['code'];
+						$updateArray['shipping_method_label']=$shipping_method['name'];
+					}
+					if ($this->post['payment_method']) {
+						$payment_method=mslib_fe::getPaymentMethod($this->post['payment_method']);
+						if (empty($order['orders_tax_data'])) {
+							// temporary call, replacing the inner tax_ruleset inside the getPaymentMethod
+							$tax_ruleset=mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
+							$payment_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+							$payment_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+							$payment_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
 						}
-					} else {
-						$shipping_tax['shipping_tax']=0;
-						$shipping_tax['shipping_country_tax']=0;
-						$shipping_tax['shipping_region_tax']=0;
-						$shipping_tax['shipping_total_tax_rate']=0;
-						$shipping_tax['shipping_country_tax_rate']=0;
-						$shipping_tax['shipping_region_tax_rate']=0;
-					}
-					$updateArray['shipping_method']=$shipping_method['code'];
-					$updateArray['shipping_method_label']=$shipping_method['name'];
-				}
-				if ($this->post['payment_method']) {
-					$payment_method=mslib_fe::getPaymentMethod($this->post['payment_method']);
-					if (empty($order['orders_tax_data'])) {
-						// temporary call, replacing the inner tax_ruleset inside the getPaymentMethod
-						$tax_ruleset=mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
-						$payment_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-						$payment_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-						$payment_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-					}
-					if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
-						$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
-					} else {
-						$price=$payment_method['handling_costs'];
-					}
-					$updateArray['payment_method_costs']=$price;
-					if ($payment_method['tax_id'] && $updateArray['payment_method_costs']) {
-						$payment_tax['payment_total_tax_rate']=$payment_method['tax_rate'];
-						if ($payment_method['country_tax_rate']) {
-							$payment_tax['payment_country_tax_rate']=$payment_method['country_tax_rate'];
-							$payment_tax['payment_country_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['country_tax_rate']));
+						if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
+							$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
 						} else {
-							$payment_tax['payment_country_tax_rate']=0;
+							$price=$payment_method['handling_costs'];
+						}
+						$updateArray['payment_method_costs']=$price;
+						if ($payment_method['tax_id'] && $updateArray['payment_method_costs']) {
+							$payment_tax['payment_total_tax_rate']=$payment_method['tax_rate'];
+							if ($payment_method['country_tax_rate']) {
+								$payment_tax['payment_country_tax_rate']=$payment_method['country_tax_rate'];
+								$payment_tax['payment_country_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['country_tax_rate']));
+							} else {
+								$payment_tax['payment_country_tax_rate']=0;
+								$payment_tax['payment_country_tax']=0;
+							}
+							if ($payment_method['region_tax_rate']) {
+								$payment_tax['payment_region_tax_rate']=$payment_method['region_tax_rate'];
+								$payment_tax['payment_region_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['region_tax_rate']));
+							} else {
+								$payment_tax['payment_region_tax_rate']=0;
+								$payment_tax['payment_region_tax']=0;
+							}
+							if ($payment_tax['payment_region_tax'] && $payment_tax['payment_country_tax']) {
+								$payment_tax['payment_tax']=$payment_tax['payment_country_tax']+$payment_tax['payment_region_tax'];
+							} else {
+								$payment_tax['payment_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['tax_rate']));
+							}
+						} else {
+							$payment_tax['payment_tax']=0;
 							$payment_tax['payment_country_tax']=0;
-						}
-						if ($payment_method['region_tax_rate']) {
-							$payment_tax['payment_region_tax_rate']=$payment_method['region_tax_rate'];
-							$payment_tax['payment_region_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['region_tax_rate']));
-						} else {
-							$payment_tax['payment_region_tax_rate']=0;
 							$payment_tax['payment_region_tax']=0;
+							$payment_tax['payment_total_tax_rate']=0;
+							$payment_tax['payment_country_tax_rate']=0;
+							$payment_tax['payment_region_tax_rate']=0;
 						}
-						if ($payment_tax['payment_region_tax'] && $payment_tax['payment_country_tax']) {
-							$payment_tax['payment_tax']=$payment_tax['payment_country_tax']+$payment_tax['payment_region_tax'];
-						} else {
-							$payment_tax['payment_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['tax_rate']));
-						}
-					} else {
-						$payment_tax['payment_tax']=0;
-						$payment_tax['payment_country_tax']=0;
-						$payment_tax['payment_region_tax']=0;
-						$payment_tax['payment_total_tax_rate']=0;
-						$payment_tax['payment_country_tax_rate']=0;
-						$payment_tax['payment_region_tax_rate']=0;
+						$updateArray['payment_method']=$payment_method['code'];
+						$updateArray['payment_method_label']=$payment_method['name'];
 					}
-					$updateArray['payment_method']=$payment_method['code'];
-					$updateArray['payment_method_label']=$payment_method['name'];
-				}
-				$keys=array();
-				$keys[]='company';
-				$keys[]='name';
-				$keys[]='street_name';
-				$keys[]='address_number';
-				$keys[]='address_ext';
-				$keys[]='building';
-				$keys[]='zip';
-				$keys[]='city';
-				$keys[]='country';
-				$keys[]='email';
-				$keys[]='telephone';
-				$keys[]='mobile';
-				$keys[]='fax';
-				foreach ($keys as $key) {
-					$string='billing_'.$key;
-					$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
-					$string='delivery_'.$key;
-					$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
-				}
-				$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
-				$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
-				if (count($updateArray)) {
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				}
-				$updateArray=array();
-				if ($this->post['expected_delivery_date']) {
-					$updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
-				}
-				if ($this->post['track_and_trace_code']) {
-					$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
-				}
-				if ($this->post['order_memo']) {
-					$updateArray['order_memo']=$this->post['order_memo'];
-				}
-				if (count($updateArray)) {
+					$keys=array();
+					$keys[]='company';
+					$keys[]='name';
+					$keys[]='street_name';
+					$keys[]='address_number';
+					$keys[]='address_ext';
+					$keys[]='building';
+					$keys[]='zip';
+					$keys[]='city';
+					$keys[]='country';
+					$keys[]='email';
+					$keys[]='telephone';
+					$keys[]='mobile';
+					$keys[]='fax';
+					foreach ($keys as $key) {
+						$string='billing_'.$key;
+						$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+						$string='delivery_'.$key;
+						$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+					}
+					$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
+					$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
+					if (count($updateArray)) {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+					$updateArray=array();
+					if ($this->post['expected_delivery_date']) {
+						$updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
+					}
+					if ($this->post['track_and_trace_code']) {
+						$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
+					}
+					if ($this->post['order_memo']) {
+						$updateArray['order_memo']=$this->post['order_memo'];
+					}
+					if (count($updateArray)) {
+						$close_window=1;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$_REQUEST['orders_id'].'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
+						$orders['track_and_trace_code']=$this->post['track_and_trace_code'];
+						$orders['order_memo']=$this->post['order_memo'];
+					}
 					$close_window=1;
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$_REQUEST['orders_id'].'\'', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
-					$orders['track_and_trace_code']=$this->post['track_and_trace_code'];
-					$orders['order_memo']=$this->post['order_memo'];
 				}
-				if ($this->post['order_status']) {
-					// first get current status
-					if ($this->post['order_status']==$orders['status']) {
-						// no new order status has been defined. only mail when the email text box is containing content
-						if ($this->post['comments']) {
-							$continue_update=1;
-						}
-					} else {
-						$continue_update=1;
-					}
-					if ($continue_update) {
-						// dynamic variables
-						mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified']);
-					}
-				}
-				$close_window=1;
+			} // if ($this->post) eol
+			// repair tax stuff
+			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+			$mslib_order=t3lib_div::makeInstance('tx_mslib_order');
+			$mslib_order->init($this);
+			$mslib_order->repairOrder($this->get['orders_id']);
+			//is proposal
+			$is_proposal_params='';
+			if ($order['is_proposal']==1) {
+				$is_proposal_params='&tx_multishop_pi1[is_proposal]=1';
 			}
-		} // if ($this->post) eol
-		// repair tax stuff
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-		$mslib_order=t3lib_div::makeInstance('tx_mslib_order');
-		$mslib_order->init($this);
-		$mslib_order->repairOrder($this->get['orders_id']);
-		//is proposal
-		$is_proposal_params='';
-		if ($order['is_proposal']==1) {
-			$is_proposal_params='&tx_multishop_pi1[is_proposal]=1';
+		} // if (!$order['is_locked']) eol
+		if ($this->post['order_status']) {
+			// first get current status
+			if ($this->post['order_status']==$orders['status']) {
+				// no new order status has been defined. only mail when the email text box is containing content
+				if ($this->post['comments']) {
+					$continue_update=1;
+				}
+			} else {
+				$continue_update=1;
+			}
+			if ($continue_update) {
+				// dynamic variables
+				mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified']);
+			}
 		}
 		if ($redirect_after_delete) {
 			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
@@ -360,7 +362,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			}
 		}
-	} // if ($this->ms['MODULES']['ORDER_EDIT'] and !$order['is_locked']) eol
+	} // if ($this->ms['MODULES']['ORDER_EDIT']) eol
 	$str="SELECT *, o.crdate, o.status, osd.name as orders_status from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) where o.orders_id='".$this->get['orders_id']."'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$orders=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
