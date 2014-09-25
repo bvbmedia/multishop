@@ -1105,7 +1105,7 @@
             <label index="you_have_items_in_your_cart">Je hebt %d artikelen in je winkelwagen</label>
             <label index="back">Terug</label>
             <label index="you_are_currently_here">Je bent hier</label>
-            <label index="add_to_basket">Plaats in winkelwagen</label>
+            <label index="add_to_basket">in winkelwagen</label>
             <label index="manufacturers">Fabrikanten</label>
             <label index="go_to_checkout">Afrekenen</label>
             <label index="go_to_catalog">Verder winkelen</label>
