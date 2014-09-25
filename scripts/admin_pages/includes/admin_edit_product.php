@@ -21,8 +21,8 @@ jQuery(document).ready(function($) {
 </script>';
 $tabs=array();
 $update_category_image='';
-print_r($this->post);
-print_r($file);
+/*print_r($this->post);
+print_r($file);*/
 //die();
 if ($this->post and $_FILES) {
 	if ($this->post['products_name'][0]) {

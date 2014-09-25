@@ -188,10 +188,8 @@ jQuery(document).ready(function ($) {
     });
     // re-activate images tab after delete
     var getloc = window.location.href;
-    if (getloc != "") {
-        if (getloc.indexOf('delete_image') > -1) {
-            var li_this = $("ul > li").find("a[href='#product_images']").parent();
-        }
+    if (getloc.indexOf('delete_image') > -1) {
+        var li_this = $("ul > li").find("a[href='#product_images']").parent();
         if (li_this.length > 0) {
             $("ul.tabs li").removeClass("active");
             $(li_this).addClass("active");
@@ -199,6 +197,7 @@ jQuery(document).ready(function ($) {
             $('#product_images').fadeIn(0);
         }
     }
+
 	###AJAX_REQUEST_SPECIAL_PRICE###
 	$('#specials_new_products_price_excl_vat').keyup(function () {
         var value = this.value;
