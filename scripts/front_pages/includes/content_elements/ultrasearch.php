@@ -57,7 +57,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$headers.='ultrasearch_categories_id=\''.$this->get['categories_id'].'\';';
 	}
 	$headers.='// location of the ultrasearch server
-	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&categories_id='.$this->get['categories_id'],1).'\';';
+	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&categories_id='.$this->get['categories_id']).'\';';
 	if ($this->hideHeader) {
 		$headers.='var ultrasearcch_resultset_header=\'\';';
 	} else {
