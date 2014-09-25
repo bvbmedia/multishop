@@ -1143,7 +1143,7 @@
             <label index="no_shipping_method_chosen">geen aflever methode gekozen</label>
             <label index="no_payment_method_chosen">geen betaalmethode gekozen</label>
             <label index="payment_costs">Betaalkosten</label>
-            <label index="confirm_order">Bestelling met betaalplicht</label>
+            <label index="confirm_order">Plaats bestelling</label>
             <label index="your_order_has_been_received">Je bestelling is ontvangen</label>
             <label index="delivery_address">Afleveradres</label>
             <label index="billing_address">Factuuradres</label>
