@@ -79,7 +79,7 @@ if ($this->ADMIN_USER) {
 			}
 			// Case sensitivity
 			/*if ($options ^ STR_HIGHLIGHT_CASESENS) {
-		
+
 				$pattern .= 'i';
 				$sl_pattern .= 'i';
 			}*/
@@ -225,7 +225,8 @@ if ($this->ADMIN_USER) {
 				$items[]="c.configuration_value LIKE '%".addslashes($this->get['q'])."%'";
 				$items[]="cv.configuration_value LIKE '%".addslashes($this->get['q'])."%'";
 				$filter[]='('.implode(" or ", $items).')';
-				$filter[]="(cv.page_uid is NULL or cv.page_uid='".$this->showCatalogFromPage."')";
+				// always display the module name regarding of the page_uid different
+				//$filter[]="(cv.page_uid is NULL or cv.page_uid='".$this->showCatalogFromPage."')";
 			}
 			//if (!$this->masterShop) $filter[]='page_uid='.$this->shop_pid;
 			$select[]='c.id, c.configuration_title';
