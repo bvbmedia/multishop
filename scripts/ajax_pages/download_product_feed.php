@@ -915,11 +915,10 @@ if ($this->get['feed_hash']) {
 					), $tmpcontent);
 				}
 				// test extra delimiter strip
-				if ($feed['delimiter']) {
-					$tmpcontent=str_replace($feed['delimiter'], '', $tmpcontent);
-					$tmpcontent=str_replace("\r", "", $tmpcontent);
-					$tmpcontent=str_replace("\n", "", $tmpcontent);
-					//$tmpcontent=str_replace('"',"\"",$tmpcontent);
+				if ($this->get['format']!='excel') {
+					if ($feed['delimiter']) {
+						$tmpcontent=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$tmpcontent);
+					}
 				}
 				$content.=$tmpcontent;
 				if ($this->get['format']=='csv') {
