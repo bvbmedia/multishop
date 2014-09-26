@@ -599,7 +599,7 @@ if ($this->post) {
 	<div id="bottom-navigation">
 		<div id="navigation"> 							
 			<input type="hidden" id="user_id" value="'.$user['ses_userid'].'" name="user_id"/>
-			<span class="msFrontButton continueState arrowRight arrowPosLeft floatRight"><input type="submit" id="submit" value="'.($this->contentMisc=='edit_account' ? ucfirst($this->pi_getLL('update_account')) : ucfirst($this->pi_getLL('register'))).'"/></span>
+			<span class="msFrontButton continueState arrowRight arrowPosLeft floatRight" id="submit"><input type="submit" value="'.($this->contentMisc=='edit_account' ? ucfirst($this->pi_getLL('update_account')) : ucfirst($this->pi_getLL('register'))).'"/></span>
 		</div>
 	</div>
 	</form>

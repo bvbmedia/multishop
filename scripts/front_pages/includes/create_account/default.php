@@ -330,7 +330,7 @@ if (mslib_fe::loggedin()) {
 			<div id="bottom-navigation">
 				<a href="" onClick="history.back();return false;" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
 			  <div id="navigation">
-				<span class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" id="submit" value="'.$this->pi_getLL('register').'" /></span>
+				<span class="msFrontButton continueState arrowRight arrowPosLeft" id="submit"><input type="submit" value="'.$this->pi_getLL('register').'" /></span>
 			  </div>
 			</div>
 		  </form>
