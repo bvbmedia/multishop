@@ -895,37 +895,37 @@ if ($this->get['feed_hash']) {
 						$tmpcontent=$output;
 					}
 				}
-				// custom page hook that can be controlled by third-party plugin eof					
-				$tmpcontent=str_replace("\"", "", $tmpcontent);
-				if ($feed['plain_text']=='1') {
-					$tmpcontent=strip_tags($tmpcontent);
-					$tmpcontent=html_entity_decode($tmpcontent);
-					$tmpcontent=str_replace(array(
-						'&nbsp;',
-						'&amp;',
-						'&euro;',
-						'&amp;quot;',
-						'&quot;'
-					), array(
-						' ',
-						'&',
-						'EUR',
-						"'",
-						"'"
-					), $tmpcontent);
-				}
-				// test extra delimiter strip
+				// custom page hook that can be controlled by third-party plugin eof
 				if ($this->get['format']!='excel') {
+					$tmpcontent=str_replace("\"", "", $tmpcontent);
+					if ($feed['plain_text']=='1') {
+						$tmpcontent=strip_tags($tmpcontent);
+						$tmpcontent=html_entity_decode($tmpcontent);
+						$tmpcontent=str_replace(array(
+							'&nbsp;',
+							'&amp;',
+							'&euro;',
+							'&amp;quot;',
+							'&quot;'
+						), array(
+							' ',
+							'&',
+							'EUR',
+							"'",
+							"'"
+						), $tmpcontent);
+					}
+					// test extra delimiter strip
 					if ($feed['delimiter']) {
 						$tmpcontent=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$tmpcontent);
 					}
 				}
+				if ($this->get['format']=='excel') {
+					$excelCols[]=$tmpcontent;
+				}
 				$content.=$tmpcontent;
 				if ($this->get['format']=='csv') {
 					$content.='"';
-				}
-				if ($this->get['format']=='excel') {
-					$excelCols[]=$tmpcontent;
 				}
 				if ($count<$total) {
 					if ($this->get['format']=='csv') {
