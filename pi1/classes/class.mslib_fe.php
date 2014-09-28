@@ -5093,7 +5093,16 @@ class mslib_fe {
 		}
 		// footer
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
-			$guests_online=mslib_befe::getCount('','tx_multishop_sessions','',array('crdate > '.(time()-180)));
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery(
+				'distinct session_id,ip_address,url,http_user_agent', // SELECT ...
+				'tx_multishop_sessions', // FROM ...
+				'crdate > '.(time()-180), // WHERE...
+				'session_id', // GROUP BY...
+				'crdate desc', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$guests_online=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
 			$members=mslib_fe::getSignedInUsers();
 			$total_members=count($members);
 			$ms_menu['footer']['ms_admin_online_users']['label']=$this->pi_getLL('admin_online_users').': '.$total_members.'/'.$guests_online;
@@ -5105,7 +5114,26 @@ class mslib_fe {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$member['uid'].'&action=edit_customer',1);
 				}
 			}
-			$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.($guests_online-$total_members);
+			if ($guests_online-$total_members) {
+				$str=$GLOBALS['TYPO3_DB']->SELECTquery(
+					'distinct session_id,ip_address,url,http_user_agent', // SELECT ...
+					'tx_multishop_sessions', // FROM ...
+					'customer_id=0 and crdate > '.(time()-180), // WHERE...
+					'', // GROUP BY...
+					'crdate desc', // ORDER BY...
+					'' // LIMIT ...
+				);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$guestsNumber=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
+				if ($guestsNumber>0) {
+					$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.$guestsNumber;
+					while ($record=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['id']]['label']=htmlspecialchars($record['ip_address']);
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['id']]['description']=htmlspecialchars($record['http_user_agent']);
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['id']]['link']=$record['url'];
+					}
+				}
+			}
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['label']=$this->pi_getLL('total').': '.$guests_online;
 		}
 		$ms_menu['footer']['ms_admin_logout']['label']=$this->pi_getLL('admin_log_out');
@@ -7212,18 +7240,6 @@ class mslib_fe {
 		return false;
 	}
 	public function logPageView() {
-		/*
-		 *  `customer_id` int(11) default '0',
-		  `crdate` int(11) default '0',
-		  `session_id` varchar(150) default '',
-		  `page_uid` int(11) default '0',
-		  `ip_address` varchar(150) default '',
-		  `http_host` varchar(150) default '',
-		  `querystring` text,
-		  `url` text,
-		  `segment_type` varchar(50) default '',
-		  `segment_id` varchar(50) default ''
-		 */
 		$insertArray=array();
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
 			$insertArray['customer_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
@@ -7236,8 +7252,7 @@ class mslib_fe {
 		$insertArray['query_string']=$this->server['QUERY_STRING'];
 		$insertArray['http_user_agent']=$this->server['HTTP_USER_AGENT'];
 		$insertArray['http_referer']=$this->server['HTTP_REFERER'];
-
-		$insertArray['url']=$this->HTTP_HOST.t3lib_div::getIndpEnv('REQUEST_URI');
+		$insertArray['url']=(isset($_SERVER['HTTPS']) ? "https" : "http").$this->HTTP_HOST.t3lib_div::getIndpEnv('REQUEST_URI');
 		$insertArray['segment_type']='';
 		$insertArray['segment_id']='';
 
