@@ -5093,13 +5093,10 @@ class mslib_fe {
 		}
 		// footer
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
-			$str="SELECT count(1) as total from fe_sessions";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$rowguests=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-			$guests_online=$rowguests['total'];
+			$guests_online=mslib_befe::getCount('','tx_multishop_sessions','',array('crdate > '.(time()-180)));
 			$members=mslib_fe::getSignedInUsers();
 			$total_members=count($members);
-			$ms_menu['footer']['ms_admin_online_users']['label']=$this->pi_getLL('admin_online_users').': '.$total_members.'/'.$rowguests['total'];
+			$ms_menu['footer']['ms_admin_online_users']['label']=$this->pi_getLL('admin_online_users').': '.$total_members.'/'.$guests_online;
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['label']=$this->pi_getLL('admin_members').': '.$total_members;
 			if ($total_members) {
 				foreach ($members as $member) {
@@ -5108,8 +5105,8 @@ class mslib_fe {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$member['uid'].'&action=edit_customer',1);
 				}
 			}
-			$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.($rowguests['total']-$total_members);
-			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['label']=$this->pi_getLL('total').': '.$rowguests['total'];
+			$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.($guests_online-$total_members);
+			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['label']=$this->pi_getLL('total').': '.$guests_online;
 		}
 		$ms_menu['footer']['ms_admin_logout']['label']=$this->pi_getLL('admin_log_out');
 		$ms_menu['footer']['ms_admin_logout']['link']=mslib_fe::typolink($this->conf['logout_pid'], '&logintype=logout');
@@ -7213,6 +7210,39 @@ class mslib_fe {
 			}
 		}
 		return false;
+	}
+	public function logPageView() {
+		/*
+		 *  `customer_id` int(11) default '0',
+		  `crdate` int(11) default '0',
+		  `session_id` varchar(150) default '',
+		  `page_uid` int(11) default '0',
+		  `ip_address` varchar(150) default '',
+		  `http_host` varchar(150) default '',
+		  `querystring` text,
+		  `url` text,
+		  `segment_type` varchar(50) default '',
+		  `segment_id` varchar(50) default ''
+		 */
+		$insertArray=array();
+		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
+			$insertArray['customer_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
+		}
+		$insertArray['crdate']=time();
+		$insertArray['session_id']=$GLOBALS['TSFE']->fe_user->id;
+		$insertArray['page_uid']=$this->shop_pid;
+		$insertArray['ip_address']=$this->REMOTE_ADDR;
+		$insertArray['http_host']=$this->HTTP_HOST;
+		$insertArray['query_string']=$this->server['QUERY_STRING'];
+		$insertArray['http_user_agent']=$this->server['HTTP_USER_AGENT'];
+		$insertArray['http_referer']=$this->server['HTTP_REFERER'];
+
+		$insertArray['url']=$this->HTTP_HOST.t3lib_div::getIndpEnv('REQUEST_URI');
+		$insertArray['segment_type']='';
+		$insertArray['segment_id']='';
+
+		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_sessions', $insertArray);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 	// deprecated methods
 	// alias for old v2 client side scripts

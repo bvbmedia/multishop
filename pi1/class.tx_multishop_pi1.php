@@ -225,6 +225,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 					//$GLOBALS['TSFE']->additionalHeaderData[]= mslib_fe::processmeta($meta_tags_html);
 					//return mslib_fe::processmeta($meta_tags_html);
 					$GLOBALS['TSFE']->additionalHeaderData[]= mslib_fe::processmeta($meta_tags_html);
+					mslib_fe::logPageView();
 				}				
 			break;
 			case 'basket':
