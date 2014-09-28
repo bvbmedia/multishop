@@ -5094,7 +5094,7 @@ class mslib_fe {
 		// footer
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
 			$str=$GLOBALS['TYPO3_DB']->SELECTquery(
-				'distinct session_id,ip_address,url,http_user_agent', // SELECT ...
+				'session_id,ip_address,url,http_user_agent', // SELECT ...
 				'tx_multishop_sessions', // FROM ...
 				'crdate > '.(time()-180), // WHERE...
 				'session_id', // GROUP BY...
@@ -5128,9 +5128,9 @@ class mslib_fe {
 				if ($guestsNumber>0) {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.$guestsNumber;
 					while ($record=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['id']]['label']=htmlspecialchars($record['ip_address']);
-						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['id']]['description']=htmlspecialchars($record['http_user_agent']);
-						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['id']]['link']=$record['url'];
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['label']=htmlspecialchars($record['ip_address']);
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['description']=htmlspecialchars($record['http_user_agent']);
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['link']=$record['url'];
 					}
 				}
 			}
