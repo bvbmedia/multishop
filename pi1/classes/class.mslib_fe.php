@@ -7252,7 +7252,7 @@ class mslib_fe {
 		$insertArray['query_string']=$this->server['QUERY_STRING'];
 		$insertArray['http_user_agent']=$this->server['HTTP_USER_AGENT'];
 		$insertArray['http_referer']=$this->server['HTTP_REFERER'];
-		$insertArray['url']=(isset($_SERVER['HTTPS']) ? "https" : "http").'/'.$this->HTTP_HOST.t3lib_div::getIndpEnv('REQUEST_URI');
+		$insertArray['url']=(isset($_SERVER['HTTPS']) ? "https" : "http").'://'.$this->HTTP_HOST.t3lib_div::getIndpEnv('REQUEST_URI');
 		$insertArray['segment_type']='';
 		$insertArray['segment_id']='';
 
