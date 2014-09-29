@@ -272,6 +272,9 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['payment_method']=$payment_method['code'];
 						$updateArray['payment_method_label']=$payment_method['name'];
 					}
+					if (isset($this->post['edit_discount_value'])) {
+						$updateArray['discount']=$this->post['edit_discount_value'];
+					}
 					$keys=array();
 					$keys[]='company';
 					$keys[]='name';
@@ -1571,11 +1574,19 @@ if (is_numeric($this->get['orders_id'])) {
 			<label>'.$this->pi_getLL('payment_costs').'</label>
 			<span class="order_total_value">'.$payment_costs.'</span>
 		</div>';
-		if ($orders['discount']>0) {
+		$discount_content='';
+		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
+			$discount_content='<input name="edit_discount_value" type="text" value="'.round($orders['discount'], 4).'" class="align_right" style="width:60px">';
+		} else {
+			if ($orders['discount']>0) {
+				$discount_content=mslib_fe::amount2Cents($orders['discount'], 0);
+			}
+		}
+		if (!empty($discount_content)) {
 			$content_discount='
 			<div class="account-field">
 				<label>'.$this->pi_getLL('discount').'</label>
-				<span class="order_total_value">'.mslib_fe::amount2Cents($orders['discount'], 0).'</span>
+				<span class="order_total_value">'.$discount_content.'</span>
 			</div>';
 		}
 		$content_total='
