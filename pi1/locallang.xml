@@ -1089,7 +1089,23 @@
             <label index="deleted">deleted</label>
             <label index="job_title">job title</label>
             <label index="customer_id_external_id_for_reference">customer id(external id for reference)</label>
-            <label index="choose_manufacturers">kies leveranciers</label>
+            <label index="choose_manufacturers">choose manufacturers</label>
+            <label index="admin_mass_updater_warning_a">Please be careful with this module.</label>
+            <label index="admin_mass_updater_warning_b">This form is created to agressively update all products. It can be handful if you want to update the prices of each product and/or to change the VAT id for each product.</label>
+            <label index="admin_mass_updater_increase_decrease_product_price_by_percentage">Increase / decrease product prices by percentage</label>
+            <label index="admin_mass_updater_example_update">Example: -10 to decrease product prices with 10%, or 10 to increase.</label>
+            <label index="or">or</label>
+            <label index="admin_mass_updater_by_amount">by Amount</label>
+            <label index="admin_mass_updater_substract_increase_price_based_in_incl_vat">Substract/Increase price based on including VAT</label>
+            <label index="admin_mass_updater_price_area_for_update">Price area for update</label>
+            <label index="attributes">attributes</label>
+            <label index="admin_no_tax">No VAT</label>
+            <label index="admin_mass_updater_update_all_products">Update All Products</label>
+            <label index="admin_mass_updater_flash_msg_x_attributes_updated">%d attributes option values has been updated</label>
+            <label index="admin_mass_updater_flash_msg_x_specials_has_been_updated">%d specials has been updated.</label>
+            <label index="admin_mass_updater_flash_msg_x_products_has_been_updated">%d products has been updated.</label>
+            <label index="admin_mass_updater_flash_msg_price_update_complete">Price update completed.</label>
+            <label index="admin_mass_updater_for_x_products_the_tax_rules_group_has_been_changed">For %d product(s) the TAX rules group has been changed.</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
