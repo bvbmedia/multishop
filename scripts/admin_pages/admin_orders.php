@@ -118,7 +118,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 	case 'mail_selected_orders_for_payment_reminder':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			foreach ($this->post['selected_orders'] as $orders_id) {
-				$tmpArray=mslib_befe::getRecord($orders_id, 'tx_multishop_orders', 'orders_id');
+				$tmpArray=mslib_fe::getOrder($orders_id); //=mslib_befe::getRecord($orders_id, 'tx_multishop_orders', 'orders_id');
 				if ($tmpArray['paid']==0) {
 					// replacing the variables with dynamic values
 					$billing_address='';
@@ -502,7 +502,7 @@ if ($this->cookie['payment_status']=='paid_only') {
 if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
-//$orderby[]='orders_id desc';	
+//$orderby[]='orders_id desc';
 $select[]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
 switch ($this->get['tx_multishop_pi1']['order_by']) {
