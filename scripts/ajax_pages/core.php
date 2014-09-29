@@ -14,10 +14,6 @@ switch ($this->ms['page']) {
 						'sort_order'=>$no
 					);
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_specials_sections', $where, $updateArray);
-
-
-					var_dump($query);
-
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					$no++;
 				}
@@ -27,7 +23,7 @@ switch ($this->ms['page']) {
 		break;
 	case 'delete_options_group':
 		if ($this->ADMIN_USER) {
-			if (isset($this->post['tx_multishop_pi1']['group_id']) && $this->post['tx_multishop_pi1']['group_id'] > 0) {
+			if (isset($this->post['tx_multishop_pi1']['group_id']) && $this->post['tx_multishop_pi1']['group_id']>0) {
 				$group_id=$this->post['tx_multishop_pi1']['group_id'];
 				$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_attributes_options_groups', 'attributes_options_groups_id='.$group_id);
 				if ($qry) {
@@ -1128,8 +1124,8 @@ switch ($this->ms['page']) {
 					);
 					// FOR PROJECTS WHERE YOU WANT TO GROUP BY COLUMN NUMBER
 					if ($this->post['tx_multishop_pi1']['col']) {
-						$col=str_replace('msCol','',$this->post['tx_multishop_pi1']['col']);
-						if(is_numeric($col)) {
+						$col=str_replace('msCol', '', $this->post['tx_multishop_pi1']['col']);
+						if (is_numeric($col)) {
 							$updateArray['col_position']=$col;
 						}
 					}

@@ -727,8 +727,10 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###AJAX_UPDATE_PRODUCT_STATUS_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=update_products_status');
 	$subpartArray['###AJAX_GET_TAX_RULESET_URL0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
 	$subpartArray['###AJAX_GET_TAX_RULESET_URL1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
-	$subpartArray['###ADMIN_LABEL_ENABLE###']=$this->pi_getLL('admin_label_enable');
-	$subpartArray['###ADMIN_LABEL_DISABLE###']=$this->pi_getLL('admin_label_disable');
+	$subpartArray['###ADMIN_LABEL_ENABLE0###']=$this->pi_getLL('admin_label_enable');
+	$subpartArray['###ADMIN_LABEL_DISABLE0###']=$this->pi_getLL('admin_label_disable');
+	$subpartArray['###ADMIN_LABEL_ENABLE1###']=$this->pi_getLL('admin_label_enable');
+	$subpartArray['###ADMIN_LABEL_DISABLE1###']=$this->pi_getLL('admin_label_disable');
 	$subpartArray['###PRODUCTS_ITEM###']=$productsItem;
 	$tmp_content_results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 } else {

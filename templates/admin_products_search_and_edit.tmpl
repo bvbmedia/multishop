@@ -1,26 +1,26 @@
 <!-- ###TEMPLATE### begin -->
 ###POST_MESSAGE###
 <table width="100%" cellpadding="2" cellspacing="2" id="msAdminSearchAndEditProductsForm">
-	<form name="search" method="get" action="index.php">	
-	<input name="id" type="hidden" value="###SHOP_PID###" />
+<form name="search" method="get" action="index.php">
+    <input name="id" type="hidden" value="###SHOP_PID###" />
 	<input name="type" type="hidden" value="2003" />
-	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit" />	
+    <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit"/>
     <input type="hidden" name="search" class="msadmin_button" value="1" />
 	<tr>
 		<td><div class="main-heading"><h1>###PAGE_HEADER###</h1></div></td>
 		<td colspan="8" align="right">
-		<div id="pricelist_search_form">		
-			<div class="form-field">
+            <div id="pricelist_search_form">
+                <div class="form-field">
 				<label>###LABEL_SEARCH_KEYWORD###</label>
 				<input type="text" class="skeyword" name="keyword" value="###VALUE_SEARCH_KEYWORD###" />
 			</div>
 			<div class="form-field">
-				<label>###LABEL_SEARCH_BY###</label>					
-				###SEARCH_BY_SELECTBOX###
+                <label>###LABEL_SEARCH_BY###</label>
+                ###SEARCH_BY_SELECTBOX###
 			</div>
 			<div class="form-field">
-				<label>###LABEL_SEARCH_IN###</label>								
-				###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
+                <label>###LABEL_SEARCH_IN###</label>
+                ###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
 			</div>
 			<div class="form-field">
 				<label>###LABEL_SEARCH_LIMIT###</label>
@@ -29,9 +29,9 @@
 			<div class="form-field">
 				<input type="submit" name="submit" class="msadmin_button" value="###LABEL_SEARCH###" />
 			</div>
-		</div>		
-		</td>
-	</tr>	
+            </div>
+        </td>
+    </tr>
 </form>
 <!-- ###RESULTS### begin -->
 <form action="###FORM_ACTION_PRICE_UPDATE_URL###" method="post" name="price_update" class="blockSubmitForm">
@@ -46,19 +46,19 @@
 		</td>
 		<th>###LABEL_HEADER_CELL_NUMBER###</th>
 		<th><a href="###HEADER_SORTBY_PRODUCT_LINK###">###LABEL_HEADER_PRODUCT###</a></th>
-		<th><a href="###HEADER_SORTBY_MODEL_LINK###">###LABEL_HEADER_MODEL###</a></th>	
-		<th><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
+        <th><a href="###HEADER_SORTBY_MODEL_LINK###">###LABEL_HEADER_MODEL###</a></th>
+        <th><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
 		<th><a href="###HEADER_SORTBY_CATEGORY_LINK###">###LABEL_HEADER_CATEGORY###</a></th>
 		<th><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
 		<th><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
 		<th><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
 		<th><a href="###HEADER_SORTBY_WEIGHT_LINK###">###LABEL_HEADER_WEIGHT###</a></th>
 		<th width="60">###LABEL_HEADER_ACTION###</th>
-	</tr>	
-	
-	<!-- ###PRODUCTS_ITEM### begin -->
-	<tr class="###ROW_TYPE###">	
-		<td nowrap class="msAdminProductsSearchCellCheckbox">
+    </tr>
+
+    <!-- ###PRODUCTS_ITEM### begin -->
+    <tr class="###ROW_TYPE###">
+        <td nowrap class="msAdminProductsSearchCellCheckbox">
 			<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
 			<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" class="PrettyInput" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
 		</td>
@@ -74,21 +74,21 @@
 		<td nowrap class="msAdminProductsSearchCellCategory">
 			<a href="###LINK_EDIT_CAT###">###CATEGORY_NAME###</a>
 		</td>
-				
-		<td nowrap class="msAdminProductsSearchCellProductsPrice">
+
+        <td nowrap class="msAdminProductsSearchCellProductsPrice">
 			<input type="hidden" id="product_tax_id_###PID1###" value="###VALUE_TAX_ID###" />
 			<div class="msAttributesField">###CURRENCY0### <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><label for="display_name">Excl. VAT</label></div>
 			<div class="msAttributesField">###CURRENCY1### <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><label for="display_name">Incl. VAT</label></div>
 			<div class="msAttributesField hidden"><input type="hidden" name="up[regular_price][###PID5###]" value="###VALUE_ORIGINAL_PRICE###" size="10px" style="text-align:right;" /></div>
 		</td>
-			
-		<td nowrap class="msAdminProductsSearchCellProductsSpecialsPrice">
+
+        <td nowrap class="msAdminProductsSearchCellProductsSpecialsPrice">
 			<div class="msAttributesField">###CURRENCY2### <input type="text" id="display_name" name="display_name" class="msSpecialsPriceExcludingVat" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><label for="display_name">Excl. VAT</label></div>
 			<div class="msAttributesField">###CURRENCY3### <input type="text" name="display_name" id="display_name" class="msSpecialsPriceIncludingVat" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><label for="display_name">Incl. VAT</label></div>
 			<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
 		</td>
-		
-		<td align="right" class="msAdminProductsSearchCellQuantity" nowrap><input type="text" name="up[stock][###PID7###]" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" size="10px" /></td>
+
+        <td align="right" class="msAdminProductsSearchCellQuantity" nowrap><input type="text" name="up[stock][###PID7###]" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" size="10px" /></td>
 		<td align="right" class="msAdminProductsSearchCellWeight" nowrap><input type="text" name="up[weight][###PID8###]" value="###VALUE_PRODUCT_WEIGHT###" style="text-align:right;" size="4px" /></td>
 		<td nowrap align="center" class="msAdminProductsSearchCellActionIcons">
 			<ul>
@@ -96,15 +96,15 @@
 				<li><a href="###PRODUCT_DETAIL_LINK###" class="admin_menu_view" target="_blank">view</a></li>
 				<li><a href="###DELETE_PRODUCT_LINK###" class="admin_menu_remove" alt="Remove"></a></li>
 			</ul>
-		</td>						
-	</tr>
+        </td>
+    </tr>
 	<!-- ###PRODUCTS_ITEM### end -->
 	<tr>
 		<th>&nbsp;</th>
 		<th>###LABEL_FOOTER_CELL_NUMBER###</th>
 		<th><a href="###FOOTER_SORTBY_PRODUCT_LINK###">###LABEL_FOOTER_PRODUCT###</a></th>
-		<th><a href="###FOOTER_SORTBY_MODEL_LINK###">###LABEL_FOOTER_MODEL###</a></th>	
-		<th><a href="###FOOTER_SORTBY_VISIBLE_LINK###">###LABEL_FOOTER_VISIBLE###</a></th>
+        <th><a href="###FOOTER_SORTBY_MODEL_LINK###">###LABEL_FOOTER_MODEL###</a></th>
+        <th><a href="###FOOTER_SORTBY_VISIBLE_LINK###">###LABEL_FOOTER_VISIBLE###</a></th>
 		<th><a href="###FOOTER_SORTBY_CATEGORY_LINK###">###LABEL_FOOTER_CATEGORY###</a></th>
 		<th><a href="###FOOTER_SORTBY_PRICE_LINK###">###LABEL_FOOTER_PRICE###</a></th>
 		<th><a href="###FOOTER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_FOOTER_SPECIAL_PRICE###</a></th>
@@ -116,12 +116,12 @@
 </div>
 	<script type="text/javascript">
     jQuery(document).ready(function ($) {
-		$('#check_all_1').click(function(){			
-			checkAllPrettyCheckboxes(this,$('.msadmin_orders_listing'));
-		});	
-	});	
-	</script>	
-	</tr>
+        $('#check_all_1').click(function () {
+            checkAllPrettyCheckboxes(this,$('.msadmin_orders_listing'));
+        });
+    });
+    </script>
+</tr>
 	<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
 	<tr>
 	<td>
@@ -135,8 +135,8 @@
 			<input class="msadmin_button" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" ></input>
 		</div>
 		<script type="text/javascript">
-		jQuery(document).ready(function($) {		
-			$('#products_search_action').change(function() {
+            jQuery(document).ready(function ($) {
+                $('#products_search_action').change(function() {
 				if ($(this).val()=='move') {
 					$("#target_categories_id").show();
 				} else if ($(this).val()=='duplicate') {
@@ -147,8 +147,8 @@
 			});
 			$("#target_categories_id").hide();
 		});
-		</script>	
-		</td>
+        </script>
+    </td>
 		<td align="right">
 			<input type="button" name="download" class="link_block" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" />
 			<input type="submit" class="msadmin_button" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" />
@@ -189,10 +189,10 @@ jQuery(document).ready(function($) {
 			dataType: 'json',
 			data:   "products_id="+products_id,
 			success: function(msg) {
-				if (msg.html==0) {
-                    return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green_disable" alt="###ADMIN_LABEL_ENABLE###"></span></a>';
+                if (msg.html == '0') {
+                    var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green_disable" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
                 } else if (msg.html==1) {
-                    return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red_disable" alt="###ADMIN_LABEL_DISABLE###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE###"></span>';
+                    var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red_disable" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
                 }
 				tthis.html(return_string);
 			}
