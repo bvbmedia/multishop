@@ -3,32 +3,31 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
-		<script type="text/javascript">
-		jQuery().ready(function($){
-			$("#s_date_visitor").datepicker({ 
-										dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
-										altField: "#s_date",
-										altFormat: "yy-mm-dd",
-										changeMonth: true,
-										changeYear: true,
-										showOtherMonths: true,
-										showAnim: \'slideDown\',
-										yearRange: "'.date("Y").':'.(date("Y")+10).'" 
-										});
-												
-			$("#e_date_visitor").datepicker({ 
-										dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
-										altField: "#e_date",
-										altFormat: "yy-mm-dd",
-										changeMonth: true,
-										changeYear: true,
-										showOtherMonths: true,
-										showAnim: \'slideDown\',
-										yearRange: "'.date("Y").':'.(date("Y")+10).'" 
-										});
-		});
-		</script>
-		';
+<script type="text/javascript">
+jQuery().ready(function($){
+	$("#s_date_visitor").datepicker({
+		dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
+		altField: "#s_date",
+		altFormat: "yy-mm-dd",
+		changeMonth: true,
+		changeYear: true,
+		showOtherMonths: true,
+		showAnim: \'slideDown\',
+		yearRange: "'.date("Y").':'.(date("Y")+10).'"
+	});
+	$("#e_date_visitor").datepicker({
+		dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
+		altField: "#e_date",
+		altFormat: "yy-mm-dd",
+		changeMonth: true,
+		changeYear: true,
+		showOtherMonths: true,
+		showAnim: \'slideDown\',
+		yearRange: "'.date("Y").':'.(date("Y")+10).'"
+	});
+});
+</script>
+';
 if ($this->post) {
 	if (!$this->post['s_date']) {
 		$this->post['s_date']=date("Y-m-d");
@@ -114,7 +113,7 @@ $content.='
 	<select name="discount_type">
 		<option value="percentage"'.($edit_row['discount_type']=='percentage' ? ' selected' : '').'>'.$this->pi_getLL('percentage').'</option>
 		<option value="price"'.($edit_row['discount_type']=='price' ? ' selected' : '').'>'.$this->pi_getLL('price').'</option>
-	</select>		
+	</select>
 </div>
 <div class="account-field">
 	<label>'.$this->pi_getLL('start_time').'</label>
