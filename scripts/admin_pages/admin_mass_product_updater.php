@@ -8,7 +8,7 @@ if ($this->post) {
 	if (isset($this->post['rules_group_id']) && !empty($this->post['rules_group_id'])) {
 		$str="update tx_multishop_products set tax_id='".$this->post['rules_group_id']."' where page_uid='".$this->showCatalogFromPage."'";
 		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$content.='<strong>For '.$GLOBALS['TYPO3_DB']->sql_affected_rows().' product(s) the TAX rules group has been changed.</strong><br />';
+		$content.='<strong>'.sprintf($this->pi_getLL('admin_mass_updater_for_x_products_the_tax_rules_group_has_been_changed'), $GLOBALS['TYPO3_DB']->sql_affected_rows()).'</strong><br />';
 	}
 	// update prices
 	if (!empty($this->post['amount'])) {
@@ -37,7 +37,7 @@ if ($this->post) {
 					$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				}
 			}
-			$content.='<strong>Price update completed. '.$sql_affected_rows.' products has been updated.</strong><br />';
+			$content.='<strong>'.$this->pi_getLL('admin_mass_updater_flash_msg_price_update_complete').' '.sprintf($this->pi_getLL('admin_mass_updater_flash_msg_x_products_has_been_updated'), $sql_affected_rows).'</strong><br />';
 			if ($sql_affected_rows>0 && $this->ms['MODULES']['FLAT_DATABASE']) {
 				// if the flat database module is enabled we have to sync the changes to the flat table
 				set_time_limit(86400);
@@ -50,13 +50,13 @@ if ($this->post) {
 				$str="update tx_multishop_products set products_price=(products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-				$content.='<strong>'.$sql_affected_rows.' products has been updated.</strong><br />';
+				$content.='<strong>'.sprintf($this->pi_getLL('admin_mass_updater_flash_msg_x_products_has_been_updated'), $sql_affected_rows).'</strong><br />';
 			}
 			if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
 				$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price+".$amount.") where page_uid='".$this->showCatalogFromPage."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-				$content.='<strong>'.$sql_affected_rows.' specials has been updated.</strong><br />';
+				$content.='<strong>'.sprintf($this->pi_getLL('admin_mass_updater_flash_msg_x_specials_has_been_updated'), $sql_affected_rows).'</strong><br />';
 			}
 			if ($sql_affected_rows>0 && $this->ms['MODULES']['FLAT_DATABASE']) {
 				// if the flat database module is enabled we have to sync the changes to the flat table
@@ -72,13 +72,13 @@ if ($this->post) {
 			$str="update tx_multishop_products set products_price=(products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-			$content.='<strong>'.$GLOBALS['TYPO3_DB']->sql_affected_rows().' products has been updated.</strong><br />';
+			$content.='<strong>'.sprintf($this->pi_getLL('admin_mass_updater_flash_msg_x_products_has_been_updated'), $GLOBALS['TYPO3_DB']->sql_affected_rows()).'</strong><br />';
 		}
 		if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('specials', $this->post['tx_multishop_pi1']['price_update_area']))) {
 			$str="update tx_multishop_specials set specials_new_products_price=(specials_new_products_price*".$multiply.") where page_uid='".$this->showCatalogFromPage."'";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$sql_affected_rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-			$content.='<strong>'.$sql_affected_rows.' specials has been updated.</strong><br />';
+			$content.='<strong>'.sprintf($this->pi_getLL('admin_mass_updater_flash_msg_x_specials_has_been_updated'), $sql_affected_rows).'</strong><br />';
 		}
 		if (($this->ADMIN_USER && !$this->ROOTADMIN_USER) || ($this->ROOTADMIN_USER && in_array('attributes', $this->post['tx_multishop_pi1']['price_update_area']))) {
 			$sql_products="select products_id from tx_multishop_products where page_uid='".$this->showCatalogFromPage."'";
@@ -90,7 +90,7 @@ if ($this->post) {
 				$sql_attribute_values_affected_rows+=$GLOBALS['TYPO3_DB']->sql_affected_rows();
 
 			}
-			$content.='<strong>'.$sql_attribute_values_affected_rows.' attribute option values has been updated.</strong><br />';
+			$content.='<strong>'.sprintf($this->pi_getLL('admin_mass_updater_flash_msg_x_attributes_updated'), $sql_attribute_values_affected_rows).'</strong><br />';
 		}
 	}
 	if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -99,31 +99,31 @@ if ($this->post) {
 } else {
 	$content.='
 	<p>
-	<strong>Please be careful with this module.</strong><br />This form is created to agressively update all products. It can be handful if you want to update the prices of each product and/or to change the VAT id for each product.<br />
+	<strong>'.$this->pi_getLL('admin_mass_updater_warning_a').'</strong><br />'.$this->pi_getLL('admin_mass_updater_warning_b').'<br />
 	<br />
 	</p>
 	<form class="edit_form"  method="post" action="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" >
 		<div class="account-field">
-			<label for="percentage">Increase / decrease product prices by percentage</label>
-			<input name="percentage" type="text" value="'.$this->post['percentage'].'" size="10" id="percentage" />%. Example: -10 to decrease product prices with 10%, or 10 to increase.<br/>- OR -<br/>
+			<label for="percentage">'.$this->pi_getLL('admin_mass_updater_increase_decrease_product_price_by_percentage').'</label>
+			<input name="percentage" type="text" value="'.$this->post['percentage'].'" size="10" id="percentage" />%. '.$this->pi_getLL('admin_mass_updater_example_update').'<br/>- '.strtoupper($this->pi_getLL('or')).' -<br/>
 		</div>
 		<div class="account-field">
-			<label for="amount">by Amount</label>
+			<label for="amount">'.$this->pi_getLL('admin_mass_updater_by_amount').'</label>
 			<input name="amount" id="amount" type="text" value="'.$this->post['amount'].'" size="10" />&nbsp;<input name="amount_vat" id="amount_vat" type="checkbox" value="1" checked="checked" />
-			<label for="amount_vat">Substract/Increase price based on including VAT</label>
+			<label for="amount_vat">'.$this->pi_getLL('admin_mass_updater_substract_increase_price_based_in_incl_vat').'</label>
 		</div>';
 	if ($this->ROOTADMIN_USER) {
 		$content.='<div class="account-field">
-				<label for="amount">Price area for update</label>
-				<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="products" />&nbsp;Products&nbsp;&nbsp;<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="specials" />&nbsp;Specials&nbsp;&nbsp;<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="attributes" />&nbsp;Attributes
-			</div>';
+			<label for="amount">'.$this->pi_getLL('admin_mass_updater_price_area_for_update').'</label>
+			<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="products" />&nbsp;'.ucfirst($this->pi_getLL('products')).'&nbsp;&nbsp;<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="specials" />&nbsp;'.ucfirst($this->pi_getLL('specials')).'&nbsp;&nbsp;<input name="tx_multishop_pi1[price_update_area][]" type="checkbox" value="attributes" />&nbsp;'.ucfirst($this->pi_getLL('attributes')).'
+		</div>';
 	}
 	$content.='
 		<div class="hr"></div>
 		<div class="account-field">
-			<label for="rules_group_id">VAT Rate</label>
-			<select name="rules_group_id"><option value="">skip</option>
-				<option value="0">No VAT</option>';
+			<label for="rules_group_id">'.$this->pi_getLL('admin_vat_rate').'</label>
+			<select name="rules_group_id"><option value="">'.$this->pi_getLL('skip').'</option>
+				<option value="0">'.$this->pi_getLL('admin_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -134,8 +134,8 @@ if ($this->post) {
 		</div>
 		<div class="account-field">
 			<label for="">&nbsp;</label>
-			<input name="Submit" type="submit" value="Update All Products" onclick="return confirm(\'Are you sure?\')" class="msadmin_button" />
-		</div>			
+			<input name="Submit" type="submit" value="'.$this->pi_getLL('admin_mass_updater_update_all_products').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')" class="msadmin_button" />
+		</div>
 		</form>
 		<script type="text/javascript">
 			jQuery(document).ready(function($) {
