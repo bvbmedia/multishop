@@ -543,8 +543,8 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 .msadmin_balloon_item i { display:block; padding:0 0 5px; }
 .msadmin_balloon_item p { margin:0 0 10px; }
 .msadmin_balloon_item table#msOrderDetailsTable { width:520px; border-collapse:collapse; margin:0 0 10px; }
-.msadmin_balloon_item table#msOrderDetailsTable th { font:bold 12px Arial, Helvetica, sans-serif; background:#333; padding:5px; }
-.msadmin_balloon_item table#msOrderDetailsTable td { background:#171717; font:bold 11px Arial, Helvetica, sans-serif; vertical-align:top; padding:5px; }
+.msadmin_balloon_item table#msOrderDetailsTable th { font:bold 12px Arial, Helvetica, sans-serif; background:#333; color:#cdcdcd; padding:5px; }
+.msadmin_balloon_item table#msOrderDetailsTable td { background:#171717; font:bold 11px Arial, Helvetica, sans-serif; color:#cdcdcd; vertical-align:top; padding:5px; }
 .msadmin_balloon_item table#msOrderDetailsTable th.msOrderDetailsHeadingImage { padding:0; }
 .msadmin_balloon_item table#msOrderDetailsTable th.msOrderDetailsHeadingQuantity,
 .msadmin_balloon_item table#msOrderDetailsTable th.msOrderDetailsHeadingTotal { text-align:right; }
