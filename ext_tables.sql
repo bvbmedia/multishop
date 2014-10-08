@@ -507,7 +507,6 @@ CREATE TABLE `tx_multishop_orders` (
   KEY `coupon_discount_type` (`coupon_discount_type`),
   KEY `coupon_discount_value` (`coupon_discount_value`)
 ) COMMENT='Ordersysteem';
-
 CREATE TABLE `tx_multishop_orders_products` (
   `orders_products_id` int(11) auto_increment,
   `orders_id` int(11) default '0',

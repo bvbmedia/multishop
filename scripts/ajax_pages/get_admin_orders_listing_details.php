@@ -186,6 +186,7 @@ if ($this->ADMIN_USER) {
 					if (!empty($order['coupon_code'])) {
 						$coupon_code=' (code: '.$order['coupon_code'].')';
 					}
+
 					$jsonData['html'].='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="3" class="align_right">'.htmlspecialchars($this->pi_getLL('discount')).$coupon_code.'</td>
