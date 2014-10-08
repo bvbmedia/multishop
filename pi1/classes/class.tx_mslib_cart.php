@@ -1679,6 +1679,11 @@ class tx_mslib_cart extends tslib_pibase {
 				$orders_tax['grand_total']=(string)array_sum($grand_total);
 				$updateArray['orders_tax_data']=serialize($orders_tax);
 				$updateArray['grand_total']=$orders_tax['grand_total'];
+				if (!empty($cart['coupon_code'])) {
+					$updateArray['coupon_code']=$cart['coupon_code'];
+					$updateArray['coupon_discount_type']=$cart['discount_type'];
+					$updateArray['coupon_discount_value']=$cart['discount'];
+				};
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderDiscountPreProc'])) {

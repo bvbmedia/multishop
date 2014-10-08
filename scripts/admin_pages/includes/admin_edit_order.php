@@ -1583,9 +1583,13 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 		}
 		if (!empty($discount_content)) {
+			$coupon_code='';
+			if (!empty($orders['coupon_code'])) {
+				$coupon_code=' (code: '.$orders['coupon_code'].')';
+			}
 			$content_discount='
 			<div class="account-field">
-				<label>'.$this->pi_getLL('discount').'</label>
+				<label>'.$this->pi_getLL('discount').$coupon_code.'</label>
 				<span class="order_total_value">'.$discount_content.'</span>
 			</div>';
 		}

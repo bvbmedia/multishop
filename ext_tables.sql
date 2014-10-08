@@ -465,6 +465,9 @@ CREATE TABLE `tx_multishop_orders` (
   `ip_address` varchar(150) default '',
   `http_referer` text,
   `user_agent` varchar(255) default '',
+  `coupon_code`           VARCHAR(255) DEFAULT '',
+  `coupon_discount_type`  VARCHAR(25) DEFAULT 'percentage',
+  `coupon_discount_value` DECIMAL(24, 14) DEFAULT '0.00000000000000',
   PRIMARY KEY (`orders_id`),
   KEY `klanten_id` (`customer_id`),
   KEY `bu` (`page_uid`),
@@ -499,7 +502,10 @@ CREATE TABLE `tx_multishop_orders` (
   KEY `status_last_modified` (`status_last_modified`),
   KEY `email_sent` (`reminder_sent`),
   KEY `ip_address` (`ip_address`),
-  KEY `user_agent` (`user_agent`)
+  KEY `user_agent` (`user_agent`),
+  KEY `coupon_code` (`coupon_code`),
+  KEY `coupon_discount_type` (`coupon_discount_type`),
+  KEY `coupon_discount_value` (`coupon_discount_value`)
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (
