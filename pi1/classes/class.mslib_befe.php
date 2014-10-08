@@ -2493,7 +2493,15 @@ class mslib_befe {
 		$updateArray['crdate']=$status_last_modified;
 		$updateArray['new_value']=$orders_status;
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_history', $updateArray);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if ($orders_status==$order['status']) {
+			if (!empty($this->post['comments']) && $mail_customer) {
+				// always save the order status history even when order status is the same as the old one when e-mail to client is filled
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+		} else {
+			// save if new order status history is different than the old status
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		}
 		$updateArray=array();
 		$updateArray['status']=$orders_status;
 		$updateArray['status_last_modified']=$status_last_modified;
