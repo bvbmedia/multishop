@@ -88,7 +88,6 @@ if (is_array($cart['products']) and count($cart['products'])) {
 					$user_id=$GLOBALS['TSFE']->fe_user->user['uid'];
 					if (is_numeric($user_id)) {
 						$payment_methods_user=mslib_fe::getCustomerMappedMethods($user_id, 'payment', $user_country);
-						print_r($payment_methods_user);
 						$shipping_methods_user=mslib_fe::getCustomerMappedMethods($user_id, 'shipping');
 						if (!count($payment_methods_user)) {
 							$payment_methods=$payment_methods_group;
