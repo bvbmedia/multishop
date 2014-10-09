@@ -98,6 +98,16 @@ if ($this->post) {
 						}
 					}
 				}
+			} else {
+				if (isset($user['usergroup'])) {
+					// first get old usergroup data, cause maybe the user is also member of excluded usergroups that we should remain
+					$old_usergroups=explode(",", $user['usergroup']);
+					foreach ($this->excluded_userGroups as $usergroup) {
+						if (in_array($usergroup, $old_usergroups)) {
+							$updateArray['usergroup'].=','.$usergroup;
+						}
+					}
+				}
 			}
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'])) {
