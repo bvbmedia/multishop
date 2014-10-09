@@ -1706,7 +1706,7 @@ class mslib_fe {
 										$items.="\n".'
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
 										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'"><span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span></label>
-										<input name="attributes['.$options['products_options_id'].'][]" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
+										<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
 										if (count($sessionData['attributes'][$options['products_options_id']])) {
 											foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
 												if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
@@ -1714,7 +1714,7 @@ class mslib_fe {
 												}
 											}
 										}
-										$items.=' class="PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
+										$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
 										<div class="attribute_item_price">';
 										if ($products_options_values['options_values_price']!='0') {
 											$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
@@ -1733,7 +1733,7 @@ class mslib_fe {
 												}
 											}
 										}
-										$items.=' class="PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
+										$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
 										<div class="attribute_item_price">';
 										if ($products_options_values['options_values_price']!='0') {
 											$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
@@ -1780,7 +1780,7 @@ class mslib_fe {
 								default:
 									if ($total_values>1) {
 										$html='';
-										$html.='<select name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').'>';
+										$html.='<select name="attributes['.$options['products_options_id'].']" class="attributes'.$options['products_options_id'].'" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').'>';
 										if ($options['required']) {
 											$html.='<option value="">'.$this->pi_getLL('choose_selection').'</option>';
 										}
@@ -2951,6 +2951,7 @@ class mslib_fe {
 				case 'payment':
 					// first we load all options
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
+					$count_a=count($allmethods);
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_payment_methods s', // FROM ...
@@ -2973,22 +2974,39 @@ class mslib_fe {
 							}
 						}
 					}
+					$count_b=count($allmethods);
+					if ($count_a==$count_b) {
+						$allmethods=array();
+					}
 					break;
 				case 'shipping':
 					// first we load all options
-					$allmethods=array();
+					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true);
+					$count_a=count($allmethods);
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
-							's.status=1 and pmm.type=\''.$type.'\' and pmm.products_id = \''.$pid.'\' and pmm.method_id=s.id and pmm.negate=0 and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
+							's.status=1 and pmm.type=\''.$type.'\' and pmm.products_id = \''.$pid.'\' and pmm.method_id=s.id and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
 							'', // GROUP BY...
 							's.sort_order', // ORDER BY...
 							'' // LIMIT ...
 						);
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-							$allmethods[$row['code']]=$row;
+							if (!isset($allmethods[$row['code']])) {
+								if (!$row['negate']) {
+									$allmethods[$row['code']]=mslib_fe::loadShippingMethod($row['code']);
+								}
+							} else {
+								if ($row['negate']>0) {
+									unset($allmethods[$row['code']]);
+								}
+							}
 						}
+					}
+					$count_b=count($allmethods);
+					if ($count_a==$count_b) {
+						$allmethods=array();
 					}
 					break;
 			}
@@ -3001,6 +3019,7 @@ class mslib_fe {
 				case 'payment':
 					// first we load all options
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
+					$count_a=count($allmethods);
 					foreach ($groups_id as $gid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
 							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_payment_methods s', // FROM ...
@@ -3023,22 +3042,39 @@ class mslib_fe {
 							}
 						}
 					}
+					$count_b=count($allmethods);
+					if ($count_a==$count_b) {
+						$allmethods=array();
+					}
 					break;
 				case 'shipping':
 					// first we load all options
-					$allmethods=array();
+					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true);
+					$count_a=count($allmethods);
 					foreach ($groups_id as $gid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
 							'tx_multishop_customers_groups_method_mappings cgmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
-							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.method_id=s.id and cgmm.negate=0 and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
+							's.status=1 and cgmm.type=\''.$type.'\' and cgmm.customers_groups_id = \''.$gid.'\' and cgmm.method_id=s.id and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
 							'', // GROUP BY...
 							's.sort_order', // ORDER BY...
 							'' // LIMIT ...
 						);
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-							$allmethods[$row['code']]=$row;
+							if (!isset($allmethods[$row['code']])) {
+								if (!$row['negate']) {
+									$allmethods[$row['code']]=mslib_fe::loadShippingMethod($row['code']);
+								}
+							} else {
+								if ($row['negate']>0) {
+									unset($allmethods[$row['code']]);
+								}
+							}
 						}
+					}
+					$count_b=count($allmethods);
+					if ($count_a==$count_b) {
+						$allmethods=array();
 					}
 					break;
 			}
@@ -3060,16 +3096,21 @@ class mslib_fe {
 					);
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$array=array();
-					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-						if (!isset($allmethods[$row['code']])) {
-							if (!$row['negate']) {
-								$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
-							}
-						} else {
-							if ($row['negate']>0) {
-								unset($allmethods[$row['code']]);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							if (!isset($allmethods[$row['code']])) {
+								if (!$row['negate']) {
+									$allmethods[$row['code']]=mslib_fe::loadPaymentMethod($row['code']);
+								}
+							} else {
+								if ($row['negate']>0) {
+									unset($allmethods[$row['code']]);
+								}
 							}
 						}
+					} else {
+						// since only containing default method we will give the default loader to handle
+						$allmethods=array();
 					}
 					break;
 				case 'shipping':
@@ -3077,14 +3118,26 @@ class mslib_fe {
 					$allmethods=array();
 					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
 						'tx_multishop_customers_method_mappings cmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
-						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.method_id=s.id and cmm.negate=0 and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
+						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.method_id=s.id and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
 						'', // GROUP BY...
 						's.sort_order', // ORDER BY...
 						'' // LIMIT ...
 					);
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-						$allmethods[$row['code']]=$row;
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							if (!isset($allmethods[$row['code']])) {
+								if (!$row['negate']) {
+									$allmethods[$row['code']]=mslib_fe::loadShippingMethod($row['code']);
+								}
+							} else {
+								if ($row['negate']>0) {
+									unset($allmethods[$row['code']]);
+								}
+							}
+						}
+					} else {
+						$allmethods=array();
 					}
 					break;
 			}

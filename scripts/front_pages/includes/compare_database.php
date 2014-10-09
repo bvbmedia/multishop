@@ -17,8 +17,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 // custom hook that can be controlled by third-party plugin eof
 if (!$skipMultishopUpdates) {
 	// V1/V2 COMPARE DATABASE FIRST
-	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
-
+	//require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
 	// V3 COMPARE DATABASE
 	$str="select id from tx_multishop_sessions limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -63,6 +62,18 @@ if (!$skipMultishopUpdates) {
 		$str="ALTER TABLE `tx_multishop_orders` ADD `coupon_discount_value` decimal(24,14) default '0.00000000000000', ADD KEY `coupon_discount_value` (`coupon_discount_value`)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
+	}
+	$str="DESCRIBE `tx_multishop_customers_groups_method_mappings`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+		if ($row['Field']=='id') {
+			if (empty($row['Extra'])) {
+				$str="ALTER TABLE  `tx_multishop_customers_groups_method_mappings` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+				break;
+			}
+		}
 	}
 	// V3 COMPARE DATABASE EOL
 

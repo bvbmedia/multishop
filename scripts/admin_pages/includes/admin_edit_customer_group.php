@@ -46,7 +46,7 @@ if ($this->post) {
 	// customer shipping/payment method mapping
 	if ($this->post['customer_group_id'] && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
 		// shipping/payment methods
-		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_groups_method_mappings', 'customers_groups_id=\''.$customer_id.'\'');
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_groups_method_mappings', 'customers_groups_id=\''.$this->post['customer_group_id'].'\'');
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
 			foreach ($this->post['payment_method'] as $payment_method_id => $value) {

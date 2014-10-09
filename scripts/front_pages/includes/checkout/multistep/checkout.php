@@ -27,6 +27,12 @@ if (is_array($cart['products']) and count($cart['products'])) {
 		$iso_customer=mslib_fe::getCountryByName($this->post['delivery_country']);
 		$delivery_user_country=$iso_customer['cn_iso_nr'];
 	}
+	$payment_methods_product=array();
+	$shipping_methods_product=array();
+	$payment_methods_group=array();
+	$shipping_methods_group=array();
+	$payment_methods_user=array();
+	$shipping_methods_user=array();
 	$payment_methods=array();
 	$shipping_methods=array();
 	$load_mappings_order=array();
@@ -46,8 +52,8 @@ if (is_array($cart['products']) and count($cart['products'])) {
 						}
 					}
 					if (count($pids)) {
-						$payment_methods=mslib_fe::getProductMappedMethods($pids, 'payment', $user_country);
-						$shipping_methods=mslib_fe::getProductMappedMethods($pids, 'shipping');
+						$payment_methods_product=mslib_fe::getProductMappedMethods($pids, 'payment', $user_country);
+						$shipping_methods_product=mslib_fe::getProductMappedMethods($pids, 'shipping');
 					}
 				}
 				break;
@@ -55,11 +61,22 @@ if (is_array($cart['products']) and count($cart['products'])) {
 				if ($this->ms['MODULES']['GROUP_EDIT_METHOD_FILTER']) {
 					$payment_methods=array();
 					$shipping_methods=array();
+					$tmp_user_groups=explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
 					$user_groups=array();
-					$user_groups=explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+					foreach ($tmp_user_groups as $tmp_user_group) {
+						if ($tmp_user_group>0) {
+							$user_groups[]=$tmp_user_group;
+						}
+					}
 					if (count($user_groups)) {
-						$payment_methods=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'payment', $user_country);
-						$shipping_methods=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'shipping');
+						$payment_methods_group=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'payment', $user_country);
+						$shipping_methods_group=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'shipping');
+						if (!count($payment_methods_group)) {
+							$payment_methods=$payment_methods_product;
+						}
+						if (!count($shipping_methods_group)) {
+							$shipping_methods=$shipping_methods_product;
+						}
 					}
 				}
 				break;
@@ -70,17 +87,26 @@ if (is_array($cart['products']) and count($cart['products'])) {
 					$user_id=array();
 					$user_id=$GLOBALS['TSFE']->fe_user->user['uid'];
 					if (is_numeric($user_id)) {
-						$payment_methods=mslib_fe::getCustomerMappedMethods($user_id, 'payment', $user_country);
-						$shipping_methods=mslib_fe::getCustomerMappedMethods($user_id, 'shipping');
+						$payment_methods_user=mslib_fe::getCustomerMappedMethods($user_id, 'payment', $user_country);
+						print_r($payment_methods_user);
+						$shipping_methods_user=mslib_fe::getCustomerMappedMethods($user_id, 'shipping');
+						if (!count($payment_methods_user)) {
+							$payment_methods=$payment_methods_group;
+						}
+						if (!count($shipping_methods)) {
+							$shipping_methods=$shipping_methods_group;
+						}
 					}
 				}
 				break;
 		}
 	}
-	if (!count($payment_methods) and !count($shipping_methods)) {
+	if (!count($payment_methods)) {
 		// nothing is loaded. this cant be valid so let's load the default methods.
 		// loading payment methods
 		$payment_methods=mslib_fe::loadPaymentMethods(0, $user_country, true);
+	}
+	if (!count($shipping_methods)) {
 		// loading shipping methods eof
 		$shipping_methods=mslib_fe::loadShippingMethods(0, $delivery_user_country, true);
 	}
