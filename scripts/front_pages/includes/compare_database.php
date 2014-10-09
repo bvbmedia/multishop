@@ -17,7 +17,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 // custom hook that can be controlled by third-party plugin eof
 if (!$skipMultishopUpdates) {
 	// V1/V2 COMPARE DATABASE FIRST
-	//require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
+	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
 	// V3 COMPARE DATABASE
 	$str="select id from tx_multishop_sessions limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
