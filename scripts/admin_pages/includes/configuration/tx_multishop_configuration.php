@@ -1626,6 +1626,17 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
+	'configuration_title'=>'Display CoC id input in checkout',
+	'configuration_key'=>'CHECKOUT_DISPLAY_COC_ID_INPUT',
+	'configuration_value'=>'0',
+	'description'=>'This setting display COC id input in checkout',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Display the selectbox for products listing limit',
 	'configuration_key'=>'PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM',
 	'configuration_value'=>'0',

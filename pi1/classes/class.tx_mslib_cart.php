@@ -880,6 +880,9 @@ class tx_mslib_cart extends tslib_pibase {
 			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($address['tx_multishop_vat_id'])) {
 				$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
 			}
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT'] && !empty($address['tx_multishop_coc_id'])) {
+				$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
+			}
 			$insertArray['tx_multishop_quick_checkout']=1;
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -1207,6 +1210,9 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray['billing_fax']='';
 			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($address['tx_multishop_vat_id'])) {
 				$insertArray['billing_vat_id']=$address['tx_multishop_vat_id'];
+			}
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT'] && !empty($address['tx_multishop_coc_id'])) {
+				$insertArray['billing_coc_id']=$address['tx_multishop_coc_id'];
 			}
 			if (!$address['different_delivery_address']) {
 				$insertArray['delivery_email']=$insertArray['billing_email'];

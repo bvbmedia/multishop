@@ -60,6 +60,9 @@ if (count($cart['products'])<1) {
 			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($GLOBALS['TSFE']->fe_user->user['tx_multishop_vat_id'])) {
 				$user['tx_multishop_vat_id']=$GLOBALS['TSFE']->fe_user->user['tx_multishop_vat_id'];
 			}
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT'] && !empty($GLOBALS['TSFE']->fe_user->user['tx_multishop_coc_id'])) {
+				$user['tx_multishop_coc_id']=$GLOBALS['TSFE']->fe_user->user['tx_multishop_coc_id'];
+			}
 		}
 	} else {
 		$user=$cart['user'];
@@ -116,6 +119,9 @@ if (count($cart['products'])<1) {
 			}
 			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT'] && !empty($this->post['tx_multishop_vat_id'])) {
 				$user['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
+			}
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT'] && !empty($this->post['tx_multishop_coc_id'])) {
+				$user['tx_multishop_coc_id']=$this->post['tx_multishop_coc_id'];
 			}
 			// billing details eof
 			// delivery details
@@ -246,6 +252,10 @@ if (count($cart['products'])<1) {
 		if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
 			$content.='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id')).'</label>
 			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($user['tx_multishop_vat_id']).'"/>';
+		}
+		if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
+			$content.='<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id')).'</label>
+			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($user['tx_multishop_coc_id']).'"/>';
 		}
 		$content.='
 		</div>

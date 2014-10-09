@@ -86,6 +86,8 @@ if (mslib_fe::loggedin()) {
 			$mslib_user->setNewsletter($this->post['tx_multishop_newsletter']);
 			$mslib_user->setCaptcha_code($this->post['tx_multishop_pi1']['captcha_code']);
 			$mslib_user->setBirthday($this->post['birthday']);
+			$mslib_user->setCustomField('tx_multishop_vat_id', $this->post['tx_multishop_vat_id']);
+			$mslib_user->setCustomField('tx_multishop_coc_id', $this->post['tx_multishop_coc_id']);
 			$erno=$mslib_user->checkUserData();
 			if (!count($erno)) {
 				$customer_id=$mslib_user->saveUserData();
@@ -184,6 +186,18 @@ if (mslib_fe::loggedin()) {
 				$content.='</ul>';
 				$content.='</div>';
 			}
+			$vat_input_block='';
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
+				$vat_input_block=' <div class="account-field" id="input-tx_multishop_vat_id">
+				<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
+	<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/></div>';
+			}
+			$coc_input_block='';
+			if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
+				$coc_input_block=' <div class="account-field" id="input-tx_multishop_coc_id">
+								<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
+	<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/></div>';
+			}
 			$content.='
 		<div id="live-validation-create-account">
 		  <form action="'.mslib_fe::typolink().'" method="post" name="create_account" class="AdvancedForm" id="create-account">
@@ -217,7 +231,7 @@ if (mslib_fe::loggedin()) {
 				<label for="company" id="account-company">'.$this->pi_getLL('company').'</label>
 				<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($this->post['company']).'" />
 				<span class="error-space"></span></div>
-		';
+				'.$vat_input_block.$coc_input_block;
 			// load enabled countries to array
 			$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);

@@ -80,7 +80,20 @@ if ($this->post) {
 		if ($this->post['tx_multishop_pi1']['image']) {
 			$updateArray['image']=$this->post['tx_multishop_pi1']['image'];
 		}
-		$updateArray['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
+		if (isset($this->post['tx_multishop_vat_id'])) {
+			if (!empty($this->post['tx_multishop_vat_id'])) {
+				$updateArray['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
+			} else {
+				$updateArray['tx_multishop_vat_id']='';
+			}
+		}
+		if (isset($this->post['tx_multishop_coc_id'])) {
+			if (!empty($this->post['tx_multishop_coc_id'])) {
+				$updateArray['tx_multishop_coc_id']=$this->post['tx_multishop_coc_id'];
+			} else {
+				$updateArray['tx_multishop_coc_id']='';
+			}
+		}
 		if ($this->post['page_uid'] and $this->masterShop) {
 			$updateArray['page_uid']=$this->post['page_uid'];
 		}
@@ -193,7 +206,20 @@ if ($this->post) {
 			} else {
 				$updateArray['page_uid']=$this->shop_pid;
 			}
-			$updateArray['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
+			if (isset($this->post['tx_multishop_vat_id'])) {
+				if (!empty($this->post['tx_multishop_vat_id'])) {
+					$updateArray['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
+				} else {
+					$updateArray['tx_multishop_vat_id']='';
+				}
+			}
+			if (isset($this->post['tx_multishop_coc_id'])) {
+				if (!empty($this->post['tx_multishop_coc_id'])) {
+					$updateArray['tx_multishop_coc_id']=$this->post['tx_multishop_coc_id'];
+				} else {
+					$updateArray['tx_multishop_coc_id']='';
+				}
+			}
 //			$updateArray['tx_multishop_newsletter']			=	$address['tx_multishop_newsletter'];
 			$updateArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
 			// custom hook that can be controlled by third-party plugin
@@ -457,8 +483,18 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 }
 // global fields
-$subpartArray['###LABEL_VAT_ID###']=ucfirst($this->pi_getLL('vat_id', 'VAT ID'));
-$subpartArray['###VALUE_VAT_ID###']=htmlspecialchars($this->post['tx_multishop_vat_id']);
+$vat_input_block='';
+if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
+	$vat_input_block='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
+	<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/>';
+}
+$coc_input_block='';
+if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
+	$coc_input_block='<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
+	<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
+}
+$subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
+$subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
 $subpartArray['###VALUE_IMAGE###']=$images_tab_block;
 $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');

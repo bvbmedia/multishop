@@ -362,22 +362,22 @@ if ($rows) {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
 		$str="CREATE TABLE `tx_multishop_payment_log` (
-  `id` int(11) NULL auto_increment,
-  `orders_id` int(11) NULL DEFAULT '0',
-  `multishop_transaction_id` varchar(127) DEFAULT '',
-  `provider_transaction_id` varchar(127) DEFAULT '',
-  `provider` varchar(127) DEFAULT '',
-  `ip_address` varchar(127) DEFAULT '',
-  `crdate` int(11) DEFAULT '0',
-  `title` varchar(127) DEFAULT '',
-  `description` text,
-  `is_error` tinyint(1) DEFAULT '0',
-  `status_type` varchar(127) DEFAULT '',
-  `raw_data` mediumtext NULL,
-  PRIMARY KEY (`id`),
-  KEY `orders_id` (`orders_id`),
-  KEY `multishop_transaction_id` (`multishop_transaction_id`)
-) ENGINE=InnoDB;";
+		  `id` int(11) NULL auto_increment,
+		  `orders_id` int(11) NULL DEFAULT '0',
+		  `multishop_transaction_id` varchar(127) DEFAULT '',
+		  `provider_transaction_id` varchar(127) DEFAULT '',
+		  `provider` varchar(127) DEFAULT '',
+		  `ip_address` varchar(127) DEFAULT '',
+		  `crdate` int(11) DEFAULT '0',
+		  `title` varchar(127) DEFAULT '',
+		  `description` text,
+		  `is_error` tinyint(1) DEFAULT '0',
+		  `status_type` varchar(127) DEFAULT '',
+		  `raw_data` mediumtext NULL,
+		  PRIMARY KEY (`id`),
+		  KEY `orders_id` (`orders_id`),
+		  KEY `multishop_transaction_id` (`multishop_transaction_id`)
+		) ENGINE=InnoDB;";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
@@ -428,17 +428,14 @@ if ($rows) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry) {
 			$str="CREATE TABLE IF NOT EXISTS `tx_multishop_attributes_options_groups_to_products_options` (
-					`attributes_options_groups_to_products_options_id` int(11) NULL AUTO_INCREMENT,
-					`attributes_options_groups_id` int(11) NULL DEFAULT '0',
-					`products_options_id` int(11) NULL DEFAULT '0',
-					PRIMARY KEY (`attributes_options_groups_to_products_options_id`)
-				);";
+				`attributes_options_groups_to_products_options_id` int(11) NULL AUTO_INCREMENT,
+				`attributes_options_groups_id` int(11) NULL DEFAULT '0',
+				`products_options_id` int(11) NULL DEFAULT '0',
+				PRIMARY KEY (`attributes_options_groups_to_products_options_id`)
+			);";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
-	} else {
-		$str="ALTER TABLE  `tx_multishop_customers_groups_method_mappings` CHANGE  `id`  `id` INT( 11 ) NOT NULL";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
 	$str="select street_name from fe_users limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
