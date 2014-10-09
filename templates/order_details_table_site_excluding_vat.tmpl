@@ -1,0 +1,61 @@
+<!-- ###TEMPLATE### begin -->
+<table class="border" id="msOrderDetailsTable">
+	<!-- ###ITEMS_HEADER_WRAPPER### begin -->
+	<tr class="msOrderDetailsHeading">
+		<th class="msOrderDetailsHeadingImage">&nbsp;</th>
+		<th class="msOrderDetailsHeadingName">###HEADING_PRODUCTS_NAME###</th>
+		<th class="msOrderDetailsHeadingQuantity">###HEADING_QUANTITY###</th>
+		<th class="msOrderDetailsHeadingTotal">###HEADING_TOTAL###</th>
+	</tr>
+	<!-- ###ITEMS_HEADER_WRAPPER### end -->	
+	<!-- ###ITEMS_WRAPPER### begin -->
+	<tr class="###ITEM_CLASS###">
+		<td class="msOrderDetailsItemImage">###ITEM_IMAGE###</td>
+		<td class="msOrderDetailsItemName">###ITEM_NAME###</td>
+		<td class="msOrderDetailsItemQuantity">###ITEM_QUANTITY###</td>
+		<td class="msOrderDetailsItemTotal">###ITEM_TOTAL###</td>
+	</tr>
+    <!-- ###ITEMS_WRAPPER### end -->
+</table>
+<table id="msOrderDetailsSubTotalTable">
+<!-- ###SUBTOTAL_WRAPPER### begin -->
+<tr>
+	<td class="msOrderDetailsSubTotalProductsLabel msOrderDetailsSubTotalLabel">###PRODUCTS_SUB_TOTAL_PRICE_LABEL###</td>
+	<td class="msOrderDetailsSubTotalProducts msOrderDetailsSubTotalValue">###PRODUCTS_TOTAL_PRICE###</td>
+</tr>
+<!-- ###SUBTOTAL_WRAPPER### end -->
+<!-- ###DISCOUNT_WRAPPER### begin -->
+<tr>
+	<td class="msFrontGrandTotalDiscountLabel msOrderDetailsSubTotalLabel">###DISCOUNT_LABEL###</td>
+	<td class="msFrontGrandTotalDiscountValue msOrderDetailsSubTotalValue">###DISCOUNT###</td>
+</tr>
+<!-- ###DISCOUNT_WRAPPER### end -->	
+<!-- ###SHIPPING_COSTS_WRAPPER### begin -->
+<tr>
+	<td class="msOrderDetailsShippingCostsLabel msOrderDetailsSubTotalLabel">###SHIPPING_COSTS_INCLUDING_VAT_LABEL###</td>
+	<td class="msOrderDetailsShippingCosts msOrderDetailsSubTotalValue">###SHIPPING_COSTS_INCLUDING_VAT###</td>
+</tr>
+<!-- ###SHIPPING_COSTS_WRAPPER### end -->	
+<!-- ###PAYMENT_COSTS_WRAPPER### begin -->
+<tr>
+	<td class="msOrderDetailsPaymentCostsLabel msOrderDetailsSubTotalLabel">###PAYMENT_COSTS_INCLUDING_VAT_LABEL###</td>
+	<td class="msOrderDetailsPaymentCosts msOrderDetailsSubTotalValue">###PAYMENT_COSTS_INCLUDING_VAT###</td>
+</tr>
+<!-- ###PAYMENT_COSTS_WRAPPER### end -->
+<tr class="msOrderDetailsSubTotalTableHr">
+<td colspan="2"><div class="hr"></div></td>
+</tr>
+<!-- ###TAX_COSTS_WRAPPER### begin -->
+<tr>
+    <td class="msOrderDetailsTaxTotalLabel msOrderDetailsSubTotalLabel" align="right" style="padding:5px 10px;">###TAX_RATE_LABEL###</td>
+    <td class="msOrderDetailsTaxTotal msOrderDetailsSubTotalValue" align="right" style="padding:5px 10px;">###TAX_COSTS###</td>
+</tr>
+<!-- ###TAX_COSTS_WRAPPER### end -->
+<!-- ###GRAND_TOTAL_WRAPPER### begin -->
+<tr>
+	<td class="msOrderDetailsGrandTotalLabel msOrderDetailsSubTotalLabel">###GRAND_TOTAL_COSTS_LABEL###</td>
+	<td class="msOrderDetailsGrandTotal msOrderDetailsSubTotalValue">###GRAND_TOTAL_COSTS###</td>
+</tr>
+<!-- ###GRAND_TOTAL_WRAPPER### end -->
+</table>
+<!-- ###TEMPLATE### end -->
