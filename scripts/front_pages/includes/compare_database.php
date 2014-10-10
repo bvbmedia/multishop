@@ -49,7 +49,6 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
 	$str="select coupon_code from tx_multishop_orders limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -74,6 +73,14 @@ if (!$skipMultishopUpdates) {
 				break;
 			}
 		}
+	}
+	// attributes values image
+	$str="select products_options_values_image from tx_multishop_products_options_values_to_products_options limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_products_options_values_to_products_options` ADD `products_options_values_image` varchar(255) default '', ADD KEY `products_options_values_image` (`products_options_values_image`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
 	}
 	// V3 COMPARE DATABASE EOL
 

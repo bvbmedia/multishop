@@ -995,10 +995,12 @@ CREATE TABLE `tx_multishop_products_options_values_to_products_options` (
   `products_options_values_to_products_options_id` int(11) auto_increment,
   `products_options_id` int(5) default '0',
   `products_options_values_id` int(5) default '0',
+  `products_options_values_image` VARCHAR(255) DEFAULT '',
   `sort_order` int(11) default '0',
   PRIMARY KEY (`products_options_values_to_products_options_id`),
   KEY `products_options_id` (`products_options_id`),
   KEY `products_options_values_id` (`products_options_values_id`),
+  KEY `products_options_values_image` (`products_options_values_image`),
   KEY `sort_order` (`sort_order`)
 );
 

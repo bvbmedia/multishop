@@ -17,6 +17,17 @@ if (!defined('TYPO3_MODE')) {
 // 12 Invoice Settings
 $records=array();
 $records[]=array(
+	'configuration_title'=>'Enable the attributes values image',
+	'configuration_key'=>'ENABLE_ATTRIBUTE_VALUE_IMAGES',
+	'configuration_value'=>'0',
+	'description'=>'Enable the attributes values image',
+	'group_id'=>'2',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Display subscribe to newsletter in checkout',
 	'configuration_key'=>'DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT',
 	'configuration_value'=>'1',

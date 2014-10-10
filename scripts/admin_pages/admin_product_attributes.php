@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>';
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
 $selects=array();
 $selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
@@ -509,6 +510,7 @@ if ($rows) {
 				data:serial_value,
 				dataType:"json",
 				success: function(s) {
+					var attributeImageUploader=[];
 					var li_class=\'even\';
 					if ($(parent_li).hasClass("odd")) {
 						li_class=\'odd\';
@@ -519,12 +521,50 @@ if ($rows) {
 					values_data+=\''.$this->pi_getLL('admin_label_option_value').': \';
 					values_data+=s.values_name;
 					values_data+=\'</span>\';
+					values_data+=\'<span class="values_image">\';
+					values_data+=\'<label for="attribute_values_image\' + s.pov2po_id + \'">'.$this->pi_getLL('admin_image').'</label>\';
+					values_data+=\'<div id="attribute_values_image\' + s.pov2po_id + \'">\';
+					values_data+=\'<noscript>\';
+					values_data+=\'<input name="attribute_values_image\' + s.pov2po_id + \'" type="file" />\';
+					values_data+=\'</noscript>\';
+					values_data+=\'</div>\';
+					values_data+=\'<input name="ajax_attribute_values_image\' + s.pov2po_id + \'" id="ajax_attribute_values_image\' + s.pov2po_id + \'" type="hidden" value="" />\';
+					//values_data+=s.values_image_display;
+					values_data+=\'</span>\';
 					values_data+=\'<span class="values_edit">\';
 					values_data += \'<a href="#" class="edit_options_values msadmin_button" rel="\' + s.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
 					values_data += \'<a href="#" class="delete_options_values msadmin_button" rel="\' + optid + \':\' + s.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
 					values_data+=\'</span>\';
 					values_data += \'</li>\';
 					$("#" + $(parent_li).attr("id")).replaceWith(values_data);
+
+					var attribute_values_name=\'attribute_values_image_\' + s.pov2po_id;
+					attributeImageUploader[s.pov2po_id] = new qq.FileUploader({
+						element: document.getElementById(\'attribute_values_image\' + s.pov2po_id),
+						action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=upload_attribute_values_image').'\',
+						params: {
+							attribute_values_name: attribute_values_name,
+							pov2po_id: s.pov2po_id,
+							file_type: \'attribute_values_image\' + s.pov2po_id
+						},
+						template: \'<div class="qq-uploader">\' +
+								  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
+								  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+								  \'<ul class="qq-upload-list"></ul>\' +
+								  \'</div>\',
+						onComplete: function(id, fileName, responseJSON){
+							console.log(responseJSON);
+							var filenameServer = responseJSON[\'filename\'];
+							var image_display_val=responseJSON[\'image_display\'];
+							var target_after=responseJSON[\'target_after\'];
+							var target_delete=responseJSON[\'target_delete\'];
+							$(\'#ajax_attribute_values_image\' + s.pov2po_id).val(filenameServer);
+							$(target_delete).remove();
+							$(image_display_val).insertAfter(target_after);
+
+						},
+						debug: false
+					});
 				}
 			});
 	  	});
@@ -543,9 +583,11 @@ if ($rows) {
 					dataType: "json",
 					success: function(r) {
 						if (r.results) {
-							var values_data = "";
+							var attributeImageUploader=[];
 							var classItem=\'even\';
+							$(container_id).empty();
 							$.each(r.results, function(i, v) {
+								var values_data = "";
 								if (classItem==\'even\') {
 									classItem=\'odd\';
 								} else {
@@ -557,14 +599,59 @@ if ($rows) {
 								values_data+=\''.$this->pi_getLL('admin_label_option_value').': \';
 								values_data+=v.values_name;
 								values_data+=\'</span>\';
+								if (v.values_image!=\'disabled\') {
+									values_data+=\'<span class="values_image">\';
+									values_data+=\'<label for="attribute_values_image\' + v.pov2po_id + \'">'.$this->pi_getLL('admin_image').'</label>\';
+									values_data+=\'<div id="attribute_values_image\' + v.pov2po_id + \'">\';
+									values_data+=\'<noscript>\';
+									values_data+=\'<input name="attribute_values_image\' + v.pov2po_id + \'" type="file" />\';
+									values_data+=\'</noscript>\';
+									values_data+=\'</div>\';
+									values_data+=\'<input name="ajax_attribute_values_image\' + v.pov2po_id + \'" id="ajax_attribute_values_image\' + v.pov2po_id + \'" type="hidden" value="" />\';
+									values_data+=v.values_image_display;
+									values_data+=\'</span>\';
+								}
 								values_data+=\'<span class="values_edit">\';
 								values_data += \'<a href="#" class="edit_options_values msadmin_button" rel="\' + v.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
 								values_data += \'<a href="#" class="delete_options_values msadmin_button" rel="\' + opt_id + \':\' + v.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
 								values_data+=\'</span>\';
 								values_data += \'</li>\';
+								$(container_id).append(values_data);
+
+								if (v.values_image!=\'disabled\') {
+									var attribute_values_name=\'attribute_values_image_\' + v.pov2po_id;
+									attributeImageUploader[v.pov2po_id] = new qq.FileUploader({
+										element: document.getElementById(\'attribute_values_image\' + v.pov2po_id),
+										action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=upload_attribute_values_image').'\',
+										params: {
+											attribute_values_name: attribute_values_name,
+											pov2po_id: v.pov2po_id,
+											file_type: \'attribute_values_image\' + v.pov2po_id
+										},
+										template: \'<div class="qq-uploader">\' +
+												  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
+												  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+												  \'<ul class="qq-upload-list"></ul>\' +
+												  \'</div>\',
+										onComplete: function(id, fileName, responseJSON){
+											console.log(responseJSON);
+											var filenameServer = responseJSON[\'filename\'];
+											var image_display_val=responseJSON[\'image_display\'];
+											var target_after=responseJSON[\'target_after\'];
+											var target_delete=responseJSON[\'target_delete\'];
+											$(\'#ajax_attribute_values_image\' + v.pov2po_id).val(filenameServer);
+											$(target_delete).remove();
+											$(image_display_val).insertAfter(target_after);
+
+										},
+										debug: false
+									});
+								}
+
 							});
-							values_data += \'<li><a href="#" class="msadmin_button add_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
-							$(container_id).html(values_data);
+							var values_data= \'<li><a href="#" class="msadmin_button add_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
+							$(container_id).append(values_data);
+
 							$(fetched_id).val("1");
 							$(container_id).show();
 							$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
@@ -582,6 +669,24 @@ if ($rows) {
 					$(container_id).hide();
 					$(button_label_id).html("'.$this->pi_getLL('show_attributes_values').'");
 				}
+			}
+		});
+		$(document).on("click", "#delete_attribute_values_image", function(e) {
+			e.preventDefault();
+			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_values_image').'";
+			var pov2po_id=$(this).attr("rel");
+			if (confirm(\'Are you sure?\')) {
+				$.ajax({
+					type:   "POST",
+					url:    href,
+					data:   \'pov2po=\' + pov2po_id,
+					dataType: "json",
+					success: function(r) {
+						if (r.target_delete!=\'\') {
+							$(r.target_delete).remove();
+						}
+					}
+				});
 			}
 		});
 		$(document).on("click", ".hide_attributes_values", function(e) {
