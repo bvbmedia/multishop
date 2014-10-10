@@ -579,6 +579,20 @@ class mslib_befe {
 			}
 		}
 	}
+	public function deleteAttributeValuesImage($file_name) {
+		if ($file_name) {
+			foreach ($this->ms['image_paths']['attribute_values'] as $key=>$value) {
+				$folder_name=mslib_befe::getImagePrefixFolder($file_name);
+				$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
+				if (file_exists($path)) {
+					if (unlink($path)) {
+						$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
+						@unlink($path);
+					}
+				}
+			}
+		}
+	}
 	public function enableProduct($products_id) {
 		if (!is_numeric($products_id)) {
 			return false;
@@ -925,6 +939,7 @@ class mslib_befe {
 		$ms['image_paths']['categories']['normal']=$prefix.'uploads/tx_multishop/images/categories/normal';
 		$ms['image_paths']['manufacturers']['original']=$prefix.'uploads/tx_multishop/images/manufacturers/original';
 		$ms['image_paths']['manufacturers']['normal']=$prefix.'uploads/tx_multishop/images/manufacturers/normal';
+		$ms['image_paths']['attribute_values']['original']=$prefix.'uploads/tx_multishop/images/attribute_values/original';
 		$format=explode("x", $ms['MODULES']['CATEGORY_IMAGE_SIZE_NORMAL']);
 		$ms['category_image_formats']['normal']['width']=$format[0];
 		$ms['category_image_formats']['normal']['height']=$format[1];
