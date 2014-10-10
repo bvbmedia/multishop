@@ -1146,7 +1146,7 @@
             <label index="the_following_errors_occurred">De volgende fout(en) zijn geconstateerd</label>
             <label index="no_email_address_has_been_specified">Geen e-mailadres opgegeven</label>
             <label index="choose_payment_method">Kies Betaalmethode</label>
-            <label index="choose_shipping_method">Kies Aflevermethode</label>
+            <label index="choose_shipping_method">Kies Verzendmethode</label>
             <label index="vat">BTW</label>
             <label index="price_excluding_vat">Prijs excl. BTW</label>
             <label index="review_your_order">Controleer je bestelling</label>

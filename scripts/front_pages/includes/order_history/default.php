@@ -12,9 +12,9 @@ if (mslib_fe::loggedin()) {
 					$content.=mslib_fe::printOrderDetailsTable($order, 'order_history_site');
 					$content.='
 					<div id="bottom-navigation">
-						<a href="'.mslib_fe::typolink('', '').'" class="back_button">'.$this->pi_getLL('back').'</a>
+						<a href="'.mslib_fe::typolink('', '').'" class="msFrontButton prevState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
 						<div id="navigation"> 							
-							<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[re-order]=1&tx_multishop_pi1[orders_id]='.$order['orders_id']).'"><input type="submit" id="submit" value="'.htmlspecialchars($this->pi_getLL('re-order')).'" /></a>
+							<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[re-order]=1&tx_multishop_pi1[orders_id]='.$order['orders_id']).'" class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" value="'.htmlspecialchars($this->pi_getLL('re-order')).'" /></a>
 						</div>
 					</div>					
 					';
