@@ -1706,6 +1706,14 @@ if ($this->post['action']=='category-insert') {
 								$updateArray['staffel_price']=$item['products_staffel_price'];
 							}
 							if (isset($item['products_quantity']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_quantity', $importedProductsLockedFields)))) {
+								switch($item['products_quantity']) {
+									case 'Y':
+										$item['products_quantity']=1;
+										break;
+									case 'N':
+										$item['products_quantity']=0;
+										break;
+								}
 								$updateArray['products_quantity']=$item['products_quantity'];
 							}
 							if ($item['products_model']) {
@@ -1988,6 +1996,14 @@ if ($this->post['action']=='category-insert') {
 							}
 							if (isset($item['order_unit_id'])) {
 								$updateArray['order_unit_id']=$item['order_unit_id'];
+							}
+							switch($item['products_quantity']) {
+								case 'Y':
+									$item['products_quantity']=1;
+									break;
+								case 'N':
+									$item['products_quantity']=0;
+									break;
 							}
 							$updateArray['products_quantity']=$item['products_quantity'];
 							$updateArray['extid']=$item['extid'];
