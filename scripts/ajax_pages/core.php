@@ -4,6 +4,19 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'get_category_tree':
+		$categories_tree=mslib_fe::tx_multishop_get_category_tree('', '', '');
+		$return_data=array();
+		foreach ($categories_tree as $category_tree) {
+			$return_data[]=array(
+				'id'=>$category_tree['id'],
+				'text'=>$category_tree['text']
+			);
+		}
+		$json_data=mslib_befe::array2json($return_data);
+		echo $json_data;
+		exit();
+		break;
 	case 'sort_specials_sections':
 		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 			$no=1;

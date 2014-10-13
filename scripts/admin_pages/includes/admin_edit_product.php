@@ -4,10 +4,15 @@ if (!defined('TYPO3_MODE')) {
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
+data_category_tree=[];
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
     }
+}
+function categoryTreeAjaxCallback(r) {
+	data_category_tree=r;
+	$(".select2BigDropWiderCategories").select2("data", data_category_tree, true);
 }
 jQuery(document).ready(function($) {
 	var text_input = $(\'#products_name_0\');
@@ -16,6 +21,26 @@ jQuery(document).ready(function($) {
 	$(\'.select2BigDropWider\').select2({
 		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
 		width:\'220px\'
+	});
+	$(\'.select2BigDropWiderCategories\').select2({
+		minimumInputLength:0,
+		placeholder:\'categories\',
+		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
+		width:\'220px\',
+		query: function(query) {
+			query.callback({results: data_category_tree});
+  		}
+	}).on("select2-opening", function(e) {
+		var href=\''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_category_tree').'\';
+		jQuery.ajax({
+			type:   "post",
+			url:    href,
+			data:   \'\',
+			dataType: \'json\',
+			success: categoryTreeAjaxCallback
+		});
+	}).on("select2-open", function(e) {
+		console.log(e);
 	});
 });
 </script>';
@@ -154,10 +179,18 @@ if ($this->post) {
 		$updateArray['ean_code']=$this->post['ean_code'];
 	}
 	if (isset($this->post['starttime'])) {
-		$updateArray['starttime']=strtotime($this->post['starttime']);
+		if (!empty($this->post['starttime_visitor'])) {
+			$updateArray['starttime']=strtotime($this->post['starttime']);
+		} else {
+			$updateArray['starttime']='';
+		}
 	}
 	if (isset($this->post['endtime'])) {
-		$updateArray['endtime']=strtotime($this->post['endtime']);
+		if (!empty($this->post['endtime_visitor'])) {
+			$updateArray['endtime']=strtotime($this->post['endtime']);
+		} else {
+			$updateArray['endtime']='';
+		}
 	}
 	$updateArray['alert_quantity_threshold']=$this->post['alert_quantity_threshold'];
 	$updateArray['custom_settings']=$this->post['custom_settings'];
@@ -311,7 +344,7 @@ if ($this->post) {
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_method_mappings', 'products_id=\''.$prodid.'\'');
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-				foreach ($this->post['payment_method'] as $payment_method_id => $value) {
+				foreach ($this->post['payment_method'] as $payment_method_id=>$value) {
 					$updateArray=array();
 					$updateArray['products_id']=$prodid;
 					$updateArray['method_id']=$payment_method_id;
@@ -322,7 +355,7 @@ if ($this->post) {
 				}
 			}
 			if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-				foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
+				foreach ($this->post['shipping_method'] as $shipping_method_id=>$value) {
 					$updateArray=array();
 					$updateArray['products_id']=$prodid;
 					$updateArray['method_id']=$shipping_method_id;
@@ -2050,7 +2083,7 @@ if ($this->post) {
 				<h1>'.$this->pi_getLL('admin_copy_duplicate_product').'</h1>
 				<div class="account-field" id="msEditProductInputDuplicateProduct">
 				<label for="cid">'.$this->pi_getLL('admin_select_category').'</label>
-				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"').'
+				<input type="hidden"name="cid" class="select2BigDropWiderCategories">
 				</div>
 				<div id="cp_buttons">
 					<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
@@ -2107,7 +2140,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$product['categories_id'];
-		$subpartArray['###INPUT_CATEGORY_TREE###']=mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"');
+		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="select2BigDropWiderCategories" value="'.$this->get['cid'].'">';
 		$subpartArray['###INFORMATION_SELECT2_LABEL0###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;
 		//exclude list products
@@ -2121,14 +2154,12 @@ if ($this->post) {
 								<div class="innerbox_exclude_feeds">
 									<h4>Exclude feed</h4>
 									<ul>';
-
 		$feed_stock_checkbox='<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeedsStock">
 							<label>Feed</label>
 							<div class="innerbox_methods">
 								<div class="innerbox_exclude_stock_feeds">
 									<h4>Exclude stock feed</h4>
 									<ul>';
-
 		while ($rs_feed=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_feed)) {
 			if ($_REQUEST['action']=='edit_product') {
 				if (!$tr_type or $tr_type=='even') {
@@ -2147,7 +2178,6 @@ if ($this->post) {
 					$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_feed_cb" id="disable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" checked="checked" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
 				}
 				$feed_checkbox.='</li>';
-
 				$sql_stock_check="select id from tx_multishop_feeds_stock_excludelist where feed_id='".addslashes($rs_feed['id'])."' and exclude_id='".addslashes($product['products_id'])."' and exclude_type='products'";
 				$qry_stock_check=$GLOBALS['TYPO3_DB']->sql_query($sql_stock_check);
 				$feed_stock_checkbox.='<li class="'.$tr_type.'"  id="multishop_exclude_stock_feed_'.$rs_feed['id'].'"><span>'.$rs_feed['name'].'</span>';
@@ -2164,7 +2194,6 @@ if ($this->post) {
 				$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="feed_cb" id="enable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
 				$feed_checkbox.='<input name="exclude_feed['.htmlspecialchars($rs_feed['id']).']" class="feed_cb" id="disable_exclude_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
 				$feed_checkbox.='</li>';
-
 				$feed_stock_checkbox.='<li class="'.$tr_type.'"  id="multishop_exclude_stock_feed_'.$rs_feed['id'].'"><span>'.$rs_feed['name'].'</span>';
 				$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="enable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="1" /><label for="enable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('enable').'</label>';
 				$feed_stock_checkbox.='<input name="exclude_stock_feed['.htmlspecialchars($rs_feed['id']).']" class="exclude_stock_feed_cb" id="disable_exclude_stock_feed_'.$rs_feed['id'].'" type="checkbox" rel="'.$rs_feed['id'].'" value="0" /><label for="disable_exclude_feed_'.$rs_feed['id'].'">'.$this->pi_getLL('disable').'</label>';
@@ -2341,7 +2370,7 @@ if ($this->post) {
 		 * special price percentage
 		 */
 		$special_price_percentage_value_selectbox='<select name="specials_price_percentage" id="specials_price_percentage"><option value="">'.$this->pi_getLL('select_percentage').'</option>';
-		for ($i=1; $i <= 100; $i++) {
+		for ($i=1; $i<=100; $i++) {
 			if ($product['specials_price_percentage']==$i) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'" selected="selected">'.$i.'%</option>';
 			} else {
@@ -2349,7 +2378,6 @@ if ($this->post) {
 			}
 		}
 		$special_price_percentage_value_selectbox.='</select>';
-
 		$subpartArray['###LABEL_PERCENTAGE_SELECTBOX###']=$this->pi_getLL('admin_label_or');
 		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
 		//

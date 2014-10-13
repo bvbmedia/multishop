@@ -154,6 +154,7 @@ if ($this->get['delete'] and is_numeric($this->get['job_id'])) {
 	// delete job
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_import_jobs', 'id='.$this->get['job_id']);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 }
 $this->ms['show_default_form']=1;
 if ($this->post) {
