@@ -68,10 +68,10 @@ foreach ($zones as $zone) {
 			$content.='
 			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" id="zone_edit_form">
 			<input name="zone_id" type="hidden" value="'.$this->get['zone_id'].'" />
-			<ul id="tx_multishop_countries_checkboxes">';
+			<ul id="tx_multishop_countries_checkboxes" class="zone_items">';
 			$counter=0;
 			foreach ($countries as $country) {
-				$content.='<li><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></li>';
+				$content.='<li class="zone_item_country"><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></li>';
 				$counter++;
 			}
 			$content.='</ul>
@@ -83,9 +83,9 @@ foreach ($zones as $zone) {
 		}
 	} else {
 		if ($rows>0) {
-			$content.='<ul class="zone_item">';
+			$content.='<ul class="zone_items">';
 			while (($country=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				$content.='<li>'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</li>';
+				$content.='<li class="zone_item_country">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</li>';
 			}
 			$content.='</ul>';
 		} else {
