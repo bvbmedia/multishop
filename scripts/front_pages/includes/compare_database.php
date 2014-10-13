@@ -64,13 +64,15 @@ if (!$skipMultishopUpdates) {
 	}
 	$str="DESCRIBE `tx_multishop_customers_groups_method_mappings`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-		if ($row['Field']=='id') {
-			if (empty($row['Extra'])) {
-				$str="ALTER TABLE  `tx_multishop_customers_groups_method_mappings` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT";
-				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-				$messages[]=$str;
-				break;
+	if ($qry) {
+		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+			if ($row['Field']=='id') {
+				if (empty($row['Extra'])) {
+					$str="ALTER TABLE  `tx_multishop_customers_groups_method_mappings` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$messages[]=$str;
+					break;
+				}
 			}
 		}
 	}
