@@ -87,8 +87,10 @@
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset br { display:none; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul { overflow:hidden; width:100%; margin:10px 0 0; padding:0; list-style:none; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item li { float:left; border-left:1px solid #000; background:none; margin:0; padding:0; list-style:none; line-height:100%; margin:0 0 0 10px; padding:1px 0 1px 10px; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item li:first-child { border-left:none; margin-left:0; padding-left:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item * { box-sizing:border-box; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item li { float:left; width:20%; background:none; margin:0; padding:0; list-style:none; line-height:100%; margin:0; padding:3px 0; }
+/*#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item li { float:left; border-left:1px solid #000; background:none; margin:0; padding:0; list-style:none; line-height:100%; margin:0 0 0 10px; padding:1px 0 1px 10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item li:first-child { border-left:none; margin-left:0; padding-left:0; } */
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item_buttons li { float:left; background:none; margin:0; padding:0; list-style:none; line-height:100%; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset ul.zone_item_buttons li a { display:inline-block; border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; margin:0 10px 0 0; padding:2px 6px; cursor:pointer; }
