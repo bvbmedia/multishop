@@ -24,7 +24,7 @@
             <label index="go_to_checkout">Go to Checkout</label>
             <label index="go_to_catalog">Go to Catalog</label>
             <label index="proceed_to_checkout">Proceed to Checkout</label>
-            <label index="qty">qty</label>
+            <label index="qty">Qty</label>
             <label index="product">product</label>
             <label index="subtotal">Subtotal</label>
             <label index="total">Total</label>
@@ -806,7 +806,7 @@
             <label index="admin_label_cms_marker_payment_link">Payment link (for payment reminder mail template)</label>
             <label index="admin_label_multishop_cache_has_been_cleared">Multishop cache has been cleared.</label>
             <label index="admin_label_cache_not_cleared_something_is_wrong_with_configuration_document_root_is_not_set_directly">Cache not cleared. Something is wrong with your configuration (DOCUMENT_ROOT is not set correctly).</label>
-            <label index="coc_id">COC Nr.</label>
+            <label index="coc_id">COC number</label>
             <label index="admin_label_unknown_order_status">Unknown Order Status</label>
             <label index="including_vat">Incl. VAT</label>
             <label index="no_records_found">No records found</label>
@@ -869,7 +869,7 @@
             <label index="admin_label_missing_related_images_has_been_adjust_to_the_database">missing related images has been adjust to the database</label>
             <label index="admin_label_everything_is_fine">Everything is fine.</label>
             <label index="payment_to_zone_mapping">Payment to Zone Mappings</label>
-            <label index="vat_id">VAT number:</label>
+            <label index="vat_id">VAT number</label>
             <label index="user_agent">Browser</label>
             <label index="admin_label_choose_option">choose attribute option</label>
             <label index="admin_label_choose_attribute">choose attribute value</label>
@@ -1962,7 +1962,7 @@
             <label index="admin_label_missing_related_images_has_been_adjust_to_the_database">ontbrekende afbeeldingen zijn aangepast in de database</label>
             <label index="admin_label_everything_is_fine">Alles is in orde.</label>
             <label index="payment_to_zone_mapping">Betaalmethodes per zone</label>
-            <label index="vat_id">BTW nummer:</label>
+            <label index="vat_id">BTW nummer</label>
             <label index="user_agent">Browser</label>
             <label index="admin_label_choose_option">selecteer attribuut optie</label>
             <label index="admin_label_choose_attribute">selecteer attribuut waarde</label>
