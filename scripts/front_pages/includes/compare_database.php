@@ -62,19 +62,12 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-	$str="DESCRIBE `tx_multishop_customers_groups_method_mappings`";
+	$str="SHOW COLUMNS FROM `tx_multishop_customers_groups_method_mappings` WHERE Field='id' and Extra like 'AUTO%'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if ($qry) {
-		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-			if ($row['Field']=='id') {
-				if (empty($row['Extra'])) {
-					$str="ALTER TABLE  `tx_multishop_customers_groups_method_mappings` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT";
-					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-					$messages[]=$str;
-					break;
-				}
-			}
-		}
+	if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+		$str="ALTER TABLE  `tx_multishop_customers_groups_method_mappings` CHANGE  `id`  `id` INT( 11 ) NOT NULL AUTO_INCREMENT";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
 	}
 	// attributes values image
 	$str="select products_options_values_image from tx_multishop_products_options_values_to_products_options limit 1";
