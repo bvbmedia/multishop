@@ -36,7 +36,7 @@ if (count($zones['zone_id'])) {
 		$content.='</tr>';
 		foreach ($zones['zone_id'] as $zone_idx=>$zone_id) {
 			$content.='<tr>';
-			$content.='<td>'.$zones['zone_name'][$zone_idx].' ('.implode(', ', $zones['countries'][$zone_id]).')</td>';
+			$content.='<td>'.$zones['zone_name'][$zone_idx].' ('.implode('<br/> ', $zones['countries'][$zone_id]).')</td>';
 			foreach ($shipping_methods as $shipping_method) {
 				$vars=unserialize($shipping_method['vars']);
 				$sql_check="select id from tx_multishop_shipping_methods_to_zones where zone_id = ".$zone_id." and shipping_method_id = ".$shipping_method['id'];
