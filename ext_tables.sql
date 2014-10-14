@@ -2,6 +2,8 @@ CREATE TABLE `fe_groups` (
   `tx_multishop_discount` int(2) default '0',
   PRIMARY KEY (`uid`),
   KEY `parent` (`pid`),
+  KEY `hidden` (`hidden`),
+  KEY `deleted` (`deleted`),
   KEY `tx_multishop_discount` (`tx_multishop_discount`)
 );
 
@@ -11,6 +13,7 @@ CREATE TABLE `fe_users` (
   `comments` text,
   `address_number` varchar(150) default '',
   `mobile` varchar(150) default '',
+  `gender` varchar(1) default '',
   `tx_multishop_discount` int(2) default '0',
   `tx_multishop_newsletter` tinyint(1) default '0',
   `tx_multishop_code` varchar(50) default '',
@@ -33,6 +36,8 @@ CREATE TABLE `fe_users` (
   KEY `tx_multishop_newsletter` (`tx_multishop_newsletter`),
   KEY `disable` (`disable`),
   KEY `deleted` (`deleted`),
+  KEY `crdate` (`crdate`),
+  KEY `lastlogin` (`lastlogin`),
   KEY `admin_search` (`company`,`name`,`email`),
   KEY `tx_multishop_code` (`tx_multishop_code`),
   KEY `tx_multishop_source_id` (`tx_multishop_source_id`),
