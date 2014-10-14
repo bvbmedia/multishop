@@ -3190,16 +3190,6 @@ class mslib_befe {
 		$selectbox_str=implode("\n", $selectbox_options);
 		return $selectbox_str;
 	}
-	function getStaticInfoTablesTaxesPluginVersion() {
-		if (t3lib_extMgm::isLoaded('static_info_tables_taxes', 0)) {
-			$plugin_ver=$GLOBALS['EM_CONF']['static_info_tables_taxes']['version'];
-			$version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger($plugin_ver) : t3lib_div::int_from_ver($plugin_ver);
-			$t3version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : t3lib_div::int_from_ver(TYPO3_version);
-			if ($version>=6000000) {
-			} else {
-			}
-		}
-	}
 	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='') {
 		$orders_tax_data=$order['orders_tax_data'];
 		$tmpcontent='<table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" id="orderDetailsPDFInvoice">';
