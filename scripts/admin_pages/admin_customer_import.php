@@ -39,6 +39,7 @@ $coltypes['fax']=$this->pi_getLL('fax');
 $coltypes['mobile']=$this->pi_getLL('mobile');
 $coltypes['company_name']=$this->pi_getLL('company');
 $coltypes['vat_id']=$this->pi_getLL('vat_id');
+$coltypes['coc_id']=$this->pi_getLL('coc_id');
 $coltypes['uid']=$this->pi_getLL('user_id');
 $coltypes['gender']=$this->pi_getLL('gender');
 $coltypes['password']=$this->pi_getLL('password');
@@ -788,6 +789,12 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						}
 						if (isset($item['tx_multishop_discount'])) {
 							$user['tx_multishop_discount']=$item['discount'];
+						}
+						if ($item['vat_id']) {
+							$user['tx_multishop_vat_id']=$item['vat_id'];
+						}
+						if ($item['coc_id']) {
+							$user['tx_multishop_coc_id']=$item['coc_id'];
 						}
 						$user['gender']=$item['gender'];
 						$user['date_of_birth']=$item['birthday'];

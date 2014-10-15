@@ -20,13 +20,15 @@ $fields['address_ext']='address number extension';
 $fields['zip']='zip';
 $fields['city']='city';
 $fields['country']='country';
-//$fields['region']					='region';		 
+//$fields['region']					='region';
 $fields['telephone']='telephone';
 $fields['fax']='fax';
 $fields['mobile']='mobile';
-//$fields['vat_id']					='VAT id';		 
+//$fields['vat_id']					='VAT id';
 $fields['tx_multishop_newsletter']='newsletter';
 $fields['tx_multishop_discount']='discount';
+$fields['tx_multishop_vat_id']='VAT ID';
+$fields['tx_multishop_coc_id']='CoC ID';
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_export.php']['msCustomersExportFieldsHook'])) {
 	$params=array(
