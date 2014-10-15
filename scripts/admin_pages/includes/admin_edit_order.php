@@ -1609,14 +1609,14 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($orders_tax_data['shipping_tax'] || $orders_tax_data['payment_tax']) {
 				$tmpcontent.=$content_shipping_costs;
 				$tmpcontent.=$content_payment_costs;
-				$tmpcontent.=$content_subtotal_tax;
 				$tmpcontent.=$content_discount;
+				$tmpcontent.=$content_subtotal_tax;
 				$tmpcontent.=$content_total;
 			} else {
-				$tmpcontent.=$content_subtotal_tax;
 				$tmpcontent.=$content_shipping_costs;
 				$tmpcontent.=$content_payment_costs;
 				$tmpcontent.=$content_discount;
+				$tmpcontent.=$content_subtotal_tax;
 				$tmpcontent.=$content_total;
 			}
 		}
