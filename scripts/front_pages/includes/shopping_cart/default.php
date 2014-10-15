@@ -33,7 +33,7 @@ if ($this->ms['MODULES']['COUPONS']) {
 			url: "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_discount').'",
 			cache :false,
 			data: "&code=" + value,
-			success: 
+			success:
 				function(t) {
 					jQuery("#span_discount").html(t);
 					jQuery("#korting").val(t);
@@ -42,7 +42,7 @@ if ($this->ms['MODULES']['COUPONS']) {
 				function() {
 					jQuery("#span_discount").html("0");
 				}
-		 });		
+		 });
 	}
 	jQuery(document).ready(function($) {
 		postCoupon(jQuery("#coupons_code").val());
@@ -159,7 +159,7 @@ if (count($cart['products'])>0) {
 						}
 					}
 				}
-				// loading the attributes eof				
+				// loading the attributes eof
 			}
 			// show selectbox by products multiplication or show default input
 			$quantity_html='';
@@ -294,12 +294,27 @@ if (count($cart['products'])>0) {
 	$output['label_update_shopping_cart']=$this->pi_getLL('update_shopping_cart');
 	$output['goto_catalog_link']=mslib_fe::typolink($this->shop_pid, '');
 	$output['label_goto_catalog']=$this->pi_getLL('go_to_catalog');
+	$output['label_checkout']=$this->pi_getLL('proceed_to_checkout');
+	// MINIMUM ORDER AMOUNT
+	$count_products=count($cart['products']);
+	if (!empty($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']>0) {
+		if ($count_products<$this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) {
+			$disable_checkout=true;
+			$output['label_checkout']=sprintf($this->pi_getLL('minimum_ordered_products_must_at_least_x_items'), $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']);
+		}
+	}
+	// MAXIMUM ORDER AMOUNT
+	if (!empty($this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']>0) {
+		if ($count_products>$this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']) {
+			$disable_checkout=true;
+			$output['label_checkout']=sprintf($this->pi_getLL('maximum_ordered_products_are_x_items'), $this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']);
+		}
+	}
 	if ($disable_checkout) {
 		$output['checkout_link']='javascript:void(0)';
 	} else {
 		$output['checkout_link']=mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]=checkout');
 	}
-	$output['label_checkout']=$this->pi_getLL('proceed_to_checkout');
 	// fill the row marker with the expanded rows
 	$markerArray=array();
 	$markerArray['LABEL_COUPON_CODE']=$output['label_coupon_code'];

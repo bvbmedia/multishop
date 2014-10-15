@@ -17,6 +17,28 @@ if (!defined('TYPO3_MODE')) {
 // 12 Invoice Settings
 $records=array();
 $records[]=array(
+	'configuration_title'=>'Minimum order amount',
+	'configuration_key'=>'MINIMUM_ORDER_AMOUNT',
+	'configuration_value'=>'',
+	'description'=>'Minimum order amount',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Maximum order amount',
+	'configuration_key'=>'MAXIMUM_ORDER_AMOUNT',
+	'configuration_value'=>'',
+	'description'=>'Maximum order amound',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Enable the attributes values image',
 	'configuration_key'=>'ENABLE_ATTRIBUTE_VALUE_IMAGES',
 	'configuration_value'=>'0',

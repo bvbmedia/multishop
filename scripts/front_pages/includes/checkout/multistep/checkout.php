@@ -9,7 +9,24 @@ if (!mslib_fe::loggedin() and $this->ms['MODULES']['DISABLE_CHECKOUT_FOR_GUESTS'
 }
 //$this->ms['page']='checkout';
 $cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
-if (is_array($cart['products']) and count($cart['products'])) {
+$count_products=count($cart['products']);
+// minimum order amount
+if (!empty($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']>0) {
+	if ($count_products<$this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) {
+		// redirect to shopping cart page
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart'));
+		exit();
+	}
+}
+// maximum order amount
+if (!empty($this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']>0) {
+	if ($count_products>$this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']) {
+		// redirect to shopping cart page
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart'));
+		exit();
+	}
+}
+if (is_array($cart['products']) and $count_products) {
 	// load customer country
 	// use for filtering the available payment on the customer country
 	$address=$cart['user'];
