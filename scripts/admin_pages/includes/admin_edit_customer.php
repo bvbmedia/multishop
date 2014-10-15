@@ -483,16 +483,12 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 }
 // global fields
-$vat_input_block='';
-if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
-	$vat_input_block='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
-	<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/>';
-}
-$coc_input_block='';
-if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
-	$coc_input_block='<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
-	<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
-}
+// VAT ID
+$vat_input_block='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
+<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/>';
+//COC ID
+$coc_input_block='<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
+<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
 $subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
 $subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
