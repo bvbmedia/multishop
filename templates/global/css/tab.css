@@ -648,7 +648,7 @@ ul#ui-menu-manual-option li.ui-menu-item span#more-results:hover { background:#0
 #tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer label { float:none; padding:3px 0 10px 0; text-align:left; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer .msAttributesField { float:none; overflow:visible; display:block; width:auto; padding:0 0 10px 0; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer .msAttributesField label { float:none; display:inline-block; width:auto; margin:0; padding:0; }
-#tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer .msAttributesField input[type="text"] { float:none; display:inline-block; width:70px; margin:0 5px 0 0; text-align:right; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer .msAttributesField input[type="text"] { float:none; display:inline-block; width:64px; margin:0 5px 0 0; text-align:right; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_options.tab_content .msAdminFormFieldValueFloatContainer .msAttributesField.hidden { padding:0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #products_group_price.tab_content .msAttributesField { padding:0 0 10px; }

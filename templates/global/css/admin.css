@@ -48,7 +48,7 @@
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttribute { padding:0 0 0 200px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField { overflow:hidden; padding:0px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField input[type="text"] { clear:left; float:left; margin:0 10px 0 0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField input.msHandlingCostExcludingVat { margin-bottom:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField input.msHandlingCostIncludingVat { width:64px; margin-bottom:10px; margin-right: 5px;}
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form#add_payment_form .account-field .msAttributesField label { clear:none; float:left; width:auto; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .account-field .input_label_wrapper { float:left; padding-top:0; }
@@ -520,7 +520,7 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset select#flat_weight5 { margin:10px 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset #has1 table { margin:5px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField { width:160px; text-align:left; padding-left:10px; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField input { float:none; display:inline-block; text-align:left; margin:5px 10px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField input { float:none; display:inline-block; text-align:left; margin:5px 5px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField label { display:inline-block; width:52px; text-align:left; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField label[for="display_name"] { width:auto; text-transform:uppercase; }
 
