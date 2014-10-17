@@ -1041,15 +1041,17 @@ if ($this->post) {
 							<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
 							<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
 							<label>&nbsp;</label>
-							<table cellpadding="0" cellspacing="0">
-								<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="0" /></td></tr>
-							</table>
-
+							<div class="product_staffel_price">
+								<table cellpadding="0" cellspacing="0">
+									<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="0" /></td></tr>
+								</table>
+							</div>
 						</div>';
 			} else {
 				$staffel_price_block.='
-						<div class="account-field" id="msEditProductInputStaffelPrice">
-							<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
+					<div class="account-field" id="msEditProductInputStaffelPrice">
+						<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
+						<div class="product_staffel_price">
 							<table cellpadding="0" cellspacing="0">
 								<tr>
 									<td>'.t3lib_div::strtolower($this->pi_getLL('admin_from')).'</td>
@@ -1066,18 +1068,19 @@ if ($this->post) {
 					$sp_price_display=mslib_fe::taxDecimalCrop($sp_price, 2, false);
 					$staffel_price_display_incl=mslib_fe::taxDecimalCrop($sp_price+$staffel_tax, 2, false);
 					$staffel_price_block.='
-									<tr id="sp_'.$sp_idx.'">
-										<td><span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></td>
-										<td><span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></td>
-										<td>
-										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-										<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
-										<td><input type="button" value="X" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="msadmin_button" /></td>
-									</tr>';
+						<tr id="sp_'.$sp_idx.'">
+							<td><span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></td>
+							<td><span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></td>
+							<td>
+							<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+							<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
+							<td><input type="button" value="X" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="msadmin_button" /></td>
+						</tr>';
 				}
 				$staffel_price_block.='<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><input type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input" /></td></tr>
-							</table>
+								</table>
+							</div>
 					</div>';
 			}
 			$staffel_price_block.='</div>';
