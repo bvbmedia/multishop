@@ -608,3 +608,11 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul li .edit_customer { }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul.odd li { background:#f5f5f5; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .msAdminTableWrapper ul.msAdminTableHeading li { background:#333 url(../../global/images/importer_th.gif) left top repeat-x; font-weight:bold; color:#fff; }
+
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #msEditProductInputStaffelPrice { overflow:visible; border-bottom:none; background:none; padding:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #msEditProductInputStaffelPrice .product_staffel_price { padding-left:200px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #msEditProductInputStaffelPrice .product_staffel_price table { border:none; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #msEditProductInputStaffelPrice .product_staffel_price table td span { display:inline-block; padding:0 5px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #msEditProductInputStaffelPrice .product_staffel_price table td { text-align:left; padding:4px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #msEditProductInputStaffelPrice .product_staffel_price table td .msAttributesField input[type="text"] { width:64px; margin:0 5px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #msEditProductInputStaffelPrice .product_staffel_price table td .msAttributesField label { clear:none; float:none; display:inline-block; width:auto; text-align:left;87 }
