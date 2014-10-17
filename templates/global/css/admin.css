@@ -519,9 +519,10 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset select#flat_weight4,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset select#flat_weight5 { margin:10px 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset #has1 table { margin:5px 0 0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField { width:160px; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField input { float:none; display:inline-block; margin:5px 10px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField { width:160px; text-align:left; padding-left:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField input { float:none; display:inline-block; text-align:left; margin:5px 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField label { display:inline-block; width:52px; text-align:left; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core fieldset.multishop_fieldset .msAttributesField label[for="display_name"] { width:auto; text-transform:uppercase; }
 
 /* .msadmin_balloon_item i { display:block; padding:0 0 5px; }
 .msadmin_balloon_item p { margin:0 0 10px; }
