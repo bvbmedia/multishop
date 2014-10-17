@@ -14,21 +14,21 @@
 			<td class="shoppingcart-img">
 				<div class="checkout_listing_image"><a href="###PRODUCT_LINK###">###PRODUCT_IMAGE###</a></div>
 			</td>
-			
-			<td valign="top" class="shoppingcart-product">
+
+            <td valign="top" class="shoppingcart-product">
 				<span class="bold"><a href="###PRODUCT_LINK###">###PRODUCT_NAME###</a></span>
 				###PRODUCT_ATTRIBUTES###
 			</td>
-			<td valign="top" class="shoppingcart-qty">###PRODUCT_QTY###</td>	
-			<td valign="top" class="shoppingcart-button">
+            <td valign="top" class="shoppingcart-qty">###PRODUCT_QTY###</td>
+            <td valign="top" class="shoppingcart-button">
 				<a href="###PRODUCT_LINK_DELETE###"><div class="ms_remove_product_button">###LABEL_REMOVE_PRODUCT###</div></a>
 			</td>
 			<td align="right" valign="top" class="shoppingcart-subtotal">###PRODUCT_FINAL_PRICE###</td>
 		</tr>
 		<!-- ###ITEM### end -->
-		<!-- ###CART_FOOTER### begin -->		
-		<tr>
-			<td colspan="###SHOPPING_CART_COLSPAN###" align="right" class="shoppingcart-subtotaal">
+        <!-- ###CART_FOOTER### begin -->
+        <tr>
+        <td colspan="###SHOPPING_CART_COLSPAN###" align="right" class="shoppingcart-subtotaal">
 				<div>
 					<span class="shoppingcart-subtotaal-txt">###LABEL_SHOPPING_CART_SUBTOTAL###: </span>
 					<span class="shoppingcart-subtotaal-price">###SHOPPING_CART_SUBTOTAL###</span>
@@ -39,20 +39,27 @@
 		<tr>
 			<td colspan="3" align="right" class="shoppingcart-coupons">
 				<span class="shoppingcart-subtotaal-txt">###LABEL_COUPON_CODE###: </span>
-				<input type="text" name="coupons_code" id="coupons_code" value="###COUPON_CODE###" /> 
-				<input type="hidden" name="korting" id="korting" value="###COUPON_CODE_VALUE###" /> 
-			</td>
+                <input type="text" name="coupons_code" id="coupons_code" value="###COUPON_CODE###"/>
+                <input type="hidden" name="korting" id="korting" value="###COUPON_CODE_VALUE###"/>
+            </td>
 			<td align="right">###LABEL_DISCOUNT###: </td>
 			<td align="right"><span id="span_discount">###DISCOUNT_VALUE###</span></td>
 		</tr>
-		<!-- ###DISCOUNT_MODULE_WRAPPER### end -->		
-		<tr>
+        <!-- ###DISCOUNT_MODULE_WRAPPER### end -->
+        <tr>
 			<td colspan="###SHOPPING_CART_COLSPAN###" align="right" class="shoppingcart-proceed-to-checkout-wrapper">
 				<span class="msFrontButton updateState arrowUp arrowPosLeft"><input type="submit" value="###LABEL_UPDATE_SHOPPING_CART###" class="proceed_to_checkout_button_en" /></span>
 			</td>
 		</tr>
-		<!-- ###CART_FOOTER### end -->		
-	</table>
+        <!-- ###MIN_MAX_CART_AMOUNT_WRAPPER### begin -->
+        <tr>
+            <td colspan="5" align="center" class="shoppingcart-minmax-warning">
+                ###MINMAX_AMOUNT_WARNING###
+            </td>
+        </tr>
+        <!-- ###MIN_MAX_CART_AMOUNT_WRAPPER### end -->
+        <!-- ###CART_FOOTER### end -->
+    </table>
 </form>
 <div id="bottom-navigation"><a href="#" onClick="history.back();return false;" class="msFrontButton prevState arrowLeft arrowPosLeft proceed_to_shop"><span>###LABEL_GOTO_CATALOG###</span></a>
 	<div class="cart">
@@ -73,8 +80,8 @@ jQuery(document).ready(function($) {
 			var new_val = parseInt(qty - 1);
 			$(qty_id).val(new_val);
 		}
-		$("#shopping_cart_form").submit();		
-	});
+        $("#shopping_cart_form").submit();
+    });
 	$(".qty_plus").click(function() {
 		var qty_id = "#" + $(this).attr("rel");
 		var qty = parseInt($(qty_id).val());
@@ -82,6 +89,6 @@ jQuery(document).ready(function($) {
 		$(qty_id).val(new_val);
 		$("#shopping_cart_form").submit();
 	});
-});	
+});
 </script>
 <!-- ###TEMPLATE### end -->

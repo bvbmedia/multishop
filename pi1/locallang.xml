@@ -1106,8 +1106,8 @@
             <label index="admin_mass_updater_flash_msg_x_products_has_been_updated">%d products has been updated.</label>
             <label index="admin_mass_updater_flash_msg_price_update_complete">Price update completed.</label>
             <label index="admin_mass_updater_for_x_products_the_tax_rules_group_has_been_changed">For %d product(s) the TAX rules group has been changed.</label>
-            <label index="minimum_ordered_products_must_at_least_x_items">Minimum ordered products must at least %d items</label>
-            <label index="maximum_ordered_products_are_x_items">Maximum ordered products are %d items</label>
+            <label index="minimum_carty_amount_must_at_least_x">In order to continue checkout the minimum order subtotal amount must at least %s</label>
+            <label index="maximum_cart_total_amount_are_x">In order to continue checkout the maximum order subtotal amount must %s</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

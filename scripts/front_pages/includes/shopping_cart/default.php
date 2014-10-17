@@ -2,6 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+$mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
+$mslib_cart->init($this);
 $disable_checkout=false;
 $output=array();
 // now parse all the objects in the tmpl file
@@ -297,18 +300,29 @@ if (count($cart['products'])>0) {
 	$output['label_checkout']=$this->pi_getLL('proceed_to_checkout');
 	// MINIMUM ORDER AMOUNT
 	$count_products=count($cart['products']);
+	$cart_total_amount=$mslib_cart->countCartTotalPrice(0);
+	$minmax_warning='';
 	if (!empty($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']>0) {
-		if ($count_products<$this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) {
+		if ($cart_total_amount<$this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) {
 			$disable_checkout=true;
-			$output['label_checkout']=sprintf($this->pi_getLL('minimum_ordered_products_must_at_least_x_items'), $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']);
+			$minmax_warning=sprintf($this->pi_getLL('minimum_carty_amount_must_at_least_x'), mslib_fe::amount2Cents($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']));
 		}
 	}
 	// MAXIMUM ORDER AMOUNT
 	if (!empty($this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']>0) {
-		if ($count_products>$this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']) {
+		if ($cart_total_amount>$this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']) {
 			$disable_checkout=true;
-			$output['label_checkout']=sprintf($this->pi_getLL('maximum_ordered_products_are_x_items'), $this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']);
+			$minmax_warning=sprintf($this->pi_getLL('maximum_cart_total_amount_are_x'), mslib_fe::amount2Cents($this->ms['MODULES']['MAXIMUM_ORDER_AMOUNT']));
 		}
+	}
+	if (empty($minmax_warning)) {
+		// clear coupon html
+		// because the DISCOUNT_MODULE_WRAPPER is inside the CART_FOOTER wrapper we have to substitute it on the footer
+		$subFooterparts=array();
+		$subFooterparts['minmax_warning']=$this->cObj->getSubpart($subparts['footer'], '###MIN_MAX_CART_AMOUNT_WRAPPER###');
+		$subpartFooterArray=array();
+		$subpartFooterArray['###MIN_MAX_CART_AMOUNT_WRAPPER###']='';
+		$subparts['footer']=$this->cObj->substituteMarkerArrayCached($subparts['footer'], array(), $subpartFooterArray);
 	}
 	if ($disable_checkout) {
 		$output['checkout_link']='javascript:void(0)';
@@ -327,6 +341,7 @@ if (count($cart['products'])>0) {
 	$markerArray['SHOPPING_CART_COLSPAN']=$output['shopping_cart_colspan'];
 	$markerArray['PRODUCT_ROW_TYPE2']=$output['product_row_type2'];
 	$markerArray['LABEL_UPDATE_SHOPPING_CART']=$output['label_update_shopping_cart'];
+	$markerArray['MINMAX_AMOUNT_WARNING']=$minmax_warning;
 	$footerItem=$this->cObj->substituteMarkerArray($subparts['footer'], $markerArray, '###|###');
 	// header part
 	$subpartArray=array();
