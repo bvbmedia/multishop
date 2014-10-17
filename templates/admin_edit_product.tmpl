@@ -456,14 +456,20 @@ jQuery(document).ready(function ($) {
         <label>###LABEL_PRICE###</label>
         <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputNormalPrice">
             <label for="products_price">###LABEL_NORMAL_PRICE###</label>
-            <div class="msAttributesField">###LABEL_CURRENCY0### <input type="text" name="products_price_excl_vat" class="price small_input msPriceExcludingVat" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###"><label for="products_price_excl_vat">Excl. VAT</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY1### <input type="text" name="products_price_incl_vat" class="price small_input msPriceIncludingVat" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###"><label for="products_price_incl_vat">Incl. VAT</label></div>
+
+            <div class="msAttributesField">###LABEL_CURRENCY0### <input type="text" name="products_price_excl_vat" class="price small_input msPriceExcludingVat" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###"><label
+                    for="products_price_excl_vat">###LABEL_EXCLUDING_VAT0###</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY1### <input type="text" name="products_price_incl_vat" class="price small_input msPriceIncludingVat" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###"><label
+                    for="products_price_incl_vat">###LABEL_INCLUDING_VAT0###</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="products_price" value="###VALUE_ORIGINAL_PRICE###" /></div>
         </div>
         <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputSpecialPrice">
             <label for="products_price">###LABEL_SPECIAL_PRICE###</label>
-            <div class="msAttributesField">###LABEL_CURRENCY2### <input type="text" name="specials_new_products_price_excl_vat" class="price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_excl_vat">Excl. VAT</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY3### <input type="text" name="specials_new_products_price_incl_vat" class="price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_incl_vat">Incl. VAT</label></div>
+
+            <div class="msAttributesField">###LABEL_CURRENCY2### <input type="text" name="specials_new_products_price_excl_vat" class="price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat"
+                                                                        value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_excl_vat">###LABEL_EXCLUDING_VAT1###</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY3### <input type="text" name="specials_new_products_price_incl_vat" class="price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat"
+                                                                        value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_incl_vat">###LABEL_INCLUDING_VAT1###</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
             <div class="special_price_percentage">
                 <label for="special_price_percentage">###LABEL_PERCENTAGE_SELECTBOX###</label>
@@ -480,8 +486,11 @@ jQuery(document).ready(function ($) {
         </div>
         <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputCapitalPrice">
             <label for="product_capital_price">###LABEL_CAPITAL_PRICE###</label>
-            <div class="msAttributesField">###LABEL_CURRENCY4### <input type="text" name="product_capital_price_excl_vat" class="price small_input msPriceExcludingVat" id="product_capital_price_excl_vat" value="###VALUE_EXCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_excl_vat">Excl. VAT</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY5### <input type="text" name="product_capital_price_incl_vat" class="price small_input msPriceIncludingVat" id="product_capital_price_incl_vat" value="###VALUE_INCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_incl_vat">Incl. VAT</label></div>
+
+            <div class="msAttributesField">###LABEL_CURRENCY4### <input type="text" name="product_capital_price_excl_vat" class="price small_input msPriceExcludingVat" id="product_capital_price_excl_vat"
+                                                                        value="###VALUE_EXCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_excl_vat">###LABEL_EXCLUDING_VAT2###</label></div>
+            <div class="msAttributesField">###LABEL_CURRENCY5### <input type="text" name="product_capital_price_incl_vat" class="price small_input msPriceIncludingVat" id="product_capital_price_incl_vat"
+                                                                        value="###VALUE_INCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_incl_vat">###LABEL_INCLUDING_VAT2###</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="product_capital_price" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" /></div>
         </div>
         <div class="account-field" id="specials_sections"></div>
@@ -494,10 +503,10 @@ jQuery(document).ready(function ($) {
         <input type="text" name="alert_quantity_threshold" class="alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
     </div>
     <div class="account-field toggle_advanced_option" id="msEditProductInputStartEndTime">
-        <label for="starttime" class="starttime">Starttime</label>
+        <label for="starttime" class="starttime">###LABEL_STARTTIME###</label>
         <input type="text" name="starttime_visitor" class="starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
         <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">
-        Endtime&nbsp;
+        ###LABEL_ENDTIME###&nbsp;
         <input type="text" name="endtime_visitor" class="endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
         <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
     </div>

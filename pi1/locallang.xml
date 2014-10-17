@@ -1108,6 +1108,9 @@
             <label index="admin_mass_updater_for_x_products_the_tax_rules_group_has_been_changed">For %d product(s) the TAX rules group has been changed.</label>
             <label index="minimum_carty_amount_must_at_least_x">In order to continue checkout the minimum order subtotal amount must at least %s</label>
             <label index="maximum_cart_total_amount_are_x">In order to continue checkout the maximum order subtotal amount must %s</label>
+            <label index="admin_label_starttime">Starttime</label>
+            <label index="admin_label_endtime">Endtime</label>
+            <label index="admin_till2">t/m</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

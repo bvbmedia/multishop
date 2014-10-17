@@ -971,14 +971,14 @@ if ($this->post) {
 								counter_data = counter_data + 1;
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" />\';
+								elem += \'<span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" />\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
+								elem += \'<span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msStaffelPriceExcludingVat" value=""><label for="display_name">Excl. VAT</label></div>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msStaffelPriceIncludingVat" value=""><label for="display_name">Incl. VAT</label></div>\';
+								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name_excluding_vat" class="msStaffelPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
+								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name_including_vat" class="msStaffelPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'<td>\';
 								elem += \'<input type="button" value="x" onclick="remStaffelInput(\' + counter_data + \')"  class="msadmin_button" />\';
@@ -996,14 +996,14 @@ if ($this->post) {
 								}
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" value="\' + next_qty_col_1 + \'" />\';
+								elem += \'<span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" value="\' + next_qty_col_1 + \'" />\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
+								elem += \'<span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msStaffelPriceExcludingVat" value=""><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msStaffelPriceIncludingVat" value=""><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>\';
+								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="msStaffelPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
+								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name_including_vat" id="display_name_including_vat" class="msStaffelPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
@@ -1067,8 +1067,8 @@ if ($this->post) {
 					$staffel_price_display_incl=mslib_fe::taxDecimalCrop($sp_price+$staffel_tax, 2, false);
 					$staffel_price_block.='
 									<tr id="sp_'.$sp_idx.'">
-										<td><input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></td>
-										<td><input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></td>
+										<td><span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></td>
+										<td><span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></td>
 										<td>
 										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
 										<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
@@ -2210,6 +2210,12 @@ if ($this->post) {
 		$subpartArray['###LABEL_CURRENCY3###']=mslib_fe::currency();
 		$subpartArray['###LABEL_CURRENCY4###']=mslib_fe::currency();
 		$subpartArray['###LABEL_CURRENCY5###']=mslib_fe::currency();
+		$subpartArray['###LABEL_EXCLUDING_VAT0###']=$this->pi_getLL('excluding_vat');
+		$subpartArray['###LABEL_EXCLUDING_VAT1###']=$this->pi_getLL('excluding_vat');
+		$subpartArray['###LABEL_EXCLUDING_VAT2###']=$this->pi_getLL('excluding_vat');
+		$subpartArray['###LABEL_INCLUDING_VAT0###']=$this->pi_getLL('including_vat');
+		$subpartArray['###LABEL_INCLUDING_VAT1###']=$this->pi_getLL('including_vat');
+		$subpartArray['###LABEL_INCLUDING_VAT2###']=$this->pi_getLL('including_vat');
 		$subpartArray['###VALUE_EXCL_VAT_PRICE###']=htmlspecialchars($price_excl_vat_display);
 		$subpartArray['###VALUE_INCL_VAT_PRICE###']=htmlspecialchars($price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_PRICE###']=htmlspecialchars($product['products_price']);
@@ -2261,6 +2267,8 @@ if ($this->post) {
 			$product['endtime_visual']=date($this->pi_getLL('locale_datetime_format'), $product['endtime']);
 			$product['endtime_sys']=date("Y-m-d H:i:s", $product['endtime']);
 		}
+		$subpartArray['###LABEL_STARTTIME###']=$this->pi_getLL('admin_label_starttime');
+		$subpartArray['###LABEL_ENDTIME###']=$this->pi_getLL('admin_label_endtime');
 		$subpartArray['###VALUE_DATE_AVAILABLE_VISUAL###']=$product['products_date_available_visual'];
 		$subpartArray['###VALUE_DATE_AVAILABLE_SYS###']=$product['products_date_available_sys'];
 		$subpartArray['###VALUE_STARTTIME_VISUAL###']=$product['starttime_visual'];
