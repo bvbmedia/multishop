@@ -1414,7 +1414,7 @@ if ($this->post['action']=='category-insert') {
 						if ($this->post['input'][$i]) {
 							$groupDelimiter='';
 							$catDelimiter='';
-							$tmp=explode("|", $this->post['input'][$i]);
+							$tmp=explode(';', $this->post['input'][$i]);
 							if (count($tmp[0]) == 2) {
 								$groupDelimiter=$tmp[0];
 								$catDelimiter=$tmp[1];

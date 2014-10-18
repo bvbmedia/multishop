@@ -28,7 +28,6 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$row['products_id'].'\'', $array);
 	$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 }
-
 $str="select id from tx_multishop_products_options_values_to_products_options_desc limit 1";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
