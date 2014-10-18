@@ -1405,31 +1405,58 @@ if ($this->post['action']=='category-insert') {
 						}
 					}
 					if ($item['category_group'] and $this->post['input'][$flipped_select['category_group']]) {
-						$cats=explode($this->post['input'][$flipped_select['category_group']], $item['category_group']);
-						$tel=0;
-						foreach ($cats as $cat) {
-							$cat=trim($cat);
-							$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
-							$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
-							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
-								$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
-								$this->ms['target-cid']=$row['categories_id'];
-							} else {
-								$str="insert into tx_multishop_categories (parent_id,status,date_added, page_uid) VALUES ('".$this->ms['target-cid']."',1,".time().",".$this->showCatalogFromPage.")";
-								$this->ms['sqls'][]=$str;
-								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-								$this->ms['target-cid']=$GLOBALS['TYPO3_DB']->sql_insert_id();
-								$str="insert into tx_multishop_categories_description (categories_id, language_id, categories_name) VALUES ('".$this->ms['target-cid']."','".$language_id."','".addslashes(trim($cat))."')";
-								$this->ms['sqls'][]=$str;
-								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-								$image='';
-								$categories_image='';
-								$stats['categories_added']++;
+						// initialize array
+						$this->ms['products_to_categories_array']=array();
+						// for supporting multiple paths you have to use aux field like this:
+						// example multiple groups in column:
+						// maincat>subcat|maincat>subcat2
+						// then the aux must contain the following value: |;>
+						if ($this->post['input'][$i]) {
+							$groupDelimiter='';
+							$catDelimiter='';
+							$tmp=explode("|", $this->post['input'][$i]);
+							if (count($tmp[0]) == 2) {
+								$groupDelimiter=$tmp[0];
+								$catDelimiter=$tmp[1];
+							} elseif(count($tmp[0]) == 1) {
+								$catDelimiter=$tmp[0];
 							}
-							$tel++;
+							if ($groupDelimiter) {
+								$groups=explode($groupDelimiter, $item['category_group']);
+							} else {
+								$groups=array($item['category_group']);
+							}
+							foreach ($groups as $group) {
+								// first configure target-cid (back) to the root
+								$this->ms['target-cid']=$this->post['cid'];
+								$cats=explode($catDelimiter, $group);
+								$tel=0;
+								foreach ($cats as $cat) {
+									$cat=trim($cat);
+									$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
+									$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
+									if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
+										$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
+										$this->ms['target-cid']=$row['categories_id'];
+									} else {
+										$str="insert into tx_multishop_categories (parent_id,status,date_added, page_uid) VALUES ('".$this->ms['target-cid']."',1,".time().",".$this->showCatalogFromPage.")";
+										$this->ms['sqls'][]=$str;
+										$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+										$this->ms['target-cid']=$GLOBALS['TYPO3_DB']->sql_insert_id();
+										$str="insert into tx_multishop_categories_description (categories_id, language_id, categories_name) VALUES ('".$this->ms['target-cid']."','".$language_id."','".addslashes(trim($cat))."')";
+										$this->ms['sqls'][]=$str;
+										$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+										$image='';
+										$categories_image='';
+										$stats['categories_added']++;
+									}
+									$tel++;
+								}
+								// add the deepest categories id to the array, so later we can relate the product to all of these categories
+								$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
+							}
 						}
-					}
-					if ($item['categories_id']) {
+					} elseif ($item['categories_id']) {
 						// deepest categories id is defined
 						$this->ms['target-cid']=$item['categories_id'];
 					}
@@ -1931,26 +1958,32 @@ if ($this->post['action']=='category-insert') {
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
 							$content.=ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_product'))).' "<strong>'.($item['products_name'] ? $item['products_name'] : $item['extid']).'</strong>" '.$this->pi_getLL('has_been_adjusted').'.<br />';
-							if ($this->ms['target-cid'] and (!$item['imported_product'] or ($item['imported_product'] and !in_array('categories_id', $importedProductsLockedFields)))) {
+							if ($this->ms['target-cid'] && (!is_array($this->ms['products_to_categories_array']) || !count($this->ms['products_to_categories_array']))) {
+								$this->ms['products_to_categories_array']=array();
+								$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
+							}
+							if (count($this->ms['products_to_categories_array']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('categories_id', $importedProductsLockedFields)))) {
 								if (!$this->post['incremental_update']) {
 									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id='.$item['updated_products_id']);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
-								$updateArray=array();
-								$updateArray['products_id']=$item['updated_products_id'];
-								$updateArray['categories_id']=$this->ms['target-cid'];
-								if (isset($item['products_sort_order'])) {
-									$updateArray['sort_order']=$item['products_sort_order'];
-								} else {
-									if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
-										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
+								foreach($this->ms['products_to_categories_array'] as $categories_id) {
+									$updateArray=array();
+									$updateArray['products_id']=$item['updated_products_id'];
+									$updateArray['categories_id']=$categories_id;
+									if (isset($item['products_sort_order'])) {
+										$updateArray['sort_order']=$item['products_sort_order'];
 									} else {
-										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
+										if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
+											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
+										} else {
+											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
+										}
+										$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
 									}
-									$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
-								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
 						} elseif ($item['products_name']) {
 							/***********************
@@ -2133,24 +2166,30 @@ if ($this->post['action']=='category-insert') {
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_description', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							// lets add the new product to the products to categories table
-							if ($this->ms['target-cid']) {
-								$updateArray=array();
-								$updateArray['products_id']=$item['added_products_id'];
-								$updateArray['categories_id']=$this->ms['target-cid'];
-								if (isset($item['products_sort_order'])) {
-									$updateArray['sort_order']=$item['products_sort_order'];
-								} else {
-									if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
-										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
-									} else {
-										$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
-									}
-									$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
-								}
-								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							if ($this->ms['target-cid'] && (!is_array($this->ms['products_to_categories_array']) || !count($this->ms['products_to_categories_array']))) {
+								$this->ms['products_to_categories_array']=array();
+								$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
 							}
-							$inserteditems[$this->ms['target-cid']][]=$item['products_name'];
+							if (count($this->ms['products_to_categories_array'])) {
+								foreach($this->ms['products_to_categories_array'] as $categories_id) {
+									$updateArray=array();
+									$updateArray['products_id']=$item['added_products_id'];
+									$updateArray['categories_id']=$categories_id;
+									if (isset($item['products_sort_order'])) {
+										$updateArray['sort_order']=$item['products_sort_order'];
+									} else {
+										if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
+											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
+										} else {
+											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
+										}
+										$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
+									}
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									$inserteditems[$categories_id][]=$item['products_name'];
+								}
+							}
 							if ($item['products_specials_price'] and ($item['products_specials_price']<$item['products_price'])) {
 								// product has a specials price, lets add it
 								$updateArray=array();
