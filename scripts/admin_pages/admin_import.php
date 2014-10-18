@@ -1411,50 +1411,48 @@ if ($this->post['action']=='category-insert') {
 						// example multiple groups in column:
 						// maincat>subcat|maincat>subcat2
 						// then the aux must contain the following value: |;>
-						if ($this->post['input'][$i]) {
-							$groupDelimiter='';
-							$catDelimiter='';
-							$tmp=explode(';', $this->post['input'][$i]);
-							if (count($tmp[0]) == 2) {
-								$groupDelimiter=$tmp[0];
-								$catDelimiter=$tmp[1];
-							} elseif(count($tmp[0]) == 1) {
-								$catDelimiter=$tmp[0];
-							}
-							if ($groupDelimiter) {
-								$groups=explode($groupDelimiter, $item['category_group']);
-							} else {
-								$groups=array($item['category_group']);
-							}
-							foreach ($groups as $group) {
-								// first configure target-cid (back) to the root
-								$this->ms['target-cid']=$this->post['cid'];
-								$cats=explode($catDelimiter, $group);
-								$tel=0;
-								foreach ($cats as $cat) {
-									$cat=trim($cat);
-									$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
-									$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
-									if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
-										$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
-										$this->ms['target-cid']=$row['categories_id'];
-									} else {
-										$str="insert into tx_multishop_categories (parent_id,status,date_added, page_uid) VALUES ('".$this->ms['target-cid']."',1,".time().",".$this->showCatalogFromPage.")";
-										$this->ms['sqls'][]=$str;
-										$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-										$this->ms['target-cid']=$GLOBALS['TYPO3_DB']->sql_insert_id();
-										$str="insert into tx_multishop_categories_description (categories_id, language_id, categories_name) VALUES ('".$this->ms['target-cid']."','".$language_id."','".addslashes(trim($cat))."')";
-										$this->ms['sqls'][]=$str;
-										$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-										$image='';
-										$categories_image='';
-										$stats['categories_added']++;
-									}
-									$tel++;
+						$groupDelimiter='';
+						$catDelimiter='';
+						$tmp=explode(';', $this->post['input'][$flipped_select['category_group']]);
+						if (count($tmp) == 2) {
+							$groupDelimiter=$tmp[0];
+							$catDelimiter=$tmp[1];
+						} elseif(count($tmp) == 1) {
+							$catDelimiter=$tmp[0];
+						}
+						if ($groupDelimiter) {
+							$groups=explode($groupDelimiter, $item['category_group']);
+						} else {
+							$groups=array($item['category_group']);
+						}
+						foreach ($groups as $group) {
+							// first configure target-cid (back) to the root
+							$this->ms['target-cid']=$this->post['cid'];
+							$cats=explode($catDelimiter, $group);
+							$tel=0;
+							foreach ($cats as $cat) {
+								$cat=trim($cat);
+								$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
+								$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
+								if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
+									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
+									$this->ms['target-cid']=$row['categories_id'];
+								} else {
+									$str="insert into tx_multishop_categories (parent_id,status,date_added, page_uid) VALUES ('".$this->ms['target-cid']."',1,".time().",".$this->showCatalogFromPage.")";
+									$this->ms['sqls'][]=$str;
+									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$this->ms['target-cid']=$GLOBALS['TYPO3_DB']->sql_insert_id();
+									$str="insert into tx_multishop_categories_description (categories_id, language_id, categories_name) VALUES ('".$this->ms['target-cid']."','".$language_id."','".addslashes(trim($cat))."')";
+									$this->ms['sqls'][]=$str;
+									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$image='';
+									$categories_image='';
+									$stats['categories_added']++;
 								}
-								// add the deepest categories id to the array, so later we can relate the product to all of these categories
-								$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
+								$tel++;
 							}
+							// add the deepest categories id to the array, so later we can relate the product to all of these categories
+							$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
 						}
 					} elseif ($item['categories_id']) {
 						// deepest categories id is defined
