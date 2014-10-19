@@ -333,6 +333,7 @@ if ($this->post['action']=='category-insert') {
 					'parser_template'=>&$this->post['parser_template'],
 					'prefix_source_name'=>$this->post['prefix_source_name'],
 					'str'=>$str,
+					'file_location'=>&$file_location,
 					'rows'=>&$rows,
 					'table_cols'=>&$table_cols,
 					'processed'=>&$processed
@@ -834,6 +835,7 @@ if ($this->post['action']=='category-insert') {
 						'prefix_source_name'=>$this->post['prefix_source_name'],
 						'str'=>$str,
 						'rows'=>&$rows,
+						'file_location'=>&$file,
 						'table_cols'=>&$table_cols,
 						'processed'=>&$processed
 					);
@@ -1023,6 +1025,11 @@ if ($this->post['action']=='category-insert') {
 						$row[$key]=mslib_befe::convToUtf8($col);
 					}
 					$row[$key]=trim($row[$key]);
+				}
+				// initialize array
+				$this->ms['products_to_categories_array']=array();
+				if (!$this->post['cid']) {
+					$this->post['cid']=$this->categoriesStartingPoint;
 				}
 				$this->ms['target-cid']=$this->post['cid'];
 				$item_counter++;
@@ -1272,7 +1279,10 @@ if ($this->post['action']=='category-insert') {
 				// custom hook that can be controlled by third-party plugin eof
 				if (!$item['products_name'] or $item['products_name']) {
 					$hashed_id='';
-					if (!$this->ms['target-cid']) {
+					if ($this->ms['target-cid']=='') {
+						$this->ms['target-cid']=$this->categoriesStartingPoint;
+					}
+					if ($this->ms['target-cid']=='') {
 						$this->ms['target-cid']=0;
 					}
 					if ($this->ms['target-cid']) {
@@ -1405,8 +1415,6 @@ if ($this->post['action']=='category-insert') {
 						}
 					}
 					if ($item['category_group'] and $this->post['input'][$flipped_select['category_group']]) {
-						// initialize array
-						$this->ms['products_to_categories_array']=array();
 						// for supporting multiple paths you have to use aux field like this:
 						// example multiple groups in column:
 						// maincat>subcat|maincat>subcat2
