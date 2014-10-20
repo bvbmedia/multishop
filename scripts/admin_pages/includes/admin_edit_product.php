@@ -24,6 +24,7 @@ jQuery(document).ready(function($) {
 		width:\'500px\',
 		minimumInputLength: 1,
 		multiple: true,
+		//allowClear: true,
 		query: function(query) {
 			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
 				data: {
@@ -2245,7 +2246,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']); //$product['categories_id'];
-		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.mslib_fe::getProductToCategories($this->get['pid'], $this->get['cid']).'" />'; //mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"');
+		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']).'" />'; //mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"');
 		$subpartArray['###INFORMATION_SELECT2_LABEL0###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;
 		//exclude list products
