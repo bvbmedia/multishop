@@ -2932,6 +2932,71 @@ class mslib_fe {
 			}
 		}
 	}
+	public function getSubcatsArray(&$subcategories_array, $keyword='', $parent_id=0) {
+		if (!empty($keyword) && strlen($keyword)>0) {
+			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'c.page_uid=\''.$this->showCatalogFromPage.'\' and c.status = \'1\' and c.categories_id=cd.categories_id and cd.categories_name like \'%'.addslashes($keyword).'%\' and cd.language_id='.$this->sys_language_uid, // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$subcategories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+			while ($subcategories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
+				$subcategories_array[]=array(
+					'id'=>$subcategories['categories_id'],
+					'name'=>$subcategories['categories_name']
+				);
+			}
+		} else {
+			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'c.page_uid=\''.$this->showCatalogFromPage.'\' and c.status = \'1\' and c.categories_id=cd.categories_id and cd.language_id='.$this->sys_language_uid.' and c.parent_id = \''.$parent_id.'\' order by cd.categories_name asc', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$subcategories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+			while ($subcategories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($subcategories_query)) {
+				$subcategories_array[$parent_id][]=array(
+					'id'=>$subcategories['categories_id'],
+					'name'=>$subcategories['categories_name']
+				);
+				if ($subcategories['categories_id']!=$parent_id) {
+					mslib_fe::getSubcatsArray($subcategories_array, $keyword, $subcategories['categories_id']);
+				}
+			}
+		}
+	}
+	public function build_categories_path(&$paths, $reference_category_id, &$prev, $categories_tree) {
+		foreach ($categories_tree[$reference_category_id] as $category_tree) {
+			$paths[$category_tree['id']]=$prev.' \ '.$category_tree['name'];
+			unset($paths[$reference_category_id]);
+			if (is_array($categories_tree[$category_tree['id']])) {
+				mslib_fe::build_categories_path($paths, $category_tree['id'], $paths[$category_tree['id']], $categories_tree);
+			}
+		}
+	}
+	public function getProductToCategories($product_id, $current_category_id) {
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id', // SELECT ...
+			'tx_multishop_products_to_categories p2c', // FROM ...
+			'p2c.products_id = \''.$product_id.'\' and p2c.categories_id!=\''.$current_category_id.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		$res=array();
+		$return_categories_id=$current_category_id;
+		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
+			$res[]=$rs['categories_id'];
+		}
+		$count_res=count($res);
+		if ($count_res>0) {
+			$return_categories_id.=','.implode(',', $res);
+		}
+		return $return_categories_id;
+	}
 	/*
 	limit				number of products
 	page_uid			the pid of the core shop page

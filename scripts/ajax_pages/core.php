@@ -5,12 +5,84 @@ if (!defined('TYPO3_MODE')) {
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
 	case 'get_category_tree':
-		$categories_tree=mslib_fe::tx_multishop_get_category_tree('', '', '');
 		$return_data=array();
-		foreach ($categories_tree as $category_tree) {
+		$tmp_return_data=array();
+		switch ($this->get['tx_multishop_pi1']['get_category_tree']) {
+			case 'getValues':
+				if (isset($this->get['preselected_id'])) {
+					if (strpos($this->get['preselected_id'], ',')!==false) {
+						$tmp_preselecteds=explode(',', $this->get['preselected_id']);
+						foreach ($tmp_preselecteds as $preselected_id) {
+							$preselected_id=trim($preselected_id);
+							$cats=mslib_fe::Crumbar($preselected_id);
+							$cats=array_reverse($cats);
+							$catpath=array();
+							foreach ($cats as $cat) {
+								$catpath[]=$cat['name'];
+							}
+							$tmp_return_data[$preselected_id]=implode(' \ ', $catpath);
+						}
+					} else {
+						$cats=mslib_fe::Crumbar($this->get['preselected_id']);
+						$cats=array_reverse($cats);
+						$catpath=array();
+						foreach ($cats as $cat) {
+							$catpath[]=$cat['name'];
+						}
+						$tmp_return_data[$this->get['preselected"_id']]=implode(' \ ', $catpath);
+					}
+				}
+				break;
+			case'getTree':
+			default:
+				if (isset($this->get['q']) && !empty($this->get['q'])) {
+					$keyword=trim($this->get['q']);
+					$categories_tree=array();
+					mslib_fe::getSubcatsArray($categories_tree, $keyword);
+					//print_r($categories_tree);
+					foreach ($categories_tree as $category_tree) {
+						$cats=mslib_fe::Crumbar($category_tree['id']);
+						$cats=array_reverse($cats);
+						$catpath=array();
+						foreach ($cats as $cat) {
+							$catpath[]=$cat['name'];
+						}
+						// fetch subcat if any
+						$subcategories_tree=array();
+						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id']);
+						if (count($subcategories_tree)) {
+							foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
+								$tmp_return_data[$subcategory_tree_0['id']]=implode(' \ ', $catpath).' \ '.$subcategory_tree_0['name'];
+								if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
+									mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree);
+								}
+							}
+						} else {
+							$tmp_return_data[$category_tree['id']]=implode(' \ ', $catpath);
+						}
+					}
+				} else {
+					$categories_tree=array();
+					mslib_fe::getSubcatsArray($categories_tree);
+					//level 0
+					foreach ($categories_tree[0] as $category_tree_0) {
+						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
+						if (is_array($categories_tree[$category_tree_0['id']])) {
+							mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree);
+						}
+					}
+					$return_data[]=array(
+						'id'=>0,
+						'text'=>$this->pi_getLL('admin_main_category')
+					);
+				}
+				break;
+		}
+		natsort($tmp_return_data);
+		foreach ($tmp_return_data as $tree_id=>$tree_path) {
 			$return_data[]=array(
-				'id'=>$category_tree['id'],
-				'text'=>$category_tree['text']
+				'id'=>$tree_id,
+				'text'=>$tree_path
 			);
 		}
 		$json_data=mslib_befe::array2json($return_data);

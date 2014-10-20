@@ -631,7 +631,7 @@ jQuery(document).ready(function ($) {
     jQuery(document).ready(function($) {
         $(".admin_product_edit").submit(function() {
             var enableBlockUi='1';
-            if ($("#categories_id").val() == "0") {
+            if ($("#categories_id").val() == "0" || $("#categories_id").val() == "") {
                 enableBlockUi='0';
                 msDialog("ERROR","###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###");
                 return false;
