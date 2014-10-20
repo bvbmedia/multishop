@@ -793,8 +793,9 @@ span.viewfront a:hover { background:#e2e2e2; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .inputWideWrapper input[type="text"] { width:100%; box-sizing:border-box; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .select2-container-multi ul.select2-choices li.select2-search-choice {
+    float:none;
     padding: 3px 5px 3px 18px;
-    margin: 3px 0 3px 5px;
+    margin: 3px 5px;
     position: relative;
 
     line-height: 16px;
