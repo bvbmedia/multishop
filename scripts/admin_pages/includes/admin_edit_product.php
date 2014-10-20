@@ -20,7 +20,7 @@ jQuery(document).ready(function($) {
 		width:\'220px\'
 	});
 	$(\'#categories_id\').select2({
-		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
+		dropdownCssClass: "", // apply css that makes the dropdown taller
 		width:\'500px\',
 		minimumInputLength: 1,
 		multiple: true,
