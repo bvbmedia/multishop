@@ -29,7 +29,7 @@ jQuery(document).ready(function($) {
 	$(\'#parent_id\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
 		width:\'500px\',
-		minimumInputLength: 1,
+		minimumInputLength: 0,
 		multiple: false,
 		//allowClear: true,
 		query: function(query) {
