@@ -2,6 +2,18 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+// when editing the current category we must prevent the user to chain the selected category to it's childs.
+$skip_ids=array();
+if ($_REQUEST['action']=='edit_category') {
+	if (is_numeric($this->get['cid']) and $this->get['cid']>0) {
+		$str="select categories_id from tx_multishop_categories where parent_id='".$this->get['cid']."'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			$skip_ids[]=$row['categories_id'];
+		}
+	}
+	$skip_ids[]=$this->get['cid'];
+}
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 window.onload = function(){
@@ -23,7 +35,8 @@ jQuery(document).ready(function($) {
 		query: function(query) {
 			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
 				data: {
-					q: query.term
+					q: query.term,
+					skip_ids: \''.implode(',', $skip_ids).'\'
 				},
 				dataType: "json"
 			}).done(function(data) {
@@ -36,7 +49,8 @@ jQuery(document).ready(function($) {
 			if (id!=="") {
 				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 					data: {
-						preselected_id: id
+						preselected_id: id,
+						skip_ids: \''.implode(',', $skip_ids).'\'
 					},
 					dataType: "json"
 				}).done(function(data) {
@@ -272,9 +286,9 @@ if ($this->post) {
 		// Extract the subparts from the template
 		$subparts=array();
 		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
-		if (!$category['parent_id']) {
-			$category['parent_id']=$this->get['cid'];
-		}
+		//if (!$category['parent_id']) {
+		//$category['parent_id']=$this->get['cid'];
+		//}
 		if ($_REQUEST['action']=='add_category') {
 			$heading_page='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
 		} else {
@@ -310,18 +324,6 @@ if ($this->post) {
 				<input spellcheck="true" type="text" class="text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'">
 			</div>
 			';
-		}
-		// when editing the current category we must prevent the user to chain the selected category to it's childs.
-		$skip_ids=array();
-		if ($_REQUEST['action']=='edit_category') {
-			if (is_numeric($this->get['cid']) and $this->get['cid']>0) {
-				$str="select categories_id from tx_multishop_categories where parent_id='".$this->get['cid']."'";
-				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-					$skip_ids[]=$row['categories_id'];
-				}
-			}
-			$skip_ids[]=$category['categories_id'];
 		}
 		$category_tree='
 		<div class="account-field" id="msEditCategoryInputParent">
