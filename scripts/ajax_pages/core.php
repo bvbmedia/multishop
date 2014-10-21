@@ -106,21 +106,25 @@ switch ($this->ms['page']) {
 								$cats=array_reverse($cats);
 								$catpath=array();
 								foreach ($cats as $cat_idx=>$cat) {
-									if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
-										$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' \ '.$cat['name'];
-									} else {
-										$tmp_return_data[$cat['id']]=$cat['name'];
+									if (!in_array($cat['id'], $skip_ids)) {
+										if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
+											$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' \ '.$cat['name'];
+										} else {
+											$tmp_return_data[$cat['id']]=$cat['name'];
+										}
+										$catpath[]=$cat['name'];
 									}
-									$catpath[]=$cat['name'];
 								}
 								// fetch subcat if any
 								$subcategories_tree=array();
 								mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id']);
 								if (count($subcategories_tree)) {
 									foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
-										$tmp_return_data[$subcategory_tree_0['id']]=implode(' \ ', $catpath).' \ '.$subcategory_tree_0['name'];
-										if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
-											mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
+										if (!in_array($subcategory_tree_0['id'], $skip_ids)) {
+											$tmp_return_data[$subcategory_tree_0['id']]=implode(' \ ', $catpath).' \ '.$subcategory_tree_0['name'];
+											if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
+												mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
+											}
 										}
 									}
 								} else {
