@@ -2968,12 +2968,16 @@ class mslib_fe {
 			}
 		}
 	}
-	public function build_categories_path(&$paths, $reference_category_id, &$prev, $categories_tree) {
+	public function build_categories_path(&$paths, $reference_category_id, &$prev, $categories_tree, $show_every_level=false) {
 		foreach ($categories_tree[$reference_category_id] as $category_tree) {
-			$paths[$category_tree['id']]=$prev.' \ '.$category_tree['name'];
-			unset($paths[$reference_category_id]);
+			if (!$show_every_level) {
+				$paths[$category_tree['id']]=$prev.' \ '.$category_tree['name'];
+				unset($paths[$reference_category_id]);
+			} else {
+				$paths[$category_tree['id']]=$paths[$reference_category_id].' \ '.$category_tree['name'];
+			}
 			if (is_array($categories_tree[$category_tree['id']])) {
-				mslib_fe::build_categories_path($paths, $category_tree['id'], $paths[$category_tree['id']], $categories_tree);
+				mslib_fe::build_categories_path($paths, $category_tree['id'], $paths[$category_tree['id']], $categories_tree, $show_every_level);
 			}
 		}
 	}
