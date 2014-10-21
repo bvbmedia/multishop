@@ -583,21 +583,26 @@ if ($pageset['total_rows']>0) {
 		}
 		$product_detail_link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$rs['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 		// view product link eof
-		$cat_crumbar='<ul class="msAdminCategoriesTree">';
-		$cats=mslib_fe::Crumbar($rs['categories_id']);
-		$teller=0;
-		$total=count($cats);
-		for ($i=($total-1); $i>=0; $i--) {
-			$teller++;
-			// get all cats to generate multilevel fake url eof
-			if ($total==$teller) {
-				$class='lastItem';
-			} else {
-				$class='';
+		$tmp_product_categories=mslib_fe::getProductToCategories($rs['products_id'], $rs['categories_id']);
+		$product_categories=explode(',', $tmp_product_categories);
+		$cat_crumbar='';
+		foreach ($product_categories as $product_category) {
+			$cat_crumbar.='<ul class="msAdminCategoriesTree">';
+			$cats=mslib_fe::Crumbar($product_category);
+			$teller=0;
+			$total=count($cats);
+			for ($i=($total-1); $i>=0; $i--) {
+				$teller++;
+				// get all cats to generate multilevel fake url eof
+				if ($total==$teller) {
+					$class='lastItem';
+				} else {
+					$class='';
+				}
+				$cat_crumbar.='<li class="'.$class.'"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$cats[$i]['id'].'&action=edit_category').'">'.$cats[$i]['name'].'</a></li>';
 			}
-			$cat_crumbar.='<li class="'.$class.'"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$cats[$i]['id'].'&action=edit_category').'">'.$cats[$i]['name'].'</a></li>';
+			$cat_crumbar.='</ul>';
 		}
-		$cat_crumbar.='</ul>';
 		$status='';
 		// fix for the flat table
 		if (isset($rs['products_status'])) {
