@@ -325,6 +325,9 @@ if ($this->post) {
 			</div>
 			';
 		}
+		if ($this->get['action']=='add_category') {
+			$category['parent_id']=0;
+		}
 		$category_tree='
 		<div class="account-field" id="msEditCategoryInputParent">
 			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>
