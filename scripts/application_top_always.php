@@ -221,7 +221,13 @@ $this->disableMetatags=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'd
 if ($this->disableMetatags) {
 	$this->conf['disableMetatags']=1;
 }
-// TypoScript custom settings
+// Load custom settings by TypoScript setup field
+if ($this->conf['modules.'] && is_array($this->conf['modules.']) && count($this->conf['modules.'])) {
+	foreach ($this->conf['modules.'] as $key => $val) {
+		$this->ms['MODULES'][$key]=$val;
+	}
+}
+// TypoScript custom settings (deprecated)
 if ($this->conf['customSettings']=='{$plugin.multishop.customSettings}') {
 	$this->conf['customSettings']='';
 }
