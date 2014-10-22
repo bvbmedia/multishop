@@ -63,7 +63,7 @@ $content.='
 			$("#orders_stats_form").submit();
 		});
 	});
-</script>	
+</script>
 ';
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h2>';
@@ -96,7 +96,7 @@ foreach ($dates as $key=>$value) {
 	$where[]='(o.deleted=0)';
 	$str="SELECT sum(op.qty) as total, op.products_name, op.products_id, op.categories_id FROM tx_multishop_orders o, tx_multishop_orders_products op WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") and o.orders_id=op.orders_id group by op.products_name having total > 0 order by total desc limit 10";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$content.='<td valign="top">	
+	$content.='<td valign="top">
 		';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$content.='
@@ -104,7 +104,7 @@ foreach ($dates as $key=>$value) {
 			<tr class="'.$tr_type.'">
 				<th valign="top">Qty</td>
 				<th valign="top">Product</td>
-			</tr>			
+			</tr>
 		';
 		while (($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			if (!$tr_type or $tr_type=='even') {
@@ -136,6 +136,7 @@ foreach ($dates as $key=>$value) {
 			} else {
 				$productLink='';
 			}
+			$total_amount+=round($product['total'], 2);
 			$content.='
 			<tr class="'.$tr_type.'">
 				<td valign="top" align="right"><strong>'.round($product['total'], 2).'</strong></td>
@@ -143,6 +144,12 @@ foreach ($dates as $key=>$value) {
 			</tr>
 			';
 		}
+		$content.='
+			<tr class="'.$tr_type.'">
+				<th valign="top" align="right">'.round($total_amount, 2).'</td>
+				<th valign="top">Product</td>
+			</tr>
+		';
 		$content.='</table>';
 	}
 	$content.='</td>';
