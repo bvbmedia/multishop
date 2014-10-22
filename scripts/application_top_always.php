@@ -222,8 +222,8 @@ if ($this->disableMetatags) {
 	$this->conf['disableMetatags']=1;
 }
 // Load custom settings by TypoScript setup field
-if ($this->conf['modules.'] && is_array($this->conf['modules.']) && count($this->conf['modules.'])) {
-	foreach ($this->conf['modules.'] as $key => $val) {
+if ($this->conf['settings.'] && is_array($this->conf['settings.']) && count($this->conf['settings.'])) {
+	foreach ($this->conf['settings.'] as $key => $val) {
 		$this->ms['MODULES'][$key]=$val;
 	}
 }
