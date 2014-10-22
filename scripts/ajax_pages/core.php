@@ -1424,6 +1424,13 @@ switch ($this->ms['page']) {
 		// custom page hook that can be controlled by third-party plugin eof
 		break;
 	default:
+		// load by TypoScript
+		if ($this->ms['page'] && $this->conf['ajax_pages.'][$this->ms['page']]) {
+			$path=t3lib_extMgm::extPath($this->ms['page']).$this->conf['ajax_pages.'][$this->ms['page']].'.php';
+			if (file_exists($path)) {
+				require($path);
+			}
+		}
 		break;
 }
 ?>
