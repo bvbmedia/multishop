@@ -326,7 +326,11 @@ if ($this->post) {
 			';
 		}
 		if ($this->get['action']=='add_category') {
-			$category['parent_id']=0;
+			if (isset($this->get['cid']) && $this->get['cid']>0) {
+				$category['parent_id']=$this->get['cid'];
+			} else {
+				$category['parent_id']=0;
+			}
 		}
 		$category_tree='
 		<div class="account-field" id="msEditCategoryInputParent">
