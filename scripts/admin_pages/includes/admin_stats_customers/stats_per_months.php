@@ -63,7 +63,7 @@ $content.='
 			$("#orders_stats_form").submit();
 		});
 	});
-</script>	
+</script>
 ';
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h2>';
@@ -94,7 +94,7 @@ foreach ($dates as $key=>$value) {
 	$where[]='(o.deleted=0)';
 	$str="SELECT sum(o.grand_total) as total, o.billing_company, o.billing_name, o.customer_id FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") group by o.customer_id having total > 0 order by total desc limit 10";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$content.='<td valign="top">	
+	$content.='<td valign="top">
 		';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$content.='
@@ -102,7 +102,7 @@ foreach ($dates as $key=>$value) {
 			<tr class="'.$tr_type.'">
 				<th valign="top">'.$this->pi_getLL('amount').'</td>
 				<th valign="top">'.$this->pi_getLL('customer').'</td>
-			</tr>			
+			</tr>
 		';
 		while (($customer=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			if (!$tr_type or $tr_type=='even') {
@@ -116,6 +116,7 @@ foreach ($dates as $key=>$value) {
 				$name=$customer['billing_name'];
 			}
 			$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['customer_id'].'&action=edit_customer',1);
+			$total_amount+=$customer['total'];
 			$content.='
 			<tr class="'.$tr_type.'">
 				<td valign="top" align="right"><strong>'.mslib_fe::amount2Cents($customer['total'], 0).'</strong></td>
@@ -123,6 +124,12 @@ foreach ($dates as $key=>$value) {
 			</tr>
 			';
 		}
+		$content.='
+			<tr class="'.$tr_type.'">
+				<th valign="top"" align="right">'.mslib_fe::amount2Cents($total_amount, 0).'</td>
+				<th valign="top">'.$this->pi_getLL('customer').'</td>
+			</tr>
+		';
 		$content.='</table>';
 	}
 	$content.='</td>';
