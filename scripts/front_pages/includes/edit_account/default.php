@@ -537,6 +537,7 @@ if ($this->post) {
 		<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile" value="'.htmlspecialchars($user['delivery_mobile']).'">
 	</div>
 	</div>
+	</div>
 	';
 	$content.='<div id="live-validation-r" class="col-md-6"><div id="delivery_address_category"><h2 class="msFrontEditAccountHeading">'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'
 	<script type="text/javascript">
@@ -601,7 +602,6 @@ if ($this->post) {
 	<div id="bottom-navigation">
 		<input type="hidden" id="user_id" value="'.$user['ses_userid'].'" name="user_id"/>
 		<span class="msFrontButton continueState arrowRight arrowPosLeft" id="submit"><input type="submit" value="'.($this->contentMisc=='edit_account' ? ucfirst($this->pi_getLL('update_account')) : ucfirst($this->pi_getLL('register'))).'"/></span>
-	</div>
 	</div>
 	</form>
 	</div>';
