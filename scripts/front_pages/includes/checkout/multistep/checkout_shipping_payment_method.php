@@ -49,9 +49,8 @@ if ($erno or $show_shipping_payment_method) {
 	';
 	if (count($payment_methods)) {
 		$content.='
-		<div class="payment_method">
+		<div id="multishop_payment_method_wrapper">
 		<div class="main-heading"><h2>'.$this->pi_getLL('choose_payment_method').'</h2></div>
-		<div class="content">
 		<ul id="multishop_payment_method">';
 		$count=0;
 		$tr_type='even';
@@ -74,33 +73,30 @@ if ($erno or $show_shipping_payment_method) {
 				if (!strstr($price, "%")) {
 					$price=mslib_fe::amount2Cents($price);
 				}
-				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'"><strong>'.$price.'</strong></div>';
+				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.$price.'</div>';
 			}
 			// costs eof
-			$content.='<li class="'.$tr_type.'"  id="multishop_payment_method_'.$item['id'].'">';
+			$content.='<li class="'.$tr_type.'" id="multishop_payment_method_'.$item['id'].'"><label for="payment_method_'.$item['id'].'" class="name"><div class="listing_item">';
 			if ($price_wrap) {
 				$content.=$price_wrap;
 			}
-			$content.='<input name="payment_method" id="payment_method_'.$item['id'].'" type="radio" value="'.htmlspecialchars($item['id']).'" '.((($this->get['tx_multishop_pi1']['previous_checkout_section']<>current($stepCodes) and $count==1) or $user['payment_method']==$item['code']) ? 'checked' : '').' /><label for="payment_method_'.$item['id'].'" class="name"><strong class="method_name">'.$item['name'].'</strong>';
+			$content.='<input name="payment_method" id="payment_method_'.$item['id'].'" type="radio" value="'.htmlspecialchars($item['id']).'" '.((($this->get['tx_multishop_pi1']['previous_checkout_section']<>current($stepCodes) and $count==1) or $user['payment_method']==$item['code']) ? 'checked' : '').' /><strong class="method_name">'.$item['name'].'</strong>';
 			if ($item['description']) {
 				$content.='<span class="description">'.$item['description'].'</span>';
 			}
-			$content.='</label>';
+			$content.='</div></label>';
 			$content.='</li>';
 		}
 		$content.='
-		 </ul>
-		</div>
+		</ul>
 		</div>
 		';
 	}
 	if (count($shipping_methods)) {
 		$content.='
-		<div id="shipping_payment_method">
-		<div class="shipping_method" id="shipping_method">
+		<div id="multishop_shipping_method_wrapper">
 		<div class="main-heading"><h2>'.$this->pi_getLL('choose_shipping_method').'</h2></div>
-		<div class="content">
-		 <ul id="multishop_shipping_method">';
+		<ul id="multishop_shipping_method">';
 		$count=0;
 		foreach ($shipping_methods as $code=>$item) {
 			$shipping_method=mslib_fe::getShippingMethod($item['id'], 's.id', $cart['user']['countries_id']);
@@ -113,21 +109,19 @@ if ($erno or $show_shipping_payment_method) {
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']).'</div>';
 			}
 			// costs eof
-			$content.='<li id="multishop_shipping_method_'.$item['id'].'">';
+			$content.='<li id="multishop_shipping_method_'.$item['id'].'"><label for="shipping_method_'.$item['id'].'" class="name" id="label_shipping_method_'.$item['id'].'"><div class="listing_item">';
 			if ($price_wrap) {
 				$content.=$price_wrap;
 			}
-			$content.='<input name="shipping_method" id="shipping_method_'.$item['id'].'" type="radio" value="'.htmlspecialchars($item['id']).'" '.(($this->post['tx_multishop_pi1']['previous_checkout_section']<>current($stepCodes) and $count==1) ? 'checked' : '').' /><label for="shipping_method_'.$item['id'].'" class="name" id="label_shipping_method_'.$item['id'].'"><strong class="method_name">'.$item['name'].'</strong>';
+			$content.='<input name="shipping_method" id="shipping_method_'.$item['id'].'" type="radio" value="'.htmlspecialchars($item['id']).'" '.(($this->post['tx_multishop_pi1']['previous_checkout_section']<>current($stepCodes) and $count==1) ? 'checked' : '').' /><strong class="method_name">'.$item['name'].'</strong>';
 			if ($item['description']) {
 				$content.='<span class="description">'.$item['description'].'</span>';
 			}
-			$content.='</label>';
+			$content.='</div></label>';
 			$content.='</li>';
 		}
 		$content.='
 		 </ul>
-		 </div>
-		 </div>
 	 	 </div>
 		 ';
 		/*  if (count($shipping_methods)==1)
@@ -142,10 +136,9 @@ if ($erno or $show_shipping_payment_method) {
 		 } */
 	}
 	$content.='
-	<hr>
 		<div id="bottom-navigation">
 			<a href="'.$back_button_link.'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
-			<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" class="float_right proceed_to_checkout_button_en" value="'.$this->pi_getLL('proceed_to_checkout').'" /></span>
+			<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" class="proceed_to_checkout_button_en" value="'.$this->pi_getLL('proceed_to_checkout').'" /></span>
 		</div>
 	</form>
 	';
