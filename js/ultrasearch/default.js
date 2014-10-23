@@ -58,7 +58,7 @@ jQuery(document).ready(function ($) {
         } else {
             //console.log(data);
             var listing_products = "";
-            listing_products += '<div id="product_listing" class="ui-sortable row">';
+            listing_products += '<div class=""product_listing_ultrasearch_wrapper"><div id="product_listing" class="ui-sortable row">';
             var colCounter = 0;
             var colClass="";
             $.each(data.resultSet.products, function (i, item) {
@@ -94,7 +94,7 @@ jQuery(document).ready(function ($) {
                 if (item.price) {
                     listing_products += '<div class="price">' + item.price + '</div>';
                 }
-                listing_products += '</div></div></div>';
+                listing_products += '</div></div></div></div>';
             });
             listing_products += '</div>';
             // PAGINATION
