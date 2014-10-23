@@ -86,16 +86,6 @@ if (!$skipMultishopUpdates) {
 	}
 	// V3 COMPARE DATABASE EOL
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN)
-	$str="select tx_multishop_customer_id from fe_users limit 1";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="ALTER TABLE `fe_users` ADD `tx_multishop_customer_id` int(11) UNSIGNED default '0', ADD KEY `tx_multishop_customer_id` (`tx_multishop_customer_id`)";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-		$str="UPDATE `fe_users` set tx_multishop_customer_id=uid where tx_multishop_customer_id='0'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
 	$str="select page_uid from tx_multishop_products_to_categories limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -103,19 +93,6 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 		$str="UPDATE tx_multishop_products_to_categories t1, tx_multishop_categories t2 SET t1.page_uid = t2.page_uid WHERE t1.categories_id=t2.categories_id";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
-	$str="select id from tx_multishop_orders limit 1";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="ALTER TABLE tx_multishop_orders CHANGE orders_id orders_id INT(11) UNSIGNED NOT NULL default '0'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-		$str="ALTER TABLE `tx_multishop_orders` DROP PRIMARY KEY";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-		$str="ALTER TABLE `tx_multishop_orders` ADD `id` int(11) auto_increment PRIMARY KEY FIRST";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
@@ -133,7 +110,32 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
+	/*
+	// for later when we want private customer_id and orders_id per shop
+	$str="select tx_multishop_customer_id from fe_users limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `fe_users` ADD `tx_multishop_customer_id` int(11) UNSIGNED default '0', ADD KEY `tx_multishop_customer_id` (`tx_multishop_customer_id`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		$str="UPDATE `fe_users` set tx_multishop_customer_id=uid where tx_multishop_customer_id='0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select id from tx_multishop_orders limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE tx_multishop_orders CHANGE orders_id orders_id INT(11) UNSIGNED NOT NULL default '0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		$str="ALTER TABLE `tx_multishop_orders` DROP PRIMARY KEY";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		$str="ALTER TABLE `tx_multishop_orders` ADD `id` int(11) auto_increment PRIMARY KEY FIRST";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	*/
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 
 	// CREATE / UPDATE MULTISHOP SETTINGS. CAN BE FURTHER CONTROLLED BY THIRD PARTY PLUGINS.
