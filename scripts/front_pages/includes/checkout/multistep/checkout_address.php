@@ -353,6 +353,7 @@ if (count($cart['products'])<1) {
 			</label>
 			<label class="checkbox_label_two" for="checkboxdifferent_delivery_address">'.$this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address').'.</label>
 		</div>
+		';
 		$tmpcontent='';
 		$tmpcontent.='
 			<script type="text/javascript">

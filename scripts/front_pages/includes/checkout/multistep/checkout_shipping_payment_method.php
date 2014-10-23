@@ -144,8 +144,8 @@ if ($erno or $show_shipping_payment_method) {
 	$content.='
 	<hr>
 		<div id="bottom-navigation">
-			<a href="'.$back_button_link.'" class="back_button">'.$this->pi_getLL('back').'</a>
-			<div class="cart"><input name="Submit" type="submit" class="float_right proceed_to_checkout_button_en" value="'.$this->pi_getLL('proceed_to_checkout').'" /></div>
+			<a href="'.$back_button_link.'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
+			<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" class="float_right proceed_to_checkout_button_en" value="'.$this->pi_getLL('proceed_to_checkout').'" /></span>
 		</div>
 	</form>
 	';

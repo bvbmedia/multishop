@@ -70,9 +70,8 @@ if (count($cart['products'])<1) {
 			$content.='
 				</div>
 				<div id="bottom-navigation">
-					<a href="'.$back_button_link.'" class="back_button">'.$this->pi_getLL('back').'</a>
-					<div class="cart">
-					<input name="Submit" type="submit" class="float_right confirm_order_en" value="'.$this->pi_getLL('confirm_order').'" /></div>
+					<a href="'.$back_button_link.'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
+					<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" class="float_right confirm_order_en" value="'.$this->pi_getLL('confirm_order').'" /></span>
 				</div>
 			</form>	
 			</div>
