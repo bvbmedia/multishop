@@ -343,7 +343,7 @@ if (count($cart['products'])<1) {
 		</div>';
 		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT']) {
 			$content.='
-			<div class="account-field delivery_checkbox_message">
+			<div class="account-field accept_newsletter">
 				<label class="checkbox_label"><input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" '.(($user['tx_multishop_newsletter']) ? 'checked' : '').' value="1" /></label>
 				<label class="checkbox_label_two" for="tx_multishop_newsletter">'.ucfirst($this->pi_getLL('subscribe_to_our_newsletter')).'</label>
 			</div>';
@@ -602,7 +602,7 @@ if (count($cart['products'])<1) {
 			<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile" value="'.htmlspecialchars($user['delivery_mobile']).'">
 		</div>
 		</div>';
-		$content.='<div id="delivery_address_category" class="hide"><h2>'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'</div>';
+		$content.='<div id="delivery_address_category"><h2>'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'</div>';
 		$content.='<div id="bottom-navigation">
 					<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart').'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
 					<span class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" id="submit" value="'.$this->pi_getLL('proceed_to_checkout').'" /></span>
