@@ -363,6 +363,7 @@ if ($this->post) {
 	<div id="live-validation-l" class="col-md-6">
 	<div class="msFrontBillingDetails">
 	<h2 class="msFrontEditAccountHeading">'.$this->pi_getLL('billing_address').'</h2>
+	<div class="row">
 	<div id="input-gender" class="account-field col-sm-12">
 		<span id="ValidRadio" class="InputGroup">
 			<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).'*</label>
@@ -460,6 +461,7 @@ if ($this->post) {
 	<div id="input-mobile" class="account-field col-sm-6">
 		<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 		<input type="text" name="mobile" id="mobile" class="mobile" value="'.htmlspecialchars($user['mobile']).'">
+	</div>
 	</div>
 	</div>
 	</div>';
