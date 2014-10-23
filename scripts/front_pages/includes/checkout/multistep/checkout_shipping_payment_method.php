@@ -49,9 +49,9 @@ if ($erno or $show_shipping_payment_method) {
 	';
 	if (count($payment_methods)) {
 		$content.='
-		<div id="multishop_payment_method_wrapper">
+		<div id="multishopPaymentMethodWrapper">
 		<div class="main-heading"><h2>'.$this->pi_getLL('choose_payment_method').'</h2></div>
-		<ul id="multishop_payment_method">';
+		<ul id="multishopPaymentMethod" class="row">';
 		$count=0;
 		$tr_type='even';
 		$countries_id=$mslib_cart->getCountry();
@@ -76,7 +76,7 @@ if ($erno or $show_shipping_payment_method) {
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.$price.'</div>';
 			}
 			// costs eof
-			$content.='<li class="'.$tr_type.'" id="multishop_payment_method_'.$item['id'].'"><label for="payment_method_'.$item['id'].'" class="name"><div class="listing_item">';
+			$content.='<li class="'.$tr_type.' col-sm-4" id="multishop_payment_method_'.$item['id'].'"><label for="payment_method_'.$item['id'].'" class="name"><div class="listing_item">';
 			if ($price_wrap) {
 				$content.=$price_wrap;
 			}
@@ -94,9 +94,9 @@ if ($erno or $show_shipping_payment_method) {
 	}
 	if (count($shipping_methods)) {
 		$content.='
-		<div id="multishop_shipping_method_wrapper">
+		<div id="multishopShippingMethodWrapper">
 		<div class="main-heading"><h2>'.$this->pi_getLL('choose_shipping_method').'</h2></div>
-		<ul id="multishop_shipping_method">';
+		<ul id="multishopShippingMethod" class="row">';
 		$count=0;
 		foreach ($shipping_methods as $code=>$item) {
 			$shipping_method=mslib_fe::getShippingMethod($item['id'], 's.id', $cart['user']['countries_id']);
@@ -109,7 +109,7 @@ if ($erno or $show_shipping_payment_method) {
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']).'</div>';
 			}
 			// costs eof
-			$content.='<li id="multishop_shipping_method_'.$item['id'].'"><label for="shipping_method_'.$item['id'].'" class="name" id="label_shipping_method_'.$item['id'].'"><div class="listing_item">';
+			$content.='<li id="multishop_shipping_method_'.$item['id'].' class="col-sm-4"><label for="shipping_method_'.$item['id'].'" class="name" id="label_shipping_method_'.$item['id'].'"><div class="listing_item">';
 			if ($price_wrap) {
 				$content.=$price_wrap;
 			}
@@ -146,7 +146,7 @@ if ($erno or $show_shipping_payment_method) {
 		$content.='
 		<script>
 		  jQuery(document).ready(function($) {
-			var result 	= jQuery("#multishop_payment_method").sortable({
+			var result 	= jQuery("#multishopPaymentMethod").sortable({
 					cursor:     "move",
 			    //axis:       "y",
 			    update: function(e, ui) {
@@ -163,7 +163,7 @@ if ($erno or $show_shipping_payment_method) {
 			        });
 			    }
 			});
-			var result2	= jQuery("#multishop_shipping_method").sortable({
+			var result2	= jQuery("#multishopShippingMethod").sortable({
 					cursor:     "move",
 			    //axis:       "y",
 			    update: function(e, ui) {
@@ -250,7 +250,7 @@ if ($erno or $show_shipping_payment_method) {
 
 				jQuery("#payment_method_'.$mapping_payment_method_id.'").click(function(event)
 				{
-					$("#shipping_payment_method").show();
+					$("#shippingPaymentMethod").show();
 			';
 			$hide=1;
 			$checked=0;
