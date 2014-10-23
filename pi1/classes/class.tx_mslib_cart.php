@@ -2083,10 +2083,11 @@ class tx_mslib_cart extends tslib_pibase {
 			//SUBTOTAL_WRAPPER EOF
 			//SHIPPING_COSTS_WRAPPER
 			$key='SHIPPING_COSTS_WRAPPER';
-			if ($this->cart['user']['shipping_method_costs_including_vat']>0) {
+			//if ($this->cart['user']['shipping_method_costs_including_vat']>0) {
+			if ($this->cart['user']['shipping_method_label']) {
 				$markerArray=array();
 				$shipping_price_value=$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'];
-				$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$this->cart['user']['shipping_method_label'].'):';
+				$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.lcfirst($this->cart['user']['shipping_method_label']).')';
 				$markerArray['SHIPPING_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs_including_vat']);
 				$markerArray['SHIPPING_COSTS']=mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs']);
 				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
@@ -2096,9 +2097,10 @@ class tx_mslib_cart extends tslib_pibase {
 			//SHIPPING_COSTS_WRAPPER EOF
 			//PAYMENT_COSTS_WRAPPER
 			$key='PAYMENT_COSTS_WRAPPER';
-			if ($this->cart['user']['payment_method_costs_including_vat']>0) {
+			//if ($this->cart['user']['payment_method_costs_including_vat']>0) {
+			if ($this->cart['user']['payment_method_label']) {
 				$markerArray=array();
-				$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$this->cart['user']['payment_method_label'].'):';
+				$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.lcfirst($this->cart['user']['payment_method_label']).')';
 				$markerArray['PAYMENT_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents($this->cart['user']['payment_method_costs_including_vat']);
 				$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($this->cart['user']['payment_method_costs']);
 				$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');

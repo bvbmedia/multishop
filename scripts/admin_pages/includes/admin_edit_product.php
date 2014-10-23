@@ -318,15 +318,19 @@ if ($this->post) {
 					}
 				}
 			}
-			foreach ($catIds as $page_uid => $catId) {
-				if ($catId>0) {
-					$updateArray=array();
-					$updateArray['categories_id']=$catId;
-					$updateArray['products_id']=$prodid;
-					$updateArray['sort_order']=time();
-					$updateArray['page_uid']=$page_uid;
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			foreach ($catIds as $page_uid => $catIdsToAdd) {
+				if (is_array($catIdsToAdd) && count($catIdsToAdd)) {
+					foreach ($catIdsToAdd as $catId) {
+						if ($catId>0) {
+							$updateArray=array();
+							$updateArray['categories_id']=$catId;
+							$updateArray['products_id']=$prodid;
+							$updateArray['sort_order']=time();
+							$updateArray['page_uid']=$page_uid;
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+					}
 				}
 			}
 		} else {
@@ -446,7 +450,7 @@ foreach ($catIds as $page_uid => $catId) {
 		$prodid=$GLOBALS['TYPO3_DB']->sql_insert_id();
 
 		$catIds=array();
-		if (strpos($this->post['categories_id'], ',')!==false) {
+		if (strpos($this->post['categories_id'],',')!==false) {
 			$catIds[$this->showCatalogFromPage]=explode(',', $this->post['categories_id']);
 		} else {
 			$catIds[$this->showCatalogFromPage][]=$this->post['categories_id'];
@@ -460,15 +464,19 @@ foreach ($catIds as $page_uid => $catId) {
 				}
 			}
 		}
-		foreach ($catIds as $page_uid => $catId) {
-			if ($catId>0) {
-				$updateArray=array();
-				$updateArray['categories_id']=$catId;
-				$updateArray['products_id']=$prodid;
-				$updateArray['sort_order']=time();
-				$updateArray['page_uid']=$page_uid;
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		foreach ($catIds as $page_uid => $catIdsToAdd) {
+			if (is_array($catIdsToAdd) && count($catIdsToAdd)) {
+				foreach ($catIdsToAdd as $catId) {
+					if ($catId>0) {
+						$updateArray=array();
+						$updateArray['categories_id']=$catId;
+						$updateArray['products_id']=$prodid;
+						$updateArray['sort_order']=time();
+						$updateArray['page_uid']=$page_uid;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				}
 			}
 		}
 	}
