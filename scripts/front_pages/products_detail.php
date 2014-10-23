@@ -26,7 +26,7 @@ if (is_numeric($this->get['products_id'])) {
 	}
 	unset($cart['last_visited'][$this->get['products_id']]);
 }
-if ($this->ms['MODULES']['CACHE_FRONT_END'] && !$this->ms['MODULES']['CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES']) {
+if (($this->ms['MODULES']['CACHE_FRONT_END'] && !$this->ms['MODULES']['CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES']) || (isset($this->get['tx_multishop_pi1']['cart_item']) && !empty($this->get['tx_multishop_pi1']['cart_item']))) {
 	$this->ms['MODULES']['CACHE_FRONT_END']=0;
 }
 if ($this->ms['MODULES']['CACHE_FRONT_END']) {

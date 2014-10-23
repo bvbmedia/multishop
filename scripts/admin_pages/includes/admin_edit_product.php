@@ -20,9 +20,9 @@ jQuery(document).ready(function($) {
 		width:\'220px\'
 	});
 	$(\'#categories_id\').select2({
-		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
+		dropdownCssClass: "", // apply css that makes the dropdown taller
 		width:\'500px\',
-		minimumInputLength: 1,
+		minimumInputLength: 0,
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
@@ -2245,8 +2245,15 @@ if ($this->post) {
 		$subpartArray['###LABEL_PRODUCT_STATUS_OFF_CHECKED###']=((!$product['products_status'] and $_REQUEST['action']=='edit_product') ? 'checked="checked"' : '');
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
-		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']); //$product['categories_id'];
-		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']).'" />'; //mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"');
+		//categories path
+		$old_current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
+		$current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
+		if ($this->get['action']=='add_product' && $this->get['cid']>0) {
+			$old_current_categories_id='';
+			$current_categories_id=$this->get['cid'];
+		}
+		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$old_current_categories_id; //$product['categories_id'];
+		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.$current_categories_id.'" />'; //mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"');
 		$subpartArray['###INFORMATION_SELECT2_LABEL0###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;
 		//exclude list products

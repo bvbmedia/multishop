@@ -2,6 +2,18 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+// when editing the current category we must prevent the user to chain the selected category to it's childs.
+$skip_ids=array();
+if ($_REQUEST['action']=='edit_category') {
+	if (is_numeric($this->get['cid']) and $this->get['cid']>0) {
+		$str="select categories_id from tx_multishop_categories where parent_id='".$this->get['cid']."'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			$skip_ids[]=$row['categories_id'];
+		}
+	}
+	$skip_ids[]=$this->get['cid'];
+}
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 window.onload = function(){
@@ -13,6 +25,57 @@ jQuery(document).ready(function($) {
 	$(\'.select2BigDropWider\').select2({
 		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
 		width:\'220px\'
+	});
+	$(\'#parent_id\').select2({
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'500px\',
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+				data: {
+					q: query.term,
+					skip_ids: \''.implode(',', $skip_ids).'\'
+				},
+				dataType: "json"
+			}).done(function(data) {
+				//categoriesIdSearchTerm[query.term]=data;
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					data: {
+						preselected_id: id,
+						skip_ids: \''.implode(',', $skip_ids).'\'
+					},
+					dataType: "json"
+				}).done(function(data) {
+					//categoriesIdTerm[data.id]={id: data.id, text: data.text};
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
 	});
 });
 </script>
@@ -223,9 +286,9 @@ if ($this->post) {
 		// Extract the subparts from the template
 		$subparts=array();
 		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
-		if (!$category['parent_id']) {
-			$category['parent_id']=$this->get['cid'];
-		}
+		//if (!$category['parent_id']) {
+		//$category['parent_id']=$this->get['cid'];
+		//}
 		if ($_REQUEST['action']=='add_category') {
 			$heading_page='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
 		} else {
@@ -262,23 +325,19 @@ if ($this->post) {
 			</div>
 			';
 		}
-		// when editing the current category we must prevent the user to chain the selected category to it's childs.
-		$skip_ids=array();
-		if ($_REQUEST['action']=='edit_category') {
-			if (is_numeric($this->get['cid']) and $this->get['cid']>0) {
-				$str="select categories_id from tx_multishop_categories where parent_id='".$this->get['cid']."'";
-				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-					$skip_ids[]=$row['categories_id'];
-				}
+		if ($this->get['action']=='add_category') {
+			if (isset($this->get['cid']) && $this->get['cid']>0) {
+				$category['parent_id']=$this->get['cid'];
+			} else {
+				$category['parent_id']=0;
 			}
-			$skip_ids[]=$category['categories_id'];
 		}
 		$category_tree='
 		<div class="account-field" id="msEditCategoryInputParent">
 			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>
-			'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
+			<input type="hidden" name="parent_id" id="parent_id" class="categoriesIdSelect2BigDropWider" value="'.$category['parent_id'].'" />
 		</div>';
+		//'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
 		$categories_image='';
 		if ($_REQUEST['action']=='edit_category' and $category['categories_image']) {
 			$categories_image.='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'">';

@@ -22,10 +22,10 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 		$("#checkbox_negative_keywords_only").click(function(e) {
 			$("#search_log_form").submit();
 		 });
-									
-		$(".is_not_checkout").css("opacity", "0.5");		 
+
+		$(".is_not_checkout").css("opacity", "0.5");
 	});
-</script>	
+</script>
 ';
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('month')).'</h2>';
@@ -55,12 +55,14 @@ foreach ($dates as $key=>$value) {
 	$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">';
 	$str="SELECT s.keyword, count(s.keyword) as total, s.negative_results FROM tx_multishop_products_search_log s WHERE (".implode(" AND ", $where).") and (s.crdate BETWEEN ".$start_time." and ".$end_time.") group by s.keyword order by total desc limit 10";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	$search_amount=0;
 	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
 		} else {
 			$tr_type='even';
 		}
+		$search_amount+=$row['total'];
 		$content.='<tr class="'.$tr_type.'">
 		<td class="text_right" nowrap width="40">'.$row['total'].'</td>
 		<td width="10">';
@@ -72,6 +74,11 @@ foreach ($dates as $key=>$value) {
 		$content.='</td>
 		<td><a href="'.mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=products_search&skeyword='.$row['keyword']).'" target="_blank">'.$row['keyword'].'</a></td>
 		</tr>';
+	}
+	if ($search_amount>0) {
+		$content.='<tr class="'.$tr_type.'">
+		<td class="text_right" nowrap width="40">'.$search_amount.'</td>
+		<td width="10" colspan="2">'.$this->pi_getLL('total').'</td>';
 	}
 	$content.='</table>';
 	$content.='</td>';
@@ -96,7 +103,7 @@ for ($i=0; $i<31; $i++) {
 $content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class="msZebraTable" id="product_import_table">
 <tr>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
-	<th>'.htmlspecialchars($this->pi_getLL('keyword')).'</th>	
+	<th>'.htmlspecialchars($this->pi_getLL('keyword')).'</th>
 </tr>
 ';
 foreach ($dates as $key=>$value) {
