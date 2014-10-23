@@ -1416,7 +1416,10 @@ class mslib_fe {
 			}
 		}
 	}
-	public function Crumbar($c, $languages_id='', $output=array()) {
+	public function Crumbar($c, $languages_id='', $output=array(),$page_uid='') {
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
 		if (is_numeric($c)) {
 			if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 				if (!isset($this->ms['MODULES']['CACHE_TIME_OUT_CRUM'])) {
@@ -1443,7 +1446,7 @@ class mslib_fe {
 			if (!$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content=$Cache_Lite->get($string))) {
 				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
 					'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-					'c.categories_id = \''.$c.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id = cd.categories_id', // WHERE...
+					'c.page_uid=\''.$page_uid.'\' and c.categories_id = \''.$c.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id = cd.categories_id', // WHERE...
 					'', // GROUP BY...
 					'', // ORDER BY...
 					'' // LIMIT ...
@@ -1467,7 +1470,7 @@ class mslib_fe {
 							echo 'crumbar is looping.';
 							die();
 						} else {
-							$output=mslib_fe::Crumbar($data['parent_id'], '', $output);
+							$output=mslib_fe::Crumbar($data['parent_id'], '', $output,$page_uid);
 						}
 					}
 					$GLOBALS['TYPO3_DB']->sql_free_result($qry);
@@ -2249,7 +2252,7 @@ class mslib_fe {
 				$where_clause=' p.products_status=1 ';
 			}
 			if (!$this->masterShop) {
-				$where_clause.=' and p.page_uid=\''.$this->showCatalogFromPage.'\' ';
+				$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')';
 			}
 			$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
 			if (is_array($where) and count($where)>0) {
@@ -2896,10 +2899,13 @@ class mslib_fe {
 		}
 		return $array;
 	}
-	public function getSubcats(&$subcategories_array, $parent_id=0) {
+	public function getSubcats(&$subcategories_array, $parent_id=0, $page_uid='') {
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
 		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('categories_id', // SELECT ...
 			'tx_multishop_categories', // FROM ...
-			'page_uid=\''.$this->showCatalogFromPage.'\' and status = \'1\' and parent_id = \''.$parent_id.'\'', // WHERE...
+			'page_uid=\''.$page_uid.'\' and status = \'1\' and parent_id = \''.$parent_id.'\'', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
 			'' // LIMIT ...
@@ -2912,11 +2918,17 @@ class mslib_fe {
 			}
 		}
 	}
-	public function getSubcatsArray(&$subcategories_array, $keyword='', $parent_id=0) {
+	public function getSubcatsArray(&$subcategories_array, $keyword='', $parent_id=0, $page_uid='') {
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
+		if ($parent_id=='') {
+			$parent_id=0;
+		}
 		if (!empty($keyword) && strlen($keyword)>0) {
 			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'c.page_uid=\''.$this->showCatalogFromPage.'\' and c.status = \'1\' and c.categories_id=cd.categories_id and cd.categories_name like \'%'.addslashes($keyword).'%\' and cd.language_id='.$this->sys_language_uid, // WHERE...
+				'c.page_uid=\''.$page_uid.'\' and c.status = \'1\' and c.categories_id=cd.categories_id and cd.categories_name like \'%'.addslashes($keyword).'%\' and cd.language_id='.$this->sys_language_uid, // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
@@ -2931,7 +2943,7 @@ class mslib_fe {
 		} else {
 			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'c.page_uid=\''.$this->showCatalogFromPage.'\' and c.status = \'1\' and c.categories_id=cd.categories_id and cd.language_id='.$this->sys_language_uid.' and c.parent_id = \''.$parent_id.'\' order by cd.categories_name asc', // WHERE...
+				'c.page_uid=\''.$page_uid.'\' and c.status = \'1\' and c.categories_id=cd.categories_id and cd.language_id='.$this->sys_language_uid.' and c.parent_id = \''.$parent_id.'\' order by cd.categories_name asc', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
@@ -2943,7 +2955,7 @@ class mslib_fe {
 					'name'=>$subcategories['categories_name']
 				);
 				if ($subcategories['categories_id']!=$parent_id) {
-					mslib_fe::getSubcatsArray($subcategories_array, $keyword, $subcategories['categories_id']);
+					mslib_fe::getSubcatsArray($subcategories_array, $keyword, $subcategories['categories_id'], $page_uid);
 				}
 			}
 		}
@@ -2961,10 +2973,13 @@ class mslib_fe {
 			}
 		}
 	}
-	public function getProductToCategories($product_id, $current_category_id) {
+	public function getProductToCategories($product_id, $current_category_id='',$page_uid='') {
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
 		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id', // SELECT ...
 			'tx_multishop_products_to_categories p2c', // FROM ...
-			'p2c.products_id = \''.$product_id.'\' and p2c.categories_id!=\''.$current_category_id.'\'', // WHERE...
+			'p2c.products_id = \''.$product_id.'\' and p2c.categories_id!=\''.$current_category_id.'\' and p2c.page_uid=\''.$page_uid.'\'', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
 			'' // LIMIT ...
@@ -2977,7 +2992,9 @@ class mslib_fe {
 		}
 		$count_res=count($res);
 		if ($count_res>0) {
+			//todo: why is there are a comma as prefix? shouldnt it be in the dispatcher and not in this method?
 			$return_categories_id.=','.implode(',', $res);
+			//$return_categories_id.=implode(',', $res);
 		}
 		return $return_categories_id;
 	}
@@ -3597,13 +3614,16 @@ class mslib_fe {
 		}
 		return $currency_symbol;
 	}
-	public function get_subcategory_ids($parent_id, &$array=array()) {
+	public function get_subcategory_ids($parent_id, &$array=array(), $page_uid='') {
 		if (!is_numeric($parent_id)) {
 			return false;
 		}
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, c.parent_id', // SELECT ...
 			'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-			'c.categories_id = cd.categories_id and c.parent_id = \''.$parent_id.'\' and c.page_uid=\''.$this->showCatalogFromPage.'\'', // WHERE...
+			'c.categories_id = cd.categories_id and c.parent_id = \''.$parent_id.'\' and c.page_uid=\''.$page_uid.'\'', // WHERE...
 			'', // GROUP BY...
 			'c.sort_order, cd.categories_name', // ORDER BY...
 			'' // LIMIT ...
@@ -4201,16 +4221,19 @@ class mslib_fe {
 		}
 	}
 	// sea functions (for relatives) eof
-	public function getSubcatsOnly($parent_id=0, $include_disabled_categories=0) {
+	public function getSubcatsOnly($parent_id=0, $include_disabled_categories=0, $page_uid='') {
 		if (!is_numeric($parent_id)) {
 			return false;
+		}
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
 		}
 		if (is_numeric($parent_id)) {
 			$query_array=array();
 			$query_array['select'][]='*';
 			$query_array['from'][]='tx_multishop_categories c';
 			$query_array['from'][]='tx_multishop_categories_description cd';
-			$query_array['where'][]='c.page_uid=\''.$this->showCatalogFromPage.'\'';
+			$query_array['where'][]='c.page_uid=\''.$page_uid.'\'';
 			if (!$include_disabled_categories) {
 				$query_array['where'][]='c.status=1';
 			}
@@ -5189,12 +5212,13 @@ class mslib_fe {
 			// now grab the active shops
 			$multishop_content_objects=mslib_fe::getActiveShop();
 			if (count($multishop_content_objects)>1) {
-				$ms_menu['header']['ms_admin_stores']['label']='STORES';
 				$counter=0;
 				$total=count($multishop_content_objects);
 				foreach ($multishop_content_objects as $pageinfo) {
 					$counter++;
-					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
+					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
+						$ms_menu['header']['ms_admin_stores']['label']=t3lib_div::strtoupper($pageinfo['title']);
+					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
 						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['label']=t3lib_div::strtoupper($pageinfo['title']);
 						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
 						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');

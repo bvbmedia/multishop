@@ -238,4 +238,9 @@ plugin.multishop {
 
 	# cat=plugin.multishop - advanced; type=string; label= Pid of the rootline page: Change the target link of the root page in the crumbar. Leave empty for default target. Example: 1.
 	crumbar_rootline_pid =
+
+	# cat=plugin.multishop - multiple shops/enable; type=boolean; label= Enable multiple shops: If you enable this constant you can relate products to multiple shops. WARNING: when this setting is enabled the module "flat database" is not supported.
+	enableMultipleShops=0
+	# cat=plugin.multishop - multiple shops; type=string; label= PIDs of the core shops: The page id's of the core shops that should be connected. I.e.: 1,2
+	connectedShopPids=
 }

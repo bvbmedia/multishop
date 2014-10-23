@@ -113,6 +113,8 @@ plugin.tx_multishop_pi1 {
 	crumbar_rootline_title={$plugin.multishop.crumbar_rootline_title}
 	crumbar_rootline_pid={$plugin.multishop.crumbar_rootline_pid}
 	debugEnabled={$plugin.multishop.debugEnabled}
+	enableMultipleShops={$plugin.multishop.enableMultipleShops}
+	connectedShopPids={$plugin.multishop.connectedShopPids}
 }
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)
 

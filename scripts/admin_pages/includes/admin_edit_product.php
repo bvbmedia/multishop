@@ -285,6 +285,7 @@ if ($this->post) {
 	}
 	if ($_REQUEST['action']=='edit_product' and $this->post['pid']) {
 		if (isset($this->post['save_as_new'])) {
+			// SECTION FOR CLONING A PRODUCT
 			if (!$updateArray['products_image']) {
 				$product_original=mslib_fe::getProduct($this->post['pid']);
 				foreach ($product_original as $arr_key=>$arr_val) {
@@ -301,25 +302,32 @@ if ($this->post) {
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$prodid=$GLOBALS['TYPO3_DB']->sql_insert_id();
+
+			$catIds=array();
 			if (strpos($this->post['categories_id'], ',')!==false) {
-				$m_categories_id=explode(',', $this->post['categories_id']);
-				foreach ($m_categories_id as $m_category_id) {
-					if ($m_category_id>0) {
-						$updateArray=array();
-						$updateArray['categories_id']=$m_category_id;
-						$updateArray['products_id']=$prodid;
-						$updateArray['sort_order']=time();
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				$catIds[$this->showCatalogFromPage]=explode(',', $this->post['categories_id']);
+			} else {
+				$catIds[$this->showCatalogFromPage][]=$this->post['categories_id'];
+			}
+			if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
+				foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
+					if (strpos($shopRecord, ',')!==false) {
+						$catIds[$page_uid]=explode(',', $shopRecord);
+					} else {
+						$catIds[$page_uid][]=$shopRecord;
 					}
 				}
-			} else {
-				$updateArray=array();
-				$updateArray['categories_id']=$this->post['categories_id'];
-				$updateArray['products_id']=$prodid;
-				$updateArray['sort_order']=time();
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+			foreach ($catIds as $page_uid => $catId) {
+				if ($catId>0) {
+					$updateArray=array();
+					$updateArray['categories_id']=$catId;
+					$updateArray['products_id']=$prodid;
+					$updateArray['sort_order']=time();
+					$updateArray['page_uid']=$page_uid;
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
 			}
 		} else {
 			$prodid=$this->post['pid'];
@@ -337,81 +345,97 @@ if ($this->post) {
 				// call disable method cause that one also removes possible flat database record
 				mslib_befe::disableProduct($row['products_id']);
 			}
-			if (is_numeric($this->post['categories_id'])) {
+			if ($this->post['categories_id']) {
+				/*
 				if (!empty($this->post['old_categories_id']) and ($this->post['old_categories_id']!=$this->post['categories_id'])) {
 					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\'');
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}
-				if (!empty($this->post['old_categories_id']) and ($this->post['old_categories_id']<>$this->post['categories_id'])) {
+				*/
+				// first collect all old category ids
+				$catOldIds=array();
+				if (!empty($this->post['old_categories_id'])) {
 					if (strpos($this->post['old_categories_id'], ',')!==false) {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						$m_old_categories_id=explode(',', $this->post['old_categories_id']);
-						foreach ($m_old_categories_id as $m_old_category_id) {
-							// if product is originally coming from products importer we have to define that the merchant changed it
-							$filter=array();
-							$filter[]='products_id='.$prodid;
-							if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-								// lock changed columns
-								mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_to_categories', array('categories_id'=>$m_old_category_id));
-							}
-						}
+						$catOldIds[$this->showCatalogFromPage]=explode(',', $this->post['old_categories_id']);
 					} else {
-						// if product is originally coming from products importer we have to define that the merchant changed it
-						$filter=array();
-						$filter[]='products_id='.$prodid;
-						if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-							// lock changed columns
-							mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_to_categories', array('categories_id'=>$this->post['categories_id']));
-						}
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and categories_id=\''.$this->post['old_categories_id'].'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$catOldIds[$this->showCatalogFromPage][]=$this->post['old_categories_id'];
 					}
-					$updateArray=array();
-					$updateArray['categories_id']=$this->post['categories_id'];
-					$updateArray['products_id']=$prodid;
-					$updateArray['sort_order']=time();
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}
-			} else {
-				if (strpos($this->post['categories_id'], ',')!==false) {
-					if (!empty($this->post['old_categories_id']) and ($this->post['old_categories_id']!=$this->post['categories_id'])) {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						if (strpos($this->post['old_categories_id'], ',')!==false) {
-							$m_old_categories_id=explode(',', $this->post['old_categories_id']);
-							foreach ($m_old_categories_id as $m_old_category_id) {
-								// if product is originally coming from products importer we have to define that the merchant changed it
-								$filter=array();
-								$filter[]='products_id='.$prodid;
-								if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-									// lock changed columns
-									mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_to_categories', array('categories_id'=>$m_old_category_id));
-								}
-							}
-						} else if (is_numeric($this->post['old_categories_id'])) {
-							// if product is originally coming from products importer we have to define that the merchant changed it
-							$filter=array();
-							$filter[]='products_id='.$prodid;
-							if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-								// lock changed columns
-								mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_to_categories', array('categories_id'=>$this->post['categories_id']));
-							}
+				// if enableMultipleShops is enabled also collect these old category ids
+				if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['old_products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['old_products_to_shop_categories'])) {
+					foreach ($this->post['tx_multishop_pi1']['old_products_to_shop_categories'] as $page_uid => $shopRecord) {
+						if (strpos($shopRecord, ',')!==false) {
+							$catOldIds[$page_uid]=explode(',', $shopRecord);
+						} else {
+							$catOldIds[$page_uid][]=$shopRecord;
 						}
-						$m_categories_id=explode(',', $this->post['categories_id']);
-						foreach ($m_categories_id as $m_category_id) {
-							if ($m_category_id>0) {
-								$updateArray=array();
-								$updateArray['categories_id']=$m_category_id;
-								$updateArray['products_id']=$prodid;
-								$updateArray['sort_order']=time();
-								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+					}
+				}
+				// now collect the new category ids
+				$catIds=array();
+				if (strpos($this->post['categories_id'], ',')!==false) {
+					$catIds[$this->showCatalogFromPage]=explode(',', $this->post['categories_id']);
+				} else {
+					$catIds[$this->showCatalogFromPage][]=$this->post['categories_id'];
+				}
+				if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
+					foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
+						if (strpos($shopRecord, ',')!==false) {
+							$catIds[$page_uid]=explode(',', $shopRecord);
+						} else {
+							$catIds[$page_uid][]=$shopRecord;
+						}
+					}
+				}
+				// finally get the category ids that we must remove
+				if (is_array($catOldIds) && count($catOldIds)) {
+					foreach ($catOldIds as $page_uid => $catOldArray) {
+						$catIdsToRemove = array_diff($catOldIds[$page_uid], $catIds[$page_uid]);
+						if (is_array($catIdsToRemove) && count($catIdsToRemove)) {
+							foreach ($catIdsToRemove as $catId) {
+								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and categories_id=\''.$catId.'\' and page_uid='.$page_uid);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
 						}
 					}
 				}
+				if (is_array($catIds) && count($catIds)) {
+					foreach ($catIds as $page_uid=>$catArray) {
+						$catIdsToAdd=array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
+						if (is_array($catIdsToAdd) && count($catIdsToAdd)) {
+							foreach ($catIdsToAdd as $catId) {
+								if ($catId > 0) {
+									$updateArray=array();
+									$updateArray['categories_id']=$catId;
+									$updateArray['products_id']=$prodid;
+									$updateArray['sort_order']=time();
+									$updateArray['page_uid']=$page_uid;
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
+							}
+						}
+					}
+				}
+
+
+
+/*
+foreach ($catIds as $page_uid => $catId) {
+	if ($catId>0) {
+		// if product is originally coming from products importer we have to define that the merchant changed it
+		$filter=array();
+		$filter[]='products_id='.$prodid;
+		if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
+			// lock changed columns
+			mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_to_categories', array('categories_id'=>$catId));
+		}
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and categories_id=\''.$catId.'\'');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+	}
+}
+*/
+
 			}
 		}
 	} else {
@@ -420,25 +444,32 @@ if ($this->post) {
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$prodid=$GLOBALS['TYPO3_DB']->sql_insert_id();
+
+		$catIds=array();
 		if (strpos($this->post['categories_id'], ',')!==false) {
-			$m_categories_id=explode(',', $this->post['categories_id']);
-			foreach ($m_categories_id as $m_category_id) {
-				if ($m_category_id>0) {
-					$updateArray=array();
-					$updateArray['categories_id']=$m_category_id;
-					$updateArray['products_id']=$prodid;
-					$updateArray['sort_order']=time();
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			$catIds[$this->showCatalogFromPage]=explode(',', $this->post['categories_id']);
+		} else {
+			$catIds[$this->showCatalogFromPage][]=$this->post['categories_id'];
+		}
+		if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
+			foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
+				if (strpos($shopRecord, ',')!==false) {
+					$catIds[$page_uid]=explode(',', $shopRecord);
+				} else {
+					$catIds[$page_uid][]=$shopRecord;
 				}
 			}
-		} else {
-			$updateArray=array();
-			$updateArray['categories_id']=$this->post['categories_id'];
-			$updateArray['products_id']=$prodid;
-			$updateArray['sort_order']=time();
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		}
+		foreach ($catIds as $page_uid => $catId) {
+			if ($catId>0) {
+				$updateArray=array();
+				$updateArray['categories_id']=$catId;
+				$updateArray['products_id']=$prodid;
+				$updateArray['sort_order']=time();
+				$updateArray['page_uid']=$page_uid;
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
 		}
 	}
 	if ($prodid) {
@@ -2246,14 +2277,109 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		//categories path
+		//$old_current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
+		//$current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
+		//todo read above code why load method 2 times with same input
 		$old_current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
-		$current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
+		$current_categories_id=$old_current_categories_id;
 		if ($this->get['action']=='add_product' && $this->get['cid']>0) {
 			$old_current_categories_id='';
 			$current_categories_id=$this->get['cid'];
 		}
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$old_current_categories_id; //$product['categories_id'];
-		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.$current_categories_id.'" />'; //mslib_fe::tx_multishop_draw_pull_down_menu('categories_id" id="categories_id', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"');
+		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.$current_categories_id.'" />';
+		// INPUT_CATEGORY_TREE
+		$tmpcontent='';
+		if ($this->conf['enableMultipleShops']) {
+			$shopPids=explode(',',$this->conf['connectedShopPids']);
+			$tmpcontent.='<div class="account-field" class="msEditProductInputMultipleShopCategory">
+				<label>Other shops</label>
+				<div class="msAttributesWrapper">';
+			foreach ($shopPids as $shopPid) {
+				if (is_numeric($shopPid) and $shopPid!=$this->shop_pid) {
+					$pageinfo=mslib_befe::getRecord($shopPid,'pages','uid',array('deleted=0 and hidden=0'));
+					if ($pageinfo['uid']) {
+						$old_products_to_shop_categories=mslib_fe::getProductToCategories($this->get['pid'], '',$pageinfo['uid']);
+						$tmpcontent.='<div class="msAttributes">
+						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops]['.$pageinfo['uid'].']" value="1" checked="checked" />
+						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
+						<div class="msEditProductInputMultipleShopCategory" style="display:none;">
+							<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$old_products_to_shop_categories.'" />
+							<input name="tx_multishop_pi1[old_products_to_shop_categories]['.$pageinfo['uid'].']" type="hidden" value="'.$old_products_to_shop_categories.'" />
+						</div>
+						</div>';
+						$GLOBALS['TSFE']->additionalHeaderData[]='
+						<script type="text/javascript">
+						jQuery(document).ready(function($) {
+							var categoriesIdTerm_'.$pageinfo['uid'].'=[];
+							var categoriesIdSearchTerm_'.$pageinfo['uid'].'=[];
+							$(\'#enableMultipleShopsTree_'.$pageinfo['uid'].'\').select2({
+								dropdownCssClass: "", // apply css that makes the dropdown taller
+								width:\'500px\',
+								minimumInputLength: 0,
+								multiple: true,
+								//allowClear: true,
+								query: function(query) {
+									$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+										data: {
+											q: query.term
+										},
+										dataType: "json"
+									}).done(function(data) {
+										categoriesIdSearchTerm_'.$pageinfo['uid'].'[query.term]=data;
+										query.callback({results: data});
+									});
+								},
+								initSelection: function(element, callback) {
+									var id=$(element).val();
+									if (id!=="") {
+										$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+											data: {
+												preselected_id: id
+											},
+											dataType: "json"
+										}).done(function(data) {
+											categoriesIdTerm_'.$pageinfo['uid'].'[data.id]={id: data.id, text: data.text};
+											callback(data);
+										});
+									}
+								},
+								formatResult: function(data){
+									if (data.text === undefined) {
+										$.each(data, function(i,val){
+											return val.text;
+										});
+									} else {
+										return data.text;
+									}
+								},
+								formatSelection: function(data){
+									if (data.text === undefined) {
+										return data[0].text;
+									} else {
+										return data.text;
+									}
+								},
+								escapeMarkup: function (m) { return m; }
+							});
+						});
+						</script>';
+
+					}
+				}
+			}
+			$tmpcontent.='</div></div>';
+			$GLOBALS['TSFE']->additionalHeaderData[]='
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(\'.enableMultipleShopsCheckbox:checked\').each(function() {
+					$(this).parent().find(\'.msEditProductInputMultipleShopCategory\').css(\'display\',\'block\');
+				});
+			});
+			</script>
+			';
+		}
+		$subpartArray['###INPUT_MULTIPLE_SHOPS_CATEGORY_TREE###']=$tmpcontent;
 		$subpartArray['###INFORMATION_SELECT2_LABEL0###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;
 		//exclude list products

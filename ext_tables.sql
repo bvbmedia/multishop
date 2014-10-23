@@ -28,6 +28,7 @@ CREATE TABLE `fe_users` (
   `tx_multishop_vat_id` varchar(127) default '',
   `tx_multishop_coc_id` varchar(127) default '',
   `tx_multishop_quick_checkout` tinyint(1) default '0',
+  `tx_multishop_customer_id` int(11) default '0',
   KEY `username` (`username`),
   KEY `is_online` (`is_online`),
   KEY `pid` (`pid`,`username`),
@@ -56,7 +57,8 @@ CREATE TABLE `fe_users` (
   KEY `last_name` (`last_name`),
   KEY `vat_id` (`tx_multishop_vat_id`),
   KEY `coc_id` (`tx_multishop_coc_id`),
-  KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`)
+  KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`),
+  KEY `tx_multishop_customer_id` (`tx_multishop_customer_id`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (
@@ -1033,9 +1035,21 @@ CREATE TABLE `tx_multishop_products_to_categories` (
   `products_id` int(11) default '0',
   `categories_id` int(5) default '0',
   `sort_order` int(11) default '0',
+  `page_uid` int(11) default '0',
   PRIMARY KEY (`products_id`,`categories_id`),
+  KEY `page_uid` (`page_uid`),
   KEY `categories_id` (`categories_id`)
 );
+
+CREATE TABLE `tx_multishop_categories_to_categories` (
+  `id` int(11) auto_increment,
+  `categories_id` int(11) default '0',
+  `foreign_categories_id` int(11) default '0',
+  PRIMARY KEY (`id`),
+  KEY `categories_id` (`categories_id`),
+  KEY `foreign_categories_id` (`foreign_categories_id`)
+);
+
 
 CREATE TABLE `tx_multishop_products_to_extra_options` (
   `id` int(11) auto_increment,
