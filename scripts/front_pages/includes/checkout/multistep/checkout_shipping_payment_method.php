@@ -76,7 +76,7 @@ if ($erno or $show_shipping_payment_method) {
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.$price.'</div>';
 			}
 			// costs eof
-			$content.='<li class="'.$tr_type.' col-sm-4" id="multishop_payment_method_'.$item['id'].'"><label for="payment_method_'.$item['id'].'" class="name"><div class="listing_item">';
+			$content.='<li id="multishop_payment_method_'.$item['id'].'" class="'.$tr_type.' col-sm-4"><label for="payment_method_'.$item['id'].'" class="name"><div class="listing_item">';
 			if ($price_wrap) {
 				$content.=$price_wrap;
 			}
@@ -109,7 +109,7 @@ if ($erno or $show_shipping_payment_method) {
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.mslib_fe::amount2Cents($priceArray['shipping_costs_including_vat']).'</div>';
 			}
 			// costs eof
-			$content.='<li id="multishop_shipping_method_'.$item['id'].' class="col-sm-4"><label for="shipping_method_'.$item['id'].'" class="name" id="label_shipping_method_'.$item['id'].'"><div class="listing_item">';
+			$content.='<li id="multishop_shipping_method_'.$item['id'].'" class="col-sm-4"><label for="shipping_method_'.$item['id'].'" class="name" id="label_shipping_method_'.$item['id'].'"><div class="listing_item">';
 			if ($price_wrap) {
 				$content.=$price_wrap;
 			}
