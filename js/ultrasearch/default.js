@@ -58,7 +58,7 @@ jQuery(document).ready(function ($) {
         } else {
             //console.log(data);
             var listing_products = "";
-            listing_products += '<ul id="product_listing" class="ui-sortable">';
+            listing_products += '<div id="product_listing" class="ui-sortable row">';
             var colCounter = 0;
             var colClass="";
             $.each(data.resultSet.products, function (i, item) {
@@ -75,14 +75,16 @@ jQuery(document).ready(function ($) {
                         colCounter=0;
                         break;
                 }
-                listing_products += '<li class="'+colClass+'">';
-                listing_products += '<h2><a class="ajax_link" href="' + item.link_detail + '">' + item.products_name + '</a></h2>';
+                listing_products += '<div class="'+colClass+' col-sm-4"><div class="listing_item">';
                 if (item.products_image) {
                     listing_products += '<div class="image"><a href="' + item.link_detail + '" title="' + item.products_name + '" class="ajax_link"><img src="' + item.products_image + '"></a></div>';
                 } else {
                     listing_products += '<div class="image"><a href="' + item.link_detail + '" title="' + item.products_name + '" class="ajax_link"><div class="no_image"></div></a></div>';
                 }
+                listing_products += '<strong><a class="ajax_link" href="' + item.link_detail + '">' + item.products_name + '</a></strong>';
                 listing_products += '<div class="category"><a href="' + item.catlink + '" class="ajax_link">' + item.categories_name + '</a></div>';
+                listing_products += '<a href="#" rel="51" class="add_cart_item_listing"><span></span></a>';
+                listing_products += '<div class="products_price">';
                 if (item.price_excluding_vat) {
                     listing_products += '<div class="price_excluding_vat">' + item.price_excluding_vat + '</div>';
                 }
@@ -92,9 +94,9 @@ jQuery(document).ready(function ($) {
                 if (item.price) {
                     listing_products += '<div class="price">' + item.price + '</div>';
                 }
-                listing_products += '</li>';
+                listing_products += '</div></div></div>';
             });
-            listing_products += '</ul>';
+            listing_products += '</div>';
             // PAGINATION
             var pagination_wrapper = '<div id="pagenav_container_list_wrapper"><ul id="pagenav_container_list">';
             if (data.resultSet.pagination.prev) {
