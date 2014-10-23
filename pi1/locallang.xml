@@ -1906,7 +1906,7 @@
             <label index="admin_label_cms_marker_payment_link">Betaallink (voor betalingsherinnering e-mail sjabloon)</label>
             <label index="admin_label_multishop_cache_has_been_cleared">Multishop cache is opgeschoond.</label>
             <label index="admin_label_cache_not_cleared_something_is_wrong_with_configuration_document_root_is_not_set_directly">Cache is niet opgeschoond. Er is mis met de configuratie (DOCUMENT_ROOT is niet correct ingesteld).</label>
-            <label index="coc_id">KvK Nr.</label>
+            <label index="coc_id">KvK-nummer</label>
             <label index="admin_label_unknown_order_status">Onbekende bestelstatus</label>
             <label index="including_vat">Incl. BTW</label>
             <label index="no_records_found">Geen records gevonden</label>
@@ -1969,7 +1969,7 @@
             <label index="admin_label_missing_related_images_has_been_adjust_to_the_database">ontbrekende afbeeldingen zijn aangepast in de database</label>
             <label index="admin_label_everything_is_fine">Alles is in orde.</label>
             <label index="payment_to_zone_mapping">Betaalmethodes per zone</label>
-            <label index="vat_id">BTW nummer</label>
+            <label index="vat_id">BTW-nummer</label>
             <label index="user_agent">Browser</label>
             <label index="admin_label_choose_option">selecteer attribuut optie</label>
             <label index="admin_label_choose_attribute">selecteer attribuut waarde</label>
