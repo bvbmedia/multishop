@@ -419,11 +419,11 @@ if ($this->post['action']=='category-insert') {
 						}
 						$rows[$i][$s]=$datacol;
 						$s++;
-						if ($s==5) {
-							break;
-						}
 					}
 					$i++;
+					if ($i==5) {
+						break;
+					}
 				}
 			} elseif ($this->post['format']=='excel') {
 				// try the generic way

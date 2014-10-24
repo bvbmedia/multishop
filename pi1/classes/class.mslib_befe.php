@@ -1622,6 +1622,8 @@ class mslib_befe {
 		if (!$qry || $this->conf['debugEnabled']=='1') {
 			$logString='rebuildFlatDatabase CREATE TABLE failed query: '.$str;
 			t3lib_div::devLog($logString, 'multishop',-1);
+			//echo $str;
+			//exit();
 		}
 		$products=array();
 		//$str="truncate tx_multishop_products_flat";

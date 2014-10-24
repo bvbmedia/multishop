@@ -359,12 +359,15 @@ if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and !$t
 		foreach ($array as $row) {
 			$item=explode(":", $row);
 			if (is_numeric($item[0])) {
-				$field_name="a_".str_replace("-", "_", mslib_fe::rewritenamein(mslib_fe::getProductsOptionName($item[0])));
-				if ($field_name) {
-					$flat_database_extra_attribute_options[$item[0]]=array(
-						0=>$field_name,
-						1=>$item[1]
-					);
+				$columnName=mslib_fe::getProductsOptionName($item[0]);
+				if ($columnName) {
+					$field_name="a_".str_replace("-", "_", mslib_fe::rewritenamein($columnName));
+					if ($field_name) {
+						$flat_database_extra_attribute_options[$item[0]]=array(
+							0=>$field_name,
+							1=>$item[1]
+						);
+					}
 				}
 			}
 		}
