@@ -202,7 +202,7 @@ if (mslib_fe::loggedin()) {
 		<div id="live-validation" class="create-account">
 			<form action="'.mslib_fe::typolink().'" method="post" name="create_account" class="AdvancedForm" id="create-account">
 		  		<div class="row">
-					<div id="live-validation_l class="col-md-6">
+					<div id="live-validation_l" class="col-md-6">
 						<div class="account-boxes">
 							<div class="account-heading">
 				  				<h2>'.$this->pi_getLL('personal_details').'</h2>
@@ -313,7 +313,7 @@ if (mslib_fe::loggedin()) {
 						</div>
 						</div>
 					</div>
-					<div id="live-validation_r" col-sm-6>
+					<div id="live-validation_r" class="col-sm-6">
 			  			<div class="account-boxes">
 							<div class="account-heading">
 				  				<h2>'.$this->pi_getLL('login_details').'</h2>
@@ -321,26 +321,26 @@ if (mslib_fe::loggedin()) {
 							<div class="account-boxes">'.$this->pi_getLL('login_details_description').'.</div>
 			  			</div>
 			  			<div class="row">
-			  			<div class="account-field" id="user-email">
-							<label class="account-email" for="email">'.$this->pi_getLL('e-mail_address').'</label>
-							<input type="text" name="email" class="email" id="email" value="'.htmlspecialchars($this->post['email']).'" />
-							<span class="error-space"></span>
-						</div>
-			  			<div class="account-field" id="user-confirmemail">
-							<label class="account-email-confirm" for="email_confirm">'.$this->pi_getLL('confirm_email_address').'</label>
-							<input type="text" name="email_confirm" class="email-confirm" id="email_confirm" value="'.htmlspecialchars($this->post['email_confirm']).'" />
-							<span class="error-space"></span>
-						</div>
-			  			<div class="account-field" id="user-password">
-							<label class="account-password" for="password">'.$this->pi_getLL('password').'</label>
-							<input type="password" name="password" class="password" id="password" value="'.htmlspecialchars($this->post['password']).'" />
-							<span class="error-space"></span>
-						</div>
-			  			<div class="account-field" id="user-confirmpassword">
-							<label class="account-password-confirm" for="password_confirm">'.$this->pi_getLL('confirm_password').'</label>
-							<input type="password" name="password_confirm" class="password-confirm" id="password_confirm" value="'.htmlspecialchars($this->post['password_confirm']).'" />
-			  				<span class="error-space"></span>
-			  			</div>
+			  				<div class="account-field col-sm-12" id="user-email">
+								<label class="account-email" for="email">'.$this->pi_getLL('e-mail_address').'</label>
+								<input type="text" name="email" class="email" id="email" value="'.htmlspecialchars($this->post['email']).'" />
+								<span class="error-space"></span>
+							</div>
+				  			<div class="account-field col-sm-12" id="user-confirmemail">
+								<label class="account-email-confirm" for="email_confirm">'.$this->pi_getLL('confirm_email_address').'</label>
+								<input type="text" name="email_confirm" class="email-confirm" id="email_confirm" value="'.htmlspecialchars($this->post['email_confirm']).'" />
+								<span class="error-space"></span>
+							</div>
+				  			<div class="account-field col-sm-12" id="user-password">
+								<label class="account-password" for="password">'.$this->pi_getLL('password').'</label>
+								<input type="password" name="password" class="password" id="password" value="'.htmlspecialchars($this->post['password']).'" />
+								<span class="error-space"></span>
+							</div>
+				  			<div class="account-field col-sm-12" id="user-confirmpassword">
+								<label class="account-password-confirm" for="password_confirm">'.$this->pi_getLL('confirm_password').'</label>
+								<input type="password" name="password_confirm" class="password-confirm" id="password_confirm" value="'.htmlspecialchars($this->post['password_confirm']).'" />
+				  				<span class="error-space"></span>
+				  			</div>
 			  			</div>
 			  			<div class="account-field newsletter_checkbox">
 							<div class="account-heading">
@@ -359,12 +359,13 @@ if (mslib_fe::loggedin()) {
 					  		<input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" />
 						</div>
 					</div>
-					<div id="bottom-navigation">
-						<a href="" onClick="history.back();return false;" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
-						<span class="msFrontButton continueState arrowRight arrowPosLeft" id="submit"><input type="submit" value="'.$this->pi_getLL('register').'" /></span>
-					</div>
-				</form>
-			</div>
+				</div>
+				<div id="bottom-navigation">
+					<a href="" onClick="history.back();return false;" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
+					<span class="msFrontButton continueState arrowRight arrowPosLeft" id="submit"><input type="submit" value="'.$this->pi_getLL('register').'" /></span>
+				</div>
+			</form>
+		</div>
 		';
 		}
 	}
