@@ -253,7 +253,7 @@ if (mslib_fe::loggedin()) {
 							$content.='<input name="country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 						} else {
 						$content.='
-					  	<div class="account-field col-sm-7" id="input-country">
+					  	<div class="account-field col-sm-8" id="input-country">
 							<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 							';
 							$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
@@ -276,7 +276,12 @@ if (mslib_fe::loggedin()) {
 							';
 						}
 						$content.='
-						<div class="account-field col-sm-6" id="input-address">
+						<div class="account-field col-sm-4" id="input-zip">
+							<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+							<input type="text" name="zip" class="zip" id="zip" value="'.htmlspecialchars($this->post['zip']).'">
+							<span class="error-space"></span>
+			  			</div>
+						<div class="account-field col-sm-3" id="input-address">
 							<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
 							<input type="text" name="address" id="address" class="address" value="'.htmlspecialchars($this->post['address']).'" />
 							<span class="error-space"></span>
@@ -291,11 +296,6 @@ if (mslib_fe::loggedin()) {
 							<input type="text" name="address_ext" id="address_ext" class="address-ext" value="'.htmlspecialchars($this->post['address_ext']).'" />
 							<span class="error-space"></span>
 						</div>
-			  			<div class="account-field col-sm-2" id="input-zip">
-							<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
-							<input type="text" name="zip" class="zip" id="zip" value="'.htmlspecialchars($this->post['zip']).'">
-							<span class="error-space"></span>
-			  			</div>
 			  			<div class="account-field col-sm-3" id="input-city">
 							<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
 							<input id="city" name="city" type="text" value="'.htmlspecialchars($this->post['city']).'" />
@@ -321,22 +321,22 @@ if (mslib_fe::loggedin()) {
 							<div class="account-boxes">'.$this->pi_getLL('login_details_description').'.</div>
 			  			</div>
 			  			<div class="row">
-			  				<div class="account-field col-sm-12" id="user-email">
+			  				<div class="account-field col-sm-6" id="user-email">
 								<label class="account-email" for="email">'.$this->pi_getLL('e-mail_address').'</label>
 								<input type="text" name="email" class="email" id="email" value="'.htmlspecialchars($this->post['email']).'" />
 								<span class="error-space"></span>
 							</div>
-				  			<div class="account-field col-sm-12" id="user-confirmemail">
+				  			<div class="account-field col-sm-6" id="user-confirmemail">
 								<label class="account-email-confirm" for="email_confirm">'.$this->pi_getLL('confirm_email_address').'</label>
 								<input type="text" name="email_confirm" class="email-confirm" id="email_confirm" value="'.htmlspecialchars($this->post['email_confirm']).'" />
 								<span class="error-space"></span>
 							</div>
-				  			<div class="account-field col-sm-12" id="user-password">
+				  			<div class="account-field col-sm-6" id="user-password">
 								<label class="account-password" for="password">'.$this->pi_getLL('password').'</label>
 								<input type="password" name="password" class="password" id="password" value="'.htmlspecialchars($this->post['password']).'" />
 								<span class="error-space"></span>
 							</div>
-				  			<div class="account-field col-sm-12" id="user-confirmpassword">
+				  			<div class="account-field col-sm-6" id="user-confirmpassword">
 								<label class="account-password-confirm" for="password_confirm">'.$this->pi_getLL('confirm_password').'</label>
 								<input type="password" name="password_confirm" class="password-confirm" id="password_confirm" value="'.htmlspecialchars($this->post['password_confirm']).'" />
 				  				<span class="error-space"></span>
@@ -356,7 +356,7 @@ if (mslib_fe::loggedin()) {
 						}
 						$content.='<div class="account-field security">
 				  			<img src="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=captcha').'">
-					  		<input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" />
+					  		<input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" caption="Type cijfers over" />
 						</div>
 					</div>
 				</div>

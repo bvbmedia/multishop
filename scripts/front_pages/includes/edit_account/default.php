@@ -395,26 +395,7 @@ if ($this->post) {
 		<label class="account-lastname" for="last_name">'.ucfirst($this->pi_getLL('last_name')).'*</label>
 		<input type="text" name="last_name" id="last_name" class="last-name" value="'.htmlspecialchars($user['last_name']).'" required="required" data-h5-errorid="invalid-last_name" title="'.$this->pi_getLL('surname_is_required').'"><div id="invalid-last_name" class="error-space" style="display:none"></div>
 	</div>
-	<div id="input-address" class="account-field col-sm-6">
-		<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
-		<input type="text" name="street_name" id="address" class="address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
-	</div>
-	<div id="input-housenumber" class="account-field col-sm-3">
-		<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
-		<input type="text" name="address_number" id="address_number" class="address-number" value="'.htmlspecialchars($user['address_number']).'" required="required" data-h5-errorid="invalid-address_number" title="'.$this->pi_getLL('street_number_is_required').'"><div id="invalid-address_number" class="error-space" style="display:none"></div>
-	</div>
-	<div id="input-extension" class="account-field col-sm-3">
-		<label for="address-ext" id="account-ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-		<input type="text" name="address_ext" class="address-ext" id="address-ext" value="'.htmlspecialchars($user['address_ext']).'"/>	
-	</div>		
-	<div id="input-zip" class="account-field col-sm-2">
-		<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
-		<input type="text" name="zip" id="zip" class="zip" value="'.htmlspecialchars($user['zip']).'" required="required" data-h5-errorid="invalid-zip" title="'.$this->pi_getLL('zip_is_required').'"><div id="invalid-zip" class="error-space" style="display:none"></div>
-	</div>
-	<div id="input-city" class="account-field col-sm-3">
-		<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
-		<input type="text" name="city" id="city" class="city" value="'.htmlspecialchars($user['city']).'" required="required" data-h5-errorid="invalid-city" title="'.$this->pi_getLL('city_is_required').'"><div id="invalid-city" class="error-space" style="display:none"></div>
-	</div>';
+	';
 	// load countries
 	if (count($enabled_countries)==1) {
 		$row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
@@ -427,7 +408,7 @@ if ($this->post) {
 		}
 		if ($tmpcontent_con) {
 			$content.='
-			<div id="input-country" class="account-field col-sm-7">
+			<div id="input-country" class="account-field col-sm-8">
 			<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 			<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 			<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
@@ -438,6 +419,28 @@ if ($this->post) {
 		}
 	}
 	// country eof
+	$content.='
+	<div id="input-zip" class="account-field col-sm-4">
+		<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+		<input type="text" name="zip" id="zip" class="zip" value="'.htmlspecialchars($user['zip']).'" required="required" data-h5-errorid="invalid-zip" title="'.$this->pi_getLL('zip_is_required').'"><div id="invalid-zip" class="error-space" style="display:none"></div>
+	</div>
+	<div id="input-address" class="account-field col-sm-3">
+		<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
+		<input type="text" name="street_name" id="address" class="address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
+	</div>
+	<div id="input-housenumber" class="account-field col-sm-3">
+		<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+		<input type="text" name="address_number" id="address_number" class="address-number" value="'.htmlspecialchars($user['address_number']).'" required="required" data-h5-errorid="invalid-address_number" title="'.$this->pi_getLL('street_number_is_required').'"><div id="invalid-address_number" class="error-space" style="display:none"></div>
+	</div>
+	<div id="input-extension" class="account-field col-sm-3">
+		<label for="address-ext" id="account-ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+		<input type="text" name="address_ext" class="address-ext" id="address-ext" value="'.htmlspecialchars($user['address_ext']).'"/>	
+	</div>
+	<div id="input-city" class="account-field col-sm-3">
+		<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
+		<input type="text" name="city" id="city" class="city" value="'.htmlspecialchars($user['city']).'" required="required" data-h5-errorid="invalid-city" title="'.$this->pi_getLL('city_is_required').'"><div id="invalid-city" class="error-space" style="display:none"></div>
+	</div>';
+
 	$telephone_validation='';
 	$mobile_validation='';
 	if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
@@ -450,10 +453,6 @@ if ($this->post) {
 		}
 	}
 	$content.='
-	<div id="input-email" class="account-field col-sm-6">
-		<label for="email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'*</label>
-		<input type="text" name="email" id="email" class="email" value="'.htmlspecialchars($user['email']).'" required="required" data-h5-errorid="invalid-email" title="'.$this->pi_getLL('email_is_required').'"><div id="invalid-email" class="error-space" style="display:none"></div>
-	</div>
 	<div id="input-phone" class="account-field col-sm-6">
 		<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).'*</label>
 		<input type="text" name="telephone" id="telephone" class="telephone" value="'.htmlspecialchars($user['telephone']).'"'.$telephone_validation.'><div id="invalid-telephone" class="error-space" style="display:none"></div>
@@ -461,6 +460,10 @@ if ($this->post) {
 	<div id="input-mobile" class="account-field col-sm-6">
 		<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 		<input type="text" name="mobile" id="mobile" class="mobile" value="'.htmlspecialchars($user['mobile']).'">
+	</div>
+	<div id="input-email" class="account-field col-sm-12">
+		<label for="email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'*</label>
+		<input type="text" name="email" id="email" class="email" value="'.htmlspecialchars($user['email']).'" required="required" data-h5-errorid="invalid-email" title="'.$this->pi_getLL('email_is_required').'"><div id="invalid-email" class="error-space" style="display:none"></div>
 	</div>
 	</div>
 	</div>
@@ -493,7 +496,24 @@ if ($this->post) {
 		<label class="account-lastname" for="delivery_last_name">'.ucfirst($this->pi_getLL('last_name')).'*</label>
 		<input type="text" name="delivery_last_name" id="delivery_last_name" class="delivery_last-name left-this" value="'.htmlspecialchars($user['delivery_last_name']).'" ><div id="invalid-delivery_last_name" class="error-space" style="display:none"></div>
 	</div>
-	<div id="input-daddress" class="account-field col-sm-6">
+	';
+	if ($tmpcontent_con) {
+		$tmpcontent.='
+		<div id="input-dcountry" class="account-field col-sm-8">
+		<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
+		<select name="delivery_country" id="delivery_country" class="delivery_country">
+		<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
+		'.$tmpcontent_con_delivery.'
+		</select>
+		<div id="invalid-delivery_country" class="error-space" style="display:none"></div>
+		</div>';
+	}
+	$tmpcontent.='
+	<div id="input-dzip" class="account-field col-sm-4">
+		<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+		<input type="text" name="delivery_zip" id="delivery_zip" class="delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'"><div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
+	</div>
+	<div id="input-daddress" class="account-field col-sm-3">
 		<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
 		<input  type="text" name="delivery_street_name" id="delivery_address" class="delivery_address left-this" value="'.htmlspecialchars($user['delivery_street_name']).'"><div id="invalid-delivery_address" class="error-space" style="display:none"></div>
 	</div>
@@ -505,30 +525,10 @@ if ($this->post) {
 		<label for="delivery_address-ext" id="delivery_account-ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
 		<input type="text" name="delivery_address_ext" class="delivery_address-ext" id="delivery_address-ext" value="'.htmlspecialchars($user['delivery_address_ext']).'"/>
 	</div>		
-	<div id="input-dzip" class="account-field col-sm-2">
-		<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
-		<input type="text" name="delivery_zip" id="delivery_zip" class="delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'"><div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
-	</div>
+
 	<div id="input-dcity" class="account-field col-sm-3">
 		<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'*</label>
 		<input type="text" name="delivery_city" id="delivery_city" class="delivery_city" value="'.htmlspecialchars($user['delivery_city']).'" ><div id="invalid-delivery_city" class="error-space" style="display:none"></div>
-	</div>
-	';
-	if ($tmpcontent_con) {
-		$tmpcontent.='
-		<div id="input-dcountry" class="account-field col-sm-7">
-		<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
-		<select name="delivery_country" id="delivery_country" class="delivery_country">
-		<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
-		'.$tmpcontent_con_delivery.'
-		</select>
-		<div id="invalid-delivery_country" class="error-space" style="display:none"></div>
-		</div>';
-	}
-	$tmpcontent.='
-	<div id="input-demail" class="account-field col-sm-6">
-		<label for="delivery_email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'*</label>
-		<input type="text" name="delivery_email" id="delivery_email" class="delivery_email" value="'.htmlspecialchars($user['delivery_email']).'"/>
 	</div>
 	<div id="input-dphone" class="account-field col-sm-6">
 		<label for="delivery_telephone">'.ucfirst($this->pi_getLL('telephone')).'*</label>
@@ -537,6 +537,10 @@ if ($this->post) {
 	<div id="input-dmobile" class="account-field col-sm-6">
 		<label for="delivery_mobile" class="account_mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 		<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile" value="'.htmlspecialchars($user['delivery_mobile']).'">
+	</div>
+	<div id="input-demail" class="account-field col-sm-12">
+		<label for="delivery_email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'*</label>
+		<input type="text" name="delivery_email" id="delivery_email" class="delivery_email" value="'.htmlspecialchars($user['delivery_email']).'"/>
 	</div>
 	</div>
 	</div>
