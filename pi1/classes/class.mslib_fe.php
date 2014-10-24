@@ -2992,9 +2992,11 @@ class mslib_fe {
 		}
 		$count_res=count($res);
 		if ($count_res>0) {
-			//todo: why is there are a comma as prefix? shouldnt it be in the dispatcher and not in this method?
-			$return_categories_id.=','.implode(',', $res);
-			//$return_categories_id.=implode(',', $res);
+			if (!empty($current_category_id)) {
+				$return_categories_id.=','.implode(',', $res);
+			} else {
+				$return_categories_id=implode(',', $res);
+			}
 		}
 		return $return_categories_id;
 	}

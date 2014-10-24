@@ -2,8 +2,39 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+$jsSelect2InitialValue=array();
+$jsSelect2InitialValue[]='var categoriesIdTerm=[];';
+$shopPids=explode(',', $this->conf['connectedShopPids']);
+if (count($shopPids)) {
+	foreach ($shopPids as $shopPid) {
+		$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']=[];';
+		if (is_numeric($shopPid)) {
+			$pageinfo=mslib_befe::getRecord($shopPid, 'pages', 'uid', array('deleted=0 and hidden=0'));
+			if ($pageinfo['uid'] && $this->get['pid']) {
+				$category_ep=mslib_fe::getProductToCategories($this->get['pid'], '', $pageinfo['uid']);
+				$categories_ep=explode(',', $category_ep);
+				if (is_array($categories_ep) && count($categories_ep)) {
+					foreach ($categories_ep as $category_id) {
+						$category_id=trim($category_id);
+						$cats=mslib_fe::Crumbar($category_id, '', array(), $pageinfo['uid']);
+						$cats=array_reverse($cats);
+						$catpath=array();
+						foreach ($cats as $cat) {
+							$catpath[]=$cat['name'];
+						}
+						if (count($catpath)>0) {
+							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \ ', $catpath), ENT_QUOTES).'"};';
+						}
+					}
+				}
+			}
+		}
+	}
+} else {
+}
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
+'.implode("\n", $jsSelect2InitialValue).'
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
@@ -11,7 +42,6 @@ function limitText(limitField, limitNum) {
 }
 jQuery(document).ready(function($) {
 	var text_input = $(\'#products_name_0\');
-	var categoriesIdTerm=[];
 	var categoriesIdSearchTerm=[];
 	text_input.focus();
 	text_input.select();
@@ -39,15 +69,26 @@ jQuery(document).ready(function($) {
 		initSelection: function(element, callback) {
 			var id=$(element).val();
 			if (id!=="") {
-				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
-					data: {
-						preselected_id: id
-					},
-					dataType: "json"
-				}).done(function(data) {
-					categoriesIdTerm[data.id]={id: data.id, text: data.text};
-					callback(data);
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.each(split_id, function(i, v) {
+					if (categoriesIdTerm['.$this->shop_pid.'][v]!==undefined) {
+						callback_data[i]=categoriesIdTerm['.$this->shop_pid.'][v];
+					}
 				});
+				if (callback_data.length) {
+					callback(callback_data);
+				} else {
+					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						categoriesIdTerm[data.id]={id: data.id, text: data.text};
+						callback(data);
+					});
+				}
 			}
 		},
 		formatResult: function(data){
@@ -2285,9 +2326,6 @@ foreach ($catIds as $page_uid => $catId) {
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		//categories path
-		//$old_current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
-		//$current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
-		//todo read above code why load method 2 times with same input
 		$old_current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
 		$current_categories_id=$old_current_categories_id;
 		if ($this->get['action']=='add_product' && $this->get['cid']>0) {
@@ -2319,7 +2357,6 @@ foreach ($catIds as $page_uid => $catId) {
 						$GLOBALS['TSFE']->additionalHeaderData[]='
 						<script type="text/javascript">
 						jQuery(document).ready(function($) {
-							var categoriesIdTerm_'.$pageinfo['uid'].'=[];
 							var categoriesIdSearchTerm_'.$pageinfo['uid'].'=[];
 							$(\'#enableMultipleShopsTree_'.$pageinfo['uid'].'\').select2({
 								dropdownCssClass: "", // apply css that makes the dropdown taller
@@ -2341,15 +2378,26 @@ foreach ($catIds as $page_uid => $catId) {
 								initSelection: function(element, callback) {
 									var id=$(element).val();
 									if (id!=="") {
-										$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
-											data: {
-												preselected_id: id
-											},
-											dataType: "json"
-										}).done(function(data) {
-											categoriesIdTerm_'.$pageinfo['uid'].'[data.id]={id: data.id, text: data.text};
-											callback(data);
+										var split_id=id.split(",");
+										var callback_data=[];
+										$.each(split_id, function(i, v) {
+											if (categoriesIdTerm['.$pageinfo['uid'].'][v]!==undefined) {
+												callback_data[i]=categoriesIdTerm['.$pageinfo['uid'].'][v];
+											}
 										});
+										if (callback_data.length) {
+											callback(callback_data);
+										} else {
+											$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+												data: {
+													preselected_id: id
+												},
+												dataType: "json"
+											}).done(function(data) {
+												categoriesIdTerm['.$pageinfo['uid'].'[data.id]={id: data.id, text: data.text};
+												callback(data);
+											});
+										}
 									}
 								},
 								formatResult: function(data){
@@ -2372,7 +2420,6 @@ foreach ($catIds as $page_uid => $catId) {
 							});
 						});
 						</script>';
-
 					}
 				}
 			}
