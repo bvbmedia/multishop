@@ -104,10 +104,12 @@ if (!$skipMultishopUpdates) {
 		  `categories_id` int(11) default '0',
 		  `foreign_categories_id` int(11) default '0',
 		  `page_uid` int(11) default '0',
+		  `foreign_page_uid` int(11) default '0',
 		  PRIMARY KEY (`id`),
 		  KEY `categories_id` (`categories_id`),
 		  KEY `foreign_categories_id` (`foreign_categories_id`),
-		  KEY `page_uid` (`page_uid`)
+		  KEY `page_uid` (`page_uid`),
+		  KEY `foreign_page_uid` (`foreign_page_uid`)
 		);";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;

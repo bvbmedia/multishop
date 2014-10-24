@@ -238,7 +238,8 @@ if ($this->post) {
 					$insertArray=array();
 					$insertArray['categories_id']=$catid;
 					$insertArray['foreign_categories_id']=$foreign_cat_id;
-					$insertArray['page_uid']=$page_uid;
+					$insertArray['page_uid']=$this->showCatalogFromPage;
+					$insertArray['foreign_page_uid']=$page_uid;
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_to_categories', $insertArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}
@@ -273,7 +274,7 @@ if ($this->post) {
 			if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['categories_to_categories']) && count($this->post['tx_multishop_pi1']['categories_to_categories'])) {
 				foreach ($this->post['tx_multishop_pi1']['categories_to_categories'] as $page_uid=>$shopRecord) {
 					// clean up the link
-					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_to_categories', 'categories_id=\''.$catid.'\' and page_uid=\''.$page_uid.'\'');
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_to_categories', 'foreign_categories_id=\''.$catid.'\' and foreign_page_uid=\''.$page_uid.'\'');
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					if (strpos($shopRecord, ',')!==false) {
 						$catIds[$page_uid]=explode(',', $shopRecord);
@@ -288,7 +289,8 @@ if ($this->post) {
 						$insertArray=array();
 						$insertArray['categories_id']=$catid;
 						$insertArray['foreign_categories_id']=$foreign_cat_id;
-						$insertArray['page_uid']=$page_uid;
+						$insertArray['page_uid']=$this->showCatalogFromPage;
+						$insertArray['foreign_page_uid']=$page_uid;
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_to_categories', $insertArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -690,7 +692,6 @@ if ($this->post) {
 		$subpartArray['###PAGE_ACTION###']=$_REQUEST['action'];
 		$subpartArray['###CATEGORIES_ID_FOOTER1###']=$category['categories_id'];
 		$subpartArray['###LABEL_HIDE_IN_MENU###']=$this->pi_getLL('hide_in_menu', 'Hide in menu');
-
 		$feed_checkbox='';
 		$feed_stock_checkbox='';
 		$sql_feed='SELECT * from tx_multishop_product_feeds';
