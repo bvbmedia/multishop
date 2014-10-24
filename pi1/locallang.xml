@@ -541,8 +541,7 @@
             <label index="personal_details">Personal details</label>
             <label index="personal_details_description">Fields with * are required</label>
             <label index="login_details_description">Your e-mail address and password is required to be able to access your account details. Also we will sent you updates about your orders</label>
-            <label index="subscribe_to_our_newsletter_description">Keep yourself up-to-date about our specials by receiving our newsletter. You will receive the latest news directly through your mailbox and at any moment you can easily unsubscribe
-            </label>
+            <label index="subscribe_to_our_newsletter_description">Keep yourself up-to-date about our specials by receiving our newsletter. You will receive the latest news directly through your mailbox and at any moment you can easily unsubscribe</label>
             <label index="invoice_date">Date of invoice</label>
             <label index="payment_terms">Payment terms</label>
             <label index="update_modified_products">Update modified products</label>
@@ -668,13 +667,9 @@
             <label index="admin_sales_volume_statistics_description">Show turn over by month/year</label>
             <label index="admin_customers_description">Manage customers here</label>
             <label index="admin_orders_description">Manage orders here</label>
-            <label index="ordered_product_qty_exceed_maximum_stock">the quantity you request for this product are exceeding the stock we have, at this moment the maximum quantity you may order for this product is: %d please update the order quantity
-                for this product, and continue the checkout
-            </label>
+            <label index="ordered_product_qty_exceed_maximum_stock">the quantity you request for this product are exceeding the stock we have, at this moment the maximum quantity you may order for this product is: %d please update the order quantity for this product, and continue the checkout</label>
             <label index="ordered_product_not_instock">this product is currently not available</label>
-            <label index="ordered_product_stock_not_available_waiting_for_restock">due to the quantity you order for this product are exceeding the stock we have, we will process the order for this product after the re-stock. you can continue the
-                checkout.
-            </label>
+            <label index="ordered_product_stock_not_available_waiting_for_restock">due to the quantity you order for this product are exceeding the stock we have, we will process the order for this product after the re-stock. you can continue the checkout.</label>
             <label index="admin_stats_products_toplist">Products Toplist</label>
             <label index="admin_stats_products_toplist_description">Display top products</label>
             <label index="admin_stats_customers_toplist">Customers Toplist</label>
@@ -1650,9 +1645,7 @@
             <label index="personal_details">Persoonlijke gegevens</label>
             <label index="personal_details_description">Velden met een markering voor verplicht zijn verplicht</label>
             <label index="login_details_description">Je e-mailadres en wachtwoord is nodig om toegang te krijgen tot je gegevens. Tevens zullen we je via dit e-mailadres op de hoogte houden van de status van uw bestellingen</label>
-            <label index="subscribe_to_our_newsletter_description">Blijf op de hoogte van alle acties en voordelen door onze nieuwsbrief te ontvangen. Je ontvangt het laatste nieuws direct in je mailbox en je kunt je op ieder gewenst moment weer
-                uitschrijven
-            </label>
+            <label index="subscribe_to_our_newsletter_description">Blijf op de hoogte van alle acties en voordelen door onze nieuwsbrief te ontvangen. Je ontvangt het laatste nieuws direct in je mailbox en je kunt je op ieder gewenst moment weer uitschrijven</label>
             <label index="invoice_date">Factuurdatum</label>
             <label index="payment_terms">Betaaltermijn</label>
             <label index="update_modified_products">Wijzig aangepaste producten</label>
@@ -2079,9 +2072,7 @@
             <label index="average">Gemiddeld</label>
             <label index="admin_label_method_is_enabled_on_default">Methode is zichtbaar</label>
             <label index="admin_label_store_tt_address_id_not_exist">Het opgegeven tt_address id (plugin.multishop.tt_address_record_id_store) is niet correct</label>
-            <label index="admin_label_store_tt_address_not_found">tt_address record voor de winkel is nog niet aangemaakt, gaarne systeem/systeem/compare database draaien en stel het aangemaakte record in als
-                plugin.multishop.tt_address_record_id_store (typoscript)
-            </label>
+            <label index="admin_label_store_tt_address_not_found">tt_address record voor de winkel is nog niet aangemaakt, gaarne systeem/systeem/compare database draaien en stel het aangemaakte record in als plugin.multishop.tt_address_record_id_store (typoscript)</label>
             <label index="admin_label_store_tt_address_id_found">Gaarne de waarde van veld plugin.multishop.tt_address_record_id_store aanpassen naar tt_address id: %d</label>
             <label index="admin_export_orders">Exporteer bestellingen</label>
             <label index="currently_there_are_no_orders_export_created">Op dit moment is er nog geen bestand aangemaakt</label>
@@ -3024,9 +3015,7 @@
             <label index="personal_details">RIncian Pribadi</label>
             <label index="personal_details_description">Kolom dengan tanda * harus diisi</label>
             <label index="login_details_description">alamat e-mail Anda dan password yang diperlukan untuk dapat mengakses rincian account Anda. Juga kami akan mengirimkan Anda update tentang pesanan Anda</label>
-            <label index="subscribe_to_our_newsletter_description">Jauhkan diri Anda berita terbaru mengenai tawaran khusus kami dengan menerima newsletter kami. Anda akan menerima berita terbaru langsung melalui kotak surat Anda dan pada setiap saat
-                Anda dapat dengan mudah berhenti berlangganan
-            </label>
+            <label index="subscribe_to_our_newsletter_description">Jauhkan diri Anda berita terbaru mengenai tawaran khusus kami dengan menerima newsletter kami. Anda akan menerima berita terbaru langsung melalui kotak surat Anda dan pada setiap saat Anda dapat dengan mudah berhenti berlangganan</label>
             <label index="invoice_date">Tanggal faktur</label>
             <label index="payment_terms">istilah Pembayaran</label>
             <label index="update_modified_products">Perbarui produk yang dimodifikasi</label>
@@ -3382,9 +3371,7 @@
             <label index="admin_label_x_orphanned_products_to_categories_relations_has_been_deleted">Verwaiste Verbindung vom Artikel zur Kategorie wurde gelöscht</label>
             <label index="admin_label_x_products_has_been_deleted">Artikel wurde gelöscht</label>
             <label index="admin_label_you_can_add_attributes_options_groups_below">Sie können weiter unten die Eigenschaftsoptionen den Gruppen hinzuzufügen.</label>
-            <label index="admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product">Sie können Artikeleigenschaften beim Erstellen und / oder Bearbeiten eines Artikels (durch die Artikel-Registerkarte Eigenschaft)
-                hinzuzufügen.
-            </label>
+            <label index="admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product">Sie können Artikeleigenschaften beim Erstellen und / oder Bearbeiten eines Artikels (durch die Artikel-Registerkarte Eigenschaft) hinzuzufügen.</label>
             <label index="admin_label_you_can_download_it_here">Sie können es hier herunterladen</label>
             <label index="admin_label_your_sitemap_has_been_created">Ihre Sitemap wurde erstellt / aktualisiert.</label>
             <label index="admin_log_out">AUSLOGGEN</label>
@@ -3919,12 +3906,8 @@
             <label index="order_type">Auftragsart</label>
             <label index="ordered_by">Bestellt von</label>
             <label index="ordered_product_not_instock">Dieser Artikel ist derzeit nicht verfügbar</label>
-            <label index="ordered_product_qty_exceed_maximum_stock">Die Menge die Sie zu diesem Artikel bestellen ist über dem aktuellen Lagerbestand. Im Lager steht Ihnen in diesem Moment für dieses Produkt die Höchstmenge von :%d für Ihre
-                Bestellung zur Verfügung. Bitte aktualisieren Sie die Bestellmenge zu dem gewünschten Artikel und kommen Sie erneut zur Kasse.
-            </label>
-            <label index="ordered_product_stock_not_available_waiting_for_restock">Aufgrund der Bestellmenge, welche Sie für diesen Artikel bestellt haben, liegt die Anzahl des bestellten Artikels über dem aktuellen Lagevorrat. Wir werden die
-                Bestellung für dieses Produkt nach dem Auffüllen des Lagers unverzüglich bearbeiten. Sie können die Bestellung fortzusetzen und zur Kasse gehen.
-            </label>
+            <label index="ordered_product_qty_exceed_maximum_stock">Die Menge die Sie zu diesem Artikel bestellen ist über dem aktuellen Lagerbestand. Im Lager steht Ihnen in diesem Moment für dieses Produkt die Höchstmenge von :%d für Ihre Bestellung zur Verfügung. Bitte aktualisieren Sie die Bestellmenge zu dem gewünschten Artikel und kommen Sie erneut zur Kasse.</label>
+            <label index="ordered_product_stock_not_available_waiting_for_restock">Aufgrund der Bestellmenge, welche Sie für diesen Artikel bestellt haben, liegt die Anzahl des bestellten Artikels über dem aktuellen Lagevorrat. Wir werden die estellung für dieses Produkt nach dem Auffüllen des Lagers unverzüglich bearbeiten. Sie können die Bestellung fortzusetzen und zur Kasse gehen.</label>
             <label index="orders">Bestellungen</label>
             <label index="orders_by_date">Bestelldatum</label>
             <label index="orders_id">Bestell-ID</label>
@@ -4056,8 +4039,7 @@
             <label index="submit">bestätigen</label>
             <label index="submit_button_label">Eingaben absenden</label>
             <label index="subscribe_to_our_newsletter">Newsletter abonnieren</label>
-            <label index="subscribe_to_our_newsletter_description">Bleiben Sie mit unseren Newslettern auf dem neuesten Stand unserer Angebote. Sie erhalten die News an Ihre angegebene E-Mail Adresse. Sie können sich jederzeit vom Newsletter abmelden&lt;br
-                /&gt;            </label>
+            <label index="subscribe_to_our_newsletter_description">Bleiben Sie mit unseren Newslettern auf dem neuesten Stand unserer Angebote. Sie erhalten die News an Ihre angegebene E-Mail Adresse. Sie können sich jederzeit vom Newsletter abmelden&lt;br/&gt;</label>
             <label index="subtotal">Zwischensumme</label>
             <label index="succesfully_created_user">Benutzer wurde erfolgreich erstellt</label>
             <label index="succesfully_updated_user">Benutzer wurde erfolgreich aktualisiert</label>
