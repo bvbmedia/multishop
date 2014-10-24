@@ -1115,7 +1115,7 @@
             <label index="upload_import_task">Upload task</label>
             <label index="download_selected_cms">Download selected CMS</label>
             <label index="upload_cms">Upload CMS</label>
-            <label index="upload_cms">Upload CMS</label>
+            <label index="admin_link_category">Link Categories</label>
             <label index="captcha_code_placeholder">type here the code</label>
         </languageKey>
         <languageKey index="nl" type="array">
