@@ -1116,6 +1116,7 @@
             <label index="download_selected_cms">Download selected CMS</label>
             <label index="upload_cms">Upload CMS</label>
             <label index="upload_cms">Upload CMS</label>
+            <label index="captcha_code_placeholder">type here the code</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -2089,6 +2090,7 @@
             <label index="shipping_method_label">Bezorgmethode (label)</label>
             <label index="payment_method_label">Betaalmethode (label)</label>
             <label index="order_type">Order type</label>
+            <label index="captcha_code_placeholder">type hier de code over</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
