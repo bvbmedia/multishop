@@ -251,16 +251,21 @@ if (count($cart['products'])<1) {
 		<div class="account-field col-sm-12" id="input-company">
 			<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
 			<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>';
+		</div>
 		if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
-			$content.='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id')).'</label>
-			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($user['tx_multishop_vat_id']).'"/>';
+			$content.='<div class="account-field col-sm-6" id="input-tx_multishop_vat_id">
+			<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id')).'</label>
+			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($user['tx_multishop_vat_id']).'"/>
+			</div>';
 		}
 		if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
-			$content.='<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id')).'</label>
-			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($user['tx_multishop_coc_id']).'"/>';
+			$content.='<div class="account-field col-sm-6" id="input-tx_multishop_coc_id">
+			<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id')).'</label>
+			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($user['tx_multishop_coc_id']).'"/>
+			</div>
+			';
 		}
 		$content.='
-		</div>
 		<div class="account-field col-sm-6" id="input-address">
 			<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
 			<input type="text" name="street_name" id="address" class="address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
@@ -343,16 +348,14 @@ if (count($cart['products'])<1) {
 		</div>';
 		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT']) {
 			$content.='
-			<div class="account-field accept_newsletter">
-				<label class="checkbox_label"><input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" '.(($user['tx_multishop_newsletter']) ? 'checked' : '').' value="1" /></label>
+			<div class="checkboxAgreement accept_newsletter">
+				<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" '.(($user['tx_multishop_newsletter']) ? 'checked' : '').' value="1" />
 				<label class="checkbox_label_two" for="tx_multishop_newsletter">'.ucfirst($this->pi_getLL('subscribe_to_our_newsletter')).'</label>
 			</div>';
 		}
 		$content.='
-		<div class="account-field delivery_checkbox_message">
-			<label class="checkbox_label">
-				<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" '.(($user['different_delivery_address']) ? 'checked' : '').' value="1" />
-			</label>
+		<div class="checkboxAgreement delivery_checkbox_message">
+			<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" '.(($user['different_delivery_address']) ? 'checked' : '').' value="1" />
 			<label class="checkbox_label_two" for="checkboxdifferent_delivery_address">'.$this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address').'.</label>
 		</div>
 		';
