@@ -3000,6 +3000,30 @@ class mslib_fe {
 		}
 		return $return_categories_id;
 	}
+	public function getCategoriesToCategories($current_category_id, $page_uid) {
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c2c.categories_id, c2c.foreign_categories_id', // SELECT ...
+			'tx_multishop_categories_to_categories c2c', // FROM ...
+			'c2c.categories_id = \''.$current_category_id.'\' and page_uid=\''.$page_uid.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		$res=array();
+		$return_categories_id='';
+		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
+			if ($rs['foreign_categories_id']>0) {
+				$res[]=$rs['foreign_categories_id'];
+			} else {
+				$res[]=$rs['categories_id'];
+			}
+		}
+		$count_res=count($res);
+		if ($count_res>0) {
+			$return_categories_id=implode(',', $res);
+		}
+		return $return_categories_id;
+	}
 	/*
 	limit				number of products
 	page_uid			the pid of the core shop page

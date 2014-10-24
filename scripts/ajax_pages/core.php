@@ -37,7 +37,7 @@ switch ($this->ms['page']) {
 						}
 					}
 				}
-				if (!count($tmp_preselecteds)) {
+				if (!count($tmp_preselecteds) || (count($tmp_preselecteds)===1 && !$tmp_preselecteds[0])) {
 					$return_data[]=array(
 						'id'=>0,
 						'text'=>$this->pi_getLL('admin_main_category')

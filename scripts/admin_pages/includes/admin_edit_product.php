@@ -31,6 +31,22 @@ if (count($shopPids)) {
 		}
 	}
 } else {
+	$category_ep=mslib_fe::getProductToCategories($this->get['pid'], '', $this->shop_pid);
+	$categories_ep=explode(',', $category_ep);
+	if (is_array($categories_ep) && count($categories_ep)) {
+		foreach ($categories_ep as $category_id) {
+			$category_id=trim($category_id);
+			$cats=mslib_fe::Crumbar($category_id, '', array(), $this->shop_pid);
+			$cats=array_reverse($cats);
+			$catpath=array();
+			foreach ($cats as $cat) {
+				$catpath[]=$cat['name'];
+			}
+			if (count($catpath)>0) {
+				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \ ', $catpath), ENT_QUOTES).'"};';
+			}
+		}
+	}
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">

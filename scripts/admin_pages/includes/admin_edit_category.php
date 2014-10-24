@@ -77,6 +77,57 @@ jQuery(document).ready(function($) {
 		},
 		escapeMarkup: function (m) { return m; }
 	});
+	$(\'#link_categories_id\').select2({
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'500px\',
+		minimumInputLength: 0,
+		multiple: true,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+				data: {
+					q: query.term,
+					skip_ids: \''.implode(',', $skip_ids).'\'
+				},
+				dataType: "json"
+			}).done(function(data) {
+				//categoriesIdSearchTerm[query.term]=data;
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					data: {
+						preselected_id: id,
+						skip_ids: \''.implode(',', $skip_ids).'\'
+					},
+					dataType: "json"
+				}).done(function(data) {
+					//categoriesIdTerm[data.id]={id: data.id, text: data.text};
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
 });
 </script>
 ';
@@ -163,6 +214,36 @@ if ($this->post) {
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$catid=$GLOBALS['TYPO3_DB']->sql_insert_id();
+		// link to other categories
+		$catIds=array();
+		if (!empty($this->post['link_categories_id'])) {
+			if (strpos($this->post['link_categories_id'], ',')!==false) {
+				$catIds[$this->showCatalogFromPage]=explode(',', $this->post['link_categories_id']);
+			} else {
+				$catIds[$this->showCatalogFromPage][]=$this->post['link_categories_id'];
+			}
+		}
+		if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['categories_to_categories']) && count($this->post['tx_multishop_pi1']['categories_to_categories'])) {
+			foreach ($this->post['tx_multishop_pi1']['categories_to_categories'] as $page_uid=>$shopRecord) {
+				if (strpos($shopRecord, ',')!==false) {
+					$catIds[$page_uid]=explode(',', $shopRecord);
+				} else {
+					$catIds[$page_uid][]=$shopRecord;
+				}
+			}
+		}
+		foreach ($catIds as $page_uid=>$catIdsToAdd) {
+			foreach ($catIdsToAdd as $foreign_cat_id) {
+				if ($foreign_cat_id>0) {
+					$insertArray=array();
+					$insertArray['categories_id']=$catid;
+					$insertArray['foreign_categories_id']=$foreign_cat_id;
+					$insertArray['page_uid']=$page_uid;
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_to_categories', $insertArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
+			}
+		}
 	} else {
 		if ($_REQUEST['action']=='edit_category') {
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\''.$this->post['cid'].'\'', $updateArray);
@@ -174,6 +255,42 @@ if ($this->post) {
 					foreach ($products as $product) {
 						// if the flat database module is enabled we have to sync the changes to the flat table
 						mslib_befe::convertProductToFlat($product['products_id']);
+					}
+				}
+			}
+			// clean up the link
+			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_to_categories', 'categories_id=\''.$catid.'\' and page_uid=\''.$this->showCatalogFromPage.'\'');
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			// link to other categories
+			$catIds=array();
+			if (!empty($this->post['link_categories_id'])) {
+				if (strpos($this->post['link_categories_id'], ',')!==false) {
+					$catIds[$this->showCatalogFromPage]=explode(',', $this->post['link_categories_id']);
+				} else {
+					$catIds[$this->showCatalogFromPage][]=$this->post['link_categories_id'];
+				}
+			}
+			if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['categories_to_categories']) && count($this->post['tx_multishop_pi1']['categories_to_categories'])) {
+				foreach ($this->post['tx_multishop_pi1']['categories_to_categories'] as $page_uid=>$shopRecord) {
+					// clean up the link
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_to_categories', 'categories_id=\''.$catid.'\' and page_uid=\''.$page_uid.'\'');
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					if (strpos($shopRecord, ',')!==false) {
+						$catIds[$page_uid]=explode(',', $shopRecord);
+					} else {
+						$catIds[$page_uid][]=$shopRecord;
+					}
+				}
+			}
+			foreach ($catIds as $page_uid=>$catIdsToAdd) {
+				foreach ($catIdsToAdd as $foreign_cat_id) {
+					if ($foreign_cat_id>0) {
+						$insertArray=array();
+						$insertArray['categories_id']=$catid;
+						$insertArray['foreign_categories_id']=$foreign_cat_id;
+						$insertArray['page_uid']=$page_uid;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_to_categories', $insertArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
 			}
@@ -396,6 +513,136 @@ if ($this->post) {
 				<input type="text" class="text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
 			</div>';
 		}
+		// INPUT_CATEGORY_TREE
+		$tmpcontent='';
+		if ($this->conf['enableMultipleShops']) {
+			$shopPids=explode(',', $this->conf['connectedShopPids']);
+			$tmpcontent.='<div class="account-field" class="msEditCategoriesInputMultipleShopCategory">
+				<label>Other shops</label>
+				<div class="msAttributesWrapper">';
+			foreach ($shopPids as $shopPid) {
+				if (is_numeric($shopPid) and $shopPid!=$this->shop_pid) {
+					$pageinfo=mslib_befe::getRecord($shopPid, 'pages', 'uid', array('deleted=0 and hidden=0'));
+					if ($pageinfo['uid']) {
+						$categories_to_categories='';
+						$shop_checkbox='';
+						$select2_block_visibility=' style="display:none"';
+						if ($this->get['action']=='edit_category') {
+							$categories_to_categories=mslib_fe::getCategoriesToCategories($this->get['cid'], $pageinfo['uid']);
+							if (!empty($categories_to_categories)) {
+								$shop_checkbox=' checked="checked"';
+								$select2_block_visibility=' style="display:block"';
+							}
+						}
+						$tmpcontent.='<div class="msAttributes">
+						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$shop_checkbox.' />
+						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
+						<div class="msEditCategoriesInputMultipleShopCategory" id="msEditCategoriesInputMultipleShopCategory'.$pageinfo['uid'].'"'.$select2_block_visibility.'>
+							<input type="hidden" name="tx_multishop_pi1[categories_to_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$categories_to_categories.'" />
+						</div>
+						</div>';
+						$GLOBALS['TSFE']->additionalHeaderData[]='
+						<script type="text/javascript">
+						jQuery(document).ready(function($) {
+							var categoriesIdSearchTerm_'.$pageinfo['uid'].'=[];
+							$(\'#enableMultipleShopsTree_'.$pageinfo['uid'].'\').select2({
+								dropdownCssClass: "", // apply css that makes the dropdown taller
+								width:\'500px\',
+								minimumInputLength: 0,
+								multiple: true,
+								//allowClear: true,
+								query: function(query) {
+									$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+										data: {
+											q: query.term
+										},
+										dataType: "json"
+									}).done(function(data) {
+										categoriesIdSearchTerm_'.$pageinfo['uid'].'[query.term]=data;
+										query.callback({results: data});
+									});
+								},
+								initSelection: function(element, callback) {
+									var id=$(element).val();
+									if (id!=="") {
+										/*var split_id=id.split(",");
+										var callback_data=[];
+										$.each(split_id, function(i, v) {
+											if (categoriesIdTerm['.$pageinfo['uid'].'][v]!==undefined) {
+												callback_data[i]=categoriesIdTerm['.$pageinfo['uid'].'][v];
+											}
+										});
+										if (callback_data.length) {
+											callback(callback_data);
+										} else {
+											$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+												data: {
+													preselected_id: id
+												},
+												dataType: "json"
+											}).done(function(data) {
+												categoriesIdTerm['.$pageinfo['uid'].'][data.id]={id: data.id, text: data.text};
+												callback(data);
+											});
+										}*/
+										$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+											data: {
+												preselected_id: id
+											},
+											dataType: "json"
+										}).done(function(data) {
+											//categoriesIdTerm['.$pageinfo['uid'].'][data.id]={id: data.id, text: data.text};
+											callback(data);
+										});
+									}
+								},
+								formatResult: function(data){
+									if (data.text === undefined) {
+										$.each(data, function(i,val){
+											return val.text;
+										});
+									} else {
+										return data.text;
+									}
+								},
+								formatSelection: function(data){
+									if (data.text === undefined) {
+										return data[0].text;
+									} else {
+										return data.text;
+									}
+								},
+								escapeMarkup: function (m) { return m; }
+							});
+						});
+						</script>';
+					}
+				}
+			}
+			$tmpcontent.='</div></div>';
+			$GLOBALS['TSFE']->additionalHeaderData[]='
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$(document).on("click", ".enableMultipleShopsCheckbox", function(){
+					var page_uid=$(this).attr("rel");
+					var block_id="#msEditCategoriesInputMultipleShopCategory" + page_uid;
+					if ($(this).prop("checked")) {
+						$(block_id).show();
+					} else {
+						$(block_id).hide();
+					}
+				});
+				/*$(\'.enableMultipleShopsCheckbox:checked\').each(function() {
+					$(this).parent().find(\'.msEditProductInputMultipleShopCategory\').css(\'display\',\'block\');
+				});*/
+			});
+			</script>
+			';
+		}
+		$link_categories_id='';
+		if ($this->get['action']=='edit_category') {
+			$link_categories_id=mslib_fe::getCategoriesToCategories($this->get['cid'], $this->shop_pid);
+		}
 		$subpartArray=array();
 		$subpartArray['###VALUE_REFERRER###']='';
 		if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -418,6 +665,9 @@ if ($this->post) {
 		$subpartArray['###HEADING_PAGE###']=$heading_page;
 		$subpartArray['###INPUT_CATEGORY_NAME_BLOCK###']=$category_name_block;
 		$subpartArray['###SELECTBOX_CATEGORY_TREE###']=$category_tree;
+		$subpartArray['###LABEL_LINK_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_link_category');
+		$subpartArray['###LINK_INPUT_CATEGORY_TREE###']='<input type="hidden" name="link_categories_id" id="link_categories_id" class="categoriesIdSelect2BigDropWider" value="'.$link_categories_id.'" />';
+		$subpartArray['###LINK_TO_CATEGORIES###']=$tmpcontent;
 		$subpartArray['###LABEL_VISIBILITY###']=$this->pi_getLL('admin_visible');
 		$subpartArray['###CATEGORY_STATUS_YES###']=(($category['status'] or $_REQUEST['action']=='add_category') ? 'checked' : '');
 		$subpartArray['###LABEL_STATUS_YES###']=$this->pi_getLL('admin_yes');
