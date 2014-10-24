@@ -356,7 +356,7 @@ if (mslib_fe::loggedin()) {
 						}
 						$content.='<div class="account-field security">
 				  			<img src="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=captcha').'">
-					  		<input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" caption="Type cijfers over" />
+					  		<input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" placeholder="'.$this->pi_getLL('captcha_code_placeholder').'" />
 						</div>
 					</div>
 				</div>
