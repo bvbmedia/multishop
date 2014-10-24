@@ -313,7 +313,7 @@ if (mslib_fe::loggedin()) {
 						</div>
 						</div>
 					</div>
-					<div id="live-validation_r" class="col-sm-6">
+					<div id="live-validation_r" class="col-md-6">
 			  			<div class="account-boxes">
 							<div class="account-heading">
 				  				<h2>'.$this->pi_getLL('login_details').'</h2>
