@@ -15,6 +15,95 @@ $subparts['results']=$this->cObj->getSubpart($subparts['template'], '###RESULTS#
 $subparts['cms_list']=$this->cObj->getSubpart($subparts['results'], '###CMS_LIST###');
 $subparts['noresults']=$this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
 //$tmpcontent.='<div class="main-heading"><h2>'.htmlspecialchars(ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_cms')))).'</h2></div>';
+if (isset($this->get['download']) && $this->get['download']=='cms' && is_array($this->get['downloadCMS'])) {
+	$rowsData=array();
+	foreach ($this->get['downloadCMS'] as $cms_id) {
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			'tx_multishop_cms c', // FROM ...
+			'id=\''.$cms_id.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			foreach ($row as $col_name=>$col_val) {
+				$rowsData[$cms_id]['cms_data'][$col_name]=$col_val;
+			}
+		}
+		$query_desc=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			'tx_multishop_cms_description cd', // FROM ...
+			'id=\''.$cms_id.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res_desc=$GLOBALS['TYPO3_DB']->sql_query($query_desc);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_desc)>0) {
+			while ($row_desc=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_desc)) {
+				foreach ($row_desc as $col_desc_name=>$col_desc_val) {
+					$rowsData[$cms_id]['cms_data']['description'][$row_desc['language_id']][$col_desc_name]=$col_desc_val;
+				}
+			}
+		}
+	}
+	$serial_data='';
+	if (count($rowsData)>0) {
+		$serial_data=serialize($rowsData);
+	}
+	$filename='multishop_cms_'.date('YmdHis').'.txt';
+	$filepath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$filename;
+	file_put_contents($filepath, $serial_data);
+	header("Content-disposition: attachment; filename={$filename}"); //Tell the filename to the browser
+	header('Content-type: application/octet-stream'); //Stream as a binary file! So it would force browser to download
+	readfile($filepath); //Read and stream the file
+	@unlink($filepath);
+	exit();
+}
+if (isset($this->get['upload']) && $this->get['upload']=='cms' && $_FILES) {
+	if (!$_FILES['cms_file']['error']) {
+		$filename=$_FILES['cms_file']['name'];
+		$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop'.$filename;
+		if (move_uploaded_file($_FILES['cms_file']['tmp_name'], $target)) {
+			$cms_content=file_get_contents($target);
+			$unserial_cms_data=unserialize($cms_content);
+			foreach ($unserial_cms_data as $cms_data) {
+				$insertArray=array();
+				foreach ($cms_data['cms_data'] as $cms_col=>$cms_val) {
+					if ($cms_col!=='description' && $cms_col!='id') {
+						if ($cms_col=='page_uid') {
+							$insertArray['page_uid']=$cms_val;
+						} else if ($cms_col=='hash') {
+							$insertArray['hash']=md5(uniqid('', TRUE));
+						} else if ($cms_col=='crdate') {
+							$insertArray['crdate']=time();
+						} else {
+							$insertArray[$cms_col]=$cms_val;
+						}
+					}
+				}
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms', $insertArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				$cms_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+				$insertArrayDesc=array();
+				foreach ($cms_data['cms_data']['description'] as $language_id=>$cms_desc_data) {
+					foreach ($cms_desc_data as $cms_desc_col_name=>$cms_desc_val) {
+						if ($cms_desc_col_name=='id') {
+							$insertArrayDesc['id']=$cms_id;
+						} else {
+							$insertArrayDesc[$cms_desc_col_name]=$cms_desc_val;
+						}
+					}
+					$query_desc=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms_description', $insertArrayDesc);
+					$GLOBALS['TYPO3_DB']->sql_query($query_desc);
+				}
+			}
+			@unlink($target);
+		}
+	}
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_cms'));
+}
 if (is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
 	$updateArray=array();
 	$updateArray['status']=$this->get['status'];
@@ -162,6 +251,7 @@ if (!count($pageset['dataset'])) {
 		}
 		$markerArray=array();
 		$markerArray['ROW_TYPE']=$tr_type;
+		$markerArray['CMS_ID_NR']=$row['id'];
 		$markerArray['CMS_ID']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.$row['id'].'</a>';
 		$markerArray['CMS_TITLE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['name']).'</a>';
 		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['type']).'</a>';
@@ -190,6 +280,7 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###LABEL_HEADER_CMS_ID###']=htmlspecialchars($this->pi_getLL('id'));
 	$subpartArray['###FOOTER_SORTBY_LINK_ID###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###LABEL_FOOTER_CMS_ID###']=htmlspecialchars($this->pi_getLL('id'));
+	$subpartArray['###LABEL_DOWNLOAD_SELECTED_CMS###']=$this->pi_getLL('download_selected_cms');
 	$key='name';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
@@ -235,6 +326,10 @@ if (!count($pageset['dataset'])) {
 $subpartArray=array();
 $subpartArray['###CMS_GROUP_ID###']=htmlspecialchars($group);
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
+$subpartArray['###ADMIN_CMS_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&download=cms');
+$subpartArray['###LABEL_UPLOAD_CMS###']=$this->pi_getLL('upload_cms');
+$subpartArray['###ADMIN_CMS_UPLOAD_URL###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms');
+$subpartArray['###LABEL_FILE###']=$this->pi_getLL('file');
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=htmlspecialchars($this->get['tx_multishop_pi1']['keyword']);
 $subpartArray['###LABEL_SEARCH###']=$this->pi_getLL('search');

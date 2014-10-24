@@ -1,6 +1,6 @@
 <!-- ###TEMPLATE### begin -->
-<script type="text/javascript"> 
-jQuery(document).ready(function($) {
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
 	$(".tab_content").hide();
 	$("ul.tabs li:first").addClass("active").show();
 	$(".tab_content:first").show();
@@ -15,14 +15,28 @@ jQuery(document).ready(function($) {
     $('#order_date_from').datetimepicker({
     	dateFormat: 'dd/mm/yy',
         showSecond: true,
-		timeFormat: 'hh:mm:ss'        		
+        timeFormat: 'hh:mm:ss'
     });
 	$('#order_date_till').datetimepicker({
     	dateFormat: 'dd/mm/yy',
         showSecond: true,
 		timeFormat: 'hh:mm:ss'
     });
-});
+        $(document).on("change", "#checkAllCMS", function () {
+            if ($(this).prop("checked") == true) {
+                $(".download_cms_cb").prop("checked", true);
+            } else {
+                $(".download_cms_cb").prop("checked", false);
+            }
+        });
+        $(document).on("click", "#dl_submit", function () {
+            var selected_cms_id = $(".download_cms_cb").serialize();
+            console.log(selected_cms_id);
+            if (selected_cms_id != "") {
+                location.href = "###ADMIN_CMS_LINK###&" + selected_cms_id;
+            }
+        });
+    });
 </script>
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">
@@ -33,24 +47,24 @@ jQuery(document).ready(function($) {
 			<div id="search-orders">
 				<table width="100%">
 					<tr>
-						<td nowrap valign="top">				
-							<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
+                        <td nowrap valign="top">
+                            <input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
 							<input name="id" type="hidden" value="###SHOP_PID###" />
 							<input name="type" type="hidden" value="2003" />
 							<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_cms" />
 							<div class="formfield-container-wrapper">
 								<div class="formfield-wrapper">
-									<label>###LABEL_KEYWORD###</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###" />					
-									<input type="submit" name="Search" class="msadmin_button" value="###LABEL_SEARCH###" />
+                                    <label>###LABEL_KEYWORD###</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###"/>
+                                    <input type="submit" name="Search" class="msadmin_button" value="###LABEL_SEARCH###" />
 								</div>
 							</div>
 						</td>
 						<td nowrap valign="top" align="right" class="searchLimit">
-							<div style="float:right;">			
-								###INPUT_LIMIT_RESULT_SELECTBOX###
+                            <div style="float:right;">
+                            ###INPUT_LIMIT_RESULT_SELECTBOX###
 							</div>
-						</td>			
-					</tr>
+                        </td>
+                    </tr>
 				</table>
 			</div>
 		</form>
@@ -59,52 +73,68 @@ jQuery(document).ready(function($) {
 			<div class="msHorizontalOverflowWrapper">
 			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">
 				<tr>
-					<th width="50" nowrap><a href="###HEADER_SORTBY_LINK_ID###">###LABEL_HEADER_CMS_ID###</a></th>
-					<th><a href="###HEADER_SORTBY_LINK_TITLE###">###LABEL_HEADER_CMS_TITLE###</a></th>
+                    <th width="10" align="center" nowrap><input type="checkbox" id="checkAllCMS"/></th>
+                    <th width="50" nowrap><a href="###HEADER_SORTBY_LINK_ID###">###LABEL_HEADER_CMS_ID###</a></th>
+                    <th><a href="###HEADER_SORTBY_LINK_TITLE###">###LABEL_HEADER_CMS_TITLE###</a></th>
 					<th width="150" nowrap><a href="###HEADER_SORTBY_LINK_TYPE###">Type</a></th>
 					<th width="100" nowrap><a href="###HEADER_SORTBY_LINK_DATE_ADDED###">###LABEL_HEADER_CMS_DATE_ADDED###</a></th>
 					<th width="50" nowrap>###LABEL_HEADER_STATUS###</th>
 					<th>###LABEL_HEADER_CMS_ACTION###</th>
 				</tr>
 				<tbody id="cms_group_###CMS_GROUP_ID###">
-				<!-- ###CMS_LIST### begin --> 
-				<tr class="###ROW_TYPE###">
-					<td align="right" nowrap>
-						###CMS_ID###
+                <!-- ###CMS_LIST### begin -->
+                <tr class="###ROW_TYPE###">
+                    <td align="center" nowrap>
+                        <input type="checkbox" name="downloadCMS[]" class="download_cms_cb" value="###CMS_ID_NR###"/>
+                    </td>
+                    <td align="right" nowrap>
+                    ###CMS_ID###
 					</td>
 					<td>
 						###CMS_TITLE###
-					</td>		
-					<td nowrap>
+                    </td>
+                    <td nowrap>
 						###CMS_TYPE###
-					</td>	
-					<td align="right" nowrap>
+                    </td>
+                    <td align="right" nowrap>
 						###CMS_DATE_CREATED###
-					</td>								
-					<td width="60" align="center">
+                    </td>
+                    <td width="60" align="center">
 						###CMS_STATUS###
 					</td>
 					<td width="30" align="center">
 						###CMS_REMOVE_BUTTON###
 					</td>
 				</tr>
-				<!-- ###CMS_LIST### end --> 	
-				<tr>
-					<th width="50" nowrap><a href="###FOOTER_SORTBY_LINK_ID###">###LABEL_FOOTER_CMS_ID###</a></th>
+                <!-- ###CMS_LIST### end -->
+                <tr>
+                    <th width="10" align="center" nowrap>&nbsp;</th>
+                    <th width="50" nowrap><a href="###FOOTER_SORTBY_LINK_ID###">###LABEL_FOOTER_CMS_ID###</a></th>
 					<th><a href="###FOOTER_SORTBY_LINK_TITLE###">###LABEL_FOOTER_CMS_TITLE###</a></th>
 					<th width="150" nowrap><a href="###FOOTER_SORTBY_LINK_TYPE###">Type</a></th>
 					<th width="100" nowrap><a href="###FOOTER_SORTBY_LINK_DATE_ADDED###">###LABEL_FOOTER_CMS_DATE_ADDED###</a></th>
 					<th width="50" nowrap>###LABEL_FOOTER_STATUS###</th>
 					<th>###LABEL_FOOTER_CMS_ACTION###</th>
 				</tr>
-			</table>
+                <tr>
+                    <td colspan="7"><input type="button" class="submit msadmin_button" id="dl_submit" value="###LABEL_DOWNLOAD_SELECTED_CMS###"/></td>
+                </tr>
+            </table>
 			</div>
 			<!-- ###RESULTS### end -->
-			
 			<!-- ###NORESULTS### begin -->
 			###LABEL_NO_RESULTS###
 			<!-- ###NORESULTS### end -->
-				
+            <fieldset id="scheduled_import_jobs_form">
+                <legend>###LABEL_UPLOAD_CMS###</legend>
+                <form action="###ADMIN_CMS_UPLOAD_URL###" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="blockSubmitForm">
+                    <div class="account-field">
+                        <label for="upload_cms_file">###LABEL_FILE###</label>
+                        <input type="file" name="cms_file">&nbsp;<input type="submit" name="upload_cms_file" class="submit msadmin_button" id="upload_cms_file" value="upload">
+                    </div>
+                </form>
+            </fieldset>
+
         </div>
     </div>
 </div>
