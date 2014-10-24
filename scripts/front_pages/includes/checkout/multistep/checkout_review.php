@@ -60,7 +60,7 @@ if (count($cart['products'])<1) {
 			$content.='</table>';
 			$content.='
 				<hr>
-				<div class="accept_general_conditions_container">					
+				<div class="checkboxAgreement accept_general_conditions_container">
 					<input name="accept_general_conditions" id="accept_general_conditions" type="checkbox" value="1" />
 					<label for="accept_general_conditions">'.$this->pi_getLL('click_here_if_you_agree_the_general_conditions');
 			$page=mslib_fe::getCMScontent('general_conditions', $GLOBALS['TSFE']->sys_language_uid);
