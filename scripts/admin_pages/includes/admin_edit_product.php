@@ -2346,10 +2346,19 @@ foreach ($catIds as $page_uid => $catId) {
 					$pageinfo=mslib_befe::getRecord($shopPid,'pages','uid',array('deleted=0 and hidden=0'));
 					if ($pageinfo['uid']) {
 						$old_products_to_shop_categories=mslib_fe::getProductToCategories($this->get['pid'], '',$pageinfo['uid']);
+						if ($this->get['action']=='add_product') {
+							$shop_checkbox='';
+							$select2_block_visibility=' style="display:none"';
+						} else {
+							if (!empty($old_products_to_shop_categories)) {
+								$shop_checkbox=' checked="checked"';
+								$select2_block_visibility=' style="display:block"';
+							}
+						}
 						$tmpcontent.='<div class="msAttributes">
-						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops]['.$pageinfo['uid'].']" value="1" checked="checked" />
+						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops]['.$pageinfo['uid'].']" value="1" rel="'.$pageinfo['uid'].'"'.$shop_checkbox.' />
 						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
-						<div class="msEditProductInputMultipleShopCategory" style="display:none;">
+						<div class="msEditProductInputMultipleShopCategory" id="msEditProductInputMultipleShopCategory'.$pageinfo['uid'].'"'.$select2_block_visibility.'>
 							<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$old_products_to_shop_categories.'" />
 							<input name="tx_multishop_pi1[old_products_to_shop_categories]['.$pageinfo['uid'].']" type="hidden" value="'.$old_products_to_shop_categories.'" />
 						</div>
@@ -2394,7 +2403,7 @@ foreach ($catIds as $page_uid => $catId) {
 												},
 												dataType: "json"
 											}).done(function(data) {
-												categoriesIdTerm['.$pageinfo['uid'].'[data.id]={id: data.id, text: data.text};
+												categoriesIdTerm['.$pageinfo['uid'].'][data.id]={id: data.id, text: data.text};
 												callback(data);
 											});
 										}
@@ -2427,9 +2436,19 @@ foreach ($catIds as $page_uid => $catId) {
 			$GLOBALS['TSFE']->additionalHeaderData[]='
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				$(\'.enableMultipleShopsCheckbox:checked\').each(function() {
-					$(this).parent().find(\'.msEditProductInputMultipleShopCategory\').css(\'display\',\'block\');
+				$(document).on("click", ".enableMultipleShopsCheckbox", function(){
+					var page_uid=$(this).attr("rel");
+					var block_id="#msEditProductInputMultipleShopCategory" + page_uid;
+					var select2_id="#enableMultipleShopsTree_" + page_uid;
+					if ($(this).prop("checked")) {
+						$(block_id).show();
+					} else {
+						$(block_id).hide();
+					}
 				});
+				/*$(\'.enableMultipleShopsCheckbox:checked\').each(function() {
+					$(this).parent().find(\'.msEditProductInputMultipleShopCategory\').css(\'display\',\'block\');
+				});*/
 			});
 			</script>
 			';
