@@ -2346,10 +2346,9 @@ foreach ($catIds as $page_uid => $catId) {
 					$pageinfo=mslib_befe::getRecord($shopPid,'pages','uid',array('deleted=0 and hidden=0'));
 					if ($pageinfo['uid']) {
 						$old_products_to_shop_categories=mslib_fe::getProductToCategories($this->get['pid'], '',$pageinfo['uid']);
-						if ($this->get['action']=='add_product') {
-							$shop_checkbox='';
-							$select2_block_visibility=' style="display:none"';
-						} else {
+						$shop_checkbox='';
+						$select2_block_visibility=' style="display:none"';
+						if ($this->get['action']=='edit_product') {
 							if (!empty($old_products_to_shop_categories)) {
 								$shop_checkbox=' checked="checked"';
 								$select2_block_visibility=' style="display:block"';
