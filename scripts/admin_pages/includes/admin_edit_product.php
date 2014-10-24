@@ -343,7 +343,6 @@ if ($this->post) {
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$prodid=$GLOBALS['TYPO3_DB']->sql_insert_id();
-
 			$catIds=array();
 			if (strpos($this->post['categories_id'], ',')!==false) {
 				$catIds[$this->showCatalogFromPage]=explode(',', $this->post['categories_id']);
@@ -369,6 +368,18 @@ if ($this->post) {
 							$updateArray['sort_order']=time();
 							$updateArray['page_uid']=$page_uid;
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+					}
+				}
+			}
+			// cleanup if the shop_pid is not in array
+			if ($this->conf['enableMultipleShops']) {
+				$active_page_uid=explode(',', $this->conf['connectedShopPids']);
+				foreach ($active_page_uid as $page_uid) {
+					if ($page_uid!=$this->showCatalogFromPage) {
+						if (!in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\'');
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
 					}
@@ -462,25 +473,31 @@ if ($this->post) {
 						}
 					}
 				}
-
-
-
-/*
-foreach ($catIds as $page_uid => $catId) {
-	if ($catId>0) {
-		// if product is originally coming from products importer we have to define that the merchant changed it
-		$filter=array();
-		$filter[]='products_id='.$prodid;
-		if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
-			// lock changed columns
-			mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_to_categories', array('categories_id'=>$catId));
-		}
-		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and categories_id=\''.$catId.'\'');
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-	}
-}
-*/
-
+				// cleanup if the shop_pid is not in array
+				if ($this->conf['enableMultipleShops']) {
+					$active_page_uid=explode(',', $this->conf['connectedShopPids']);
+					foreach ($active_page_uid as $page_uid) {
+						if ($page_uid!=$this->showCatalogFromPage) {
+							if (!in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\'');
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
+						}
+					}
+				}
+				/*
+				foreach ($catIds as $page_uid => $catId) {
+					if ($catId>0) {
+						// if product is originally coming from products importer we have to define that the merchant changed it
+						$filter=array();
+						$filter[]='products_id='.$prodid;
+						if (mslib_befe::ifExists('1', 'tx_multishop_products', 'imported_product', $filter)) {
+							// lock changed columns
+							mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_to_categories', array('categories_id'=>$catId));
+						}
+					}
+				}
+				*/
 			}
 		}
 	} else {
@@ -2355,7 +2372,7 @@ foreach ($catIds as $page_uid => $catId) {
 							}
 						}
 						$tmpcontent.='<div class="msAttributes">
-						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops]['.$pageinfo['uid'].']" value="1" rel="'.$pageinfo['uid'].'"'.$shop_checkbox.' />
+						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$shop_checkbox.' />
 						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
 						<div class="msEditProductInputMultipleShopCategory" id="msEditProductInputMultipleShopCategory'.$pageinfo['uid'].'"'.$select2_block_visibility.'>
 							<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$old_products_to_shop_categories.'" />
