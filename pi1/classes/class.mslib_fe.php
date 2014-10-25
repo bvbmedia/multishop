@@ -1275,6 +1275,20 @@ class mslib_fe {
 			}
 			$markerArray=array();
 			$markerArray['###BODY###']=$content;
+			// ADDITIONAL OPTIONAL MARKERS
+			$markerArray['###STORE_NAME###']=$this->ms['MODULES']['STORE_NAME'];
+			$markerArray['###STORE_EMAIL###']=$this->ms['MODULES']['STORE_EMAIL'];
+			$markerArray['###STORE_DOMAIN###']=$this->server['HTTP_HOST'];
+			$markerArray['###STORE_URL###']=$this->FULL_HTTP_URL;
+			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
+				$address=mslib_befe::getRecord($this->conf['tt_address_record_id_store'], 'tt_address', 'uid');
+				if (is_array($address) && $address['uid']) {
+					$markerArray['###STORE_ADDRESS###']=$address['address'];
+					$markerArray['###STORE_ZIP###']=$address['zip'];
+					$markerArray['###STORE_CITY###']=$address['city'];
+					$markerArray['###STORE_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+				}
+			}
 			$body=$this->cObj->substituteMarkerArray($template, $markerArray);
 			$mail->SetFrom($from_address, $from_name);
 			$mail->AddAddress($user['email'], $user['username']);

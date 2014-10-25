@@ -24,14 +24,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 		$(document).on("click", ".advanced_import_radio", function() {
 			$(this).parent().find(".hide").show();
 		});
-		$(".admin_menu_upload_productfeed").click(function(event) {
-			var cid=$(this).attr("cid");
-			var cloned_productfeed_form=$("#upload_productfeed_form").clone();
-			cloned_productfeed_form.find(".cid").attr("value",cid);
-			jQuery("#productfeed_form_container_"+cid).html(\'<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="blockSubmitForm">\'+cloned_productfeed_form.html()+\'</form>\');
-			jQuery("#productfeed_form_container_"+cid).slideToggle(\'slow\', function(){});
-			event.preventDefault();
-		});
+
 	});
 </script>';
 $max_category_level=4;
