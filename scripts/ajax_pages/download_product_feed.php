@@ -158,13 +158,16 @@ if ($this->get['feed_hash']) {
 						// add delimiter
 						switch ($feed['delimiter']) {
 							case 'dash':
-								$content.='|';
+								$feed['delimiter_char']='|';
+								$content.=$feed['delimiter_char'];
 								break;
 							case 'dotcomma':
-								$content.=";";
+								$feed['delimiter_char']=';';
+								$content.=$feed['delimiter_char'];
 								break;
 							case 'tab':
-								$content.="\t";
+								$feed['delimiter_char']="\t";
+								$content.=$feed['delimiter_char'];
 								break;
 						}
 					}
@@ -487,7 +490,7 @@ if ($this->get['feed_hash']) {
 						if ($row['content']) {
 							$string=$row['content'];
 							if (!$this->get['format']=='excel') {
-								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 							}
 							$tmpcontent.=$string;
 						}
@@ -496,7 +499,7 @@ if ($this->get['feed_hash']) {
 						if ($row['content_footer']) {
 							$string=$row['content_footer'];
 							if (!$this->get['format']=='excel') {
-								$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 							}
 							$tmpcontent.=$string;
 						}
@@ -565,7 +568,7 @@ if ($this->get['feed_hash']) {
 							if ($row2['content']) {
 								$string=$row2['content'];
 								if (!$this->get['format']=='excel') {
-									$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 								}
 								$tmpcontent.=$string;
 							}
@@ -584,7 +587,7 @@ if ($this->get['feed_hash']) {
 							if ($row2['categories_name']) {
 								$string=$row2['categories_name'];
 								if (!$this->get['format']=='excel') {
-									$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 								}
 								$tmpcontent.=$string;
 							}
@@ -622,7 +625,7 @@ if ($this->get['feed_hash']) {
 							if ($row2['content_footer']) {
 								$string=$row2['content_footer'];
 								if (!$this->get['format']=='excel') {
-									$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 								}
 								$tmpcontent.=$string;
 							}
@@ -739,7 +742,7 @@ if ($this->get['feed_hash']) {
 					case 'products_shortdescription':
 						$string=$row['products_shortdescription'];
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
@@ -749,7 +752,7 @@ if ($this->get['feed_hash']) {
 					case 'products_description':
 						$string=$row['products_description'];
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
@@ -759,7 +762,7 @@ if ($this->get['feed_hash']) {
 					case 'products_description_encoded':
 						$string=$row['products_description'];
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 						}
 						$string=htmlentities($string);
 						if ($string) {
@@ -770,7 +773,7 @@ if ($this->get['feed_hash']) {
 					case 'products_description_strip_tags':
 						$string=strip_tags($row['products_description']);
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
 						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
@@ -916,8 +919,8 @@ if ($this->get['feed_hash']) {
 						), $tmpcontent);
 					}
 					// test extra delimiter strip
-					if ($feed['delimiter']) {
-						$tmpcontent=preg_replace("/\r\n|\n|".$feed['delimiter']."/", " ",$tmpcontent);
+					if ($feed['delimiter_char']) {
+						$tmpcontent=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$tmpcontent);
 					}
 				}
 				if ($this->get['format']=='excel') {
@@ -934,13 +937,16 @@ if ($this->get['feed_hash']) {
 						// add delimiter
 						switch ($feed['delimiter']) {
 							case 'dash':
-								$content.='|';
+								$feed['delimiter_char']='|';
+								$content.=$feed['delimiter_char'];
 								break;
 							case 'dotcomma':
-								$content.=';';
+								$feed['delimiter_char']=';';
+								$content.=$feed['delimiter_char'];
 								break;
 							case 'tab':
-								$content.="\t";
+								$feed['delimiter_char']="\t";
+								$content.=$feed['delimiter_char'];
 								break;
 						}
 					}
