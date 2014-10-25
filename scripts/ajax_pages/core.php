@@ -168,10 +168,12 @@ switch ($this->ms['page']) {
 						}
 					}
 				}
-				$return_data[]=array(
-					'id'=>0,
-					'text'=>$this->pi_getLL('admin_main_category')
-				);
+				if (!isset($this->get['no_maincat'])) {
+					$return_data[]=array(
+						'id'=>0,
+						'text'=>$this->pi_getLL('admin_main_category')
+					);
+				}
 				break;
 		}
 		natsort($tmp_return_data);

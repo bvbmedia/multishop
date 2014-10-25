@@ -152,10 +152,9 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&no_maincat=1').'\', {
 				data: {
-					q: query.term,
-					skip_ids: \''.implode(',', $skip_ids).'\'
+					q: query.term
 				},
 				dataType: "json"
 			}).done(function(data) {
@@ -642,7 +641,7 @@ if ($this->post) {
 								multiple: true,
 								//allowClear: true,
 								query: function(query) {
-									$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+									$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'&no_maincat=1\', {
 										data: {
 											q: query.term
 										},
