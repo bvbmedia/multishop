@@ -154,7 +154,8 @@ jQuery(document).ready(function($) {
 		query: function(query) {
 			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&no_maincat=1').'\', {
 				data: {
-					q: query.term
+					q: query.term,
+					skip_ids: \''.implode(',', $skip_ids).'\'
 				},
 				dataType: "json"
 			}).done(function(data) {
