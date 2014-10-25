@@ -2,6 +2,53 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+$jsSelect2InitialValue=array();
+$jsSelect2InitialValue[]='var categoriesIdTerm=[];';
+$shopPids=explode(',', $this->conf['connectedShopPids']);
+if (count($shopPids)) {
+	foreach ($shopPids as $shopPid) {
+		$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']=[];';
+		$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.'][0]={id:"0", text:"'.htmlentities($this->pi_getLL('admin_main_category')).'"};';
+		if (is_numeric($shopPid)) {
+			$pageinfo=mslib_befe::getRecord($shopPid, 'pages', 'uid', array('deleted=0 and hidden=0'));
+			if ($pageinfo['uid'] && $this->get['cid']) {
+				$category_ep=mslib_fe::getCategoriesToCategories($this->get['cid'], $pageinfo['uid']);
+				$categories_ep=explode(',', $category_ep);
+				if (is_array($categories_ep) && count($categories_ep)) {
+					foreach ($categories_ep as $category_id) {
+						$category_id=trim($category_id);
+						$cats=mslib_fe::Crumbar($category_id, '', array(), $pageinfo['uid']);
+						$cats=array_reverse($cats);
+						$catpath=array();
+						foreach ($cats as $cat) {
+							$catpath[]=$cat['name'];
+						}
+						if (count($catpath)>0) {
+							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \ ', $catpath), ENT_QUOTES).'"};';
+						}
+					}
+				}
+			}
+		}
+	}
+} else {
+	$category_ep=mslib_fe::getCategoriesToCategories($this->get['cid'], $this->shop_pid);
+	$categories_ep=explode(',', $category_ep);
+	if (is_array($categories_ep) && count($categories_ep)) {
+		foreach ($categories_ep as $category_id) {
+			$category_id=trim($category_id);
+			$cats=mslib_fe::Crumbar($category_id, '', array(), $this->shop_pid);
+			$cats=array_reverse($cats);
+			$catpath=array();
+			foreach ($cats as $cat) {
+				$catpath[]=$cat['name'];
+			}
+			if (count($catpath)>0) {
+				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \ ', $catpath), ENT_QUOTES).'"};';
+			}
+		}
+	}
+}
 // when editing the current category we must prevent the user to chain the selected category to it's childs.
 $skip_ids=array();
 if ($_REQUEST['action']=='edit_category') {
@@ -16,6 +63,7 @@ if ($_REQUEST['action']=='edit_category') {
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
+'.implode("\n", $jsSelect2InitialValue).'
 window.onload = function(){
   var text_input = document.getElementById (\'categories_name_0\');
   text_input.focus ();
@@ -47,7 +95,27 @@ jQuery(document).ready(function($) {
 		initSelection: function(element, callback) {
 			var id=$(element).val();
 			if (id!=="") {
-				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.each(split_id, function(i, v) {
+					if (categoriesIdTerm['.$this->shop_pid.'][v]!==undefined) {
+						callback_data[i]=categoriesIdTerm['.$this->shop_pid.'][v];
+					}
+				});
+				if (callback_data.length) {
+					callback(callback_data);
+				} else {
+					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						categoriesIdTerm[data.id]={id: data.id, text: data.text};
+						callback(data);
+					});
+				}
+				/*$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 					data: {
 						preselected_id: id,
 						skip_ids: \''.implode(',', $skip_ids).'\'
@@ -56,7 +124,7 @@ jQuery(document).ready(function($) {
 				}).done(function(data) {
 					//categoriesIdTerm[data.id]={id: data.id, text: data.text};
 					callback(data);
-				});
+				});*/
 			}
 		},
 		formatResult: function(data){
@@ -98,7 +166,27 @@ jQuery(document).ready(function($) {
 		initSelection: function(element, callback) {
 			var id=$(element).val();
 			if (id!=="") {
-				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.each(split_id, function(i, v) {
+					if (categoriesIdTerm['.$this->shop_pid.'][v]!==undefined) {
+						callback_data[i]=categoriesIdTerm['.$this->shop_pid.'][v];
+					}
+				});
+				if (callback_data.length) {
+					callback(callback_data);
+				} else {
+					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						categoriesIdTerm[data.id]={id: data.id, text: data.text};
+						callback(data);
+					});
+				}
+				/*$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 					data: {
 						preselected_id: id,
 						skip_ids: \''.implode(',', $skip_ids).'\'
@@ -107,7 +195,7 @@ jQuery(document).ready(function($) {
 				}).done(function(data) {
 					//categoriesIdTerm[data.id]={id: data.id, text: data.text};
 					callback(data);
-				});
+				});*/
 			}
 		},
 		formatResult: function(data){
@@ -567,7 +655,7 @@ if ($this->post) {
 								initSelection: function(element, callback) {
 									var id=$(element).val();
 									if (id!=="") {
-										/*var split_id=id.split(",");
+										var split_id=id.split(",");
 										var callback_data=[];
 										$.each(split_id, function(i, v) {
 											if (categoriesIdTerm['.$pageinfo['uid'].'][v]!==undefined) {
@@ -586,16 +674,7 @@ if ($this->post) {
 												categoriesIdTerm['.$pageinfo['uid'].'][data.id]={id: data.id, text: data.text};
 												callback(data);
 											});
-										}*/
-										$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
-											data: {
-												preselected_id: id
-											},
-											dataType: "json"
-										}).done(function(data) {
-											//categoriesIdTerm['.$pageinfo['uid'].'][data.id]={id: data.id, text: data.text};
-											callback(data);
-										});
+										}
 									}
 								},
 								formatResult: function(data){
