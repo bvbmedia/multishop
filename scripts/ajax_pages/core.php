@@ -162,16 +162,20 @@ switch ($this->ms['page']) {
 					mslib_fe::getSubcatsArray($categories_tree,'','',$page_uid);
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
-						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
-						if (is_array($categories_tree[$category_tree_0['id']])) {
-							mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree, true);
+						if (!in_array($category_tree_0['id'], $skip_ids)) {
+							$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
+							if (is_array($categories_tree[$category_tree_0['id']])) {
+								mslib_fe::build_categories_path($tmp_return_data, $category_tree_0['id'], $tmp_return_data[$category_tree_0['id']], $categories_tree, true);
+							}
 						}
 					}
 				}
-				$return_data[]=array(
-					'id'=>0,
-					'text'=>$this->pi_getLL('admin_main_category')
-				);
+				if (!isset($this->get['no_maincat'])) {
+					$return_data[]=array(
+						'id'=>0,
+						'text'=>$this->pi_getLL('admin_main_category')
+					);
+				}
 				break;
 		}
 		natsort($tmp_return_data);
