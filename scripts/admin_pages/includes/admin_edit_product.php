@@ -4,7 +4,11 @@ if (!defined('TYPO3_MODE')) {
 }
 $jsSelect2InitialValue=array();
 $jsSelect2InitialValue[]='var categoriesIdTerm=[];';
-$shopPids=explode(',', $this->conf['connectedShopPids']);
+$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']=[];';
+$shopPids=array();
+if ($this->conf['connectedShopPids']) {
+	$shopPids=explode(',', $this->conf['connectedShopPids']);
+}
 if (count($shopPids)) {
 	foreach ($shopPids as $shopPid) {
 		$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']=[];';
