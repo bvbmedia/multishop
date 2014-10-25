@@ -1734,11 +1734,20 @@ if ($this->post['action']=='category-insert') {
 						if ($item['products_old_price_including_vat'] and $item['products_vat_rate']) {
 							$item['products_old_price']=number_format(($item['products_old_price_including_vat']/(100+$item['products_vat_rate'])*100), 14, '.', '');
 						}
-						if ($item['products_price_including_vat'] and $item['products_vat_rate']) {
-							$item['products_price']=number_format(($item['products_price_including_vat']/(100+$item['products_vat_rate'])*100), 14, '.', '');
+						if ($item['products_price_including_vat']) {
+							if ($item['products_vat_rate']) {
+								$item['products_price']=number_format(($item['products_price_including_vat']/(100+$item['products_vat_rate'])*100), 14, '.', '');
+							} else {
+								$item['products_price']=number_format($item['products_price_including_vat'], 14, '.', '');
+							}
+
 						}
-						if ($item['products_specials_price_including_vat'] and $item['products_vat_rate']) {
-							$item['products_specials_price']=number_format(($item['products_specials_price_including_vat']/(100+$item['products_vat_rate'])*100), 14, '.', '');
+						if ($item['products_specials_price_including_vat']) {
+							if ($item['products_vat_rate']) {
+								$item['products_specials_price']=number_format(($item['products_specials_price_including_vat']/(100+$item['products_vat_rate'])*100), 14, '.', '');
+							} else {
+								$item['products_specials_price']=number_format($item['products_specials_price'], 14, '.', '');
+							}
 						}
 						if ($item['products_old_price']) {
 							if ($item['products_price']<$item['products_old_price']) {
