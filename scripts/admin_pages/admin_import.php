@@ -421,6 +421,9 @@ if ($this->post['action']=='category-insert') {
 						$s++;
 					}
 					$i++;
+					if ($i==5) {
+						break;
+					}
 				}
 			} elseif ($this->post['format']=='excel') {
 				// try the generic way
@@ -452,6 +455,9 @@ if ($this->post['action']=='category-insert') {
 							}
 						}
 						$counter++;
+						if ($counter==5) {
+							break;
+						}
 					}
 				}
 				// excel eof
@@ -485,6 +491,9 @@ if ($this->post['action']=='category-insert') {
 //					}
 					$i++;
 					$s=0;
+					if ($i==5) {
+						break;
+					}
 				}
 			} else {
 				if ($this->post['os']=='linux') {
@@ -526,6 +535,9 @@ if ($this->post['action']=='category-insert') {
 								$rows[]=$data;
 							}
 							$counter++;
+							if ($counter==5) {
+								break;
+							}
 						}
 						fclose($handle);
 					}
