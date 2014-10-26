@@ -72,7 +72,7 @@ class mslib_befe {
 		}
 		// load global front-end module config eof
 		// merge global with local front-end module config
-		if (is_array($settings['GLOBAL_MODULES'])) {
+		if (is_array($settings['GLOBAL_MODULES']) && count($settings['GLOBAL_MODULES'])) {
 			foreach ($settings['GLOBAL_MODULES'] as $key=>$value) {
 				if (isset($settings['LOCAL_MODULES'][$key])) {
 					$settings[$key]=$settings['LOCAL_MODULES'][$key];
@@ -567,13 +567,15 @@ class mslib_befe {
 	}
 	public function deleteProductImage($file_name) {
 		if ($file_name) {
-			foreach ($this->ms['image_paths']['products'] as $key=>$value) {
-				$folder_name=mslib_befe::getImagePrefixFolder($file_name);
-				$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
-				if (file_exists($path)) {
-					if (unlink($path)) {
-						$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
-						@unlink($path);
+			if (is_array($this->ms['image_paths']['products']) && count($this->ms['image_paths']['products'])) {
+				foreach ($this->ms['image_paths']['products'] as $key=>$value) {
+					$folder_name=mslib_befe::getImagePrefixFolder($file_name);
+					$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
+					if (file_exists($path)) {
+						if (unlink($path)) {
+							$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
+							@unlink($path);
+						}
 					}
 				}
 			}
@@ -581,13 +583,15 @@ class mslib_befe {
 	}
 	public function deleteAttributeValuesImage($file_name) {
 		if ($file_name) {
-			foreach ($this->ms['image_paths']['attribute_values'] as $key=>$value) {
-				$folder_name=mslib_befe::getImagePrefixFolder($file_name);
-				$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
-				if (file_exists($path)) {
-					if (unlink($path)) {
-						$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
-						@unlink($path);
+			if (is_array($this->ms['image_paths']['attribute_values']) && count($this->ms['image_paths']['attribute_values'])) {
+				foreach ($this->ms['image_paths']['attribute_values'] as $key=>$value) {
+					$folder_name=mslib_befe::getImagePrefixFolder($file_name);
+					$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
+					if (file_exists($path)) {
+						if (unlink($path)) {
+							$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
+							@unlink($path);
+						}
 					}
 				}
 			}
@@ -854,18 +858,22 @@ class mslib_befe {
 		}
 	}
 	public function deleteCategoryImage($file_name) {
-		foreach ($this->ms['image_paths']['categories'] as $key=>$value) {
-			$path=PATH_site.$value.'/'.$file_name;
-			if (unlink($path)) {
-				return 1;
+		if (is_array($this->ms['image_paths']['categories']) && count($this->ms['image_paths']['categories'])) {
+			foreach ($this->ms['image_paths']['categories'] as $key=>$value) {
+				$path=PATH_site.$value.'/'.$file_name;
+				if (unlink($path)) {
+					return 1;
+				}
 			}
 		}
 	}
 	public function deleteManufacturerImage($file_name) {
-		foreach ($this->ms['image_paths']['manufacturers'] as $key=>$value) {
-			$path=PATH_site.$value.'/'.$file_name;
-			if (unlink($path)) {
-				return 1;
+		if (is_array($this->ms['image_paths']['manufacturers']) && count($this->ms['image_paths']['manufacturers'])) {
+			foreach ($this->ms['image_paths']['manufacturers'] as $key=>$value) {
+				$path=PATH_site.$value.'/'.$file_name;
+				if (unlink($path)) {
+					return 1;
+				}
 			}
 		}
 	}
@@ -892,9 +900,11 @@ class mslib_befe {
 					$entries=array(); // just in case scandir fail...
 				}
 			}
-			foreach ($entries as $entry) {
-				if ($entry!='.' && $entry!='..') {
-					mslib_befe::deltree($path.'/'.$entry);
+			if (is_array($entries) && count($entries)) {
+				foreach ($entries as $entry) {
+					if ($entry!='.' && $entry!='..') {
+						mslib_befe::deltree($path.'/'.$entry);
+					}
 				}
 			}
 			return rmdir($path);
@@ -1213,18 +1223,20 @@ class mslib_befe {
 					}
 					// now we are going to define the price filter start value, so we can search very fast on it
 					$array=explode(";", $this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']);
-					$total=count($array);
-					$tel=0;
-					foreach ($array as $item) {
-						$tel++;
-						$cols=explode("-", $item);
-						if ($flat_product['final_price']<=$cols[1]) {
-							$flat_product['price_filter']=$cols[0];
-							break;
-						}
-						if ($tel==$total) {
-							if ($flat_product['final_price']>$cols[1]) {
-								$flat_product['price_filter']=$cols[1];
+					if (is_array($array) && count($array)) {
+						$total=count($array);
+						$tel=0;
+						foreach ($array as $item) {
+							$tel++;
+							$cols=explode("-", $item);
+							if ($flat_product['final_price']<=$cols[1]) {
+								$flat_product['price_filter']=$cols[0];
+								break;
+							}
+							if ($tel==$total) {
+								if ($flat_product['final_price']>$cols[1]) {
+									$flat_product['price_filter']=$cols[1];
+								}
 							}
 						}
 					}
@@ -1252,17 +1264,19 @@ class mslib_befe {
 						// get all cats to generate multilevel fake url
 						$level=0;
 						$cats=mslib_fe::Crumbar($flat_product['categories_id']);
-						$cats=array_reverse($cats);
-						$where='';
-						if (count($cats)>0) {
-							$i=0;
-							foreach ($cats as $cat) {
-								$flat_product['categories_id_'.$i]=$cat['id'];
-								$flat_product['categories_name_'.$i]=$cat['name'];
-								$i++;
+						if (is_array($cats) && count($cats)) {
+							$cats=array_reverse($cats);
+							$where='';
+							if (count($cats)>0) {
+								$i=0;
+								foreach ($cats as $cat) {
+									$flat_product['categories_id_'.$i]=$cat['id'];
+									$flat_product['categories_name_'.$i]=$cat['name'];
+									$i++;
+								}
 							}
+							// get all cats to generate multilevel fake url eof
 						}
-						// get all cats to generate multilevel fake url eof
 					}
 					for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
 						$i=$x;
@@ -1281,7 +1295,7 @@ class mslib_befe {
 					$flat_product['sort_order']=$row['sort_order'];
 					$flat_product['product_capital_price']=$row['product_capital_price'];
 					$flat_product['page_uid']=$row['page_uid'];
-					if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
+					if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
 						foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id=>$array) {
 							if ($option_id) {
 								$option_values=mslib_fe::getProductsOptionValues($option_id, $flat_product['products_id']);
@@ -1422,8 +1436,10 @@ class mslib_befe {
 			$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
 				$tmp_array=mslib_befe::tep_get_chained_categories_select($parent_categories['categories_id'], $aid, ($level+1), $selectedid, $page_uid);
-				foreach ($tmp_array as $key=>$value) {
-					$output[$key].=$value;
+				if (is_array($tmp_array) && count($tmp_array)) {
+					foreach ($tmp_array as $key=>$value) {
+						$output[$key].=$value;
+					}
 				}
 			}
 		}
@@ -1447,30 +1463,32 @@ class mslib_befe {
 				}
 			}
 		}
-		foreach ($arr as $key=>$value) {
-			if (is_array($value)) { //Custom handling for arrays
-				if ($is_list) {
-					$parts[]=array2json($value); /* :RECURSION: */
+		if (is_array($arr) && count($arr)) {
+			foreach ($arr as $key=>$value) {
+				if (is_array($value)) { //Custom handling for arrays
+					if ($is_list) {
+						$parts[]=array2json($value); /* :RECURSION: */
+					} else {
+						$parts[]='"'.$key.'":'.array2json($value); /* :RECURSION: */
+					}
 				} else {
-					$parts[]='"'.$key.'":'.array2json($value); /* :RECURSION: */
+					$str='';
+					if (!$is_list) {
+						$str='"'.$key.'":';
+					}
+					//Custom handling for multiple data types
+					if (is_numeric($value)) {
+						$str.=$value; //Numbers
+					} else if ($value===false) {
+						$str.='false'; //The booleans
+					} else if ($value===true) {
+						$str.='true';
+					} else {
+						$str.='"'.addslashes($value).'"'; //All other things
+					}
+					// :TODO: Is there any more datatype we should be in the lookout for? (Object?)
+					$parts[]=$str;
 				}
-			} else {
-				$str='';
-				if (!$is_list) {
-					$str='"'.$key.'":';
-				}
-				//Custom handling for multiple data types
-				if (is_numeric($value)) {
-					$str.=$value; //Numbers
-				} else if ($value===false) {
-					$str.='false'; //The booleans
-				} else if ($value===true) {
-					$str.='true';
-				} else {
-					$str.='"'.addslashes($value).'"'; //All other things
-				}
-				// :TODO: Is there any more datatype we should be in the lookout for? (Object?)
-				$parts[]=$str;
 			}
 		}
 		if (is_array($parts)) {
@@ -1552,7 +1570,7 @@ class mslib_befe {
 		  `products_condition` varchar(20) default 'new',
 		  `vendor_code` varchar(25) default '',
 		";
-		if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
+		if ($this->ms['MODULES']['FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS'] and is_array($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS']) && count($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'])) {
 			$additional_indexes='';
 			foreach ($this->ms['FLAT_DATABASE_ATTRIBUTE_OPTIONS'] as $option_id=>$array) {
 				if ($array[0] and $array[1]) {
@@ -1644,8 +1662,10 @@ class mslib_befe {
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$products[]=$row['products_id'];
 		}
-		foreach ($products as $products_id) {
-			mslib_befe::convertProductToFlat($products_id, 'tx_multishop_products_flat_tmp');
+		if (count($products)) {
+			foreach ($products as $products_id) {
+				mslib_befe::convertProductToFlat($products_id, 'tx_multishop_products_flat_tmp');
+			}
 		}
 		$str="ANALYZE TABLE `tx_multishop_products_flat_tmp`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -1718,37 +1738,39 @@ class mslib_befe {
 					</tr>
 					';
 				}
-				foreach ($array_in as $key=>$val) {
-					if ((string)$key or $val) {
-						if (!$tr_type or $tr_type=='even') {
-							$tr_type='odd';
-						} else {
-							$tr_type='even';
-						}
-						$result.='<tr class="'.$tr_type.'">
+				if (is_array($array_in) && count($array_in)) {
+					foreach ($array_in as $key=>$val) {
+						if ((string)$key or $val) {
+							if (!$tr_type or $tr_type=='even') {
+								$tr_type='odd';
+							} else {
+								$tr_type='even';
+							}
+							$result.='<tr class="'.$tr_type.'">
 							<td valign="top" class="print_r_key">'.htmlspecialchars((string)$key).'</td>
 							<td class="print_r_value">';
-						if (is_array($val)) {
+							if (is_array($val)) {
 //							$result .= t3lib_utility_Debug::viewArray($val);
-							$result.=mslib_befe::print_r($val);
-						} elseif (is_object($val)) {
-							$string='';
-							if (method_exists($val, '__toString')) {
-								$string.=get_class($val).': '.(string)$val;
+								$result.=mslib_befe::print_r($val);
+							} elseif (is_object($val)) {
+								$string='';
+								if (method_exists($val, '__toString')) {
+									$string.=get_class($val).': '.(string)$val;
+								} else {
+									$string.=print_r($val, true);
+								}
+								$result.=''.nl2br(htmlspecialchars($string)).'<br />';
 							} else {
-								$string.=print_r($val, true);
+								if (gettype($val)=='object') {
+									$string='Unknown object';
+								} else {
+									$string=(string)$val;
+								}
+								$result.=nl2br(htmlspecialchars($string)).'<br />';
 							}
-							$result.=''.nl2br(htmlspecialchars($string)).'<br />';
-						} else {
-							if (gettype($val)=='object') {
-								$string='Unknown object';
-							} else {
-								$string=(string)$val;
-							}
-							$result.=nl2br(htmlspecialchars($string)).'<br />';
-						}
-						$result.='</td>
+							$result.='</td>
 						</tr>';
+						}
 					}
 				}
 				$result.='</table>';
@@ -1875,11 +1897,13 @@ class mslib_befe {
 		}
 		// load global front-end module config eof
 		// merge global with local front-end module config
-		foreach ($settings['GLOBAL_MODULES'] as $key=>$value) {
-			if (isset($settings['LOCAL_MODULES'][$key])) {
-				$settings[$key]=$settings['LOCAL_MODULES'][$key];
-			} else {
-				$settings[$key]=$value;
+		if (is_array($settings['GLOBAL_MODULES']) && count($settings['GLOBAL_MODULES'])) {
+			foreach ($settings['GLOBAL_MODULES'] as $key=>$value) {
+				if (isset($settings['LOCAL_MODULES'][$key])) {
+					$settings[$key]=$settings['LOCAL_MODULES'][$key];
+				} else {
+					$settings[$key]=$value;
+				}
 			}
 		}
 		// merge global with local front-end module config eof
@@ -2083,64 +2107,66 @@ class mslib_befe {
 			//insert into tx_multishop_products
 			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 			$product_arr_new=array();
-			foreach ($row as $key_p=>$val_p) {
-				if ($key_p!='products_id') {
-					if ($key_p=='products_image' or $key_p=='products_image1' or $key_p=='products_image2' or $key_p=='products_image3' or $key_p=='products_image4') {
-						if (!empty($val_p)) {
-							$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-								'tx_multishop_products_description', // FROM ...
-								'products_id=\''.$id_product.'\' and language_id=\''.$this->sys_language_uid.'\'', // WHERE...
-								'', // GROUP BY...
-								'', // ORDER BY...
-								'' // LIMIT ...
-							);
-							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-							$row_desc=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-							$file=mslib_befe::getImagePath($val_p, 'products', 'original');
-							//echo $file;
-							$imgtype=mslib_befe::exif_imagetype($file);
-							if ($imgtype) {
-								// valid image
-								$ext=image_type_to_extension($imgtype, false);
-								if ($ext) {
-									$i=0;
-									$filename=mslib_fe::rewritenamein($row_desc['products_name']).'.'.$ext;
-									//echo $filename;
-									$folder=mslib_befe::getImagePrefixFolder($filename);
-									$array=explode(".", $filename);
-									if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-										t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
-									}
-									$folder.='/';
-									$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
-									//echo $target;
-									if (file_exists($target)) {
-										do {
-											$filename=mslib_fe::rewritenamein($row_desc['products_name']).($i>0 ? '-'.$i : '').'.'.$ext;
-											$folder_name=mslib_befe::getImagePrefixFolder($filename);
-											$array=explode(".", $filename);
-											$folder=$folder_name;
-											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-												t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
-											}
-											$folder.='/';
-											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
-											$i++;
-											//echo $target . "<br/>";
-										} while (file_exists($target));
-									}
-									if (copy($file, $target)) {
-										$target_origineel=$target;
-										$update_product_images=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath($this->extKey));
+			if (is_array($row) && count($row)) {
+				foreach ($row as $key_p=>$val_p) {
+					if ($key_p!='products_id') {
+						if ($key_p=='products_image' or $key_p=='products_image1' or $key_p=='products_image2' or $key_p=='products_image3' or $key_p=='products_image4') {
+							if (!empty($val_p)) {
+								$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+									'tx_multishop_products_description', // FROM ...
+									'products_id=\''.$id_product.'\' and language_id=\''.$this->sys_language_uid.'\'', // WHERE...
+									'', // GROUP BY...
+									'', // ORDER BY...
+									'' // LIMIT ...
+								);
+								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+								$row_desc=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+								$file=mslib_befe::getImagePath($val_p, 'products', 'original');
+								//echo $file;
+								$imgtype=mslib_befe::exif_imagetype($file);
+								if ($imgtype) {
+									// valid image
+									$ext=image_type_to_extension($imgtype, false);
+									if ($ext) {
+										$i=0;
+										$filename=mslib_fe::rewritenamein($row_desc['products_name']).'.'.$ext;
+										//echo $filename;
+										$folder=mslib_befe::getImagePrefixFolder($filename);
+										$array=explode(".", $filename);
+										if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
+											t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+										}
+										$folder.='/';
+										$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
+										//echo $target;
+										if (file_exists($target)) {
+											do {
+												$filename=mslib_fe::rewritenamein($row_desc['products_name']).($i>0 ? '-'.$i : '').'.'.$ext;
+												$folder_name=mslib_befe::getImagePrefixFolder($filename);
+												$array=explode(".", $filename);
+												$folder=$folder_name;
+												if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
+													t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+												}
+												$folder.='/';
+												$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
+												$i++;
+												//echo $target . "<br/>";
+											} while (file_exists($target));
+										}
+										if (copy($file, $target)) {
+											$target_origineel=$target;
+											$update_product_images=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath($this->extKey));
+										}
 									}
 								}
+								$product_arr_new[$key_p]=$update_product_images;
+							} else {
+								$product_arr_new[$key_p]=$val_p;
 							}
-							$product_arr_new[$key_p]=$update_product_images;
 						} else {
 							$product_arr_new[$key_p]=$val_p;
 						}
-					} else {
-						$product_arr_new[$key_p]=$val_p;
 					}
 				}
 			}
@@ -2331,9 +2357,11 @@ class mslib_befe {
 			}
 		}
 		$fl=array();
-		foreach ($list as $file) {
-			$parts=preg_split('/'.preg_quote($sc).'+/', $file);
-			$fl[]=trim($parts[$pos]);
+		if (is_array($list) && count($list)) {
+			foreach ($list as $file) {
+				$parts=preg_split('/'.preg_quote($sc).'+/', $file);
+				$fl[]=trim($parts[$pos]);
+			}
 		}
 		return $fl;
 	}
@@ -2720,19 +2748,21 @@ class mslib_befe {
 		$pattern.='i';
 		$sl_pattern.='i';
 		$needle=(array)$needle;
-		foreach ($needle as $needle_s) {
-			$needle_s=preg_quote($needle_s);
-			// Escape needle with optional whole word check
-			if ($options&$STR_HIGHLIGHT_WHOLEWD) {
-				$needle_s='\b'.$needle_s.'\b';
+		if (is_array($needle) && count($needle)) {
+			foreach ($needle as $needle_s) {
+				$needle_s=preg_quote($needle_s);
+				// Escape needle with optional whole word check
+				if ($options&$STR_HIGHLIGHT_WHOLEWD) {
+					$needle_s='\b'.$needle_s.'\b';
+				}
+				// Strip links
+				if ($options&$STR_HIGHLIGHT_STRIPLINKS) {
+					$sl_regex=sprintf($sl_pattern, $needle_s);
+					$text=preg_replace($sl_regex, '\1', $text);
+				}
+				$regex=sprintf($pattern, $needle_s);
+				$text=preg_replace($regex, $highlight, $text);
 			}
-			// Strip links
-			if ($options&$STR_HIGHLIGHT_STRIPLINKS) {
-				$sl_regex=sprintf($sl_pattern, $needle_s);
-				$text=preg_replace($sl_regex, '\1', $text);
-			}
-			$regex=sprintf($pattern, $needle_s);
-			$text=preg_replace($regex, $highlight, $text);
 		}
 		return $text;
 	}
@@ -2832,11 +2862,13 @@ class mslib_befe {
 		if (!$a || !is_array($a)) {
 			return '';
 		}
-		foreach ($a as $k=>$v) {
-			if (is_array($v)) {
-				$f=mslib_befe::array_flatten($v, $f);
-			} else {
-				$f[$k]=$v;
+		if (is_array($a) && count($a)) {
+			foreach ($a as $k=>$v) {
+				if (is_array($v)) {
+					$f=mslib_befe::array_flatten($v, $f);
+				} else {
+					$f[$k]=$v;
+				}
 			}
 		}
 		return $f;
@@ -2884,7 +2916,7 @@ class mslib_befe {
 			if (isset($value) and isset($field) && $field != '') {
 				$filter[]=$field.'="'.addslashes($value).'"';
 			}
-			if (count($additional_where)) {
+			if (is_array($additional_where) && count($additional_where)) {
 				foreach ($additional_where as $item) {
 					$filter[]=$item;
 				}
@@ -2912,7 +2944,7 @@ class mslib_befe {
 			if (isset($value) and isset($field) && $field != '') {
 				$queryArray['where'][]=$field.'=\''.addslashes($value).'\'';
 			}
-			if (count($additional_where)) {
+			if (is_array($additional_where) && count($additional_where)) {
 				foreach ($additional_where as $where) {
 					if ($where) {
 						$queryArray['where'][]=$where;
@@ -3021,20 +3053,22 @@ class mslib_befe {
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-				foreach ($lockedFields[$table] as $field_key) {
-					if ($row[$field_key]!=$updateArray[$field_key]) {
-						// add to locking table with original value
-						$filter=array();
-						$filter[]='products_id='.$row['products_id'];
-						if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
-							$insertArray=array();
-							$insertArray['field_key']=$field_key;
-							$insertArray['products_id']=$row['products_id'];
-							$insertArray['crdate']=time();
-							$insertArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
-							$insertArray['original_value']=$row[$field_key];
-							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
-							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				if (is_array($lockedFields[$table]) && count($lockedFields[$table])) {
+					foreach ($lockedFields[$table] as $field_key) {
+						if ($row[$field_key]!=$updateArray[$field_key]) {
+							// add to locking table with original value
+							$filter=array();
+							$filter[]='products_id='.$row['products_id'];
+							if (!mslib_befe::ifExists($field_key, 'tx_multishop_products_locked_fields', 'field_key', $filter)) {
+								$insertArray=array();
+								$insertArray['field_key']=$field_key;
+								$insertArray['products_id']=$row['products_id'];
+								$insertArray['crdate']=time();
+								$insertArray['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
+								$insertArray['original_value']=$row[$field_key];
+								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_locked_fields', $insertArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
 						}
 					}
 				}
@@ -3156,9 +3190,25 @@ class mslib_befe {
 			);
 		}
 		$selectbox_options=array();
-		foreach ($weights_list as $weight_value=>$weight_label) {
-			if (!empty($start_value) && $start_value<101) {
-				if ($weight_value>=$start_value) {
+		if (is_array($weights_list) && count($weights_list)) {
+			foreach ($weights_list as $weight_value=>$weight_label) {
+				if (!empty($start_value) && $start_value<101) {
+					if ($weight_value>=$start_value) {
+						if (empty($selected)) {
+							if ($weight_value==101) {
+								$selectbox_options[]='<option value="'.$weight_value.'" selected="selected">'.$weight_label.'</option>';
+							} else {
+								$selectbox_options[]='<option value="'.$weight_value.'">'.$weight_label.'</option>';
+							}
+						} else {
+							if ($selected==$weight_value) {
+								$selectbox_options[]='<option value="'.$weight_value.'" selected="selected">'.$weight_label.'</option>';
+							} else {
+								$selectbox_options[]='<option value="'.$weight_value.'">'.$weight_label.'</option>';
+							}
+						}
+					}
+				} else {
 					if (empty($selected)) {
 						if ($weight_value==101) {
 							$selectbox_options[]='<option value="'.$weight_value.'" selected="selected">'.$weight_label.'</option>';
@@ -3171,20 +3221,6 @@ class mslib_befe {
 						} else {
 							$selectbox_options[]='<option value="'.$weight_value.'">'.$weight_label.'</option>';
 						}
-					}
-				}
-			} else {
-				if (empty($selected)) {
-					if ($weight_value==101) {
-						$selectbox_options[]='<option value="'.$weight_value.'" selected="selected">'.$weight_label.'</option>';
-					} else {
-						$selectbox_options[]='<option value="'.$weight_value.'">'.$weight_label.'</option>';
-					}
-				} else {
-					if ($selected==$weight_value) {
-						$selectbox_options[]='<option value="'.$weight_value.'" selected="selected">'.$weight_label.'</option>';
-					} else {
-						$selectbox_options[]='<option value="'.$weight_value.'">'.$weight_label.'</option>';
 					}
 				}
 			}
@@ -3214,119 +3250,121 @@ class mslib_befe {
 		$total_tax=0;
 		$tr_type='even';
 		$od_rows_count=0;
-		foreach ($order['products'] as $product) {
-			$od_rows_count++;
-			if (!$tr_type or $tr_type=='even') {
-				$tr_type='odd';
-			} else {
-				$tr_type='even';
-			}
-			$tmpcontent.='<tr class="'.$tr_type.'">';
-			$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.number_format($product['qty']).'</td>';
-			$product_tmp=mslib_fe::getProduct($product['products_id']);
-			$tmpcontent.='<td align="left" class="cell_products_name valign_top" style="padding-left:10px">'.$product['products_name'];
-			if ($product['products_article_number']) {
-				$tmpcontent.=' ('.$product['products_article_number'].')';
-			}
-			if ($product['products_model']) {
-				$tmpcontent.='<br/>Model: '.$product['products_model'];
-			}
-			if (!empty($product['ean_code'])) {
-				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
-			}
-			if (!empty($product['sku_code'])) {
-				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
-			}
-			if (!empty($product['vendor_code'])) {
-				$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
-			}
-			$tmpcontent.='</td>';
-			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-				$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents($product['final_price']+$product['products_tax_data']['total_tax'], 0).'</td>';
-				$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents(($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0).'</td>';
-			} else {
-				$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents($product['final_price'], 0).'</td>';
-				$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-				$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents(($product['qty']*$product['final_price']), 0).'</td>';
-			}
-			$tmpcontent.='</tr>';
-			// start for new page
-			if ($od_rows_count%20==0) {
-				$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" style="page-break-before: always; margin-top:200px">';
-				$tmpcontent.='<tr>';
-				$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
-				$tmpcontent.='</tr>';
-				$tmpcontent.='<tr style="background-color:#000; color:#fff;">
-					  <td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
-					  <td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
-				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
-						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
-						  <td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+		if (is_array($order['products']) && count($order['products'])) {
+			foreach ($order['products'] as $product) {
+				$od_rows_count++;
+				if (!$tr_type or $tr_type=='even') {
+					$tr_type='odd';
 				} else {
-					$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
-						  <td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
-						  <td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+					$tr_type='even';
+				}
+				$tmpcontent.='<tr class="'.$tr_type.'">';
+				$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.number_format($product['qty']).'</td>';
+				$product_tmp=mslib_fe::getProduct($product['products_id']);
+				$tmpcontent.='<td align="left" class="cell_products_name valign_top" style="padding-left:10px">'.$product['products_name'];
+				if ($product['products_article_number']) {
+					$tmpcontent.=' ('.$product['products_article_number'].')';
+				}
+				if ($product['products_model']) {
+					$tmpcontent.='<br/>Model: '.$product['products_model'];
+				}
+				if (!empty($product['ean_code'])) {
+					$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
+				}
+				if (!empty($product['sku_code'])) {
+					$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
+				}
+				if (!empty($product['vendor_code'])) {
+					$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
+				}
+				$tmpcontent.='</td>';
+				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
+					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents($product['final_price']+$product['products_tax_data']['total_tax'], 0).'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents(($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0).'</td>';
+				} else {
+					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents($product['final_price'], 0).'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
+					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.$prefix.' '.mslib_fe::amount2Cents(($product['qty']*$product['final_price']), 0).'</td>';
 				}
 				$tmpcontent.='</tr>';
-			}
-			if (count($product['attributes'])) {
-				foreach ($product['attributes'] as $tmpkey=>$options) {
-					if ($options['products_options_values']) {
-						$od_rows_count++;
-						$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td align="left" style="padding-left:10px">'.$options['products_options'].': '.$options['products_options_values'].'</td>';
-						$cell_products_normal_price='';
-						$cell_products_vat='';
-						$cell_products_final_price='';
-						if ($options['options_values_price']>0) {
-							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$attributes_price=$options['price_prefix'].$options['options_values_price']+$options['attributes_tax_data']['tax'];
-								$total_attributes_price=$attributes_price*$product['qty'];
-								$cell_products_normal_price=$prefix.' '.mslib_fe::amount2Cents(($attributes_price), 0);
-								$cell_products_final_price=$prefix.' '.mslib_fe::amount2Cents(($total_attributes_price), 0);
-							} else {
-								$cell_products_normal_price=$prefix.' '.mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price']), 0);
-								$cell_products_final_price=$prefix.' '.mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price'])*$product['qty'], 0);
+				// start for new page
+				if ($od_rows_count%20==0) {
+					$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" style="page-break-before: always; margin-top:200px">';
+					$tmpcontent.='<tr>';
+					$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
+					$tmpcontent.='</tr>';
+					$tmpcontent.='<tr style="background-color:#000; color:#fff;">
+					  <td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
+					  <td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
+						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
+						  <td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+					} else {
+						$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
+						  <td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
+						  <td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+					}
+					$tmpcontent.='</tr>';
+				}
+				if (is_array($product['attributes']) && count($product['attributes'])) {
+					foreach ($product['attributes'] as $tmpkey=>$options) {
+						if ($options['products_options_values']) {
+							$od_rows_count++;
+							$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td align="left" style="padding-left:10px">'.$options['products_options'].': '.$options['products_options_values'].'</td>';
+							$cell_products_normal_price='';
+							$cell_products_vat='';
+							$cell_products_final_price='';
+							if ($options['options_values_price']>0) {
+								if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+									$attributes_price=$options['price_prefix'].$options['options_values_price']+$options['attributes_tax_data']['tax'];
+									$total_attributes_price=$attributes_price*$product['qty'];
+									$cell_products_normal_price=$prefix.' '.mslib_fe::amount2Cents(($attributes_price), 0);
+									$cell_products_final_price=$prefix.' '.mslib_fe::amount2Cents(($total_attributes_price), 0);
+								} else {
+									$cell_products_normal_price=$prefix.' '.mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price']), 0);
+									$cell_products_final_price=$prefix.' '.mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price'])*$product['qty'], 0);
+								}
 							}
-						}
-						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-							$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
-							$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
-							$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
-						} else {
-							$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
-							$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
-							$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
-						}
-						$tmpcontent.='</tr>';
-						// start for new page
-						if ($od_rows_count%20==0) {
-							$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" style="page-break-before: always; margin-top:200px">';
-							$tmpcontent.='<tr>';
-							$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
+								$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
+								$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
+							} else {
+								$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
+								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
+								$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
+							}
 							$tmpcontent.='</tr>';
-							$tmpcontent.='<tr style="background-color:#000; color:#fff;">
+							// start for new page
+							if ($od_rows_count%20==0) {
+								$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" style="page-break-before: always; margin-top:200px">';
+								$tmpcontent.='<tr>';
+								$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
+								$tmpcontent.='</tr>';
+								$tmpcontent.='<tr style="background-color:#000; color:#fff;">
 							<td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
 							<td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
-							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
+								if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+									$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
 						  		<td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
 						  		<td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
-							} else {
-								$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
+								} else {
+									$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
 						  		<td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
 						  		<td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+								}
+								$tmpcontent.='</tr>';
 							}
-							$tmpcontent.='</tr>';
 						}
 					}
 				}
-			}
-			// count the vat
-			if ($order['final_price'] and $order['products_tax']) {
-				$item_tax=$order['qty']*($order['final_price']*$order['products_tax']/100);
-				$total_tax=$total_tax+$item_tax;
+				// count the vat
+				if ($order['final_price'] and $order['products_tax']) {
+					$item_tax=$order['qty']*($order['final_price']*$order['products_tax']/100);
+					$total_tax=$total_tax+$item_tax;
+				}
 			}
 		}
 		$colspan=5;
@@ -3416,27 +3454,33 @@ class mslib_befe {
 		if (!is_array( $needleArray)) {
 			return false;
 		}
-		foreach ($needleArray as $needle) {
-			if ( strstr( $string, $needle ) ) {
-				return $needle;
+		if (is_array($needleArray) && count($needleArray)) {
+			foreach ($needleArray as $needle) {
+				if ( strstr( $string, $needle ) ) {
+					return $needle;
+				}
 			}
 		}
 	}
 	function stristr_array($string,$needleArray) {
-		if ( !is_array( $needleArray ) ) {
+		if (!is_array($needleArray)) {
 			return false;
 		}
-		foreach ($needleArray as $needle) {
-			if ( stristr( $string, $needle ) ) {
-				return $needle;
+		if (is_array($needleArray) && count($needleArray)) {
+			foreach ($needleArray as $needle) {
+				if (stristr($string, $needle)) {
+					return $needle;
+				}
 			}
 		}
 	}
 	function natksort(&$array) {
 		$keys = array_keys($array);
 		natcasesort($keys);
-		foreach ($keys as $k) {
-			$new_array[$k] = $array[$k];
+		if (is_array($keys) && count($keys)) {
+			foreach ($keys as $k) {
+				$new_array[$k]=$array[$k];
+			}
 		}
 		$array = $new_array;
 		return true;
