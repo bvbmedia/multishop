@@ -90,6 +90,7 @@ foreach ($products as $current_product) {
 	$markerArray['PRODUCTS_PRICE']=$output['products_price'];
 	$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 	$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
+	$markerArray['PRODUCTS_URL']=$current_product['products_url'];
 	// STOCK INDICATOR
 	$product_qty=$product['products_quantity'];
 	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {

@@ -279,6 +279,8 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_DESCRIPTION###']=$product['products_meta_description'];
 	$markerArray['###PRODUCTS_META_KEYWORDS###']=$product['products_meta_keywords'];
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
+	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
+
 	$plugins_extra_content=array();
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'])) {
