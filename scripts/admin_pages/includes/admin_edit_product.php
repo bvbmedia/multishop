@@ -6,7 +6,7 @@ $jsSelect2InitialValue=array();
 $jsSelect2InitialValue[]='var categoriesIdTerm=[];';
 $jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']=[];';
 $shopPids=array();
-if ($this->conf['connectedShopPids']) {
+if ($this->conf['enableMultipleShops'] && $this->conf['connectedShopPids']) {
 	$shopPids=explode(',', $this->conf['connectedShopPids']);
 }
 if (count($shopPids)) {
