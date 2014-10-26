@@ -2064,6 +2064,7 @@ class mslib_befe {
 			$insertArray=array();
 			$insertArray['categories_id']=$target_categories_id;
 			$insertArray['products_id']=$products_id;
+			$insertArray['page_uid']=$this->showCatalogFromPage;
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
@@ -2262,7 +2263,8 @@ class mslib_befe {
 				$insertArray=array(
 					'products_id'=>$id_product_new,
 					'categories_id'=>$target_categories_id,
-					'sort_order'=>time()
+					'sort_order'=>time(),
+					'page_uid'=>$this->showCatalogFromPage
 				);
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);

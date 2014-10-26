@@ -2049,6 +2049,7 @@ if ($this->post['action']=='category-insert') {
 									$updateArray=array();
 									$updateArray['products_id']=$item['updated_products_id'];
 									$updateArray['categories_id']=$categories_id;
+									$updateArray['page_uid']=$this->showCatalogFromPage;
 									if (isset($item['products_sort_order'])) {
 										$updateArray['sort_order']=$item['products_sort_order'];
 									} else {
@@ -2253,6 +2254,7 @@ if ($this->post['action']=='category-insert') {
 									$updateArray=array();
 									$updateArray['products_id']=$item['added_products_id'];
 									$updateArray['categories_id']=$categories_id;
+									$updateArray['page_uid']=$this->showCatalogFromPage;
 									if (isset($item['products_sort_order'])) {
 										$updateArray['sort_order']=$item['products_sort_order'];
 									} else {
