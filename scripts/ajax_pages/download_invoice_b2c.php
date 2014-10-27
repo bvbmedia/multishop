@@ -22,6 +22,7 @@ if ($invoice['orders_id']) {
 			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_invoice_pdf.tmpl');
 		}
 		$markerArray=array();
+		$markerArray['###GENDER_SALUTATION###']=mslib_fe::genderSalutation($order['billing_gender']);
 		if ($this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE']) {
 			$markerArray['###INVOICE_HEADER_BACKGROUND_IMAGE###']=' <img src="'.$this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE'].'" style="width: 100%"/>';
 		} else {

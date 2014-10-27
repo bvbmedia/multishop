@@ -16,6 +16,8 @@ if (mslib_fe::loggedin()) {
 			// replacing the variables with dynamic values
 			$array1=array();
 			$array2=array();
+			$array1[]='###GENDER_SALUTATION###';
+			$array2[]=mslib_fe::genderSalutation($newCustomer['gender']);
 			$array1[]='###BILLING_COMPANY###';
 			$array2[]=$newCustomer['company'];
 			$array1[]='###FULL_NAME###';
@@ -104,6 +106,8 @@ if (mslib_fe::loggedin()) {
 							// replacing the variables with dynamic values
 							$array1=array();
 							$array2=array();
+							$array1[]='###GENDER_SALUTATION###';
+							$array2[]=mslib_fe::genderSalutation($this->post['gender']);
 							$array1[]='###BILLING_COMPANY###';
 							$array2[]=$newCustomer['company'];
 							$array1[]='###FULL_NAME###';
