@@ -327,12 +327,12 @@ jQuery(document).ready(function ($) {
         var product_class_name = "." + $(this).attr("rel");
 
         if ($(this).is(":checked")) {
-            $(product_class_name).attr("checked", true);
+            $(product_class_name).prop("checked", true);
             saveRelation(url_relatives, $(product_class_name).serialize());
         } else {
             // .serialize only() take the checked checkbox
             deleteRelation(url_relatives, $(product_class_name).serialize());
-            $(product_class_name).attr("checked", false);
+            $(product_class_name).prop("checked", false);
         }
     });
     $(document).on("click", ".cekbox", function () {

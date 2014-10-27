@@ -184,6 +184,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 				</tr>
 				';
 	$markers=array();
+	$markers['GENDER_SALUTATION']=$this->pi_getLL('admin_label_gender_salutation');
 	$markers['DELIVERY_FIRST_NAME']=$this->pi_getLL('admin_label_cms_marker_first_name_delivery');
 	$markers['DELIVERY_LAST_NAME']=$this->pi_getLL('admin_label_cms_marker_last_name_delivery');
 	$markers['BILLING_FIRST_NAME']=$this->pi_getLL('admin_label_cms_marker_first_name_billing');

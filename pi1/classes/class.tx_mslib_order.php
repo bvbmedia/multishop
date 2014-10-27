@@ -269,6 +269,8 @@ class tx_mslib_order extends tslib_pibase {
 			// replacing the variables with dynamic values
 			$array1=array();
 			$array2=array();
+			$array1[]='###GENDER_SALUTATION###';
+			$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
 			// full billing name
 			$array1[]='###BILLING_FULL_NAME###';
 			$array2[]=$full_customer_name;

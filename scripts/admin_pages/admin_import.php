@@ -2737,22 +2737,6 @@ if ($this->post['action']!='product-import-preview') {
 			}
 			$schedule_content.='</table>
 			</fieldset>
-			<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_import_task').'</legend>
-				<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-					<div class="account-field">
-						<label for="new_cron_name">'.$this->pi_getLL('name').'</label>
-						<input name="new_cron_name" type="text" value="" size="125">
-					</div>
-					<div class="account-field">
-						<label for="new_prefix_source_name">'.$this->pi_getLL('source_name').'</label>
-						<input name="new_prefix_source_name" type="text" value="" />
-					</div>
-					<div class="account-field">
-						<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
-						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
-					</div>
-				</form>
-			</fieldset>
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$(".copy_to_clipboard").click(function(event) {
@@ -2769,24 +2753,23 @@ if ($this->post['action']!='product-import-preview') {
 			</script>
 			';
 			$tmptab='';
-		} else {
-			$schedule_content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_import_task').'</legend>
-				<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-					<div class="account-field">
-						<label for="new_cron_name">'.$this->pi_getLL('name').'</label>
-						<input name="new_cron_name" type="text" value="" size="125">
-					</div>
-					<div class="account-field">
-						<label for="new_prefix_source_name">'.$this->pi_getLL('source_name').'</label>
-						<input name="new_prefix_source_name" type="text" value="" />
-					</div>
-					<div class="account-field">
-						<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
-						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
-					</div>
-				</form>
-			</fieldset>';
 		}
+		$schedule_content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_import_task').'</legend>
+			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+				<div class="account-field">
+					<label for="new_cron_name">'.$this->pi_getLL('name').'</label>
+					<input name="new_cron_name" type="text" value="" size="125">
+				</div>
+				<div class="account-field">
+					<label for="new_prefix_source_name">'.$this->pi_getLL('source_name').'</label>
+					<input name="new_prefix_source_name" type="text" value="" />
+				</div>
+				<div class="account-field">
+					<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
+					<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
+				</div>
+			</form>
+		</fieldset>';
 		$tabs['tasks']=array(
 			$this->pi_getLL('import_tasks'),
 			$schedule_content

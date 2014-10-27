@@ -61,7 +61,13 @@ if ($this->post['req']=='init') {
 					$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 					$cheking_check=0;
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2)>0) {
-						$json_data['related_product'][$row['categories_id']]['categories_name']=$row['categories_name'];
+						$cats=mslib_fe::Crumbar($row['categories_id']);
+						$cats=array_reverse($cats);
+						$catpath=array();
+						foreach ($cats as $cat) {
+							$catpath[]=$cat['name'];
+						}
+						$json_data['related_product'][$row['categories_id']]['categories_name']=implode(' / ', $catpath);
 						$json_data['related_product'][$row['categories_id']]['products']=array();
 						$product_counter=0;
 						while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2))!=false) {

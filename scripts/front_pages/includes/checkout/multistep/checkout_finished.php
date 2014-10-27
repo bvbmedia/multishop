@@ -9,7 +9,7 @@ if (!$order_session['orders_id']) {
 } else {
 	$order=mslib_fe::getOrder($order_session['orders_id']);
 	$orders_id=$order['orders_id'];
-	// replacing the variables with dynamic values			
+	// replacing the variables with dynamic values
 	$billing_address='';
 	$delivery_address='';
 	$full_customer_name=$order['billing_first_name'];
@@ -60,6 +60,8 @@ if (!$order_session['orders_id']) {
 	}
 	$array1=array();
 	$array2=array();
+	$array1[]='###GENDER_SALUTATION###';
+	$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
 	$array1[]='###DELIVERY_FIRST_NAME###';
 	$array2[]=$order['delivery_first_name'];
 	$array1[]='###DELIVERY_LAST_NAME###';
@@ -167,7 +169,7 @@ if (!$order_session['orders_id']) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	// custom hook that can be controlled by third-party plugin eof		
+	// custom hook that can be controlled by third-party plugin eof
 	if ($page[0]['name']) {
 		if ($page[0]['name']) {
 			$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);

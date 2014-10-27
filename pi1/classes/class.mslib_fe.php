@@ -7455,6 +7455,27 @@ class mslib_fe {
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_sessions', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
+	public function genderSalutation($gender) {
+		switch ($gender) {
+			case '0':
+			case 'm':
+				// male
+				$salutation=$this->pi_getLL('gender_salutation_male');
+				break;
+			case '1':
+			case 'f':
+				// female
+				$salutation=$this->pi_getLL('gender_salutation_female');
+				break;
+			case '2':
+			case 'c':
+			default:
+				// couple/unknown
+				$salutation=$this->pi_getLL('gender_salutation_unknown');
+				break;
+		}
+		return $salutation;
+	}
 	// deprecated methods
 	// alias for old v2 client side scripts
 	public function Money2Cents($amount, $customer_currency=1) {

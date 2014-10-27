@@ -281,6 +281,8 @@ switch ($this->ms['page']) {
 				}
 				$array1=array();
 				$array2=array();
+				$array1[]='###GENDER_SALUTATION###';
+				$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
 				$array1[]='###DELIVERY_FIRST_NAME###';
 				$array2[]=$order['delivery_first_name'];
 				$array1[]='###DELIVERY_LAST_NAME###';
