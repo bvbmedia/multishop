@@ -276,6 +276,7 @@ if ($this->get['update_category_for_job']) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// update the target category of a job eof
 	}
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 }
 if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	// update the status of a job
@@ -284,6 +285,7 @@ if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id=\''.$this->get['job_id'].'\'', $updateArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	// update the status of a job eof
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 }
 $tabs=array();
 /*
@@ -2670,6 +2672,9 @@ if ($this->post['action']!='product-import-preview') {
 			<th>'.$this->pi_getLL('download_import_task').'</th>
 			';
 			$switch='';
+			$jsSelect2InitialValue=array();
+			$jsSelect2InitialValue[]='var categoriesIdTerm=[];';
+			$jsSelect2InitialValue[]='categoriesIdTerm[0]={id:"0", text:"'.htmlentities($this->pi_getLL('admin_main_category')).'"};';
 			foreach ($jobs as $job) {
 				if ($switch=='odd') {
 					$switch='even';
@@ -2679,16 +2684,15 @@ if ($this->post['action']!='product-import-preview') {
 				$schedule_content.='<tr class="'.$switch.'">';
 				$schedule_content.='<td>'.$job['prefix_source_name'].'</td>
 				<td><a class="blockAhrefLink" href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id']).'&action=edit_job">'.$job['name'].'</a></td>';
-				$category_name='<form method="get" action="index.php">
-			<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
-			<input name="type" type="hidden" value="2003" />
-			<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_import" />
-
-		'.mslib_fe::tx_multishop_draw_pull_down_menu('update_category_for_job['.$job['id'].']', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, $this->pi_getLL('admin_main_category')), $job['categories_id'], 'onchange="if (CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure')).'?\')) this.form.submit();"').'</form>';
-				$schedule_content.='<td>'.$category_name;
-				$schedule_content.='
-				</td>
-				';
+				$category_name='
+				<form method="get" action="index.php" id="updateCatForm'.$job['id'].'">
+					<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
+					<input name="type" type="hidden" value="2003" />
+					<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_import" />
+					<input type="hidden" name="update_category_for_job['.$job['id'].']" value="'.$job['categories_id'].'" class="importCategoryTargetTree" rel="'.$job['id'].'" />
+				</form>';
+				//mslib_fe::tx_multishop_draw_pull_down_menu('update_category_for_job['.$job['id'].']', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, $this->pi_getLL('admin_main_category')), $job['categories_id'], 'onchange="if (CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure')).'?\')) this.form.submit();"')
+				$schedule_content.='<td>'.$category_name.'</td>';
 				$schedule_content.='<td nowrap align="right">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
 				if (!$job['period']) {
 					$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="msadmin_button msadminRunImporter" data-dialog-title=\'Warning\' data-dialog-body="'.addslashes(htmlspecialchars($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job').': '.$job['name'].'?')).'">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" >'.$this->pi_getLL('run_by_crontab').'</a></td>';
@@ -2734,11 +2738,23 @@ if ($this->post['action']!='product-import-preview') {
 					<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_import&download=task&job_id='.$job['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_import_task').'</i></a>
 				</td>';
 				$schedule_content.='</tr>';
+				// build the select2 cache
+				$cats=mslib_fe::Crumbar($job['categories_id']);
+				$cats=array_reverse($cats);
+				$catpath=array();
+				foreach ($cats as $cat) {
+					$catpath[]=$cat['name'];
+				}
+				if (count($catpath)>0) {
+					$jsSelect2InitialValue[]='categoriesIdTerm['.$job['categories_id'].']={id:"'.$job['categories_id'].'", text:"'.implode(' \\\\ ', $catpath).'"};';
+				}
 			}
 			$schedule_content.='</table>
 			</fieldset>
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
+				'.implode("\n", $jsSelect2InitialValue).'
+				var categoriesIdSearchTerm=[];
 				$(".copy_to_clipboard").click(function(event) {
 					event.preventDefault();
 					var string=$(this).attr("rel");
@@ -2748,6 +2764,69 @@ if ($this->post['action']!='product-import-preview') {
 						message:  \'<p>\'+string+\'</p>\',
 						timeout:   8000
 					});
+				});
+				$(\'.importCategoryTargetTree\').select2({
+					placeholder: "'.$this->pi_getLL('admin_select_category').'",
+					dropdownCssClass: "", // apply css that makes the dropdown taller
+					width:\'500px\',
+					minimumInputLength: 0,
+					//multiple: true,
+					//allowClear: true,
+					query: function(query) {
+						$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+							data: {
+								q: query.term
+							},
+							dataType: "json"
+						}).done(function(data) {
+							categoriesIdSearchTerm[query.term]=data;
+							query.callback({results: data});
+						});
+					},
+					initSelection: function(element, callback) {
+						var id=$(element).val();
+						if (id!=="") {
+							if (categoriesIdTerm[id]!==undefined) {
+								callback(categoriesIdTerm[id]);
+							} else {
+								$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+									data: {
+										preselected_id: id
+									},
+									dataType: "json"
+								}).done(function(data) {
+									categoriesIdTerm[data.id]={id: data.id, text: data.text};
+									callback(data);
+								});
+							}
+						}
+					},
+					formatResult: function(data){
+						if (data.text === undefined) {
+							$.each(data, function(i,val){
+								return val.text;
+							});
+						} else {
+							return data.text;
+						}
+					},
+					formatSelection: function(data){
+						if (data.text === undefined) {
+							return data[0].text;
+						} else {
+							return data.text;
+						}
+					},
+					escapeMarkup: function (m) { return m; }
+				}).on("select2-selecting", function(e) {
+					if (CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure')).'?\')) {
+						$(this).val(e.object.id);
+						var formId=\'#updateCatForm\' + $(this).attr("rel");
+						$(formId).submit();
+					} else {
+						$(this).select2("close");
+						e.preventDefault();
+					}
 				});
 			});
 			</script>
