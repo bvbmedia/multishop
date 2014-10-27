@@ -1117,6 +1117,10 @@
             <label index="upload_cms">Upload CMS</label>
             <label index="admin_link_category">Link Categories</label>
             <label index="captcha_code_placeholder">type here the code</label>
+            <label index="gender_salutation_male">Dear Sir</label>
+            <label index="gender_salutation_female">Dear Madam</label>
+            <label index="gender_salutation_unknown">Dear Sir/Madam</label>
+            <label index="admin_label_gender_salutation">Gender salutation</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
