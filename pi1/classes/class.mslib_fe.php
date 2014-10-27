@@ -1625,7 +1625,7 @@ class mslib_fe {
 					case 'file':
 						$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<label>'.$options['products_options_name'].':</label>
-						<div id="attribute_item_wrapper">
+						<div class="attribute_item_wrapper">
 						<input type="file" name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').' />
 						</div>
 						</div>';
@@ -1675,7 +1675,7 @@ class mslib_fe {
 					$products_options=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$total_values=$GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
 					if (!$readonly) {
-						$output_html[$options['products_options_id']].='<div class="'.$class.'" id="attribute_item_wrapper_'.$options['products_options_id'].'"><label>'.$options['products_options_name'].':</label><div id="attribute_item_wrapper">';
+						$output_html[$options['products_options_id']].='<div class="'.$class.'" id="attribute_item_wrapper_'.$options['products_options_id'].'"><label>'.$options['products_options_name'].':</label><div class="attribute_item_wrapper">';
 					} else {
 						$output_html[$options['products_options_id']].='<li><label>'.$options['products_options_name'].':</label> ';
 					}
@@ -1850,8 +1850,8 @@ class mslib_fe {
 					// hook
 				}
 			}
-			$output.='<div class="products_attributes"><h2>'.$this->pi_getLL('product_options').'</h2>';
-			$output.=implode("\n", $output_html);
+			$output.='<div class="products_attributesWrapper"><h2>'.$this->pi_getLL('product_options').'</h2>';
+			$output.='<div class="products_attributes">'.implode("\n", $output_html).'</div>';
 			$output.='</div>';
 		}
 		return $output;
