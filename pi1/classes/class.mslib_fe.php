@@ -1850,7 +1850,11 @@ class mslib_fe {
 					// hook
 				}
 			}
-			$output.='<div class="products_attributesWrapper"><h2>'.$this->pi_getLL('product_options').'</h2>';
+			$output.='<div class="products_attributesWrapper">';
+			$title=$this->pi_getLL('product_options');
+			if ($title) {
+				$output.='<h3>'.$this->pi_getLL('product_options').'</h3>';
+			}
 			$output.='<div class="products_attributes">'.implode("\n", $output_html).'</div>';
 			$output.='</div>';
 		}
