@@ -2,6 +2,64 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if (isset($this->get['download']) && $this->get['download']=='feed' && is_numeric($this->get['feed_id'])) {
+	$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+		'tx_multishop_product_feeds ', // FROM ...
+		'id= \''.$this->get['feed_id'].'\'', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+		$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		$serial_value=array();
+		foreach ($data as $key_idx=>$key_val) {
+			if ($key_idx!='id' && $key_idx!='page_uid') {
+				$serial_value[$key_idx]=$key_val;
+			}
+		}
+		$serial_data='';
+		if (count($serial_value)>0) {
+			$serial_data=serialize($serial_value);
+		}
+		$filename='multishop_product_feed_record_'.date('YmdHis').'_'.$this->get['feed_id'].'.txt';
+		$filepath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$filename;
+		file_put_contents($filepath, $serial_data);
+		header("Content-disposition: attachment; filename={$filename}"); //Tell the filename to the browser
+		header('Content-type: application/octet-stream'); //Stream as a binary file! So it would force browser to download
+		readfile($filepath); //Read and stream the file
+		@unlink($filepath);
+		exit();
+	}
+}
+if (isset($this->get['upload']) && $this->get['upload']=='feed' && $_FILES) {
+	if (!$_FILES['feed_record_file']['error']) {
+		$filename=$_FILES['feed_record_file']['name'];
+		$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop'.$filename;
+		if (move_uploaded_file($_FILES['feed_record_file']['tmp_name'], $target)) {
+			$task_content=file_get_contents($target);
+			$unserial_task_data=unserialize($task_content);
+			$insertArray=array();
+			$insertArray['page_uid']=$this->showCatalogFromPage;
+			foreach ($unserial_task_data as $col_name=>$col_val) {
+				if ($col_name=='code') {
+					$insertArray[$col_name]=md5(uniqid());
+				} else if ($col_name=='name' && isset($this->post['new_name']) && !empty($this->post['new_name'])) {
+					$insertArray[$col_name]=$this->post['new_name'];
+				} else if ($col_name=='crdate') {
+					$insertArray[$col_name]=time();
+				} else {
+					$insertArray[$col_name]=$col_val;
+				}
+			}
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_product_feeds', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			@unlink($target);
+		}
+	}
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds'));
+}
 // defining the types
 $array=array();
 $array['categories_name']=$this->pi_getLL('feed_exporter_fields_label_categories_name_product_category_level');
@@ -339,8 +397,8 @@ if ($this->ms['show_main']) {
 			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>
-		</tr>
-		';
+			<th>'.htmlspecialchars($this->pi_getLL('download_feed_record')).'</th>
+		</tr>';
 		foreach ($feeds as $feed) {
 			$feed['feed_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'];
 			$feed['feed_link_excel']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'].'&format=excel';
@@ -378,13 +436,27 @@ if ($this->ms['show_main']) {
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';
 			$content.='
 			</td>
-			</tr>
-			';
+			<td>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_feed_record').'</i></a>
+			</td>
+			</tr>';
 		}
 		$content.='</table>';
 	} else {
 		$content.='<h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')).'</h3>';
 	}
+	$content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_feed_record').'</legend>
+		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+			<div class="account-field">
+				<label for="new_name">'.$this->pi_getLL('name').'</label>
+				<input name="new_name" type="text" value="" />
+			</div>
+			<div class="account-field">
+				<label for="upload_feed_file">'.$this->pi_getLL('file').'</label>
+				<input type="file" name="feed_record_file">&nbsp;<input type="submit" name="upload_feed_file" class="submit msadmin_button" id="upload_feed_file" value="upload">
+			</div>
+		</form>
+	</fieldset>';
 	$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="msBackendButton continueState arrowRight arrowPosLeft float_right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a>';
 }
 ?>
