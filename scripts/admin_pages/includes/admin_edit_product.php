@@ -27,7 +27,7 @@ if (count($shopPids)) {
 							$catpath[]=$cat['name'];
 						}
 						if (count($catpath)>0) {
-							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \ ', $catpath), ENT_QUOTES).'"};';
+							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.implode(' \\\\ ', $catpath).'"};';
 						}
 					}
 				}
@@ -47,7 +47,7 @@ if (count($shopPids)) {
 				$catpath[]=$cat['name'];
 			}
 			if (count($catpath)>0) {
-				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \ ', $catpath), ENT_QUOTES).'"};';
+				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.implode(' \\\\ ', $catpath).'"};';
 			}
 		}
 	}
@@ -77,6 +77,127 @@ jQuery(document).ready(function($) {
 		//allowClear: true,
 		query: function(query) {
 			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				categoriesIdSearchTerm[query.term]=data;
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.each(split_id, function(i, v) {
+					if (categoriesIdTerm['.$this->shop_pid.'][v]!==undefined) {
+						callback_data[i]=categoriesIdTerm['.$this->shop_pid.'][v];
+					}
+				});
+				if (callback_data.length) {
+					callback(callback_data);
+				} else {
+					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						categoriesIdTerm[data.id]={id: data.id, text: data.text};
+						callback(data);
+					});
+				}
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
+	$(\'#cid\').select2({
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'500px\',
+		minimumInputLength: 0,
+		//multiple: true,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				categoriesIdSearchTerm[query.term]=data;
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				var split_id=id.split(",");
+				var callback_data=[];
+				$.each(split_id, function(i, v) {
+					if (categoriesIdTerm['.$this->shop_pid.'][v]!==undefined) {
+						callback_data[i]=categoriesIdTerm['.$this->shop_pid.'][v];
+					}
+				});
+				if (callback_data.length) {
+					callback(callback_data);
+				} else {
+					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						categoriesIdTerm['.$this->shop_pid.'][data.id]={id: data.id, text: data.text};
+						callback(data);
+					});
+				}
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) { return m; }
+	});
+	$(\'#rel_catid\').select2({
+		placeholder: "'.$this->pi_getLL('admin_select_category').'",
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		width:\'500px\',
+		minimumInputLength: 0,
+		//multiple: true,
+		//allowClear: true,
+		query: function(query) {
+			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
 				data: {
 					q: query.term
 				},
@@ -2288,13 +2409,14 @@ if ($this->post) {
 					<td>
 						<input type="text" name="keypas" id="key" value=""> </input>
 					</td>
-					<td>'.mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', '')).'</td>
+					<td><input type="hidden" name="rel_catid" id="rel_catid" /></td>
 					<td>
 						<input type="button" id="filter" value="'.$this->pi_getLL('admin_search').'" />
 					<td>
 
 				</tr>
 			</table>';
+			// mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', ''))
 			$product_relatives_block='<h1>'.$this->pi_getLL('admin_related_products').'</h1>'.$form_category_search.'<div id="load"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/loading2.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
 		}
 		/*
@@ -2306,7 +2428,7 @@ if ($this->post) {
 				<h1>'.$this->pi_getLL('admin_copy_duplicate_product').'</h1>
 				<div class="account-field" id="msEditProductInputDuplicateProduct">
 				<label for="cid">'.$this->pi_getLL('admin_select_category').'</label>
-				'.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"').'
+				<input type="hidden" name="cid" id="cid" value="'.$this->get['cid'].'" />
 				</div>
 				<div id="cp_buttons">
 					<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
@@ -2314,6 +2436,7 @@ if ($this->post) {
 				</div>
 				<div id="has_cd">
 				</div>';
+			// '.mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', ''), $this->get['cid'], 'class="select2BigDropWider"').'
 		}
 		/*
 		 * layout page
