@@ -5,10 +5,10 @@ if (!defined('TYPO3_MODE')) {
 $jsSelect2InitialValue=array();
 $jsSelect2InitialValue[]='var categoriesIdTerm=[];';
 $shopPids=array();
-if ($this->conf['enableMultipleShops'] && $this->conf['connectedShopPids']) {
+if ($this->conf['enableMultipleShops'] && $this->conf['connectedShopPids'] && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 	$shopPids=explode(',', $this->conf['connectedShopPids']);
 }
-if (count($shopPids)) {
+if (count($shopPids) && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 	foreach ($shopPids as $shopPid) {
 		$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']=[];';
 		$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.'][0]={id:"0", text:"'.htmlentities($this->pi_getLL('admin_main_category')).'"};';
@@ -35,6 +35,8 @@ if (count($shopPids)) {
 		}
 	}
 } else {
+	$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']=[];';
+	$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.'][0]={id:"0", text:"'.htmlentities($this->pi_getLL('admin_main_category')).'"};';
 	$category_ep=mslib_fe::getCategoriesToCategories($this->get['cid'], $this->shop_pid);
 	$categories_ep=explode(',', $category_ep);
 	if (is_array($categories_ep) && count($categories_ep)) {
@@ -148,6 +150,7 @@ jQuery(document).ready(function($) {
 		},
 		escapeMarkup: function (m) { return m; }
 	});
+	'.($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES'] ? '
 	$(\'#link_categories_id\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
 		width:\'500px\',
@@ -219,6 +222,7 @@ jQuery(document).ready(function($) {
 		},
 		escapeMarkup: function (m) { return m; }
 	});
+	' : '').'
 });
 </script>
 ';
@@ -608,7 +612,7 @@ if ($this->post) {
 		}
 		// INPUT_CATEGORY_TREE
 		$tmpcontent='';
-		if ($this->conf['enableMultipleShops']) {
+		if ($this->conf['enableMultipleShops'] && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 			$shopPids=explode(',', $this->conf['connectedShopPids']);
 			$tmpcontent.='<div class="account-field" class="msEditCategoriesInputMultipleShopCategory">
 				<label>Other shops</label>
@@ -723,9 +727,14 @@ if ($this->post) {
 			</script>
 			';
 		}
-		$link_categories_id='';
-		if ($this->get['action']=='edit_category') {
+		$link_to_categories_elem='';
+		if ($this->get['action']=='edit_category' && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 			$link_categories_id=mslib_fe::getCategoriesToCategories($this->get['cid'], $this->shop_pid);
+			$link_to_categories_elem='
+			<div class="account-field" id="msEditLinkInputCategory">
+            	<label for="link_categories_id">'.$this->pi_getLL('admin_link_category').'</label>
+				<input type="hidden" name="link_categories_id" id="link_categories_id" class="categoriesIdSelect2BigDropWider" value="'.$link_categories_id.'" />
+            </div>';
 		}
 		$subpartArray=array();
 		$subpartArray['###VALUE_REFERRER###']='';
@@ -749,8 +758,7 @@ if ($this->post) {
 		$subpartArray['###HEADING_PAGE###']=$heading_page;
 		$subpartArray['###INPUT_CATEGORY_NAME_BLOCK###']=$category_name_block;
 		$subpartArray['###SELECTBOX_CATEGORY_TREE###']=$category_tree;
-		$subpartArray['###LABEL_LINK_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_link_category');
-		$subpartArray['###LINK_INPUT_CATEGORY_TREE###']='<input type="hidden" name="link_categories_id" id="link_categories_id" class="categoriesIdSelect2BigDropWider" value="'.$link_categories_id.'" />';
+		$subpartArray['###LINK_INPUT_CATEGORY_TREE###']=$link_to_categories_elem;
 		$subpartArray['###LINK_TO_CATEGORIES###']=$tmpcontent;
 		$subpartArray['###LABEL_VISIBILITY###']=$this->pi_getLL('admin_visible');
 		$subpartArray['###CATEGORY_STATUS_YES###']=(($category['status'] or $_REQUEST['action']=='add_category') ? 'checked' : '');

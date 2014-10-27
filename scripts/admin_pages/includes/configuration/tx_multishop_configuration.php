@@ -17,6 +17,17 @@ if (!defined('TYPO3_MODE')) {
 // 12 Invoice Settings
 $records=array();
 $records[]=array(
+	'configuration_title'=>'Enable categories to categories linking',
+	'configuration_key'=>'ENABLE_CATEGORIES_TO_CATEGORIES',
+	'configuration_value'=>'0',
+	'description'=>'Enable categories to categories linking',
+	'group_id'=>'11',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Minimum order amount',
 	'configuration_key'=>'MINIMUM_ORDER_AMOUNT',
 	'configuration_value'=>'',
