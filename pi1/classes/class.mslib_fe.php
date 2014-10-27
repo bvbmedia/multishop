@@ -7022,6 +7022,22 @@ class mslib_fe {
 		return $content;
 	}
 	// attributes stock
+	public function getTaxById($id) {
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			'tx_multishop_taxes', // FROM ...
+			'tax_id="'.addslashes($id).'"', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$tax=0;
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$tax=($row['rate']*100);
+		}
+		return $tax;
+	}
 	public function getTaxes($tax_id) {
 		if (!is_numeric($tax_id)) {
 			return false;
