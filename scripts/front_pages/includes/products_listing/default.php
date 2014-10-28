@@ -92,21 +92,21 @@ foreach ($products as $current_product) {
 	$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
 	$markerArray['PRODUCTS_URL']=$current_product['products_url'];
 	// STOCK INDICATOR
-	$product_qty=$product['products_quantity'];
+	$product_qty=$current_product['products_quantity'];
 	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
 		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
 			case 'yes_with_image':
-				if ($current_product['products_quantity']) {
-					$product_qty=$this->pi_getLL('stock').': <img src="'.t3lib_extMgm::siteRelPath('multishop').'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" />';
+				if ($product_qty) {
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
 				} else {
-					$product_qty=$this->pi_getLL('stock').': <img src="'.t3lib_extMgm::siteRelPath('multishop').'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" />';
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
 				}
 				break;
 			case 'yes_without_image':
-				if ($current_product['products_quantity']) {
-					$product_qty=$this->pi_getLL('admin_yes');
+				if ($product_qty) {
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_yes').'</span></div>';
 				} else {
-					$product_qty=$this->pi_getLL('admin_no');
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_no').'</span></div>';
 				}
 				break;
 		}

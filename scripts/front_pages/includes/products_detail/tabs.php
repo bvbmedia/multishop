@@ -190,25 +190,26 @@ if (!$product['products_id']) {
 	$output['back_button']='
 	<div onClick="history.back();return false;" class="back_button">'.$this->pi_getLL('back').'</div>
 	';
+	$product_qty=$product['products_quantity'];
 	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
 		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
 			case 'yes_with_image':
-				if ($product['products_quantity']) {
-					$product['products_quantity']='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
+				if ($product_qty) {
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
 				} else {
-					$product['products_quantity']='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
 				}
 				break;
 			case 'yes_without_image':
-				if ($product['products_quantity']) {
-					$product['products_quantity']='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_yes').'</span></div>';
+				if ($product_qty) {
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_yes').'</span></div>';
 				} else {
-					$product['products_quantity']='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_no').'</span></div>';
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_no').'</span></div>';
 				}
 				break;
 		}
 	}
-	$output['products_quantity']=$product['products_quantity'];
+	$output['products_quantity']=$product_qty;
 	$output['products_category']='Category: '.$product['categories_name'];
 	$output['products_relatives']=mslib_fe::getProductRelativesBox($product);
 	$output['customers_also_bought']=mslib_fe::getProductRelativesBox($product, 'customers_also_bought');

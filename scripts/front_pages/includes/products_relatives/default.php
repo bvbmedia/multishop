@@ -79,24 +79,28 @@ foreach ($rel_products as $rel_rs) {
 		// get all cats to generate multilevel fake url eof
 	}
 	$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$rel_rs['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+	// STOCK INDICATOR
+	$product_qty=$rel_rs['products_quantity'];
 	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
 		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
 			case 'yes_with_image':
-				if ($rel_rs['products_quantity']) {
-					$rel_rs['products_quantity']='<img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" />';
+				if ($product_qty) {
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
 				} else {
-					$rel_rs['products_quantity']='<img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" />';
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
 				}
 				break;
 			case 'yes_without_image':
-				if ($rel_rs['products_quantity']) {
-					$rel_rs['products_quantity']=$this->pi_getLL('admin_yes');
+				if ($product_qty) {
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_yes').'</span></div>';
 				} else {
-					$rel_rs['products_quantity']=$this->pi_getLL('admin_no');
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_no').'</span></div>';
 				}
 				break;
 		}
 	}
+	$markerArray['PRODUCTS_STOCK']=$product_qty;
+	// STOCK INDICATOR EOF
 	if ($rel_rs['products_image']) {
 		$image='<img src="'.mslib_befe::getImagePath($rel_rs['products_image'], 'products', '50').'" alt="'.htmlspecialchars($rel_rs['products_name']).'" />';
 	} else {
