@@ -17,6 +17,64 @@ if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	// update the status of a job eof
 }
+if (isset($this->get['download']) && $this->get['download']=='task' && is_numeric($this->get['job_id'])) {
+	$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+		'tx_multishop_import_jobs ', // FROM ...
+		'id= \''.$this->get['job_id'].'\'', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+		$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		$serial_value=array();
+		foreach ($data as $key_idx=>$key_val) {
+			if ($key_idx!='id' && $key_idx!='page_uid') {
+				$serial_value[$key_idx]=$key_val;
+			}
+		}
+		$serial_data='';
+		if (count($serial_value)>0) {
+			$serial_data=serialize($serial_value);
+		}
+		$filename='multishop_customer_import_task_'.date('YmdHis').'_'.$this->get['job_id'].'.txt';
+		$filepath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$filename;
+		file_put_contents($filepath, $serial_data);
+		header("Content-disposition: attachment; filename={$filename}"); //Tell the filename to the browser
+		header('Content-type: application/octet-stream'); //Stream as a binary file! So it would force browser to download
+		readfile($filepath); //Read and stream the file
+		@unlink($filepath);
+		exit();
+	}
+}
+if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
+	if (!$_FILES['task_file']['error']) {
+		$filename=$_FILES['task_file']['name'];
+		$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop'.$filename;
+		if (move_uploaded_file($_FILES['task_file']['tmp_name'], $target)) {
+			$task_content=file_get_contents($target);
+			$unserial_task_data=unserialize($task_content);
+			$insertArray=array();
+			$insertArray['page_uid']=$this->showCatalogFromPage;
+			foreach ($unserial_task_data as $col_name=>$col_val) {
+				if ($col_name=='code') {
+					$insertArray[$col_name]=md5(uniqid());
+				} else if ($col_name=='name' && isset($this->post['new_cron_name']) && !empty($this->post['new_cron_name'])) {
+					$insertArray[$col_name]=$this->post['new_cron_name'];
+				} else if ($col_name=='prefix_source_name' && isset($this->post['new_prefix_source_name']) && !empty($this->post['new_prefix_source_name'])) {
+					$insertArray[$col_name]=$this->post['new_prefix_source_name'];
+				} else {
+					$insertArray[$col_name]=$col_val;
+				}
+			}
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_import_jobs', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			@unlink($target);
+		}
+	}
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_customer_import').'#tasks');
+}
 $default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
 $GLOBALS['TSFE']->additionalHeaderData['tx_multishop_pi1_block_ui']=mslib_fe::jQueryBlockUI();
 // define the different columns
@@ -1079,7 +1137,7 @@ if ($this->ms['show_default_form']) {
 		<th>'.ucfirst($this->pi_getLL('delete')).'</th>
 		<th>'.$this->pi_getLL('file_exists').'</th>
 		<th>'.$this->pi_getLL('upload_file').'</th>
-		';
+		<th>'.$this->pi_getLL('download_import_task').'</th>';
 		$switch='';
 		foreach ($jobs as $job) {
 			if ($switch=='odd') {
@@ -1123,7 +1181,7 @@ if ($this->ms['show_default_form']) {
 			$schedule_content.='
 			</td>
 			<td>
-				 <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1">
+			 	<form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1">
 					<input type="file" name="file" />
 					<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 					<input name="skip_import" type="hidden" value="1" />
@@ -1131,7 +1189,10 @@ if ($this->ms['show_default_form']) {
 					<input name="job_id" type="hidden" value="'.$job['id'].'" />
 					<input name="action" type="hidden" value="edit_job" />
 				</form>
-				</td>
+			</td>
+			<td>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&download=task&job_id='.$job['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_import_task').'</i></a>
+			</td>
 			';
 			$schedule_content.='</tr>';
 		}
@@ -1156,9 +1217,25 @@ if ($this->ms['show_default_form']) {
 		';
 		$tmptab='';
 		$content.=$schedule_content;
-//		$tabs['tasks']=array($this->pi_getLL('import_tasks'),$schedule_content);
+		//$tabs['tasks']=array($this->pi_getLL('import_tasks'),$schedule_content);
 	}
 	// load the jobs templates eof
+	$content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_import_task').'</legend>
+		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_customer_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+			<div class="account-field">
+				<label for="new_cron_name">'.$this->pi_getLL('name').'</label>
+				<input name="new_cron_name" type="text" value="" size="125">
+			</div>
+			<div class="account-field">
+				<label for="new_prefix_source_name">'.$this->pi_getLL('source_name').'</label>
+				<input name="new_prefix_source_name" type="text" value="" />
+			</div>
+			<div class="account-field">
+				<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
+				<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
+			</div>
+		</form>
+	</fieldset>';
 }
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
