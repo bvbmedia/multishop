@@ -10,6 +10,7 @@
             <label index="function1">Welcome to Multishop</label>
             <label index="function2">Administration</label>
             <label index="function3">Help</label>
+            <label index="function4">Migration</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="title">Multishop</label>

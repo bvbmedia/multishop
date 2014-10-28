@@ -61,7 +61,8 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			'function'=>Array(
 				'1'=>$LANG->getLL('function1'),
 				'2'=>$LANG->getLL('function2'),
-				'3'=>$LANG->getLL('function3'),
+				'4'=>$LANG->getLL('function4'),
+				'3'=>$LANG->getLL('function3')
 			)
 		);
 		parent::menuConfig();
@@ -279,6 +280,9 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 				break;
 			case 3:
 				require_once(t3lib_extMgm::extPath('multishop').'mod1/pages/help.php');
+				break;
+			case 4:
+				require_once(t3lib_extMgm::extPath('multishop').'mod1/pages/migration.php');
 				break;
 		}
 		$year=date("Y");

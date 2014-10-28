@@ -18,6 +18,12 @@ foreach ($this->MOD_MENU['function'] as $key=>$label) {
 			$pages[$key]['url']=$typoLink;
 			$pages[$key]['description']='Are you new to TYPO3 Multishop? Here you can find details about how to configure Multishop on this TYPO3 Installation.';
 			break;
+		case '4':
+			$typoLink=$t3lib_BEfuncAlias::getModuleUrl('web_txmultishopM1', $params);
+			$pages[$key]['title']=$label;
+			$pages[$key]['url']=$typoLink;
+			$pages[$key]['description']='Here you can move existing data from one shop to another.';
+			break;
 	}
 	if ($pages[$key]['title']) {
 		$pages[$key]['description'].=' <strong><a title="'.htmlspecialchars('Go to '.$label).'" href="'.$pages[$key]['url'].'">'.$this->Typo3Icon('actions-document-view', 'Go to web site').' Go to '.$label.'</a></strong>';

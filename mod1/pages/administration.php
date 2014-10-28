@@ -1346,7 +1346,7 @@ if (count($shops)>0) {
 	if ($options) {
 		$typoLink=$t3lib_BEfuncAlias::getModuleUrl('web_txmultishopM1');
 		$tmpcontent='';
-		$tmpcontent.='<select name="configuration_copier_pid">'."\n".$options."\n".'</select>'."\n";
+		$tmpcontent.='<select name="configuration_copier_pid"><option value="">Choose</option>'."\n".$options."\n".'</select>'."\n";
 		$content.='
 		<fieldset><legend>Multishop Configuration</legend>
 		<fieldset><legend>Downloader / Duplicator</legend>
@@ -1383,7 +1383,7 @@ if (count($shops)>0) {
 			<form action="'.$typoLink.'" method="post" enctype="multipart/form-data">
 				Target shop
 		';
-			$content.='<select name="target_pid">'."\n";
+			$content.='<select name="target_pid"><option value="">Choose</option>'."\n";
 			$content.=$options;
 			$content.='</select>'."\n";
 			$content.='
