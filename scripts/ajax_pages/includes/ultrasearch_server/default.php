@@ -1,31 +1,4 @@
 <?php
-if ($this->post['locationHash']) {
-	// convert the hash to post
-	$locationHash=$this->post['locationHash'];
-	parse_str(urldecode($this->post['locationHash']), $this->post);
-}
-if ($this->post['tx_multishop_pi1']['limitsb']) {
-	if ($this->post['tx_multishop_pi1']['limitsb'] and $this->post['tx_multishop_pi1']['limitsb'] != $this->cookie['limitsb']) {
-		$this->cookie['limitsb'] = $this->post['tx_multishop_pi1']['limitsb'];
-
-		$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
-		$GLOBALS['TSFE']->storeSessionData();
-	}
-}
-if ($this->post['tx_multishop_pi1']['sortbysb']) {
-	if ($this->post['tx_multishop_pi1']['sortbysb'] and $this->post['tx_multishop_pi1']['sortbysb'] != $this->cookie['sortbysb']) {
-		$this->cookie['sortbysb'] = $this->post['tx_multishop_pi1']['sortbysb'];
-
-		$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
-		$GLOBALS['TSFE']->storeSessionData();
-	}
-} else {
-	$this->cookie['sortbysb'] = '';
-	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
-	$GLOBALS['TSFE']->storeSessionData();
-}
-// input_keywords;categories:list;1:list{asc};2:list{asc};manufacturers:select_multiple;price_filter:0-200;sort_filter
-//error_log(print_r($this->post['tx_multishop_pi1'],1));
 header('Content-Type: application/json');
 if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) {
 	$this->ms['MODULES']['CACHE_FRONT_END']=0;
@@ -40,6 +13,31 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	$string=md5($this->cObj->data['uid'].'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'].print_r($this->get,1).print_r($this->post,1));
 }
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
+	if ($this->post['locationHash']) {
+		// convert the hash to post
+		$locationHash=$this->post['locationHash'];
+		parse_str(urldecode($this->post['locationHash']), $this->post);
+	}
+	if ($this->post['tx_multishop_pi1']['limitsb']) {
+		if ($this->post['tx_multishop_pi1']['limitsb'] and $this->post['tx_multishop_pi1']['limitsb'] != $this->cookie['limitsb']) {
+			$this->cookie['limitsb'] = $this->post['tx_multishop_pi1']['limitsb'];
+
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+	}
+	if ($this->post['tx_multishop_pi1']['sortbysb']) {
+		if ($this->post['tx_multishop_pi1']['sortbysb'] and $this->post['tx_multishop_pi1']['sortbysb'] != $this->cookie['sortbysb']) {
+			$this->cookie['sortbysb'] = $this->post['tx_multishop_pi1']['sortbysb'];
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+	} else {
+		$this->cookie['sortbysb'] = '';
+		$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+		$GLOBALS['TSFE']->storeSessionData();
+	}
+
 	$select=array();
 	$formFields=array();
 	$ultrasearch_hash = base64_decode($this->get['tx_multishop_pi1']['ultrasearch_hash']);
@@ -1377,6 +1375,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	$data['resultSet']=$results;
 	$content=json_encode($data);
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
+		error_log($content);
 		$Cache_Lite->save($content);
 	}
 }

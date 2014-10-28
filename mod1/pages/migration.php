@@ -7,12 +7,18 @@ switch ($_REQUEST['action']) {
 			$str="SHOW TABLES where tables_in_".$db." like 'tx_multishop_%'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$array=explode('_',$_REQUEST['source_target_string']);
-			if (is_array($array) && count($array) == 2) {
+			if (is_array($array) && count($array) == 2 && is_numeric($array[0]) && is_numeric($array[1])) {
 				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-					$str2="UPDATE ".$row['Tables_in_'.$db]." SET page_uid='".$array[0]."' where page_uid='".$array[1]."'";
+					$str2="UPDATE ".$row['Tables_in_'.$db]." SET page_uid='".$array[1]."' where page_uid='".$array[0]."'";
 					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-					echo $str2.'<br/>';
+					$rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+					echo $str2.' (affected rows: '.$rows.')<br/>';
 				}
+				// manually some other tables
+				$str2="UPDATE fe_users SET page_uid='".$array[1]."' where page_uid='".$array[0]."'";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+				echo $str2.' (affected rows: '.$rows.')<br/>';
 			}
 		}
 		break;

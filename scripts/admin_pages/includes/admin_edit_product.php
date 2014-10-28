@@ -52,6 +52,48 @@ if (count($shopPids)) {
 		}
 	}
 }
+if ($this->ms['product_image_formats'][300]['width'] > $this->ms['product_image_formats'][300]['height']) {
+	//$aspectRatio=($this->ms['product_image_formats'][300]['width'])
+}
+$aspectRatio=($this->ms['product_image_formats'][300]['width']/$this->ms['product_image_formats'][300]['height']);
+$jcrop_html='
+<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.Jcrop.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.color.js"></script>
+<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/css/jquery.Jcrop.css" type="text/css" />
+<script type="text/javascript">
+		(function($) {
+			$(function(){
+				var jcrop_api;
+				var bounds, boundx, boundy;
+				$(\'.cropbox\').Jcrop({
+					onChange: showPreview,
+					onSelect: showPreview,
+					aspectRatio: '.$aspectRatio.'
+				},function(){
+					jcrop_api = this;
+					bounds = jcrop_api.getBounds();
+					boundx = bounds[0];
+					boundy = bounds[1];
+				});
+				function showPreview(coords) {
+					if (parseInt(coords.w) > 0) {
+						var rx = 100 / coords.w;
+						var ry = 100 / coords.h;
+/*
+						$(\'#preview\').css({
+							width: Math.round(rx * boundx) + \'px\',
+							height: Math.round(ry * boundy) + \'px\',
+							marginLeft: \'-\' + Math.round(rx * coords.x) + \'px\',
+							marginTop: \'-\' + Math.round(ry * coords.y) + \'px\'
+						});
+*/
+					}
+				};
+			});
+		}(jQuery));
+		</script>
+';
+$GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_html;
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 '.implode("\n", $jsSelect2InitialValue).'
@@ -128,6 +170,39 @@ jQuery(document).ready(function($) {
 			}
 		},
 		escapeMarkup: function (m) { return m; }
+	});
+	$(document).on(\'click\',".saveJcropButton",function(e) {
+		var jCropX=$("#jCropX").val();
+		var jCropY=$("#jCropY").val();
+		var jCropH=$("#jCropH").val();
+		var jCropW=$("#jCropW").val();
+
+		var request=$.ajax({
+			type: "POST",
+			url: "index.php?eID=tx_multishop&tx_multishop_pi1[page_section]=cropImage",
+			async: true,
+			dataType: "json",
+			data: "tx_multishop_pi1[uid]=XXX&tx_multishop_pi1[jCropX]="+jCropX+"&tx_multishop_pi1[jCropY]="+jCropY+"&tx_multishop_pi1[jCropW]="+jCropW+"&tx_multishop_pi1[jCropH]="+jCropH,
+			success: function (output) {
+				location.reload();
+			},
+			error : function(xhr, textStatus, errorThrown ) {
+				if (textStatus == \'timeout\') {
+					this.tryCount++;
+					if (this.tryCount <= this.retryLimit) {
+						//try again
+						$.ajax(this);
+						return;
+					}
+					return;
+				}
+				if (xhr.status == 500) {
+					//handle error
+				} else {
+					//handle error
+				}
+			}
+		});
 	});
 	$(\'#cid\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
@@ -1587,7 +1662,7 @@ if ($this->post) {
 				</div>
 				<input name="ajax_products_image'.$i.'" id="ajax_products_image'.$i.'" type="hidden" value="" />';
 			if ($_REQUEST['action']=='edit_product' and $product['products_image'.$i]) {
-				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'">';
+				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '300').'" class="cropbox" />';
 				$images_tab_block.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image'.$i).'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 			}
 			$images_tab_block.='</div>';
