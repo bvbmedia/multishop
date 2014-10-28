@@ -68,35 +68,51 @@ if (isset($this->get['upload']) && $this->get['upload']=='cms' && $_FILES) {
 		if (move_uploaded_file($_FILES['cms_file']['tmp_name'], $target)) {
 			$cms_content=file_get_contents($target);
 			$unserial_cms_data=unserialize($cms_content);
-			foreach ($unserial_cms_data as $cms_data) {
-				$insertArray=array();
-				foreach ($cms_data['cms_data'] as $cms_col=>$cms_val) {
-					if ($cms_col!=='description' && $cms_col!='id') {
-						if ($cms_col=='page_uid') {
-							$insertArray['page_uid']=$this->shop_pid;
-						} else if ($cms_col=='hash') {
-							$insertArray['hash']=md5(uniqid('', TRUE));
-						} else if ($cms_col=='crdate') {
-							$insertArray['crdate']=time();
-						} else {
-							$insertArray[$cms_col]=$cms_val;
+			if (is_array($unserial_cms_data) && count($unserial_cms_data)) {
+				foreach ($unserial_cms_data as $cms_data) {
+					$insertArray=array();
+					if (is_array($cms_data['cms_data']) && count($cms_data['cms_data'])) {
+						foreach ($cms_data['cms_data'] as $cms_col=>$cms_val) {
+							if ($cms_col && $cms_col!='description' && $cms_col!='id') {
+								switch($cms_col) {
+									case 'page_uid':
+										$insertArray['page_uid']=$this->shop_pid;
+										break;
+									case 'hash':
+										$insertArray['hash']=md5(uniqid('', TRUE));
+										break;
+									case 'crdate':
+										$insertArray['crdate']=time();
+										break;
+									default:
+										$insertArray[$cms_col]=$cms_val;
+										break;
+								}
+							}
 						}
 					}
-				}
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms', $insertArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				$cms_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-				$insertArrayDesc=array();
-				foreach ($cms_data['cms_data']['description'] as $language_id=>$cms_desc_data) {
-					foreach ($cms_desc_data as $cms_desc_col_name=>$cms_desc_val) {
-						if ($cms_desc_col_name=='id') {
-							$insertArrayDesc['id']=$cms_id;
-						} else {
-							$insertArrayDesc[$cms_desc_col_name]=$cms_desc_val;
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms', $insertArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$cms_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+					if (is_array($cms_data['cms_data']['description']) && count($cms_data['cms_data']['description'])) {
+						foreach ($cms_data['cms_data']['description'] as $language_id=>$cms_desc_data) {
+							if (is_array($cms_desc_data) && count($cms_desc_data)) {
+								$insertArrayDesc=array();
+								foreach ($cms_desc_data as $cms_desc_col_name=>$cms_desc_val) {
+									switch($cms_desc_col_name) {
+										case 'id':
+											$insertArrayDesc['id']=$cms_id;
+											break;
+										default:
+											$insertArrayDesc[$cms_desc_col_name]=$cms_desc_val;
+											break;
+									}
+								}
+								$query_desc=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms_description', $insertArrayDesc);
+								$GLOBALS['TYPO3_DB']->sql_query($query_desc);
+							}
 						}
 					}
-					$query_desc=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms_description', $insertArrayDesc);
-					$GLOBALS['TYPO3_DB']->sql_query($query_desc);
 				}
 			}
 			@unlink($target);
