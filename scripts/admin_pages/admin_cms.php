@@ -73,7 +73,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='cms' && $_FILES) {
 				foreach ($cms_data['cms_data'] as $cms_col=>$cms_val) {
 					if ($cms_col!=='description' && $cms_col!='id') {
 						if ($cms_col=='page_uid') {
-							$insertArray['page_uid']=$cms_val;
+							$insertArray['page_uid']=$this->shop_pid;
 						} else if ($cms_col=='hash') {
 							$insertArray['hash']=md5(uniqid('', TRUE));
 						} else if ($cms_col=='crdate') {
