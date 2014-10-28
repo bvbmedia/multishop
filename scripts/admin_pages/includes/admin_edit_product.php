@@ -959,6 +959,10 @@ if ($this->post) {
 							$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
 					}
+					// sort the values
+					if (!isset($values_sort_order[$opt_id][$pa_value])) {
+						$values_sort_order[$opt_id][$pa_value]=count($values_sort_order[$opt_id])+1;
+					}
 				}
 				$pa_prefix=$this->post['tx_multishop_pi1']['prefix'][$opt_sort];
 				$pa_price=$this->post['tx_multishop_pi1']['price'][$opt_sort];
@@ -989,10 +993,6 @@ if ($this->post) {
 					$option_sort_order[$pa_option]=$counter;
 					$counter++;
 				}
-				// sort the values
-				if (!isset($values_sort_order[$opt_id][$pa_value])) {
-					$values_sort_order[$opt_id][$pa_value]=count($values_sort_order[$opt_id])+1;
-				}
 				if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
 					if ($pa_id>0) {
 						$attributesArray=array();
@@ -1002,7 +1002,7 @@ if ($this->post) {
 						$attributesArray['price_prefix']=$pa_prefix;
 						$attributesArray['options_values_price']=$pa_price;
 						$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
-						$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$this->post['tx_multishop_pi1']['attributes'][$opt_sort]];
+						$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$pa_value];
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					} else {
@@ -1013,7 +1013,7 @@ if ($this->post) {
 						$attributesArray['price_prefix']=$pa_prefix;
 						$attributesArray['options_values_price']=$pa_price;
 						$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
-						$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$this->post['tx_multishop_pi1']['attributes'][$opt_sort]];
+						$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
