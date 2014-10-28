@@ -14,11 +14,16 @@ switch ($_REQUEST['action']) {
 					$rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
 					echo $str2.' (affected rows: '.$rows.')<br/>';
 				}
-				// manually some other tables
-				$str2="UPDATE fe_users SET page_uid='".$array[1]."' where page_uid='".$array[0]."'";
-				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-				$rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-				echo $str2.' (affected rows: '.$rows.')<br/>';
+				$tables=array();
+				$tables[]='fe_users';
+				$tables[]='tt_address';
+				foreach ($tables as $table) {
+					// manually some other tables
+					$str2="UPDATE ".$table." SET page_uid='".$array[1]."' where page_uid='".$array[0]."'";
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					$rows=$GLOBALS['TYPO3_DB']->sql_affected_rows();
+					echo $str2.' (affected rows: '.$rows.')<br/>';
+				}
 			}
 		}
 		break;
@@ -37,9 +42,9 @@ if (is_array($multishop_content_objects) && count($multishop_content_objects)>0)
 	}
 }
 if (count($shopPids)) {
-	foreach ($shopPids as $page_uid) {
-		if (!array_key_exists($page_uid, $sourceShops)) {
-			$sourceShops[$page_uid]='PID: '.$page_uid.' (Unknown)';
+	foreach ($shopPids as $record) {
+		if (!array_key_exists($record['page_uid'], $sourceShops)) {
+			$sourceShops[$record['page_uid']]='PID: '.$record['page_uid'].' (Unknown)';
 		}
 	}
 }
