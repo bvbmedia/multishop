@@ -16,6 +16,7 @@ switch ($_REQUEST['action']) {
 				}
 				$tables=array();
 				$tables[]='fe_users';
+				$tables[]='fe_groups';
 				$tables[]='tt_address';
 				foreach ($tables as $table) {
 					// manually some other tables
