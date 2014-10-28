@@ -701,11 +701,20 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 					$no=1;
 					foreach ($this->post['options'] as $prod_id) {
 						if (is_numeric($prod_id)) {
+							// global level
 							$where="products_options_id = ".$prod_id;
 							$updateArray=array(
 								'sort_order'=>$no
 							);
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// products level
+							$where="options_id = ".$prod_id;
+							$updateArray=array();
+							$updateArray=array(
+								'sort_order_option_name'=>$no
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$no++;
 						}
