@@ -97,9 +97,9 @@ foreach ($products as $current_product) {
 		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
 			case 'yes_with_image':
 				if ($current_product['products_quantity']) {
-					$product_qty='Voorraad: <img src="'.t3lib_extMgm::siteRelPath('multishop').'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" />';
+					$product_qty=$this->pi_getLL('stock').': <img src="'.t3lib_extMgm::siteRelPath('multishop').'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" />';
 				} else {
-					$product_qty='Voorraad: <img src="'.t3lib_extMgm::siteRelPath('multishop').'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" />';
+					$product_qty=$this->pi_getLL('stock').': <img src="'.t3lib_extMgm::siteRelPath('multishop').'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" />';
 				}
 				break;
 			case 'yes_without_image':
