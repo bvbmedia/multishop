@@ -36,10 +36,12 @@ $EM_CONF[$_EXTKEY] = array(
 			'typo3' => '4.5.33-6.2.99',
 			'tt_address' => '2.3.4-2.3.99',
 			'static_info_tables' => '0.0.0',
+		),
+		'suggests' => array(
 			't3jquery' => '2.7.1-3.9.99',
 			'rzcolorbox_jquery2' => '1.0.0-1.9.99',
 			'phpexcel_service' => '1.7.6-1.7.99',
-		),
+		)
 		'conflicts' => array(
 			'dbal' => '0.0.0'
 		),
