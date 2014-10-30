@@ -1103,6 +1103,7 @@ CREATE TABLE `tx_multishop_orders_export` (
   `page_uid` int(11) default '0',
   `crdate` int(11) default '0',
   `fields` text,
+  `post_data` TEXT,
   `code` varchar(150) default '',
   `status` tinyint(1) default '0',
   PRIMARY KEY (`id`),

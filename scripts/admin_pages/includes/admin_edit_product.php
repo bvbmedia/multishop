@@ -2478,7 +2478,7 @@ if ($this->post) {
 		$product_relatives_block='';
 		if ($_REQUEST['action']=='edit_product') {
 			$form_category_search='
-			<table>
+			<table id="related_product_table">
 				<tr>
 					<td><label>'.$this->pi_getLL('admin_keyword').'</label></td>
 					<td>
