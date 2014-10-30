@@ -121,6 +121,20 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select page_uid from tx_multishop_products_to_categories where page_uid='0' limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if ($qry && $this->showCatalogFromPage) {
+		$str="UPDATE `tx_multishop_products_to_categories` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select page_uid from tx_multishop_products_description where page_uid='0' limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if ($qry && $this->showCatalogFromPage) {
+		$str="UPDATE `tx_multishop_products_description` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// for later when we want private customer_id and orders_id per shop
 	$str="select tx_multishop_customer_id from fe_users limit 1";
