@@ -19,13 +19,6 @@ if (!$skipMultishopUpdates) {
 	// V1/V2 COMPARE DATABASE FIRST
 	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
 	// V3 COMPARE DATABASE
-	$str="select post_data from tx_multishop_orders_export limit 1";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="ALTER TABLE  `tx_multishop_orders_export` ADD `post_data` text default ''";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
 	$str="select id from tx_multishop_sessions limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -132,6 +125,27 @@ if (!$skipMultishopUpdates) {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if ($qry && $this->showCatalogFromPage) {
 		$str="UPDATE `tx_multishop_products_description` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select layered_categories_id from tx_multishop_products_description limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_products_description` ADD `layered_categories_id` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`layered_categories_id`);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select page_uid from tx_multishop_products_description limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_products_description` ADD `page_uid` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`page_uid`);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select post_data from tx_multishop_orders_export limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_orders_export` ADD `post_data` text default ''";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}

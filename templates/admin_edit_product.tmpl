@@ -178,7 +178,7 @@ jQuery(document).ready(function ($) {
     $(".tab_content").hide();
     $("ul.tabs li:first").addClass("active").show();
     $(".tab_content:first").show();
-    $("ul.tabs li").click(function () {
+    $(document).on("click", "ul.tabs li", function () {
         $("ul.tabs li").removeClass("active");
         $(this).addClass("active");
         $(".tab_content").hide();
@@ -392,6 +392,7 @@ jQuery(document).ready(function ($) {
     <li><a href="#product_attributes">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
     <li><a href="#product_relatives">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
     <li><a href="#product_copy">###LABEL_TABS_PRODUCT_COPY###</a></li>
+    ###LABEL_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###
     ###LABEL_EXTRA_PLUGIN_TABS###
 </ul>
 <div class="tab_container">
@@ -618,6 +619,7 @@ jQuery(document).ready(function ($) {
 <div style="display: block;" id="product_copy" class="tab_content">
     ###INPUT_PRODUCT_COPY_BLOCK###
 </div>
+###CONTENT_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###
 ###CONTENT_EXTRA_PLUGIN_TABS###
 <div class="save_block">
     <input name="advanced" type="button" value="###FOOTER_VALUE_ADVANCED_OPTION###" class="toggle_advanced_options msadmin_button" />

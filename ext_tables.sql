@@ -866,6 +866,7 @@ CREATE TABLE `tx_multishop_products_attributes_download` (
 
 CREATE TABLE `tx_multishop_products_description` (
   `products_id` int(11) default '0',
+  `page_uid`              INT(11) DEFAULT '0',
   `language_id` int(5) default '0',
   `products_name` varchar(255) default '',
   `products_description` text,
@@ -891,9 +892,11 @@ CREATE TABLE `tx_multishop_products_description` (
   `products_description_tab_content_4` text,
   `products_description_tab_title_4` varchar(50) default '',
   `file_remote_location` text,
+  `layered_categories_id` int(11) default '0',
   PRIMARY KEY (`products_id`,`language_id`),
   KEY `products_name` (`products_name`),
   KEY `products_id` (`products_id`),
+  KEY `page_uid` (`page_uid`),
   KEY `language_id` (`language_id`),
   KEY `ppc` (`ppc`),
   KEY `combined_one` (`language_id`,`products_name`),
@@ -902,7 +905,8 @@ CREATE TABLE `tx_multishop_products_description` (
   KEY `combined_seven` (`language_id`,`products_meta_keywords`),
   KEY `products_description` (`products_description`(250)),
   KEY `products_negative_keywords` (`products_negative_keywords`(250)),
-  KEY `promotext` (`promotext`)
+  KEY `promotext` (`promotext`),
+  KEY `layered_categories_id` (`layered_categories_id`)
 );
 
 # remove fulltext index cause innodb does not support this
