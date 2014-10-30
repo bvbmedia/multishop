@@ -78,8 +78,8 @@ if ($invoice['orders_id']) {
 		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
 		$content=$tmpcontent;
 		$dompdf = new DOMPDF();
-		$dompdf->set_paper('a4');
-		$dompdf->load_html($content);
+		$dompdf->set_paper('A4');
+		$dompdf->load_html($content, 'UTF-8');
 		$dompdf->render();
 		// ADD PAGE NUMBER IN FOOTER
 		$canvas = $dompdf->get_canvas();
