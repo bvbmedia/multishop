@@ -19,6 +19,13 @@ if (!$skipMultishopUpdates) {
 	// V1/V2 COMPARE DATABASE FIRST
 	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
 	// V3 COMPARE DATABASE
+	$str="select post_data from tx_multishop_orders_export limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_orders_export` ADD `post_data` text default ''";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	$str="select id from tx_multishop_sessions limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {

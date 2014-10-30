@@ -96,8 +96,8 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 			$this->ms['show_main']=1;
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_orders'));
 		}
-		header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_orders'));
 	} else {
 		if ($_REQUEST['section']=='edit' and is_numeric($this->get['orders_export_id'])) {
 			$str="SELECT * from tx_multishop_orders_export where id='".$this->get['orders_export_id']."'";
