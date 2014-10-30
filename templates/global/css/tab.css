@@ -209,6 +209,8 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content ul { margin:10px 0 0; padding:0; list-style:none; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content ul li { background:none; margin:0; padding:0 0 7px; list-style:none; list-style:none; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content ul li input[type="checkbox"] { margin:0 10px 0 0; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table#related_product_table { width:auto; }
+#tx_multishop_pi1_core #tab-container .tab_container #product_relatives.tab_content table#related_product_table input[type="text"] { margin-right:0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table { margin-top:10px; }
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Details.tab_content table.msadmin_border th { text-align:left; }
