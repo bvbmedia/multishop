@@ -52,7 +52,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			unset($this->post['tx_multishop_pi1']['categories'][$key]);
 		}
 	}
-	$parent_id=0;
+	$parent_id=$this->categoriesStartingPoint;
 	if (is_numeric($this->get['categories_id'])) {
 		$parent_id=$this->get['categories_id'];
 	}
@@ -220,7 +220,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		}
 	}
 	if (is_array($this->post['tx_multishop_pi1']['manufacturers']) && count($this->post['tx_multishop_pi1']['manufacturers'])) {
-	// attributes
+		// attributes
 		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 			$prefix='p';
 		} else {
@@ -291,8 +291,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['caption']='Categories';
 				$array=explode(":",$field);
 				$list_type=$array[1];
-				if (!isset($this->get['categories_id'])) {
-					$this->get['categories_id']=0;
+				if (!isset($this->get['categories_id']) || $this->get['categories_id']=='') {
+					$this->get['categories_id']=$this->categoriesStartingPoint;
 				}
 				$categories = mslib_fe::getSubcatsOnly($this->get['categories_id']);
 				if (count($categories)) {
@@ -304,7 +304,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						case 'select':
 							$formField['type']="div";
 							$formField['class']="ui-dform-selectbox";
-						$formFieldItem[$count_select]['type'] = 'select';
+							$formFieldItem[$count_select]['type'] = 'select';
 							$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[categories][]';
 							$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldCategoriesItem';
 							$formFieldItem[$count_select]['options'][0] = 'kies categories';
@@ -314,7 +314,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						case 'select_multiple':
 							$formField['type']="div";
 							$formField['class']="ui-dform-selectbox-multiple";
-						$formFieldItem[$count_select]['type'] = 'select';
+							$formFieldItem[$count_select]['type'] = 'select';
 							$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[categories][]';
 							$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldCategoriesItem';
 							$formFieldItem[$count_select]['multiple'] = 'multiple';
@@ -330,117 +330,119 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							break;
 					}
 					$counter=0;
-					foreach ($categories as $row) {
-						// count available records
-						$tmpFilter=$totalCountFilter;
-						$totalCountSubFilterTmp=$totalCountSubFilter;
-						unset($totalCountSubFilterTmp['categories']);
-						if (is_array($totalCountSubFilterTmp['options']) and count($totalCountSubFilterTmp['options'])) {
-							foreach ($totalCountSubFilterTmp['options'] as $key => $items) {
-								foreach ($items as $item) {
-									$tmpFilter[]=$item;
+					if (is_array($categories) && count($categories)) {
+						foreach ($categories as $row) {
+							// count available records
+							$tmpFilter=$totalCountFilter;
+							$totalCountSubFilterTmp=$totalCountSubFilter;
+							unset($totalCountSubFilterTmp['categories']);
+							if (is_array($totalCountSubFilterTmp['options']) and count($totalCountSubFilterTmp['options'])) {
+								foreach ($totalCountSubFilterTmp['options'] as $key => $items) {
+									foreach ($items as $item) {
+										$tmpFilter[]=$item;
+									}
+								}
+								unset($totalCountSubFilterTmp['options']);
+							}
+							if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {
+								foreach ($totalCountSubFilterTmp as $key => $items) {
+									foreach ($items as $item) {
+										$tmpFilter[]=$item;
+									}
 								}
 							}
-							unset($totalCountSubFilterTmp['options']);
-						}
-						if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {
-							foreach ($totalCountSubFilterTmp as $key => $items) {
-								foreach ($items as $item) {
-									$tmpFilter[]=$item;
+							if ($this->ms['MODULES']['FLAT_DATABASE']) {
+								$string='(';
+								for ($i=0;$i<4;$i++) {
+									if ($i>0) {
+										$string.=" or ";
+									}
+									$string.="pf.categories_id_".$i." IN (".$row['categories_id'].")";
 								}
-							}
-						}
-						if ($this->ms['MODULES']['FLAT_DATABASE']) {
-							$string='(';
-							for ($i=0;$i<4;$i++) {
-								if ($i>0) {
-									$string.=" or ";
+								$string.=')';
+								if ($string) {
+									$tmpFilter[]=$string;
 								}
-								$string.="pf.categories_id_".$i." IN (".$row['categories_id'].")";
-							}
-							$string.=')';
-							if ($string) {
-								$tmpFilter[]=$string;
-							}
-						} else {
-							//$tmpFilter[]="p2c.categories_id = ".$row['categories_id'];
-							$subcats_id = mslib_fe::get_subcategory_ids($row['categories_id']);
-							if (count($subcats_id)) {
-								$tmpFilter[]="p2c.categories_id IN (".$row['categories_id'].", ".implode(',', $subcats_id).")";
 							} else {
-								$tmpFilter[]="p2c.categories_id = ".$row['categories_id'];
+								//$tmpFilter[]="p2c.categories_id = ".$row['categories_id'];
+								$subcats_id = mslib_fe::get_subcategory_ids($row['categories_id']);
+								if (count($subcats_id)) {
+									$tmpFilter[]="p2c.categories_id IN (".$row['categories_id'].", ".implode(',', $subcats_id).")";
+								} else {
+									$tmpFilter[]="p2c.categories_id = ".$row['categories_id'];
+								}
 							}
-						}
-						$totalCountFromFlat=array();
-						$totalCountWhereFlat=array();
-						if (is_array($totalCountFrom['options'])) {
-							$totalCountFromFlat=array_values($totalCountFrom['options']);
-						}
-						if (is_array($totalCountWhere['options'])) {
-							$totalCountWhereFlat=array_values($totalCountWhere['options']);
-						}
-						if (!$this->ms['MODULES']['FLAT_DATABASE']) {
-							$prefix='p';
-						} else {
-							$prefix='pf';
-						}
-						//print_r($tmpFilter);
-						$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
-						// count available records eof
-						switch ($list_type) {
-							case 'list':
-							case 'select':
-							case 'multiselect':
-							case 'list_multiple':
-							case 'select_multiple':
-								//if ($totalCount > 0) {
+							$totalCountFromFlat=array();
+							$totalCountWhereFlat=array();
+							if (is_array($totalCountFrom['options'])) {
+								$totalCountFromFlat=array_values($totalCountFrom['options']);
+							}
+							if (is_array($totalCountWhere['options'])) {
+								$totalCountWhereFlat=array_values($totalCountWhere['options']);
+							}
+							if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+								$prefix='p';
+							} else {
+								$prefix='pf';
+							}
+							//print_r($tmpFilter);
+							$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
+							// count available records eof
+							switch ($list_type) {
+								case 'list':
+								case 'select':
+								case 'multiselect':
+								case 'list_multiple':
+								case 'select_multiple':
+									//if ($totalCount > 0) {
 									if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'],$this->post['tx_multishop_pi1']['categories'])) {
 										$formFieldItem[$count_select]['options'][$row['categories_id']]['selected'] = 'selected';
 										$formFieldItem[$count_select]['options'][$row['categories_id']]['html'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
 									} else {
 										$formFieldItem[$count_select]['options'][$row['categories_id']] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
 									}
-								//}
-								break;
-							case 'radio':
-								$formFieldItem[$counter]['type']='div';
-								$formFieldItem[$counter]['class']='ui-dform-radiobuttons-wrapper';
-								if (!$totalCount) {
-									$formFieldItem[$counter]['class'].=' zero_results';
-								}
-								$row['categories_name']='<span class="title">'.$row['categories_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
-								if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'],$this->post['tx_multishop_pi1']['categories'])) {
-									$formFieldItem[$counter]['elements']['checked']="checked";
-								}
-								$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[categories][]";
-								$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Radiobutton".$row['categories_id'];
-								$formFieldItem[$counter]['elements']['caption']=$row['categories_name'];
-								$formFieldItem[$counter]['elements']['value']=$row['categories_id'];
-								$formFieldItem[$counter]['elements']['type']='radio';
-								$formFieldItem[$counter]['elements']['class']='ui-dform-radiobutton';
-								break;
-							case 'checkbox':
-							default:
-								$formFieldItem[$counter]['type']='div';
-								$formFieldItem[$counter]['class']='ui-dform-checkboxes-wrapper';
-								if (!$totalCount) {
-									$formFieldItem[$counter]['class'].=' zero_results';
-								}
-								$row['categories_name']='<span class="title">'.$row['categories_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
-								if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'],$this->post['tx_multishop_pi1']['categories'])) {
-									$formFieldItem[$counter]['elements']['checked']="checked";
-								}
-								$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[categories][]";
-								$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Checkbox".$row['categories_id'];
-								$formFieldItem[$counter]['elements']['caption']=$row['categories_name'];
-								$formFieldItem[$counter]['elements']['value']=$row['categories_id'];
-								$formFieldItem[$counter]['elements']['type']='checkbox';
-								$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
-								break;
+									//}
+									break;
+								case 'radio':
+									$formFieldItem[$counter]['type']='div';
+									$formFieldItem[$counter]['class']='ui-dform-radiobuttons-wrapper';
+									if (!$totalCount) {
+										$formFieldItem[$counter]['class'].=' zero_results';
+									}
+									$row['categories_name']='<span class="title">'.$row['categories_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
+									if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'],$this->post['tx_multishop_pi1']['categories'])) {
+										$formFieldItem[$counter]['elements']['checked']="checked";
+									}
+									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[categories][]";
+									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Radiobutton".$row['categories_id'];
+									$formFieldItem[$counter]['elements']['caption']=$row['categories_name'];
+									$formFieldItem[$counter]['elements']['value']=$row['categories_id'];
+									$formFieldItem[$counter]['elements']['type']='radio';
+									$formFieldItem[$counter]['elements']['class']='ui-dform-radiobutton';
+									break;
+								case 'checkbox':
+								default:
+									$formFieldItem[$counter]['type']='div';
+									$formFieldItem[$counter]['class']='ui-dform-checkboxes-wrapper';
+									if (!$totalCount) {
+										$formFieldItem[$counter]['class'].=' zero_results';
+									}
+									$row['categories_name']='<span class="title">'.$row['categories_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
+									if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'],$this->post['tx_multishop_pi1']['categories'])) {
+										$formFieldItem[$counter]['elements']['checked']="checked";
+									}
+									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[categories][]";
+									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Checkbox".$row['categories_id'];
+									$formFieldItem[$counter]['elements']['caption']=$row['categories_name'];
+									$formFieldItem[$counter]['elements']['value']=$row['categories_id'];
+									$formFieldItem[$counter]['elements']['type']='checkbox';
+									$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+									break;
+							}
+							$counter++;
 						}
-						$counter++;
+						$formField['elements']=$formFieldItem;
 					}
-					$formField['elements']=$formFieldItem;
 				}
 				break;
 			case 'manufacturers':
