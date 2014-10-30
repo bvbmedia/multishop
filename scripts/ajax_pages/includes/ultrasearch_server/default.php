@@ -220,7 +220,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		}
 	}
 	if (is_array($this->post['tx_multishop_pi1']['manufacturers']) && count($this->post['tx_multishop_pi1']['manufacturers'])) {
-	// attributes
+		// attributes
 		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
 			$prefix='p';
 		} else {
