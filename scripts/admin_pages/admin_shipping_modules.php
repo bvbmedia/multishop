@@ -522,6 +522,9 @@ if ($this->ms['show_main']) {
 												$insertArray['code']=$shipping_val;
 											}
 											break;
+										case 'page_uid':
+											$insertArray['page_uid']=$this->shop_pid;
+											break;
 										default:
 											$insertArray[$shipping_col]=$shipping_val;
 											break;

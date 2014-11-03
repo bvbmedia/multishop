@@ -511,6 +511,9 @@ if ($this->ms['show_main']) {
 												$insertArray['code']=$payment_val;
 											}
 											break;
+										case 'page_uid':
+											$insertArray['page_uid']=$this->shop_pid;
+											break;
 										default:
 											$insertArray[$payment_col]=$payment_val;
 											break;
