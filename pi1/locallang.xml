@@ -1125,6 +1125,8 @@
             <label index="import_feed_record">Import feed record</label>
             <label index="link_to_categories_in_other_shops">Link to categories in other shops</label>
             <label index="enable_custom_products_description_for">Enable custom products description for</label>
+            <label index="download_record">Download record</label>
+            <label index="upload_record">Upload record</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
