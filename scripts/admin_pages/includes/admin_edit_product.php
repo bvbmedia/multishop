@@ -93,10 +93,17 @@ $jcrop_html='
 		}(jQuery));
 		</script>
 ';
+$js_languages=array();
+foreach ($this->languages as $key=>$language) {
+	$js_languages[]='languages['.$key.']='.json_encode($language);
+}
+$pageinfo=mslib_befe::getRecord($this->shop_pid, 'pages', 'uid', array('deleted=0 and hidden=0'));
 $GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_html;
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 '.implode("\n", $jsSelect2InitialValue).'
+var languages=[];
+'.implode("\n", $js_languages).'
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
@@ -170,6 +177,36 @@ jQuery(document).ready(function($) {
 			}
 		},
 		escapeMarkup: function (m) { return m; }
+	}).on("select2-removed", function(e) {
+		'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
+		var removed_li_id="#products_info_shops'.$this->shop_pid.'_" + e.val;
+		$(removed_li_id).remove();
+		' : '').'
+	}).on("select2-selecting", function(e) {
+		'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
+		var page_uid=\''.$this->shop_pid.'\';
+		var tabs_anchor=\'mshop_tab_\' + page_uid;
+		var tabs_bar_class=\'.shops_tab_bar_\' + page_uid;
+		var tabs_anchor_id=\'#mshop_tab_\' + page_uid;
+		var product_details_number_of_tabs=parseInt('.$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS'].');
+		var shop_tabs_label=\''.$pageinfo['title'].'\';
+		var select2_id="#categories_id";
+		var select2_value=$(select2_id).select2("data");
+		// insert new tabs bar
+		var tabs_bar=\'<li class="\' + tabs_anchor + \' shops_tab_bar_\' + page_uid + \'"><a href="#\' + tabs_anchor + \'">'.$this->pi_getLL('enable_custom_products_description_for').' \' + shop_tabs_label + \'</a></li>\';
+		if (!$(tabs_bar_class).length) {
+			$(".tabs").append(tabs_bar);
+		}
+		// insert new tabs content
+		if (!$(tabs_anchor_id).length) {
+			var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'" class="tab_content"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'"></ul></div>\';
+			$(tabs_content).insertAfter("#product_copy");
+		}
+		var target_ul_id="#custom_products_desc_ul_'.$this->shop_pid.'";
+		var tabs_content_li="";
+		tabs_content_li+=buildCustomProductsDescriptionIntput('.$this->shop_pid.', e.object.id, e.object.text, languages);
+		$(target_ul_id).append(tabs_content_li);
+		' : '').'
 	});
 	$(document).on(\'click\',".saveJcropButton",function(e) {
 		var jCropX=$("#jCropX").val();
@@ -2641,10 +2678,6 @@ if ($this->post) {
 		$subpartArray['###VALUE_OLD_CATEGORY_ID###']=$old_current_categories_id; //$product['categories_id'];
 		$subpartArray['###INPUT_CATEGORY_TREE###']='<input type="hidden" name="categories_id" id="categories_id" class="categoriesIdSelect2BigDropWider" value="'.$current_categories_id.'" />';
 		// INPUT_CATEGORY_TREE
-		$js_languages=array();
-		foreach ($this->languages as $key=>$language) {
-			$js_languages[]='languages['.$key.']='.json_encode($language);
-		}
 		$tmpcontent='';
 		$shops_tabs_bar=array();
 		$shops_tabs_content=array();
@@ -2768,7 +2801,7 @@ if ($this->post) {
 									$tabs_array[]=$tmpcontent2;
 								}
 								if (count($tabs_array)) {
-									$shops_tabs_content[]='<div class="mshop_tab_'.$pageinfo['uid'].' shops_tab_content tab_content" style="display: block;" id="mshop_tab_'.$pageinfo['uid'].'" class="tab_content"><ul class="custom_products_description" id="custom_products_desc_ul_'.$pageinfo['uid'].'">'.implode("\n", $tabs_array).'</ul></div>';
+									$shops_tabs_content[]='<div class="mshop_tab_'.$pageinfo['uid'].' shops_tab_content tab_content" style="display: block;" id="mshop_tab_'.$pageinfo['uid'].'"><ul class="custom_products_description" id="custom_products_desc_ul_'.$pageinfo['uid'].'">'.implode("\n", $tabs_array).'</ul></div>';
 								}
 							}
 							$main_shop_checkbox=' checked="checked"';
@@ -2847,19 +2880,19 @@ if ($this->post) {
 									}
 								},
 								escapeMarkup: function (m) { return m; }
-							});
-						}).on("select2-removed", function(e) {
-							'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
-							var removed_li_id="#products_info_shops'.$pageinfo['uid'].'_" + e.val;
-							$(removed_li_id).remove();
-							' : '').'
-						}).on("select2-selecting", function(e) {
-							'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
-							var target_ul_id="#custom_products_desc_ul_'.$pageinfo['uid'].'";
-							var tabs_content_li="";
-							tabs_content_li+=buildCustomProductsDescriptionIntput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
-							$(target_ul_id).append(tabs_content_li);
-							' : '').'
+							}).on("select2-removed", function(e) {
+								'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
+								var removed_li_id="#products_info_shops'.$pageinfo['uid'].'_" + e.val;
+								$(removed_li_id).remove();
+								' : '').'
+							}).on("select2-selecting", function(e) {
+								'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
+								var target_ul_id="#custom_products_desc_ul_'.$pageinfo['uid'].'";
+								var tabs_content_li="";
+								tabs_content_li+=buildCustomProductsDescriptionIntput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
+								$(target_ul_id).append(tabs_content_li);
+								' : '').'
+							})
 						});
 						</script>';
 					}
@@ -3002,7 +3035,7 @@ if ($this->post) {
 								tabs_content_li+=buildCustomProductsDescriptionIntput(page_uid, data.id, data.text, languages);
 							});
 							if (tabs_content_li!="") {
-								var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'" class="tab_content"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'">\' + tabs_content_li + \'</ul></div>\';
+								var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'">\' + tabs_content_li + \'</ul></div>\';
 								if ($(".shops_tab_content").length) {
 									$(tabs_content).insertAfter(".shops_tab_content:last");
 								} else {
