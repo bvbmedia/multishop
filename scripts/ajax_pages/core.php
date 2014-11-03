@@ -178,7 +178,7 @@ switch ($this->ms['page']) {
 				}
 				break;
 		}
-		natsort($tmp_return_data);
+		//natsort($tmp_return_data);
 		foreach ($tmp_return_data as $tree_id=>$tree_path) {
 			$return_data[]=array(
 				'id'=>$tree_id,
