@@ -4208,22 +4208,36 @@ if ($rows) {
 	}
 
 	if (!$this->conf['tt_address_record_id_store']) {
-		$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+		//$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+		$str="select uid from tt_address where tx_multishop_address_type='store' and page_uid='".$this->showCatalogFromPage."'";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-			$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
-			$array=array();
-			$array['pid']=$this->conf['fe_customer_pid'];
-			$array['name']='Store';
-			$array['country']=$default_country['cn_short_en'];
-			$array['tx_multishop_customer_id']=0;
-			$array['tx_multishop_default']=0;
-			$array['tx_multishop_address_type']='store';
-			$array['page_uid']=$this->showCatalogFromPage;
-			$array['tstamp']=time();
-			$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $array);
-			$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
-			$messages[]=$query2;
+			$str="select uid from tt_address where tx_multishop_address_type='store' and page_uid=0";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				$default_iso_nr=276; // germany
+				if (!empty($this->ms['MODULES']['COUNTRY_ISO_NR']) && $this->ms['MODULES']['COUNTRY_ISO_NR']>0) {
+					$default_iso_nr=$this->ms['MODULES']['COUNTRY_ISO_NR'];
+				}
+				$default_country=mslib_fe::getCountryByIso($default_iso_nr);
+				$array=array();
+				$array['pid']=$this->conf['fe_customer_pid'];
+				$array['name']='Store';
+				$array['country']=$default_country['cn_short_en'];
+				$array['tx_multishop_customer_id']=0;
+				$array['tx_multishop_default']=0;
+				$array['tx_multishop_address_type']='store';
+				$array['page_uid']=$this->showCatalogFromPage;
+				$array['tstamp']=time();
+				$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $array);
+				$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+				$messages[]=$query2;
+			} else {
+				$tt_rec=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+				$str="UPDATE `tt_address` SET page_uid='".$this->showCatalogFromPage."' where uid='".$tt_rec['uid']."'";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+			}
 		}
 	}
 	// now fix the vat
