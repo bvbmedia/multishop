@@ -456,6 +456,108 @@ if ($this->ms['show_main']) {
 		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_method_mappings', 'type=\'shipping\' and method_id=\''.$this->get['shipping_method_id'].'\'');
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
+	if (isset($this->get['download']) && $this->get['download']=='shipping' && is_numeric($this->get['shipping_method_id'])) {
+		$rowsData=array();
+		$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			'tx_multishop_shipping_methods ', // FROM ...
+			'id= \''.$this->get['shipping_method_id'].'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+			$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+			$serial_value=array();
+			foreach ($data as $key_idx=>$key_val) {
+				$rowsData[$this->get['shipping_method_id']]['general'][$key_idx]=$key_val;
+			}
+			$query_desc=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+				'tx_multishop_shipping_methods_description', // FROM ...
+				'id=\''.$this->get['shipping_method_id'].'\'', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res_desc=$GLOBALS['TYPO3_DB']->sql_query($query_desc);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_desc)>0) {
+				while ($row_desc=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_desc)) {
+					foreach ($row_desc as $col_desc_name=>$col_desc_val) {
+						$rowsData[$this->get['shipping_method_id']]['description'][$row_desc['language_id']][$col_desc_name]=$col_desc_val;
+					}
+				}
+			}
+			$serial_data='';
+			if (count($rowsData)>0) {
+				$serial_data=serialize($rowsData);
+			}
+			$filename='multishop_shipping_method_'.date('YmdHis').'_'.$this->get['shipping_method_id'].'.txt';
+			$filepath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$filename;
+			file_put_contents($filepath, $serial_data);
+			header("Content-disposition: attachment; filename={$filename}"); //Tell the filename to the browser
+			header('Content-type: application/octet-stream'); //Stream as a binary file! So it would force browser to download
+			readfile($filepath); //Read and stream the file
+			@unlink($filepath);
+			exit();
+		}
+	}
+	if (isset($this->get['upload']) && $this->get['upload']=='shipping' && $_FILES) {
+		if (!$_FILES['shipping_file']['error']) {
+			$filename=$_FILES['shipping_file']['name'];
+			$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop'.$filename;
+			if (move_uploaded_file($_FILES['shipping_file']['tmp_name'], $target)) {
+				$shipping_content=file_get_contents($target);
+				$unserial_shipping_data=unserialize($shipping_content);
+				if (is_array($unserial_shipping_data) && count($unserial_shipping_data)) {
+					foreach ($unserial_shipping_data as $shipping_data) {
+						$insertArray=array();
+						if (is_array($shipping_data['general']) && count($shipping_data['general'])) {
+							foreach ($shipping_data['general'] as $shipping_col=>$shipping_val) {
+								if ($shipping_col!='id') {
+									switch ($shipping_col) {
+										case 'code':
+											if (isset($this->post['new_code']) && !empty($this->post['new_code'])) {
+												$insertArray['code']=$this->post['new_code'];
+											} else {
+												$insertArray['code']=$shipping_val;
+											}
+											break;
+										default:
+											$insertArray[$shipping_col]=$shipping_val;
+											break;
+									}
+								}
+							}
+						}
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods', $insertArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$shipping_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+						if (is_array($shipping_data['description']) && count($shipping_data['description'])) {
+							foreach ($shipping_data['description'] as $language_id=>$shipping_desc_data) {
+								if (is_array($shipping_desc_data) && count($shipping_desc_data)) {
+									$insertArrayDesc=array();
+									foreach ($shipping_desc_data as $shipping_desc_col_name=>$shipping_desc_val) {
+										switch ($shipping_desc_col_name) {
+											case 'id':
+												$insertArrayDesc['id']=$shipping_id;
+												break;
+											default:
+												$insertArrayDesc[$shipping_desc_col_name]=$shipping_desc_val;
+												break;
+										}
+									}
+									$query_desc=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_description', $insertArrayDesc);
+									$GLOBALS['TYPO3_DB']->sql_query($query_desc);
+								}
+							}
+						}
+					}
+				}
+				@unlink($target);
+			}
+		}
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+	}
 	// shipping method admin system
 	$colspan=4;
 	$str="SELECT *,d.name from tx_multishop_shipping_methods p, tx_multishop_shipping_methods_description d where d.language_id='".$this->sys_language_uid."' and (p.page_uid = '".$this->shop_pid."' or p.page_uid = '0') and p.id=d.id order by p.sort_order";
@@ -467,7 +569,7 @@ if ($this->ms['show_main']) {
 		if (count($active_shop)>1) {
 			$tmpcontent.='<th>'.$this->pi_getLL('shop', 'Shop').'</th>';
 		}
-		$tmpcontent.='<th>'.$this->pi_getLL('shipping_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th></tr>
+		$tmpcontent.='<th>'.$this->pi_getLL('shipping_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th><th width="30">'.ucfirst($this->pi_getLL('download')).'</th></tr>
 		<tbody class="sortable_content">
 		';
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -501,13 +603,29 @@ if ($this->ms['show_main']) {
 			<td align="center">
 			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>
 			</td>
+			<td align="center">
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=shipping&shipping_method_id='.$row['id']).'" class="msadmin_button"><i>'.ucfirst($this->pi_getLL('download_record')).'</i></a>
+			</td>
 			</tr>';
 		}
 		$tmpcontent.='</tbody></table>';
 	} else {
 		$tmpcontent.=$this->pi_getLL('currently_there_are_no_shipping_methods_defined').'.';
 	}
-	$tmpcontent.='<p class="float_right"><a href="#" id="add_shipping_method" class="admin_menu_add label">'.$this->pi_getLL('add_shipping_method').'</a></p>
+	$tmpcontent.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_record').'</legend>
+			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=shipping').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+				<div class="account-field">
+					<label for="new_code">'.$this->pi_getLL('code').'</label>
+					<input name="new_code" type="text" value="" />
+				</div>
+				<div class="account-field">
+					<label for="upload_shipping_file">'.$this->pi_getLL('file').'</label>
+					<input type="file" name="shipping_file">&nbsp;<input type="submit" name="upload_shipping_file" class="submit msadmin_button" id="upload_shipping_file" value="upload">
+				</div>
+			</form>
+		</fieldset>';
+	$tmpcontent.='<p class="float_right"><a href="#" id="add_shipping_method" class="admin_menu_add label">'.$this->pi_getLL('add_shipping_method').'</a></p>';
+	$tmpcontent.='
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
 		// sortables
