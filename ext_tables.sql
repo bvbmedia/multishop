@@ -893,7 +893,7 @@ CREATE TABLE `tx_multishop_products_description` (
   `products_description_tab_title_4` varchar(50) default '',
   `file_remote_location` text,
   `layered_categories_id` int(11) default '0',
-  PRIMARY KEY (`products_id`,`language_id`),
+  PRIMARY KEY (`products_id`, `language_id`, `page_uid`, `layered_categories_id`),
   KEY `products_name` (`products_name`),
   KEY `products_id` (`products_id`),
   KEY `page_uid` (`page_uid`),

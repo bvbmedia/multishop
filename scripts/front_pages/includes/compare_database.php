@@ -149,6 +149,15 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="show indexes from `tx_multishop_products_description` where Key_name='PRIMARY'";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)==2) {
+		$str="ALTER TABLE tx_multishop_products_description DROP PRIMARY KEY";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$str="ALTER TABLE `tx_multishop_products_description` ADD PRIMARY KEY (`products_id`,`language_id`,`page_uid`,`layered_categories_id`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// for later when we want private customer_id and orders_id per shop
 	$str="select tx_multishop_customer_id from fe_users limit 1";

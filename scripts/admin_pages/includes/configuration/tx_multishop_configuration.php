@@ -17,6 +17,17 @@ if (!defined('TYPO3_MODE')) {
 // 12 Invoice Settings
 $records=array();
 $records[]=array(
+	'configuration_title'=>'Enable layered custom product description',
+	'configuration_key'=>'ENABLE_LAYERED_PRODUCTS_DESCRIPTION',
+	'configuration_value'=>'0',
+	'description'=>'different product description for each linked categories',
+	'group_id'=>'7',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Enable categories to categories linking',
 	'configuration_key'=>'ENABLE_CATEGORIES_TO_CATEGORIES',
 	'configuration_value'=>'0',

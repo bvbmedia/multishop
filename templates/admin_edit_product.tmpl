@@ -417,34 +417,36 @@ jQuery(document).ready(function ($) {
     </div>
     ###INPUT_MULTIPLE_SHOPS_CATEGORY_TREE###
     <!-- ###DETAILS_CONTENT### begin -->
-    <div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-        <label>###LABEL_LANGUAGE###</label>
-        <strong>###LANGUAGE_LABEL###</strong>
-    </div>
-    <div class="account-field" id="msEditProductInputName">
-        <label for="products_name">###LABEL_PRODUCT_NAME###</label>
-        <input type="text" class="text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
-    </div>
-    <div class="account-field" id="msEditProductInputShortDesc">
-        <label for="products_shortdescription">###LABEL_SHORT_DESCRIPTION###</label>
-        <textarea name="products_shortdescription[###LANGUAGE_UID###]" ###TEXTAREA_SHORT_DESCRIPTION_PARAMS### id="products_shortdescription" rows="4" ###TEXTAREA_SHORT_DESCRIPTION_CLASS###>###VALUE_SHORT_DESCRIPTION###</textarea>
-    </div>
-    <div class="account-field" id="msEditProductInputDesc">
-        <label for="products_description">###LABEL_PRODUCT_DESCRIPTION###</label>
-        <textarea name="products_description[###LANGUAGE_UID###]" id="products_description[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_PRODUCT_DESCRIPTION###</textarea>
-    </div>
-    ###DETAILS_TAB_CONTENT###
-    <div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl">
-        <label for="products_url">###LABEL_PRODUCT_URL###</label>
-        <input type="text" class="text" name="products_url[###LANGUAGE_UID###]" id="products_url[###LANGUAGE_UID###]" value="###VALUE_PRODUCT_URL###">
-    </div>
-    <div class="account-field" id="msEditProductInputDeliveryTime">
-        <label for="delivery_time">###LABEL_DELIVERY_TIME###</label>
-        <input type="text" class="text" name="delivery_time[###LANGUAGE_UID###]" id="delivery_time[###LANGUAGE_UID###]" value="###VALUE_DELIVERY_TIME###">
-    </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords">
-        <label for="products_negative_keywords">###LABEL_NEGATIVE_KEYWORDS###</label>
-        <textarea name="products_negative_keywords[###LANGUAGE_UID###]" id="products_negative_keywords" class="expand20-100">###VALUE_NEGATIVE_KEYWORDS###</textarea>
+    <div class="productInfoItem">
+        <div class="account-field toggle_advanced_option msEditProductLanguageDivider">
+            <label>###LABEL_LANGUAGE###</label>
+            <strong>###LANGUAGE_LABEL###</strong>
+        </div>
+        <div class="account-field" id="msEditProductInputName">
+            <label for="products_name">###LABEL_PRODUCT_NAME###</label>
+            <input type="text" class="text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
+        </div>
+        <div class="account-field" id="msEditProductInputShortDesc">
+            <label for="products_shortdescription">###LABEL_SHORT_DESCRIPTION###</label>
+            <textarea name="products_shortdescription[###LANGUAGE_UID###]" ###TEXTAREA_SHORT_DESCRIPTION_PARAMS### id="products_shortdescription" rows="4" ###TEXTAREA_SHORT_DESCRIPTION_CLASS###>###VALUE_SHORT_DESCRIPTION###</textarea>
+        </div>
+        <div class="account-field" id="msEditProductInputDesc">
+            <label for="products_description">###LABEL_PRODUCT_DESCRIPTION###</label>
+            <textarea name="products_description[###LANGUAGE_UID###]" id="products_description[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_PRODUCT_DESCRIPTION###</textarea>
+        </div>
+        ###DETAILS_TAB_CONTENT###
+        <div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl">
+            <label for="products_url">###LABEL_PRODUCT_URL###</label>
+            <input type="text" class="text" name="products_url[###LANGUAGE_UID###]" id="products_url[###LANGUAGE_UID###]" value="###VALUE_PRODUCT_URL###">
+        </div>
+        <div class="account-field" id="msEditProductInputDeliveryTime">
+            <label for="delivery_time">###LABEL_DELIVERY_TIME###</label>
+            <input type="text" class="text" name="delivery_time[###LANGUAGE_UID###]" id="delivery_time[###LANGUAGE_UID###]" value="###VALUE_DELIVERY_TIME###">
+        </div>
+        <div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords">
+            <label for="products_negative_keywords">###LABEL_NEGATIVE_KEYWORDS###</label>
+            <textarea name="products_negative_keywords[###LANGUAGE_UID###]" id="products_negative_keywords" class="expand20-100">###VALUE_NEGATIVE_KEYWORDS###</textarea>
+        </div>
     </div>
     <!-- ###DETAILS_CONTENT### end -->
 </div>
@@ -631,20 +633,20 @@ jQuery(document).ready(function ($) {
 </div>
 </div>
 <script type="text/javascript">
-    jQuery(document).ready(function($) {
-        $(".admin_product_edit").submit(function() {
-            var enableBlockUi='1';
+    jQuery(document).ready(function ($) {
+        $(".admin_product_edit").submit(function () {
+            var enableBlockUi = '1';
             if ($("#categories_id").val() == "0" || $("#categories_id").val() == "") {
-                enableBlockUi='0';
-                msDialog("ERROR","###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###");
+                enableBlockUi = '0';
+                msDialog("ERROR", "###ADMIN_LABEL_JS_PLEASE_SELECT_CATEGORY_FOR_THIS_PRODUCT###");
                 return false;
             }
             if ($("#products_name_0").val() == "") {
-                enableBlockUi='0';
-                msDialog("ERROR","###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###");
+                enableBlockUi = '0';
+                msDialog("ERROR", "###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###");
                 return false;
             }
-            if (enableBlockUi=='1') {
+            if (enableBlockUi == '1') {
                 msAdminBlockUi();
             }
         });
@@ -660,45 +662,45 @@ jQuery(document).ready(function ($) {
                 $(".qq-uploader").hide();
                 $(".file-upload-hidden").show();
             }
-        });
-        $(document).on("click", ".payment_method_cb", function() {
-            var current_cb_id=$(this).attr("id");
-            var current_id=$(this).attr("rel");
-            var target_cb="#disable_payment_method_" + current_id;
-            if (current_cb_id.indexOf("disable")>-1) {
-                target_cb="#enable_payment_method_" + current_id;
+    });
+        $(document).on("click", ".payment_method_cb", function () {
+            var current_cb_id = $(this).attr("id");
+            var current_id = $(this).attr("rel");
+            var target_cb = "#disable_payment_method_" + current_id;
+            if (current_cb_id.indexOf("disable") > -1) {
+                target_cb = "#enable_payment_method_" + current_id;
             }
             $(target_cb).prop("checked", false);
         });
-        $(document).on("click", ".shipping_method_cb", function() {
-            var current_cb_id=$(this).attr("id");
-            var current_id=$(this).attr("rel");
-            var target_cb="#disable_shipping_method_" + current_id;
-            if (current_cb_id.indexOf("disable")>-1) {
-                target_cb="#enable_shipping_method_" + current_id;
+        $(document).on("click", ".shipping_method_cb", function () {
+            var current_cb_id = $(this).attr("id");
+            var current_id = $(this).attr("rel");
+            var target_cb = "#disable_shipping_method_" + current_id;
+            if (current_cb_id.indexOf("disable") > -1) {
+                target_cb = "#enable_shipping_method_" + current_id;
             }
             $(target_cb).prop("checked", false);
         });
-        $(document).on("click", ".exclude_feed_cb", function() {
-            var current_cb_id=$(this).attr("id");
-            var current_id=$(this).attr("rel");
-            var target_cb="#disable_exclude_feed_" + current_id;
-            if (current_cb_id.indexOf("disable")>-1) {
-                target_cb="#enable_exclude_feed_" + current_id;
+        $(document).on("click", ".exclude_feed_cb", function () {
+            var current_cb_id = $(this).attr("id");
+            var current_id = $(this).attr("rel");
+            var target_cb = "#disable_exclude_feed_" + current_id;
+            if (current_cb_id.indexOf("disable") > -1) {
+                target_cb = "#enable_exclude_feed_" + current_id;
             }
             $(target_cb).prop("checked", false);
         });
-        $(document).on("click", ".exclude_stock_feed_cb", function() {
-            var current_cb_id=$(this).attr("id");
-            var current_id=$(this).attr("rel");
-            var target_cb="#disable_exclude_stock_feed_" + current_id;
-            if (current_cb_id.indexOf("disable")>-1) {
-                target_cb="#enable_exclude_stock_feed_" + current_id;
+        $(document).on("click", ".exclude_stock_feed_cb", function () {
+            var current_cb_id = $(this).attr("id");
+            var current_id = $(this).attr("rel");
+            var target_cb = "#disable_exclude_stock_feed_" + current_id;
+            if (current_cb_id.indexOf("disable") > -1) {
+                target_cb = "#enable_exclude_stock_feed_" + current_id;
             }
             $(target_cb).prop("checked", false);
         });
         $("#specials_price_percentage").select2();
-	    ###JS_ADVANCED_OPTION_TOGGLE###
+    ###JS_ADVANCED_OPTION_TOGGLE###
     });
 </script>
 <!-- ###TEMPLATE### end -->
