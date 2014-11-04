@@ -212,7 +212,10 @@ if ($contentType=='specials_listing_page') {
 			} else {
 				$filter[]='s.status=1';
 			}
-			//$orderby='rand()';
+			// 2014-11-04 enabled random order again to order specialsbox randomly
+			if ($contentType=='specials_box') {
+				$orderby='rand()';
+			}
 			// the mslib_fe::Crumbar cannot be used to determine the categories status since that method doesnt return any category status
 			/* $str="SELECT p2c.categories_id, p.products_id FROM tx_multishop_products p, tx_multishop_specials s, tx_multishop_products_to_categories p2c where p.products_status=1 and p.products_id=s.products_id and p.products_id=p2c.products_id order by rand() limit ".$limit;
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
