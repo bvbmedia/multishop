@@ -106,7 +106,7 @@ foreach ($products as $product) {
 }
 if ($specials_items and $this->ajax_content) {
 	// ajax so lets show the normal grid layout
-	$content.='<ul id="product_listing">'.$specials_items.'</ul>';
+	$content.='<ul class="product_listing">'.$specials_items.'</ul>';
 } elseif ($specials_items and !$this->ajax_content) {
 	$content.='
 	<script type="text/javascript"> 

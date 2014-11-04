@@ -8,7 +8,7 @@ if (!$this->imageWidth) {
 if ($show_default_header) {
 	$content.='<div class="main-heading"><h2>'.trim($current['categories_name']).'</h2></div>';
 }
-$content.='<ul id="product_listing">';
+$content.='<ul class="product_listing">';
 $counter=0;
 foreach ($products as $current_product) {
 	$where='';

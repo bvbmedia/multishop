@@ -120,7 +120,7 @@ if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 	$content.='
 	<script type="text/javascript">
 	  jQuery(document).ready(function($) {
-		var result = jQuery("#specialssections_listing_'.$this->section_code.'").sortable({
+		var result = jQuery("#specialssections_listing_'.$this->section_code.' .product_listing").sortable({
 			cursor:     "move",
 			//axis:       "y",
 			update: function(e, ui) {
