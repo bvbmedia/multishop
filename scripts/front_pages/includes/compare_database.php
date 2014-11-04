@@ -123,7 +123,7 @@ if (!$skipMultishopUpdates) {
 	}
 	$str="select page_uid from tx_multishop_products_description where page_uid='0' limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if ($qry && $this->showCatalogFromPage) {
+	if ($qry && $this->showCatalogFromPage && $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$str="UPDATE `tx_multishop_products_description` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
