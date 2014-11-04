@@ -49,9 +49,9 @@ foreach ($products as $product) {
 	}
 	$special_section_price='';
 	if ($old_price and $final_price) {
-		$output['special_section_price']='<div class="section_products_old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="section_products_specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$output['special_section_price']='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
 	} else {
-		$output['special_section_price']='<div class="section_products_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$output['special_section_price']='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
 	}
 	$output['products_name']=htmlspecialchars($product['products_name']);
 	$markerArray=array();
