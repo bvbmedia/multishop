@@ -85,7 +85,7 @@ if (!in_array($this->ms['page'], $skippedTypes) and ($this->ROOTADMIN_USER or ($
 			$(".disabled_product").css({ opacity: 0.6 });
 		  }
 		);			  
-		var result = jQuery("#product_listing").sortable({
+		var result = jQuery(".product_listing").sortable({
 			cursor:     "move", 
 			//axis:       "y", 
 			update: function(e, ui) { 

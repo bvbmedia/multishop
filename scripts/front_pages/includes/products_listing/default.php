@@ -288,7 +288,7 @@ if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or (
 	$content.='					
 	<script type="text/javascript">
 	  jQuery(document).ready(function($) {
-		var result = jQuery("#product_listing").sortable({
+		var result = jQuery(".product_listing").sortable({
 			cursor:     "move", 
 			//axis:       "y", 
 			update: function(e, ui) { 

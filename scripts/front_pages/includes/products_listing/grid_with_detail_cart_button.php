@@ -87,7 +87,7 @@ if (!in_array($this->ms['page'], $skippedTypes) and ($this->ROOTADMIN_USER or ($
 	$content.='
 		<script>
 		  jQuery(document).ready(function($) {
-			var result = jQuery("#product_listing").sortable({
+			var result = jQuery(".product_listing").sortable({
 				cursor:     "move", 
 			    //axis:       "y", 
 			    update: function(e, ui) { 
