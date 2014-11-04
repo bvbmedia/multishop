@@ -398,6 +398,7 @@ jQuery(document).ready(function ($) {
 <div class="tab_container">
 <form class="admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit_###PRODUCT_PID###" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
 <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
+###INPUT_OLD_LAYERED_CATEGORY_INPUT###
 <div style="display: block;" id="product_details" class="tab_content">
     <div style="float:right;">
         <div class="save_block">
@@ -425,6 +426,7 @@ jQuery(document).ready(function ($) {
         <div class="account-field" id="msEditProductInputName">
             <label for="products_name">###LABEL_PRODUCT_NAME###</label>
             <input type="text" class="text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
+            ###LOCAL_PRIMARY_PRODUCTS_CATEGORIES###
         </div>
         <div class="account-field" id="msEditProductInputShortDesc">
             <label for="products_shortdescription">###LABEL_SHORT_DESCRIPTION###</label>
