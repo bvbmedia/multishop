@@ -884,7 +884,7 @@ if ($this->post) {
 						mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_description', $updateArray);
 					}
 					if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$this->shop_pid.'\' and layered_categories_id=\''.$this->post['local_primary_product_categories'].'\' and language_id=\''.$key.'\'', $updateArray);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$this->shop_pid.'\' and (layered_categories_id=\''.$this->post['local_primary_product_categories'].'\' or layered_categories_id=\'0\') and language_id=\''.$key.'\'', $updateArray);
 					} else {
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and language_id=\''.$key.'\'', $updateArray);
 					}
