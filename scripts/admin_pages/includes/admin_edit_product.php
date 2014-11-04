@@ -179,6 +179,16 @@ jQuery(document).ready(function($) {
 		escapeMarkup: function (m) { return m; }
 	}).on("select2-removed", function(e) {
 		'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
+		var local_primary_cat_id="#local_primary_product_categories";
+		var select2_id="#categories_id";
+		var select2_value=$(select2_id).select2("data");
+		if (select2_value.length==0) {
+			$(local_primary_cat_id).val("0");
+		} else {
+			var removed_li_id="#products_info_shops'.$this->shop_pid.'_" + select2_value[0].id;
+			$(removed_li_id).remove();
+			$(local_primary_cat_id).val(select2_value[0].id);
+		}
 		var removed_li_id="#products_info_shops'.$this->shop_pid.'_" + e.val;
 		$(removed_li_id).remove();
 		' : '').'
@@ -186,26 +196,40 @@ jQuery(document).ready(function($) {
 		'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
 		var page_uid=\''.$this->shop_pid.'\';
 		var tabs_anchor=\'mshop_tab_\' + page_uid;
-		var tabs_bar_class=\'.shops_tab_bar_\' + page_uid;
-		var tabs_anchor_id=\'#mshop_tab_\' + page_uid;
+		var tabs_bar_class=\'li.shops_tab_bar_\' + page_uid;
+		var tabs_anchor_id=\'div#mshop_tab_\' + page_uid;
 		var product_details_number_of_tabs=parseInt('.$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS'].');
 		var shop_tabs_label=\''.$pageinfo['title'].'\';
+		var local_primary_cat_id="#local_primary_product_categories";
 		var select2_id="#categories_id";
 		var select2_value=$(select2_id).select2("data");
-		// insert new tabs bar
-		var tabs_bar=\'<li class="\' + tabs_anchor + \' shops_tab_bar_\' + page_uid + \'"><a href="#\' + tabs_anchor + \'">'.$this->pi_getLL('enable_custom_products_description_for').' \' + shop_tabs_label + \'</a></li>\';
-		if (!$(tabs_bar_class).length) {
-			$(".tabs").append(tabs_bar);
+		if (select2_value.length==0 && e.object.id!="") {
+			$(local_primary_cat_id).val(e.object.id);
 		}
-		// insert new tabs content
-		if (!$(tabs_anchor_id).length) {
-			var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'" class="tab_content"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'"></ul></div>\';
-			$(tabs_content).insertAfter("#product_copy");
+		if (select2_value.length>0) {
+			// insert new tabs bar
+			var tabs_bar=\'<li class="\' + tabs_anchor + \' shops_tab_bar_\' + page_uid + \'"><a href="#\' + tabs_anchor + \'">'.$this->pi_getLL('enable_custom_products_description_for').' \' + shop_tabs_label + \'</a></li>\';
+			if (!$(tabs_bar_class).length) {
+				$(".tabs").append(tabs_bar);
+			}
+			// insert new tabs content
+			if (!$(tabs_anchor_id).length) {
+				var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'" class="tab_content"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'"></ul></div>\';
+				$(tabs_content).insertAfter("#product_copy");
+			}
+			var target_ul_id="#custom_products_desc_ul_'.$this->shop_pid.'";
+			var tabs_content_li="";
+			tabs_content_li+=buildCustomProductsDescriptionIntput('.$this->shop_pid.', e.object.id, e.object.text, languages);
+			$(target_ul_id).append(tabs_content_li);
+			$(\'.mceEditor\').redactor({
+				focus: false,
+				clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+				imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+				fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+				imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+				minHeight:\'400\'
+			});
 		}
-		var target_ul_id="#custom_products_desc_ul_'.$this->shop_pid.'";
-		var tabs_content_li="";
-		tabs_content_li+=buildCustomProductsDescriptionIntput('.$this->shop_pid.', e.object.id, e.object.text, languages);
-		$(target_ul_id).append(tabs_content_li);
 		' : '').'
 	});
 	$(document).on(\'click\',".saveJcropButton",function(e) {
@@ -699,6 +723,20 @@ if ($this->post) {
 						}
 					}
 				}
+				// remove the p2c relation when the external shops are not linked anymore
+				if ($this->conf['enableMultipleShops']) {
+					foreach ($shopPids as $shop_pid) {
+						if ($shop_pid!=$this->shop_pid) {
+							if (!in_array($shop_pid, $this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								// remove the custom page desc if the cat id is not related anymore in p2c
+								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
+						}
+					}
+				}
 				if (is_array($catIds) && count($catIds)) {
 					foreach ($catIds as $page_uid=>$catArray) {
 						$catIdsToAdd=array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
@@ -801,11 +839,11 @@ if ($this->post) {
 		}
 		foreach ($this->post['products_name'] as $key=>$value) {
 			if (is_numeric($key)) {
-				//if ($this->conf['enableMultipleShops']) {
-				//	$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid='".$this->shop_pid."' or page_uid=0) and (layered_categories_id=0 or layered_categories_id='".."') and language_id='".$key."'";
-				//} else {
-				$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid='".$page_uid."' or page_uid=0) and layered_categories_id=0 and language_id='".$key."'";
-				//}
+				if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$this->shop_pid."' and layered_categories_id='".$this->post['local_primary_product_categories']."' and language_id='".$key."'";
+				} else {
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid='".$this->shop_pid."' or page_uid=0) and layered_categories_id=0 and language_id='".$key."'";
+				}
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$updateArray=array();
 				$updateArray['products_name']=$this->post['products_name'][$key];
@@ -819,6 +857,9 @@ if ($this->post) {
 				$updateArray['products_negative_keywords']=$this->post['products_negative_keywords'][$key];
 				$updateArray['products_url']=$this->post['products_url'][$key];
 				$updateArray['page_uid']=$this->shop_pid;
+				if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
+					$updateArray['layered_categories_id']=$this->post['local_primary_product_categories'];
+				}
 				if ($update_product_files[$key]['file_label']) {
 					$updateArray['file_label']=$update_product_files[$key]['file_label'];
 				}
@@ -842,7 +883,11 @@ if ($this->post) {
 						// lock changed columns
 						mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_description', $updateArray);
 					}
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and language_id=\''.$key.'\'', $updateArray);
+					if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$this->shop_pid.'\' and layered_categories_id=\''.$this->post['local_primary_product_categories'].'\' and language_id=\''.$key.'\'', $updateArray);
+					} else {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and language_id=\''.$key.'\'', $updateArray);
+					}
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				} else {
 					if (isset($this->post['save_as_new'])) {
@@ -867,10 +912,10 @@ if ($this->post) {
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name'])) {
 			foreach ($this->post['customProductsDescription_products_name'] as $page_uid=>$customDescData) {
 				foreach ($customDescData as $customDescData_category_id=>$descData) {
-					if (isset($this->post['tx_multishop_pi1']['enableMultipleShopsProductInfo'][$page_uid][$customDescData_category_id])) {
+					if (isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$customDescData_category_id])) {
 						foreach ($descData as $customDescData_language_id=>$desc) {
 							if (is_numeric($customDescData_language_id)) {
-								$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid='".$page_uid."' or page_uid=0) and (layered_categories_id=0 or layered_categories_id='".$customDescData_category_id."') and language_id='".$customDescData_language_id."'";
+								$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$page_uid."' and layered_categories_id='".$customDescData_category_id."' and language_id='".$customDescData_language_id."'";
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								$updateArray=array();
 								$updateArray['products_name']=$this->post['customProductsDescription_products_name'][$page_uid][$customDescData_category_id][$customDescData_language_id];
@@ -918,10 +963,23 @@ if ($this->post) {
 									$updateArray['layered_categories_id']=$customDescData_category_id;
 									$updateArray['language_id']=$customDescData_language_id;
 									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_description', $updateArray);
+									//var_dump($query);
+									//die();
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 							}
 						}
+					}
+				}
+			}
+		}
+		// deletion of custom product desc
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+			foreach ($this->post['old_layered_categories_id'] as $page_uid=>$cat_data) {
+				foreach ($cat_data as $cat_id=>$cat_bool) {
+					if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$cat_id])) {
+						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\' and layered_categories_id=\''.$cat_id.'\'');
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
 			}
@@ -1286,6 +1344,9 @@ if ($this->post) {
 	//window.opener.location.reload();
 	//parent.window.hs.close();
 } else {
+	if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+		$local_primary_product_categories=0;
+	}
 	if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
 		$str="SELECT p.*, c.categories_id, pd.file_location, pd.file_label, p.custom_settings from tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p2c.products_id='".$this->get['pid']."' ";
 		if (is_numeric($this->get['cid'])) {
@@ -1294,6 +1355,7 @@ if ($this->post) {
 		$str.=" and p.products_id=pd.products_id and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		$local_primary_product_categories=$product['categories_id'];
 		if ($this->get['delete_image'] and is_numeric($this->get['pid'])) {
 			if ($product[$this->get['delete_image']]) {
 				mslib_befe::deleteProductImage($product[$this->get['delete_image']]);
@@ -1307,7 +1369,11 @@ if ($this->post) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 		}
-		$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and (pd.page_uid='".$this->shop_pid."' or pd.page_uid=0) and p.products_id=pd.products_id";
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and pd.layered_categories_id='".$local_primary_product_categories."' and p.products_id=pd.products_id";
+		} else {
+			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and p.products_id=pd.products_id";
+		}
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$lngproduct[$row['language_id']]=$row;
@@ -1435,6 +1501,11 @@ if ($this->post) {
 			$markerArray['PAGE_UID']=$this->shop_pid;
 			$markerArray['LABEL_LANGUAGE']=t3lib_div::strtoupper($this->pi_getLL('language'));
 			$markerArray['LANGUAGE_LABEL']=$language_label;
+			if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+				$markerArray['LOCAL_PRIMARY_PRODUCTS_CATEGORIES']='<input type="hidden" name="local_primary_product_categories" id="local_primary_product_categories" value="'.$local_primary_product_categories.'">';
+			} else {
+				$markerArray['LOCAL_PRIMARY_PRODUCTS_CATEGORIES']='';
+			}
 			$markerArray['LABEL_PRODUCT_NAME']=$this->pi_getLL('admin_name');
 			$markerArray['VALUE_PRODUCT_NAME']=htmlspecialchars($lngproduct[$language['uid']]['products_name']);
 			$markerArray['LABEL_SHORT_DESCRIPTION']=$this->pi_getLL('admin_short_description');
@@ -2681,25 +2752,33 @@ if ($this->post) {
 		$tmpcontent='';
 		$shops_tabs_bar=array();
 		$shops_tabs_content=array();
+		$old_layered_categories_ids=array();
 		if (is_array($shopPids) && count($shopPids)) {
 			$tmpcontent.='<div class="account-field" class="msEditProductInputMultipleShopCategory">
 				<label>'.$this->pi_getLL('link_to_categories_in_other_shops').'</label>
 				<div class="msAttributesWrapper">';
 			foreach ($shopPids as $shopPid) {
-				if (is_numeric($shopPid) and $shopPid!=$this->shop_pid) {
+				if (is_numeric($shopPid)) {
 					$pageinfo=mslib_befe::getRecord($shopPid,'pages','uid',array('deleted=0 and hidden=0'));
 					if ($pageinfo['uid']) {
 						$old_products_to_shop_categories=mslib_fe::getProductToCategories($this->get['pid'], '',$pageinfo['uid']);
-						$shop_checkbox='';
-						$select2_block_visibility=' style="display:none"';
+						if ($pageinfo['uid']==$this->shop_pid) {
+							$old_products_to_shop_categories=str_replace(array(
+								','.$local_primary_product_categories.',',
+								','.$local_primary_product_categories,
+								$local_primary_product_categories.',',
+								$local_primary_product_categories
+							), '', $old_products_to_shop_categories);
+						}
+						$main_shop_checkbox='';
+						$main_select2_block_visibility=' style="display:none"';
 						if ($this->get['action']=='edit_product') {
 							if (!empty($old_products_to_shop_categories) && $this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 								// build the shops tab if the link for categories in other shop exist
-								$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.t3lib_div::strtoupper($pageinfo['title']).'</a></li>';
+								$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar_'.$pageinfo['uid'].'"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.t3lib_div::strtoupper($pageinfo['title']).'</a></li>';
 								$tmp_categories_id=explode(',', $old_products_to_shop_categories);
 								$tabs_content=array();
 								$tabs_array=array();
-								$tmpcontent2='';
 								foreach ($tmp_categories_id as $tmp_category_id) {
 									$tmp_category_name=mslib_fe::getCategoryName($tmp_category_id);
 									$other_shops_product_info=mslib_fe::getProductInfo($this->get['pid'], $tmp_category_id, $pageinfo['uid']);
@@ -2776,6 +2855,7 @@ if ($this->post) {
 												<input type="text" class="text" name="customProductsDescription_products_meta_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_description']).'">
 											</div>';
 									}
+									$old_layered_categories_ids[]='<input type="hidden" name="old_layered_categories_id['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" />';
 									$shop_checkbox='';
 									$custom_products_description_block=' style="display:none"';
 									$afoldwrapperState='items_wrapper_folded';
@@ -2789,9 +2869,9 @@ if ($this->post) {
 										}
 									}
 									$tmpcontent2='<li id="products_info_shops'.$pageinfo['uid'].'_'.$tmp_category_id.'" alt="" class="products_info_shops odd_group_row">';
-									$tmpcontent2.='<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo]['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$shop_checkbox.' />&nbsp;';
 									$tmpcontent2.='<span class="shop_name" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'">';
-									$tmpcontent2.=t3lib_div::strtoupper($tmp_category_name).'<a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
+									$tmpcontent2.='<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo]['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$shop_checkbox.' />&nbsp;';
+									$tmpcontent2.='<label for="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.t3lib_div::strtoupper($tmp_category_name).'</label><a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
 									$tmpcontent2.='</span>';
 									$tmpcontent2.='<div class="custom_products_description" id="enableMultipleShopsCustomProductInfoCheckbox'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$custom_products_description_block.'>';
 									$tmpcontent2.=$details_content_multishops;
@@ -2803,98 +2883,124 @@ if ($this->post) {
 								if (count($tabs_array)) {
 									$shops_tabs_content[]='<div class="mshop_tab_'.$pageinfo['uid'].' shops_tab_content tab_content" style="display: block;" id="mshop_tab_'.$pageinfo['uid'].'"><ul class="custom_products_description" id="custom_products_desc_ul_'.$pageinfo['uid'].'">'.implode("\n", $tabs_array).'</ul></div>';
 								}
+								$main_shop_checkbox=' checked="checked"';
+								$main_select2_block_visibility=' style="display:block"';
 							}
-							$main_shop_checkbox=' checked="checked"';
-							$main_select2_block_visibility=' style="display:block"';
 						}
-						$tmpcontent.='<div class="msAttributes">
-						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$main_shop_checkbox.' />
-						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
-						<div class="msEditProductInputMultipleShopCategory" id="msEditProductInputMultipleShopCategory'.$pageinfo['uid'].'"'.$main_select2_block_visibility.'>
-							<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$old_products_to_shop_categories.'" />
-							<input name="tx_multishop_pi1[old_products_to_shop_categories]['.$pageinfo['uid'].']" type="hidden" value="'.$old_products_to_shop_categories.'" />
-						</div>
-						</div>';
-						$GLOBALS['TSFE']->additionalHeaderData[]='
-						<script type="text/javascript">
-						var languages=[];
-						'.implode("\n", $js_languages).'
-						jQuery(document).ready(function($) {
-							var categoriesIdSearchTerm_'.$pageinfo['uid'].'=[];
-							$(\'#enableMultipleShopsTree_'.$pageinfo['uid'].'\').select2({
-								dropdownCssClass: "", // apply css that makes the dropdown taller
-								width:\'500px\',
-								minimumInputLength: 0,
-								multiple: true,
-								//allowClear: true,
-								query: function(query) {
-									$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
-										data: {
-											q: query.term
-										},
-										dataType: "json"
-									}).done(function(data) {
-										categoriesIdSearchTerm_'.$pageinfo['uid'].'[query.term]=data;
-										query.callback({results: data});
-									});
-								},
-								initSelection: function(element, callback) {
-									var id=$(element).val();
-									if (id!=="") {
-										var split_id=id.split(",");
-										var callback_data=[];
-										$.each(split_id, function(i, v) {
-											if (categoriesIdTerm['.$pageinfo['uid'].'][v]!==undefined) {
-												callback_data[i]=categoriesIdTerm['.$pageinfo['uid'].'][v];
-											}
+						if ($pageinfo['uid']!=$this->shop_pid) {
+							$tmpcontent.='<div class="msAttributes">
+							<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$main_shop_checkbox.' />
+							<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
+							<div class="msEditProductInputMultipleShopCategory" id="msEditProductInputMultipleShopCategory'.$pageinfo['uid'].'"'.$main_select2_block_visibility.'>
+								<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$old_products_to_shop_categories.'" />
+								<input name="tx_multishop_pi1[old_products_to_shop_categories]['.$pageinfo['uid'].']" type="hidden" value="'.$old_products_to_shop_categories.'" />
+							</div>
+							</div>';
+							$GLOBALS['TSFE']->additionalHeaderData[]='
+							<script type="text/javascript">
+							var languages=[];
+							'.implode("\n", $js_languages).'
+							jQuery(document).ready(function($) {
+								var categoriesIdSearchTerm_'.$pageinfo['uid'].'=[];
+								$(\'#enableMultipleShopsTree_'.$pageinfo['uid'].'\').select2({
+									dropdownCssClass: "", // apply css that makes the dropdown taller
+									width:\'500px\',
+									minimumInputLength: 0,
+									multiple: true,
+									//allowClear: true,
+									query: function(query) {
+										$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+											data: {
+												q: query.term
+											},
+											dataType: "json"
+										}).done(function(data) {
+											categoriesIdSearchTerm_'.$pageinfo['uid'].'[query.term]=data;
+											query.callback({results: data});
 										});
-										if (callback_data.length) {
-											callback(callback_data);
-										} else {
-											$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
-												data: {
-													preselected_id: id
-												},
-												dataType: "json"
-											}).done(function(data) {
-												categoriesIdTerm['.$pageinfo['uid'].'][data.id]={id: data.id, text: data.text};
-												callback(data);
+									},
+									initSelection: function(element, callback) {
+										var id=$(element).val();
+										if (id!=="") {
+											var split_id=id.split(",");
+											var callback_data=[];
+											$.each(split_id, function(i, v) {
+												if (categoriesIdTerm['.$pageinfo['uid'].'][v]!==undefined) {
+													callback_data[i]=categoriesIdTerm['.$pageinfo['uid'].'][v];
+												}
 											});
+											if (callback_data.length) {
+												callback(callback_data);
+											} else {
+												$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+													data: {
+														preselected_id: id
+													},
+													dataType: "json"
+												}).done(function(data) {
+													categoriesIdTerm['.$pageinfo['uid'].'][data.id]={id: data.id, text: data.text};
+													callback(data);
+												});
+											}
 										}
+									},
+									formatResult: function(data){
+										if (data.text === undefined) {
+											$.each(data, function(i,val){
+												return val.text;
+											});
+										} else {
+											return data.text;
+										}
+									},
+									formatSelection: function(data){
+										if (data.text === undefined) {
+											return data[0].text;
+										} else {
+											return data.text;
+										}
+									},
+									escapeMarkup: function (m) { return m; }
+								}).on("select2-removed", function(e) {
+									'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
+									var removed_li_id="#products_info_shops'.$pageinfo['uid'].'_" + e.val;
+									$(removed_li_id).remove();
+									' : '').'
+								}).on("select2-selecting", function(e) {
+									'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
+									var page_uid=\''.$pageinfo['uid'].'\';
+									var tabs_anchor=\'mshop_tab_\' + page_uid;
+									var tabs_bar_class=\'.shops_tab_bar_\' + page_uid;
+									var tabs_anchor_id=\'#mshop_tab_\' + page_uid;
+									var product_details_number_of_tabs=parseInt('.$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS'].');
+									var shop_tabs_label=\''.$pageinfo['title'].'\';
+									// insert new tabs bar
+									var tabs_bar=\'<li class="\' + tabs_anchor + \' shops_tab_bar_\' + page_uid + \'"><a href="#\' + tabs_anchor + \'">'.$this->pi_getLL('enable_custom_products_description_for').' \' + shop_tabs_label + \'</a></li>\';
+									if (!$(tabs_bar_class).length) {
+										$(".tabs").append(tabs_bar);
 									}
-								},
-								formatResult: function(data){
-									if (data.text === undefined) {
-										$.each(data, function(i,val){
-											return val.text;
-										});
-									} else {
-										return data.text;
+									// insert new tabs content
+									if (!$(tabs_anchor_id).length) {
+										var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'" class="tab_content"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'"></ul></div>\';
+										$(tabs_content).insertAfter("#product_copy");
 									}
-								},
-								formatSelection: function(data){
-									if (data.text === undefined) {
-										return data[0].text;
-									} else {
-										return data.text;
-									}
-								},
-								escapeMarkup: function (m) { return m; }
-							}).on("select2-removed", function(e) {
-								'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
-								var removed_li_id="#products_info_shops'.$pageinfo['uid'].'_" + e.val;
-								$(removed_li_id).remove();
-								' : '').'
-							}).on("select2-selecting", function(e) {
-								'.($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] ? '
-								var target_ul_id="#custom_products_desc_ul_'.$pageinfo['uid'].'";
-								var tabs_content_li="";
-								tabs_content_li+=buildCustomProductsDescriptionIntput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
-								$(target_ul_id).append(tabs_content_li);
-								' : '').'
-							})
-						});
-						</script>';
+									var target_ul_id="#custom_products_desc_ul_'.$pageinfo['uid'].'";
+									var tabs_content_li="";
+									tabs_content_li+=buildCustomProductsDescriptionIntput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
+									$(target_ul_id).append(tabs_content_li);
+									$(\'.mceEditor\').redactor({
+										focus: false,
+										clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+										imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+										fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+										imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+										minHeight:\'400\'
+									});
+									' : '').'
+								})
+							});
+							</script>';
+						}
 					}
 				}
 			}
@@ -2973,9 +3079,9 @@ if ($this->post) {
 					var afoldwrapperState=\'items_wrapper_folded\';
 					var afoldwrapperText=\'unfold\';
 					tmpcontent2=\'<li id="products_info_shops\' + page_uid + \'_\' + category_id + \'" alt="" class="products_info_shops odd_group_row">\';
-					tmpcontent2+=\'<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_\' + page_uid + \'_\' + category_id + \'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo][\' + page_uid + \'][\' + category_id + \']" value="1" rel="\' + page_uid + \'_\' + category_id + \'" />&nbsp;\';
 					tmpcontent2+=\'<span class="shop_name" rel="\' + page_uid + \'_\' + category_id +\'">\';
-					tmpcontent2+= category_name + \' <a href="#" class="\' + afoldwrapperState + \'" id="afoldwrapper\' + page_uid + \'_\' + category_id +\'">\' + afoldwrapperText + \'</a>\';
+					tmpcontent2+=\'<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_\' + page_uid + \'_\' + category_id + \'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo][\' + page_uid + \'][\' + category_id + \']" value="1" rel="\' + page_uid + \'_\' + category_id + \'" />&nbsp;\';
+					tmpcontent2+=\'<label for="enableMultipleShopsCustomProductInfo_\' + page_uid + \'_\' + category_id + \'">\' + category_name + \'</label><a href="#" class="\' + afoldwrapperState + \'" id="afoldwrapper\' + page_uid + \'_\' + category_id +\'">\' + afoldwrapperText + \'</a>\';
 					tmpcontent2+=\'</span>\';
 					tmpcontent2+=\'<div class="custom_products_description" id="enableMultipleShopsCustomProductInfoCheckbox\' + page_uid + \'_\' + category_id +\'"\' + custom_products_description_block + \'>\';
 					tmpcontent2+=details_content;
@@ -2985,7 +3091,7 @@ if ($this->post) {
 					return tmpcontent2;
 				}
 				jQuery(document).ready(function($) {
-					$(document).on("click", ".enableMultipleShopsCustomProductInfoCheckbox", function(){
+					$(document).on("click", ".enableMultipleShopsCustomProductInfoCheckbox", function() {
 						var page_uid=$(this).attr("rel"); // this string are combination page_uid and category_id : pageuid_catid
 						var afoldwrapperId="#afoldwrapper" + page_uid;
 						var checkboxId="#enableMultipleShopsCustomProductInfo_" + page_uid;
@@ -3023,7 +3129,7 @@ if ($this->post) {
 						if ($(this).prop("checked")) {
 							var shop_tabs_label=$(\'label[for="\' + checkbox_id + \'"]\').text();
 							// insert new tabs bar
-							var tabs_bar=\'<li class="\' + tabs_anchor + \' shops_tab_bar"><a href="#\' + tabs_anchor + \'">'.$this->pi_getLL('enable_custom_products_description_for').' \' + shop_tabs_label + \'</a></li>\';
+							var tabs_bar=\'<li class="\' + tabs_anchor + \' shops_tab_bar_\' + page_uid + \'"><a href="#\' + tabs_anchor + \'">'.$this->pi_getLL('enable_custom_products_description_for').' \' + shop_tabs_label + \'</a></li>\';
 							if ($(".shops_tab_bar").length) {
 								$(tabs_bar).insertAfter(".shops_tab_bar:last");
 							} else {
@@ -3076,6 +3182,10 @@ if ($this->post) {
 				</script>
 				';
 			}
+		}
+		$subpartArray['###INPUT_OLD_LAYERED_CATEGORY_INPUT###']='';
+		if (count($old_layered_categories_ids)) {
+			$subpartArray['###INPUT_OLD_LAYERED_CATEGORY_INPUT###']=implode("\n", $old_layered_categories_ids);;
 		}
 		$subpartArray['###LABEL_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###']='';
 		$subpartArray['###CONTENT_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###']='';
