@@ -799,9 +799,7 @@ span.viewfront a:hover { background:#e2e2e2; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul li { background:none; margin:0; padding:0; line-height:20px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul li input[type="checkbox"] { display:inline-block; margin:0 5px 0 0; }
 
-.mceEditorFullWidth { display:block; padding-left:200px; }
 .mceEditorFullWidth .redactor_box { float:none; width:100%; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core .inputWideWrapper { display:block; padding-left:200px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .inputWideWrapper input[type="text"] { width:100%; box-sizing:border-box; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .select2-container-multi ul.select2-choices li.select2-search-choice {
