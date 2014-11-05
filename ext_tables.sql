@@ -1114,6 +1114,19 @@ CREATE TABLE `tx_multishop_orders_export` (
   KEY `code` (`code`)
 );
 
+CREATE TABLE `tx_multishop_invoices_export` (
+  `id`        INT(11) AUTO_INCREMENT,
+  `name`      VARCHAR(75) DEFAULT '',
+  `page_uid`  INT(11) DEFAULT '0',
+  `crdate`    INT(11) DEFAULT '0',
+  `fields`    TEXT,
+  `post_data` TEXT,
+  `code`      VARCHAR(150) DEFAULT '',
+  `status`    TINYINT(1) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `code` (`code`)
+);
+
 CREATE TABLE `tx_multishop_product_wishlist` (
   `product_wishlist_id` int(11) auto_increment,
   `wishlist_id` int(11) default '0',

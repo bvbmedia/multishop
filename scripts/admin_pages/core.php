@@ -268,6 +268,11 @@ switch ($this->ms['page']) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_export_orders.php');
 		}
 		break;
+	case 'admin_export_invoices':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_export_invoices.php');
+		}
+		break;
 	case 'admin_customer_export':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_customer_export.php');
