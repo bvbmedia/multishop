@@ -27,9 +27,15 @@ if (is_numeric($this->get['manufacturers_id'])) {
 	}
 	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 		// current manufacturer
-		$str="SELECT * from tx_multishop_manufacturers m left join tx_multishop_manufacturers_info mi on m.manufacturers_id=mi.manufacturers_id left join tx_multishop_manufacturers_cms mcms on m.manufacturers_id=mcms.manufacturers_id where m.status=1 and m.manufacturers_id='".$this->get['manufacturers_id']."' and mcms.language_id='".$this->sys_language_uid."'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$current=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name, m.manufacturers_image', // SELECT ...
+			'tx_multishop_manufacturers m', // FROM ...
+			'm.status=1 and m.manufacturers_id=\''.$this->get['manufacturers_id'].'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$current=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		$content.='<div class="main-heading"><h2>'.$current['manufacturers_name'].'</h2></div>';
 		// now the listing
 		if ($p>0) {
@@ -77,6 +83,9 @@ if (is_numeric($this->get['manufacturers_id'])) {
 				if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {
 					die('error in PRODUCTS_LISTING_TYPE value');
 				} else {
+					if (!$this->ms['MODULES']['PRODUCTS_LISTING_TYPE']) {
+						$this->ms['MODULES']['PRODUCTS_LISTING_TYPE']='default';
+					}
 					if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "/")) {
 						require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
 					} else {

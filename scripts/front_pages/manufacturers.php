@@ -20,10 +20,16 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 }
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 	$content.='<div id="tx_multishop_pi1_core">';
-	$str="SELECT m.manufacturers_id, m.manufacturers_name from tx_multishop_manufacturers m, tx_multishop_manufacturers_info mi where m.status=1 and mi.language_id='".$this->sys_language_uid."' and m.manufacturers_id=mi.manufacturers_id order by m.sort_order";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	$query=$GLOBALS['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name', // SELECT ...
+		'tx_multishop_manufacturers m, tx_multishop_manufacturers_info mi m', // FROM ...
+		'm.status=1 and mi.language_id=\''.$this->sys_language_uid.'\' and m.manufacturers_id=mi.manufacturers_id', // WHERE...
+		'', // GROUP BY...
+		'm.sort_order', // ORDER BY...
+		'' // LIMIT ...
+	);
+	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	$manufacturers=array();
-	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 		$manufacturers[]=$row;
 	}
 	if (count($manufacturers)>0) {
