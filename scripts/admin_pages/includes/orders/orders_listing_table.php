@@ -98,6 +98,7 @@ foreach ($tmporders as $order) {
 	}
 	$markerArray['EDIT_ORDER_POPUP_WIDTH']=$edit_order_popup_width;
 	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
+	$markerArray['ORDER_TOOLTIP_DATA_URL']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&tx_multishop_pi1[orders_id]='.$order['orders_id']);
 	$markerArray['ORDER_CUSTOMER_NAME']=$customer_name;
 	$markerArray['ORDER_CREATE_DATE']=strftime("%x %X", $order['crdate']);
 	$markerArray['ORDER_GRAND_TOTAL']=mslib_fe::amount2Cents($order['grand_total'], 0);
@@ -312,21 +313,33 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $headerData.='});
 		'.($this->get['tx_multishop_pi1']['action']!='change_order_status_for_selected_orders' ? '$("#msadmin_order_status_select").hide();' : '').'
-		$(".tooltip").tooltip({position: "bottom",
-			onBeforeShow: function() {
-				var that=this;
-				var orders_id=this.getTrigger().attr(\'rel\');
+		$(".tooltip").tooltip({
+			position: "down",
+			placement: \'auto\',
+			html: true
+		});
+		var tooltip_is_shown=\'\';
+		$(\'.tooltip\').on(\'show.bs.tooltip\', function () {
+			var orders_id=$(this).attr(\'rel\');
+			var that=$(this);
+			if (tooltip_is_shown != orders_id) {
+				tooltip_is_shown=orders_id;
 				$.ajax({
 					type:   "POST",
-					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails').'\',
+					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
 					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
 					dataType: "json",
 					success: function(data) {
-						that.getTip().html(data.html);
+						that.next().html(data.html);
+            			that.tooltip(\'show\', {
+            				position: \'down\',
+               				placement: \'auto\',
+               				html: true
+            			});
 					}
 				});
 			}
-		});
+		})
 		$(\'#check_all_1\').click(function(){
 			checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
 		});
