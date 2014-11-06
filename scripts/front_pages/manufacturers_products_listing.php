@@ -25,7 +25,7 @@ if (is_numeric($this->get['manufacturers_id'])) {
 		$Cache_Lite=new Cache_Lite($options);
 		$string=$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 	}
-	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
+	if ((!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) && is_numeric($this->get['manufacturers_id'])) {
 		// current manufacturer
 		$query=$GLOBALS['TYPO3_DB']->SELECTquery('m.manufacturers_id, m.manufacturers_name, m.manufacturers_image', // SELECT ...
 			'tx_multishop_manufacturers m', // FROM ...
