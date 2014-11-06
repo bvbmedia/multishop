@@ -2999,6 +2999,24 @@ class mslib_fe {
 			}
 		}
 	}
+	public function getProductToCategoriesRelatedTo($product_id, $category_id, $page_uid='') {
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.related_to', // SELECT ...
+			'tx_multishop_products_to_categories p2c', // FROM ...
+			'p2c.products_id = \''.$product_id.'\' and p2c.categories_id=\''.$category_id.'\' and p2c.page_uid=\''.$page_uid.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		if (!$qry) {
+			return false;
+		}
+		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query);
+		return $rs['related_to'];
+	}
 	public function getProductToCategories($product_id, $current_category_id='',$page_uid='') {
 		if (!is_numeric($page_uid)) {
 			$page_uid=$this->showCatalogFromPage;
@@ -3047,6 +3065,30 @@ class mslib_fe {
 	public function getCategoriesToCategories($current_category_id, $page_uid) {
 		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c2c.categories_id, c2c.foreign_categories_id', // SELECT ...
 			'tx_multishop_categories_to_categories c2c', // FROM ...
+			'((c2c.categories_id = \''.$current_category_id.'\' and c2c.foreign_page_uid = \''.$page_uid.'\') or (c2c.foreign_categories_id = \''.$current_category_id.'\' and c2c.page_uid = \''.$page_uid.'\'))', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		$res=array();
+		$return_categories_id='';
+		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
+			if ($rs['categories_id']==$current_category_id) {
+				$res[]=$rs['foreign_categories_id'];
+			} else {
+				$res[]=$rs['categories_id'];
+			}
+		}
+		$count_res=count($res);
+		if ($count_res>0) {
+			$return_categories_id=implode(',', $res);
+		}
+		return $return_categories_id;
+	}
+	public function checkCategories($category_id, $page_uid) {
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c2c.categories_id, c2c.foreign_categories_id', // SELECT ...
+			'tx_multishop_categories_description cd', // FROM ...
 			'((c2c.categories_id = \''.$current_category_id.'\' and c2c.foreign_page_uid = \''.$page_uid.'\') or (c2c.foreign_categories_id = \''.$current_category_id.'\' and c2c.page_uid = \''.$page_uid.'\'))', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
@@ -5613,15 +5655,18 @@ class mslib_fe {
 			}
 		}
 	}
-	public function getCategoryName($categories_id) {
+	public function getCategoryName($categories_id, $page_uid=0) {
 		if (!is_numeric($categories_id)) {
 			return false;
 		}
+		if (!$page_uid) {
+			$page_uid=$this->showCatalogFromPage;
+		}
 		if (is_numeric($categories_id)) {
 			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
-			$query=$GLOBALS['TYPO3_DB']->SELECTquery('categories_name', // SELECT ...
-				'tx_multishop_categories_description', // FROM ...
-				'categories_id=\''.$categories_id.'\'', // WHERE...
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'c.categories_id=cd.categories_id and c.categories_id=\''.$categories_id.'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\'', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
@@ -5631,6 +5676,104 @@ class mslib_fe {
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 				return $row['categories_name'];
 			}
+		}
+	}
+	public function getCategoryIdByName($categories_name, $page_uid=0) {
+		if (empty($categories_name)) {
+			return false;
+		}
+		if (!$page_uid) {
+			$page_uid=$this->showCatalogFromPage;
+		}
+		if (!empty($categories_name)) {
+			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'c.categories_id=cd.categories_id and cd.categories_name=\''.addslashes($categories_name).'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\'', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				return $row['categories_id'];
+			}
+		}
+		return false;
+	}
+	function getCategoryDescription($categories_id, $page_uid) {
+		if (!is_numeric($categories_id)) {
+			return false;
+		}
+		if (!$page_uid) {
+			$page_uid=$this->showCatalogFromPage;
+		}
+		if (is_numeric($categories_id)) {
+			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				'c.categories_id=cd.categories_id and c.categories_id=\''.$categories_id.'\' and c.page_uid=\''.$page_uid.'\' and c.language_id=\''.$this->sys_language_uid.'\'', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				return $row;
+			}
+		}
+	}
+	public function createExternalShopCategoryTree($categories_id, $external_page_uid) {
+		if (!is_numeric($categories_id)) {
+			return false;
+		}
+		if (!is_numeric($external_page_uid)) {
+			return false;
+		}
+		if (is_numeric($categories_id) && is_numeric($external_page_uid)) {
+			$cats=mslib_fe::Crumbar($categories_id, '', array(), $this->showCatalogFromPage);
+			$cats=array_reverse($cats);
+			$prev_catid=0;
+			foreach ($cats as $catidx=>$cat) {
+				if ($catidx>0) {
+					$prev_catid=$cats[$catidx-1]['id'];
+				}
+				$local_catname=$cat['name'];
+				// check categories name if already exists or not
+				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid);
+				if (!$foreign_catid) {
+					$insertArray=array();
+					$insertArray['custom_settings']='';
+					$insertArray['parent_id']=$prev_catid;
+					$insertArray['hide_in_menu']=0;
+					$insertArray['categories_url']='';
+					$insertArray['status']=1;
+					$insertArray['page_uid']=$external_page_uid;
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$new_catid=$GLOBALS['TYPO3_DB']->sql_insert_id();
+					$cats[$catidx]['id']=$new_catid;
+					// cat desc
+					$cat_info=mslib_fe::getCategoryDescription($cat['id'], $this->showCatalogFromPage);
+					$insertArray=array();
+					$insertArray['categories_id']=$new_catid;
+					$insertArray['language_id']=$this->sys_language_uid;
+					$insertArray['categories_name']=$local_catname;
+					$insertArray['meta_title']=$cat_info['meta_title'];
+					$insertArray['meta_keywords']=$cat_info['meta_keywords'];
+					$insertArray['meta_description']=$cat_info['meta_description'];
+					$insertArray['content']=$cat_info['content'];
+					$insertArray['content_footer']=$cat_info['content_footer'];
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				} else {
+					$cats[$catidx]['id']=$foreign_catid;
+				}
+				$endpoint_catid=$cats[$catidx]['id'];
+			}
+			return $endpoint_catid;
 		}
 	}
 	public function tep_get_categories_edit($categories_id='', $aid='') {

@@ -1040,9 +1040,11 @@ CREATE TABLE `tx_multishop_products_to_categories` (
   `categories_id` int(5) default '0',
   `sort_order` int(11) default '0',
   `page_uid` int(11) default '0',
+  `related_to` INT(11) DEFAULT '0',
   PRIMARY KEY (`products_id`,`categories_id`),
   KEY `page_uid` (`page_uid`),
-  KEY `categories_id` (`categories_id`)
+  KEY `categories_id` (`categories_id`),
+  KEY `related_to` (`related_to`)
 );
 
 CREATE TABLE `tx_multishop_categories_to_categories` (
