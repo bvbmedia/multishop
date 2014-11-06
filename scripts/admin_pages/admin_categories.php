@@ -182,4 +182,5 @@ $subpartArray['###ADMIN_LABEL_BTN_MOVE###']=$this->pi_getLL('admin_label_btn_mov
 $subpartArray['###ADMIN_LABEL_BTN_DELETE_SELECTED_CATEGORIES###']=$this->pi_getLL('admin_label_btn_delete_selected_categories');
 $subpartArray['###CATEGORIES###']=$contentItem;
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
+$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 ?>
