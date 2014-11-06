@@ -31,8 +31,8 @@ div.tooltip .msAdminTooltipOrderDetailsAddressWrapper h3 { font:bold 12px Arial,
 /* div.tooltip.fade { position:absolute !important; overflow:visible; margin-left:300px; max-width:100px; margin-top:-10px; border:none; box-shadow:0 4px 10px #999; }
 div.tooltip.fade:after { position:absolute; left:10px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; } */
 
-div.tooltip.fade { position:absolute !important; overflow:visible; margin:-10px 0 0; width:auto; min-width:100px; max-width:400px; border:none; box-shadow:0 4px 10px #999; }
-div.tooltip.fade:after { position:absolute; left:50%; margin-left:-7px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; }
+div.tooltip.fade { position:absolute !important; overflow:visible; margin:-10px 0 0; width:auto; min-width:100px; max-width:380px; border:none; box-shadow:0 4px 10px #999; }
+div.tooltip.fade.top:after { position:absolute; left:50%; margin-left:-7px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; }
 
 .align_left { text-align:left; }
 .align_right { text-align:right; }
