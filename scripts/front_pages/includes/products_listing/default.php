@@ -139,7 +139,7 @@ foreach ($products as $current_product) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	// custom hook that can be controlled by third-party plugin eof		
+	// custom hook that can be controlled by third-party plugin eof
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 }
 // fill the row marker with the expanded rows
@@ -151,7 +151,11 @@ $subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='';
 if ($current['content_footer']) {
 	$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
 }
-$subpartArray['###CURRENT_CATEGORIES_NAME###']=trim($current['categories_name']);
+if (isset($current['categories_name']) && !empty($current['categories_name'])) {
+	$subpartArray['###CURRENT_CATEGORIES_NAME###']='<h1>'.trim($current['categories_name']).'</h1>';
+} else {
+	$subpartArray['###CURRENT_CATEGORIES_NAME###']='';
+}
 $subpartArray['###ITEM###']=$contentItem;
 $product_listing_form_content='';
 if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM']) {
@@ -249,7 +253,7 @@ if (!empty($product_listing_form_content)) {
 	$subpartArray['###PRODUCTS_LISTING_FILTER_FORM_URL###']='';
 	$subpartArray['###PRODUCTS_LISTING_FORM_CONTENT###']='';
 }
-// completed the template expansion by replacing the "item" marker in the template 
+// completed the template expansion by replacing the "item" marker in the template
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'])) {
 	$params=array(
@@ -285,28 +289,28 @@ $skippedTypes[]='products_new';
 $skippedTypes[]='products_specials';
 $skippedTypes[]='specials_listing_page';
 if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER))) {
-	$content.='					
+	$content.='
 	<script type="text/javascript">
 	  jQuery(document).ready(function($) {
 		var result = jQuery(".product_listing").sortable({
-			cursor:     "move", 
-			//axis:       "y", 
-			update: function(e, ui) { 
+			cursor:     "move",
+			//axis:       "y",
+			update: function(e, ui) {
 				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=product&catid='.$current_product['categories_id']).'";
-				jQuery(this).sortable("refresh"); 
-				sorted = jQuery(this).sortable("serialize", "id"); 
-				jQuery.ajax({ 
-						type:   "POST", 
-						url:    href, 
-						data:   sorted, 
+				jQuery(this).sortable("refresh");
+				sorted = jQuery(this).sortable("serialize", "id");
+				jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
 						success: function(msg) {
-								//do something with the sorted data 
+								//do something with the sorted data
 						}
-				}); 
+				});
 			}
 		});
 	  });
-	  </script>					
+	  </script>
 	';
 }
 ?>

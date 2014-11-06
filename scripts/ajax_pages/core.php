@@ -557,6 +557,10 @@ switch ($this->ms['page']) {
 		require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/download_orders_export.php');
 		exit();
 		break;
+	case 'download_invoices_export':
+		require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/download_invoices_export.php');
+		exit();
+		break;
 	case 'admin_ajax_upload':
 		if ($this->ADMIN_USER) {
 			if (isset($_SERVER["CONTENT_LENGTH"])) {
