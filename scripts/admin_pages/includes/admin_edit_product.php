@@ -628,6 +628,27 @@ if ($this->post) {
 			}
 			if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 				foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
+					if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+						$tmp_categories_id=array();
+						if (strpos($this->post['categories_id'], ',')!==false) {
+							$tmp_categories_id=explode(',', $this->post['categories_id']);
+						} else {
+							$tmp_categories_id[]=$this->post['categories_id'];
+						}
+						$endpoint_catid=array();
+						foreach ($tmp_categories_id as $tmp_category_id) {
+							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+							if (!empty($tmp_catname)) {
+								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+								if (!$foreign_catid) {
+									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+								} else {
+									$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+								}
+							}
+						}
+						$shopRecord=implode(',', $endpoint_catid);
+					}
 					if (strpos($shopRecord, ',')!==false) {
 						$catIds[$page_uid]=explode(',', $shopRecord);
 					} else {
@@ -638,13 +659,23 @@ if ($this->post) {
 			foreach ($catIds as $page_uid => $catIdsToAdd) {
 				if (is_array($catIdsToAdd) && count($catIdsToAdd)) {
 					foreach ($catIdsToAdd as $catId) {
+						if (strpos($catId, '::rel_')!==false) {
+							list($tmpCatId, $relCatId)=explode('::rel_', $catId);
+							$catId=$tmpCatId;
+						}
 						if ($catId>0) {
 							$updateArray=array();
 							$updateArray['categories_id']=$catId;
 							$updateArray['products_id']=$prodid;
 							$updateArray['sort_order']=time();
 							$updateArray['page_uid']=$page_uid;
+							$updateArray['related_to']=$relCatId;
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// update the counterpart relation
+							$updateArray=array();
+							$updateArray['related_to']=$catId;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\''.$relCatId.'\' and products_id=\''.$prodid.'\'', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
 					}
@@ -701,25 +732,49 @@ if ($this->post) {
 				}
 				if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 					foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
-						if (strpos($shopRecord, ',')!==false) {
-							$catIds[$page_uid]=explode(',', $shopRecord);
-						} else {
-							$catIds[$page_uid][]=$shopRecord;
+						if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+							$tmp_categories_id=array();
+							if (strpos($this->post['categories_id'], ',')!==false) {
+								$tmp_categories_id=explode(',', $this->post['categories_id']);
+							} else {
+								$tmp_categories_id[]=$this->post['categories_id'];
+							}
+							$endpoint_catid=array();
+							foreach ($tmp_categories_id as $tmp_category_id) {
+								$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+								if (!empty($tmp_catname)) {
+									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+									if (!$foreign_catid) {
+										$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+									} else {
+										$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+									}
+								}
+							}
+							$shopRecord=implode(',', $endpoint_catid);
+						}
+						if (!empty($shopRecord)) {
+							if (strpos($shopRecord, ',')!==false) {
+								$catIds[$page_uid]=explode(',', $shopRecord);
+							} else {
+								$catIds[$page_uid][]=$shopRecord;
+							}
 						}
 					}
 				}
 				// finally get the category ids that we must remove
 				if (is_array($catOldIds) && count($catOldIds)) {
 					foreach ($catOldIds as $page_uid => $catOldArray) {
-						$catIdsToRemove = array_diff($catOldIds[$page_uid], $catIds[$page_uid]);
-						if (is_array($catIdsToRemove) && count($catIdsToRemove)) {
-							foreach ($catIdsToRemove as $catId) {
-								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and categories_id=\''.$catId.'\' and page_uid='.$page_uid);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-								// remove the custom page desc if the cat id is not related anymore in p2c
-								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and layered_categories_id=\''.$catId.'\' and page_uid='.$page_uid);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						foreach ($catOldArray as $catId) {
+							if (strpos($catId, '::rel_')!==false) {
+								list($tmpcatId,)=explode('::rel_', $catId);
+								$catId=$tmpcatId;
 							}
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and categories_id=\''.$catId.'\' and page_uid='.$page_uid);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// remove the custom page desc if the cat id is not related anymore in p2c
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and layered_categories_id=\''.$catId.'\' and page_uid='.$page_uid);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
 					}
 				}
@@ -737,22 +792,36 @@ if ($this->post) {
 						}
 					}
 				}
+				//print_r($catIds);
+				//die();
 				if (is_array($catIds) && count($catIds)) {
 					foreach ($catIds as $page_uid=>$catArray) {
-						$catIdsToAdd=array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
-						if (is_array($catIdsToAdd) && count($catIdsToAdd)) {
-							foreach ($catIdsToAdd as $catId) {
-								if ($catId > 0) {
+						//$catIdsToAdd=array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
+						//if (is_array($catIdsToAdd) && count($catIdsToAdd)) {
+						foreach ($catArray as $catId) {
+							if (strpos($catId, '::rel_')!==false) {
+								list($tmpCatId, $relCatId)=explode('::rel_', $catId);
+								$catId=$tmpCatId;
+							} else {
+								$relCatId=0;
+							}
+							if ($catId > 0) {
 									$updateArray=array();
 									$updateArray['categories_id']=$catId;
 									$updateArray['products_id']=$prodid;
 									$updateArray['sort_order']=time();
 									$updateArray['page_uid']=$page_uid;
-									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+								$updateArray['related_to']=$relCatId;
+								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-								}
+								// update the counterpart relation
+								$updateArray=array();
+								$updateArray['related_to']=$catId;
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\''.$relCatId.'\' and products_id=\''.$prodid.'\'', $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
-						}
+							}
+						//}
 					}
 				}
 				/*
@@ -785,23 +854,58 @@ if ($this->post) {
 		}
 		if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 			foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
-				if (strpos($shopRecord, ',')!==false) {
-					$catIds[$page_uid]=explode(',', $shopRecord);
-				} else {
-					$catIds[$page_uid][]=$shopRecord;
+				if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+					$tmp_categories_id=array();
+					if (strpos($this->post['categories_id'], ',')!==false) {
+						$tmp_categories_id=explode(',', $this->post['categories_id']);
+					} else {
+						$tmp_categories_id[]=$this->post['categories_id'];
+					}
+					$endpoint_catid=array();
+					foreach ($tmp_categories_id as $tmp_category_id) {
+						$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+						if (!empty($tmp_catname)) {
+							$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+							if (!$foreign_catid) {
+								$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+							} else {
+								$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+							}
+						}
+					}
+					$shopRecord=implode(',', $endpoint_catid);
+				}
+				if (!empty($shopRecord)) {
+					if (strpos($shopRecord, ',')!==false) {
+						$catIds[$page_uid]=explode(',', $shopRecord);
+					} else {
+						$catIds[$page_uid][]=$shopRecord;
+					}
 				}
 			}
 		}
 		foreach ($catIds as $page_uid => $catIdsToAdd) {
 			if (is_array($catIdsToAdd) && count($catIdsToAdd)) {
 				foreach ($catIdsToAdd as $catId) {
+					if (strpos($catId, '::rel_')!==false) {
+						list($tmpCatId, $relCatId)=explode('::rel_', $catId);
+						$catId=$tmpCatId;
+					} else {
+						$relCatId=0;
+					}
 					if ($catId>0) {
 						$updateArray=array();
 						$updateArray['categories_id']=$catId;
 						$updateArray['products_id']=$prodid;
 						$updateArray['sort_order']=time();
 						$updateArray['page_uid']=$page_uid;
+						$updateArray['related_to']=$relCatId;
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						// update the counterpart relation
+						$updateArray=array();
+						$updateArray['related_to']=$catId;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\''.$relCatId.'\' and products_id=\''.$prodid.'\'', $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
@@ -2773,126 +2877,138 @@ if ($this->post) {
 						$main_shop_checkbox='';
 						$main_select2_block_visibility=' style="display:none"';
 						if ($this->get['action']=='edit_product') {
-							if (!empty($old_products_to_shop_categories) && $this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-								// build the shops tab if the link for categories in other shop exist
-								$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar_'.$pageinfo['uid'].'"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.t3lib_div::strtoupper($pageinfo['title']).'</a></li>';
-								$tmp_categories_id=explode(',', $old_products_to_shop_categories);
-								$tabs_content=array();
-								$tabs_array=array();
-								foreach ($tmp_categories_id as $tmp_category_id) {
-									$tmp_category_name=mslib_fe::getCategoryName($tmp_category_id);
-									$other_shops_product_info=mslib_fe::getProductInfo($this->get['pid'], $tmp_category_id, $pageinfo['uid']);
-									// external custom product desc
-									$details_content_multishops='';
-									foreach ($this->languages as $key=>$language) {
-										$details_tab_content_multishops='';
-										if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
-											for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
-												$details_tab_content_multishops.='
-													<div class="account-field" id="msEditProductInputTabTitle_'.$i.'">
-														<label for="products_description_tab_title_'.$i.'">'.$this->pi_getLL('admin_title_tab_'.$i, 'TITLE TAB '.$i).'</label>
-														<input type="text" class="text" name="customProductsDescription_products_description_tab_title_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_title_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_title_'.$i.'']).'">
-													</div>
-													<div class="account-field" id="msEditProductInputTabContent_'.$i.'">
-														<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('admin_full_description_tab_'.$i, 'DESCRIPTION TAB '.$i).'</label>
-														<textarea name="customProductsDescription_products_description_tab_content_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_content_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
-													</div>';
+							if (!empty($old_products_to_shop_categories)) {
+								if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+									// build the shops tab if the link for categories in other shop exist
+									$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar_'.$pageinfo['uid'].'"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.t3lib_div::strtoupper($pageinfo['title']).'</a></li>';
+									$tmp_categories_id=explode(',', $old_products_to_shop_categories);
+									$tabs_content=array();
+									$tabs_array=array();
+									foreach ($tmp_categories_id as $tmp_category_id) {
+										$tmp_category_name=mslib_fe::getCategoryName($tmp_category_id);
+										$other_shops_product_info=mslib_fe::getProductInfo($this->get['pid'], $tmp_category_id, $pageinfo['uid']);
+										// external custom product desc
+										$details_content_multishops='';
+										foreach ($this->languages as $key=>$language) {
+											$details_tab_content_multishops='';
+											if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
+												for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
+													$details_tab_content_multishops.='
+														<div class="account-field" id="msEditProductInputTabTitle_'.$i.'">
+															<label for="products_description_tab_title_'.$i.'">'.$this->pi_getLL('admin_title_tab_'.$i, 'TITLE TAB '.$i).'</label>
+															<input type="text" class="text" name="customProductsDescription_products_description_tab_title_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_title_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_title_'.$i.'']).'">
+														</div>
+														<div class="account-field" id="msEditProductInputTabContent_'.$i.'">
+															<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('admin_full_description_tab_'.$i, 'DESCRIPTION TAB '.$i).'</label>
+															<textarea name="customProductsDescription_products_description_tab_content_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_content_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
+														</div>';
+												}
+											}
+											$flag_path='';
+											if ($language['flag']) {
+												$flag_path='sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif';
+											}
+											$language_label='';
+											if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.$flag_path)) {
+												$language_label.='<img src="'.$this->FULL_HTTP_URL_TYPO3.$flag_path.'"> ';
+											}
+											$language_label.=''.$language['title'];
+											$textarea_short_description_params='';
+											if (!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']) {
+												$textarea_short_description_params='onKeyDown="limitText(this,255);" onKeyUp="limitText(this,255);"';
+											}
+											$textarea_short_description_class=($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="text expand20-100" ');
+											$details_content_multishops.='<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
+													<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>
+													<strong>'.$language_label.'</strong>
+												</div>
+												<div class="account-field" id="msEditProductInputName">
+													<label for="products_name">'.$this->pi_getLL('admin_name').'</label>
+													<input type="text" class="text" name="customProductsDescription_products_name['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_name_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_name']).'">
+												</div>
+												<div class="account-field" id="msEditProductInputShortDesc">
+													<label for="products_shortdescription">'.$this->pi_getLL('admin_short_description').'</label>
+													<textarea name="customProductsDescription_products_shortdescription['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" '.$textarea_short_description_params.' id="customProductsDescription_products_shortdescription_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" rows="4" '.$textarea_short_description_class.'>'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_shortdescription']).'</textarea>
+												</div>
+												<div class="account-field" id="msEditProductInputDesc">
+													<label for="products_description">'.$this->pi_getLL('admin_full_description').'</label>
+													<textarea name="customProductsDescription_products_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description']).'</textarea>
+												</div>
+												'.$details_tab_content_multishops.'
+												<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl">
+													<label for="products_url">'.$this->pi_getLL('admin_external_url').'</label>
+													<input type="text" class="text" name="customProductsDescription_products_url['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_url_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_url']).'">
+												</div>
+												<div class="account-field" id="msEditProductInputDeliveryTime">
+													<label for="delivery_time">'.$this->pi_getLL('admin_delivery_time').'</label>
+													<input type="text" class="text" name="customProductsDescription_delivery_time['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_delivery_time_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['delivery_time']).'">
+												</div>
+												<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords">
+													<label for="products_negative_keywords">Negative keywords</label>
+													<textarea name="customProductsDescription_products_negative_keywords['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_negative_keywords_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="expand20-100">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_negative_keywords']).'</textarea>
+												</div>
+												<div class="account-field" id="msEditProductInputMetaTitle_'.$pageinfo['uid'].'_'.$language['uid'].'">
+													<label for="products_meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
+													<input type="text" class="text" name="customProductsDescription_products_meta_title['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_title_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_title']).'">
+												</div>
+												<div class="account-field" id="msEditProductInputMetaKeywords_'.$pageinfo['uid'].'_'.$language['uid'].'">
+													<label for="products_meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
+													<input type="text" class="text" name="customProductsDescription_products_meta_keywords['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_keywords_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_keywords']).'">
+												</div>
+												<div class="account-field" id="msEditProductInputMetaDesc_'.$pageinfo['uid'].'_'.$language['uid'].'">
+													<label for="products_meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
+													<input type="text" class="text" name="customProductsDescription_products_meta_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_description']).'">
+												</div>';
+										}
+										$old_layered_categories_ids[]='<input type="hidden" name="old_layered_categories_id['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" />';
+										$shop_checkbox='';
+										$custom_products_description_block=' style="display:none"';
+										$afoldwrapperState='items_wrapper_folded';
+										$afoldwrapperText='unfold';
+										if ($this->get['action']=='edit_product') {
+											if (count($other_shops_product_info)) {
+												$shop_checkbox=' checked="checked"';
+												$custom_products_description_block=' style="display:block"';
+												$afoldwrapperState='items_wrapper_unfolded';
+												$afoldwrapperText='fold';
 											}
 										}
-										$flag_path='';
-										if ($language['flag']) {
-											$flag_path='sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif';
-										}
-										$language_label='';
-										if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.$flag_path)) {
-											$language_label.='<img src="'.$this->FULL_HTTP_URL_TYPO3.$flag_path.'"> ';
-										}
-										$language_label.=''.$language['title'];
-										$textarea_short_description_params='';
-										if (!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']) {
-											$textarea_short_description_params='onKeyDown="limitText(this,255);" onKeyUp="limitText(this,255);"';
-										}
-										$textarea_short_description_class=($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="text expand20-100" ');
-										$details_content_multishops.='<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-												<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>
-												<strong>'.$language_label.'</strong>
-											</div>
-											<div class="account-field" id="msEditProductInputName">
-												<label for="products_name">'.$this->pi_getLL('admin_name').'</label>
-												<input type="text" class="text" name="customProductsDescription_products_name['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_name_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_name']).'">
-											</div>
-											<div class="account-field" id="msEditProductInputShortDesc">
-												<label for="products_shortdescription">'.$this->pi_getLL('admin_short_description').'</label>
-												<textarea name="customProductsDescription_products_shortdescription['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" '.$textarea_short_description_params.' id="customProductsDescription_products_shortdescription_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" rows="4" '.$textarea_short_description_class.'>'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_shortdescription']).'</textarea>
-											</div>
-											<div class="account-field" id="msEditProductInputDesc">
-												<label for="products_description">'.$this->pi_getLL('admin_full_description').'</label>
-												<textarea name="customProductsDescription_products_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description']).'</textarea>
-											</div>
-											'.$details_tab_content_multishops.'
-											<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl">
-												<label for="products_url">'.$this->pi_getLL('admin_external_url').'</label>
-												<input type="text" class="text" name="customProductsDescription_products_url['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_url_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_url']).'">
-											</div>
-											<div class="account-field" id="msEditProductInputDeliveryTime">
-												<label for="delivery_time">'.$this->pi_getLL('admin_delivery_time').'</label>
-												<input type="text" class="text" name="customProductsDescription_delivery_time['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_delivery_time_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['delivery_time']).'">
-											</div>
-											<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords">
-												<label for="products_negative_keywords">Negative keywords</label>
-												<textarea name="customProductsDescription_products_negative_keywords['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_negative_keywords_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="expand20-100">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_negative_keywords']).'</textarea>
-											</div>
-											<div class="account-field" id="msEditProductInputMetaTitle_'.$pageinfo['uid'].'_'.$language['uid'].'">
-												<label for="products_meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
-												<input type="text" class="text" name="customProductsDescription_products_meta_title['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_title_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_title']).'">
-											</div>
-											<div class="account-field" id="msEditProductInputMetaKeywords_'.$pageinfo['uid'].'_'.$language['uid'].'">
-												<label for="products_meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
-												<input type="text" class="text" name="customProductsDescription_products_meta_keywords['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_keywords_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_keywords']).'">
-											</div>
-											<div class="account-field" id="msEditProductInputMetaDesc_'.$pageinfo['uid'].'_'.$language['uid'].'">
-												<label for="products_meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
-												<input type="text" class="text" name="customProductsDescription_products_meta_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_description']).'">
-											</div>';
+										$tmpcontent2='<li id="products_info_shops'.$pageinfo['uid'].'_'.$tmp_category_id.'" alt="" class="products_info_shops odd_group_row">';
+										$tmpcontent2.='<span class="shop_name" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'">';
+										$tmpcontent2.='<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo]['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$shop_checkbox.' />&nbsp;';
+										$tmpcontent2.='<label for="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.t3lib_div::strtoupper($tmp_category_name).'</label><a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
+										$tmpcontent2.='</span>';
+										$tmpcontent2.='<div class="custom_products_description" id="enableMultipleShopsCustomProductInfoCheckbox'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$custom_products_description_block.'>';
+										$tmpcontent2.=$details_content_multishops;
+										$tmpcontent2.='</div>';
+										$tmpcontent2.='</li>';
+										// push to array for easy implode
+										$tabs_array[]=$tmpcontent2;
 									}
-									$old_layered_categories_ids[]='<input type="hidden" name="old_layered_categories_id['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" />';
-									$shop_checkbox='';
-									$custom_products_description_block=' style="display:none"';
-									$afoldwrapperState='items_wrapper_folded';
-									$afoldwrapperText='unfold';
-									if ($this->get['action']=='edit_product') {
-										if (count($other_shops_product_info)) {
-											$shop_checkbox=' checked="checked"';
-											$custom_products_description_block=' style="display:block"';
-											$afoldwrapperState='items_wrapper_unfolded';
-											$afoldwrapperText='fold';
-										}
+									if (count($tabs_array)) {
+										$shops_tabs_content[]='<div class="mshop_tab_'.$pageinfo['uid'].' shops_tab_content tab_content" style="display: block;" id="mshop_tab_'.$pageinfo['uid'].'"><ul class="custom_products_description" id="custom_products_desc_ul_'.$pageinfo['uid'].'">'.implode("\n", $tabs_array).'</ul></div>';
 									}
-									$tmpcontent2='<li id="products_info_shops'.$pageinfo['uid'].'_'.$tmp_category_id.'" alt="" class="products_info_shops odd_group_row">';
-									$tmpcontent2.='<span class="shop_name" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'">';
-									$tmpcontent2.='<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo]['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$shop_checkbox.' />&nbsp;';
-									$tmpcontent2.='<label for="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.t3lib_div::strtoupper($tmp_category_name).'</label><a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
-									$tmpcontent2.='</span>';
-									$tmpcontent2.='<div class="custom_products_description" id="enableMultipleShopsCustomProductInfoCheckbox'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$custom_products_description_block.'>';
-									$tmpcontent2.=$details_content_multishops;
-									$tmpcontent2.='</div>';
-									$tmpcontent2.='</li>';
-									// push to array for easy implode
-									$tabs_array[]=$tmpcontent2;
-								}
-								if (count($tabs_array)) {
-									$shops_tabs_content[]='<div class="mshop_tab_'.$pageinfo['uid'].' shops_tab_content tab_content" style="display: block;" id="mshop_tab_'.$pageinfo['uid'].'"><ul class="custom_products_description" id="custom_products_desc_ul_'.$pageinfo['uid'].'">'.implode("\n", $tabs_array).'</ul></div>';
 								}
 								$main_shop_checkbox=' checked="checked"';
 								$main_select2_block_visibility=' style="display:block"';
 							}
 						}
 						if ($pageinfo['uid']!=$this->shop_pid) {
+							$current_products_to_shop_categories=$old_products_to_shop_categories;
+							if ($this->get['action']=='edit_product') {
+								$tmp_categories_id=explode(',', $old_products_to_shop_categories);
+								foreach ($tmp_categories_id as $tmpcat_id) {
+									if (mslib_fe::getProductToCategoriesRelatedTo($this->get['pid'], $tmpcat_id, $pageinfo['uid'])) {
+										$current_products_to_shop_categories='';
+										break;
+									}
+								}
+							}
 							$tmpcontent.='<div class="msAttributes">
 							<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$main_shop_checkbox.' />
 							<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
 							<div class="msEditProductInputMultipleShopCategory" id="msEditProductInputMultipleShopCategory'.$pageinfo['uid'].'"'.$main_select2_block_visibility.'>
-								<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$old_products_to_shop_categories.'" />
+								<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$current_products_to_shop_categories.'" />
 								<input name="tx_multishop_pi1[old_products_to_shop_categories]['.$pageinfo['uid'].']" type="hidden" value="'.$old_products_to_shop_categories.'" />
 							</div>
 							</div>';
