@@ -1397,19 +1397,43 @@ if ($this->post['action']=='category-insert') {
 								$this->ms['sqls'][]=$str;
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								$this->ms['target-cid']=$GLOBALS['TYPO3_DB']->sql_insert_id();
-								$insertArray=array();
+								$updateArray=array();
 								if (isset($item['categories_content'.$x])) {
-									$insertArray['content']=$item['categories_content'.$x];
+									$updateArray['content']=$item['categories_content'.$x];
 								}
 								if (isset($item['categories_content_bottom'.$x])) {
-									$insertArray['content_footer']=$item['categories_content_bottom'.$x];
+									$updateArray['content_footer']=$item['categories_content_bottom'.$x];
 								}
-								$insertArray['categories_id']=$this->ms['target-cid'];
-								$insertArray['language_id']=$language_id;
-								$insertArray['categories_name']=trim($item['categories_name'.$x]);
-								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
+								$updateArray['categories_id']=$this->ms['target-cid'];
+								$updateArray['language_id']=$language_id;
+								$updateArray['categories_name']=trim($item['categories_name'.$x]);
+								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$this->ms['sqls'][]=$query;
+								// LANGUAGE OVERLAYS
+								foreach ($this->languages as $langKey => $langTitle) {
+									if ($langKey>0) {
+										$suffix='_'.$langKey;
+										$updateArray2=$updateArray;
+										foreach ($updateArray2 as $key => $val) {
+											if (isset($item[$key.$suffix])) {
+												$updateArray2[$key]=$item[$key.$suffix];
+											}
+										}
+										$updateArray2['language_id']=$langKey;
+										// get existing record
+										$record=mslib_befe::getRecord($this->ms['target-cid'],'tx_multishop_categories_description','categories_id',array(0=>'language_id='.$langKey));
+										if ($record['products_id']) {
+											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id='.$this->ms['target-cid'].' and language_id='.$langKey, $updateArray2);
+											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										} else {
+											// add new record
+											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray2);
+											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										}
+									}
+								}
+								// LANGUAGE OVERLAYS EOL
 								$stats['categories_added']++;
 							}
 							if ($this->ms['target-cid']) {
@@ -1528,12 +1552,35 @@ if ($this->post['action']=='category-insert') {
 									$this->ms['sqls'][]=$str;
 									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 									$this->ms['target-cid']=$GLOBALS['TYPO3_DB']->sql_insert_id();
-									$str="insert into tx_multishop_categories_description (categories_id, language_id, categories_name) VALUES ('".$this->ms['target-cid']."','".$language_id."','".addslashes(trim($cat))."')";
+									$updateArray=array();
+									$updateArray['categories_id']=$this->ms['target-cid'];
+									$updateArray['language_id']=$language_id;
+									$updateArray['categories_name']=trim($cat);
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+
 									$this->ms['sqls'][]=$str;
 									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 									$image='';
 									$categories_image='';
 									$stats['categories_added']++;
+									// LANGUAGE OVERLAYS
+									foreach ($this->languages as $langKey => $langTitle) {
+										if ($langKey>0) {
+											$suffix='_'.$langKey;
+											$updateArray2=$updateArray;
+											foreach ($updateArray2 as $key => $val) {
+												if (isset($item[$key.$suffix])) {
+													$updateArray2[$key]=$item[$key.$suffix];
+												}
+											}
+											$updateArray2['language_id']=$langKey;
+											// add new record
+											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray2);
+											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										}
+									}
+									// LANGUAGE OVERLAYS EOL
 								}
 								$tel++;
 							}
