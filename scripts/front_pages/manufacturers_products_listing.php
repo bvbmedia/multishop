@@ -9,7 +9,7 @@ if (is_numeric($this->get['manufacturers_id'])) {
 	if (is_numeric($this->get['p'])) {
 		$p=$this->get['p'];
 	}
-	if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) {
+	if (($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES']) or $this->ROOTADMIN_USER) {
 		$this->ms['MODULES']['CACHE_FRONT_END']=0;
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
@@ -27,11 +27,11 @@ if (is_numeric($this->get['manufacturers_id'])) {
 	}
 	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 		// current manufacturer
-		$str="SELECT * from tx_multishop_manufacturers m, tx_multishop_manufacturers_info mi, tx_multishop_manufacturers_cms mcms where m.status=1 and m.manufacturers_id='".$this->get['manufacturers_id']."' and mcms.language_id='".$this->sys_language_uid."' and m.manufacturers_id=mi.manufacturers_id and m.manufacturers_id=mcms.manufacturers_id";
+		$str="SELECT * from tx_multishop_manufacturers m left join tx_multishop_manufacturers_info mi on m.manufacturers_id=mi.manufacturers_id left join tx_multishop_manufacturers_cms mcms on m.manufacturers_id=mcms.manufacturers_id where m.status=1 and m.manufacturers_id='".$this->get['manufacturers_id']."' and mcms.language_id='".$this->sys_language_uid."'";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$current=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		$content.='<div class="main-heading"><h2>'.$current['manufacturers_name'].'</h2></div>';
-		// now the listing		
+		// now the listing
 		if ($p>0) {
 			$extrameta=' (page '.$p.')';
 		} else {
