@@ -1535,10 +1535,28 @@ if ($this->post['action']=='category-insert') {
 						} else {
 							$groups=array($item['category_group']);
 						}
+						$languageGroups=array();
+						foreach ($this->languages as $langKey => $langTitle) {
+							if ($langKey>0) {
+								if ($groupDelimiter) {
+									$groups2=explode($groupDelimiter, $item['category_group_'.$langKey]);
+								} else {
+									$groups2=array($item['category_group_'.$langKey]);
+								}
+								$languageGroups[$langKey]=$groups2;
+							}
+						}
+						$groupCounter=0;
 						foreach ($groups as $group) {
 							// first configure target-cid (back) to the root
 							$this->ms['target-cid']=$this->post['cid'];
 							$cats=explode($catDelimiter, $group);
+							$languageCats=array();
+							foreach ($this->languages as $langKey => $langTitle) {
+								if ($langKey>0) {
+									$languageCats[$langKey]=explode($catDelimiter, $languageGroups[$langKey][$groupCounter]);
+								}
+							}
 							$tel=0;
 							foreach ($cats as $cat) {
 								$cat=trim($cat);
@@ -1574,6 +1592,9 @@ if ($this->post['action']=='category-insert') {
 													$updateArray2[$key]=$item[$key.$suffix];
 												}
 											}
+											if (isset($languageCats[$langKey][$tel])) {
+												$updateArray2['categories_name']=$languageCats[$langKey][$tel];
+											}
 											$updateArray2['language_id']=$langKey;
 											// add new record
 											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray2);
@@ -1586,6 +1607,7 @@ if ($this->post['action']=='category-insert') {
 							}
 							// add the deepest categories id to the array, so later we can relate the product to all of these categories
 							$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
+							$groupCounter++;
 						}
 					} elseif ($item['categories_id']) {
 						// deepest categories id is defined
