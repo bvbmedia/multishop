@@ -1423,7 +1423,7 @@ if ($this->post['action']=='category-insert') {
 										$updateArray2['language_id']=$langKey;
 										// get existing record
 										$record=mslib_befe::getRecord($this->ms['target-cid'],'tx_multishop_categories_description','categories_id',array(0=>'language_id='.$langKey));
-										if ($record['products_id']) {
+										if ($record['categories_id']) {
 											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id='.$this->ms['target-cid'].' and language_id='.$langKey, $updateArray2);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										} else {
