@@ -28,6 +28,10 @@ div.tooltip .msAdminTooltipBillingAddressDetails,
 div.tooltip .msAdminTooltipDeliveryAddressDetails { float:left; width:49.8%; font:12px Arial, Helvetica, sans-serif; }
 div.tooltip .msAdminTooltipOrderDetailsAddressWrapper h3 { font:bold 12px Arial, Helvetica, sans-serif; padding:0 0 3px; }
 
+#msadmin_section #msadmin_content #tx_multishop_pi1_core table.msAdminTooltipTable { border:none; background:none; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core table.msAdminTooltipTable tr.removeTableCellBorder td { height:auto; border:none; background:none; padding:2px 10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core table.msAdminTooltipTable tr.removeTableCellBorder td strong { font-size:13px; }
+
 /* div.tooltip.fade { position:absolute !important; overflow:visible; margin-left:300px; max-width:100px; margin-top:-10px; border:none; box-shadow:0 4px 10px #999; }
 div.tooltip.fade:after { position:absolute; left:10px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; } */
 
