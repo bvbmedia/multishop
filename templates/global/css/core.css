@@ -299,7 +299,7 @@ text-align:center !important;
 margin:2px 5px 22px 0 !important;
 padding:0 !important;
 border:1px solid rgba(0,0,0,.1) !important;
-border-bottom:1px solid rgba(0,0,0,.2) !important;
+border-bottom-color:rgba(0,0,0,.2) !important;
 box-shadow         :0 1px 2px rgba(0,0,0,0.3), inset 0 1px 0 0 rgba(255,255,255,.4) !important;
 background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Firefox+ */
 background-image   :-webkit-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Chrome+, Safari+ */
@@ -309,13 +309,14 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 text-shadow: rgba(0, 0, 0, 0.4) 1px 1px 0px !important;
 }
 .msBackendButton:hover,
-.ui-dialog-buttonpane .msBackendButton:hover { 
+.ui-dialog-buttonpane .msBackendButton:hover {
+text-decoration:none  !important;
 background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* Firefox+ */
 background-image   :-webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* Chrome+, Safari+ */
 background-image   :-o-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* Opera+ */
 background-image   :-ms-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* IE10 */
 filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#33FFFFFF', EndColorStr='#19FFFFFF') !important; /* IE+ */
-text-decoration:none !important;
+
 }
 .msBackendButton span,
 .msBackendButton b,
