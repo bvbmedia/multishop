@@ -46,11 +46,62 @@ if (is_numeric($this->get['manufacturers_id'])) {
 		if (!$this->conf['disableMetatags']) {
 			$GLOBALS['TSFE']->additionalHeaderData['title']='<title>'.htmlspecialchars($current['manufacturers_name']).$this->ms['MODULES']['PAGE_TITLE_DELIMETER'].$this->ms['MODULES']['STORE_NAME'].'</title>';
 		}
+		if ($this->productsLimit) {
+			$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=$this->productsLimit;
+		}
+		$default_limit_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
+		if ($this->get['tx_multishop_pi1']['limitsb']) {
+			if ($this->get['tx_multishop_pi1']['limitsb'] and $this->get['tx_multishop_pi1']['limitsb']!=$this->cookie['limitsb']) {
+				$this->cookie['limitsb']=$this->get['tx_multishop_pi1']['limitsb'];
+				$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=$this->cookie['limitsb'];
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+				$GLOBALS['TSFE']->storeSessionData();
+			}
+		}
+		if ($this->get['tx_multishop_pi1']['sortbysb']) {
+			if ($this->get['tx_multishop_pi1']['sortbysb'] and $this->get['tx_multishop_pi1']['sortbysb']!=$this->cookie['sortbysb']) {
+				$this->cookie['sortbysb']=$this->get['tx_multishop_pi1']['sortbysb'];
+				$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+				$GLOBALS['TSFE']->storeSessionData();
+			}
+		} else {
+			$this->cookie['sortbysb']='';
+			$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
+			$GLOBALS['TSFE']->storeSessionData();
+		}
+		if ($this->ADMIN_USER) {
+			$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=150;
+		}
+		// product listing
+		if (isset($this->cookie['limitsb']) && $this->cookie['limitsb']>0) {
+			$limit_per_page=$this->cookie['limitsb'];
+			if ($this->ADMIN_USER) {
+				$limit_per_page=150;
+			}
+		} else {
+			$limit_per_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
+		}
 		if ($p>0) {
-			$offset=(((($p)*$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'])));
+			$offset=(((($p)*$limit_per_page)));
 		} else {
 			$p=0;
 			$offset=0;
+		}
+		if ($this->ADMIN_USER and $this->get['sort_by']) {
+			switch ($this->get['sort_by']) {
+				case 'alphabet':
+					$str="SELECT c.categories_id, p.products_id, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id = m.manufacturers_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_status=1 and p.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$this->sys_language_uid."' and cd.language_id=pd.language_id and p2c.categories_id='".$this->get['categories_id']."' and p.products_id=pd.products_id and p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id order by pd.products_name";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$counter=0;
+					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+						$updateArray=array();
+						$updateArray['sort_order']=$counter;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id='.$row['categories_id'].' and products_id='.$row['products_id'], $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$counter++;
+					}
+					break;
+			}
 		}
 		$do_search=1;
 		if ($do_search) {
@@ -69,15 +120,47 @@ if (is_numeric($this->get['manufacturers_id'])) {
 			$where=array();
 			$orderby=array();
 			$select=array();
+			$extra_join=array();
+			if (isset($this->cookie['sortbysb']) && !empty($this->cookie['sortbysb']) && isset($this->get['tx_multishop_pi1']['sortbysb']) && !empty($this->get['tx_multishop_pi1']['sortbysb'])) {
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$tbl='pf.';
+				} else {
+					$tbl='p.';
+				}
+				switch ($this->cookie['sortbysb']) {
+					case 'best_selling_asc':
+						$select[]='SUM(op.qty) as order_total_qty';
+						$extra_join[]='LEFT JOIN tx_multishop_orders_products op ON '.$tbl.'products_id=op.products_id';
+						$orderby[]="order_total_qty asc";
+						break;
+					case 'best_selling_desc':
+						$select[]='SUM(op.qty) as order_total_qty';
+						$extra_join[]='LEFT JOIN tx_multishop_orders_products op ON '.$tbl.'products_id=op.products_id';
+						$orderby[]="order_total_qty desc";
+						break;
+					case 'price_asc':
+						$orderby[]="final_price asc";
+						break;
+					case 'price_desc':
+						$orderby[]="final_price desc";
+						break;
+					case 'new_asc':
+						$orderby[]=$tbl."products_date_added desc";
+						break;
+					case 'new_desc':
+						$orderby[]=$tbl."products_date_added asc";
+						break;
+				}
+			}
 			if ($this->ms['MODULES']['FLAT_DATABASE']) {
-				$tbl='';
+				$tbl='pf.';
 			} else {
 				$tbl='p.';
 			}
 			$filter[]=$tbl."manufacturers_id='".$this->get['manufacturers_id']."'";
-			$orderby[]=$tbl."products_last_modified desc";
-			$limit_per_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
-			$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'manufacturers_products');
+			//$this->msDebug=1;
+			$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, $having, $select, $where, 0, array(), array(), 'manufacturers_products', '', 0, 1, $extra_join);
+			//echo $this->msDebugInfo;
 			$products=$pageset['products'];
 			if ($pageset['total_rows']>0) {
 				if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {

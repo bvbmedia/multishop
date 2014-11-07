@@ -212,6 +212,8 @@ if (!empty($product_listing_form_content)) {
 	$product_listing_form_content.='<input type="hidden" name="id" value="'.$this->get['id'].'">';
 	if ($this->get['tx_multishop_pi1']['page_section']=='products_listing') {
 		$product_listing_form_content.='<input type="hidden" name="categories_id" value="'.$this->get['categories_id'].'">';
+	} else if ($this->get['tx_multishop_pi1']['page_section']=='manufacturers_products_listing') {
+		$product_listing_form_content.='<input type="hidden" name="manufacturers_id" value="'.$this->get['manufacturers_id'].'">';
 	}
 	if ($this->get['tx_multishop_pi1']['page_section']=='products_search') {
 		$product_listing_form_content.='<input type="hidden" name="skeyword" value="'.$this->get['skeyword'].'">';
