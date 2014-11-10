@@ -3271,7 +3271,7 @@
             <label index="admin_label_cms_marker_telephone_billing">Telefon (Rechnung)</label>
             <label index="admin_label_cms_marker_telephone_delivery">Telefon (Lieferung)</label>
             <label index="admin_label_cms_marker_track_and_trace_code">Sendungsverfolgung</label>
-            <label index="admin_label_collapse_all">fehlgeschlagen</label>
+            <label index="admin_label_collapse_all">Alles schließen</label>
             <label index="admin_label_consistency_checker">Übereinstimmungskontrolle</label>
             <label index="admin_label_contact_info">Kontaktinformation</label>
             <label index="admin_label_create_order">Legen Sie einen Auftrag an</label>
