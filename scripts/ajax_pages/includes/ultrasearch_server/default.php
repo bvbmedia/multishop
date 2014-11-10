@@ -446,7 +446,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 				break;
 			case 'manufacturers':
-				$formField['caption']='Merk';
+				$formField['caption']=$this->pi_getLL('manufacturers');
 				if ($this->ultrasearch_filtered_by_current_category) {
 					if ($this->ms['MODULES']['FLAT_DATABASE']) {
 						$str="SELECT manufacturers_id from tx_multishop_products_flat where (";

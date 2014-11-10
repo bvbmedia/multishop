@@ -2768,7 +2768,7 @@ class mslib_befe {
 		}
 		return $text;
 	}
-	public function cacheLite($action='', $key, $timeout='', $serialized=0, $content='') {
+	public function cacheLite($action='', $key='', $timeout='', $serialized=0, $content='') {
 		$options=array(
 			'caching'=>true,
 			'cacheDir'=>$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/cache/',
@@ -2795,20 +2795,24 @@ class mslib_befe {
 				break;
 			case 'delete':
 				// removes the cache
-				switch ($string) {
-					case 'clear_all':
-						if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {
-							if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..')) {
-								$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
-								exec($command);
-							}
-						}
-						break;
-					default:
-						$Cache_Lite->remove($string);
-						break;
+				$Cache_Lite->remove($string);
+				break;
+			case 'delete_all':
+				if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {
+					if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache")) {
+						$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
+						exec($command);
+					}
 				}
 				break;
+		}
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLitePostProc'])) {
+			$params=array(
+				'action'=>$action
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLitePostProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
 		}
 	}
 	public function loadLanguages() {

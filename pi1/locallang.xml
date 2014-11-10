@@ -1139,6 +1139,7 @@
             <label index="feed_exporter_fields_label_invoice_paid_status">Invoice paid status</label>
             <label index="feed_exporter_fields_label_invoice_reversal_status">Invoice reversal status</label>
             <label index="feed_exporter_fields_label_invoice_reversal_related_id">Invoice reversal related id</label>
+            <label index="clear_list">Clear list</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -2114,6 +2115,7 @@
             <label index="order_type">Order type</label>
             <label index="captcha_code_placeholder">type hier de code over</label>
             <label index="admin_export_invoices">Export invoices wizard</label>
+            <label index="clear_list">Leeg lijst</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
@@ -4142,6 +4144,7 @@
             <label index="your_payment_has_not_been_completed">Der Bezahlvorgang wurde nicht abgeschlossen</label>
             <label index="zip">PLZ</label>
             <label index="zip_is_required">PLZ ist ein Pflichtfeld.</label>
+            <label index="clear_list">Liste löschen</label>
         </languageKey>
         <languageKey index="es" type="array">
             <label index="list_mode_1">Mode 1</label>
