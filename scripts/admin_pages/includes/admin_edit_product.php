@@ -2647,49 +2647,11 @@ if ($this->post) {
 								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" id="manual_option_'.$attribute_data['products_attributes_id'].'" value="0" />';
 								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="'.$attribute_data['products_attributes_id'].'" />';
 								$attributes_tab_block.='<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>';
-								/*$attributes_tab_block.='<select name="tx_multishop-pi1[options][]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options">';
-								$attributes_tab_block.='<option value="">'.$this->pi_getLL('admin_label_choose_option').'</option>';
-								// fetch attributes options
-								$str=$GLOBALS ['TYPO3_DB']->SELECTquery('*', // SELECT ...
-									'tx_multishop_products_options', // FROM ...
-									'language_id = 0', // WHERE.
-									'', // GROUP BY...
-									'sort_order', // ORDER BY...
-									'' // LIMIT ...
-								);
-								$qry=$GLOBALS ['TYPO3_DB']->sql_query($str);
-								while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-									if ($row2['products_options_id']==$option_id) {
-										$attributes_tab_block.='<option value="'.$row2['products_options_id'].'" selected="selected">'.$row2['products_options_name'].'</option>';
-									} else {
-										$attributes_tab_block.='<option value="'.$row2['products_options_id'].'">'.$row2['products_options_name'].'</option>';
-									}
-								}
-								$attributes_tab_block.='</select>';*/
 								$attributes_tab_block.='</td>';
 								$attributes_tab_block.='<td class="product_attribute_value">';
 								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values" value="'.$attribute_data['options_values_id'].'" style="width:200px" />';
 								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" id="manual_attributes_'.$attribute_data['products_attributes_id'].'" value="0" />';
 								$attributes_tab_block.='<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>';
-								/*$attributes_tab_block.='<select name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values">';
-								$attributes_tab_block.='<option value="">'.$this->pi_getLL('admin_label_choose_attribute').'</option>';
-								// fetch values
-								$str2=$GLOBALS ['TYPO3_DB']->SELECTquery('optval.*', // SELECT...
-									'tx_multishop_products_options_values as optval, tx_multishop_products_options_values_to_products_options as optval2opt', // FROM...
-									'optval2opt.products_options_id = '.$option_id.' and optval2opt.products_options_values_id = optval.products_options_values_id and optval.language_id = 0', // WHERE...
-									'', // GROUP BY...
-									'optval2opt.sort_order', // ORDER BY...
-									'' // LIMIT...
-								);
-								$qry2=$GLOBALS ['TYPO3_DB']->sql_query($str2);
-								while (($row3=$GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
-									if ($row3['products_options_values_id']==$attribute_data['options_values_id']) {
-										$attributes_tab_block.='<option value="'.$row3['products_options_values_id'].'" selected="selected">'.$row3['products_options_values_name'].'</option>';
-									} else {
-										$attributes_tab_block.='<option value="'.$row3['products_options_values_id'].'">'.$row3['products_options_values_name'].'</option>';
-									}
-								}
-								$attributes_tab_block.='</select>';*/
 								$attributes_tab_block.='</td>';
 								$attributes_tab_block.='<td class="product_attribute_prefix">';
 								$attributes_tab_block.='<select name="tx_multishop_pi1[prefix][]">';
@@ -2697,18 +2659,19 @@ if ($this->post) {
 								$attributes_tab_block.='<option value="+"'.($attribute_data['price_prefix']=='+' ? ' selected="selected"' : '').'>+</option>';
 								$attributes_tab_block.='<option value="-"'.($attribute_data['price_prefix']=='-' ? ' selected="selected"' : '').'>-</option>';
 								$attributes_tab_block.='</select>';
-								//$attributes_tab_block.='<input type="text" name="tx_multishop_pi1[prefix][]" value="'.$attribute_data['price_prefix'].'" />';
 								$attributes_tab_block.='</td>';
 								// recalc price to display
 								$attributes_tax=mslib_fe::taxDecimalCrop(($attribute_data['options_values_price']*$product_tax_rate)/100);
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
-								$attributes_tab_block.='<td>
+								$attributes_tab_block.='<td class="product_attribute_price">
 											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
 											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
 											<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
 										</td>';
-								$attributes_tab_block.='<td class="product_attribute_price"><input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes"></td>';
+								$attributes_tab_block.='<td>';
+								$attributes_tab_block.='<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes">';
+								$attributes_tab_block.='</td>';
 								$attributes_tab_block.='</tr>';
 								$attributes_tab_block.='</table>';
 								$attributes_tab_block.='</div>';

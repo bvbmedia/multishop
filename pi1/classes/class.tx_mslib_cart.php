@@ -91,11 +91,46 @@ class tx_mslib_cart extends tslib_pibase {
 						$total_attributes_tax=0;
 						$total_attributes_price=0;
 						if (is_array($product['attributes'])) {
-							foreach ($product['attributes'] as &$attributes) {
+							// loading the attributes
+							foreach ($product['attributes'] as $attribute_key=>$attribute_values) {
+								$continue=0;
+								if (is_numeric($attribute_key)) {
+									$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
+									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+								}
+								switch ($row['listtype']) {
+									case 'checkbox':
+										foreach ($attribute_values as $attribute_item) {
+											$total_attributes_price+=($attribute_item['options_values_price']);
+											$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
+											$total_attributes_tax+=$attribute_item['price_prefix'].$attribute_item['tax'];
+										}
+										break;
+									case 'input':
+										$multiple=0;
+										$continue=0;
+										break;
+									default:
+										$multiple=0;
+										$continue=1;
+										break;
+								}
+								if ($continue) {
+									$array=array($attribute_values);
+									foreach ($array as $attribute_item) {
+										$total_attributes_price+=($attribute_item['options_values_price']);
+										$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
+										$total_attributes_tax+=$attribute_item['price_prefix'].$attribute_item['tax'];
+									}
+								}
+							}
+							// loading the attributes eof
+							/*foreach ($product['attributes'] as &$attributes) {
 								$total_attributes_price+=($attributes['options_values_price']);
 								$attributes['tax']=mslib_fe::taxDecimalCrop($attributes['options_values_price']*$product['tax_rate']);
 								$total_attributes_tax+=$attributes['price_prefix'].$attributes['tax'];
-							}
+							}*/
 						}
 						$product['final_price_including_vat']=mslib_fe::taxDecimalCrop(($product['final_price']*(1+$product['tax_rate'])));
 						$product['total_price']=(($product['final_price']+$total_attributes_price)*$product['qty']);
@@ -1959,18 +1994,75 @@ class tx_mslib_cart extends tslib_pibase {
 				if (!empty($product['vendor_code'])) {
 					$item['ITEM_NAME'] .= '<br/>Vendor: '.$product['vendor_code'];
 				}*/
+				//print_r($product['attributes']);
 				if (is_array($product['attributes'])) {
-					foreach ($product['attributes'] as $attributeKey=>$attributeItem) {
-						$item['ITEM_NAME'].='<br />'.$attributeItem['products_options_name'].': '.$attributeItem['products_options_values_name'];
-						if ($attributeItem['options_values_price']>0) {
-							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$subPrices.=mslib_fe::amount2Cents($attributeItem['options_values_price_including_vat']);
-							} else {
-								$subPrices.=mslib_fe::amount2Cents($attributeItem['options_values_price']);
+					// loading the attributes
+					foreach ($product['attributes'] as $attribute_key=>$attribute_values) {
+						$continue=0;
+						if (is_numeric($attribute_key)) {
+							$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
+							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+							$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+						}
+						switch ($row['listtype']) {
+							case 'checkbox':
+								$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
+								$continue=0;
+								$total=count($attribute_values);
+								$counter=0;
+								foreach ($attribute_values as $attribute_item) {
+									$counter++;
+									if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+										$attribute_item['options_values_price']=round($attribute_item['options_values_price']*(1+$product['tax_rate']), 2);
+									} else {
+										$attribute_item['options_values_price']=round($attribute_item['options_values_price'], 2);
+									}
+									$item['ITEM_NAME'].=trim($attribute_item['products_options_values_name']);
+									$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
+									if ($attribute_item['options_values_price']>0) {
+										$subPrices.=mslib_fe::amount2Cents(($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price'])));
+									}
+									$subPrices.='<br />';
+									if (isset($attribute_values[$counter])) {
+										$item['ITEM_NAME'].=', ';
+									}
+								}
+								break;
+							case 'input':
+								$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
+								$multiple=0;
+								$continue=0;
+								break;
+							default:
+								$multiple=0;
+								$continue=1;
+								break;
+						}
+						if ($continue) {
+							$array=array($attribute_values);
+							foreach ($array as $attribute_item) {
+								if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+									if ($product['country_tax_rate'] && $product['region_tax_rate']) {
+										$country_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['country_tax_rate']));
+										$region_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['region_tax_rate']));
+										$item_tax_rate=$country_tax_rate+$region_tax_rate;
+									} else {
+										$item_tax_rate=mslib_fe::taxDecimalCrop($item['options_values_price']*($product['tax_rate']));
+									}
+									$attribute_item['options_values_price']=$attribute_item['options_values_price']+($item_tax_rate);
+								} else {
+									$attribute_item['options_values_price']=round($attribute_item['options_values_price'], 2);
+								}
+								if ($attribute_item['options_values_price']>0) {
+									$subPrices.=mslib_fe::amount2Cents(($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price'])));
+								}
+								$subPrices.='<br />';
+								$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
+								$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
 							}
 						}
-						$subPrices.='<br />';
 					}
+					// loading the attributes eof
 				}
 				if ($subPrices) {
 					$subPrices='<div class="attribute_prices">'.$subPrices.'</div>';
@@ -1993,7 +2085,7 @@ class tx_mslib_cart extends tslib_pibase {
 				} else {
 					$totalPrice=$product['total_price'];
 				}
-				$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice).$subprices;
+				$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice); //.$subPrices;
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'])) {
 					$params=array(
 						'item'=>&$item,
