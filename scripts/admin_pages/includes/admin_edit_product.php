@@ -950,9 +950,9 @@ if ($this->post) {
 		foreach ($this->post['products_name'] as $key=>$value) {
 			if (is_numeric($key)) {
 				if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
-					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$this->shop_pid."' and (layered_categories_id='".$this->post['local_primary_product_categories']."' or layered_categories_id='0') and language_id='".$key."'";
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and (layered_categories_id='".$this->post['local_primary_product_categories']."' or layered_categories_id='0') and language_id='".$key."'";
 				} else {
-					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$this->shop_pid."' and language_id='".$key."'";
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and language_id='".$key."'";
 				}
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$updateArray=array();
@@ -994,7 +994,7 @@ if ($this->post) {
 						mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_description', $updateArray);
 					}
 					if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$this->shop_pid.'\' and (layered_categories_id=\''.$this->post['local_primary_product_categories'].'\' or layered_categories_id=\'0\') and language_id=\''.$key.'\'', $updateArray);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and (page_uid=0 OR page_uid=\''.$this->shop_pid.'\') and (layered_categories_id=\''.$this->post['local_primary_product_categories'].'\' or layered_categories_id=\'0\') and language_id=\''.$key.'\'', $updateArray);
 					} else {
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and language_id=\''.$key.'\'', $updateArray);
 					}
