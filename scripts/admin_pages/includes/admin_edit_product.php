@@ -95,7 +95,7 @@ $jcrop_html='
 ';
 $js_languages=array();
 foreach ($this->languages as $key=>$language) {
-	$js_languages[]='languages['.$key.']='.json_encode($language);
+	$js_languages[]=json_encode($language);
 }
 $pageinfo=mslib_befe::getRecord($this->shop_pid, 'pages', 'uid', array('deleted=0 and hidden=0'));
 $GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_html;
@@ -103,7 +103,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 '.implode("\n", $jsSelect2InitialValue).'
 var languages=[];
-'.implode("\n", $js_languages).'
+languages=['.implode(",", $js_languages).'];
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
@@ -219,7 +219,7 @@ jQuery(document).ready(function($) {
 			}
 			var target_ul_id="#custom_products_desc_ul_'.$this->shop_pid.'";
 			var tabs_content_li="";
-			tabs_content_li+=buildCustomProductsDescriptionIntput('.$this->shop_pid.', e.object.id, e.object.text, languages);
+			tabs_content_li+=buildCustomProductsDescriptionInput('.$this->shop_pid.', e.object.id, e.object.text, languages);
 			$(target_ul_id).append(tabs_content_li);
 			$(\'.mceEditor\').redactor({
 				focus: false,
@@ -881,26 +881,28 @@ if ($this->post) {
 		}
 		if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 			foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
-				if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
-					$tmp_categories_id=array();
-					if (strpos($this->post['categories_id'], ',')!==false) {
-						$tmp_categories_id=explode(',', $this->post['categories_id']);
-					} else {
-						$tmp_categories_id[]=$this->post['categories_id'];
-					}
-					$endpoint_catid=array();
-					foreach ($tmp_categories_id as $tmp_category_id) {
-						$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
-						if (!empty($tmp_catname)) {
-							$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
-							if (!$foreign_catid) {
-								$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-							} else {
-								$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+				if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops']) && count($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+					if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+						$tmp_categories_id=array();
+						if (strpos($this->post['categories_id'], ',')!==false) {
+							$tmp_categories_id=explode(',', $this->post['categories_id']);
+						} else {
+							$tmp_categories_id[]=$this->post['categories_id'];
+						}
+						$endpoint_catid=array();
+						foreach ($tmp_categories_id as $tmp_category_id) {
+							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+							if (!empty($tmp_catname)) {
+								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+								if (!$foreign_catid) {
+									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+								} else {
+									$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+								}
 							}
 						}
+						$shopRecord=implode(',', $endpoint_catid);
 					}
-					$shopRecord=implode(',', $endpoint_catid);
 				}
 				if (!empty($shopRecord)) {
 					if (strpos($shopRecord, ',')!==false) {
@@ -3014,8 +3016,7 @@ if ($this->post) {
 							</div>';
 							$GLOBALS['TSFE']->additionalHeaderData[]='
 							<script type="text/javascript">
-							var languages=[];
-							'.implode("\n", $js_languages).'
+
 							jQuery(document).ready(function($) {
 								var categoriesIdSearchTerm_'.$pageinfo['uid'].'=[];
 								$(\'#enableMultipleShopsTree_'.$pageinfo['uid'].'\').select2({
@@ -3102,7 +3103,7 @@ if ($this->post) {
 									}
 									var target_ul_id="#custom_products_desc_ul_'.$pageinfo['uid'].'";
 									var tabs_content_li="";
-									tabs_content_li+=buildCustomProductsDescriptionIntput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
+									tabs_content_li+=buildCustomProductsDescriptionInput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
 									$(target_ul_id).append(tabs_content_li);
 									$(\'.mceEditor\').redactor({
 										focus: false,
@@ -3125,12 +3126,10 @@ if ($this->post) {
 			if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 				$GLOBALS['TSFE']->additionalHeaderData[]='
 				<script type="text/javascript">
-				var languages=[];
-				'.implode("\n", $js_languages).'
 				'.$js_number_of_tabs.'
-				function buildCustomProductsDescriptionIntput(page_uid, category_id, category_name, languages) {
+				function buildCustomProductsDescriptionInput(page_uid, category_id, category_name, languages) {
 					var details_content=\'\';
-					$.each(languages, function(uid, lang) {
+					$.each(languages, function(i, lang) {
 						var details_tab_content=\'\';
 						if (product_details_number_of_tabs>0) {
 							for (var i=1; i<=product_details_number_of_tabs; i++) {
@@ -3254,7 +3253,7 @@ if ($this->post) {
 							// insert new tabs content
 							var tabs_content_li="";
 							$.each(select2_value, function(i, data) {
-								tabs_content_li+=buildCustomProductsDescriptionIntput(page_uid, data.id, data.text, languages);
+								tabs_content_li+=buildCustomProductsDescriptionInput(page_uid, data.id, data.text, languages);
 							});
 							if (tabs_content_li!="") {
 								var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'">\' + tabs_content_li + \'</ul></div>\';
