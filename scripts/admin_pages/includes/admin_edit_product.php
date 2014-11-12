@@ -1114,11 +1114,13 @@ if ($this->post) {
 		}
 		// deletion of custom product desc
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-			foreach ($this->post['old_layered_categories_id'] as $page_uid=>$cat_data) {
-				foreach ($cat_data as $cat_id=>$cat_bool) {
-					if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$cat_id])) {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\' and layered_categories_id=\''.$cat_id.'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if (is_array($this->post['old_layered_categories_id']) && count($this->post['old_layered_categories_id'])) {
+				foreach ($this->post['old_layered_categories_id'] as $page_uid=>$cat_data) {
+					foreach ($cat_data as $cat_id=>$cat_bool) {
+						if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$cat_id])) {
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\' and layered_categories_id=\''.$cat_id.'\'');
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
 					}
 				}
 			}
@@ -2883,7 +2885,7 @@ if ($this->post) {
 									$tabs_content=array();
 									$tabs_array=array();
 									foreach ($tmp_categories_id as $tmp_category_id) {
-										$tmp_category_name=mslib_fe::getCategoryName($tmp_category_id);
+										$tmp_category_name=mslib_fe::getCategoryName($tmp_category_id, $pageinfo['uid']);
 										$other_shops_product_info=mslib_fe::getProductInfo($this->get['pid'], $tmp_category_id, $pageinfo['uid']);
 										// external custom product desc
 										$details_content_multishops='';
