@@ -11,11 +11,14 @@ $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
 // load optional cms content and show the current category name
-if ($current['content']) {
+if (is_array($current) && $current['content']) {
 	//$output['categories_header_description']=mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
 	$output['categories_header_description']=mslib_fe::htmlBox('', $current['content'], 1);
 }
-$output['categories_header']=trim($current['categories_name']);
+$output['categories_header']='';
+if (is_array($current) && $current['categories_name']) {
+	$output['categories_header']='<h1>'.trim($current['categories_name']).'</h1>';
+}
 if ($current['categories_id']==$this->conf['categoriesStartingPoint'] and $this->hideHeader) {
 	$output['categories_header']='';
 }
