@@ -628,26 +628,28 @@ if ($this->post) {
 			}
 			if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 				foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
-					if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
-						$tmp_categories_id=array();
-						if (strpos($this->post['categories_id'], ',')!==false) {
-							$tmp_categories_id=explode(',', $this->post['categories_id']);
-						} else {
-							$tmp_categories_id[]=$this->post['categories_id'];
-						}
-						$endpoint_catid=array();
-						foreach ($tmp_categories_id as $tmp_category_id) {
-							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
-							if (!empty($tmp_catname)) {
-								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
-								if (!$foreign_catid) {
-									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-								} else {
-									$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+					if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops']) && count($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+						if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+							$tmp_categories_id=array();
+							if (strpos($this->post['categories_id'], ',')!==false) {
+								$tmp_categories_id=explode(',', $this->post['categories_id']);
+							} else {
+								$tmp_categories_id[]=$this->post['categories_id'];
+							}
+							$endpoint_catid=array();
+							foreach ($tmp_categories_id as $tmp_category_id) {
+								$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+								if (!empty($tmp_catname)) {
+									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+									if (!$foreign_catid) {
+										$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+									} else {
+										$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+									}
 								}
 							}
+							$shopRecord=implode(',', $endpoint_catid);
 						}
-						$shopRecord=implode(',', $endpoint_catid);
 					}
 					if (strpos($shopRecord, ',')!==false) {
 						$catIds[$page_uid]=explode(',', $shopRecord);
@@ -807,6 +809,12 @@ if ($this->post) {
 										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
+								} else if (!isset($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									// remove the custom page desc if the cat id is not related anymore in p2c
+									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 							}
 						}
@@ -1050,7 +1058,7 @@ if ($this->post) {
 			}
 		}
 		// external SHOP product custom description
-		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name'])) {
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && is_array($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name'])) {
 			foreach ($this->post['customProductsDescription_products_name'] as $page_uid=>$customDescData) {
 				foreach ($customDescData as $customDescData_category_id=>$descData) {
 					if (isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$customDescData_category_id])) {
@@ -1115,7 +1123,7 @@ if ($this->post) {
 			}
 		}
 		// deletion of custom product desc
-		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+		/*if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 			if (is_array($this->post['old_layered_categories_id']) && count($this->post['old_layered_categories_id'])) {
 				foreach ($this->post['old_layered_categories_id'] as $page_uid=>$cat_data) {
 					foreach ($cat_data as $cat_id=>$cat_bool) {
@@ -1126,7 +1134,7 @@ if ($this->post) {
 					}
 				}
 			}
-		}
+		}*/
 		//die();
 		// specials price
 		if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
