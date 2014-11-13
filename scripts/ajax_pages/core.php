@@ -1349,7 +1349,7 @@ switch ($this->ms['page']) {
 					}
 					// custom page hook that can be controlled by third-party plugin eof
 					// download action is valid. lets proceed
-					if ($row['file_remote_location']) {
+					if (!$row['file_location'] && $row['file_remote_location']) {
 						// file is stored on remote location. lets download it and send it to the browser
 						$body_data=mslib_fe::file_get_contents($row['file_remote_location']);
 						if (!$row['file_label']) {
