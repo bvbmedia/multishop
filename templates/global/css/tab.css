@@ -162,7 +162,8 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field#cms_types select { width:640px; }
 #tx_multishop_pi1_core #tab-container .tab_container .admin_cms_edit .tab_content,
-#tx_multishop_pi1_core #tab-container .tab_containe #CmsListing.tab_content { border-top:none; border-radius:0; }
+#tx_multishop_pi1_core #tab-container .tab_containe #CmsListing.tab_content,
+#tx_multishop_pi1_core #tab-container .tab_containe #CustomersListing.tab_content { border-top:none; border-radius:0; }
 
 /* #tx_multishop_pi1_core #tab-container .tab_container #product_options .account-field { min-width:880px; }
 #tx_multishop_pi1_core.msAdminHighslidePopup #tab-container .tab_container #product_options .account-field { min-width:811px; }
