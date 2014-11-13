@@ -769,7 +769,9 @@ class mslib_befe {
 					}
 					$tables=array();
 					$tables[]='tx_multishop_products';
-					$tables[]='tx_multishop_products_flat';
+					if ($this->ms['MODULES']['FLAT_DATABASE']) {
+						$tables[]='tx_multishop_products_flat';
+					}
 					$tables[]='tx_multishop_products_description';
 					$tables[]='tx_multishop_products_to_categories';
 					$tables[]='tx_multishop_products_attributes';
@@ -861,7 +863,7 @@ class mslib_befe {
 		if (is_array($this->ms['image_paths']['categories']) && count($this->ms['image_paths']['categories'])) {
 			foreach ($this->ms['image_paths']['categories'] as $key=>$value) {
 				$path=PATH_site.$value.'/'.$file_name;
-				if (unlink($path)) {
+				if (@unlink($path)) {
 					return 1;
 				}
 			}
@@ -909,7 +911,7 @@ class mslib_befe {
 			}
 			return rmdir($path);
 		} else {
-			return unlink($path);
+			return @unlink($path);
 		}
 	}
 	public function doesExist($table, $field, $value, $more='') {

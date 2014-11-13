@@ -21,7 +21,7 @@ while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($query))
 		echo $query3.'<br>';
 		$res = $GLOBALS['TYPO3_DB']->sql_query($query3);
 		$counter++;
-	}		
+	}
 }
 die();
 */
@@ -56,12 +56,10 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 	foreach ($this->post['tx_multishop_pi1']['items'] as $item) {
 		switch ($item) {
 			case 'orders':
-				$tables='
-				tx_multishop_orders
+				$tables='tx_multishop_orders
 				tx_multishop_orders_products
 				tx_multishop_orders_products_attributes
-				tx_multishop_orders_status_history
-				';
+				tx_multishop_orders_status_history';
 				$tableArray=explode("\n", $tables);
 				foreach ($tableArray as $table) {
 					$table=trim($table);
@@ -97,11 +95,9 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$content.='<p>'.$this->pi_getLL('admin_label_products_has_been_cleared').'</p>';
 				break;
 			case 'manufacturers':
-				$string='
-				TRUNCATE `tx_multishop_manufacturers`;
+				$string='TRUNCATE `tx_multishop_manufacturers`;
 				TRUNCATE `tx_multishop_manufacturers_cms`;
-				TRUNCATE `tx_multishop_manufacturers_info`;			
-				';
+				TRUNCATE `tx_multishop_manufacturers_info`;';
 				$array=explode("\n", $string);
 				foreach ($array as $item) {
 					if ($item) {
@@ -111,8 +107,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$content.='<p>'.$this->pi_getLL('admin_label_manufacturers_has_been_cleared').'</p>';
 				break;
 			case 'products_attributes':
-				$string='
-				TRUNCATE `tx_multishop_products_attributes`;
+				$string='TRUNCATE `tx_multishop_products_attributes`;
 				TRUNCATE `tx_multishop_products_attributes_download`;
 				TRUNCATE `tx_multishop_products_attributes_extra`;
 				TRUNCATE `tx_multishop_products_options`;
@@ -120,8 +115,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				TRUNCATE `tx_multishop_products_options_values_extra`;
 				TRUNCATE `tx_multishop_products_options_values_to_products_options`
 				TRUNCATE `tx_multishop_attributes_options_groups`
-				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`
-				';
+				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`';
 				$array=explode("\n", $string);
 				foreach ($array as $item) {
 					if ($item) {
@@ -131,14 +125,13 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$content.='<p>products_attributes has been cleared.</p>';
 				break;
 			case 'everything':
-				$string='
-				TRUNCATE `tx_multishop_categories`;
+				$string='TRUNCATE `tx_multishop_categories`;
 				TRUNCATE `tx_multishop_categories_description`;
 				TRUNCATE `tx_multishop_manufacturers`;
 				TRUNCATE `tx_multishop_manufacturers_cms`;
 				TRUNCATE `tx_multishop_manufacturers_info`;
 				TRUNCATE `tx_multishop_products`;
-				TRUNCATE `tx_multishop_products_flat`;
+				'.(($this->ms['MODULES']['FLAT_DATABASE']) ? 'TRUNCATE `tx_multishop_products_flat`;' : '').'
 				TRUNCATE `tx_multishop_products_attributes`;
 				TRUNCATE `tx_multishop_products_attributes_download`;
 				TRUNCATE `tx_multishop_products_attributes_extra`;
@@ -155,10 +148,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				TRUNCATE `tx_multishop_specials`;
 				TRUNCATE `tx_multishop_specials_sections`;
 				TRUNCATE `tx_multishop_attributes_options_groups`;
-				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`;
-
-
-				';
+				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`;';
 				/*
 				TRUNCATE `tx_multishop_coupons`;
 				TRUNCATE `tx_multishop_import_jobs`;
