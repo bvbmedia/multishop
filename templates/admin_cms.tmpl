@@ -43,32 +43,32 @@
     	<li class="active"><a href="#CmsListing">CMS</a></li>
     </ul>
     <div class="tab_container">
-		<form id="form1" name="form1" method="get" action="index.php">
-			<div id="search-orders">
-				<table width="100%">
-					<tr>
-                        <td nowrap valign="top">
-                            <input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
-							<input name="id" type="hidden" value="###SHOP_PID###" />
-							<input name="type" type="hidden" value="2003" />
-							<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_cms" />
-							<div class="formfield-container-wrapper">
-								<div class="formfield-wrapper">
-                                    <label>###LABEL_KEYWORD###</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###"/>
-                                    <input type="submit" name="Search" class="msadmin_button" value="###LABEL_SEARCH###" />
-								</div>
-							</div>
-						</td>
-						<td nowrap valign="top" align="right" class="searchLimit">
-                            <div style="float:right;">
-                            ###INPUT_LIMIT_RESULT_SELECTBOX###
-							</div>
-                        </td>
-                    </tr>
-				</table>
-			</div>
-		</form>
         <div style="display: block;" id="CmsListing" class="tab_content">
+            <form id="form1" name="form1" method="get" action="index.php">
+                <div id="search-orders">
+                    <table width="100%">
+                        <tr>
+                            <td nowrap valign="top">
+                                <input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
+                                <input name="id" type="hidden" value="###SHOP_PID###" />
+                                <input name="type" type="hidden" value="2003" />
+                                <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_cms" />
+                                <div class="formfield-container-wrapper">
+                                    <div class="formfield-wrapper">
+                                        <label>###LABEL_KEYWORD###</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###"/>
+                                        <input type="submit" name="Search" class="msadmin_button" value="###LABEL_SEARCH###" />
+                                    </div>
+                                </div>
+                            </td>
+                            <td nowrap valign="top" align="right" class="searchLimit">
+                                <div style="float:right;">
+                                    ###INPUT_LIMIT_RESULT_SELECTBOX###
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </form>
 			<!-- ###RESULTS### begin -->
 			<div class="msHorizontalOverflowWrapper">
 			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">

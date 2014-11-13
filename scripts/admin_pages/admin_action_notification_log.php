@@ -215,15 +215,15 @@ foreach ($tabs as $key=>$value) {
 $content.='
     </ul>
     <div class="tab_container">
-	<form id="form1" name="form1" method="get" action="index.php">
-	'.$formTopSearch.'
-	</form>
 	';
 $count=0;
 foreach ($tabs as $key=>$value) {
 	$count++;
 	$content.='
         <div style="display: block;" id="'.$key.'" class="tab_content">
+        	<form id="form1" name="form1" method="get" action="index.php">
+			'.$formTopSearch.'
+			</form>
 			'.$value[1].'
         </div>
 	';
