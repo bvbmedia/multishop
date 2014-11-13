@@ -137,7 +137,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"]:hover { background:#e2e2e2; }
 
 #tx_multishop_pi1_core #tab-container .tab_container { overflow:auto; width:100%; border:none; background:none; font:12px Arial, Helvetica, sans-serif; margin:0 0 10px; padding:0; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content { border:1px solid #cdcdcd; background:#fff; padding:10px; border-radius:5px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content { border:1px solid #cdcdcd; border-top:none; background:#fff; padding:10px; border-radius:0 0 5px 5px; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content { border-top:1px solid #cdcdcd; border-radius:5px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content h1 { border:none; background:#fff; font:bold 16px Arial, Helvetica, sans-serif; color:#c50000; margin:0; padding:7px 0; }
 
