@@ -1368,13 +1368,15 @@ if ($this->post['action']=='category-insert') {
 					}
 					for ($x=1; $x<=$max_category_level; $x++) {
 						if ($item['categories_name'.$x]) {
+							$item['categories_name'.$x]=trim($item['categories_name'.$x]);
 							if ($hashed_id) {
 								$hashed_id.=' / ';
 							}
 							$hashed_id.=$item['categories_name'.$x];
 							$strchk="SELECT categories_id from tx_multishop_categories c where c.hashed_id='".addslashes(md5($hashed_id))."' and c.page_uid='".$this->showCatalogFromPage."'";
 							$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
-							if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
+							$qryRows=$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk);
+							if (!$qryRows) {
 								$strchk="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where cd.categories_name='".addslashes($item['categories_name'.$x])."' and c.parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and cd.language_id='".$language_id."' and c.categories_id=cd.categories_id";
 								$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 								if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
@@ -1387,9 +1389,10 @@ if ($this->post['action']=='category-insert') {
 									// now rerun original query
 									$strchk="SELECT categories_id from tx_multishop_categories c where c.hashed_id='".addslashes(md5($hashed_id))."' and c.page_uid='".$this->showCatalogFromPage."'";
 									$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
+									$qryRows=$GLOBALS['TYPO3_DB']->sql_num_rows($qrychk);
 								}
 							}
-							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
+							if ($qryRows) {
 								$rowchk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
 								$this->ms['target-cid']=$rowchk['categories_id'];
 							} else {
@@ -1406,7 +1409,7 @@ if ($this->post['action']=='category-insert') {
 								}
 								$updateArray['categories_id']=$this->ms['target-cid'];
 								$updateArray['language_id']=$language_id;
-								$updateArray['categories_name']=trim($item['categories_name'.$x]);
+								$updateArray['categories_name']=$item['categories_name'.$x];
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$this->ms['sqls'][]=$query;
