@@ -95,7 +95,7 @@ $jcrop_html='
 ';
 $js_languages=array();
 foreach ($this->languages as $key=>$language) {
-	$js_languages[]='languages['.$key.']='.json_encode($language);
+	$js_languages[]=json_encode($language);
 }
 $pageinfo=mslib_befe::getRecord($this->shop_pid, 'pages', 'uid', array('deleted=0 and hidden=0'));
 $GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_html;
@@ -103,7 +103,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 '.implode("\n", $jsSelect2InitialValue).'
 var languages=[];
-'.implode("\n", $js_languages).'
+languages=['.implode(",", $js_languages).'];
 function limitText(limitField, limitNum) {
     if (limitField.value.length > limitNum) {
         limitField.value = limitField.value.substring(0, limitNum);
@@ -219,7 +219,7 @@ jQuery(document).ready(function($) {
 			}
 			var target_ul_id="#custom_products_desc_ul_'.$this->shop_pid.'";
 			var tabs_content_li="";
-			tabs_content_li+=buildCustomProductsDescriptionIntput('.$this->shop_pid.', e.object.id, e.object.text, languages);
+			tabs_content_li+=buildCustomProductsDescriptionInput('.$this->shop_pid.', e.object.id, e.object.text, languages);
 			$(target_ul_id).append(tabs_content_li);
 			$(\'.mceEditor\').redactor({
 				focus: false,
@@ -628,26 +628,28 @@ if ($this->post) {
 			}
 			if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 				foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
-					if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
-						$tmp_categories_id=array();
-						if (strpos($this->post['categories_id'], ',')!==false) {
-							$tmp_categories_id=explode(',', $this->post['categories_id']);
-						} else {
-							$tmp_categories_id[]=$this->post['categories_id'];
-						}
-						$endpoint_catid=array();
-						foreach ($tmp_categories_id as $tmp_category_id) {
-							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
-							if (!empty($tmp_catname)) {
-								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
-								if (!$foreign_catid) {
-									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-								} else {
-									$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+					if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops']) && count($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+						if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+							$tmp_categories_id=array();
+							if (strpos($this->post['categories_id'], ',')!==false) {
+								$tmp_categories_id=explode(',', $this->post['categories_id']);
+							} else {
+								$tmp_categories_id[]=$this->post['categories_id'];
+							}
+							$endpoint_catid=array();
+							foreach ($tmp_categories_id as $tmp_category_id) {
+								$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+								if (!empty($tmp_catname)) {
+									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+									if (!$foreign_catid) {
+										$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+									} else {
+										$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+									}
 								}
 							}
+							$shopRecord=implode(',', $endpoint_catid);
 						}
-						$shopRecord=implode(',', $endpoint_catid);
 					}
 					if (strpos($shopRecord, ',')!==false) {
 						$catIds[$page_uid]=explode(',', $shopRecord);
@@ -663,16 +665,24 @@ if ($this->post) {
 							if (strpos($catId, '::rel_')!==false) {
 								list($tmpCatId, $relCatId)=explode('::rel_', $catId);
 								$catId=$tmpCatId;
+							} else {
+								$relCatId=0;
 							}
 							if ($catId>0) {
+								/*$p2c_record=mslib_befe::getRecord($prodid, 'tx_multishop_products_to_categories', 'products_id', array(
+									'categories_id=\''.$catId.'\'',
+									'(page_uid=0 or page_uid=\''.$this->shop_pid.'\')'
+								));*/
+								//if (!is_array($p2c_record)) {
 								$updateArray=array();
-								$updateArray['categories_id']=$catId;
-								$updateArray['products_id']=$prodid;
-								$updateArray['sort_order']=time();
-								$updateArray['page_uid']=$page_uid;
-								$updateArray['related_to']=$relCatId;
-								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									$updateArray['categories_id']=$catId;
+									$updateArray['products_id']=$prodid;
+									$updateArray['sort_order']=time();
+									$updateArray['page_uid']=$page_uid;
+									$updateArray['related_to']=$relCatId;
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								//}
 								// update the counterpart relation
 								$updateArray=array();
 								$updateArray['related_to']=$catId;
@@ -734,26 +744,28 @@ if ($this->post) {
 				}
 				if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 					foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
-						if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
-							$tmp_categories_id=array();
-							if (strpos($this->post['categories_id'], ',')!==false) {
-								$tmp_categories_id=explode(',', $this->post['categories_id']);
-							} else {
-								$tmp_categories_id[]=$this->post['categories_id'];
-							}
-							$endpoint_catid=array();
-							foreach ($tmp_categories_id as $tmp_category_id) {
-								$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
-								if (!empty($tmp_catname)) {
-									$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
-									if (!$foreign_catid) {
-										$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-									} else {
-										$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+						if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+							if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+								$tmp_categories_id=array();
+								if (strpos($this->post['categories_id'], ',')!==false) {
+									$tmp_categories_id=explode(',', $this->post['categories_id']);
+								} else {
+									$tmp_categories_id[]=$this->post['categories_id'];
+								}
+								$endpoint_catid=array();
+								foreach ($tmp_categories_id as $tmp_category_id) {
+									$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+									if (!empty($tmp_catname)) {
+										$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+										if (!$foreign_catid) {
+											$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+										} else {
+											$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+										}
 									}
 								}
+								$shopRecord=implode(',', $endpoint_catid);
 							}
-							$shopRecord=implode(',', $endpoint_catid);
 						}
 						if (!empty($shopRecord)) {
 							if (strpos($shopRecord, ',')!==false) {
@@ -767,7 +779,10 @@ if ($this->post) {
 				// finally get the category ids that we must remove
 				if (is_array($catOldIds) && count($catOldIds)) {
 					foreach ($catOldIds as $page_uid => $catOldArray) {
-						$catIdsToRemove=array_diff($catOldIds[$page_uid], $catIds[$page_uid]);
+						$catIdsToRemove=$catOldArray;
+						if (is_array($catIds[$page_uid]) && count($catIds[$page_uid])) {
+							$catIdsToRemove=array_diff($catOldIds[$page_uid], $catIds[$page_uid]);
+						}
 						if (is_array($catIdsToRemove) && count($catIdsToRemove)) {
 							foreach ($catIdsToRemove as $catId) {
 								if (strpos($catId, '::rel_')!==false) {
@@ -788,7 +803,15 @@ if ($this->post) {
 					if (is_array($shopPids) && count($shopPids)) {
 						foreach ($shopPids as $shop_pid) {
 							if ($shop_pid!=$this->shop_pid) {
-								if (!in_array($shop_pid, $this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+								if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops']) && count($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+									if (!in_array($shop_pid, $this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										// remove the custom page desc if the cat id is not related anymore in p2c
+										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									}
+								} else if (!isset($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
 									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									// remove the custom page desc if the cat id is not related anymore in p2c
@@ -803,6 +826,10 @@ if ($this->post) {
 				//die();
 				if (is_array($catIds) && count($catIds)) {
 					foreach ($catIds as $page_uid=>$catArray) {
+						$catIdsToAdd=$catArray;
+						if (is_array($catOldIds[$page_uid]) && count($catOldIds[$page_uid])) {
+							$catIdsToAdd=array_diff($catIds[$page_uid], $catOldIds[$page_uid]);
+						}
 						foreach ($catIdsToAdd as $catId) {
 							if (strpos($catId, '::rel_')!==false) {
 								list($tmpCatId, $relCatId)=explode('::rel_', $catId);
@@ -811,14 +838,20 @@ if ($this->post) {
 								$relCatId=0;
 							}
 							if ($catId > 0) {
-								$updateArray=array();
-								$updateArray['categories_id']=$catId;
-								$updateArray['products_id']=$prodid;
-								$updateArray['sort_order']=time();
-								$updateArray['page_uid']=$page_uid;
-								$updateArray['related_to']=$relCatId;
-								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$p2c_record=mslib_befe::getRecord($prodid, 'tx_multishop_products_to_categories', 'products_id', array(
+									'categories_id=\''.$catId.'\'',
+									'(page_uid=0 or page_uid=\''.$this->shop_pid.'\')'
+								));
+								if (!is_array($p2c_record)) {
+									$updateArray=array();
+									$updateArray['categories_id']=$catId;
+									$updateArray['products_id']=$prodid;
+									$updateArray['sort_order']=time();
+									$updateArray['page_uid']=$page_uid;
+									$updateArray['related_to']=$relCatId;
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 								// update the counterpart relation
 								$updateArray=array();
 								$updateArray['related_to']=$catId;
@@ -858,26 +891,28 @@ if ($this->post) {
 		}
 		if ($this->conf['enableMultipleShops'] && is_array($this->post['tx_multishop_pi1']['products_to_shop_categories']) && count($this->post['tx_multishop_pi1']['products_to_shop_categories'])) {
 			foreach ($this->post['tx_multishop_pi1']['products_to_shop_categories'] as $page_uid => $shopRecord) {
-				if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
-					$tmp_categories_id=array();
-					if (strpos($this->post['categories_id'], ',')!==false) {
-						$tmp_categories_id=explode(',', $this->post['categories_id']);
-					} else {
-						$tmp_categories_id[]=$this->post['categories_id'];
-					}
-					$endpoint_catid=array();
-					foreach ($tmp_categories_id as $tmp_category_id) {
-						$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
-						if (!empty($tmp_catname)) {
-							$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
-							if (!$foreign_catid) {
-								$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
-							} else {
-								$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+				if (is_array($this->post['tx_multishop_pi1']['enableMultipleShops']) && count($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
+					if (in_array($page_uid, $this->post['tx_multishop_pi1']['enableMultipleShops']) && empty($shopRecord)) {
+						$tmp_categories_id=array();
+						if (strpos($this->post['categories_id'], ',')!==false) {
+							$tmp_categories_id=explode(',', $this->post['categories_id']);
+						} else {
+							$tmp_categories_id[]=$this->post['categories_id'];
+						}
+						$endpoint_catid=array();
+						foreach ($tmp_categories_id as $tmp_category_id) {
+							$tmp_catname=mslib_fe::getCategoryName($tmp_category_id);
+							if (!empty($tmp_catname)) {
+								$foreign_catid=mslib_fe::getCategoryIdByName($tmp_catname, $page_uid);
+								if (!$foreign_catid) {
+									$endpoint_catid[]=mslib_fe::createExternalShopCategoryTree($tmp_category_id, $page_uid).'::rel_'.$tmp_category_id;
+								} else {
+									$endpoint_catid[]=$foreign_catid.'::rel_'.$tmp_category_id;
+								}
 							}
 						}
+						$shopRecord=implode(',', $endpoint_catid);
 					}
-					$shopRecord=implode(',', $endpoint_catid);
 				}
 				if (!empty($shopRecord)) {
 					if (strpos($shopRecord, ',')!==false) {
@@ -899,14 +934,20 @@ if ($this->post) {
 							$relCatId=0;
 						}
 						if ($catId>0) {
-							$updateArray=array();
-							$updateArray['categories_id']=$catId;
-							$updateArray['products_id']=$prodid;
-							$updateArray['sort_order']=time();
-							$updateArray['page_uid']=$page_uid;
-							$updateArray['related_to']=$relCatId;
-							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$p2c_record=mslib_befe::getRecord($prodid, 'tx_multishop_products_to_categories', 'products_id', array(
+								'categories_id=\''.$catId.'\'',
+								'(page_uid=0 or page_uid=\''.$this->shop_pid.'\')'
+							));
+							if (!is_array($p2c_record)) {
+								$updateArray=array();
+								$updateArray['categories_id']=$catId;
+								$updateArray['products_id']=$prodid;
+								$updateArray['sort_order']=time();
+								$updateArray['page_uid']=$page_uid;
+								$updateArray['related_to']=$relCatId;
+								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
 							// update the counterpart relation
 							$updateArray=array();
 							$updateArray['related_to']=$catId;
@@ -950,9 +991,9 @@ if ($this->post) {
 		foreach ($this->post['products_name'] as $key=>$value) {
 			if (is_numeric($key)) {
 				if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
-					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$this->shop_pid."' and (layered_categories_id='".$this->post['local_primary_product_categories']."' or layered_categories_id='0') and language_id='".$key."'";
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and (layered_categories_id='".$this->post['local_primary_product_categories']."' or layered_categories_id='0') and language_id='".$key."'";
 				} else {
-					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$this->shop_pid."' and language_id='".$key."'";
+					$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and (page_uid=0 OR page_uid='".$this->shop_pid."') and language_id='".$key."'";
 				}
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$updateArray=array();
@@ -994,7 +1035,7 @@ if ($this->post) {
 						mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products_description', $updateArray);
 					}
 					if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['local_primary_product_categories'])) {
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$this->shop_pid.'\' and (layered_categories_id=\''.$this->post['local_primary_product_categories'].'\' or layered_categories_id=\'0\') and language_id=\''.$key.'\'', $updateArray);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and (page_uid=0 OR page_uid=\''.$this->shop_pid.'\') and (layered_categories_id=\''.$this->post['local_primary_product_categories'].'\' or layered_categories_id=\'0\') and language_id=\''.$key.'\'', $updateArray);
 					} else {
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and language_id=\''.$key.'\'', $updateArray);
 					}
@@ -1019,7 +1060,7 @@ if ($this->post) {
 			}
 		}
 		// external SHOP product custom description
-		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name'])) {
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && is_array($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name'])) {
 			foreach ($this->post['customProductsDescription_products_name'] as $page_uid=>$customDescData) {
 				foreach ($customDescData as $customDescData_category_id=>$descData) {
 					if (isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$customDescData_category_id])) {
@@ -1084,16 +1125,18 @@ if ($this->post) {
 			}
 		}
 		// deletion of custom product desc
-		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-			foreach ($this->post['old_layered_categories_id'] as $page_uid=>$cat_data) {
-				foreach ($cat_data as $cat_id=>$cat_bool) {
-					if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$cat_id])) {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\' and layered_categories_id=\''.$cat_id.'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		/*if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+			if (is_array($this->post['old_layered_categories_id']) && count($this->post['old_layered_categories_id'])) {
+				foreach ($this->post['old_layered_categories_id'] as $page_uid=>$cat_data) {
+					foreach ($cat_data as $cat_id=>$cat_bool) {
+						if (!isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$cat_id])) {
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\' and layered_categories_id=\''.$cat_id.'\'');
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
 					}
 				}
 			}
-		}
+		}*/
 		//die();
 		// specials price
 		if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
@@ -2854,7 +2897,7 @@ if ($this->post) {
 									$tabs_content=array();
 									$tabs_array=array();
 									foreach ($tmp_categories_id as $tmp_category_id) {
-										$tmp_category_name=mslib_fe::getCategoryName($tmp_category_id);
+										$tmp_category_name=mslib_fe::getCategoryName($tmp_category_id, $pageinfo['uid']);
 										$other_shops_product_info=mslib_fe::getProductInfo($this->get['pid'], $tmp_category_id, $pageinfo['uid']);
 										// external custom product desc
 										$details_content_multishops='';
@@ -2983,8 +3026,7 @@ if ($this->post) {
 							</div>';
 							$GLOBALS['TSFE']->additionalHeaderData[]='
 							<script type="text/javascript">
-							var languages=[];
-							'.implode("\n", $js_languages).'
+
 							jQuery(document).ready(function($) {
 								var categoriesIdSearchTerm_'.$pageinfo['uid'].'=[];
 								$(\'#enableMultipleShopsTree_'.$pageinfo['uid'].'\').select2({
@@ -3071,7 +3113,7 @@ if ($this->post) {
 									}
 									var target_ul_id="#custom_products_desc_ul_'.$pageinfo['uid'].'";
 									var tabs_content_li="";
-									tabs_content_li+=buildCustomProductsDescriptionIntput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
+									tabs_content_li+=buildCustomProductsDescriptionInput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
 									$(target_ul_id).append(tabs_content_li);
 									$(\'.mceEditor\').redactor({
 										focus: false,
@@ -3094,12 +3136,10 @@ if ($this->post) {
 			if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 				$GLOBALS['TSFE']->additionalHeaderData[]='
 				<script type="text/javascript">
-				var languages=[];
-				'.implode("\n", $js_languages).'
 				'.$js_number_of_tabs.'
-				function buildCustomProductsDescriptionIntput(page_uid, category_id, category_name, languages) {
+				function buildCustomProductsDescriptionInput(page_uid, category_id, category_name, languages) {
 					var details_content=\'\';
-					$.each(languages, function(uid, lang) {
+					$.each(languages, function(i, lang) {
 						var details_tab_content=\'\';
 						if (product_details_number_of_tabs>0) {
 							for (var i=1; i<=product_details_number_of_tabs; i++) {
@@ -3223,7 +3263,7 @@ if ($this->post) {
 							// insert new tabs content
 							var tabs_content_li="";
 							$.each(select2_value, function(i, data) {
-								tabs_content_li+=buildCustomProductsDescriptionIntput(page_uid, data.id, data.text, languages);
+								tabs_content_li+=buildCustomProductsDescriptionInput(page_uid, data.id, data.text, languages);
 							});
 							if (tabs_content_li!="") {
 								var tabs_content=\'<div class="\' + tabs_anchor + \' shops_tab_content tab_content" style="display: block;" id="\' + tabs_anchor + \'"><ul class="custom_products_description" id="custom_products_desc_ul_\' + page_uid + \'">\' + tabs_content_li + \'</ul></div>\';

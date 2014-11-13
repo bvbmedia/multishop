@@ -769,7 +769,9 @@ class mslib_befe {
 					}
 					$tables=array();
 					$tables[]='tx_multishop_products';
-					$tables[]='tx_multishop_products_flat';
+					if ($this->ms['MODULES']['FLAT_DATABASE']) {
+						$tables[]='tx_multishop_products_flat';
+					}
 					$tables[]='tx_multishop_products_description';
 					$tables[]='tx_multishop_products_to_categories';
 					$tables[]='tx_multishop_products_attributes';
@@ -861,7 +863,7 @@ class mslib_befe {
 		if (is_array($this->ms['image_paths']['categories']) && count($this->ms['image_paths']['categories'])) {
 			foreach ($this->ms['image_paths']['categories'] as $key=>$value) {
 				$path=PATH_site.$value.'/'.$file_name;
-				if (unlink($path)) {
+				if (@unlink($path)) {
 					return 1;
 				}
 			}
@@ -909,7 +911,7 @@ class mslib_befe {
 			}
 			return rmdir($path);
 		} else {
-			return unlink($path);
+			return @unlink($path);
 		}
 	}
 	public function doesExist($table, $field, $value, $more='') {
@@ -2287,14 +2289,31 @@ class mslib_befe {
 	 * @return    array        Files packed
 	 */
 	public function zipPack($file, $targetFile) {
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']=':';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']='1';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']='0';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']='1';
+		}
 		if (!(isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']))) {
 			return array();
 		}
 		$zip=$GLOBALS['TYPO3_CONF_VARS']['BE']['zip_path'] ? $GLOBALS['TYPO3_CONF_VARS']['BE']['zip_path'] : 'zip';
-		$path=dirname($file);
-		$file=basename($file);
-		chdir($path);
-		$cmd=$zip.' -r -9 '.escapeshellarg($targetFile).' '.escapeshellarg($file);
+		if (is_dir($file)) {
+			chdir($file);
+			$cmd=$zip.' -r -9 '.escapeshellarg($targetFile).' \'./\'';
+		} else {
+			$path=dirname($file);
+			$file=basename($file);
+			chdir($path);
+			$cmd=$zip.' -r -9 '.escapeshellarg($targetFile).' '.escapeshellarg($file);
+		}
 		exec($cmd, $list, $ret);
 		if ($ret) {
 			return array();
@@ -2336,6 +2355,18 @@ class mslib_befe {
 	 * @return    array        A clean list of the filenames returned by the binary
 	 */
 	public function getFileResult($list, $type='zip') {
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['split_char'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['split_char']='';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['pre_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['pre_lines']='3';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['post_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['post_lines']='2';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['file_pos'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['file_pos']='3';
+		}
 		$sc=$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['split_char'];
 		$pre=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['pre_lines']);
 		$post_lines=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['post_lines']);

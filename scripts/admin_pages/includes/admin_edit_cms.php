@@ -259,7 +259,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		<div class="account-field">
 			<label for="cms_name['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 			<input spellcheck="true" type="text" class="text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
-			<span><a href="#" class="tooltipMarker" title="Dynamic markers">markers</a></span>
+			<button type="button" class="tooltipMarker msadmin_button" data-container="body" data-toggle="popover">Markers</button>
 		</div>
 		<div class="account-field">
 			<label for="cms_content['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('content')).'</label>
@@ -336,11 +336,14 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(document).on("click", ".tooltipMarker", function(e){ e.preventDefault(); });
-		$(".tooltipMarker").tooltip({
-			position: "bottom",
-			onBeforeShow: function() {
-				var html=$("#msadminMarkersBox .valueField").html();
-				this.getTip().html("<h1>'.$this->pi_getLL('marker').'</h1>"+html);
+		var html=$("#msadminMarkersBox .valueField").html();
+
+		$(\'.tooltipMarker\').popover({
+			html : true,
+			placement:\'right\',
+			title:\'Markers\',
+			content: function() {
+			  return $("#msadminMarkersBox .valueField").html();
 			}
 		});
 	});
