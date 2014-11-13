@@ -2305,10 +2305,15 @@ class mslib_befe {
 			return array();
 		}
 		$zip=$GLOBALS['TYPO3_CONF_VARS']['BE']['zip_path'] ? $GLOBALS['TYPO3_CONF_VARS']['BE']['zip_path'] : 'zip';
-		$path=dirname($file);
-		$file=basename($file);
-		chdir($path);
-		$cmd=$zip.' -r -9 '.escapeshellarg($targetFile).' '.escapeshellarg($file);
+		if (is_dir($file)) {
+			chdir($file);
+			$cmd=$zip.' -r -9 '.escapeshellarg($targetFile).' \'./\'';
+		} else {
+			$path=dirname($file);
+			$file=basename($file);
+			chdir($path);
+			$cmd=$zip.' -r -9 '.escapeshellarg($targetFile).' '.escapeshellarg($file);
+		}
 		exec($cmd, $list, $ret);
 		if ($ret) {
 			return array();
