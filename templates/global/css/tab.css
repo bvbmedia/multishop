@@ -138,6 +138,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container { overflow:auto; width:100%; border:none; background:none; font:12px Arial, Helvetica, sans-serif; margin:0 0 10px; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content { border:1px solid #cdcdcd; background:#fff; padding:10px; border-radius:5px; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content { border-top:1px solid #cdcdcd; border-radius:5px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content h1 { border:none; background:#fff; font:bold 16px Arial, Helvetica, sans-serif; color:#c50000; margin:0; padding:7px 0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field { overflow:hidden; width:100%; border-bottom:1px dotted #e0e0e0; background:#fff; font:12px Arial, Helvetica, sans-serif; color:#333; text-transform:uppercase; padding:7px 0; }
@@ -161,9 +162,9 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content#cms_details input[type="text"] { width:630px; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field#cms_types select { width:640px; }
-#tx_multishop_pi1_core #tab-container .tab_container .admin_cms_edit .tab_content,
+/* #tx_multishop_pi1_core #tab-container .tab_container .admin_cms_edit .tab_content,
 #tx_multishop_pi1_core #tab-container .tab_container #CmsListing.tab_content,
-#tx_multishop_pi1_core #tab-container .tab_container #CustomersListing.tab_content { border-top:none; border-radius:0; }
+#tx_multishop_pi1_core #tab-container .tab_container #CustomersListing.tab_content { border-top:none; border-radius:0; } */
 
 /* #tx_multishop_pi1_core #tab-container .tab_container #product_options .account-field { min-width:880px; }
 #tx_multishop_pi1_core.msAdminHighslidePopup #tab-container .tab_container #product_options .account-field { min-width:811px; }
