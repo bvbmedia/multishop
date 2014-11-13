@@ -2289,6 +2289,18 @@ class mslib_befe {
 	 * @return    array        Files packed
 	 */
 	public function zipPack($file, $targetFile) {
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']=':';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']='1';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']='0';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']='1';
+		}
 		if (!(isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']))) {
 			return array();
 		}
@@ -2338,6 +2350,18 @@ class mslib_befe {
 	 * @return    array        A clean list of the filenames returned by the binary
 	 */
 	public function getFileResult($list, $type='zip') {
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['split_char'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['split_char']='';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['pre_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['pre_lines']='3';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['post_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['post_lines']='2';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['file_pos'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['list']['file_pos']='3';
+		}
 		$sc=$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['split_char'];
 		$pre=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['pre_lines']);
 		$post_lines=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['post_lines']);
