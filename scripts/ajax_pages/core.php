@@ -1338,6 +1338,16 @@ switch ($this->ms['page']) {
 					exit();
 				} else {
 					$body_data='';
+					// custom page hook that can be controlled by third-party plugin
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['get_micro_downloadPreProc'])) {
+						$params=array(
+							'row'=>&$row
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['get_micro_downloadPreProc'] as $funcRef) {
+							t3lib_div::callUserFunction($funcRef, $params, $this);
+						}
+					}
+					// custom page hook that can be controlled by third-party plugin eof
 					// download action is valid. lets proceed
 					if ($row['file_remote_location']) {
 						// file is stored on remote location. lets download it and send it to the browser
