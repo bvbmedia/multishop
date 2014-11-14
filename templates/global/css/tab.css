@@ -128,7 +128,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container { position:relative; left:-1px;display:block; width:auto; z-index:1; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content { min-height:500px; }*/
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs { clear:both; overflow:hidden; border-top:20px solid transparent; display:table; padding:0 0 20px; }
-#tx_multishop_pi1_core #tab-container.msadminVerticalTabs ul.tabs { position:relative; float:none; overflow:visible !important; display:table-cell; width:auto; height:auto; background:none; margin:14px 0 0; z-index:1; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs ul.tabs { position:relative; float:none; overflow:visible !important; display:table-cell; width:auto; height:auto; background:none; margin:0; padding:14px 0 0; z-index:1; vertical-align:top; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs ul.tabs li { position:relative; float:none; display:block; height:auto; background:none; line-height:14px; text-align:left; margin:0 0 4px; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs ul.tabs li a { float:none; display:block; min-width:200px; height:auto; border:1px solid #cdcdcd; border-right:none; background:#555; color:#fff !important; text-align:right; line-height:14px; padding:7px 10px; border-radius:4px 0 0 4px; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs ul.tabs li a:hover { background:#444; color:#fff !important; text-decoration:none !important; }
