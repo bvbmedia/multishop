@@ -151,10 +151,9 @@ $subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='';
 if ($current['content_footer']) {
 	$subpartArray['###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###']='<div class="categories_bottom_description">'.trim($current['content_footer']).'</div>';
 }
-if (isset($current['categories_name']) && !empty($current['categories_name'])) {
+$subpartArray['###CURRENT_CATEGORIES_NAME###']='';
+if (is_array($current) && $current['categories_name']) {
 	$subpartArray['###CURRENT_CATEGORIES_NAME###']='<h1>'.trim($current['categories_name']).'</h1>';
-} else {
-	$subpartArray['###CURRENT_CATEGORIES_NAME###']='';
 }
 $subpartArray['###ITEM###']=$contentItem;
 $product_listing_form_content='';
