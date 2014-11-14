@@ -107,12 +107,12 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$content.='<p>'.$this->pi_getLL('admin_label_manufacturers_has_been_cleared').'</p>';
 				break;
 			case 'products_attributes':
-				$string='TRUNCATE `tx_multishop_products_attributes`;
+				//TRUNCATE `tx_multishop_products_attributes_extra`;
+				//TRUNCATE `tx_multishop_products_options_values_extra`;
+			$string='TRUNCATE `tx_multishop_products_attributes`;
 				TRUNCATE `tx_multishop_products_attributes_download`;
-				TRUNCATE `tx_multishop_products_attributes_extra`;
 				TRUNCATE `tx_multishop_products_options`;
 				TRUNCATE `tx_multishop_products_options_values`;
-				TRUNCATE `tx_multishop_products_options_values_extra`;
 				TRUNCATE `tx_multishop_products_options_values_to_products_options`
 				TRUNCATE `tx_multishop_attributes_options_groups`
 				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`';
@@ -125,6 +125,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$content.='<p>products_attributes has been cleared.</p>';
 				break;
 			case 'everything':
+				//TRUNCATE `tx_multishop_products_attributes_extra`;
 				$string='TRUNCATE `tx_multishop_categories`;
 				TRUNCATE `tx_multishop_categories_description`;
 				TRUNCATE `tx_multishop_manufacturers`;
@@ -134,7 +135,6 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				'.(($this->ms['MODULES']['FLAT_DATABASE']) ? 'TRUNCATE `tx_multishop_products_flat`;' : '').'
 				TRUNCATE `tx_multishop_products_attributes`;
 				TRUNCATE `tx_multishop_products_attributes_download`;
-				TRUNCATE `tx_multishop_products_attributes_extra`;
 				TRUNCATE `tx_multishop_products_description`;
 				TRUNCATE `tx_multishop_products_faq`;
 				TRUNCATE `tx_multishop_products_options`;
@@ -144,11 +144,11 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				TRUNCATE `tx_multishop_products_to_categories`;
 				TRUNCATE `tx_multishop_products_to_extra_options`;
 				TRUNCATE `tx_multishop_products_to_relative_products`;
-				TRUNCATE `tx_multishop_products_undo`;
 				TRUNCATE `tx_multishop_specials`;
 				TRUNCATE `tx_multishop_specials_sections`;
 				TRUNCATE `tx_multishop_attributes_options_groups`;
-				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`;';
+				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`;
+				TRUNCATE `tx_multishop_undo_products`;';
 				/*
 				TRUNCATE `tx_multishop_coupons`;
 				TRUNCATE `tx_multishop_import_jobs`;

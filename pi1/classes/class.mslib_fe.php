@@ -1536,7 +1536,7 @@ class mslib_fe {
 		$query_array['select'][]='popt.products_options_id';
 		$query_array['select'][]='popt.products_options_name';
 		$query_array['select'][]='popt.listtype';
-		$query_array['select'][]='popt.listtype';
+		$query_array['select'][]='popt.hide';
 		$query_array['from'][]='tx_multishop_products_options popt';
 		$query_array['from'][]='tx_multishop_products_attributes patrib';
 		$query_array['where'][]='patrib.products_id=\''.(int)$products_id.'\'';
@@ -1593,261 +1593,265 @@ class mslib_fe {
 			$output_html=array();
 			$next_index=0;
 			while ($options=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$load_default=0;
-				switch ($options['listtype']) {
-					case 'divider':
-						$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-divider" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+				if (!$options['hide']) {
+					$load_default=0;
+					switch ($options['listtype']) {
+						case 'divider':
+							$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-divider" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<label></label>
 						<div class="hr"></div>
 						</div>';
-						$load_default=0;
-						break;
-					case 'input':
-						$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+							$load_default=0;
+							break;
+						case 'input':
+							$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<label>'.$options['products_options_name'].':</label>
 						<input type="text" name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" '.($options['required'] ? 'required="required"' : '').' />
 						</div>';
-						$load_default=0;
-						break;
-					case 'textarea':
-						$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-textarea" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+							$load_default=0;
+							break;
+						case 'textarea':
+							$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-textarea" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<label>'.$options['products_options_name'].':</label>
 						<textarea name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').'>'.htmlspecialchars($sessionData['attributes'][$options['products_options_id']]['products_options_values_name']).'</textarea>
 						</div>';
-						$load_default=0;
-						break;
-					case 'hidden_field':
-						$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-textarea" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+							$load_default=0;
+							break;
+						case 'hidden_field':
+							$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-textarea" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<input type="hidden" name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" value="'.$sessionData['attributes'][$options['products_options_id']]['products_options_values_name'].'" />
 						</div>';
-						$load_default=0;
-						break;
-					case 'file':
-						$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
+							$load_default=0;
+							break;
+						case 'file':
+							$output_html[$options['products_options_id']].='<div class="opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-input" id="attribute_item_wrapper_'.$options['products_options_id'].'">
 						<label>'.$options['products_options_name'].':</label>
 						<div class="attribute_item_wrapper">
 						<input type="file" name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').' />
 						</div>
 						</div>';
-						$load_default=0;
-						break;
-					case 'radio':
-						$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio';
-						$load_default=1;
-						break;
-					case 'checkbox':
-						$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-checkbox';
-						$load_default=1;
-						break;
-					default:
-						$load_default=1;
-						//hook to let other plugins further manipulate the listypes
-						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'])) {
+							$load_default=0;
+							break;
+						case 'radio':
+							$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio';
+							$load_default=1;
+							break;
+						case 'checkbox':
+							$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-checkbox';
+							$load_default=1;
+							break;
+						default:
+							$load_default=1;
+							//hook to let other plugins further manipulate the listypes
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'])) {
+								$params=array(
+									'load_default'=>&$load_default,
+									'products_id'=>$products_id,
+									'options'=>&$options,
+									'class'=>&$class,
+									'output_html'=>&$output_html
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'] as $funcRef) {
+									t3lib_div::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							if ($load_default) {
+								$load_default=1;
+								$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio';
+							}
+							break;
+					}
+					if ($load_default) {
+						if ($readonly) {
+							$output_html[$options['products_options_id']].='<ul>';
+						}
+						// now get the values
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix', // SELECT ...
+							'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp', // FROM ...
+							'pa.products_id = \''.(int)$products_id.'\' and pa.options_id = \''.$options['products_options_id'].'\' and pov.language_id = \''.$this->sys_language_uid.'\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\''.$options['products_options_id'].'\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
+							'', // GROUP BY...
+							'pa.sort_order_option_value asc', // ORDER BY...
+							'' // LIMIT ...
+						);
+						$products_options=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$total_values=$GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
+						if (!$readonly) {
+							$output_html[$options['products_options_id']].='<div class="'.$class.'" id="attribute_item_wrapper_'.$options['products_options_id'].'"><label>'.$options['products_options_name'].':</label><div class="attribute_item_wrapper">';
+						} else {
+							$output_html[$options['products_options_id']].='<li><label>'.$options['products_options_name'].':</label> ';
+						}
+						// SHOW_ATTRIBUTE_DESCRIPTION
+						if (SHOW_ATTRIBUTE_DESCRIPTION && !empty($products_options_name_values['description'])) {
+							$output_html[$options['products_options_id']].=$products_options_name_values['description']."<br/>";
+						}
+						$opt=0;
+						$next_index++;
+						$next_index2=0;
+						$items='';
+						$options_values=array();
+						while ($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
+							$options_values[]=$products_options_values;
+							// hook for manipulating the $products_options_values array
+							// hook to let other plugins further manipulate the option values display
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['attributesArray'])) {
+								$params=array(
+									'options'=>&$options,
+									'products_options_values'=>&$products_options_values,
+									'products_id'=>&$products_id
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['attributesArray'] as $funcRef) {
+									t3lib_div::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							// hook
+							if ($hide_prices) {
+								$products_options_values['options_values_price']=0;
+							}
+							$option_value_counter++;
+							if ($add_tax_rate) {
+								// add vat
+								$products_options_values['options_values_price']=round($products_options_values['options_values_price']*(1+$add_tax_rate), 2);
+							}
+							// print_r($products_options_values);
+							if (!$readonly) {
+								if ($total_values<2 and $options['listtype']!='checkbox') {
+									$label='<span class="attributes-values">'.$products_options_values['products_options_values_name'].'</span>';
+									if ($products_options_values['options_values_price']!='0') {
+										$label.=' ('.$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']).')';
+									}
+									$output_html[$options['products_options_id']].="\n".$label.'<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" type="hidden" value="'.$products_options_values['products_options_values_id'].'" /></li>';
+								} else {
+									switch ($options['listtype']) {
+										case 'radio':
+											$items.="\n".'
+										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
+										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'"><span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span></label>
+										<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
+											if (count($sessionData['attributes'][$options['products_options_id']])) {
+												foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
+													if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
+														$items.=' checked';
+													}
+												}
+											}
+											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
+										<div class="attribute_item_price">';
+											if ($products_options_values['options_values_price']!='0') {
+												$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
+											}
+											$items.='</div></div>';
+											break;
+										case 'checkbox':
+											$items.="\n".'
+										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
+										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">'.$products_options_values['products_options_values_name'].'</label>
+										<input name="attributes['.$options['products_options_id'].'][]" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="checkbox" value="'.$products_options_values['products_options_values_id'].'"';
+											if (count($sessionData['attributes'][$options['products_options_id']])) {
+												foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
+													if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
+														$items.=' checked';
+													}
+												}
+											}
+											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
+										<div class="attribute_item_price">';
+											if ($products_options_values['options_values_price']!='0') {
+												$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
+											}
+											$items.='</div></div>';
+											break;
+										default:
+											$items.="\n".'<option value="'.$products_options_values['products_options_values_id'].'" ';
+											if (($sessionData['attributes'][$options['products_options_id']]['products_options_values_id']==$products_options_values['products_options_values_id'])) {
+												$selected=1;
+												$items.=' SELECTED';
+											}
+											$aantal=strlen($products_options_values['products_options_values_name']);
+											$t="";
+											if ($products_options_values['options_values_price']!='0') {
+												$t=' ('.$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']).')&nbsp';
+												$aantal=$aantal+strlen($t);
+											}
+											$x=62-$aantal;
+											$x=INFO_SELECTBOX_OPTIONS_SPACE-$aantal;
+											$spaces='';
+											for ($i=0; $i<=$x; $i++) {
+												$spaces.='&nbsp;';
+											}
+											$items.='>'.$products_options_values['products_options_values_name'].$spaces.$t;
+											$items.='</option>';
+											break;
+									}
+								}
+							} else {
+								if (($sessionData['attributes'][$options['products_options_id']]==$products_options_values['products_options_values_id'])) {
+									$items.=$products_options_values['products_options_values_name'].'</li>';
+								}
+							}
+							$next_index2++;
+						}
+						if ($total_values>0) {
+							if (!$readonly) {
+								switch ($options['listtype']) {
+									case 'input':
+									case 'checkbox':
+									case 'radio':
+									break;
+									default:
+										if ($total_values>1) {
+											$html='';
+											$html.='<select name="attributes['.$options['products_options_id'].']" class="attributes'.$options['products_options_id'].'" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').'>';
+											if ($options['required']) {
+												$html.='<option value="">'.$this->pi_getLL('choose_selection').'</option>';
+											}
+											$items=$html.$items.'</select>'."\n";
+										}
+										break;
+								}
+								$output_html[$options['products_options_id']].=$items;
+							}
+						}
+						if (!$readonly) {
+							$output_html[$options['products_options_id']].='</div></div>'."\n";
+						}
+						if ($readonly) {
+							$output_html[$options['products_options_id']].='</ul>';
+						}
+						// hook to let other plugins further manipulate the option values display
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesLoadDefaultOutputHTML'])) {
 							$params=array(
 								'load_default'=>&$load_default,
 								'products_id'=>$products_id,
 								'options'=>&$options,
-								'class'=>&$class,
+								'readonly'=>$readonly,
+								'options_values'=>&$options_values,
+								'output'=>&$output,
 								'output_html'=>&$output_html
 							);
-							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'] as $funcRef) {
-								t3lib_div::callUserFunction($funcRef, $params, $this);
-							}
-						}
-						if ($load_default) {
-							$load_default=1;
-							$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio';
-						}
-						break;
-				}
-				if ($load_default) {
-					if ($readonly) {
-						$output_html[$options['products_options_id']].='<ul>';
-					}
-					// now get the values
-					$str=$GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix', // SELECT ...
-						'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp', // FROM ...
-						'pa.products_id = \''.(int)$products_id.'\' and pa.options_id = \''.$options['products_options_id'].'\' and pov.language_id = \''.$this->sys_language_uid.'\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\''.$options['products_options_id'].'\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
-						'', // GROUP BY...
-						'pa.sort_order_option_value asc', // ORDER BY...
-						'' // LIMIT ...
-					);
-					$products_options=$GLOBALS['TYPO3_DB']->sql_query($str);
-					$total_values=$GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
-					if (!$readonly) {
-						$output_html[$options['products_options_id']].='<div class="'.$class.'" id="attribute_item_wrapper_'.$options['products_options_id'].'"><label>'.$options['products_options_name'].':</label><div class="attribute_item_wrapper">';
-					} else {
-						$output_html[$options['products_options_id']].='<li><label>'.$options['products_options_name'].':</label> ';
-					}
-					// SHOW_ATTRIBUTE_DESCRIPTION
-					if (SHOW_ATTRIBUTE_DESCRIPTION && !empty($products_options_name_values['description'])) {
-						$output_html[$options['products_options_id']].=$products_options_name_values['description']."<br/>";
-					}
-					$opt=0;
-					$next_index++;
-					$next_index2=0;
-					$items='';
-					$options_values=array();
-					while ($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
-						$options_values[]=$products_options_values;
-						// hook for manipulating the $products_options_values array
-						// hook to let other plugins further manipulate the option values display
-						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['attributesArray'])) {
-							$params=array(
-								'options'=>&$options,
-								'products_options_values'=>&$products_options_values,
-								'products_id'=>&$products_id
-							);
-							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['attributesArray'] as $funcRef) {
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesLoadDefaultOutputHTML'] as $funcRef) {
 								t3lib_div::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						// hook
-						if ($hide_prices) {
-							$products_options_values['options_values_price']=0;
-						}
-						$option_value_counter++;
-						if ($add_tax_rate) {
-							// add vat
-							$products_options_values['options_values_price']=round($products_options_values['options_values_price']*(1+$add_tax_rate), 2);
-						}
-						// print_r($products_options_values);
-						if (!$readonly) {
-							if ($total_values<2 and $options['listtype']!='checkbox') {
-								$label='<span class="attributes-values">'.$products_options_values['products_options_values_name'].'</span>';
-								if ($products_options_values['options_values_price']!='0') {
-									$label.=' ('.$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']).')';
-								}
-								$output_html[$options['products_options_id']].="\n".$label.'<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'" type="hidden" value="'.$products_options_values['products_options_values_id'].'" /></li>';
-							} else {
-								switch ($options['listtype']) {
-									case 'radio':
-										$items.="\n".'
-										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'"><span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span></label>
-										<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
-										if (count($sessionData['attributes'][$options['products_options_id']])) {
-											foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
-												if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
-													$items.=' checked';
-												}
-											}
-										}
-										$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
-										<div class="attribute_item_price">';
-										if ($products_options_values['options_values_price']!='0') {
-											$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
-										}
-										$items.='</div></div>';
-										break;
-									case 'checkbox':
-										$items.="\n".'
-										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">'.$products_options_values['products_options_values_name'].'</label>
-										<input name="attributes['.$options['products_options_id'].'][]" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="checkbox" value="'.$products_options_values['products_options_values_id'].'"';
-										if (count($sessionData['attributes'][$options['products_options_id']])) {
-											foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
-												if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
-													$items.=' checked';
-												}
-											}
-										}
-										$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
-										<div class="attribute_item_price">';
-										if ($products_options_values['options_values_price']!='0') {
-											$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
-										}
-										$items.='</div></div>';
-										break;
-									default:
-										$items.="\n".'<option value="'.$products_options_values['products_options_values_id'].'" ';
-										if (($sessionData['attributes'][$options['products_options_id']]['products_options_values_id']==$products_options_values['products_options_values_id'])) {
-											$selected=1;
-											$items.=' SELECTED';
-										}
-										$aantal=strlen($products_options_values['products_options_values_name']);
-										$t="";
-										if ($products_options_values['options_values_price']!='0') {
-											$t=' ('.$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']).')&nbsp';
-											$aantal=$aantal+strlen($t);
-										}
-										$x=62-$aantal;
-										$x=INFO_SELECTBOX_OPTIONS_SPACE-$aantal;
-										$spaces='';
-										for ($i=0; $i<=$x; $i++) {
-											$spaces.='&nbsp;';
-										}
-										$items.='>'.$products_options_values['products_options_values_name'].$spaces.$t;
-										$items.='</option>';
-										break;
-								}
-							}
-						} else {
-							if (($sessionData['attributes'][$options['products_options_id']]==$products_options_values['products_options_values_id'])) {
-								$items.=$products_options_values['products_options_values_name'].'</li>';
+					} else {
+						// hook to let other plugins further manipulate the option values display
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionValuesHook'])) {
+							$params=array(
+								'load_default'=>&$load_default,
+								'products_id'=>$products_id,
+								'options'=>&$options,
+								'readonly'=>$readonly,
+								'output'=>&$output,
+								'output_html'=>&$output_html
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionValuesHook'] as $funcRef) {
+								t3lib_div::callUserFunction($funcRef, $params, $this);
 							}
 						}
-						$next_index2++;
+						// hook
 					}
-					if ($total_values>0) {
-						if (!$readonly) {
-							switch ($options['listtype']) {
-								case 'input':
-								case 'checkbox':
-								case 'radio':
-									break;
-								default:
-									if ($total_values>1) {
-										$html='';
-										$html.='<select name="attributes['.$options['products_options_id'].']" class="attributes'.$options['products_options_id'].'" id="attributes'.$options['products_options_id'].'" '.($options['required'] ? 'required="required"' : '').'>';
-										if ($options['required']) {
-											$html.='<option value="">'.$this->pi_getLL('choose_selection').'</option>';
-										}
-										$items=$html.$items.'</select>'."\n";
-									}
-									break;
-							}
-							$output_html[$options['products_options_id']].=$items;
-						}
-					}
-					if (!$readonly) {
-						$output_html[$options['products_options_id']].='</div></div>'."\n";
-					}
-					if ($readonly) {
-						$output_html[$options['products_options_id']].='</ul>';
-					}
-					// hook to let other plugins further manipulate the option values display
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesLoadDefaultOutputHTML'])) {
-						$params=array(
-							'load_default'=>&$load_default,
-							'products_id'=>$products_id,
-							'options'=>&$options,
-							'readonly'=>$readonly,
-							'options_values'=>&$options_values,
-							'output'=>&$output,
-							'output_html'=>&$output_html
-						);
-						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesLoadDefaultOutputHTML'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
-						}
-					}
-					// hook
 				} else {
-					// hook to let other plugins further manipulate the option values display
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionValuesHook'])) {
-						$params=array(
-							'load_default'=>&$load_default,
-							'products_id'=>$products_id,
-							'options'=>&$options,
-							'readonly'=>$readonly,
-							'output'=>&$output,
-							'output_html'=>&$output_html
-						);
-						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionValuesHook'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
-						}
-					}
-					// hook
+					$output_html[$options['products_options_id']]='<input type="hidden" id="attributes'.$options['products_options_id'].'" name="attributes['.$options['products_options_id'].']" value="0">';
 				}
 			}
 			$output.='<div class="products_attributesWrapper">';
@@ -6808,7 +6812,7 @@ class mslib_fe {
 			} else {
 				if (preg_match("/^\//", $filename)) {
 					// local path
-					$file_content=file_get_contents($filename);
+					$file_content=@file_get_contents($filename);
 				} else {
 					$path=@parse_url($filename);
 					if ($path['scheme']) {
