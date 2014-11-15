@@ -160,6 +160,34 @@ class mslib_befe {
 				if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5']=='im6') {
 					$params.='-strip';
 				}
+				$imgtype=mslib_befe::exif_imagetype($original_path);
+				if ($imgtype) {
+					// valid image
+					$ext=image_type_to_extension($imgtype, false);
+					if ($ext) {
+						if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG']) {
+							switch($ext) {
+								//case 'jpeg':
+								case 'png':
+								case 'gif':
+									break;
+								default:
+									// IMAGE IS NOT PNG. CONVERTING IT TO PNG TO REDUCE THE FILESIZE
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.png';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									@unlink($original_path);
+									$original_path=$newOriginal_path;
+									$filename=$newFilename;
+									break;
+							}
+						}
+					}
+				} else {
+					return false;
+				}
 				$maxwidth=$this->ms['category_image_formats']['normal']['width'];
 				$maxheight=$this->ms['category_image_formats']['normal']['height'];
 				$folder=mslib_befe::getImagePrefixFolder($filename);
@@ -232,6 +260,34 @@ class mslib_befe {
 				if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5']=='im6') {
 					$params.='-strip';
 				}
+				$imgtype=mslib_befe::exif_imagetype($original_path);
+				if ($imgtype) {
+					// valid image
+					$ext=image_type_to_extension($imgtype, false);
+					if ($ext) {
+						if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG']) {
+							switch($ext) {
+								//case 'jpeg':
+								case 'png':
+								case 'gif':
+									break;
+								default:
+									// IMAGE IS NOT PNG. CONVERTING IT TO PNG TO REDUCE THE FILESIZE
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.png';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									@unlink($original_path);
+									$original_path=$newOriginal_path;
+									$filename=$newFilename;
+									break;
+							}
+						}
+					}
+				} else {
+					return false;
+				}
 				$maxwidth=$this->ms['manufacturer_image_formats']['enlarged']['width'];
 				$maxheight=$this->ms['manufacturer_image_formats']['enlarged']['height'];
 				$folder=mslib_befe::getImagePrefixFolder($filename);
@@ -291,8 +347,8 @@ class mslib_befe {
 	*/
 	public function getImagePrefixFolder($filename) {
 		$array=explode(".", $filename);
-		$folder_name=substr(preg_replace("/\.+?$/is", "", trim($array[0])), 0, 3);
-		$folder_name=preg_replace("/\-$/", "", $folder_name);
+		$folder_name=substr(preg_replace("/\\.+?$/is", "", trim($array[0])), 0, 3);
+		$folder_name=preg_replace("/\\-$/", "", $folder_name);
 		return t3lib_div::strtolower($folder_name);
 	}
 	public function resizeProductImage($original_path, $filename, $module_path, $run_in_background=0) {
@@ -320,8 +376,36 @@ class mslib_befe {
 				if ($GLOBALS['TYPO3_CONF_VARS']['GFX']['im_version_5']=='im6') {
 					$params.='-strip';
 				}
+				$imgtype=mslib_befe::exif_imagetype($original_path);
+				if ($imgtype) {
+					// valid image
+					$ext=image_type_to_extension($imgtype, false);
+					if ($ext) {
+						if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG']) {
+							switch($ext) {
+								//case 'jpeg':
+								case 'png':
+								case 'gif':
+									break;
+								default:
+									// IMAGE IS NOT PNG. CONVERTING IT TO PNG TO REDUCE THE FILESIZE
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.png';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									@unlink($original_path);
+									$original_path=$newOriginal_path;
+									$filename=$newFilename;
+									break;
+							}
+						}
+					}
+				} else {
+					return false;
+				}
 				if (filesize($original_path) > 16384) {
-					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT
+					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
 					$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					exec($command);
 				}

@@ -17,6 +17,17 @@ if (!defined('TYPO3_MODE')) {
 // 12 Invoice Settings
 $records=array();
 $records[]=array(
+	'configuration_title'=>'Automatically convert uploaded images to PNG format',
+	'configuration_key'=>'ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG',
+	'configuration_value'=>'1',
+	'description'=>'Automatically convert uploaded images for products, categories, and manufaturers to PNG format',
+	'group_id'=>'2',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Enable layered custom product description',
 	'configuration_key'=>'ENABLE_LAYERED_PRODUCTS_DESCRIPTION',
 	'configuration_value'=>'0',

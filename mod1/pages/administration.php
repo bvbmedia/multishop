@@ -128,6 +128,9 @@ switch ($_REQUEST['action']) {
 		$format=explode("x", $this->ms['MODULES']['CATEGORY_IMAGE_SIZE_NORMAL']);
 		$this->ms['category_image_formats']['normal']['width']=$format[0];
 		$this->ms['category_image_formats']['normal']['height']=$format[1];
+		$format=explode("x", $this->ms['MODULES']['MANUFACTURER_IMAGE_SIZE_NORMAL']);
+		$this->ms['manufacturer_image_formats']['normal']['width']=$format[0];
+		$this->ms['manufacturer_image_formats']['normal']['height']=$format[1];
 		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_50']);
 		$this->ms['product_image_formats']['50']['width']=$format[0];
 		$this->ms['product_image_formats']['50']['height']=$format[1];
@@ -148,13 +151,10 @@ switch ($_REQUEST['action']) {
 		}
 		$content.='<h2>Log</h2>';
 		$data=array();
-		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('categories_image', 'tx_multishop_categories', 'page_uid='.$_GET['page_uid']);
-		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_row($res))!=false) {
-			if ($row[0]) {
-				$data['categories'][]=$row[0];
-			}
-		}
+		$data['categories']=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('categories_id,categories_image', 'tx_multishop_categories', 'page_uid=\''.$_GET['page_uid'].'\'', '');
+		$data['manufacturers']=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('manufacturers_id,manufacturers_image', 'tx_multishop_manufacturers');
 		$fields=array();
+		$fields[]='products_id';
 		for ($i=0; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
 			if (!$i) {
 				$s='';
@@ -163,32 +163,75 @@ switch ($_REQUEST['action']) {
 			}
 			$fields[]='products_image'.$s;
 		}
-		$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery(implode(",", $fields), 'tx_multishop_products', 'page_uid='.$_GET['page_uid']);
-		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_row($res))!=false) {
-			for ($i=0; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
-				if ($row[$i]) {
-					$data['products'][]=$row[$i];
-				}
-			}
-		}
-		if (count($data['products'])>0) {
-			$content.='<h2>Products</h2><BR>';
-			foreach ($data['products'] as $item) {
-				$folder=mslib_befe::getImagePrefixFolder($item);
-				$tmp=mslib_befe::resizeProductImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$item, $item, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
-				if ($tmp) {
-					$content.=$tmp.'<BR>';
-				}
-			}
-		}
-		if (count($data['categories'])>0) {
-			$content.='<h2>Categories</h2><BR>';
-			foreach ($data['categories'] as $item) {
-				$folder=mslib_befe::getImagePrefixFolder($item);
-				$tmp=mslib_befe::resizeCategoryImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$item, $item, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
-				if ($tmp) {
-					$content.=$tmp.'<BR>';
-				}
+		$data['products']=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(implode(",", $fields), 'tx_multishop_products', 'page_uid=\''.$_GET['page_uid'].'\'', '');
+		foreach($data as $type => $items) {
+			$content.='<h2>'.$type.'</h2>';
+			switch($type) {
+				case 'categories':
+					foreach ($items as $item) {
+						$dbFilename=$item['categories_image'];
+						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+						$newFilename=mslib_befe::resizeCategoryImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
+						if ($newFilename) {
+							$content.=$newFilename.'<BR>';
+							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
+								// FILE IS ALSO CONVERTED TO PNG. LETS UPDATE THE DATABASE
+								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+								$updateArray=array();
+								$updateArray['categories_image']=$newFilename;
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\''.$item['categories_id'].'\'', $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
+						}
+					}
+					break;
+				case 'manufacturers':
+					foreach ($items as $item) {
+						$dbFilename=$item['manufacturers_image'];
+						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+						$newFilename=mslib_befe::resizeManufacturerImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
+						if ($newFilename) {
+							$content.=$newFilename.'<BR>';
+							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
+								// FILE IS ALSO CONVERTED TO PNG. LETS UPDATE THE DATABASE
+								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+								$updateArray=array();
+								$updateArray['manufacturers_image']=$newFilename;
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=\''.$item['manufacturers_id'].'\'', $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
+						}
+					}
+					break;
+				case 'products':
+					foreach ($items as $item) {
+						$updateArray=array();
+						for ($i=0; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+							if (!$i) {
+								$s='';
+							} else {
+								$s=$i;
+							}
+							$col='products_image'.$s;
+
+							$dbFilename=$item[$col];
+							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
+							$newFilename=mslib_befe::resizeProductImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
+							if ($newFilename) {
+								$content.=$newFilename.'<BR>';
+								if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
+									// FILE IS ALSO CONVERTED TO PNG. LETS UPDATE THE DATABASE
+									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
+									$updateArray[$col]=$newFilename;
+								}
+							}
+						}
+						if (count($updateArray)) {
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$item['products_id'].'\'', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+					}
+					break;
 			}
 		}
 		break;
