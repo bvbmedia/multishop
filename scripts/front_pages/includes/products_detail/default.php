@@ -80,12 +80,12 @@ if (!$product['products_id']) {
 		// get previous / next record
 		$pagination_items=mslib_fe::getNextPreviousProduct($product['products_id'], $product['categories_id']);
 		$pagination.='<div id="products_detail_pagination">';
-		if ($pagination_items['previous_item']) {
+		if ($pagination_items['previous_item']['link']) {
 			$pagination.='<div class="pagination_previous"><a href="'.$pagination_items['previous_item']['link'].'">'.$this->pi_getLL('previous').'</a></div>';
 		} else {
 			$pagination.='<div class="pagination_previous_disabled"><span>'.$this->pi_getLL('previous').'</span></div>';
 		}
-		if ($pagination_items['next_item']) {
+		if ($pagination_items['next_item']['link']) {
 			$pagination.='<div class="pagination_next"><a href="'.$pagination_items['next_item']['link'].'">'.$this->pi_getLL('next').'</a></div>';
 		} else {
 			$pagination.='<div class="pagination_next_disabled"><span>'.$this->pi_getLL('next').'</span></div>';
