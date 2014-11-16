@@ -176,6 +176,13 @@ class mslib_befe {
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.png';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.png';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									@unlink($original_path);
@@ -276,6 +283,13 @@ class mslib_befe {
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.png';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.png';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									@unlink($original_path);
@@ -385,13 +399,20 @@ class mslib_befe {
 							switch($ext) {
 								//case 'jpeg':
 								case 'png':
-								case 'gif':
+								//case 'gif':
 									break;
 								default:
 									// IMAGE IS NOT PNG. CONVERTING IT TO PNG TO REDUCE THE FILESIZE
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.png';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.png';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									@unlink($original_path);
