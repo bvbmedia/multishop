@@ -185,9 +185,11 @@ class mslib_befe {
 									}
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
-									@unlink($original_path);
-									$original_path=$newOriginal_path;
-									$filename=$newFilename;
+									if (file_exists($newOriginal_path)) {
+										@unlink($original_path);
+										$original_path=$newOriginal_path;
+										$filename=$newFilename;
+									}
 									break;
 							}
 						}
@@ -292,9 +294,11 @@ class mslib_befe {
 									}
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
-									@unlink($original_path);
-									$original_path=$newOriginal_path;
-									$filename=$newFilename;
+									if (file_exists($newOriginal_path)) {
+										@unlink($original_path);
+										$original_path=$newOriginal_path;
+										$filename=$newFilename;
+									}
 									break;
 							}
 						}
@@ -415,9 +419,11 @@ class mslib_befe {
 									}
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
-									@unlink($original_path);
-									$original_path=$newOriginal_path;
-									$filename=$newFilename;
+									if (file_exists($newOriginal_path)) {
+										@unlink($original_path);
+										$original_path=$newOriginal_path;
+										$filename=$newFilename;
+									}
 									break;
 							}
 						}
