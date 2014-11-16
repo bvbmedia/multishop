@@ -2133,13 +2133,13 @@ class mslib_fe {
 		$trans=array_flip($products);
 		$internal=$trans[$products_id];
 		if ($internal==0) {
-			$pagination_items['next_item']=$products[1];
+			$pagination_items['next_item']['products_id']=$products[1];
 		} else {
 			$pagination_items['previous_item']['products_id']=$products[($internal-1)];
 			$pagination_items['next_item']['products_id']=$products[($internal+1)];
 		}
 		foreach ($pagination_items as $key=>$item) {
-			if ($item) {
+			if ($item['products_id']) {
 				// get all cats to generate multilevel fake url
 				$level=0;
 				$cats=mslib_fe::Crumbar($categories_id);
