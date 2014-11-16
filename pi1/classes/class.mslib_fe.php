@@ -2132,11 +2132,15 @@ class mslib_fe {
 		$pagination_items=array();
 		$trans=array_flip($products);
 		$internal=$trans[$products_id];
-		if ($internal==0) {
+		if ($internal==0 && is_numeric($products[1])) {
 			$pagination_items['next_item']['products_id']=$products[1];
 		} else {
-			$pagination_items['previous_item']['products_id']=$products[($internal-1)];
-			$pagination_items['next_item']['products_id']=$products[($internal+1)];
+			if ($products[($internal-1)] && is_numeric($products[($internal-1)])) {
+				$pagination_items['previous_item']['products_id']=$products[($internal-1)];
+			}
+			if ($products[($internal+1)] && is_numeric($products[($internal+1)])) {
+				$pagination_items['next_item']['products_id']=$products[($internal+1)];
+			}
 		}
 		$cats=mslib_fe::Crumbar($categories_id);
 		$cats=array_reverse($cats);
