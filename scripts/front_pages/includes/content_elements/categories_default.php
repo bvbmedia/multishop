@@ -42,7 +42,7 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	} else {
 		$prefix='';
 	}
-	$string=$prefix.'_'.serialize($GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar']).$this->cObj->data['uid'].$this->lang;
+	$string=$prefix.'_'.serialize($GLOBALS["TYPO3_CONF_VARS"]['tx_multishop_data']['user_crumbar']).$this->cObj->data['uid'].$this->lang.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 }
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 	$this->ms['add_this_button']='';
