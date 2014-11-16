@@ -2135,8 +2135,8 @@ class mslib_fe {
 		if ($internal==0) {
 			$pagination_items['next_item']=$products[1];
 		} else {
-			$pagination_items['previous_item']=$products[($internal-1)];
-			$pagination_items['next_item']=$products[($internal+1)];
+			$pagination_items['previous_item']['products_id']=$products[($internal-1)];
+			$pagination_items['next_item']['products_id']=$products[($internal+1)];
 		}
 		foreach ($pagination_items as $key=>$item) {
 			if ($item) {
@@ -2154,8 +2154,8 @@ class mslib_fe {
 					$where.='&';
 				}
 				// get all cats to generate multilevel fake url eof
-				$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$item.'&tx_multishop_pi1[page_section]=products_detail');
-				$pagination_items[$key]=$link;
+				$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$item['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+				$pagination_items[$key]['link']=$link;
 			}
 		}
 		$pagination_items['internal']=$internal;
