@@ -2138,12 +2138,12 @@ class mslib_fe {
 			$pagination_items['previous_item']['products_id']=$products[($internal-1)];
 			$pagination_items['next_item']['products_id']=$products[($internal+1)];
 		}
+		$cats=mslib_fe::Crumbar($categories_id);
+		$cats=array_reverse($cats);
 		foreach ($pagination_items as $key=>$item) {
 			if ($item['products_id']) {
 				// get all cats to generate multilevel fake url
 				$level=0;
-				$cats=mslib_fe::Crumbar($categories_id);
-				$cats=array_reverse($cats);
 				$where='';
 				if (count($cats)>0) {
 					foreach ($cats as $cat) {
