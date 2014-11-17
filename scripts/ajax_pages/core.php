@@ -1333,7 +1333,7 @@ switch ($this->ms['page']) {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-				if ($row['file_locked']) {
+				if (($row['file_locked'] && !$this->ADMIN_USER) || ($row['file_locked'] && $this->ADMIN_USER && !isset($this->get['tx_multishop_pi1']['from_interface']))) {
 					echo 'Sorry, but the maximum number of downloads has been exceeded.';
 					exit();
 				} else {
@@ -1365,25 +1365,27 @@ switch ($this->ms['page']) {
 						}
 					}
 					if ($body_data) {
-						$query="update tx_multishop_orders_products set file_downloaded=(file_downloaded+1) where orders_products_id='".$row['orders_products_id']."'";
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						$row['file_downloaded']++;
-						if ($row['file_downloaded']>=$row['file_number_of_downloads']) {
-							// maximum allowed downloads exceeded. lets lock it.
-							$updateArray=array(
-								'file_locked'=>'1'
-							);
-							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id='.addslashes($row['orders_products_id']), $updateArray);
+						if (!isset($this->get['tx_multishop_pi1']['from_interface'])) {
+							$query="update tx_multishop_orders_products set file_downloaded=(file_downloaded+1) where orders_products_id='".$row['orders_products_id']."'";
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$row['file_downloaded']++;
+							if ($row['file_downloaded']>=$row['file_number_of_downloads']) {
+								// maximum allowed downloads exceeded. lets lock it.
+								$updateArray=array(
+									'file_locked'=>'1'
+								);
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id='.addslashes($row['orders_products_id']), $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
+							// log the download request for statistic purposes
+							$updateArray=array();
+							$updateArray['orders_id']=$this->get['orders_id'];
+							$updateArray['orders_products_id']=$row['orders_products_id'];
+							$updateArray['ip_address']=$this->REMOTE_ADDR;
+							$updateArray['date_of_download']=time();
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_downloads', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
-						// log the download request for statistic purposes
-						$updateArray=array();
-						$updateArray['orders_id']=$this->get['orders_id'];
-						$updateArray['orders_products_id']=$row['orders_products_id'];
-						$updateArray['ip_address']=$this->REMOTE_ADDR;
-						$updateArray['date_of_download']=time();
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_downloads', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 						header("Last-Modified: ".gmdate("D,d M YH:i:s")." GMT");
 						header("Cache-Control: no-cache, must-revalidate");
