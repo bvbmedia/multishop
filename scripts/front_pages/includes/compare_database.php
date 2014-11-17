@@ -132,31 +132,17 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-	$str="select page_uid from tx_multishop_products_to_categories where page_uid='0' limit 1";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if ($qry && $this->showCatalogFromPage && $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-		$str="UPDATE `tx_multishop_products_to_categories` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
-	$str="select page_uid from tx_multishop_products_description where page_uid='0' limit 1";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if ($qry && $this->showCatalogFromPage && $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
-		$str="UPDATE `tx_multishop_products_description` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
 	$str="select layered_categories_id from tx_multishop_products_description limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
-		$str="ALTER TABLE  `tx_multishop_products_description` ADD `layered_categories_id` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`layered_categories_id`);";
+		$str="ALTER TABLE `tx_multishop_products_description` ADD `layered_categories_id` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`layered_categories_id`);";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
 	$str="select page_uid from tx_multishop_products_description limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
-		$str="ALTER TABLE  `tx_multishop_products_description` ADD `page_uid` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`page_uid`);";
+		$str="ALTER TABLE `tx_multishop_products_description` ADD `page_uid` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`page_uid`);";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
@@ -182,6 +168,30 @@ if (!$skipMultishopUpdates) {
 		$str="ALTER TABLE  `tx_multishop_products_to_categories` ADD `related_to` INT(11) NOT NULL DEFAULT '0', ADD INDEX (`related_to`);";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
+	}
+	$str="select page_uid from tx_multishop_products_to_categories where page_uid='0' limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if ($qry && $this->showCatalogFromPage && $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+		$str="UPDATE tx_multishop_products_to_categories t1, tx_multishop_categories t2 SET t1.page_uid = t2.page_uid WHERE t1.page_uid=0 AND t1.categories_id=t2.categories_id";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		/*
+		$str="UPDATE `tx_multishop_products_to_categories` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		*/
+	}
+	$str="select page_uid from tx_multishop_products_description where page_uid='0' limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if ($qry && $this->showCatalogFromPage && $GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+		$str="UPDATE tx_multishop_products_description t1, tx_multishop_products t2 SET t1.page_uid = t2.page_uid WHERE t1.page_uid=0 AND t1.products_id=t2.products_id";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		/*
+		$str="UPDATE `tx_multishop_products_description` SET page_uid='".$this->showCatalogFromPage."' where page_uid='0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		*/
 	}
 	/*
 	// for later when we want private customer_id and orders_id per shop
