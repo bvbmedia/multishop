@@ -1164,6 +1164,10 @@ if (is_numeric($this->get['orders_id'])) {
 							$row[2].='('.$order['products_model'].')';
 						}
 					}
+					if (!empty($order['file_label']) && !empty($order['file_location']) && !empty($order['file_download_code'])) {
+						$label='Download '.htmlspecialchars($order['file_label']);
+						$row[2].='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", 'tx_multishop_pi1[page_section]=get_micro_download&tx_multishop_pi1[from_interface]=edit_order&orders_id='.$order['orders_id'].'&code='.$order['file_download_code'], 1).'" alt="'.$order['products_name'].'" title="'.$order['products_name'].'">'.$label.'</a>';
+					}
 					$row[3]=mslib_fe::amount2Cents($order['final_price'], 0);
 					$row[4]=number_format($order['products_tax'], 2);
 					$row[4]=str_replace('.00', '', $order['products_tax']).'%';
