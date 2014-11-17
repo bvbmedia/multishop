@@ -1106,7 +1106,7 @@ if ($this->post['action']=='category-insert') {
 				}
 				// initialize array
 				$this->ms['products_to_categories_array']=array();
-				if (!$this->post['cid']) {
+				if (!isset($this->post['cid'])) {
 					$this->post['cid']=$this->categoriesStartingPoint;
 				}
 				$this->ms['target-cid']=$this->post['cid'];
@@ -1957,6 +1957,7 @@ if ($this->post['action']=='category-insert') {
 								}
 								// custom hook that can be controlled by third-party plugin eof
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "page_uid=".$this->showCatalogFromPage." and products_id=".$item['updated_products_id'], $updateArray);
+								// TYPO3 6.2 NULL VALUE FIX
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$stats['products_updated']++;
 							}
@@ -2048,8 +2049,20 @@ if ($this->post['action']=='category-insert') {
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
-								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' and language_id='.$language_id, $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$filter=array();
+								$filter[]='language_id='.$language_id;
+								$filter[]='page_uid='.$this->showCatalogFromPage;
+								$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
+								if (is_array($record) && $record['products_id']) {
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$language_id, $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								} else {
+									$updateArray['products_id']=$item['updated_products_id'];
+									$updateArray['language_id']=$language_id;
+									$updateArray['page_uid']=$this->showCatalogFromPage;
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_description', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 								// LANGUAGE OVERLAYS
 								foreach ($this->languages as $langKey => $langTitle) {
 									if ($langKey>0) {
@@ -2062,12 +2075,17 @@ if ($this->post['action']=='category-insert') {
 										}
 										$updateArray2['language_id']=$langKey;
 										// get existing record
-										$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',array(0=>'language_id='.$langKey));
+										$filter=array();
+										$filter[]='language_id='.$langKey;
+										$filter[]='page_uid='.$this->showCatalogFromPage;
+										$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
 										if ($record['products_id']) {
-											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' and language_id='.$langKey, $updateArray2);
+											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$langKey, $updateArray2);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										} else {
 											// add new record
+											$updateArray2['products_id']=$item['updated_products_id'];
+											$updateArray2['page_uid']=$this->showCatalogFromPage;
 											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_description', $updateArray2);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										}
@@ -2306,6 +2324,10 @@ if ($this->post['action']=='category-insert') {
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPreHook'] as $funcRef) {
 									t3lib_div::callUserFunction($funcRef, $params, $this);
 								}
+							}
+							// TYPO3 6.2 NULL VALUE FIX
+							if (!isset($updateArray['sku_code'])) {
+								$updateArray['sku_code']='';
 							}
 							// custom hook that can be controlled by third-party plugin eof
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);

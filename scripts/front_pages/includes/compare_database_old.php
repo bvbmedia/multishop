@@ -320,14 +320,14 @@ if ($rows) {
 	$str="select sku_code from tx_multishop_orders_products limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
-		$str="ALTER TABLE  `tx_multishop_orders_products` ADD `sku_code` varchar(50) DEFAULT '', ADD KEY `sku_code` (sku_code)";
+		$str="ALTER TABLE `tx_multishop_orders_products` ADD `sku_code` varchar(50) DEFAULT '', ADD KEY `sku_code` (sku_code)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
 	$str="select vendor_code from tx_multishop_orders_products limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
-		$str="ALTER TABLE  `tx_multishop_orders_products` ADD `vendor_code` varchar(50) DEFAULT '', ADD KEY `vendor_code` (vendor_code)";
+		$str="ALTER TABLE `tx_multishop_orders_products` ADD `vendor_code` varchar(50) DEFAULT '', ADD KEY `vendor_code` (vendor_code)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
