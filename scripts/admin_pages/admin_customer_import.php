@@ -1071,10 +1071,12 @@ if ($this->ms['show_default_form']) {
 	$this->ms['upload_customerfeed_form']='<div id="upload_customerfeed_form">';
 	$this->ms['upload_customerfeed_form'].='
 	<fieldset>
-	<legend>'.$this->pi_getLL('import_customer_feed').'</legend>
+	<legend>'.$this->pi_getLL('source').'</legend>
 	<fieldset style="margin-top:5px;"><legend>'.$this->pi_getLL('file').'</legend>
 	<ul>
 	<li><input type="file" name="file" /></li>
+	<li>URL <input name="file_url" type="text" /></li>
+	<li>'.$this->pi_getLL('database_table').' <input name="database_name" type="text" /></li>
 	</ul>
 	</fieldset>
 	';
