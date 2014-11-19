@@ -990,6 +990,15 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							if (!$user['gender']) {
 								$user['gender']=0;
 							}
+							// T3 6.2 BUGFIXES
+							$requiredCols=array();
+							$requiredCols[]='title';
+							$requiredCols[]='www';
+							foreach ($requiredCols as $requiredCol) {
+								if (!isset($user[$requiredCol])) {
+									$user[$requiredCol]='';
+								}
+							}
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
