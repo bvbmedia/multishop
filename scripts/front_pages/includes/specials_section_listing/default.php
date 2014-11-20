@@ -59,6 +59,12 @@ foreach ($products as $product) {
 	$markerArray['ITEM_PRODUCTS_NAME']=$output['products_name'];
 	$markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];
 	$markerArray['ITEM_PRODUCTS_PRICE']=$output['special_section_price'];
+	$markerArray['PRODUCTS_SHORTDESCRIPTION']=$product['products_shortdescription'];
+	$markerArray['PRODUCTS_DESCRIPTION']=$product['products_description'];
+	$markerArray['PRODUCTS_ID']=$product['products_id'];
+	$markerArray['PRODUCTS_DETAIL_PAGE_LINK']=$output['link'];
+
+
 	if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
 		$button_submit='<a href="'.$output['link'].'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
 	} else {

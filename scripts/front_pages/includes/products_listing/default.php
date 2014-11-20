@@ -47,11 +47,24 @@ foreach ($products as $current_product) {
 	}
 	$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 	$output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
-	if ($current_product['products_image']) {
-		$output['image']='<img src="'.mslib_befe::getImagePath($current_product['products_image'], 'products', $this->imageWidth).'" alt="'.htmlspecialchars($current_product['products_name']).'" />';
-	} else {
-		$output['image']='<div class="no_image"></div>';
+
+	$formats=array();
+	$formats[]='100';
+	$formats[]='200';
+	$formats[]='300';
+	foreach ($formats as $format) {
+		if ($current_product['products_image']) {
+			$key='image_'.$format;
+			if ($this->imageWidth==$format) {
+				$key='image';
+			}
+			$imagePath=mslib_befe::getImagePath($current_product['products_image'], 'products', $format);
+			$output[$key]='<img src="'.$imagePath.'" alt="'.htmlspecialchars($current_product['products_name']).'" />';
+		} else {
+			$output[$key]='<div class="no_image"></div>';
+		}
 	}
+
 	if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
 		$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	}
@@ -87,6 +100,8 @@ foreach ($products as $current_product) {
 	$markerArray['CATEGORIES_NAME']=$current_product['categories_name'];
 	$markerArray['CATEGORIES_NAME_PAGE_LINK']=$output['catlink'];
 	$markerArray['PRODUCTS_IMAGE']=$output['image'];
+	$markerArray['PRODUCTS_IMAGE_200']=$output['image_200'];
+	$markerArray['PRODUCTS_IMAGE_300']=$output['image_300'];
 	$markerArray['PRODUCTS_PRICE']=$output['products_price'];
 	$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 	$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];

@@ -75,7 +75,8 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_customer_import').'#tasks');
 }
-$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
+//$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
+$default_country=$this->tta_shop_info['country'];
 $GLOBALS['TSFE']->additionalHeaderData['tx_multishop_pi1_block_ui']=mslib_fe::jQueryBlockUI();
 // define the different columns
 $coltypes=array();
@@ -860,11 +861,26 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						$user['zip']=$item['zip'];
 						$user['city']=$item['city'];
 						if (isset($item['country'])) {
-							$englishCountryName=mslib_fe::getEnglishCountryNameByTranslatedName($this->lang, $item['country']);
-							if ($englishCountryName and $englishCountryName!=$user['country']) {
-								$user['country']=$englishCountryName;
+							if ($item['country']=='') {
+								$item['country']=$default_country;
 							} else {
-								$user['country']=$item['country'];
+								$englishCountryName='';
+								if (strlen($item['country'])==2) {
+									// 2CHAR ISO
+									$englishCountryName=mslib_fe::getCountryByCode($item['country']);
+								} else {
+									// check if the country name is valid English name
+									$englishCountryName=mslib_fe::getEnglishCountryNameByTranslatedName('en', $item['country']);
+									if (!$englishCountryName) {
+										// not english. hopefully its having a valid country name in the shops default language
+										$englishCountryName=mslib_fe::getEnglishCountryNameByTranslatedName($this->lang, $item['country']);
+									}
+								}
+								if ($englishCountryName and $englishCountryName!=$user['country']) {
+									$user['country']=$englishCountryName;
+								} else {
+									$user['country']=$item['country'];
+								}
 							}
 						}
 						$user['www']=$item['www'];
@@ -927,7 +943,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						$uid='';
 						if ($update) {
 							if (!$user['country']) {
-								$user['country']=$default_country['cn_short_en'];
+								$user['country']=$default_country;
 							}
 							// custom hook that can be controlled by third-party
 							// plugin
@@ -970,7 +986,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							$user['page_uid']=$this->shop_pid;
 							$user['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
 							if (!$user['country']) {
-								$user['country']=$default_country['cn_short_en'];
+								$user['country']=$default_country;
 							}
 							// custom hook that can be controlled by third-party
 							// plugin
@@ -989,6 +1005,15 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							// plugin eof
 							if (!$user['gender']) {
 								$user['gender']=0;
+							}
+							// T3 6.2 BUGFIXES
+							$requiredCols=array();
+							$requiredCols[]='title';
+							$requiredCols[]='www';
+							foreach ($requiredCols as $requiredCol) {
+								if (!isset($user[$requiredCol])) {
+									$user[$requiredCol]='';
+								}
 							}
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
