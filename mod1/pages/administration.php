@@ -241,8 +241,9 @@ switch ($_REQUEST['action']) {
 		break;
 	case 'clearMultishopCache':
 		if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..')) {
-			$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
-			exec($command);
+			//$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
+			//exec($command);
+			mslib_befe::cacheLite('delete_all');
 			$content.='<br /><p><strong>Multishop cache has been cleared.</strong></p>';
 		} else {
 			$content.='<br /><p><strong>Cache not cleared. Something is wrong with your configuration (DOCUMENT_ROOT is not set correctly).</strong></p>';
