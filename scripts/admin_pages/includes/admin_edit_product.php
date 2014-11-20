@@ -601,7 +601,17 @@ if ($this->post) {
 	if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
 		$updateArray['specials_price_percentage']=$this->post['specials_price_percentage'];
 	}
-	if ($_REQUEST['action']=='edit_product' and $this->post['pid']) {
+	if ($_REQUEST['action']=='edit_product' and is_numeric($this->post['pid'])) {
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'])) {
+			$params=array(
+				'products_id'=>$this->post['pid']
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		if (isset($this->post['save_as_new'])) {
 			// SECTION FOR CLONING A PRODUCT
 			if (!$updateArray['products_image']) {
