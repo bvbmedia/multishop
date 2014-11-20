@@ -2093,22 +2093,13 @@ if ($this->post) {
 			new_attributes_html+=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="msadmin_button save_new_attributes">&nbsp;<input type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="msadmin_button delete_tmp_product_attributes">\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
+			$extra_js_after_add_new_attributes_row=array();
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
 				$params=array(
-					'new_product_attributes_block_columns_js'=>&$new_product_attributes_block_columns_js
-				);
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
-				}
-			}
-			// custom hook that can be controlled by third-party plugin eof
-			$extra_js_after_add_new_attributes_row=array();
-			// custom hook that can be controlled by third-party plugin
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExtraJSAfterNewRow'])) {
-				$params=array(
+					'new_product_attributes_block_columns_js'=>&$new_product_attributes_block_columns_js,
 					'extra_js_after_add_new_attributes_row'=>&$extra_js_after_add_new_attributes_row
 				);
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExtraJSAfterNewRow'] as $funcRef) {
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'] as $funcRef) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
