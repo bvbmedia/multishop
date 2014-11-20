@@ -50,6 +50,9 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 }
 // hook eof
 $price=mslib_fe::final_products_price($product, $qty, 0)*$qty;
+$original_price=$product['products_price']*$qty;
+$attr=array();
+$original_attr=array();
 if (is_array($this->get['attributes'])) {
 	foreach ($this->get['attributes'] as $key=>$value) {
 		if (is_numeric($key)) {
@@ -90,6 +93,7 @@ if (is_array($this->get['attributes'])) {
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 						$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+						$original_row=$row;
 						// hook to let other plugins further manipulate the option values display
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'])) {
 							$params=array(
@@ -103,8 +107,10 @@ if (is_array($this->get['attributes'])) {
 						// hook
 						if ($multiple) {
 							$attr['attributes'][$key][]=$row;
+							$original_attr['attributes'][$key][]=$original_row;
 						} else {
 							$attr['attributes'][$key]=$row;
+							$original_attr['attributes'][$key]=$original_row;
 						}
 					}
 				}
@@ -114,22 +120,31 @@ if (is_array($this->get['attributes'])) {
 }
 if (is_array($attr['attributes'])) {
 	foreach ($attr['attributes'] as $attribute_key=>$attribute_values) {
+		$original_attribute_values=$original_attr['attributes'][$attribute_key];
 		if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$attribute_values['options_values_price']=round($attribute_values['options_values_price']*(1+$product['tax_rate']), 2);
+			$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price']*(1+$product['tax_rate']), 2);
 		} else {
 			$attribute_values['options_values_price']=round($attribute_values['options_values_price'], 2);
+			$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price'], 2);
 		}
 		$price=$price+($qty*($attribute_values['price_prefix'].$attribute_values['options_values_price']));
+		$original_price=$original_price+($qty*($original_attribute_values['price_prefix'].$original_attribute_values['options_values_price']));
 	}
 }
+$data['old_price_format']='';
+$data['old_price']=0;
+$data['price_format']='';
+$data['price']=0;
+$data['qty_correction']=0;
 if ($price>0) {
+	if ($price!=$original_price && $original_price>0) {
+		$data['old_price_format']=mslib_fe::amount2Cents($original_price, 1);
+		$data['old_price']=$original_price;
+	}
 	$data['price_format']=mslib_fe::amount2Cents($price, 1);
 	$data['price']=$price;
 	$data['qty_correction']=$qty_decimal_correction;
-} else {
-	$data['price_format']='';
-	$data['price']=0;
-	$data['qty_correction']=0;
 }
 echo json_encode($data, ENT_NOQUOTES);
 exit();
