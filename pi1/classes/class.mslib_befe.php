@@ -2927,42 +2927,46 @@ class mslib_befe {
 		return $text;
 	}
 	public function cacheLite($action='', $key='', $timeout='', $serialized=0, $content='') {
-		$options=array(
-			'caching'=>true,
-			'cacheDir'=>$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/cache/',
-			'lifeTime'=>$timeout
-		);
-		$Cache_Lite=new Cache_Lite($options);
-//		$Cache_Lite = t3lib_div::makeInstance('Cache_Lite');
-		$string=md5($key);
-		switch ($action) {
-			case 'get':
-				// get cache
-				$content=$Cache_Lite->get($string);
-				if ($serialized) {
-					$content=unserialize($content);
+		if ($action=='delete_all') {
+			if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {
+				if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache")) {
+					$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
+					exec($command);
 				}
-				return $content;
-				break;
-			case 'save':
-				// save cache
-				if ($serialized) {
-					$content=serialize($content);
-				}
-				$Cache_Lite->save($content, $string);
-				break;
-			case 'delete':
-				// removes the cache
-				$Cache_Lite->remove($string);
-				break;
-			case 'delete_all':
-				if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {
-					if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache")) {
-						$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
-						exec($command);
+			}
+		} else {
+			if (!class_exists('Cache_Lite')) {
+				require_once(t3lib_extMgm::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/Lite.php');
+			}
+			$options=array(
+				'caching'=>true,
+				'cacheDir'=>$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/cache/',
+				'lifeTime'=>$timeout
+			);
+			$Cache_Lite=new Cache_Lite($options);
+			//$Cache_Lite = t3lib_div::makeInstance('Cache_Lite');
+			$string=md5($key);
+			switch ($action) {
+				case 'get':
+					// get cache
+					$content=$Cache_Lite->get($string);
+					if ($serialized) {
+						$content=unserialize($content);
 					}
-				}
-				break;
+					return $content;
+					break;
+				case 'save':
+					// save cache
+					if ($serialized) {
+						$content=serialize($content);
+					}
+					$Cache_Lite->save($content, $string);
+					break;
+				case 'delete':
+					// removes the cache
+					$Cache_Lite->remove($string);
+					break;
+			}
 		}
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLitePostProc'])) {
 			$params=array(
