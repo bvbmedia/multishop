@@ -1025,6 +1025,7 @@ class mslib_befe {
 			return @unlink($path);
 		}
 	}
+	// remove list, redundant functionality with getRecord method
 	public function doesExist($table, $field, $value, $more='') {
 		$query="SELECT * FROM ".$table." WHERE ".$field."='".addslashes($value)."' ".$more;
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);

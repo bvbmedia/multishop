@@ -1387,6 +1387,7 @@ if ($this->post) {
 						$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
 					}
 				}
 			}
@@ -2056,6 +2057,63 @@ if ($this->post) {
 		$attributes_tab_block='';
 		// product Attribute
 		if (!$this->ms['MODULES']['DISABLE_PRODUCT_ATTRIBUTES_TAB_IN_EDITOR']) {
+			$new_product_attributes_block_columns_js=array();
+			$new_product_attributes_block_columns_js['attribute_option_col']='new_attributes_html+=\'<td class="product_attribute_option">\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" style="width:200px" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" value="0" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="0" />\';
+			new_attributes_html+=\'<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>\';
+			new_attributes_html+=\'</td>\';';
+			$new_product_attributes_block_columns_js['attribute_value_col']='new_attributes_html+=\'<td class="product_attribute_value">\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" style="width:200px" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" value="0" />\';
+			new_attributes_html+=\'<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>\';
+			new_attributes_html+=\'</td>\';';
+			$new_product_attributes_block_columns_js['attribute_price_prefix_col']='new_attributes_html+=\'<td class="product_attribute_prefix">\';
+			new_attributes_html+=\'<select name="tx_multishop_pi1[prefix][]">\';
+			new_attributes_html+=\'<option value="">&nbsp;</option>\';
+			new_attributes_html+=\'<option value="+" selected="selected">+</option>\';
+			new_attributes_html+=\'<option value="-">-</option>\';
+			new_attributes_html+=\'</select>\';
+			new_attributes_html+=\'</td>\';';
+			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
+			new_attributes_html+=\'<div class="msAttributesField">\';
+			new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceExcludingVat">\';
+			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('excluding_vat').'</label>\';
+			new_attributes_html+=\'</div>\';
+			new_attributes_html+=\'<div class="msAttributesField">\';
+			new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat">\';
+			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('including_vat').'</label>\';
+			new_attributes_html+=\'</div>\';
+			new_attributes_html+=\'<div class="msAttributesField hidden">\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
+			new_attributes_html+=\'</div>\';
+			new_attributes_html+=\'</td>\';';
+			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td>\';
+			new_attributes_html+=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="msadmin_button save_new_attributes">&nbsp;<input type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="msadmin_button delete_tmp_product_attributes">\';
+			new_attributes_html+=\'</td>\';';
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
+				$params=array(
+					'new_product_attributes_block_columns_js'=>&$new_product_attributes_block_columns_js
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom hook that can be controlled by third-party plugin eof
+			$extra_js_after_add_new_attributes_row=array();
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExtraJSAfterNewRow'])) {
+				$params=array(
+					'extra_js_after_add_new_attributes_row'=>&$extra_js_after_add_new_attributes_row
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExtraJSAfterNewRow'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom hook that can be controlled by third-party plugin eof
+			// js attributes block
 			$attributes_tab_block.='
 			<input name="options_form" type="hidden" value="1" />
 			<script type="text/javascript">
@@ -2069,53 +2127,15 @@ if ($this->post) {
 					new_attributes_html+=\'<span class="new_product_attributes">'.$this->pi_getLL('admin_label_add_new_product_attributes').'</span><div class="wrap-attributes-item" rel="new">\';
 					new_attributes_html+=\'<table>\';
 					new_attributes_html+=\'<tr class="option_row">\';
-
-					new_attributes_html+=\'<td class="product_attribute_option">\';
-					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" style="width:200px" />\';
-					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" value="0" />\';
-					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="0" />\';
-					new_attributes_html+=\'<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>\';
-					new_attributes_html+=\'</td>\';
-
-					new_attributes_html+=\'<td class="product_attribute_value">\';
-					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" style="width:200px" />\';
-					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" value="0" />\';
-					new_attributes_html+=\'<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>\';
-					new_attributes_html+=\'</td>\';
-
-					new_attributes_html+=\'<td class="product_attribute_prefix">\';
-					new_attributes_html+=\'<select name="tx_multishop_pi1[prefix][]">\';
-					new_attributes_html+=\'<option value="">&nbsp;</option>\';
-					new_attributes_html+=\'<option value="+" selected="selected">+</option>\';
-					new_attributes_html+=\'<option value="-">-</option>\';
-					new_attributes_html+=\'</select>\';
-					new_attributes_html+=\'</td>\';
-
-					new_attributes_html+=\'<td class="product_attribute_price">\';
-					new_attributes_html+=\'<div class="msAttributesField">\';
-					new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceExcludingVat">\';
-					new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('excluding_vat').'</label>\';
-					new_attributes_html+=\'</div>\';
-					new_attributes_html+=\'<div class="msAttributesField">\';
-					new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat">\';
-					new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('including_vat').'</label>\';
-					new_attributes_html+=\'</div>\';
-					new_attributes_html+=\'<div class="msAttributesField hidden">\';
-					new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
-					new_attributes_html+=\'</div>\';
-					new_attributes_html+=\'</td>\';
-
-					new_attributes_html+=\'<td>\';
-					new_attributes_html+=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="msadmin_button save_new_attributes">&nbsp;<input type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="msadmin_button delete_tmp_product_attributes">\';
-					new_attributes_html+=\'</td>\';
+					'.implode("\n", $new_product_attributes_block_columns_js).'
 					new_attributes_html+=\'</tr>\';
-
 					new_attributes_html+=\'</table>\';
 					new_attributes_html+=\'</div>\';
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
-					// init selec2
+					// init select2
 					select2_sb("#tmp_options_sb", "'.$this->pi_getLL('admin_label_choose_option').'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb("#tmp_attributes_sb", "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+					'.implode("\n", $extra_js_after_add_new_attributes_row).'
 					event.preventDefault();
 				});
 				jQuery(document).on("click", ".add_new_attributes_values", function(event) {
@@ -2167,7 +2187,7 @@ if ($this->post) {
 					$(element_cloned).find("div.msAttributesField>input").val("0.00");
 					// add new shiny cloned attributes row
 					$($(this).parent().prev()).append(element_cloned);
-					// init selec2
+					// init select2
 					select2_sb(".product_attribute_options" + n, "'.$this->pi_getLL('admin_label_choose_option').'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb(".product_attribute_values" + n, "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					event.preventDefault();
@@ -2688,39 +2708,51 @@ if ($this->post) {
 								} else {
 									$item_row_type='even_item_row';
 								}
-								$attributes_tab_block.='<div class="wrap-attributes-item '.$item_row_type.'" id="item_product_attribute_'.$attribute_data['products_attributes_id'].'" rel="'.$attribute_data['products_attributes_id'].'">';
-								$attributes_tab_block.='<table>';
-								$attributes_tab_block.='<tr class="option_row">';
-								$attributes_tab_block.='<td class="product_attribute_option">';
-								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[options][]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options" value="'.$option_id.'" style="width:200px" />';
-								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" id="manual_option_'.$attribute_data['products_attributes_id'].'" value="0" />';
-								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="'.$attribute_data['products_attributes_id'].'" />';
-								$attributes_tab_block.='<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>';
-								$attributes_tab_block.='</td>';
-								$attributes_tab_block.='<td class="product_attribute_value">';
-								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values" value="'.$attribute_data['options_values_id'].'" style="width:200px" />';
-								$attributes_tab_block.='<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" id="manual_attributes_'.$attribute_data['products_attributes_id'].'" value="0" />';
-								$attributes_tab_block.='<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>';
-								$attributes_tab_block.='</td>';
-								$attributes_tab_block.='<td class="product_attribute_prefix">';
-								$attributes_tab_block.='<select name="tx_multishop_pi1[prefix][]">';
-								$attributes_tab_block.='<option value="">&nbsp;</option>';
-								$attributes_tab_block.='<option value="+"'.($attribute_data['price_prefix']=='+' ? ' selected="selected"' : '').'>+</option>';
-								$attributes_tab_block.='<option value="-"'.($attribute_data['price_prefix']=='-' ? ' selected="selected"' : '').'>-</option>';
-								$attributes_tab_block.='</select>';
-								$attributes_tab_block.='</td>';
+								$existing_product_attributes_block_columns=array();
+								$existing_product_attributes_block_columns['attribute_option_col']='<td class="product_attribute_option">
+								<input type="hidden" name="tx_multishop_pi1[options][]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options" value="'.$option_id.'" style="width:200px" />
+								<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" id="manual_option_'.$attribute_data['products_attributes_id'].'" value="0" />
+								<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="'.$attribute_data['products_attributes_id'].'" />
+								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
+								</td>';
+								$existing_product_attributes_block_columns['attribute_value_col']='<td class="product_attribute_value">
+								<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values" value="'.$attribute_data['options_values_id'].'" style="width:200px" />
+								<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" id="manual_attributes_'.$attribute_data['products_attributes_id'].'" value="0" />
+								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
+								</td>';
+								$existing_product_attributes_block_columns['attribute_price_prefix_col']='<td class="product_attribute_prefix">
+								<select name="tx_multishop_pi1[prefix][]">
+								<option value="">&nbsp;</option>
+								<option value="+"'.($attribute_data['price_prefix']=='+' ? ' selected="selected"' : '').'>+</option>
+								<option value="-"'.($attribute_data['price_prefix']=='-' ? ' selected="selected"' : '').'>-</option>
+								</select>
+								</td>';
 								// recalc price to display
 								$attributes_tax=mslib_fe::taxDecimalCrop(($attribute_data['options_values_price']*$product_tax_rate)/100);
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
-								$attributes_tab_block.='<td class="product_attribute_price">
-											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-											<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-											<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
-										</td>';
-								$attributes_tab_block.='<td>';
-								$attributes_tab_block.='<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes">';
-								$attributes_tab_block.='</td>';
+								$existing_product_attributes_block_columns['attribute_price_col']='<td class="product_attribute_price">
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
+								</td>';
+								$existing_product_attributes_block_columns['attribute_save_col']='<td>
+								<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes">
+								</td>';
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'])) {
+									$params=array(
+										'existing_product_attributes_block_columns'=>&$existing_product_attributes_block_columns,
+										'attribute_data'=>&$attribute_data,
+										'product_tax_rate'=>&$product_tax_rate
+									);
+									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'] as $funcRef) {
+										t3lib_div::callUserFunction($funcRef, $params, $this);
+									}
+								}
+								$attributes_tab_block.='<div class="wrap-attributes-item '.$item_row_type.'" id="item_product_attribute_'.$attribute_data['products_attributes_id'].'" rel="'.$attribute_data['products_attributes_id'].'">';
+								$attributes_tab_block.='<table>';
+								$attributes_tab_block.='<tr class="option_row">';
+								$attributes_tab_block.=implode("\n", $existing_product_attributes_block_columns);
 								$attributes_tab_block.='</tr>';
 								$attributes_tab_block.='</table>';
 								$attributes_tab_block.='</div>';

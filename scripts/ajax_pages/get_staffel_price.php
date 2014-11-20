@@ -17,7 +17,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
-// hook eof	
+// hook eof
 // convert the dec sign from comma to dot
 if (strpos($qty, ',')!==false) {
 	$qty=str_replace(',', '.', $qty);
@@ -48,7 +48,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
-// hook eof	
+// hook eof
 $price=mslib_fe::final_products_price($product, $qty, 0)*$qty;
 if (is_array($this->get['attributes'])) {
 	foreach ($this->get['attributes'] as $key=>$value) {
@@ -90,6 +90,17 @@ if (is_array($this->get['attributes'])) {
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 						$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+						// hook to let other plugins further manipulate the option values display
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'])) {
+							$params=array(
+								'options_id'=>&$key,
+								'row'=>&$row
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'] as $funcRef) {
+								t3lib_div::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						// hook
 						if ($multiple) {
 							$attr['attributes'][$key][]=$row;
 						} else {
