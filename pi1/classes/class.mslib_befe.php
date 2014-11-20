@@ -731,6 +731,16 @@ class mslib_befe {
 				// if the flat database module is enabled we have to sync the changes to the flat table
 				mslib_befe::convertProductToFlat($products_id);
 			}
+			//hook to let other plugins further manipulate the create table query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableProductPostHook'])) {
+				$params=array(
+					'products_id'=>&$products_id
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableProductPostHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			//hook to let other plugins further manipulate the create table query eol
 		}
 	}
 	public function disableProduct($products_id) {
