@@ -50,7 +50,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 }
 // hook eof
 $price=mslib_fe::final_products_price($product, $qty, 0)*$qty;
-$original_price=$product['products_price'];
+$original_price=$product['products_price']*$qty;
 $attr=array();
 $original_attr=array();
 if (is_array($this->get['attributes'])) {
