@@ -2094,10 +2094,14 @@ if ($this->post) {
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
 			$extra_js_after_add_new_attributes_row=array();
+			$extra_js_before_clone_new_attributes_row=array();
+			$extra_js_after_clone_new_attributes_row=array();
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
 				$params=array(
 					'new_product_attributes_block_columns_js'=>&$new_product_attributes_block_columns_js,
-					'extra_js_after_add_new_attributes_row'=>&$extra_js_after_add_new_attributes_row
+					'extra_js_after_add_new_attributes_row'=>&$extra_js_after_add_new_attributes_row,
+					'extra_js_before_clone_new_attributes_row'=>&$extra_js_before_clone_new_attributes_row,
+					'extra_js_after_clone_new_attributes_row'=>&$extra_js_after_clone_new_attributes_row
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'] as $funcRef) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
@@ -2176,11 +2180,14 @@ if ($this->post) {
 					});
 					$(element_cloned).find("div.product_attribute_prefix>select").val("+");
 					$(element_cloned).find("div.msAttributesField>input").val("0.00");
+					$(element_cloned).find("div.clonedInputBlank>input").val("");
+					'.implode("\n", $extra_js_before_clone_new_attributes_row).'
 					// add new shiny cloned attributes row
 					$($(this).parent().prev()).append(element_cloned);
 					// init select2
 					select2_sb(".product_attribute_options" + n, "'.$this->pi_getLL('admin_label_choose_option').'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb(".product_attribute_values" + n, "'.$this->pi_getLL('admin_label_choose_attribute').'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+					'.implode("\n", $extra_js_after_clone_new_attributes_row).'
 					event.preventDefault();
 				});
 				jQuery(document).on("click", ".save_new_attributes", function(){
