@@ -133,6 +133,12 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 			$pid=$this->get['pid'];
 			$paid=$this->post['paid'];
 			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_attributes', "products_id='".$pid."' and products_attributes_id='".$paid."'");
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_attributes.php']['deleteProductAttributes'])) {
+				$params=array();
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_attributes.php']['deleteProductAttributes'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
 		}
 		exit();
 		break;
