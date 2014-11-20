@@ -1981,7 +1981,7 @@ class mslib_fe {
 					$disable_special_price=true;
 				}
 			}
-			if ($product['special_expired_date']>0 && $product['special_expired_date']>0) {
+			if ($product['special_expired_date']>0) {
 				if ($product['special_expired_date']<=$current_tstamp) {
 					$product['specials_new_products_price']=0;
 					$product['final_price']=$product['products_price'];
