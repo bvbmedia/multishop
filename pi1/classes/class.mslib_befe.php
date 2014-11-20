@@ -713,6 +713,16 @@ class mslib_befe {
 			return false;
 		}
 		if (is_numeric($products_id)) {
+			//hook to let other plugins further manipulate the create table query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableProductPreHook'])) {
+				$params=array(
+					'products_id'=>&$products_id
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableProductPreHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			//hook to let other plugins further manipulate the create table query eol
 			$updateArray=array();
 			$updateArray['products_status']=1;
 			$str=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$products_id.'\'', $updateArray);
@@ -728,6 +738,16 @@ class mslib_befe {
 			return false;
 		}
 		if (is_numeric($products_id)) {
+			//hook to let other plugins further manipulate the create table query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableProductPreHook'])) {
+				$params=array(
+					'products_id'=>&$products_id
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableProductPreHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			//hook to let other plugins further manipulate the create table query eol
 			$updateArray=array();
 			$updateArray['products_status']=0;
 			$str=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$products_id.'\'', $updateArray);
