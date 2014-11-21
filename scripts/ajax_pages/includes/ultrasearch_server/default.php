@@ -388,6 +388,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							//print_r($tmpFilter);
 							$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 							// count available records eof
+							if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
+								unset($formFieldItem[$counter]);
+								continue;
+							}
 							switch ($list_type) {
 								case 'list':
 								case 'select':
@@ -565,6 +569,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					//error_log(print_r($tmpFilter, 1));
 					$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 					// count available records eof
+					if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
+						unset($formFieldItem[$counter]);
+						continue;
+					}
 					switch ($list_type) {
 						case 'list':
 						case 'select':
@@ -836,6 +844,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$totalCountWhereFlat=array_values($totalCountWhereTmp['options']);
 							$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 							// count available records eof
+							if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
+								unset($formFieldItem[$counter]);
+								continue;
+							}
 							switch ($list_type) {
 								case 'list':
 								case 'select':

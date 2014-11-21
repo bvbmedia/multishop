@@ -23,6 +23,13 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$this->ultrasearch_filtered_by_current_category = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_filtered_by_current_category', 's_search');	
 	}
 	// setting coming from typoscript or from flexform
+	if ($this->conf['ultrasearch_filtered_by_current_category']) {
+		$this->ultrasearch_exclude_negative_filter_values = $this->conf['ultrasearch_exclude_negative_filter_values'];
+	} else {
+		$this->ultrasearch_exclude_negative_filter_values = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_exclude_negative_filter_values', 's_search');
+	}
+
+	// setting coming from typoscript or from flexform
 	if ($this->conf['ultrasearch_target_element']) {
 		$this->ultrasearch_target_element = $this->conf['ultrasearch_target_element'];
 	} else {
@@ -52,12 +59,16 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	<script type="text/javascript">
 	var content_middle = "'.$this->ultrasearch_target_element.'";
 	var ultrasearch_categories_id;
+	var ultrasearch_exclude_negative_filter_values;
 	var ultrasearch_fields=\''.base64_encode(($this->ultrasearch_fields)).'\';';
 	if ($this->ultrasearch_filtered_by_current_category and is_numeric($this->get['categories_id'])) {
 		$headers.='ultrasearch_categories_id=\''.$this->get['categories_id'].'\';';
 	}
+	if ($this->ultrasearch_exclude_negative_filter_values) {
+		$headers.='ultrasearch_exclude_negative_filter_values=\'1\';';
+	}
 	$headers.='// location of the ultrasearch server
-	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&categories_id='.$this->get['categories_id']).'\';';
+	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'\';';
 	if ($this->hideHeader) {
 		$headers.='var ultrasearcch_resultset_header=\'\';';
 	} else {
