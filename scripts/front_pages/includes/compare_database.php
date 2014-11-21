@@ -193,6 +193,26 @@ if (!$skipMultishopUpdates) {
 		$messages[]=$str;
 		*/
 	}
+	$str="select id from tx_multishop_product_crop_image_coordinate limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="CREATE TABLE `tx_multishop_product_crop_image_coordinate` (
+		  `id` int(11) auto_increment,
+		  `image_filename` varchar(255) default '',
+		  `coordinate_x` int(11) default '0',
+		  `coordinate_y` int(11) default '0',
+		  `coordinate_w` int(11) default '0',
+		  `coordinate_h` int(11) default '0',
+		  PRIMARY KEY (`id`),
+		  KEY `image_filename` (`image_filename`),
+		  KEY `coordinate_x` (`coordinate_x`),
+		  KEY `coordinate_y` (`coordinate_y`),
+		  KEY `coordinate_w` (`coordinate_w`),
+		  KEY `coordinate_h` (`coordinate_h`)
+		);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// for later when we want private customer_id and orders_id per shop
 	$str="select tx_multishop_customer_id from fe_users limit 1";

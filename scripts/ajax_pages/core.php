@@ -4,6 +4,112 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'get_images_for_crop':
+		$return_data=array();
+		$image_name=$this->post['imagename'];
+		$image_size=$this->post['size'];
+		if (!empty($image_name)) {
+			switch ($image_size) {
+				case 'enlarged':
+					$return_data['images']['enlarged']=mslib_befe::getImagePath($image_name, 'products', 'normal').'?'.time();
+					$return_data['aspectratio']['enlarged']=$this->ms['product_image_formats']['enlarged']['width']/$this->ms['product_image_formats']['enlarged']['height'];
+					break;
+				case '300':
+					$return_data['images']['300']=mslib_befe::getImagePath($image_name, 'products', '300').'?'.time();
+					$return_data['aspectratio']['300']=$this->ms['product_image_formats'][300]['width']/$this->ms['product_image_formats'][300]['height'];
+					break;
+				case '200':
+					$return_data['images']['200']=mslib_befe::getImagePath($image_name, 'products', '200').'?'.time();
+					$return_data['aspectratio']['200']=$this->ms['product_image_formats'][200]['width']/$this->ms['product_image_formats'][200]['height'];
+					break;
+				case '100':
+					$return_data['images']['100']=mslib_befe::getImagePath($image_name, 'products', '100').'?'.time();
+					$return_data['aspectratio']['100']=$this->ms['product_image_formats'][100]['width']/$this->ms['product_image_formats'][100]['height'];
+					break;
+				case '50':
+				default:
+					$return_data['images']['50']=mslib_befe::getImagePath($image_name, 'products', '50').'?'.time();
+					$return_data['aspectratio']['50']=$this->ms['product_image_formats'][50]['width']/$this->ms['product_image_formats'][50]['height'];
+					break;
+			}
+			$return_data['status']='OK';
+		} else {
+			$return_data['status']='NOTOK';
+		}
+		echo json_encode($return_data);
+		exit();
+		break;
+	case 'crop_product_image':
+		$return_data=array();
+		$return_data['disable_crop_button']="";
+		$image_name=$this->post['tx_multishop_pi1']['jCropImageName'];
+		$image_size=$this->post['tx_multishop_pi1']['jCropImageSize'];
+		if (!empty($image_name)) {
+			$return_data['image_name']=$image_name;
+			$return_data['image_size']=$image_size;
+			switch ($image_size) {
+				case 'enlarged':
+					$return_data['images']['enlarged']=mslib_befe::getImagePath($image_name, 'products', 'normal').'?'.time();
+					$return_data['aspectratio']['enlarged']=$this->ms['product_image_formats']['enlarged']['width']/$this->ms['product_image_formats']['enlarged']['height'];
+					break;
+				case '300':
+					$return_data['images']['300']=mslib_befe::getImagePath($image_name, 'products', '300').'?'.time();
+					$return_data['aspectratio']['300']=$this->ms['product_image_formats'][300]['width']/$this->ms['product_image_formats'][300]['height'];
+					break;
+				case '200':
+					$return_data['images']['200']=mslib_befe::getImagePath($image_name, 'products', '200').'?'.time();
+					$return_data['aspectratio']['200']=$this->ms['product_image_formats'][200]['width']/$this->ms['product_image_formats'][200]['height'];
+					break;
+				case '100':
+					$return_data['images']['100']=mslib_befe::getImagePath($image_name, 'products', '100').'?'.time();
+					$return_data['aspectratio']['100']=$this->ms['product_image_formats'][100]['width']/$this->ms['product_image_formats'][100]['height'];
+					break;
+				case '50':
+				default:
+					$return_data['images']['50']=mslib_befe::getImagePath($image_name, 'products', '50').'?'.time();
+					$return_data['aspectratio']['50']=$this->ms['product_image_formats'][50]['width']/$this->ms['product_image_formats'][50]['height'];
+					break;
+			}
+			$return_data['status']='OK';
+		} else {
+			$return_data['status']='NOTOK';
+		}
+		if ($this->post['tx_multishop_pi1']['jCropX'] || $this->post['tx_multishop_pi1']['jCropY'] || $this->post['tx_multishop_pi1']['jCropW'] || $this->post['tx_multishop_pi1']['jCropH']) {
+			$return_data['disable_crop_button']="disabled";
+			$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_'.strtoupper($image_size)]);
+			$targ_w=$this->post['tx_multishop_pi1']['jCropW']; //$format[0];
+			$targ_h=$this->post['tx_multishop_pi1']['jCropH']; //$format[1];
+			$jpeg_quality=90;
+			$src_image_size=($image_size=='enlarged' ? 'normal' : $image_size);
+			$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($image_name, 'products', $src_image_size);
+			switch (exif_imagetype($src)) {
+				case IMAGETYPE_GIF:
+					$img_r=imagecreatefromgif($src);
+					break;
+				case IMAGETYPE_PNG:
+					$img_r=imagecreatefrompng($src);
+					break;
+				case IMAGETYPE_JPEG:
+				default:
+					$img_r=imagecreatefromjpeg($src);
+					break;
+			}
+			$dst_r=imagecreatetruecolor($targ_w, $targ_h);
+			imagecopyresampled($dst_r, $img_r, 0, 0, $this->post['tx_multishop_pi1']['jCropX'], $this->post['tx_multishop_pi1']['jCropY'], $targ_w, $targ_h, $this->post['tx_multishop_pi1']['jCropW'], $this->post['tx_multishop_pi1']['jCropH']);
+			imagejpeg($dst_r, $src, $jpeg_quality);
+			// save to database for the coordinate
+			$insertArray=array();
+			$insertArray['image_filename']=$image_name;
+			$insertArray['coordinate_x']=$this->post['tx_multishop_pi1']['jCropX'];
+			$insertArray['coordinate_y']=$this->post['tx_multishop_pi1']['jCropY'];
+			$insertArray['coordinate_w']=$this->post['tx_multishop_pi1']['jCropW'];
+			$insertArray['coordinate_h']=$this->post['tx_multishop_pi1']['jCropH'];
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_product_crop_image_coordinate', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		}
+		echo json_encode($return_data);
+		exit();
+		break;
 	case 'get_category_tree':
 		$page_uid=$this->showCatalogFromPage;
 		if (is_numeric($this->get['tx_multishop_pi1']['page_uid'])) {

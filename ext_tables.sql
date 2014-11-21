@@ -1502,3 +1502,18 @@ CREATE TABLE `tx_multishop_sessions` (
   KEY `segment_type` (`segment_type`),
   KEY `segment_id` (`segment_id`)
 );
+
+CREATE TABLE `tx_multishop_product_crop_image_coordinate` (
+  `id`             INT(11) AUTO_INCREMENT,
+  `image_filename` VARCHAR(255) DEFAULT '',
+  `coordinate_x`   INT(11) DEFAULT '0',
+  `coordinate_y`   INT(11) DEFAULT '0',
+  `coordinate_w`   INT(11) DEFAULT '0',
+  `coordinate_h`   INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `image_filename` (`image_filename`),
+  KEY `coordinate_x` (`coordinate_x`),
+  KEY `coordinate_y` (`coordinate_y`),
+  KEY `coordinate_w` (`coordinate_w`),
+  KEY `coordinate_h` (`coordinate_h`)
+);
