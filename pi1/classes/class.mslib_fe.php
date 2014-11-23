@@ -2105,7 +2105,7 @@ class mslib_fe {
 			$query_elements['select'][]='pf.products_name, pf.products_id, pf.categories_id';
 			$query_elements['from'][]='tx_multishop_products_flat pf';
 			$query_elements['filter'][]="pf.categories_id='".$categories_id."'";
-			$query_elements['orderby'][]="pf.sort_order ".$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
+			//$query_elements['orderby'][]="pf.sort_order ".$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
 		}
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getNextPreviousProduct'])) {
 			$params=array(
@@ -2122,6 +2122,7 @@ class mslib_fe {
 			(count($query_elements['orderby']) ? implode(' AND ', $query_elements['orderby']) : ''), // ORDER BY...
 			'' // LIMIT ...
 		);
+
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$count=0;
 		$products=array();
@@ -2132,14 +2133,30 @@ class mslib_fe {
 		$pagination_items=array();
 		$trans=array_flip($products);
 		$internal=$trans[$products_id];
+		if ($this->ms['MODULES']['FLAT_DATABASE']) {
+			$prevKey='previous_item';
+			$nextKey='next_item';
+		} else {
+			switch($this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION']) {
+				case 'desc':
+					$prevKey='next_item';
+					$nextKey='previous_item';
+					break;
+				default:
+				case 'asc':
+					$prevKey='previous_item';
+					$nextKey='next_item';
+					break;
+			}
+		}
 		if ($internal==0 && is_numeric($products[1])) {
-			$pagination_items['next_item']['products_id']=$products[1];
+			$pagination_items[$nextKey]['products_id']=$products[1];
 		} else {
 			if ($products[($internal-1)] && is_numeric($products[($internal-1)])) {
-				$pagination_items['previous_item']['products_id']=$products[($internal-1)];
+				$pagination_items[$prevKey]['products_id']=$products[($internal-1)];
 			}
 			if ($products[($internal+1)] && is_numeric($products[($internal+1)])) {
-				$pagination_items['next_item']['products_id']=$products[($internal+1)];
+				$pagination_items[$nextKey]['products_id']=$products[($internal+1)];
 			}
 		}
 		$cats=mslib_fe::Crumbar($categories_id);

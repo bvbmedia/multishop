@@ -295,7 +295,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$this->get['categories_id']=$this->categoriesStartingPoint;
 				}
 				$categories = mslib_fe::getSubcatsOnly($this->get['categories_id']);
-				if (count($categories)) {
+				if (!is_array($categories)) {
+					$count_select = count($formField['elements']);
+					unset($formFieldItem);
+					continue;
+				} else {
 					$options=array();
 					$formFieldItem=array();
 					$count_select = count($formField['elements']);
@@ -566,7 +570,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					} else {
 						$prefix='pf';
 					}
-					//error_log(print_r($tmpFilter, 1));
 					$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 					// count available records eof
 					if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
@@ -909,7 +912,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				//end attributs options
 				break;
 		}
-		if (isset($key) && !empty($key)) {
+		if (isset($key) && !empty($key) && isset($formField)) {
 			$formFields[]=array("type"=>"container","class"=>'ui-dform-container-'.$key,"html"=>$formField);
 		}
 	}
@@ -1251,6 +1254,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				break;
 		}
 	}
+	//error_log(print_r($filter, 1));
 	$pageset=mslib_fe::getProductsPageSet($filter,$offset,$limit,$orderby,$having,$select,$where,0,$from,array(),'ajax_products_search',$select_total_count,0,1,$extra_join);
 	//	error_log($pageset['total_rows']);
 	//	error_log($this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']);
@@ -1305,9 +1309,26 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$temp_var_products['products_model']	= $product['products_model'];
 				$temp_var_products['categories_name'] = $product['categories_name'];
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
-					$temp_var_products['categories_name_1'] = $product['categories_name_1'];
-					$temp_var_products['categories_name_2'] = $product['categories_name_2'];
-					$temp_var_products['categories_name_3'] = $product['categories_name_3'];
+					for ($s=0;$s<5;$s++) {
+						if ($product['categories_id_'.$s]) {
+							$temp_var_products['categories_name_'.$s] = $product['categories_name_'.$s];
+							// get all cats to generate multilevel fake url
+							$level=0;
+							$cats=mslib_fe::Crumbar($product['categories_id_'.$s]);
+							$cats=array_reverse($cats);
+							$where='';
+							if (count($cats) > 0) {
+								foreach ($cats as $cat) {
+									$where.="categories_id[".$level."]=".$cat['id']."&";
+									$level++;
+								}
+								$where=substr($where,0,(strlen($where)-1));
+								$where.='&';
+							}
+							// get all cats to generate multilevel fake url eof
+							$temp_var_products['categories_link_'.$s] = mslib_fe::typolink($this->conf['products_listing_page_pid'],$where.'&tx_multishop_pi1[page_section]=products_listing');
+						}
+					}
 				}
 				$temp_var_products['link_detail']    = $link_detail;
 				$temp_var_products['link_add_to_cart']    = mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&products_id='.$product['products_id']);
