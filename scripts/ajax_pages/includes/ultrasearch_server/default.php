@@ -1327,6 +1327,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$temp_var_products['products_shortdescription']	= $product['products_shortdescription'];
 				$temp_var_products['products_name']	= $product['products_name'];
 				$temp_var_products['products_model']	= $product['products_model'];
+				$temp_var_products['products_url']	= $product['products_url'];
 				$temp_var_products['categories_name'] = $product['categories_name'];
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					for ($s=0;$s<5;$s++) {
