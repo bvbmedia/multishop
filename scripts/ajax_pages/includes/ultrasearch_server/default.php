@@ -449,7 +449,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							}
 							$counter++;
 						}
-						$formField['elements']=$formFieldItem;
+						if (!count($formFieldItem)) {
+							unset($formField);
+						} else {
+							$formField['elements']=$formFieldItem;
+						}
 					}
 				}
 				break;
@@ -631,7 +635,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					}
 					$counter++;
 				}
-				$formField['elements']=$formFieldItem;
+				if (!count($formFieldItem)) {
+					unset($formField);
+				} else {
+					$formField['elements']=$formFieldItem;
+				}
 			break;
 			case 'productslisting_filter':
 				$formField['caption'] = $this->pi_getLL('products_per_page', 'Products per page:');
@@ -667,7 +675,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						}
 					}
 				}
-				$formField['elements']=$formFieldItem;
+				if (!count($formFieldItem)) {
+					unset($formField);
+				} else {
+					$formField['elements']=$formFieldItem;
+				}
 			break;
 			case 'sortby_filter':
 				$formField['caption'] = $this->pi_getLL('sort_by', 'Sort by:');
@@ -695,7 +707,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						$formFieldItem[$count_select]['options'][$sortby_key]['html'] = $sortby_label;
 					}
 				}
-				$formField['elements']=$formFieldItem;
+				if (!count($formFieldItem)) {
+					unset($formField);
+				} else {
+					$formField['elements']=$formFieldItem;
+				}
 			break;
 			case 'sort_filter':
 			case 'price_filter':
@@ -906,7 +922,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							}
 							$counter++;
 						}
-						$formField['elements']=$formFieldItem;
+						if (!count($formFieldItem)) {
+							unset($formField);
+						} else {
+							$formField['elements']=$formFieldItem;
+						}
 					}
 				}
 				//end attributs options
