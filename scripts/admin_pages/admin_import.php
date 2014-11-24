@@ -2064,7 +2064,7 @@ if ($this->post['action']=='category-insert') {
 								$filter[]='page_uid='.$this->showCatalogFromPage;
 								$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
 								if (is_array($record) && $record['products_id']) {
-									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$language_id, $updateArray);
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$language_id, $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								} else {
 									$updateArray['products_id']=$item['updated_products_id'];
@@ -2090,7 +2090,7 @@ if ($this->post['action']=='category-insert') {
 										$filter[]='page_uid='.$this->showCatalogFromPage;
 										$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
 										if ($record['products_id']) {
-											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$langKey, $updateArray2);
+											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$langKey, $updateArray2);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										} else {
 											// add new record
