@@ -258,8 +258,8 @@ jQuery(document).ready(function($) {
 					var image_interface=\'<div id="crop_editor_wrapper">\';
 					image_interface+=\'<div id="crop_main_window_editor" align="center"><img src="\' + r.images[50] + \'" id="cropbox"/></div>\';
 					image_interface+=\'<div id="crop_thumb_image_button">\';
-					image_interface+=\'<div id="crop_save_btn_wrapper" class="msBackendButton continueState arrowRight arrowPosLeft"><input type="button" id="crop_save" value="crop & save" /></div>\';
-					image_interface+=\'<div id="crop_restore_btn_wrapper" class="msBackendButton continueState arrowRight arrowPosLeft"><input type="button" id="crop_restore" value="restore image" /></div>\';
+					image_interface+=\'<div id="crop_save_btn_wrapper"><input type="button" id="crop_save" value="crop & save" /></div>\';
+					image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><input type="button" id="crop_restore" value="restore image" /></div>\';
 					image_interface +=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
 					image_interface +=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="50" />\';
 					image_interface +=\'<input type="hidden" id="jCropX" name="tx_multishop_pi1[jCropX]" class="jcrop_coords" value="" />\';
@@ -278,9 +278,16 @@ jQuery(document).ready(function($) {
 					image_interface+=\'</ul>\';
 					image_interface+=\'</div>\';
 					image_interface+=\'</div>\';
-					cropEditorDialog("Crop editor " + image_name, image_interface);
+					cropEditorDialog("Crop image " + image_name + " [50]", image_interface);
 					// default for first time loading is 50
-					activate_jcrop_js(r.aspectratio[50]);
+					if (r.disable_crop_button=="disabled") {
+						$("#crop_save_btn_wrapper").hide();
+						$("#crop_restore_btn_wrapper").show();
+					} else {
+						$("#crop_save_btn_wrapper").show();
+						$("#crop_restore_btn_wrapper").hide();
+						activate_jcrop_js(r.aspectratio[50]);
+					}
 				}
 			}
 		});
@@ -298,6 +305,7 @@ jQuery(document).ready(function($) {
 			success: function (r) {
 				//do something with the sorted data
 				if (r.status=="OK") {
+				console.log(r);
 					var new_image=\'<img src="\' + r.images[tmp[1]] + \'" id="cropbox"/>\';
 					$(".crop_image").removeClass("active_thumbs");
 					$(current_obj).addClass("active_thumbs");
@@ -305,8 +313,16 @@ jQuery(document).ready(function($) {
 					$("#jCropImageName").val(tmp[0]);
 					$("#jCropImageSize").val(tmp[1]);
 					$("#crop_main_window_editor").empty();
+					$(".ui-dialog-title").html("Crop image: " + tmp[0] + " [" + tmp[1] + "]");
 					$("#crop_main_window_editor").html(new_image);
-					activate_jcrop_js(r.aspectratio[tmp[1]]);
+					if (r.disable_crop_button=="disabled") {
+						$("#crop_save_btn_wrapper").hide();
+						$("#crop_restore_btn_wrapper").show();
+					} else {
+						$("#crop_save_btn_wrapper").show();
+						$("#crop_restore_btn_wrapper").hide();
+						activate_jcrop_js(r.aspectratio[tmp[1]]);
+					}
 				}
 			}
 		});
@@ -330,8 +346,11 @@ jQuery(document).ready(function($) {
 					$("#crop_main_window_editor").empty();
 					$("#crop_main_window_editor").html(new_image);
 					if (r.disable_crop_button=="disabled") {
-						$("#crop_save").attr("disabled", "disabled");
+						$("#crop_save_btn_wrapper").hide();
+						$("#crop_restore_btn_wrapper").show();
 					} else {
+						$("#crop_save_btn_wrapper").show();
+						$("#crop_restore_btn_wrapper").hide();
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()]);
 					}
 				}
@@ -357,8 +376,11 @@ jQuery(document).ready(function($) {
 					$("#crop_main_window_editor").empty();
 					$("#crop_main_window_editor").html(new_image);
 					if (r.disable_crop_button=="disabled") {
-						$(this).attr("disabled", "disabled");
+						$("#crop_save_btn_wrapper").hide();
+						$("#crop_restore_btn_wrapper").show();
 					} else {
+						$("#crop_save_btn_wrapper").show();
+						$("#crop_restore_btn_wrapper").hide();
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()]);
 					}
 				}
