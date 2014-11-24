@@ -305,7 +305,6 @@ jQuery(document).ready(function($) {
 			success: function (r) {
 				//do something with the sorted data
 				if (r.status=="OK") {
-				console.log(r);
 					var new_image=\'<img src="\' + r.images[tmp[1]] + \'" id="cropbox"/>\';
 					$(".crop_image").removeClass("active_thumbs");
 					$(current_obj).addClass("active_thumbs");
@@ -386,6 +385,29 @@ jQuery(document).ready(function($) {
 				}
 			}
 		});
+	});
+	$(document).on(\'click\',".delete_product_images",function(e) {
+		e.preventDefault();
+		var tmp_img_attr=$(this).attr("rel").split(":");
+		var img_ctr=tmp_img_attr[0];
+		var img_filename=tmp_img_attr[1];
+		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=delete_products_images').'";
+		if (confirm(\'Are you sure?\')) {
+			jQuery.ajax({
+				type:"POST",
+				url:href,
+				data: "pid='.(isset($this->get['pid']) && $this->get['pid']>0 ? $this->get['pid'] : '').'&image_counter=" + img_ctr + "&image_filename=" + img_filename,
+				dataType: "json",
+				success: function(r) {
+					//do something with the sorted data
+					var image_action_div_id="#image_action" + r.image_counter;
+					var ajax_products_image_id="#ajax_products_image" +  r.image_counter;
+					$(image_action_div_id).html("");
+					$(ajax_products_image_id).val("");
+
+				}
+			});
+		}
 	});
 	$(\'#cid\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
@@ -836,6 +858,9 @@ if ($this->post) {
 				mslib_befe::updateImportedProductsLockedFields($prodid, 'tx_multishop_products', $updateArray);
 			}
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$prodid.'\'', $updateArray);
+			//print_r($updateArray);
+			//var_dump($query);
+			//die();
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if (!$updateArray['products_status']) {
 				// call disable method cause that one also removes possible flat database record
@@ -1641,19 +1666,6 @@ if ($this->post) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		$local_primary_product_categories=$product['categories_id'];
-		if ($this->get['delete_image'] and is_numeric($this->get['pid'])) {
-			if ($product[$this->get['delete_image']]) {
-				mslib_befe::deleteProductImage($product[$this->get['delete_image']]);
-				$updateArray=array();
-				$updateArray[$this->get['delete_image']]='';
-				$product[$this->get['delete_image']]='';
-				if ($this->get['delete_image']=='products_image') {
-					$updateArray['contains_image']=0;
-				}
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$this->get['pid'].'\'', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			}
-		}
 		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 			$str="SELECT * from tx_multishop_products p, tx_multishop_products_description pd where p.products_id='".$this->get['pid']."' and pd.page_uid='".$this->shop_pid."' and (pd.layered_categories_id='".$local_primary_product_categories."' or pd.layered_categories_id='0') and p.products_id=pd.products_id";
 		} else {
@@ -2102,12 +2114,14 @@ if ($this->post) {
 						<input name="products_image'.$i.'" type="file" />
 					</noscript>
 				</div>
-				<input name="ajax_products_image'.$i.'" id="ajax_products_image'.$i.'" type="hidden" value="" />';
-			if ($_REQUEST['action']=='edit_product' and $product['products_image'.$i]) {
+				<input name="ajax_products_image'.$i.'" id="ajax_products_image'.$i.'" type="hidden" value="'.$product['products_image'.$i].'" />';
+			$images_tab_block.='<div id="image_action'.$i.'">';
+			if ($_REQUEST['action']=='edit_product' && $product['products_image'.$i]) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'" />';
 				$images_tab_block.=' <a href="#" id="cropEditor" rel="'.$product['products_image'.$i].'"><span>crop</span></a>';
-				$images_tab_block.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image'.$i).'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+				$images_tab_block.=' <a href="#" class="delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 			}
+			$images_tab_block.='</div>';
 			$images_tab_block.='</div>';
 		}
 		$images_tab_block.='<script>
@@ -2129,11 +2143,23 @@ if ($this->post) {
 				template: \'<div class="qq-uploader">\' +
 						  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
 						  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
-						  \'<ul class="qq-upload-list"></ul>\' +
+						  \'<ul class="qq-upload-list" id="qq-upload-list-ul'.$i.'"></ul>\' +
 						  \'</div>\',
 				onComplete: function(id, fileName, responseJSON){
 					var filenameServer = responseJSON[\'filename\'];
+					var filenameLocationServer = responseJSON[\'fileLocation\'];
 					$("#ajax_products_image'.$i.'").val(filenameServer);
+					// hide the qq-upload status
+					//$("#qq-upload-list-ul'.$i.'").hide();
+					// display instantly uploaded image
+					$("#image_action'.$i.'").empty();
+					var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
+					new_image+=\' <a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
+					'.($_REQUEST['action']=='edit_product' && $this->get['pid'] ? '
+					new_image+=\' <a href="#" class="delete_product_images" rel="'.$i.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+					' : '').'
+					$("#image_action'.$i.'").html(new_image);
+
 				},
 				debug: false
 			});';

@@ -157,7 +157,8 @@ switch ($this->ms['page']) {
 			$return_data['status']='NOTOK';
 		}
 		$return_data['disable_crop_button']="";
-		$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($image_name, 'products', $image_size);
+		$src_image_size=($image_size=='enlarged' ? 'normal' : $image_size);
+		$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($image_name, 'products', $src_image_size);
 		// backup original
 		@unlink($src);
 		copy($src.'-ori-'.$image_size, $src);
@@ -1108,10 +1109,12 @@ switch ($this->ms['page']) {
 											}
 											if (copy($temp_file, $target)) {
 												$filename=mslib_befe::resizeProductImage($target, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath($this->extKey), 1);
+												$fileLocation=$this->FULL_HTTP_URL.mslib_befe::getImagePath($filename, 'products', '50');
 												$result=array();
 												$result['success']=true;
 												$result['error']=false;
 												$result['filename']=$filename;
+												$result['fileLocation']=$fileLocation;
 												echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
 												exit();
 											}
@@ -1125,6 +1128,29 @@ switch ($this->ms['page']) {
 			}
 		}
 		exit();
+		break;
+	case 'delete_products_images':
+		if ($this->ADMIN_USER) {
+			$return_data=array();
+			$pid=$this->post['pid'];
+			$img_counter=$this->post['image_counter'];
+			$image_array_key="products_image".$img_counter;
+			$image_filename=$this->post['image_filename'];
+			mslib_befe::deleteProductImage($image_filename);
+			if (is_numeric($pid) && $pid>0) {
+				$updateArray=array();
+				$updateArray[$image_array_key]='';
+				if ($image_array_key=='products_image') {
+					$updateArray['contains_image']=0;
+				}
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$pid.'\'', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+			$return_data['image_counter']=$img_counter;
+			$json=json_encode($return_data);
+			echo $json;
+			exit();
+		}
 		break;
 	case 'update_products_status':
 		if ($this->ADMIN_USER) {
