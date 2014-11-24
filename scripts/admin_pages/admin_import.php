@@ -29,23 +29,23 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 </script>';
 $max_category_level=4;
 if ($this->get['run_as_cron']) {
-	$lock_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/log/importer_is_running_'.$this->HTTP_HOST.'_'.$this->get['job_id'];
+	$this->msLockFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/log/importer_is_running_'.$this->HTTP_HOST.'_'.$this->get['job_id'];
 	// Clears file status cache
-	if (file_exists($lock_file)) {
+	if (file_exists($this->msLockFile)) {
 		clearstatcache();
-		$ss=@stat($lock_file);
+		$ss=@stat($this->msLockFile);
 		$time_created=$ss['ctime'];
 		$time=(time()-$time_created);
 		if ($time>(60*60*12)) {
-			@unlink($lock_file);
+			@unlink($this->msLockFile);
 		} else {
-			die('lock '.$lock_file.' is file enabled, meaning importer is already running.');
+			die('lock '.$this->msLockFile.' is file enabled, meaning importer is already running.');
 		}
 	}
-	$log_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/log/import_'.$this->HTTP_HOST.'_log.txt';
-	@unlink($log_file);
-	file_put_contents($log_file, $this->HTTP_HOST.' - importer started. (job '.$this->get['job_id'].') ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
-	file_put_contents($lock_file, $this->HTTP_HOST.' - importer started. (job '.$this->get['job_id'].') ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+	$this->msLogFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/log/import_'.$this->HTTP_HOST.'_log.txt';
+	@unlink($this->msLogFile);
+	file_put_contents($this->msLogFile, $this->HTTP_HOST.' - importer started. (job '.$this->get['job_id'].') ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+	file_put_contents($this->msLockFile, $this->HTTP_HOST.' - importer started. (job '.$this->get['job_id'].') ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
 	// start counter for incremental updates on the display
 	$subtel=0;
 }
@@ -881,8 +881,8 @@ if ($this->post['action']=='category-insert') {
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$row['id'], $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			//update the last run time eof
-			if ($log_file) {
-				file_put_contents($log_file, $this->HTTP_HOST.' - cron job settings loaded. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+			if ($this->msLogFile) {
+				file_put_contents($this->msLogFile, $this->HTTP_HOST.' - cron job settings loaded. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
 			}
 		}
 		if ($this->post['file_url']) {
@@ -928,8 +928,8 @@ if ($this->post['action']=='category-insert') {
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 					$primaryKeyColumn=$row['Column_name'];
-					if ($log_file) {
-						file_put_contents($log_file, $this->HTTP_HOST.' - loading random products. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+					if ($this->msLogFile) {
+						file_put_contents($this->msLogFile, $this->HTTP_HOST.' - loading random products. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
 					}
 					if (is_numeric($this->get['limit'])) {
 						$limit=$this->get['limit'];
@@ -1066,13 +1066,13 @@ if ($this->post['action']=='category-insert') {
 			$global_start_time=microtime(TRUE);
 			$start_time=microtime(TRUE);
 			$total_datarows=count($rows);
-			if ($log_file) {
+			if ($this->msLogFile) {
 				if ($total_datarows) {
 					// sometimes the preload takes so long that the database connection is lost.
 					$GLOBALS['TYPO3_DB']->connectDB();
-					file_put_contents($log_file, $this->HTTP_HOST.' - products loaded, now starting the import. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+					file_put_contents($this->msLogFile, $this->HTTP_HOST.' - products loaded, now starting the import. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
 				} else {
-					file_put_contents($log_file, $this->HTTP_HOST.' - no products needed to be imported'."\n", FILE_APPEND);
+					file_put_contents($this->msLogFile, $this->HTTP_HOST.' - no products needed to be imported'."\n", FILE_APPEND);
 				}
 			}
 			// load default TAX rules
@@ -1080,9 +1080,19 @@ if ($this->post['action']=='category-insert') {
 				$default_iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
 				$default_tax_rate=mslib_fe::taxRuleSet($this->post['tx_multishop_pi1']['default_vat_rate'], 0, $default_iso_customer['cn_iso_nr'], 0);
 			}
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'])) {
+				$params=array(
+					'rows'=>$rows
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom hook that can be controlled by third-party plugin eof
 			foreach ($rows as $row) {
-				// custom hook that can be controlled by third-party plugin
 				$skipRow=0;
+				// custom hook that can be controlled by third-party plugin
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIteratePreProc'])) {
 					$params=array(
 						'row'=>&$row,
@@ -1093,10 +1103,10 @@ if ($this->post['action']=='category-insert') {
 						t3lib_div::callUserFunction($funcRef, $params, $this);
 					}
 				}
+				// custom hook that can be controlled by third-party plugin eof
 				if ($skipRow) {
 					continue;
 				}
-				// custom hook that can be controlled by third-party plugin eof
 				$item=array();
 				foreach ($row as $key=>$col) {
 					if (!mb_detect_encoding($col, 'UTF-8', true)) {
@@ -1976,8 +1986,8 @@ if ($this->post['action']=='category-insert') {
 										$folder=mslib_befe::getImagePrefixFolder($filename);
 										if (!file_exists($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$filename)) {
 											$old_product[$name]='';
-											if ($log_file) {
-												file_put_contents($log_file, $this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$filename.' does not exist. Trying to re-import the product'.$x.' image.'."\n", FILE_APPEND);
+											if ($this->msLogFile) {
+												file_put_contents($this->msLogFile, $this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$filename.' does not exist. Trying to re-import the product'.$x.' image.'."\n", FILE_APPEND);
 											}
 										}
 									}
@@ -1991,7 +2001,7 @@ if ($this->post['action']=='category-insert') {
 									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 									$item['products_name']=$row['products_name'];
 								}
-								mslib_befe::saveImportedProductImages($item['updated_products_id'], $this->post['input'], $item, $old_product, $log_file);
+								mslib_befe::saveImportedProductImages($item['updated_products_id'], $this->post['input'], $item, $old_product, $this->msLogFile);
 								unset($item['img']);
 							}
 							$updateArray=array();
@@ -2338,8 +2348,8 @@ if ($this->post['action']=='category-insert') {
 							if ($products_id==0 and $this->get['run_as_cron']) {
 								// error. lets print the error
 								$message='ERROR QUERY FAILED: '.$query."\n";
-								if ($log_file) {
-									file_put_contents($log_file, $message, FILE_APPEND);
+								if ($this->msLogFile) {
+									file_put_contents($this->msLogFile, $message, FILE_APPEND);
 								}
 							}
 							// lets add the new product to the products description table
@@ -2740,8 +2750,8 @@ if ($this->post['action']=='category-insert') {
 								$subtel=0;
 								$start_time=microtime(TRUE);
 							}
-							if ($log_file) {
-								file_put_contents($log_file, $message, FILE_APPEND);
+							if ($this->msLogFile) {
+								file_put_contents($this->msLogFile, $message, FILE_APPEND);
 							}
 							$content='';
 						}
@@ -2755,7 +2765,7 @@ if ($this->post['action']=='category-insert') {
 				}
 //					echo ' ';
 //				}
-				if ($log_file) {
+				if ($this->msLogFile) {
 					$content='';
 				}
 				// end foreach
@@ -2773,7 +2783,7 @@ if ($this->post['action']=='category-insert') {
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
-		if ($log_file) {
+		if ($this->msLogFile) {
 			$end_time=microtime(TRUE);
 			$global_ms_string=number_format(($end_time-$global_start_time), 3, '.', '');
 			$running_seconds=round($global_ms_string);
@@ -2782,7 +2792,7 @@ if ($this->post['action']=='category-insert') {
 			} else {
 				$time_running=number_format(($running_seconds), 0, '.', '').' seconds';
 			}
-			file_put_contents($log_file, 'Import task completed on: '.date("Y-m-d G:i:s", time()).' and took: '.$time_running.".\n", FILE_APPEND);
+			file_put_contents($this->msLogFile, 'Import task completed on: '.date("Y-m-d G:i:s", time()).' and took: '.$time_running.".\n", FILE_APPEND);
 		}
 	}
 }
@@ -3062,7 +3072,7 @@ if ($this->post['action']!='product-import-preview') {
 	}
 }
 if ($this->get['run_as_cron']) {
-	@unlink($lock_file);
+	@unlink($this->msLockFile);
 	die();
 }
 ?>
