@@ -197,12 +197,22 @@ if ($invoice['orders_id']) {
 		}
 		function Header() {
 			if ($this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE']) {
+				$imageLocation=$this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE'];
+				if (!file_exists($imageLocation) && file_exists($this->DOCUMENT_ROOT.$imageLocation)) {
+					// relative filepath
+					$imageLocation=$this->FULL_HTTP_URL.$imageLocation;
+				}
 				$this->SetY(10);
-				$this->Image($this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE'], '', '', 213);
+				$this->Image($imageLocation, '', '', 213);
 			}
 			if ($this->ms['MODULES']['INVOICE_PDF_FOOTER_IMAGE']) {
+				$imageLocation=$this->ms['MODULES']['INVOICE_PDF_FOOTER_IMAGE'];
+				if (!file_exists($imageLocation) && file_exists($this->DOCUMENT_ROOT.$imageLocation)) {
+					// relative filepath
+					$imageLocation=$this->FULL_HTTP_URL.$imageLocation;
+				}
 				$this->SetY(-50);
-				$this->Image($this->ms['MODULES']['INVOICE_PDF_FOOTER_IMAGE'], '', '232', 213);
+				$this->Image($imageLocation, '', '232', 213);
 				$this->SetY(10);
 				$this->Ln(30);
 			}

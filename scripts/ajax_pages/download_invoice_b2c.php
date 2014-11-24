@@ -24,12 +24,22 @@ if ($invoice['orders_id']) {
 		$markerArray=array();
 		$markerArray['###GENDER_SALUTATION###']=mslib_fe::genderSalutation($order['billing_gender']);
 		if ($this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE']) {
-			$markerArray['###INVOICE_HEADER_BACKGROUND_IMAGE###']=' <img src="'.$this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE'].'" style="width: 100%"/>';
+			$imageLocation=$this->ms['MODULES']['INVOICE_PDF_HEADER_IMAGE'];
+			if (!file_exists($imageLocation) && file_exists($this->DOCUMENT_ROOT.$imageLocation)) {
+				// relative filepath
+				$imageLocation=$this->FULL_HTTP_URL.$imageLocation;
+			}
+			$markerArray['###INVOICE_HEADER_BACKGROUND_IMAGE###']=' <img src="'.$imageLocation.'" style="width: 100%"/>';
 		} else {
 			$markerArray['###INVOICE_HEADER_BACKGROUND_IMAGE###']='';
 		}
 		if ($this->ms['MODULES']['INVOICE_PDF_FOOTER_IMAGE']) {
-			$markerArray['###INVOICE_FOOTER_BACKGROUND_IMAGE###']=' <img src="'.$this->ms['MODULES']['INVOICE_PDF_FOOTER_IMAGE'].'" style="width: 100%"/>';
+			$imageLocation=$this->ms['MODULES']['INVOICE_PDF_FOOTER_IMAGE'];
+			if (!file_exists($imageLocation) && file_exists($this->DOCUMENT_ROOT.$imageLocation)) {
+				// relative filepath
+				$imageLocation=$this->FULL_HTTP_URL.$imageLocation;
+			}
+			$markerArray['###INVOICE_FOOTER_BACKGROUND_IMAGE###']=' <img src="'.$imageLocation.'" style="width: 100%"/>';
 		} else {
 			$markerArray['###INVOICE_FOOTER_BACKGROUND_IMAGE###']='';
 		}
