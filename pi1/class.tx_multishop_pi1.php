@@ -307,15 +307,37 @@ class tx_multishop_pi1 extends tslib_pibase {
 				}
 			break;				
 			case 'specials':
-				$this->section_code = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'section_code', 's_specials');
-				$this->box_class='multishop_specials';
-				$this->contentType = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'contentType', 's_specials');
-				$this->limit = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'speciallimit', 's_specials');			
-				if (!$this->limit) $this->limit=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
+				if ($this->conf['section_code']) {
+					$this->section_code = $this->conf['section_code'];
+				} else {
+					$this->section_code = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'section_code', 's_specials');
+				}
+				if ($this->conf['box_class']) {
+					$this->box_class = $this->conf['box_class'];
+				} else {
+					$this->box_class='multishop_specials';
+				}
+				if ($this->conf['contentType']) {
+					$this->contentType = $this->conf['contentType'];
+				} else {
+					$this->contentType = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'contentType', 's_specials');
+				}
+				if ($this->conf['limit']) {
+					$this->limit = $this->conf['limit'];
+				} else {
+					$this->limit = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'speciallimit', 's_specials');
+				}
+				if (!$this->limit) {
+					$this->limit=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
+				}
 				$content.=mslib_fe::SpecialsBox($this->contentType,$this->limit,$this->showCatalogFromPage,$this->cObj->data['uid']);
 			break;
 			case 'products':
-				$this->contentType = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'contentType', 's_products_listing');
+				if ($this->conf['contentType']) {
+					$this->contentType = $this->conf['contentType'];
+				} else {
+					$this->contentType = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'contentType', 's_products_listing');
+				}
 				switch ($this->contentType) {
 					case 'products_new':
 						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_new.php');
