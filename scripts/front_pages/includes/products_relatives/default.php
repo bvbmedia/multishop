@@ -19,9 +19,16 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['title']=$this->cObj->getSubpart($subparts['template'], '###TITLE###');
 $subparts['header']=$this->cObj->getSubpart($subparts['template'], '###HEADER###');
 $subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
-// TITLE
+
 $markerArray=array();
-$markerArray['TITLE_LABEL']=htmlspecialchars($this->pi_getLL('product_relatives'));
+// TITLE
+$title=$this->pi_getLL('product_relatives');
+switch ($type) {
+	case 'customers_also_bought':
+		$title=$this->pi_getLL('customers_that_bought_this_product_also_bought');
+		break;
+}
+$markerArray['TITLE_LABEL']=htmlspecialchars($title);
 $subpartArray['###TITLE###']=$this->cObj->substituteMarkerArray($subparts['title'], $markerArray, '###|###');
 // TABLE HEADER FIRST
 $markerArray=array();
