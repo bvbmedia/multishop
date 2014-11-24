@@ -3469,9 +3469,9 @@ class mslib_befe {
 						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
 						  <td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
 		} else {
-			$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
-						  <td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
-						  <td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+			$tmpcontent.='<td align="right" class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
+						  <td align="right" class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
+						  <td align="right" class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
 		}
 		$tmpcontent.='</tr>';
 		$total_tax=0;
