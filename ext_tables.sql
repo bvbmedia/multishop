@@ -1505,13 +1505,15 @@ CREATE TABLE `tx_multishop_sessions` (
 
 CREATE TABLE `tx_multishop_product_crop_image_coordinate` (
   `id`             INT(11) AUTO_INCREMENT,
+  `products_id` INT(11) DEFAULT '0',
   `image_filename` VARCHAR(255) DEFAULT '',
-  `image_size` TINYINT(3) DEFAULT '0',
+  `image_size`  VARCHAR(10) DEFAULT '',
   `coordinate_x`   INT(11) DEFAULT '0',
   `coordinate_y`   INT(11) DEFAULT '0',
   `coordinate_w`   INT(11) DEFAULT '0',
   `coordinate_h`   INT(11) DEFAULT '0',
   PRIMARY KEY (`id`),
+  KEY `products_id` (`products_id`),
   KEY `image_filename` (`image_filename`),
   KEY `image_size` (`image_size`),
   KEY `coordinate_x` (`coordinate_x`),

@@ -50,6 +50,7 @@ switch ($this->ms['page']) {
 	case 'crop_product_image':
 		$return_data=array();
 		$return_data['disable_crop_button']="";
+		$pid=(isset($this->post['pid']) ? $this->post['pid'] : 0);
 		$image_name=$this->post['tx_multishop_pi1']['jCropImageName'];
 		$image_size=$this->post['tx_multishop_pi1']['jCropImageSize'];
 		if (!empty($image_name)) {
@@ -84,31 +85,14 @@ switch ($this->ms['page']) {
 		}
 		if ($this->post['tx_multishop_pi1']['jCropX'] || $this->post['tx_multishop_pi1']['jCropY'] || $this->post['tx_multishop_pi1']['jCropW'] || $this->post['tx_multishop_pi1']['jCropH']) {
 			$return_data['disable_crop_button']="disabled";
-			$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_'.strtoupper($image_size)]);
-			$targ_w=$this->post['tx_multishop_pi1']['jCropW']; //$format[0];
-			$targ_h=$this->post['tx_multishop_pi1']['jCropH']; //$format[1];
-			$jpeg_quality=90;
 			$src_image_size=($image_size=='enlarged' ? 'normal' : $image_size);
 			$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($image_name, 'products', $src_image_size);
 			// backup original
 			copy($src, $src.'-ori-'.$image_size);
-			switch (exif_imagetype($src)) {
-				case IMAGETYPE_GIF:
-					$img_r=imagecreatefromgif($src);
-					break;
-				case IMAGETYPE_PNG:
-					$img_r=imagecreatefrompng($src);
-					break;
-				case IMAGETYPE_JPEG:
-				default:
-					$img_r=imagecreatefromjpeg($src);
-					break;
-			}
-			$dst_r=imagecreatetruecolor($targ_w, $targ_h);
-			imagecopyresampled($dst_r, $img_r, 0, 0, $this->post['tx_multishop_pi1']['jCropX'], $this->post['tx_multishop_pi1']['jCropY'], $targ_w, $targ_h, $this->post['tx_multishop_pi1']['jCropW'], $this->post['tx_multishop_pi1']['jCropH']);
-			imagejpeg($dst_r, $src, $jpeg_quality);
+			mslib_befe::cropProductImage($src, $this->post['tx_multishop_pi1']['jCropX'], $this->post['tx_multishop_pi1']['jCropY'], $this->post['tx_multishop_pi1']['jCropW'], $this->post['tx_multishop_pi1']['jCropH']);
 			// save to database for the coordinate
 			$insertArray=array();
+			$insertArray['products_id']=$pid;
 			$insertArray['image_filename']=$image_name;
 			$insertArray['image_size']=$image_size;
 			$insertArray['coordinate_x']=$this->post['tx_multishop_pi1']['jCropX'];
@@ -124,6 +108,7 @@ switch ($this->ms['page']) {
 	case 'restore_crop_image':
 		$return_data=array();
 		$return_data['disable_crop_button']="";
+		$pid=(isset($this->post['pid']) ? $this->post['pid'] : 0);
 		$image_name=$this->post['tx_multishop_pi1']['jCropImageName'];
 		$image_size=$this->post['tx_multishop_pi1']['jCropImageSize'];
 		if (!empty($image_name)) {
@@ -163,7 +148,11 @@ switch ($this->ms['page']) {
 		@unlink($src);
 		copy($src.'-ori-'.$image_size, $src);
 		// delete coordinate
-		$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_product_crop_image_coordinate', 'image_filename=\''.$image_name.'\' and image_size=\''.$image_size.'\'');
+		if ($pid>0) {
+			$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_product_crop_image_coordinate', 'image_filename=\''.$image_name.'\' and image_size=\''.$image_size.'\' and products_id=\''.$pid.'\'');
+		} else {
+			$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_product_crop_image_coordinate', 'image_filename=\''.$image_name.'\' and image_size=\''.$image_size.'\'');
+		}
 		echo json_encode($return_data);
 		exit();
 		break;
@@ -1145,6 +1134,13 @@ switch ($this->ms['page']) {
 				}
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$pid.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+			if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
+				if (is_numeric($pid) && $pid>0) {
+					$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_product_crop_image_coordinate', 'image_filename=\''.addslashes($image_filename).'\' and products_id=\''.$pid.'\'');
+				} else {
+					$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_product_crop_image_coordinate', 'image_filename=\''.addslashes($image_filename).'\'');
+				}
 			}
 			$return_data['image_counter']=$img_counter;
 			$json=json_encode($return_data);

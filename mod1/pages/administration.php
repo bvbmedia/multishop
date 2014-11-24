@@ -226,6 +226,18 @@ switch ($_REQUEST['action']) {
 								}
 							}
 						}
+						if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
+							$crop_images_data=mslib_befe::getRecords($item['products_id'], 'tx_multishop_product_crop_image_coordinate', 'products_id');
+							if (is_array($crop_images_data) && count($crop_images_data)) {
+								foreach ($crop_images_data as $crop_image_data) {
+									$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
+									$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'products', $src_image_size);
+									// backup original
+									copy($src, $src.'-ori-'.$image_size);
+									mslib_befe::cropProductImage($src, $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h']);
+								}
+							}
+						}
 						if (count($updateArray)) {
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id=\''.$item['products_id'].'\'', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -418,7 +430,7 @@ switch ($_REQUEST['action']) {
 						} elseif ($paths[1]=='images' && $paths[2]=='manufacturers' && $paths[3]) {
 							$restore_files['manufacturers'][$paths[3]]=$fullpath.'/'.$path;
 						}
-//					}					
+//					}
 					}
 				}
 				$this->ms['MODULES']=mslib_befe::loadConfiguration($this->post['page_uid']);
@@ -1412,7 +1424,7 @@ if (count($shops)>0) {
 				</tr>
 			</table>
 		</form>
-		</fieldset>		
+		</fieldset>
 		';
 	}
 	if (count($shops)) {
@@ -1435,8 +1447,8 @@ if (count($shops)>0) {
 			$content.=$options;
 			$content.='</select>'."\n";
 			$content.='
-			<input name="action" type="hidden" value="configuration_actions" />	
-				<br /><input name="restore_configuration_file" type="file" /> <input name="Submit" type="submit" value="Restore" />	
+			<input name="action" type="hidden" value="configuration_actions" />
+				<br /><input name="restore_configuration_file" type="file" /> <input name="Submit" type="submit" value="Restore" />
 			</form>
 			</fieldset>
 			';
@@ -1459,7 +1471,7 @@ if (count($multishop_content_objects)>0) {
 						<ul>
 							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=clearMultishopCache">Clear Multishop Cache</a></li>
 							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=fulls_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
-						</ul>						
+						</ul>
 					</fieldset>
 					';
 	foreach ($multishop_content_objects as $content_object) {
@@ -1537,9 +1549,9 @@ if (count($multishop_content_objects)>0) {
 			var link=\''.$this->FULL_HTTP_URL.'\'+$(this).attr("href");
 			var checkboxes=$(this).parent().parent().parent().find(".selected_tables").serialize();
 			document.location.href=link+"&"+checkboxes;
-		});	
-	});	
-</script>	
+		});
+	});
+</script>
 							<h3>Restore</h3>
 							';
 			if (is_dir(PATH_site.'fileadmin/multishop_backup')) {
@@ -1555,7 +1567,7 @@ if (count($multishop_content_objects)>0) {
 				}
 			}
 			$content.='
-							
+
 							<input name="restore_file" type="file" /> <input name="Submit" type="submit" value="RESTORE" />
 							<BR>
 							<input name="skip_images" type="checkbox" value="1" /> Skip images<BR>

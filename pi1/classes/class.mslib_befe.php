@@ -601,6 +601,26 @@ class mslib_befe {
 			return $filename;
 		}
 	}
+	public function cropProductImage($filesrc, $coords_x, $coords_y, $coords_w, $coords_h) {
+		$targ_w=$coords_w; //$format[0];
+		$targ_h=$coords_h; //$format[1];
+		$jpeg_quality=90;
+		switch (exif_imagetype($filesrc)) {
+			case IMAGETYPE_GIF:
+				$img_r=imagecreatefromgif($filesrc);
+				break;
+			case IMAGETYPE_PNG:
+				$img_r=imagecreatefrompng($filesrc);
+				break;
+			case IMAGETYPE_JPEG:
+			default:
+				$img_r=imagecreatefromjpeg($filesrc);
+				break;
+		}
+		$dst_r=imagecreatetruecolor($targ_w, $targ_h);
+		imagecopyresampled($dst_r, $img_r, 0, 0, $coords_x, $coords_y, $targ_w, $targ_h, $coords_w, $coords_h);
+		imagejpeg($dst_r, $filesrc, $jpeg_quality);
+	}
 	public function countProducts($page_uid) {
 		if (!is_numeric($page_uid)) {
 			return false;

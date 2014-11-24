@@ -114,7 +114,7 @@ function cropEditorDialog(textTitle, textBody) {
                 class: \'msOkButton msBackendButton continueState arrowRight arrowPosLeft\',
                 click: function () {
                     $(this).dialog("close");
-                    $(this).hide();
+                    $(this).remove();
                 }
             }
         }
@@ -243,6 +243,7 @@ jQuery(document).ready(function($) {
 		}
 		' : '').'
 	});
+	'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 	$(document).on(\'click\', "#cropEditor", function(e) {
 		e.preventDefault();
 		var image_name=$(this).attr("rel");
@@ -332,7 +333,7 @@ jQuery(document).ready(function($) {
 		jQuery.ajax({
 			type:"POST",
 			url:href,
-			data: $(".jcrop_coords").serialize(),
+			data: $(".jcrop_coords").serialize() + "&pid='.(isset($this->get['pid']) && $this->get['pid']>0 ? $this->get['pid'] : '').'",
 			dataType: "json",
 			success: function(r) {
 				//do something with the sorted data
@@ -362,7 +363,7 @@ jQuery(document).ready(function($) {
 		jQuery.ajax({
 			type:"POST",
 			url:href,
-			data: $(".jcrop_coords").serialize(),
+			data: $(".jcrop_coords").serialize() + "&pid='.(isset($this->get['pid']) && $this->get['pid']>0 ? $this->get['pid'] : '').'",
 			dataType: "json",
 			success: function(r) {
 				//do something with the sorted data
@@ -386,6 +387,7 @@ jQuery(document).ready(function($) {
 			}
 		});
 	});
+	' : '').'
 	$(document).on(\'click\',".delete_product_images",function(e) {
 		e.preventDefault();
 		var tmp_img_attr=$(this).attr("rel").split(":");
@@ -1116,6 +1118,20 @@ if ($this->post) {
 		}
 	}
 	if ($prodid) {
+		if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
+			if ($update_product_images) {
+				foreach ($update_product_images as $key=>$value) {
+					$image_filename=$value;
+					$image_crop_data=mslib_befe::getRecord($image_filename, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('products_id=\'0\''));
+					if (is_array($image_crop_data) && $image_crop_data['id']>0) {
+						$updateArray=array();
+						$updateArray['products_id']=$prodid;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_product_crop_image_coordinate', 'id=\''.$image_crop_data['id'].'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				}
+			}
+		}
 		if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
 			// shipping/payment methods
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_method_mappings', 'products_id=\''.$prodid.'\'');
@@ -2118,7 +2134,9 @@ if ($this->post) {
 			$images_tab_block.='<div id="image_action'.$i.'">';
 			if ($_REQUEST['action']=='edit_product' && $product['products_image'.$i]) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'" />';
-				$images_tab_block.=' <a href="#" id="cropEditor" rel="'.$product['products_image'.$i].'"><span>crop</span></a>';
+				if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
+					$images_tab_block.=' <a href="#" id="cropEditor" rel="'.$product['products_image'.$i].'"><span>crop</span></a>';
+				}
 				$images_tab_block.=' <a href="#" class="delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 			}
 			$images_tab_block.='</div>';
@@ -2149,17 +2167,16 @@ if ($this->post) {
 					var filenameServer = responseJSON[\'filename\'];
 					var filenameLocationServer = responseJSON[\'fileLocation\'];
 					$("#ajax_products_image'.$i.'").val(filenameServer);
+					'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 					// hide the qq-upload status
-					//$("#qq-upload-list-ul'.$i.'").hide();
+					$("#qq-upload-list-ul'.$i.'").hide();
 					// display instantly uploaded image
 					$("#image_action'.$i.'").empty();
 					var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
 					new_image+=\' <a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
-					'.($_REQUEST['action']=='edit_product' && $this->get['pid'] ? '
 					new_image+=\' <a href="#" class="delete_product_images" rel="'.$i.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
-					' : '').'
 					$("#image_action'.$i.'").html(new_image);
-
+					' : '').'
 				},
 				debug: false
 			});';

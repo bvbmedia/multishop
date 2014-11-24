@@ -198,13 +198,15 @@ if (!$skipMultishopUpdates) {
 	if (!$qry) {
 		$str="CREATE TABLE `tx_multishop_product_crop_image_coordinate` (
 		  `id` int(11) auto_increment,
+		  `products_id` int(11) default '0',
 		  `image_filename` varchar(255) default '',
-		  `image_size` TINYINT(3) DEFAULT '0',
+		  `image_size` varchar(10) DEFAULT '',
 		  `coordinate_x` int(11) default '0',
 		  `coordinate_y` int(11) default '0',
 		  `coordinate_w` int(11) default '0',
 		  `coordinate_h` int(11) default '0',
 		  PRIMARY KEY (`id`),
+		  KEY `products_id` (`products_id`),
 		  KEY `image_filename` (`image_filename`),
 		  KEY `image_size` (`image_size`),
 		  KEY `coordinate_x` (`coordinate_x`),
