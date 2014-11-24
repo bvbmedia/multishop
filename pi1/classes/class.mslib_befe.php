@@ -2987,11 +2987,9 @@ class mslib_befe {
 	}
 	public function cacheLite($action='', $key='', $timeout='', $serialized=0, $content='') {
 		if ($action=='delete_all') {
-			if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {
-				if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache")) {
-					$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
-					exec($command);
-				}
+			if ($this->DOCUMENT_ROOT and !strstr($this->DOCUMENT_ROOT, '..') && is_dir($this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache")) {
+				$command="rm -rf ".$this->DOCUMENT_ROOT."uploads/tx_multishop/tmp/cache/*";
+				exec($command);
 			}
 		} else {
 			if (!class_exists('Cache_Lite')) {
