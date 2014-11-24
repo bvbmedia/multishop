@@ -210,14 +210,38 @@ if ($this->ADMIN_USER) {
 	ksort($this->languages);
 	// load enabled languages eof
 }
-$this->addBox=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'addBox', 'sDEFAULT');
-$this->hideHeader=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideHeader', 'sDEFAULT');
-$this->hidePagination=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hidePagination', 'sDEFAULT');
-$this->productsLimit=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'productsLimit', 'sDEFAULT');
-$this->hideIfNoResults=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideIfNoResults', 'sDEFAULT');
+if ($this->conf['addBox']) {
+	$this->addBox = $this->conf['addBox'];
+} else {
+	$this->addBox=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'addBox', 'sDEFAULT');
+}
+if ($this->conf['hideHeader']) {
+	$this->hideHeader = $this->conf['hideHeader'];
+} else {
+	$this->hideHeader=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideHeader', 'sDEFAULT');
+}
+if ($this->conf['hidePagination']) {
+	$this->hidePagination = $this->conf['hidePagination'];
+} else {
+	$this->hidePagination=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hidePagination', 'sDEFAULT');
+}
+if ($this->conf['productsLimit']) {
+	$this->productsLimit = $this->conf['productsLimit'];
+} else {
+	$this->productsLimit=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'productsLimit', 'sDEFAULT');
+}
+if ($this->conf['hideIfNoResults']) {
+	$this->hideIfNoResults = $this->conf['hideIfNoResults'];
+} else {
+	$this->hideIfNoResults=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideIfNoResults', 'sDEFAULT');
+}
+if ($this->conf['disableMetatags']) {
+	$this->disableMetatags = $this->conf['disableMetatags'];
+} else {
+	$this->disableMetatags=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'disableMetatags', 's_advanced');
+}
 // FlexForm custom settings
 $this->customSettings=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'customSettings', 's_advanced');
-$this->disableMetatags=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'disableMetatags', 's_advanced');
 if ($this->disableMetatags) {
 	$this->conf['disableMetatags']=1;
 }
@@ -237,8 +261,14 @@ if ($this->conf['customSettings']) {
 	}
 	$this->customSettings.=$this->conf['customSettings'];
 }
-$this->imageWidth=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'imageWidth', 's_specials');
-if (!$this->custom_script) {
+if ($this->conf['imageWidth']) {
+	$this->imageWidth = $this->conf['imageWidth'];
+} else {
+	$this->imageWidth=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'imageWidth', 's_specials');
+}
+if ($this->conf['custom_script']) {
+	$this->custom_script = $this->conf['custom_script'];
+} else {
 	$this->custom_script=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'custom_script', 's_misc');
 }
 if ($this->conf['custom_script']) {
