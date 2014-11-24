@@ -1140,6 +1140,7 @@
             <label index="feed_exporter_fields_label_invoice_reversal_status">Invoice reversal status</label>
             <label index="feed_exporter_fields_label_invoice_reversal_related_id">Invoice reversal related id</label>
             <label index="clear_list">Clear list</label>
+            <label index="customers_that_bought_this_product_also_bought">Customers that bought this product, also bought</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -2116,6 +2117,7 @@
             <label index="captcha_code_placeholder">type hier de code over</label>
             <label index="admin_export_invoices">Export invoices wizard</label>
             <label index="clear_list">Leeg lijst</label>
+            <label index="customers_that_bought_this_product_also_bought">Klanten die dit product hebben besteld, bestelden ook</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
@@ -4145,6 +4147,7 @@
             <label index="zip">PLZ</label>
             <label index="zip_is_required">PLZ ist ein Pflichtfeld.</label>
             <label index="clear_list">Liste löschen</label>
+            <label index="customers_that_bought_this_product_also_bought">Kunden, die diesen Artikel gekauft haben, kauften auch</label>
         </languageKey>
         <languageKey index="es" type="array">
             <label index="list_mode_1">Mode 1</label>
