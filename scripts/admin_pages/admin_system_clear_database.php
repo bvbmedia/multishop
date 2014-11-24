@@ -109,7 +109,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 			case 'products_attributes':
 				//TRUNCATE `tx_multishop_products_attributes_extra`;
 				//TRUNCATE `tx_multishop_products_options_values_extra`;
-			$string='TRUNCATE `tx_multishop_products_attributes`;
+				$string='TRUNCATE `tx_multishop_products_attributes`;
 				TRUNCATE `tx_multishop_products_attributes_download`;
 				TRUNCATE `tx_multishop_products_options`;
 				TRUNCATE `tx_multishop_products_options_values`;
@@ -125,52 +125,62 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$content.='<p>products_attributes has been cleared.</p>';
 				break;
 			case 'everything':
-				//TRUNCATE `tx_multishop_products_attributes_extra`;
-				$string='TRUNCATE `tx_multishop_categories`;
-				TRUNCATE `tx_multishop_categories_description`;
-				TRUNCATE `tx_multishop_manufacturers`;
-				TRUNCATE `tx_multishop_manufacturers_cms`;
-				TRUNCATE `tx_multishop_manufacturers_info`;
-				TRUNCATE `tx_multishop_products`;
-				'.(($this->ms['MODULES']['FLAT_DATABASE']) ? 'TRUNCATE `tx_multishop_products_flat`;' : '').'
-				TRUNCATE `tx_multishop_products_attributes`;
-				TRUNCATE `tx_multishop_products_attributes_download`;
-				TRUNCATE `tx_multishop_products_description`;
-				TRUNCATE `tx_multishop_products_faq`;
-				TRUNCATE `tx_multishop_products_options`;
-				TRUNCATE `tx_multishop_products_options_values`;
-				TRUNCATE `tx_multishop_products_options_values_extra`;
-				TRUNCATE `tx_multishop_products_options_values_to_products_options`;
-				TRUNCATE `tx_multishop_products_to_categories`;
-				TRUNCATE `tx_multishop_products_to_extra_options`;
-				TRUNCATE `tx_multishop_products_to_relative_products`;
-				TRUNCATE `tx_multishop_specials`;
-				TRUNCATE `tx_multishop_specials_sections`;
-				TRUNCATE `tx_multishop_attributes_options_groups`;
-				TRUNCATE `tx_multishop_attributes_options_groups_to_products_options`;
-				TRUNCATE `tx_multishop_undo_products`;';
+				$tables=array();
+				$tables[]='tx_multishop_categories';
+				$tables[]='tx_multishop_categories_description';
+				$tables[]='tx_multishop_manufacturers';
+				$tables[]='tx_multishop_manufacturers_cms';
+				$tables[]='tx_multishop_manufacturers_info';
+				$tables[]='tx_multishop_products';
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$tables[]='tx_multishop_products_flat';
+				}
+				$tables[]='tx_multishop_products_attributes';
+				$tables[]='tx_multishop_products_attributes_download';
+				$tables[]='tx_multishop_products_description';
+				$tables[]='tx_multishop_products_faq';
+				$tables[]='tx_multishop_products_options';
+				$tables[]='tx_multishop_products_options_values';
+				$tables[]='tx_multishop_products_options_values_extra';
+				$tables[]='tx_multishop_products_options_values_to_products_options';
+				$tables[]='tx_multishop_products_to_categories';
+				$tables[]='tx_multishop_products_to_extra_options';
+				$tables[]='tx_multishop_products_to_relative_products';
+				$tables[]='tx_multishop_specials';
+				$tables[]='tx_multishop_specials_sections';
+				$tables[]='tx_multishop_attributes_options_groups';
+				$tables[]='tx_multishop_attributes_options_groups_to_products_options';
+				$tables[]='tx_multishop_undo_products';
+
 				/*
-				TRUNCATE `tx_multishop_coupons`;
-				TRUNCATE `tx_multishop_import_jobs`;
-				TRUNCATE `tx_multishop_invoices`;
-				TRUNCATE `tx_multishop_orders`;
-				TRUNCATE `tx_multishop_orders_products`;
-				TRUNCATE `tx_multishop_orders_products_attributes`;
-				TRUNCATE `tx_multishop_orders_status_history`;
-				TRUNCATE `tx_multishop_payment_methods`;
-				TRUNCATE `tx_multishop_payment_methods_description`;
-				TRUNCATE `tx_multishop_payment_shipping_mappings`;
-				TRUNCATE `tx_multishop_payment_transactions`;
-				TRUNCATE `tx_multishop_products_method_mappings`;
-				TRUNCATE `tx_multishop_shipping_methods_costs`;
-				TRUNCATE `tx_multishop_shipping_methods_description`;
-				TRUNCATE `tx_multishop_stores`;
-				TRUNCATE `tx_multishop_stores_description`;
+				$tables[]='tx_multishop_coupons';
+				$tables[]='tx_multishop_import_jobs';
+				$tables[]='tx_multishop_invoices';
+				$tables[]='tx_multishop_orders';
+				$tables[]='tx_multishop_orders_products';
+				$tables[]='tx_multishop_orders_products_attributes';
+				$tables[]='tx_multishop_orders_status_history';
+				$tables[]='tx_multishop_payment_methods';
+				$tables[]='tx_multishop_payment_methods_description';
+				$tables[]='tx_multishop_payment_shipping_mappings';
+				$tables[]='tx_multishop_payment_transactions';
+				$tables[]='tx_multishop_products_method_mappings';
+				$tables[]='tx_multishop_shipping_methods_costs';
+				$tables[]='tx_multishop_shipping_methods_description';
+				$tables[]='tx_multishop_stores';
+				$tables[]='tx_multishop_stores_description';
 				*/
-				$array=explode("\n", $string);
-				foreach ($array as $item) {
-					if ($item) {
-						$qry=$GLOBALS['TYPO3_DB']->sql_query($item);
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_system_clear_database.php']['clearEverythingPreProc'])) {
+					$params=array(
+						'tables'=>&$tables
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_system_clear_database.php']['clearEverythingPreProc'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				foreach ($tables as $table) {
+					if ($table) {
+						$qry=$GLOBALS['TYPO3_DB']->sql_query('TRUNCATE '.$table);
 					}
 				}
 				foreach ($this->ms['image_paths']['products'] as $key=>$path) {
