@@ -1431,7 +1431,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	$data['resultSet']=$results;
 	$content=json_encode($data);
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
-		error_log($content);
 		$Cache_Lite->save($content);
 	}
 }
