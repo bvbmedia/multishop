@@ -1768,6 +1768,28 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Display popup link in details page to show shipping cost',
+	'configuration_key'=>'DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_DETAIL_PAGE',
+	'configuration_value'=>'0',
+	'description'=>'Display popup link in details page to show shipping cost',
+	'group_id'=>'7',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Display shipping cost in shopping cart page',
+	'configuration_key'=>'DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE',
+	'configuration_value'=>'0',
+	'description'=>'Display shipping cost in shopping cart page',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

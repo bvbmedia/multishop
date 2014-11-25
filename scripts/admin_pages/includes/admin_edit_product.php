@@ -67,6 +67,12 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 '.implode("\n", $jsSelect2InitialValue).'
 var languages=[];
 languages=['.implode(",", $js_languages).'];
+function limitText(limitField, limitNum) {
+    if (limitField.value.length > limitNum) {
+        limitField.value = limitField.value.substring(0, limitNum);
+    }
+}
+'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 function activate_jcrop_js(aspecratio) {
 	var jcrop_api;
 	var bounds, boundx, boundy;
@@ -86,11 +92,6 @@ function updateCoords(c) {
 	$(\'#jCropY\').val(c.y);
 	$(\'#jCropW\').val(c.w);
 	$(\'#jCropH\').val(c.h);
-}
-function limitText(limitField, limitNum) {
-    if (limitField.value.length > limitNum) {
-        limitField.value = limitField.value.substring(0, limitNum);
-    }
 }
 function cropEditorDialog(textTitle, textBody) {
     var dialog = $(\'<div/>\', {
@@ -120,6 +121,7 @@ function cropEditorDialog(textTitle, textBody) {
         }
     });
 }
+' : '').'
 jQuery(document).ready(function($) {
 	var text_input = $(\'#products_name_0\');
 	var categoriesIdSearchTerm=[];
