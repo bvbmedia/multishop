@@ -1,44 +1,23 @@
 ###PAGINATION###
 <h1 class="title"><!--TYPO3SEARCH_begin-->###PRODUCTS_NAME###<!--TYPO3SEARCH_end--></h1>
 <div class="prod-img-details-outer">
-<div class="prod-img-details">
+    <div class="prod-img-details">
         ###PRODUCTS_IMAGE###
         ###PRODUCTS_IMAGE_MORE###
-</div>
+    </div>
 </div>
 <div class="prod-details-desc">
-<!--TYPO3SEARCH_begin-->
-	###PRODUCTS_DESCRIPTION###
-<!--TYPO3SEARCH_end-->
+    <!--TYPO3SEARCH_begin-->
+    ###PRODUCTS_DESCRIPTION###
+    <!--TYPO3SEARCH_end-->
 </div>
 ###PRODUCTS_PRICE###
 ###PRODUCTS_SPECIAL_PRICE###
-###SHIPPING_COST_POPUP###
 ###QUANTITY###
 <div class="prod-details-attr">###PRODUCTS_ATTRIBUTES###</div>
 <div class="prod-details-rel">###PRODUCTS_RELATIVES###</div>
 <div class="prod-details-extra">###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###</div>
 <div id="bottom-navigation">
-###BACK_BUTTON###
-###ADD_TO_CART_BUTTON###
+    ###BACK_BUTTON###
+    ###ADD_TO_CART_BUTTON###
 </div>
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	if ($("#quantity").val() == "") {
-		$("#quantity").val("1");
-	}
-	$(".qty_minus").click(function() {
-		var qty = parseInt($("#quantity").val());
-		if (qty > 1) {
-			var new_val = parseInt(qty - 1);
-			$("#quantity").val(new_val);
-		}
-	});
-	$(".qty_plus").click(function() {
-		var qty = parseInt($("#quantity").val());
-		var new_val = parseInt(qty + 1);
-		$("#quantity").val(new_val);
-	});
-    ###SHIPPING_COST_POPUP_JS###
-});
-</script>

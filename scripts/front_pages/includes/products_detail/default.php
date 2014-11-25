@@ -3,6 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $output=array();
+$js_detail_page_triggers=array();
 if ($this->ADMIN_USER) {
 	$include_disabled_products=1;
 } else {
@@ -282,48 +283,63 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_KEYWORDS###']=$product['products_meta_keywords'];
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
 	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
-	// shipping cost popup
-	$markerArray['###SHIPPING_COST_POPUP###']='';
-	$markerArray['###SHIPPING_COST_POPUP_JS###']='';
-	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_DETAIL_PAGE']) {
-		$markerArray['###SHIPPING_COST_POPUP###']='<div class="shipping_cost_popup_link_wrapper"><a href="#" id="show_shipping_cost_table"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
-		$markerArray['###SHIPPING_COST_POPUP_JS###']='
-		$(document).on("click", "#show_shipping_cost_table", function(e) {
-			e.preventDefault();
-			jQuery.ajax({
-				url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
-				data: \'tx_multishop_pi1[pid]=\' + $("#products_id").val() + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
-				type: \'post\',
-				dataType: \'json\',
-				success: function (j) {
-					if (j) {
-						var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
-						shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
-						shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_header">\';
-						shipping_cost_popup+=\'<table>\';
-						shipping_cost_popup+=\'<tr>\';
-						shipping_cost_popup+=\'<td colspan="2">\' + j.products_name + \'<td>\';
-						shipping_cost_popup+=\'</tr>\';
-						shipping_cost_popup+=\'<tr>\';
-						shipping_cost_popup+=\'<td>'.$this->pi_getLL('shipping_and_handling_cost_overview').'<td>\';
-						shipping_cost_popup+=\'<td>\' + j.shipping_costs_display + \'<td>\';
-						shipping_cost_popup+=\'</tr>\';
-						shipping_cost_popup+=\'<tr>\';
-						shipping_cost_popup+=\'<td>'.$this->pi_getLL('deliver_to').'<td>\';
-						shipping_cost_popup+=\'<td>\' + j.deliver_to + \'<td>\';
-						shipping_cost_popup+=\'</tr>\';
-						shipping_cost_popup+=\'<tr>\';
-						shipping_cost_popup+=\'<td>'.$this->pi_getLL('deliver_by').'<td>\';
-						shipping_cost_popup+=\'<td>\' + j.deliver_by + \'<td>\';
-						shipping_cost_popup+=\'</tr>\';
-						shipping_cost_popup+=\'</table>\';
-						shipping_cost_popup+=\'</div>\';
-						shipping_cost_popup+=\'</div>\';
-						msDialog("'.$this->pi_getLL('shipping_costs').' via " + j.shipping_method.deliver_by, shipping_cost_popup);
-					}
-				}
-			});
+	$js_detail_page_triggers[]='
+		if ($("#quantity").val() == "") {
+			$("#quantity").val("1");
+		}
+		$(".qty_minus").click(function() {
+			var qty = parseInt($("#quantity").val());
+			if (qty > 1) {
+				var new_val = parseInt(qty - 1);
+				$("#quantity").val(new_val);
+			}
 		});
+		$(".qty_plus").click(function() {
+			var qty = parseInt($("#quantity").val());
+			var new_val = parseInt(qty + 1);
+			$("#quantity").val(new_val);
+		});
+	';
+	// shipping cost popup
+	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_DETAIL_PAGE']) {
+		$markerArray['###PRODUCTS_SPECIAL_PRICE###'].='<div class="shipping_cost_popup_link_wrapper"><a href="#" id="show_shipping_cost_table"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
+		$js_detail_page_triggers[]='
+			$(document).on("click", "#show_shipping_cost_table", function(e) {
+				e.preventDefault();
+				jQuery.ajax({
+					url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
+					data: \'tx_multishop_pi1[pid]=\' + $("#products_id").val() + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
+					type: \'post\',
+					dataType: \'json\',
+					success: function (j) {
+						if (j) {
+							var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
+							shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
+							shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
+							shipping_cost_popup+=\'<table id="product_shippingcost_popup_table">\';
+							shipping_cost_popup+=\'<tr>\';
+							shipping_cost_popup+=\'<td colspan="2" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'<td>\';
+							shipping_cost_popup+=\'</tr>\';
+							shipping_cost_popup+=\'<tr>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'<td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.shipping_costs_display + \'<td>\';
+							shipping_cost_popup+=\'</tr>\';
+							shipping_cost_popup+=\'<tr>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'<td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_to + \'<td>\';
+							shipping_cost_popup+=\'</tr>\';
+							shipping_cost_popup+=\'<tr>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_by').'<td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by + \'<td>\';
+							shipping_cost_popup+=\'</tr>\';
+							shipping_cost_popup+=\'</table>\';
+							shipping_cost_popup+=\'</div>\';
+							shipping_cost_popup+=\'</div>\';
+							msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup);
+						}
+					}
+				});
+			});
 		';
 	}
 	$plugins_extra_content=array();
@@ -343,6 +359,15 @@ if (!$product['products_id']) {
 	if (count($plugins_extra_content)) {
 		$plugin_extra_content=implode("\n", $plugins_extra_content);
 		$markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###']=$plugin_extra_content;
+	}
+	if (count($js_detail_page_triggers)) {
+		$output_array['meta']['details_page_js']='
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+			'.implode("\n", $js_detail_page_triggers).'
+			});
+			</script>
+		';
 	}
 	// custom hook that can be controlled by third-party plugin eof
 	$content.=$output['top_content'].'<form action="'.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart&products_id='.$product['products_id']).'" method="post" name="shopping_cart" id="add_to_shopping_cart_form" enctype="multipart/form-data"><div id="products_detail">'.$this->cObj->substituteMarkerArray($template, $markerArray).'</div><input name="tx_multishop_pi1[cart_item]" type="hidden" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['cart_item']).'" /></form>';
