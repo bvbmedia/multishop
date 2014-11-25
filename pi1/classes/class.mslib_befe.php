@@ -3358,15 +3358,21 @@ class mslib_befe {
 	}
 	// utf-8 support
 	public function strtoupper($value) {
-		return $GLOBALS['LANG']->csConvObj->conv_case($GLOBALS['LANG']->charSet, $value, 'toUpper');
+		$csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
+		$charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
+		return $csConvObj->conv_case($charset, $value, 'toUpper');
 	}
 	// utf-8 support
 	public function strtolower($value) {
-		return $GLOBALS['LANG']->csConvObj->conv_case($GLOBALS['LANG']->charSet, $value, 'toLower');
+		$csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
+		$charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
+		return $csConvObj->conv_case($charset, $value, 'toLower');
 	}
 	// utf-8 support
 	public function strlen($value) {
-		return $GLOBALS['LANG']->csConvObj->strlen($GLOBALS['LANG']->charSet, $value);
+		$csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
+		$charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
+		return $csConvObj->strlen($charset, $value);
 	}
 	// weight list for shipping costs page
 	public function createSelectboxWeightsList($selected='', $start_value='', $weights_list=array()) {
