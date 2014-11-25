@@ -46,7 +46,7 @@ foreach ($categories as $cat) {
 	$innerContent='';
 	$innerContent.='<div>';
 	$innerContent.='<table width="100%" border="0" align="center" class="msadmin_border msZebraTable" id="admin_modules_listing">';
-	$innerContent.='<tr><td colspan="'.$colspan.'" class="module_heading">'.t3lib_div::strtoupper($cat['gtitle']).' (ID: '.$cat['gid'].')</div></td></tr>';
+	$innerContent.='<tr><td colspan="'.$colspan.'" class="module_heading">'.mslib_befe::strtoupper($cat['gtitle']).' (ID: '.$cat['gid'].')</div></td></tr>';
 	$innerContent.='<tr>
 	<th>'.$this->pi_getLL('name').'</th>
 	<th>'.$this->pi_getLL('current_value').'</th>
@@ -113,6 +113,6 @@ foreach ($tabs as $key=>$value) {
 $content.='
     </div>
 </div>';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

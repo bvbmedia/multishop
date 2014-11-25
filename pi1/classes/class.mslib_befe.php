@@ -3047,8 +3047,8 @@ class mslib_befe {
 		$languages=array();
 		$languagesLabels=array();
 		// Set default language
-		$defaultLanguageISOCode=trim($this->conf['defaultLanguageISOCode']) ? t3lib_div::strtoupper(trim($this->conf['defaultLanguageISOCode'])) : 'EN';
-		$this->ms['MODULES']['COUNTRY_ISO_NR']=trim($this->conf['defaultCountryISOCode']) ? t3lib_div::strtoupper(trim($this->conf['defaultCountryISOCode'])) : '';
+		$defaultLanguageISOCode=trim($this->conf['defaultLanguageISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultLanguageISOCode'])) : 'EN';
+		$this->ms['MODULES']['COUNTRY_ISO_NR']=trim($this->conf['defaultCountryISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultCountryISOCode'])) : '';
 		$languages[]=t3lib_div::strtolower($defaultLanguageISOCode).($this->ms['MODULES']['COUNTRY_ISO_NR'] ? '_'.$this->ms['MODULES']['COUNTRY_ISO_NR'] : '');
 		$this->languagesUids[]='0';
 		// Get the language codes and labels for the languages set in the plugin list

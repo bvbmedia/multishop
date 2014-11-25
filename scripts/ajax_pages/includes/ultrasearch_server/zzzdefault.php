@@ -365,8 +365,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$results['pagination']['first']=false;
 	} else {
 		$results['pagination']['prev']=$p-1;
-		$results['pagination']['prevText']=t3lib_div::strtoupper($this->pi_getLL('previous'));
-		$results['pagination']['first']=t3lib_div::strtoupper($this->pi_getLL('first'));
+		$results['pagination']['prevText']=mslib_befe::strtoupper($this->pi_getLL('previous'));
+		$results['pagination']['first']=mslib_befe::strtoupper($this->pi_getLL('first'));
 	}
 	$results['pagination']['curent_p']=$p;
 	if ($totpage==$p) {
@@ -374,8 +374,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$results['pagination']['last']=false;
 	} else {
 		$results['pagination']['next']=$p+1;
-		$results['pagination']['nextText']=t3lib_div::strtoupper($this->pi_getLL('next'));
-		$results['pagination']['last']=t3lib_div::strtoupper($this->pi_getLL('last'));
+		$results['pagination']['nextText']=mslib_befe::strtoupper($this->pi_getLL('next'));
+		$results['pagination']['last']=mslib_befe::strtoupper($this->pi_getLL('last'));
 	}
 	$content=json_encode($results, ENT_NOQUOTES);
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {

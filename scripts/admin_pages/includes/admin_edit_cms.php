@@ -250,7 +250,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
 		<div class="account-field">
-		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
+		<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}

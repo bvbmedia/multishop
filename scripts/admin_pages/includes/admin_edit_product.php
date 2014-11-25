@@ -1812,7 +1812,7 @@ if ($this->post) {
 			$markerArray=array();
 			$markerArray['LANGUAGE_UID']=$language['uid'];
 			$markerArray['PAGE_UID']=$this->shop_pid;
-			$markerArray['LABEL_LANGUAGE']=t3lib_div::strtoupper($this->pi_getLL('language'));
+			$markerArray['LABEL_LANGUAGE']=mslib_befe::strtoupper($this->pi_getLL('language'));
 			$markerArray['LANGUAGE_LABEL']=$language_label;
 			if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 				$markerArray['LOCAL_PRIMARY_PRODUCTS_CATEGORIES']='<input type="hidden" name="local_primary_product_categories" id="local_primary_product_categories" value="'.$local_primary_product_categories.'">';
@@ -1958,7 +1958,7 @@ if ($this->post) {
 				$staffel_price_block.='
 						<div class="account-field toggle_advanced_option" id="msEditProductInputStaffelPrice">
 							<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
-							<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
+							<input type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
 							<label>&nbsp;</label>
 							<div class="product_staffel_price">
 								<table cellpadding="0" cellspacing="0">
@@ -2031,7 +2031,7 @@ if ($this->post) {
 			$language_lable.=''.$language['title'];
 			$options_tab_virtual_product.='
 				<div class="account-field toggle_advanced_option msEditProductLanguageDivider" id="msEditProductInputLanguageDivider_'.$language['uid'].'">
-					<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>
+					<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
 					<strong>'.$language_lable.'</strong>
 				</div>
 				<div class="account-field toggle_advanced_option" id="msEditProductInputVirtualProductFile_'.$language['uid'].'">
@@ -2206,7 +2206,7 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$meta_tags_block.='
 			<div class="account-field" id="msEditProductInputMeta_'.$language['uid'].'">
-			<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
+			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$meta_tags_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
@@ -3005,8 +3005,8 @@ if ($this->post) {
 				<input type="hidden" name="cid" id="cid" value="'.$this->get['cid'].'" />
 				</div>
 				<div id="cp_buttons">
-					<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
-					<input type="button" value="'.t3lib_div::strtoupper($this->pi_getLL('admin_duplicate_product')).'" id="dp_product" />
+					<input type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
+					<input type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_duplicate_product')).'" id="dp_product" />
 				</div>
 				<div id="has_cd">
 				</div>';
@@ -3096,7 +3096,7 @@ if ($this->post) {
 							if (!empty($old_products_to_shop_categories)) {
 								if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 									// build the shops tab if the link for categories in other shop exist
-									$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar_'.$pageinfo['uid'].'"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.t3lib_div::strtoupper($pageinfo['title']).'</a></li>';
+									$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar_'.$pageinfo['uid'].'"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.mslib_befe::strtoupper($pageinfo['title']).'</a></li>';
 									$tmp_categories_id=explode(',', $old_products_to_shop_categories);
 									$tabs_content=array();
 									$tabs_array=array();
@@ -3135,7 +3135,7 @@ if ($this->post) {
 											}
 											$textarea_short_description_class=($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="text expand20-100" ');
 											$details_content_multishops.='<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-													<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>
+													<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
 													<strong>'.$language_label.'</strong>
 												</div>
 												<div class="account-field" id="msEditProductInputName">
@@ -3192,7 +3192,7 @@ if ($this->post) {
 										$tmpcontent2='<li id="products_info_shops'.$pageinfo['uid'].'_'.$tmp_category_id.'" alt="" class="products_info_shops odd_group_row">';
 										$tmpcontent2.='<span class="shop_name" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'">';
 										$tmpcontent2.='<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo]['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$shop_checkbox.' />&nbsp;';
-										$tmpcontent2.='<label for="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.t3lib_div::strtoupper($tmp_category_name).'</label><a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
+										$tmpcontent2.='<label for="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.mslib_befe::strtoupper($tmp_category_name).'</label><a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
 										$tmpcontent2.='</span>';
 										$tmpcontent2.='<div class="custom_products_description" id="enableMultipleShopsCustomProductInfoCheckbox'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$custom_products_description_block.'>';
 										$tmpcontent2.=$details_content_multishops;
@@ -3222,7 +3222,7 @@ if ($this->post) {
 							}
 							$tmpcontent.='<div class="msAttributes">
 							<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$main_shop_checkbox.' />
-							<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.t3lib_div::strtoupper($pageinfo['title']).'</label>
+							<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.mslib_befe::strtoupper($pageinfo['title']).'</label>
 							<div class="msEditProductInputMultipleShopCategory" id="msEditProductInputMultipleShopCategory'.$pageinfo['uid'].'"'.$main_select2_block_visibility.'>
 								<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$current_products_to_shop_categories.'" />
 								<input name="tx_multishop_pi1[old_products_to_shop_categories]['.$pageinfo['uid'].']" type="hidden" value="'.$old_products_to_shop_categories.'" />
@@ -3363,7 +3363,7 @@ if ($this->post) {
 						'.(!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? 'textarea_short_description_params=\'onKeyDown="limitText(this,255);" onKeyUp="limitText(this,255);"\';'."\n" : '').'
 						var textarea_short_description_class=\''.($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="text expand20-100"').'\';
 						details_content+=\'<div class="account-field toggle_advanced_option msEditProductLanguageDivider">\';
-						details_content+=\'<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>\';
+						details_content+=\'<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>\';
 						details_content+=\'<strong>\' + language_label + \'</strong>\';
 						details_content+=\'</div>\';
 						details_content+=\'<div class="account-field" id="msEditProductInputName">\';
@@ -3617,8 +3617,8 @@ if ($this->post) {
 		$subpartArray['###LABEL_HEADING_TAB_OPTION###']=$this->pi_getLL('admin_product_options');
 		$subpartArray['###LABEL_VAT_RATE###']=$this->pi_getLL('admin_vat_rate');
 		$subpartArray['###INPUT_VATE_RATE###']=$input_vat_rate;
-		$subpartArray['###LABEL_PRICE###']=t3lib_div::strtoupper($this->pi_getLL('admin_price'));
-		$subpartArray['###LABEL_NORMAL_PRICE###']=t3lib_div::strtoupper($this->pi_getLL('admin_normal_price'));
+		$subpartArray['###LABEL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_price'));
+		$subpartArray['###LABEL_NORMAL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_normal_price'));
 		$subpartArray['###LABEL_CURRENCY0###']=mslib_fe::currency();
 		$subpartArray['###LABEL_CURRENCY1###']=mslib_fe::currency();
 		$subpartArray['###LABEL_CURRENCY2###']=mslib_fe::currency();
@@ -3634,14 +3634,14 @@ if ($this->post) {
 		$subpartArray['###VALUE_EXCL_VAT_PRICE###']=htmlspecialchars($price_excl_vat_display);
 		$subpartArray['###VALUE_INCL_VAT_PRICE###']=htmlspecialchars($price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_PRICE###']=htmlspecialchars($product['products_price']);
-		$subpartArray['###LABEL_SPECIAL_PRICE###']=t3lib_div::strtoupper($this->pi_getLL('admin_specials_price'));
+		$subpartArray['###LABEL_SPECIAL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_specials_price'));
 		$subpartArray['###VALUE_EXCL_VAT_SPECIAL_PRICE###']=htmlspecialchars($special_price_excl_vat_display);
 		$subpartArray['###VALUE_INCL_VAT_SPECIAL_PRICE###']=htmlspecialchars($special_price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_SPECIAL_PRICE###']=htmlspecialchars($product['specials_new_products_price']);
-		$subpartArray['###LABEL_SPECIAL_PRICE_START###']=t3lib_div::strtoupper($this->pi_getLL('special_price_start'));
+		$subpartArray['###LABEL_SPECIAL_PRICE_START###']=mslib_befe::strtoupper($this->pi_getLL('special_price_start'));
 		$subpartArray['###VALUE_SPECIAL_PRICE_START_VISUAL###']=$product['specials_start_date_visual'];
 		$subpartArray['###VALUE_SPECIAL_PRICE_START_SYS###']=$product['specials_start_date_sys'];
-		$subpartArray['###LABEL_SPECIAL_PRICE_EXPIRED###']=t3lib_div::strtoupper($this->pi_getLL('special_price_expired'));
+		$subpartArray['###LABEL_SPECIAL_PRICE_EXPIRED###']=mslib_befe::strtoupper($this->pi_getLL('special_price_expired'));
 		$subpartArray['###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###']=$product['specials_expired_date_visual'];
 		$subpartArray['###VALUE_SPECIAL_PRICE_EXPIRED_SYS###']=$product['specials_expired_date_sys'];
 		$subpartArray['###LABEL_CAPITAL_PRICE###']=$this->pi_getLL('capital_price');
@@ -3649,11 +3649,11 @@ if ($this->post) {
 		$subpartArray['###VALUE_INCL_VAT_CAPITAL_PRICE###']=htmlspecialchars($capital_price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_CAPITAL_PRICE###']=htmlspecialchars($product['product_capital_price']);
 		$subpartArray['###INPUT_STAFFEL_PRICE_BLOCK###']=$staffel_price_block;
-		$subpartArray['###LABEL_STOCK###']=t3lib_div::strtoupper($this->pi_getLL('admin_stock'));
+		$subpartArray['###LABEL_STOCK###']=mslib_befe::strtoupper($this->pi_getLL('admin_stock'));
 		$subpartArray['###VALUE_STOCK###']=$product['products_quantity'];
-		$subpartArray['###LABEL_THRESHOLD_QTY###']=t3lib_div::strtoupper($this->pi_getLL('admin_alert_quantity_threshold', 'Alert stock threshold'));
+		$subpartArray['###LABEL_THRESHOLD_QTY###']=mslib_befe::strtoupper($this->pi_getLL('admin_alert_quantity_threshold', 'Alert stock threshold'));
 		$subpartArray['###VALUE_THRESHOLD_QTY###']=$product['alert_quantity_threshold'];
-		$subpartArray['###LABEL_DATE_AVAILABLE###']=t3lib_div::strtoupper($this->pi_getLL('products_date_available'));
+		$subpartArray['###LABEL_DATE_AVAILABLE###']=mslib_befe::strtoupper($this->pi_getLL('products_date_available'));
 		if ($product['products_date_available']==0 || empty($product['products_date_available'])) {
 			$product['products_date_available_sys']='';
 			$product['products_date_available_visual']='';
@@ -3690,7 +3690,7 @@ if ($this->post) {
 		$subpartArray['###VALUE_STARTTIME_SYS###']=$product['starttime_sys'];
 		$subpartArray['###VALUE_ENDTIME_VISUAL###']=$product['endtime_visual'];
 		$subpartArray['###VALUE_ENDTIME_SYS###']=$product['endtime_sys'];
-		$subpartArray['###LABEL_DATE_ADDED###']=t3lib_div::strtoupper($this->pi_getLL('date_added'));
+		$subpartArray['###LABEL_DATE_ADDED###']=mslib_befe::strtoupper($this->pi_getLL('date_added'));
 		$subpartArray['###VALUE_DATE_ADDED_VISUAL###']=$product['products_date_added_visual'];
 		$subpartArray['###VALUE_DATE_ADDED_SYS###']=$product['products_date_added_sys'];
 		$subpartArray['###LABEL_PRODUCT_MODEL###']=$this->pi_getLL('admin_model');

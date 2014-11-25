@@ -294,6 +294,6 @@ $subpartArray['###NORESULTS###']=$noresults;
 $subpartArray['###ADMIN_LABEL_TABS_MANUFACTURERS###']=$this->pi_getLL('admin_label_tabs_manufacturers');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<div class="float_right"><div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id'].'&action=add_manufacturer', 1).'" class="admin_menu_add label">'.t3lib_div::strtoupper($this->pi_getLL('add_manufacturer')).'</a></div></div>';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<div class="float_right"><div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id'].'&action=add_manufacturer', 1).'" class="admin_menu_add label">'.mslib_befe::strtoupper($this->pi_getLL('add_manufacturer')).'</a></div></div>';
+$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 ?>

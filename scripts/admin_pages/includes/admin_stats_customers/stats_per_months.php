@@ -138,7 +138,7 @@ $content.='</tr>';
 $content.='
 </table>';
 $content.='<p class="extra_padding_bottom">';
-$content.='<a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a>';
+$content.='<a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a>';
 $content.='
 </p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';

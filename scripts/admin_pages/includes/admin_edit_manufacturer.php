@@ -169,7 +169,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	foreach ($this->languages as $key=>$language) {
 		$markerArray=array();
 		$markerArray['LANGUAGE_UID']=$language['uid'];
-		$markerArray['LABEL_MANUFACTURER_LANGUAGE']=t3lib_div::strtoupper($this->pi_getLL('language'));
+		$markerArray['LABEL_MANUFACTURER_LANGUAGE']=mslib_befe::strtoupper($this->pi_getLL('language'));
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$markerArray['MANUFACTURER_CONTENT_FLAG']='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		} else {
@@ -178,15 +178,15 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$markerArray['MANUFACTURER_CONTENT_TITLE']=$language['title'];
 		$markerArray['LABEL_MANUFACTURER_SHORT_DESCRIPTION']=$this->pi_getLL('admin_short_description');
 		$markerArray['VALUE_MANUFACTURER_SHORT_DESCRIPTION']=htmlspecialchars($lngman[$language['uid']]['shortdescription']);
-		$markerArray['LABEL_MANUFACTURER_CONTENT']=t3lib_div::strtoupper($this->pi_getLL('content'));
+		$markerArray['LABEL_MANUFACTURER_CONTENT']=mslib_befe::strtoupper($this->pi_getLL('content'));
 		$markerArray['VALUE_MANUFACTURER_CONTENT']=htmlspecialchars($lngman[$language['uid']]['content']);
-		$markerArray['LABEL_MANUFACTURER_CONTENT_FOOTER']=t3lib_div::strtoupper($this->pi_getLL('content')).' '.t3lib_div::strtoupper($this->pi_getLL('bottom'));
+		$markerArray['LABEL_MANUFACTURER_CONTENT_FOOTER']=mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('bottom'));
 		$markerArray['VALUE_MANUFACTURER_CONTENT_FOOTER']=htmlspecialchars($lngman[$language['uid']]['content_footer']);
 		$manufacturersContent.=$this->cObj->substituteMarkerArray($subparts['manufacturers_content'], $markerArray, '###|###');
 		// manufacturers meta
 		$markerArray=array();
 		$markerArray['LANGUAGE_UID']=$language['uid'];
-		$markerArray['LABEL_MANUFACTURER_META_LANGUAGE']=t3lib_div::strtoupper($this->pi_getLL('language'));
+		$markerArray['LABEL_MANUFACTURER_META_LANGUAGE']=mslib_befe::strtoupper($this->pi_getLL('language'));
 		$markerArray['MANUFACTURER_META_TITLE']=$language['title'];
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$markerArray['MANUFACTURER_META_FLAG']='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
@@ -208,10 +208,10 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 	}
 	if ($_REQUEST['action']=='add_manufacturer') {
-		$subpartArray['###MANUFACTURER_FORM_HEADING###']=t3lib_div::strtoupper($this->pi_getLL('add_manufacturer'));
+		$subpartArray['###MANUFACTURER_FORM_HEADING###']=mslib_befe::strtoupper($this->pi_getLL('add_manufacturer'));
 	} else {
 		if ($_REQUEST['action']=='edit_manufacturer') {
-			$subpartArray['###MANUFACTURER_FORM_HEADING###']=t3lib_div::strtoupper($this->pi_getLL('edit_manufacturer'));
+			$subpartArray['###MANUFACTURER_FORM_HEADING###']=mslib_befe::strtoupper($this->pi_getLL('edit_manufacturer'));
 		}
 	}
 	if ($manufacturer['status'] or $_REQUEST['action']=='add_manufacturer') {

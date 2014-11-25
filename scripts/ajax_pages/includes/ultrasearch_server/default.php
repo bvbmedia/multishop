@@ -288,7 +288,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['value']=$this->post['tx_multishop_pi1']['q'];
 			break;
 			case 'categories':
-				$formField['caption']='Categories';
+				$formField['caption']=$this->pi_getLL('categories');
 				$array=explode(":",$field);
 				$list_type=$array[1];
 				if (!isset($this->get['categories_id']) || $this->get['categories_id']=='') {
@@ -455,6 +455,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$formField['elements']=$formFieldItem;
 						}
 					}
+				}
+				if (!count($formField['elements'])) {
+					unset($formField);
 				}
 				break;
 			case 'manufacturers':
@@ -639,6 +642,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					unset($formField);
 				} else {
 					$formField['elements']=$formFieldItem;
+				}
+				if (!count($formField['elements'])) {
+					unset($formField);
 				}
 			break;
 			case 'productslisting_filter':
@@ -928,6 +934,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$formField['elements']=$formFieldItem;
 						}
 					}
+				}
+				if (!count($formField['elements'])) {
+					unset($formField);
 				}
 				//end attributs options
 				break;
@@ -1422,12 +1431,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	} else {
 		$results['pagination']['next'] = $p + 1;
 	}
-	$results['pagination']['firstText']=t3lib_div::strtoupper($this->pi_getLL('first'));
-	$results['pagination']['first']=t3lib_div::strtoupper($this->pi_getLL('first'));
-	$results['pagination']['prevText'] = t3lib_div::strtoupper($this->pi_getLL('previous'));
-	$results['pagination']['nextText'] = t3lib_div::strtoupper($this->pi_getLL('next'));
-	$results['pagination']['last']=t3lib_div::strtoupper($this->pi_getLL('last'));
-	$results['pagination']['lastText']=t3lib_div::strtoupper($this->pi_getLL('last'));
+	$results['pagination']['firstText']=mslib_befe::strtoupper($this->pi_getLL('first'));
+	$results['pagination']['first']=mslib_befe::strtoupper($this->pi_getLL('first'));
+	$results['pagination']['prevText'] = mslib_befe::strtoupper($this->pi_getLL('previous'));
+	$results['pagination']['nextText'] = mslib_befe::strtoupper($this->pi_getLL('next'));
+	$results['pagination']['last']=mslib_befe::strtoupper($this->pi_getLL('last'));
+	$results['pagination']['lastText']=mslib_befe::strtoupper($this->pi_getLL('last'));
 	$data['resultSet']=$results;
 	$content=json_encode($data);
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {

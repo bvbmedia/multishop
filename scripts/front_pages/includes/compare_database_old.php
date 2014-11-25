@@ -3545,42 +3545,42 @@ if ($rows) {
 	}
 	$width='normal';
 	$value="176x140";
-	$key='CATEGORY_IMAGE_SIZE_'.t3lib_div::strtoupper($width);
+	$key='CATEGORY_IMAGE_SIZE_'.mslib_befe::strtoupper($width);
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Category image size', '".$key."', '".$value."', 'The maximum image size in pixels for the category image folder.', 2, NULL, NULL, now(), NULL, '');";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
 	$width=50;
 	$value="50x50";
-	$key='PRODUCT_IMAGE_SIZE_'.t3lib_div::strtoupper($width);
+	$key='PRODUCT_IMAGE_SIZE_'.mslib_befe::strtoupper($width);
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Product image size (".$width.")', '".$key."', '".$value."', 'The maximum ".$type." in pixels for the ".$width." image folder.', 2, NULL, NULL, now(), NULL, '');";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
 	$width=100;
 	$value="175x123";
-	$key='PRODUCT_IMAGE_SIZE_'.t3lib_div::strtoupper($width);
+	$key='PRODUCT_IMAGE_SIZE_'.mslib_befe::strtoupper($width);
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Product image size (".$width.")', '".$key."', '".$value."', 'The maximum ".$type." in pixels for the ".$width." image folder.', 2, NULL, NULL, now(), NULL, '');";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
 	$width=200;
 	$value="140x150";
-	$key='PRODUCT_IMAGE_SIZE_'.t3lib_div::strtoupper($width);
+	$key='PRODUCT_IMAGE_SIZE_'.mslib_befe::strtoupper($width);
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Product image size (".$width.")', '".$key."', '".$value."', 'The maximum ".$type." in pixels for the ".$width." image folder.', 2, NULL, NULL, now(), NULL, '');";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
 	$width=300;
 	$value="350x300";
-	$key='PRODUCT_IMAGE_SIZE_'.t3lib_div::strtoupper($width);
+	$key='PRODUCT_IMAGE_SIZE_'.mslib_befe::strtoupper($width);
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Product image size (".$width.")', '".$key."', '".$value."', 'The maximum ".$type." in pixels for the ".$width." image folder.', 2, NULL, NULL, now(), NULL, '');";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
 	$width='enlarged';
 	$value="600x400";
-	$key='PRODUCT_IMAGE_SIZE_'.t3lib_div::strtoupper($width);
+	$key='PRODUCT_IMAGE_SIZE_'.mslib_befe::strtoupper($width);
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Product image size (".$width.")', '".$key."', '".$value."', 'The maximum ".$type." in pixels for the ".$width." image folder.', 2, NULL, NULL, now(), NULL, '');";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

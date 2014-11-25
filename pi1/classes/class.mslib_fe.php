@@ -5097,7 +5097,7 @@ class mslib_fe {
 		$string_array=explode(" ", $strtochange);
 		$fixed_str="";
 		foreach ($string_array as $part) {
-			$fixed_str.=t3lib_div::strtoupper(substr("$part", 0, 1));
+			$fixed_str.=mslib_befe::strtoupper(substr("$part", 0, 1));
 			$fixed_str.=substr("$part", 1, strlen($part));
 			$fixed_str.=" ";
 		}
@@ -5328,7 +5328,7 @@ class mslib_fe {
 		if ($this->ROOTADMIN_USER or $this->SEARCHADMIN_USER) {
 			$pageinfo=$GLOBALS['TSFE']->sys_page->getPage($this->shop_pid);
 			$ms_menu['header']['ms_admin_search']['description']='<div id="ms_admin_user">
-				<a href="'.mslib_fe::typolink($this->shop_pid, '').'">'.$this->pi_getLL('admin_user').': <strong>'.t3lib_div::strtoupper(substr($GLOBALS['TSFE']->fe_user->user['username'], 0, 10)).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.t3lib_div::strtoupper(substr($pageinfo['title'], 0, 10)).'</strong></a>
+				<a href="'.mslib_fe::typolink($this->shop_pid, '').'">'.$this->pi_getLL('admin_user').': <strong>'.mslib_befe::strtoupper(substr($GLOBALS['TSFE']->fe_user->user['username'], 0, 10)).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.mslib_befe::strtoupper(substr($pageinfo['title'], 0, 10)).'</strong></a>
 			</div>';
 			$ms_menu['header']['ms_admin_search']['description'].='<form action="'.mslib_fe::typolink().'" method="get" id="ms_admin_top_search">
 				<!-- <input class="admin_skeyword" id="ms_admin_skeyword" name="ms_admin_skeyword" type="text" placeholder="'.$this->pi_getLL('keyword').'" value="" />-->
@@ -5357,9 +5357,9 @@ class mslib_fe {
 				foreach ($multishop_content_objects as $pageinfo) {
 					$counter++;
 					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
-						$ms_menu['header']['ms_admin_stores']['label']=t3lib_div::strtoupper($pageinfo['title']);
+						$ms_menu['header']['ms_admin_stores']['label']=mslib_befe::strtoupper($pageinfo['title']);
 					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
-						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['label']=t3lib_div::strtoupper($pageinfo['title']);
+						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['label']=mslib_befe::strtoupper($pageinfo['title']);
 						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
 						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');
 					}
@@ -5580,8 +5580,8 @@ class mslib_fe {
 		$languages=array();
 		$languagesLabels=array();
 		// Set default language
-		$defaultLanguageISOCode=trim($this->conf['defaultLanguageISOCode']) ? t3lib_div::strtoupper(trim($this->conf['defaultLanguageISOCode'])) : 'EN';
-		$this->ms['MODULES']['COUNTRY_ISO_NR']=trim($this->conf['defaultCountryISOCode']) ? t3lib_div::strtoupper(trim($this->conf['defaultCountryISOCode'])) : '';
+		$defaultLanguageISOCode=trim($this->conf['defaultLanguageISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultLanguageISOCode'])) : 'EN';
+		$this->ms['MODULES']['COUNTRY_ISO_NR']=trim($this->conf['defaultCountryISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultCountryISOCode'])) : '';
 		$languages[]=t3lib_div::strtolower($defaultLanguageISOCode).($this->ms['MODULES']['COUNTRY_ISO_NR'] ? '_'.$this->ms['MODULES']['COUNTRY_ISO_NR'] : '');
 		$this->languagesUids[]='0';
 		// Get the language codes and labels for the languages set in the plugin list
@@ -5617,11 +5617,11 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_language']['description']='
 			<form action="'.mslib_fe::typolink().'" method="post" id="multishop_admin_language_form">
 				<select name="multishop_admin_language" id="ms_admin_simulate_language">
-				<option value="default"'.($this->cookie['multishop_admin_language']=='' ? ' selected' : '').'>'.t3lib_div::strtoupper($this->pi_getLL('default_language')).'</option>
+				<option value="default"'.($this->cookie['multishop_admin_language']=='' ? ' selected' : '').'>'.mslib_befe::strtoupper($this->pi_getLL('default_language')).'</option>
 				';
 			foreach ($languagesLabels as $key=>$language) {
 				if ($language['key']) {
-					$ms_menu['footer']['ms_admin_language']['description'].='<option value="'.$language['flag'].'"'.($this->cookie['multishop_admin_language']==$language['flag'] ? ' selected' : '').'>'.t3lib_div::strtoupper($language['value']).'</option>'."\n";
+					$ms_menu['footer']['ms_admin_language']['description'].='<option value="'.$language['flag'].'"'.($this->cookie['multishop_admin_language']==$language['flag'] ? ' selected' : '').'>'.mslib_befe::strtoupper($language['value']).'</option>'."\n";
 				}
 			}
 			$ms_menu['footer']['ms_admin_language']['description'].='

@@ -224,7 +224,7 @@ if ($this->get['edit']) {
 		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='<div class="account-field">
-		<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
+		<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
@@ -235,7 +235,7 @@ if ($this->get['edit']) {
 			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
 		</div>
 		<div class="account-field">
-			<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+			<label for="description">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
 			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 		</div>';
 	}
@@ -336,7 +336,7 @@ if ($this->get['edit']) {
 		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='<div class="account-field">
-				<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>';
+				<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
@@ -347,7 +347,7 @@ if ($this->get['edit']) {
 					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
 				</div>
 				<div class="account-field">
-					<label for="description">'.t3lib_div::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+					<label for="description">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
 					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 				</div>';
 		}
@@ -679,6 +679,6 @@ if ($this->ms['show_main']) {
 	$tmpcontent='';
 	// payment method admin system eof
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

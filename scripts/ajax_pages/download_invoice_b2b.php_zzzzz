@@ -19,7 +19,7 @@ if ($invoice['orders_id']) {
 	}
 	$pdfdata['address1'][]=$name;
 	$pdfdata['address1'][]=$order['billing_address'];
-	$pdfdata['address1'][]=$order['billing_zip'].' '.t3lib_div::strtoupper($order['billing_city']);
+	$pdfdata['address1'][]=$order['billing_zip'].' '.mslib_befe::strtoupper($order['billing_city']);
 	$pdfdata['address1'][]=ucfirst($order['billing_country']);
 	// top left area eof
 	// top right area
@@ -232,15 +232,15 @@ if ($invoice['orders_id']) {
 				} else {
 					//Tag
 					if ($e[0]=='/') {
-						$this->CloseTag(t3lib_div::strtoupper(substr($e, 1)));
+						$this->CloseTag(mslib_befe::strtoupper(substr($e, 1)));
 					} else {
 						//Extract attributes
 						$a2=explode(' ', $e);
-						$tag=t3lib_div::strtoupper(array_shift($a2));
+						$tag=mslib_befe::strtoupper(array_shift($a2));
 						$attr=array();
 						foreach ($a2 as $v) {
 							if (preg_match('/([^=]*)=["\']?([^"\']*)/', $v, $a3)) {
-								$attr[t3lib_div::strtoupper($a3[1])]=$a3[2];
+								$attr[mslib_befe::strtoupper($a3[1])]=$a3[2];
 							}
 						}
 						$this->OpenTag($tag, $attr);

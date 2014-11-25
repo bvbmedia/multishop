@@ -151,6 +151,12 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$tables[]='tx_multishop_attributes_options_groups';
 				$tables[]='tx_multishop_attributes_options_groups_to_products_options';
 				$tables[]='tx_multishop_undo_products';
+				$tables[]='tx_multishop_orphan_files';
+				$tables[]='tx_multishop_sessions';
+				$tables[]='tx_multishop_products_search_log';
+
+
+
 
 				/*
 				$tables[]='tx_multishop_coupons';

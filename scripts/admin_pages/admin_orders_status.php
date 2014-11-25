@@ -90,7 +90,7 @@ foreach ($this->languages as $key=>$language) {
 	$language_lable.=''.$language['title'];
 	$tmpcontent.='
 			<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-				<label>'.t3lib_div::strtoupper($this->pi_getLL('language')).'</label>
+				<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
 				<span><strong>'.$language_lable.'</strong></span>
 			</div>			
 			<div class="account-field">
@@ -153,7 +153,7 @@ if (count($statusses)) {
 	}
 	$content.='</table>';
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>

@@ -190,7 +190,7 @@ if ($this->ADMIN_USER) {
 	$enabled_countries=array();
 	if ($this->ms['MODULES']['ENABLED_LANGUAGES']) {
 		// if this setting is defined we must not enable all TYPO3 languages, but only the ones that are defined in this variable
-		$this->ms['MODULES']['ENABLED_LANGUAGES']=t3lib_div::strtoupper($this->ms['MODULES']['ENABLED_LANGUAGES']);
+		$this->ms['MODULES']['ENABLED_LANGUAGES']=mslib_befe::strtoupper($this->ms['MODULES']['ENABLED_LANGUAGES']);
 		if (strstr($this->ms['MODULES']['ENABLED_LANGUAGES'], " ")) {
 			$this->ms['MODULES']['ENABLED_LANGUAGES']=str_replace(" ", "", $this->ms['MODULES']['ENABLED_LANGUAGES']);
 		}

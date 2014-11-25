@@ -265,7 +265,7 @@ if (mslib_fe::loggedin()) {
 								$this->post['country']=$default_country['cn_short_en'];
 							}
 							foreach ($enabled_countries as $country) {
-								$tmpcontent.='<option value="'.t3lib_div::strtoupper($country['cn_short_en']).'" '.((t3lib_div::strtolower($this->post['country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+								$tmpcontent.='<option value="'.mslib_befe::strtoupper($country['cn_short_en']).'" '.((t3lib_div::strtolower($this->post['country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 							}
 							if ($tmpcontent) {
 								$content.='
