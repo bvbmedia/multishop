@@ -1470,7 +1470,7 @@ if (count($multishop_content_objects)>0) {
 					<fieldset class="mod1MultishopFieldset"><legend>Global Features</legend>
 						<ul>
 							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=clearMultishopCache">Clear Multishop Cache</a></li>
-							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=fulls_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
+							<li><a class="buttons" href="'.t3lib_div::linkThisScript().'&page_uid='.$content_object['uid'].'&action=full_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
 						</ul>
 					</fieldset>
 					';

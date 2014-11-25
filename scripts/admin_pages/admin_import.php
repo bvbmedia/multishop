@@ -1571,17 +1571,28 @@ if ($this->post['action']=='category-insert') {
 								}
 							}
 							$tel=0;
+							$hashed_id=$this->ms['target-cid'];
 							foreach ($cats as $cat) {
 								$cat=trim($cat);
-								$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
+								if ($hashed_id) {
+									$hashed_id.=' / ';
+								}
+								$hashed_id.=$cat;
+								$strchk="SELECT categories_id from tx_multishop_categories c where c.hashed_id='".addslashes(md5($hashed_id))."' and c.page_uid='".$this->showCatalogFromPage."'";
+								//$strchk="SELECT c.categories_id from tx_multishop_categories_description cd, tx_multishop_categories c where cd.categories_name='".addslashes($cat)."' and parent_id='".$this->ms['target-cid']."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id";
 								$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
 								if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
 									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
 									$this->ms['target-cid']=$row['categories_id'];
 								} else {
-									$str="insert into tx_multishop_categories (parent_id,status,date_added, page_uid) VALUES ('".$this->ms['target-cid']."',1,".time().",".$this->showCatalogFromPage.")";
-									$this->ms['sqls'][]=$str;
-									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$insertArray=array();
+									$insertArray['parent_id']=$this->ms['target-cid'];
+									$insertArray['status']=1;
+									$insertArray['date_added']=time();
+									$insertArray['page_uid']=$this->showCatalogFromPage;
+									$insertArray['hashed_id']=md5($hashed_id);
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									$this->ms['target-cid']=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									$updateArray=array();
 									$updateArray['categories_id']=$this->ms['target-cid'];
