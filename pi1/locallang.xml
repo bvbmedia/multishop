@@ -1141,6 +1141,10 @@
             <label index="feed_exporter_fields_label_invoice_reversal_related_id">Invoice reversal related id</label>
             <label index="clear_list">Clear list</label>
             <label index="customers_that_bought_this_product_also_bought">Customers that bought this product, also bought</label>
+            <label index="product_shipping_and_handling_cost_overview">Products shipping and handling costs</label>
+            <label index="shipping_and_handling_cost_overview">Shipping and handling costs</label>
+            <label index="deliver_to">Deliver to</label>
+            <label index="deliver_by">Deliver by</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

@@ -4,6 +4,23 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'get_product_shippingcost_overview':
+		$return_data=array();
+		$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($this->tta_shop_info['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs_including_vat'];
+			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs_including_vat']);
+		} else {
+			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs'];
+			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs']);
+		}
+		$return_data['products_name']=$shipping_cost_data['product_name'];
+		$return_data['deliver_to']=ucfirst($this->tta_shop_info['country']);
+		$return_data['deliver_by']=$shipping_cost_data['deliver_by'];
+		$return_data['shipping_method']=$shipping_cost_data;
+		echo json_encode($return_data);
+		exit();
+		break;
 	case 'get_images_for_crop':
 		$return_data=array();
 		$image_name=$this->post['imagename'];
