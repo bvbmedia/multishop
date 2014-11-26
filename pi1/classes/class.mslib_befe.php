@@ -603,8 +603,8 @@ class mslib_befe {
 	}
 	public function cropProductImage($filesrc, $filesrc_original, $thumb_size, $coords_x, $coords_y, $coords_w, $coords_h) {
 		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_' . strtoupper($thumb_size)]);
-		$targ_w=$format[0]; //$coords_w;
-		$targ_h=$format[1]; //$coords_h;
+		$targ_w=(($coords_w<$format[0])? $coords_w : $format[0]); //$coords_w;
+		$targ_h=(($coords_h<$format[1])? $coords_h : $format[1]); //$coords_h;
 		$jpeg_quality=90;
 		switch (exif_imagetype($filesrc_original)) {
 			case IMAGETYPE_GIF:
