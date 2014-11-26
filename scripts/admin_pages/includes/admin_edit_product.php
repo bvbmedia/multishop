@@ -73,13 +73,15 @@ function limitText(limitField, limitNum) {
     }
 }
 '.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
-function activate_jcrop_js(aspecratio) {
+function activate_jcrop_js(aspecratio, minsize, setselect) {
 	var jcrop_api;
 	var bounds, boundx, boundy;
 	$(\'#cropbox\').Jcrop({
 		onChange: updateCoords,
 		onSelect: updateCoords,
-		aspectRatio: aspecratio
+		aspectRatio: aspecratio,
+		minSize: minsize,
+		setSelect: setselect
 	},function(){
 		jcrop_api = this;
 		bounds = jcrop_api.getBounds();
@@ -290,7 +292,7 @@ jQuery(document).ready(function($) {
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
-						activate_jcrop_js(r.aspectratio[50]);
+						activate_jcrop_js(r.aspectratio[50], r.minsize[50], r.setselect[50]);
 					}
 				}
 			}
@@ -324,7 +326,7 @@ jQuery(document).ready(function($) {
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
-						activate_jcrop_js(r.aspectratio[tmp[1]]);
+						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]]);
 					}
 				}
 			}
@@ -354,7 +356,7 @@ jQuery(document).ready(function($) {
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
-						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()]);
+						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
 					}
 				}
 			}
@@ -384,7 +386,7 @@ jQuery(document).ready(function($) {
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
-						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()]);
+						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
 					}
 				}
 			}
