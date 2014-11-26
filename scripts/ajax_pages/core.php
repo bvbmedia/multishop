@@ -38,6 +38,7 @@ switch ($this->ms['page']) {
 		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 		$enabled_countries=array();
 		while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
+			$shipping_cost_data=array();
 			$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($row2['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$return_data['shipping_cost'][$row2['cn_iso_nr']]=$shipping_cost_data['shipping_costs_including_vat'];
