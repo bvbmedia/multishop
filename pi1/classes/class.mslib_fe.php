@@ -4019,12 +4019,17 @@ class mslib_fe {
 		}
 		return $field;
 	}
-	public function getShoppingcartShippingCostsOverview($countries_id, $shipping_method_id) {
+	public function getShoppingcartShippingCostsOverview($countries_id, $shipping_method_id='') {
 		if (!is_numeric($countries_id)) {
 			return false;
 		}
-		if (!is_numeric($shipping_method_id)) {
-			return false;
+		if (!$shipping_method_id) {
+			$shipping_methods=mslib_fe::loadShippingMethods(0, $countries_id, true);
+			$shipping_array=array();
+			foreach ($shipping_methods as $shipping_method) {
+				$shipping_array[]=$shipping_method;
+			}
+			$shipping_method_id=$shipping_array[0]['id'];
 		}
 		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...

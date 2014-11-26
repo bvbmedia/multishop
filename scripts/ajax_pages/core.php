@@ -19,7 +19,7 @@ switch ($this->ms['page']) {
 		$return_data=array();
 		$country_id=$this->post['tx_multishop_pi1']['country_id'];
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
-		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($country_id, $shipping_method_id);
+		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($country_id);
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs_including_vat'];
 			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs_including_vat']);

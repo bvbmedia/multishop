@@ -318,24 +318,24 @@ if (!$product['products_id']) {
 							shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
 							shipping_cost_popup+=\'<table id="product_shippingcost_popup_table">\';
 							shipping_cost_popup+=\'<tr>\';
-							shipping_cost_popup+=\'<td colspan="2" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'<td>\';
+							shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
 							shipping_cost_popup+=\'</tr>\';
 							shipping_cost_popup+=\'<tr>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'<td>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'<td>\';
-							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'<td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'</td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
 							shipping_cost_popup+=\'</tr>\';
 							$.each(j.shipping_costs_display, function(country_iso_nr, shipping_cost) {
 								shipping_cost_popup+=\'<tr>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[country_iso_nr] + \'<td>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'<td>\';
-								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[country_iso_nr] + \'<td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[country_iso_nr] + \'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[country_iso_nr] + \'</td>\';
 								shipping_cost_popup+=\'</tr>\';
 							});
 							shipping_cost_popup+=\'</table>\';
 							shipping_cost_popup+=\'</div>\';
 							shipping_cost_popup+=\'</div>\';
-							msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup);
+							msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 600);
 						}
 					}
 				});
