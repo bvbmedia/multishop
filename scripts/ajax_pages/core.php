@@ -4,6 +4,34 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'get_shoppingcart_shippingmethod_overview':
+		$return_data=array();
+		$country_cn_iso_nr=$this->post['tx_multishop_pi1']['country_id'];
+		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true);
+		$return_data['shipping_methods']=array();
+		foreach ($shipping_methods as $shipping_method) {
+			$return_data['shipping_methods'][]=$shipping_method;
+		}
+		echo json_encode($return_data);
+		exit();
+		break;
+	case 'get_shoppingcart_shippingcost_overview':
+		$return_data=array();
+		$country_id=$this->post['tx_multishop_pi1']['country_id'];
+		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
+		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($country_id, $shipping_method_id);
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs_including_vat'];
+			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs_including_vat']);
+		} else {
+			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs'];
+			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs']);
+		}
+		$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, 0, $country_id)+$return_data['shipping_cost']);
+		$return_data['shipping_method']=$shipping_cost_data;
+		echo json_encode($return_data);
+		exit();
+		break;
 	case 'get_product_shippingcost_overview':
 		$return_data=array();
 		$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($this->tta_shop_info['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);

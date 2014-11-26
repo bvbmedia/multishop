@@ -356,6 +356,42 @@ if (count($cart['products'])>0) {
 	$subpartArray['###LABEL_CHECKOUT###']=$output['label_checkout'];
 	$subpartArray['###ITEM###']=$contentItem;
 	$subpartArray['###CART_FOOTER###']=$footerItem;
+	// shipping cost
+	$subpartArray['###SHIPPING_COST_COUNTRY_SELECTION###']='';
+	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_SHOPPING_CART_PAGE']) {
+		// load countries
+		$deliver_to_sb='';
+		// load enabled countries to array
+		$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+		$enabled_countries=array();
+		while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
+			$enabled_countries[]=$row2;
+		}
+		// load enabled countries to array eof
+		if (count($enabled_countries)==1) {
+			$deliver_to_sb.='<input name="deliver_to_country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+		} else {
+			$default_country=mslib_fe::getCountryByIso($this->tta_shop_info['cn_iso_nr']);
+			foreach ($enabled_countries as $country) {
+				$tmpcontent_con.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($default_country['cn_short_en'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			}
+			if ($tmpcontent_con) {
+				$deliver_to_sb.='
+				<select name="deliver_to_country" id="deliver_to_country" class="country" title="'.$this->pi_getLL('country_is_required').'">
+					'.$tmpcontent_con.'
+				</select>
+				';
+			}
+		}
+		// country eof
+		$subpartArray['###SHIPPING_COST_COUNTRY_SELECTION###']='
+		<div class="shoppingcart_shipping_cost_wrapper">
+			<div class="shipping_deliver_to"><label for="deliver_to_country">'.$this->pi_getLL('deliver_to').'<label>'.$deliver_to_sb.'</div>
+			<div class="shipping_deliver_by"></div>
+		</div>
+		';
+	}
 	// completed the template expansion by replacing the "item" marker in the template
 	$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 } else {
