@@ -601,20 +601,21 @@ class mslib_befe {
 			return $filename;
 		}
 	}
-	public function cropProductImage($filesrc, $coords_x, $coords_y, $coords_w, $coords_h) {
-		$targ_w=$coords_w; //$format[0];
-		$targ_h=$coords_h; //$format[1];
+	public function cropProductImage($filesrc, $filesrc_original, $thumb_size, $coords_x, $coords_y, $coords_w, $coords_h) {
+		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_' . strtoupper($thumb_size)]);
+		$targ_w=$format[0]; //$coords_w;
+		$targ_h=$format[1]; //$coords_h;
 		$jpeg_quality=90;
-		switch (exif_imagetype($filesrc)) {
+		switch (exif_imagetype($filesrc_original)) {
 			case IMAGETYPE_GIF:
-				$img_r=imagecreatefromgif($filesrc);
+				$img_r=imagecreatefromgif($filesrc_original);
 				break;
 			case IMAGETYPE_PNG:
-				$img_r=imagecreatefrompng($filesrc);
+				$img_r=imagecreatefrompng($filesrc_original);
 				break;
 			case IMAGETYPE_JPEG:
 			default:
-				$img_r=imagecreatefromjpeg($filesrc);
+				$img_r=imagecreatefromjpeg($filesrc_original);
 				break;
 		}
 		$dst_r=imagecreatetruecolor($targ_w, $targ_h);

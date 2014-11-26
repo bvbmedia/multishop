@@ -232,9 +232,10 @@ switch ($_REQUEST['action']) {
 								foreach ($crop_images_data as $crop_image_data) {
 									$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
 									$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'products', $src_image_size);
+									$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'products', 'original');
 									// backup original
 									copy($src, $src.'-ori-'.$image_size);
-									mslib_befe::cropProductImage($src, $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h']);
+									mslib_befe::cropProductImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h']);
 								}
 							}
 						}

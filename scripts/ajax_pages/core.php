@@ -62,33 +62,15 @@ switch ($this->ms['page']) {
 		if (!empty($image_name)) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
-			switch ($image_size) {
-				case 'enlarged':
-					$return_data['images']['enlarged']=mslib_befe::getImagePath($image_name, 'products', 'normal').'?'.time();
-					$return_data['aspectratio']['enlarged']=$this->ms['product_image_formats']['enlarged']['width']/$this->ms['product_image_formats']['enlarged']['height'];
-					break;
-				case '300':
-					$return_data['images']['300']=mslib_befe::getImagePath($image_name, 'products', '300').'?'.time();
-					$return_data['aspectratio']['300']=$this->ms['product_image_formats'][300]['width']/$this->ms['product_image_formats'][300]['height'];
-					break;
-				case '200':
-					$return_data['images']['200']=mslib_befe::getImagePath($image_name, 'products', '200').'?'.time();
-					$return_data['aspectratio']['200']=$this->ms['product_image_formats'][200]['width']/$this->ms['product_image_formats'][200]['height'];
-					break;
-				case '100':
-					$return_data['images']['100']=mslib_befe::getImagePath($image_name, 'products', '100').'?'.time();
-					$return_data['aspectratio']['100']=$this->ms['product_image_formats'][100]['width']/$this->ms['product_image_formats'][100]['height'];
-					break;
-				case '50':
-				default:
-					$return_data['images']['50']=mslib_befe::getImagePath($image_name, 'products', '50').'?'.time();
-					$return_data['aspectratio']['50']=$this->ms['product_image_formats'][50]['width']/$this->ms['product_image_formats'][50]['height'];
-					break;
-			}
+
+			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', 'original').'?'.time();
+			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
+			$maxwidth=getimagesize(mslib_befe::getImagePath($image_name, 'products', 'original'));
+			$return_data['maxwidth']=$maxwidth[0];
 			$image_data=mslib_befe::getRecord($image_name, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('image_size=\''.$image_size.'\''));
 			$return_data['disable_crop_button']="";
-			$return_data['db']=print_r($image_data, 1);
 			if (is_array($image_data) && isset($image_data['id']) && $image_data['id']>0) {
+				$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', ($image_size=='enlarged'?'normal':$image_size)).'?'.time();
 				$return_data['disable_crop_button']="disabled";
 			}
 			$return_data['status']='OK';
@@ -107,29 +89,8 @@ switch ($this->ms['page']) {
 		if (!empty($image_name)) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
-			switch ($image_size) {
-				case 'enlarged':
-					$return_data['images']['enlarged']=mslib_befe::getImagePath($image_name, 'products', 'normal').'?'.time();
-					$return_data['aspectratio']['enlarged']=$this->ms['product_image_formats']['enlarged']['width']/$this->ms['product_image_formats']['enlarged']['height'];
-					break;
-				case '300':
-					$return_data['images']['300']=mslib_befe::getImagePath($image_name, 'products', '300').'?'.time();
-					$return_data['aspectratio']['300']=$this->ms['product_image_formats'][300]['width']/$this->ms['product_image_formats'][300]['height'];
-					break;
-				case '200':
-					$return_data['images']['200']=mslib_befe::getImagePath($image_name, 'products', '200').'?'.time();
-					$return_data['aspectratio']['200']=$this->ms['product_image_formats'][200]['width']/$this->ms['product_image_formats'][200]['height'];
-					break;
-				case '100':
-					$return_data['images']['100']=mslib_befe::getImagePath($image_name, 'products', '100').'?'.time();
-					$return_data['aspectratio']['100']=$this->ms['product_image_formats'][100]['width']/$this->ms['product_image_formats'][100]['height'];
-					break;
-				case '50':
-				default:
-					$return_data['images']['50']=mslib_befe::getImagePath($image_name, 'products', '50').'?'.time();
-					$return_data['aspectratio']['50']=$this->ms['product_image_formats'][50]['width']/$this->ms['product_image_formats'][50]['height'];
-					break;
-			}
+			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', ($image_size=='enlarged'?'normal':$image_size)).'?'.time();
+			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
 			$return_data['status']='OK';
 		} else {
 			$return_data['status']='NOTOK';
@@ -137,10 +98,11 @@ switch ($this->ms['page']) {
 		if ($this->post['tx_multishop_pi1']['jCropX'] || $this->post['tx_multishop_pi1']['jCropY'] || $this->post['tx_multishop_pi1']['jCropW'] || $this->post['tx_multishop_pi1']['jCropH']) {
 			$return_data['disable_crop_button']="disabled";
 			$src_image_size=($image_size=='enlarged' ? 'normal' : $image_size);
-			$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($image_name, 'products', $src_image_size);
+			$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($image_name, 'products', ($image_size=='enlarged'?'normal':$image_size));
+			$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($image_name, 'products', 'original');
 			// backup original
 			copy($src, $src.'-ori-'.$image_size);
-			mslib_befe::cropProductImage($src, $this->post['tx_multishop_pi1']['jCropX'], $this->post['tx_multishop_pi1']['jCropY'], $this->post['tx_multishop_pi1']['jCropW'], $this->post['tx_multishop_pi1']['jCropH']);
+			mslib_befe::cropProductImage($src, $src_original, $image_size, $this->post['tx_multishop_pi1']['jCropX'], $this->post['tx_multishop_pi1']['jCropY'], $this->post['tx_multishop_pi1']['jCropW'], $this->post['tx_multishop_pi1']['jCropH']);
 			// save to database for the coordinate
 			$insertArray=array();
 			$insertArray['products_id']=$pid;
@@ -165,29 +127,8 @@ switch ($this->ms['page']) {
 		if (!empty($image_name)) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
-			switch ($image_size) {
-				case 'enlarged':
-					$return_data['images']['enlarged']=mslib_befe::getImagePath($image_name, 'products', 'normal').'?'.time();
-					$return_data['aspectratio']['enlarged']=$this->ms['product_image_formats']['enlarged']['width']/$this->ms['product_image_formats']['enlarged']['height'];
-					break;
-				case '300':
-					$return_data['images']['300']=mslib_befe::getImagePath($image_name, 'products', '300').'?'.time();
-					$return_data['aspectratio']['300']=$this->ms['product_image_formats'][300]['width']/$this->ms['product_image_formats'][300]['height'];
-					break;
-				case '200':
-					$return_data['images']['200']=mslib_befe::getImagePath($image_name, 'products', '200').'?'.time();
-					$return_data['aspectratio']['200']=$this->ms['product_image_formats'][200]['width']/$this->ms['product_image_formats'][200]['height'];
-					break;
-				case '100':
-					$return_data['images']['100']=mslib_befe::getImagePath($image_name, 'products', '100').'?'.time();
-					$return_data['aspectratio']['100']=$this->ms['product_image_formats'][100]['width']/$this->ms['product_image_formats'][100]['height'];
-					break;
-				case '50':
-				default:
-					$return_data['images']['50']=mslib_befe::getImagePath($image_name, 'products', '50').'?'.time();
-					$return_data['aspectratio']['50']=$this->ms['product_image_formats'][50]['width']/$this->ms['product_image_formats'][50]['height'];
-					break;
-			}
+			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', 'original').'?'.time();
+			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
 			$return_data['status']='OK';
 		} else {
 			$return_data['status']='NOTOK';

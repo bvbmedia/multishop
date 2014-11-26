@@ -93,7 +93,8 @@ function updateCoords(c) {
 	$(\'#jCropW\').val(c.w);
 	$(\'#jCropH\').val(c.h);
 }
-function cropEditorDialog(textTitle, textBody) {
+function cropEditorDialog(textTitle, textBody, maxwidth) {
+    maxwidth = typeof maxwidth !== \'undefined\' ? maxwidth : 1100;
     var dialog = $(\'<div/>\', {
         id: \'dialog\',
         title: textTitle
@@ -101,7 +102,7 @@ function cropEditorDialog(textTitle, textBody) {
     dialog.append(textBody);
     dialog.dialog({
         minWidth: 800,
-        maxWidth: 1100,
+        width: parseInt(maxwidth+50),
         modal: true,
         body: "",
         resizable: false,
@@ -281,7 +282,7 @@ jQuery(document).ready(function($) {
 					image_interface+=\'</ul>\';
 					image_interface+=\'</div>\';
 					image_interface+=\'</div>\';
-					cropEditorDialog("Crop image " + image_name + " [50]", image_interface);
+					cropEditorDialog("Crop image " + image_name + " [50]", image_interface, r.maxwidth);
 					// default for first time loading is 50
 					if (r.disable_crop_button=="disabled") {
 						$("#crop_save_btn_wrapper").hide();
