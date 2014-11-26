@@ -5243,6 +5243,10 @@ class mslib_fe {
 			if ($GLOBALS['TYPO3_CONF_VARS']['BE']['disable_exec_function'] or strstr($data, 'exec')) {
 				$messages[]=$this->pi_getLL('admin_label_warning_disable_exec_is_true');
 			}
+			$data=ini_get('max_input_vars');
+			if ($data < 3000) {
+				$messages[]='PHP setting "max_input_vars" is very low ('.$data.'). Please update it to at least 3.000.';
+			}
 			// typo3 settings eof
 			// now some constants
 			$key='STORE_NAME';
@@ -6167,6 +6171,7 @@ class mslib_fe {
 		}
 		return $html;
 	}
+
 	public function updateCustomSettings($customsettings) {
 		// this is for overwriting the Multishop module settings with the inserted values in the advanced tab of the Multishop content element settings.
 		if (strstr($customsettings, "\r\n")) {
