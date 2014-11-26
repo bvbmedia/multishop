@@ -4184,17 +4184,23 @@ class mslib_fe {
 			return false;
 		}
 		$product_data=mslib_fe::getProduct($products_id);
-		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id, sm.vars', // SELECT ...
+		$shipping_methods=mslib_fe::loadShippingMethods(0, $countries_id, true);
+		$shipping_array=array();
+		foreach ($shipping_methods as $shipping_method) {
+			$shipping_array[]=$shipping_method;
+		}
+		$shipping_method_id=$shipping_array[0]['id'];
+		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
-			'sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
+			'c.shipping_method_id=\''.$shipping_method_id.'\' and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 			'', // GROUP BY...
-			'sm.sort_order asc', // ORDER BY...
-			'1' // LIMIT ...
+			'', // ORDER BY...
+			'' // LIMIT ...
 		);
 		$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry3)) {
 			$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
-			$shipping_method=mslib_fe::getShippingMethod($row3['shipping_method_id'], 's.id', $countries_id);
+			$shipping_method=mslib_fe::getShippingMethod($shipping_method_id, 's.id', $countries_id);
 			if ($row3['shipping_costs_type']=='weight') {
 				$total_weight=($product_data['products_weight']*$products_quantity);
 				$steps=explode(",", $row3['price']);
@@ -4324,7 +4330,7 @@ class mslib_fe {
 			$shipping_method['shipping_costs']=$shipping_cost;
 			$shipping_method['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
 			$unserialize_sm=unserialize($row3['vars']);
-			$shipping_method['deliver_by']=$unserialize_sm['name'][0];
+			$shipping_method['deliver_by']=$shipping_method['name'];//$unserialize_sm['name'][0];
 			$shipping_method['product_name']=$product_data['products_name'];
 			return $shipping_method;
 		} else {
