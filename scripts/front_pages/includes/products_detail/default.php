@@ -335,7 +335,7 @@ if (!$product['products_id']) {
 							shipping_cost_popup+=\'</table>\';
 							shipping_cost_popup+=\'</div>\';
 							shipping_cost_popup+=\'</div>\';
-							msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 550);
+							msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 560);
 						}
 					}
 				});
