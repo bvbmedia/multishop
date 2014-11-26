@@ -50,7 +50,8 @@ function ifConfirm(textTitle, textBody, yesFn, noFn) {
         }
     });
 }
-function msDialog(textTitle, textBody, width=450) {
+function msDialog(textTitle, textBody, width) {
+    width = typeof a !== 'undefined' ? a : 450;
     var dialog = $('<div/>', {
         id: 'dialog',
         title: textTitle
