@@ -1145,6 +1145,8 @@
             <label index="shipping_and_handling_cost_overview">Shipping and handling costs</label>
             <label index="deliver_to">Deliver to</label>
             <label index="deliver_by">Deliver by</label>
+            <label index="country">Country</label>
+            <label index="countries">Countries</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

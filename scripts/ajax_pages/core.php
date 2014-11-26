@@ -34,18 +34,23 @@ switch ($this->ms['page']) {
 		break;
 	case 'get_product_shippingcost_overview':
 		$return_data=array();
-		$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($this->tta_shop_info['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
-		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs_including_vat'];
-			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs_including_vat']);
-		} else {
-			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs'];
-			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs']);
+		$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+		$enabled_countries=array();
+		while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
+			$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($row2['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$return_data['shipping_cost'][$row2['cn_iso_nr']]=$shipping_cost_data['shipping_costs_including_vat'];
+				$return_data['shipping_costs_display'][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs_including_vat']);
+			} else {
+				$return_data['shipping_cost'][$row2['cn_iso_nr']]=$shipping_cost_data['shipping_costs'];
+				$return_data['shipping_costs_display'][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs']);
+			}
+			$return_data['deliver_to'][$row2['cn_iso_nr']]=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row2['cn_short_en']));
+			$return_data['deliver_by'][$row2['cn_iso_nr']]=$shipping_cost_data['deliver_by'];
+			$return_data['shipping_method'][$row2['cn_iso_nr']]=$shipping_cost_data;
+			$return_data['products_name']=$shipping_cost_data['product_name'];
 		}
-		$return_data['products_name']=$shipping_cost_data['product_name'];
-		$return_data['deliver_to']=ucfirst($this->tta_shop_info['country']);
-		$return_data['deliver_by']=$shipping_cost_data['deliver_by'];
-		$return_data['shipping_method']=$shipping_cost_data;
 		echo json_encode($return_data);
 		exit();
 		break;
