@@ -4134,7 +4134,7 @@ class mslib_fe {
 				}
 				if ($percentage_handling_cost) {
 					$tmp_handling_cost=$handling_cost;
-					$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+					$subtotal=$product_data['final_price'];
 					if ($subtotal) {
 						$handling_cost=($subtotal/100*$tmp_handling_cost);
 					}
