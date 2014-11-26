@@ -50,14 +50,14 @@ function ifConfirm(textTitle, textBody, yesFn, noFn) {
         }
     });
 }
-function msDialog(textTitle, textBody) {
+function msDialog(textTitle, textBody, width=450) {
     var dialog = $('<div/>', {
         id: 'dialog',
         title: textTitle
     });
     dialog.append(textBody);
     dialog.dialog({
-        width: 450,
+        width: width,
         modal: true,
         body: "",
         resizable: false,
