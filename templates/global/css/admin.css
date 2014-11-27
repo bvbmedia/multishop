@@ -743,11 +743,11 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
     border-left-color: #fff;
 }
 
-#msEditProductInputImage_ #image_action img { float:left; padding:0 8px 0 0; }
-#msEditProductInputImage_ #image_action .image_tools { float:left; }
-#msEditProductInputImage_ #image_action .image_tools a { display:block; overflow:hidden; width:22px; height:0; line-height:22px; padding:22px 0 0; }
-#msEditProductInputImage_ #image_action .image_tools a#cropEditor { background:url(../images/img_stock_crop.png) center center no-repeat; margin:0 0 6px; }
-#msEditProductInputImage_ #image_action .image_tools .delete_product_images { background:url(../images/img_edit_delete.png) center center no-repeat; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content#product_images.image_action img { float:left; padding:0 8px 0 0; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content#product_images.image_action .image_tools { float:left; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content#product_images.image_action .image_tools a { display:block; overflow:hidden; width:22px; height:0; line-height:22px; padding:22px 0 0; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content#product_images.image_action .image_tools a#cropEditor { background:url(../images/img_stock_crop.png) center center no-repeat; margin:0 0 6px; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content#product_images .image_action .image_tools .delete_product_images { background:url(../images/img_edit_delete.png) center center no-repeat; }
 
 .ui-dialog-content.ui-widget-content #crop_main_window_editor { border:1px solid #cdcdcd; background:#f5f5f5; padding:2px; }
 .ui-dialog-content.ui-widget-content #crop_thumb_image_button { text-align:center; padding:10px 0; }
