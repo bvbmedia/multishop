@@ -748,3 +748,13 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 #msEditProductInputImage_ #image_action .image_tools a { display:block; overflow:hidden; width:22px; height:0; line-height:22px; padding:22px 0 0; }
 #msEditProductInputImage_ #image_action .image_tools a#cropEditor { background:url(../images/img_stock_crop.png) center center no-repeat; margin:0 0 6px; }
 #msEditProductInputImage_ #image_action .image_tools .delete_product_images { background:url(../images/img_edit_delete.png) center center no-repeat; }
+
+.ui-dialog-content.ui-widget-content #crop_main_window_editor { border:1px solid #cdcdcd; background:#f5f5f5; padding:5px; border-radius:4px; }
+.ui-dialog-content.ui-widget-content #crop_thumb_image_button { text-align:center; padding:10px 0; }
+.ui-dialog-content.ui-widget-content #crop_thumb_image_list ul { border-bottom:1px solid #f0f0f0; text-align:center; padding:0 0 10px; }
+.ui-dialog-content.ui-widget-content #crop_thumb_image_list ul li { display:inline-block; padding:0 5px; }
+.ui-dialog-content.ui-widget-content #crop_thumb_image_list ul li > span { float:none; display:inline-block; width:auto; padding:5px; }
+.ui-dialog-content.ui-widget-content #crop_thumb_image_list ul li > a { float:none; display:inline-block; border:1px solid transparent; font-weight:bold; text-decoration:none; padding:5px; border-radius:4px; }
+.ui-dialog-content.ui-widget-content #crop_thumb_image_list ul li > a:hover,
+.ui-dialog-content.ui-widget-content #crop_thumb_image_list ul li > a:focus { border-color:#dedede; }
+.ui-dialog-content.ui-widget-content #crop_thumb_image_list ul li > a > span { float:none; width:auto; }
