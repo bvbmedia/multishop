@@ -83,7 +83,9 @@ jQuery(document).ready(function ($) {
                 }
                 listing_products += '<strong><a class="ajax_link" href="' + item.link_detail + '">' + item.products_name + '</a></strong>';
                 listing_products += '<div class="category"><a href="' + item.catlink + '" class="ajax_link">' + item.categories_name + '</a></div>';
-                listing_products += '<a href="#" rel="51" class="add_cart_item_listing"><span></span></a>';
+                listing_products += '<div class="visible-lg msFrontAddToCartBtn"><a href="#" rel="' + item.products_id + '" class="add_cart_item_listing"><span></span></a></div>';
+                listing_products += '<div class="visible-xs visible-sm visible-md msFrontAddToCartBtn"><a href="' + item.link_add_to_cart + '"><span>winkelwagen</span></a></div>';
+
                 listing_products += '<div class="products_price">';
                 if (item.price_excluding_vat) {
                     listing_products += '<div class="price_excluding_vat">' + item.price_excluding_vat + '</div>';
