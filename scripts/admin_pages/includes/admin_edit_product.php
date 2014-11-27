@@ -268,6 +268,7 @@ jQuery(document).ready(function($) {
 					image_interface+=\'<div id="crop_save_btn_wrapper"><input type="button" id="crop_save" value="crop & save" /></div>\';
 					image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><input type="button" id="crop_restore" value="restore image" /></div>\';
 					image_interface+=\'<div id="minsize_settings_btn_wrapper" style="display:none"><label for="remove_minsize"><input type="checkbox" id="remove_minsize" checked="checked" /> Lock minimal size of crop selection</label></div>\';
+					image_interface+=\'<div id="aspectratio_settings_btn_wrapper" style="display:none"><label for="remove_aspectratio"><input type="checkbox" id="remove_aspectratio" checked="checked" /> Lock aspect ratio of crop selection</label></div>\';
 					image_interface+=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
 					image_interface+=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="50" />\';
 					image_interface+=\'<input type="hidden" id="jCropX" name="tx_multishop_pi1[jCropX]" class="jcrop_coords" value="" />\';
@@ -275,6 +276,7 @@ jQuery(document).ready(function($) {
 					image_interface+=\'<input type="hidden" id="jCropW" name="tx_multishop_pi1[jCropW]" class="jcrop_coords" value="" />\';
 					image_interface+=\'<input type="hidden" id="jCropH" name="tx_multishop_pi1[jCropH]" class="jcrop_coords" value="" />\';
 					image_interface+=\'<input type="hidden" id="default_minsize_settings" name="default_minsize_settings" class="jcrop_coords" value="\' + r.minsize[50] + \'" />\';
+					image_interface+=\'<input type="hidden" id="default_aspectratio_settings" name="default_aspectratio_settings" class="jcrop_coords" value="\' + r.aspectratio[50] + \'" />\';
 					image_interface+=\'</div>\';
 					image_interface+=\'<div id="crop_thumb_image_list">\';
 					image_interface+=\'<ul>\';
@@ -293,11 +295,14 @@ jQuery(document).ready(function($) {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
+						$("#aspectratio_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
 						$("#minsize_settings_btn_wrapper").show();
 						$("#remove_minsize").prop("checked", true);
+						$("#aspectratio_settings_btn_wrapper").show();
+						$("#remove_aspectratio").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[50], r.minsize[50], r.setselect[50]);
 					}
 				}
@@ -331,11 +336,14 @@ jQuery(document).ready(function($) {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
+						$("#aspectratio_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
 						$("#minsize_settings_btn_wrapper").show();
 						$("#remove_minsize").prop("checked", true);
+						$("#aspectratio_settings_btn_wrapper").show();
+						$("#remove_aspectratio").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]]);
 					}
 				}
@@ -364,11 +372,14 @@ jQuery(document).ready(function($) {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
+						$("#aspectratio_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
 						$("#minsize_settings_btn_wrapper").show();
 						$("#remove_minsize").prop("checked", true);
+						$("#aspectratio_settings_btn_wrapper").show();
+						$("#remove_aspectratio").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
 					}
 				}
@@ -397,11 +408,14 @@ jQuery(document).ready(function($) {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
+						$("#aspectratio_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
 						$("#minsize_settings_btn_wrapper").show();
 						$("#remove_minsize").prop("checked", true);
+						$("#aspectratio_settings_btn_wrapper").show();
+						$("#remove_aspectratio").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
 					}
 				}
@@ -413,6 +427,14 @@ jQuery(document).ready(function($) {
 			minSize: $("#default_minsize_settings").val().split(",")
 		}: {
 			minSize: [0,0]
+		});
+		jcrop_api.focus();
+	});
+	$(document).on("change", "#remove_aspectratio", function(){
+		jcrop_api.setOptions(this.checked? {
+			aspectRatio: $("#default_aspectratio_settings").val()
+		}: {
+			aspectRatio: 0
 		});
 		jcrop_api.focus();
 	});
