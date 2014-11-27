@@ -67,8 +67,7 @@ switch ($this->ms['page']) {
 			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
 			$return_data['minsize'][$image_size]=array($this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
 			$return_data['setselect'][$image_size]=array(0, 0, $this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
-			$maxwidth=getimagesize(mslib_befe::getImagePath($image_name, 'products', 'original'));
-			$return_data['maxwidth']=$maxwidth[0];
+			// check if there any crop record
 			$image_data=mslib_befe::getRecord($image_name, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('image_size=\''.$image_size.'\''));
 			$return_data['disable_crop_button']="";
 			if (is_array($image_data) && isset($image_data['id']) && $image_data['id']>0) {
