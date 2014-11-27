@@ -63,11 +63,11 @@ foreach ($products as $product) {
 	$markerArray['PRODUCTS_DESCRIPTION']=$product['products_description'];
 	$markerArray['PRODUCTS_ID']=$product['products_id'];
 	$markerArray['PRODUCTS_DETAIL_PAGE_LINK']=$output['link'];
-
-
 	if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
+		$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=$output['link'];
 		$button_submit='<a href="'.$output['link'].'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
 	} else {
+		$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$product['products_id']);
 		$button_submit='<input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/>';
 	}
 	$markerArray['ITEM_DETAILS_ADD_TO_CART_BUTTON']='

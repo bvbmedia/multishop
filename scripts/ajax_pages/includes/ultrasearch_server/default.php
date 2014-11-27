@@ -1361,7 +1361,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					}
 				}
 				$temp_var_products['link_detail']    = $link_detail;
-				$temp_var_products['link_add_to_cart']    = mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&products_id='.$product['products_id']);
+				$temp_var_products['link_add_to_cart']    = mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$product['products_id']);
 				$temp_var_products['add_to_basket']	=$this->pi_getLL('add_to_basket');
 				$temp_var_products['catlink']   = $catlink;
 				if ($product['products_image']) 	{
