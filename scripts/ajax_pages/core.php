@@ -62,11 +62,11 @@ switch ($this->ms['page']) {
 		if (!empty($image_name)) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
-
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', 'original').'?'.time();
 			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
 			$return_data['minsize'][$image_size]=array($this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
 			$return_data['setselect'][$image_size]=array(0, 0, $this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
+
 			// check if there any crop record
 			$image_data=mslib_befe::getRecord($image_name, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('image_size=\''.$image_size.'\''));
 			$return_data['disable_crop_button']="";
@@ -94,6 +94,7 @@ switch ($this->ms['page']) {
 			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
 			$return_data['minsize'][$image_size]=array($this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
 			$return_data['setselect'][$image_size]=array(0, 0, $this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
+
 			$return_data['status']='OK';
 		} else {
 			$return_data['status']='NOTOK';
