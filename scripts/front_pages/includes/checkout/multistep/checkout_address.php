@@ -620,7 +620,7 @@ if (count($cart['products'])<1) {
 		$content.='<div id="delivery_address_category"><h2>'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'</div>';
 		$content.='<div id="bottom-navigation">
 					<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart').'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
-					<span class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" id="submit" value="'.$this->pi_getLL('proceed_to_checkout').'" /></span>
+					<span class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" id="submit" value="'.$this->pi_getLL('next').'" /></span>
 				</div>
 				</form>
 				</div>';
