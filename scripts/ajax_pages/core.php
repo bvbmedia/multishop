@@ -63,9 +63,16 @@ switch ($this->ms['page']) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', 'original').'?'.time();
+			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, 'products', 'original'));
+			$return_data['truesize'][$image_size]=array($image_truesize[0], $image_truesize[1]);
 			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
-			$return_data['minsize'][$image_size]=array($this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
-			$return_data['setselect'][$image_size]=array(0, 0, $this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
+
+			$max_width=($this->ms['product_image_formats'][$image_size]['width']>640?640:$this->ms['product_image_formats'][$image_size]['width']);
+			$max_height=($this->ms['product_image_formats'][$image_size]['height']>480?480:$this->ms['product_image_formats'][$image_size]['height']);
+
+			$return_data['minsize'][$image_size]=array($max_width, $max_height);
+			$return_data['setselect'][$image_size]=array(0, 0, $max_width, $max_height);
+
 
 			// check if there any crop record
 			$image_data=mslib_befe::getRecord($image_name, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('image_size=\''.$image_size.'\''));
@@ -91,6 +98,10 @@ switch ($this->ms['page']) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', ($image_size=='enlarged'?'normal':$image_size)).'?'.time();
+
+			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, 'products', 'original'));
+			$return_data['truesize'][$image_size]=array($image_truesize[0], $image_truesize[1]);
+
 			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
 			$return_data['minsize'][$image_size]=array($this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
 			$return_data['setselect'][$image_size]=array(0, 0, $this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
@@ -132,6 +143,10 @@ switch ($this->ms['page']) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, 'products', 'original').'?'.time();
+
+			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, 'products', 'original'));
+			$return_data['truesize'][$image_size]=array($image_truesize[0], $image_truesize[1]);
+
 			$return_data['aspectratio'][$image_size]=$this->ms['product_image_formats'][$image_size]['width']/$this->ms['product_image_formats'][$image_size]['height'];
 			$return_data['minsize'][$image_size]=array($this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);
 			$return_data['setselect'][$image_size]=array(0, 0, $this->ms['product_image_formats'][$image_size]['width'], $this->ms['product_image_formats'][$image_size]['height']);

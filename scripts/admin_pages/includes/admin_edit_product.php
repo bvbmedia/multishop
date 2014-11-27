@@ -74,14 +74,15 @@ function limitText(limitField, limitNum) {
 }
 '.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 var jcrop_api;
-var bounds, boundx, boundy;
-function activate_jcrop_js(aspecratio, minsize, setselect) {
+var bounds, boundx, boundy, scaled;
+function activate_jcrop_js(aspecratio, minsize, setselect, truesize) {
 	jcrop_api=$(\'#cropbox\').Jcrop({
 		onChange: updateCoords,
 		onSelect: updateCoords,
 		aspectRatio: aspecratio,
 		minSize: minsize,
 		setSelect: setselect,
+		trueSize: truesize,
 		boxWidth: 640,
 		boxHeight: 480
 	},function(){
@@ -89,6 +90,21 @@ function activate_jcrop_js(aspecratio, minsize, setselect) {
 		bounds = jcrop_api.getBounds();
 		boundx = bounds[0];
 		boundy = bounds[1];
+		scaled = jcrop_api.tellScaled();
+
+		var new_scale_x2=minsize[0];
+		var new_scale_y2=minsize[1];
+		if (parseInt(minsize[0])>parseInt(scaled.x2)) {
+			new_scale_x2=scaled.x2;
+		}
+		if (parseInt(minsize[1])>parseInt(scaled.y2)) {
+			new_scale_y2=scaled.y2;
+		}
+		$("#default_minsize_settings").val(new_scale_x2 + "," + new_scale_y2);
+		jcrop_api.setOptions({
+			minSize: [new_scale_x2, new_scale_y2],
+			setSelect: [0, 0, new_scale_x2, new_scale_y2],
+		});
 	});
 }
 function updateCoords(c) {
@@ -113,10 +129,14 @@ function cropEditorDialog(textTitle, textBody) {
             // right button (OK button) must be the default button when user presses enter key
             $(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').focus();
         },
+        close: function() {
+        	$(this).dialog("close");
+			$(this).remove();
+        },
         buttons: {
             "ok": {
                 text: "Close",
-                class: \'msOkButton msBackendButton continueState arrowRight arrowPosLeft\',
+                class: \'msOkButton msBackendButton backState arrowRight arrowPosLeft\',
                 click: function () {
                     $(this).dialog("close");
                     $(this).remove();
@@ -265,8 +285,8 @@ jQuery(document).ready(function($) {
 					var image_interface=\'<div id="crop_editor_wrapper">\';
 					image_interface+=\'<div id="crop_main_window_editor" align="center"><img src="\' + r.images[50] + \'" id="cropbox" /></div>\';
 					image_interface+=\'<div id="crop_thumb_image_button">\';
-					image_interface+=\'<div id="crop_save_btn_wrapper"><input type="button" id="crop_save" value="crop & save" /></div>\';
-					image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><input type="button" id="crop_restore" value="restore image" /></div>\';
+					image_interface+=\'<div id="crop_save_btn_wrapper""><span class="msBackendButton continueState"><input type="button" id="crop_save" value="crop & save" /></span></div>\';
+					image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><span class="msBackendButton continueState"><input type="button" id="crop_restore" value="restore image" /></span></div>\';
 					image_interface+=\'<div id="minsize_settings_btn_wrapper" style="display:none"><label for="remove_minsize"><input type="checkbox" id="remove_minsize" checked="checked" /> Lock minimal size of crop selection</label></div>\';
 					image_interface+=\'<div id="aspectratio_settings_btn_wrapper" style="display:none"><label for="remove_aspectratio"><input type="checkbox" id="remove_aspectratio" checked="checked" /> Lock aspect ratio of crop selection</label></div>\';
 					image_interface+=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
@@ -303,7 +323,7 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
-						activate_jcrop_js(r.aspectratio[50], r.minsize[50], r.setselect[50]);
+						activate_jcrop_js(r.aspectratio[50], r.minsize[50], r.setselect[50], r.truesize[50]);
 					}
 				}
 			}
@@ -344,7 +364,7 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
-						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]]);
+						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]], r.truesize[tmp[1]]);
 					}
 				}
 			}
@@ -380,7 +400,7 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
-						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
+						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
 				}
 			}
@@ -416,7 +436,7 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
-						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
+						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
 				}
 			}
@@ -2182,7 +2202,7 @@ if ($this->post) {
 					</noscript>
 				</div>
 				<input name="ajax_products_image'.$i.'" id="ajax_products_image'.$i.'" type="hidden" value="'.$product['products_image'.$i].'" />';
-			$images_tab_block.='<div id="image_action'.$i.'">';
+			$images_tab_block.='<div id="image_action'.$i.'" class="image_action">';
 			if ($_REQUEST['action']=='edit_product' && $product['products_image'.$i]) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'" />';
 				$images_tab_block.='<div class="image_tools">';
@@ -2226,8 +2246,10 @@ if ($this->post) {
 					// display instantly uploaded image
 					$("#image_action'.$i.'").empty();
 					var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
-					new_image+=\' <a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
-					new_image+=\' <a href="#" class="delete_product_images" rel="'.$i.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+					new_image+=\'<div class="image_tools">\';
+					new_image+=\'<a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
+					new_image+=\'<a href="#" class="delete_product_images" rel="'.$i.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+					new_image+=\'</div>\';
 					$("#image_action'.$i.'").html(new_image);
 					' : '').'
 				},
