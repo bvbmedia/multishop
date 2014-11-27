@@ -2186,7 +2186,7 @@ if ($this->post) {
 			if ($_REQUEST['action']=='edit_product' && $product['products_image'.$i]) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'" />';
 				if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
-					$images_tab_block.=' <a href="#" id="cropEditor" rel="'.$product['products_image'.$i].'"><span>crop</span></a>';
+					$images_tab_block.=' <div class="image_tools"><a href="#" id="cropEditor" rel="'.$product['products_image'.$i].'"><span>crop</span></a></div>';
 				}
 				$images_tab_block.=' <a href="#" class="delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 			}
