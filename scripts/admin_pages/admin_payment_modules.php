@@ -257,6 +257,7 @@ if ($this->get['edit']) {
 	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost+$cost_tax, 2, false);
 	$tmpcontent.='<div class="account-field">
 		<label>'.$this->pi_getLL('code').'</label>
+		<input name="custom_code" id="custom_code" type="hidden" value="'.htmlspecialchars($row['code']).'" />
 		'.$row['code'].'
 	</div>';
 	if (count($active_shop)>1) {
