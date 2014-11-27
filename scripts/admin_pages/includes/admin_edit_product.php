@@ -73,15 +73,17 @@ function limitText(limitField, limitNum) {
     }
 }
 '.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
+var jcrop_api;
+var bounds, boundx, boundy;
 function activate_jcrop_js(aspecratio, minsize, setselect) {
-	var jcrop_api;
-	var bounds, boundx, boundy;
-	$(\'#cropbox\').Jcrop({
+	jcrop_api=$(\'#cropbox\').Jcrop({
 		onChange: updateCoords,
 		onSelect: updateCoords,
 		aspectRatio: aspecratio,
 		minSize: minsize,
-		setSelect: setselect
+		setSelect: setselect,
+		boxWidth: 640,
+		boxHeight: 480
 	},function(){
 		jcrop_api = this;
 		bounds = jcrop_api.getBounds();
@@ -95,7 +97,7 @@ function updateCoords(c) {
 	$(\'#jCropW\').val(c.w);
 	$(\'#jCropH\').val(c.h);
 }
-function cropEditorDialog(textTitle, textBody, maxwidth) {
+function cropEditorDialog(textTitle, textBody) {
     maxwidth = typeof maxwidth !== \'undefined\' ? maxwidth : 1100;
     var dialog = $(\'<div/>\', {
         id: \'dialog\',
@@ -103,8 +105,7 @@ function cropEditorDialog(textTitle, textBody, maxwidth) {
     });
     dialog.append(textBody);
     dialog.dialog({
-        minWidth: 800,
-        width: parseInt(maxwidth+50),
+        width: 670,
         modal: true,
         body: "",
         resizable: false,
@@ -262,16 +263,18 @@ jQuery(document).ready(function($) {
 				//do something with the sorted data
 				if (r.status=="OK") {
 					var image_interface=\'<div id="crop_editor_wrapper">\';
-					image_interface+=\'<div id="crop_main_window_editor" align="center"><img src="\' + r.images[50] + \'" id="cropbox"/></div>\';
+					image_interface+=\'<div id="crop_main_window_editor" align="center"><img src="\' + r.images[50] + \'" id="cropbox" /></div>\';
 					image_interface+=\'<div id="crop_thumb_image_button">\';
 					image_interface+=\'<div id="crop_save_btn_wrapper"><input type="button" id="crop_save" value="crop & save" /></div>\';
 					image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><input type="button" id="crop_restore" value="restore image" /></div>\';
-					image_interface +=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
-					image_interface +=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="50" />\';
-					image_interface +=\'<input type="hidden" id="jCropX" name="tx_multishop_pi1[jCropX]" class="jcrop_coords" value="" />\';
-					image_interface +=\'<input type="hidden" id="jCropY" name="tx_multishop_pi1[jCropY]" class="jcrop_coords" value="" />\';
-					image_interface +=\'<input type="hidden" id="jCropW" name="tx_multishop_pi1[jCropW]" class="jcrop_coords" value="" />\';
-					image_interface +=\'<input type="hidden" id="jCropH" name="tx_multishop_pi1[jCropH]" class="jcrop_coords" value="" />\';
+					image_interface+=\'<div id="minsize_settings_btn_wrapper" style="display:none"><label for="remove_minsize"><input type="checkbox" id="remove_minsize" checked="checked" /> Lock minimal size of crop selection</label></div>\';
+					image_interface+=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
+					image_interface+=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="50" />\';
+					image_interface+=\'<input type="hidden" id="jCropX" name="tx_multishop_pi1[jCropX]" class="jcrop_coords" value="" />\';
+					image_interface+=\'<input type="hidden" id="jCropY" name="tx_multishop_pi1[jCropY]" class="jcrop_coords" value="" />\';
+					image_interface+=\'<input type="hidden" id="jCropW" name="tx_multishop_pi1[jCropW]" class="jcrop_coords" value="" />\';
+					image_interface+=\'<input type="hidden" id="jCropH" name="tx_multishop_pi1[jCropH]" class="jcrop_coords" value="" />\';
+					image_interface+=\'<input type="hidden" id="default_minsize_settings" name="default_minsize_settings" class="jcrop_coords" value="\' + r.minsize[50] + \'" />\';
 					image_interface+=\'</div>\';
 					image_interface+=\'<div id="crop_thumb_image_list">\';
 					image_interface+=\'<ul>\';
@@ -284,14 +287,17 @@ jQuery(document).ready(function($) {
 					image_interface+=\'</ul>\';
 					image_interface+=\'</div>\';
 					image_interface+=\'</div>\';
-					cropEditorDialog("Crop image " + image_name + " [50]", image_interface, r.maxwidth);
+					cropEditorDialog("Crop image " + image_name + " [50]", image_interface);
 					// default for first time loading is 50
 					if (r.disable_crop_button=="disabled") {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
+						$("#minsize_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
+						$("#minsize_settings_btn_wrapper").show();
+						$("#remove_minsize").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[50], r.minsize[50], r.setselect[50]);
 					}
 				}
@@ -317,15 +323,19 @@ jQuery(document).ready(function($) {
 					$(".jcrop_coords").val("");
 					$("#jCropImageName").val(tmp[0]);
 					$("#jCropImageSize").val(tmp[1]);
+					$("#default_minsize_settings").val(r.minsize[tmp[1]]);
 					$("#crop_main_window_editor").empty();
 					$(".ui-dialog-title").html("Crop image: " + tmp[0] + " [" + tmp[1] + "]");
 					$("#crop_main_window_editor").html(new_image);
 					if (r.disable_crop_button=="disabled") {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
+						$("#minsize_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
+						$("#minsize_settings_btn_wrapper").show();
+						$("#remove_minsize").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]]);
 					}
 				}
@@ -353,9 +363,12 @@ jQuery(document).ready(function($) {
 					if (r.disable_crop_button=="disabled") {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
+						$("#minsize_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
+						$("#minsize_settings_btn_wrapper").show();
+						$("#remove_minsize").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
 					}
 				}
@@ -383,14 +396,25 @@ jQuery(document).ready(function($) {
 					if (r.disable_crop_button=="disabled") {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
+						$("#minsize_settings_btn_wrapper").hide();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
+						$("#minsize_settings_btn_wrapper").show();
+						$("#remove_minsize").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()]);
 					}
 				}
 			}
 		});
+	});
+	$(document).on("change", "#remove_minsize", function(){
+		jcrop_api.setOptions(this.checked? {
+			minSize: $("#default_minsize_settings").val().split(",")
+		}: {
+			minSize: [0,0]
+		});
+		jcrop_api.focus();
 	});
 	' : '').'
 	$(document).on(\'click\',".delete_product_images",function(e) {
