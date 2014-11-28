@@ -69,6 +69,7 @@ plugin.tx_multishop_pi1 {
 	products_listing_tmpl_path={$plugin.multishop.products_listing_tmpl_path}
 	specials_sections_products_listing_tmpl={$plugin.multishop.specials_sections_products_listing_tmpl}
     specials_sections_products_listing_tmpl_path={$plugin.multishop.specials_sections_products_listing_tmpl_path}
+	specials_products_listing_tmpl_path={$plugin.multishop.specials_products_listing_tmpl_path}
 	html_box_tmpl={$plugin.multishop.html_box_tmpl}
 	html_box_tmpl_path={$plugin.multishop.html_box_tmpl_path}
 	cacheConfiguration={$plugin.multishop.cacheConfiguration}
