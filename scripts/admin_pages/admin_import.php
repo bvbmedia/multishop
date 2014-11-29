@@ -1172,8 +1172,16 @@ if ($this->post['action']=='category-insert') {
 							break;
 						case 'products_deeplink':
 							$item[$this->post['select'][$i]]=$tmpitem[$i];
-							if ($this->post['input'][$i]) {
-								$item[$this->post['select'][$i]].=$this->post['input'][$i];
+							if (strstr($this->post['input'][$i], "|")) {
+								// PREPEND AUX VALUE TO URL
+								$tmp=explode("|", $this->post['input'][$i]);
+								$prependValue=$tmp[0];
+								$item[$this->post['select'][$i]]=$prependValue.$item[$this->post['select'][$i]];
+							} else {
+								// APPEND AUX VALUE TO URL
+								if ($this->post['input'][$i]) {
+									$item[$this->post['select'][$i]].=$this->post['input'][$i];
+								}
 							}
 							break;
 						case 'products_meta_keywords':
@@ -2072,9 +2080,10 @@ if ($this->post['action']=='category-insert') {
 								// custom hook that can be controlled by third-party plugin eof
 								$filter=array();
 								$filter[]='language_id='.$language_id;
-								$filter[]='page_uid='.$this->showCatalogFromPage;
+								$filter[]='(page_uid=0 or page_uid='.$this->showCatalogFromPage.')';
 								$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
 								if (is_array($record) && $record['products_id']) {
+									$updateArray['page_uid']=$this->showCatalogFromPage;
 									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$language_id, $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								} else {
@@ -2098,9 +2107,10 @@ if ($this->post['action']=='category-insert') {
 										// get existing record
 										$filter=array();
 										$filter[]='language_id='.$langKey;
-										$filter[]='page_uid='.$this->showCatalogFromPage;
+										$filter[]='(page_uid=0 or page_uid='.$this->showCatalogFromPage.')';
 										$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
 										if ($record['products_id']) {
+											$updateArray['page_uid']=$this->showCatalogFromPage;
 											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$langKey, $updateArray2);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										} else {
