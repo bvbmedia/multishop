@@ -104,7 +104,7 @@ foreach ($products as $product) {
 	$markerArray=array();
 	$markerArray['ITEM_PRODUCTS_ID']=$product['products_id'];
 	$markerArray['ITEM_PRODUCT_DETAILS_PAGE_LINK']=$link;
-	$markerArray['ITEM_PRODUCTS_NAME']=$htmlspecialchars($product['products_name']);
+	$markerArray['ITEM_PRODUCTS_NAME']=htmlspecialchars($product['products_name']);
 	$markerArray['ITEM_PRODUCTS_IMAGE']=$image;
 	$markerArray['ITEM_PRODUCTS_SPECIAL_PRICE']=$item_products_specials_price;
 	$markerArray['ITEM_PRODUCTS_PRICE']=$item_products_price;
