@@ -728,7 +728,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$formField['placeholder']="";
 			break;
 			default:
-				$count_attributes = count($formField['elements']);;
+				$count_attributes = count($formField['elements']);
 				// attributes
 				$array=explode(":",$field);
 				if (strstr($array[1],'{asc}')) {
