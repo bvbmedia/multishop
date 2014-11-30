@@ -17,13 +17,13 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	$this->no_database_results=1;
 } else {
 	// setting coming from typoscript or from flexform
-	if ($this->conf['ultrasearch_filtered_by_current_category']) {
+	if (is_numeric($this->conf['ultrasearch_filtered_by_current_category'])) {
 		$this->ultrasearch_filtered_by_current_category = $this->conf['ultrasearch_filtered_by_current_category'];
 	} else {
 		$this->ultrasearch_filtered_by_current_category = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_filtered_by_current_category', 's_search');	
 	}
 	// setting coming from typoscript or from flexform
-	if ($this->conf['ultrasearch_exclude_negative_filter_values']) {
+	if (is_numeric($this->conf['ultrasearch_exclude_negative_filter_values'])) {
 		$this->ultrasearch_exclude_negative_filter_values = $this->conf['ultrasearch_exclude_negative_filter_values'];
 	} else {
 		$this->ultrasearch_exclude_negative_filter_values = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_exclude_negative_filter_values', 's_search');
