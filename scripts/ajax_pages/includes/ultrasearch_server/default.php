@@ -53,11 +53,13 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		}
 	}
 	$parent_id=$this->categoriesStartingPoint;
-	if (is_numeric($this->get['categories_id'])) {
-		$parent_id=$this->get['categories_id'];
-	}
-	if (is_numeric($this->post['categories_id'])) {
-		$parent_id=$this->post['categories_id'];
+	if ($this->ultrasearch_filtered_by_current_category) {
+		if (is_numeric($this->get['categories_id'])) {
+			$parent_id=$this->get['categories_id'];
+		}
+		if (is_numeric($this->post['categories_id'])) {
+			$parent_id=$this->post['categories_id'];
+		}
 	}
 	if (is_numeric($parent_id) and $parent_id > 0) {
 		if ($this->ms['MODULES']['FLAT_DATABASE']) {
@@ -291,10 +293,22 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['caption']=$this->pi_getLL('categories');
 				$array=explode(":",$field);
 				$list_type=$array[1];
-				if (!isset($this->get['categories_id']) || $this->get['categories_id']=='') {
-					$this->get['categories_id']=$this->categoriesStartingPoint;
+				$parent_id=$this->categoriesStartingPoint;
+				if ($this->ultrasearch_filtered_by_current_category) {
+					if (isset($this->get['categories_id'])) {
+						$parent_id=$this->get['categories_id'];
+					}
+				} else {
+					if (isset($this->get['categories_id'])) {
+						if (!is_array($this->post['tx_multishop_pi1']['categories'])) {
+							$this->post['tx_multishop_pi1']['categories']=array();
+						}
+						if (!in_array($this->get['categories_id'],$this->post['tx_multishop_pi1']['categories'])) {
+							$this->post['tx_multishop_pi1']['categories'][]=$this->get['categories_id'];
+						}
+					}
 				}
-				$categories = mslib_fe::getSubcatsOnly($this->get['categories_id']);
+				$categories = mslib_fe::getSubcatsOnly($parent_id);
 				if (!is_array($categories)) {
 					$count_select = count($formField['elements']);
 					unset($formFieldItem);

@@ -23,7 +23,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$this->ultrasearch_filtered_by_current_category = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_filtered_by_current_category', 's_search');	
 	}
 	// setting coming from typoscript or from flexform
-	if ($this->conf['ultrasearch_filtered_by_current_category']) {
+	if ($this->conf['ultrasearch_exclude_negative_filter_values']) {
 		$this->ultrasearch_exclude_negative_filter_values = $this->conf['ultrasearch_exclude_negative_filter_values'];
 	} else {
 		$this->ultrasearch_exclude_negative_filter_values = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_exclude_negative_filter_values', 's_search');
