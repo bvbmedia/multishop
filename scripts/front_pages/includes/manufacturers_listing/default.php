@@ -56,4 +56,29 @@ if (count($manufacturers)>0) {
 	// completed the template expansion by replacing the "item" marker in the template
 	$content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 }
+if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+	$content.='
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		jQuery("#manufacturers_sortable_'.$output['manufacturers_uid'].'").sortable({
+			cursor:     "move",
+			//axis:       "y",
+			update: function(e, ui) {
+				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=manufacturers').'";
+				jQuery(this).sortable("refresh");
+				sorted = jQuery(this).sortable("serialize", "id");
+				jQuery.ajax({
+					type:   "POST",
+					url:    href,
+					data:   sorted,
+					success: function(msg) {
+							//do something with the sorted data
+					}
+				});
+			}
+		});
+	});
+	</script>
+	';
+}
 ?>

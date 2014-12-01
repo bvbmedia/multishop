@@ -1482,6 +1482,24 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'manufacturers':
+		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+			$getPost=$this->post['sortable_manufacturer'];
+			$no=1;
+			foreach ($getPost as $man_id) {
+				if (is_numeric($man_id)) {
+					$where="manufacturers_id = $man_id";
+					$updateArray=array(
+						'sort_order'=>$no
+					);
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', $where, $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$no++;
+				}
+			}
+		}
+		exit();
+		break;
 	case 'menu':
 		if ($this->ADMIN_USER) {
 			$getPost=$this->post['sortable_maincat'];
