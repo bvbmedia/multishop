@@ -103,6 +103,8 @@ if ($this->conf['includejAutocomplete']) {
 // fill the row marker with the expanded rows
 $subpartArray['###SEARCH_PAGE_PID###']=$this->conf['search_page_pid'];
 $subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
+$subpartArray['###LABEL_PLACEHOLDER_KEYWORD###']=$this->pi_getLL('keyword');
+
 $subpartArray['###KEYWORD_VALUE###']=htmlspecialchars(mslib_fe::RemoveXSS($this->get['skeyword']));
 $subpartArray['###LABEL_SUBMIT_BUTTON###']=htmlspecialchars($this->pi_getLL('search'));
 // completed the template expansion by replacing the "item" marker in the template
