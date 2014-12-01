@@ -11,11 +11,13 @@ require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart
 $mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
-$countries_id=$mslib_cart->setCountry($this->post['cc']);
+$mslib_cart->setCountry($this->post['b_cc']);
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart=$mslib_cart->getCart();
 $payment_method=mslib_fe::getPaymentMethod($this->post['tx_multishop_pi1']['pid'], 'p.id', $countries_id, true);
+$tmp_countries=mslib_fe::getCountryByName($this->post['d_cc']);
+$countries_id=$tmp_countries['cn_iso_nr'];
 if ($payment_method['handling_costs']) {
 	if (!strstr($payment_method['handling_costs'], "%")) {
 		$payment_method_costs=$payment_method['handling_costs'];
@@ -51,7 +53,7 @@ $available_sid=array();
 $str_s2p="select * from tx_multishop_payment_shipping_mappings where payment_method = '".addslashes($this->post['tx_multishop_pi1']['pid'])."'";
 $qry_s2p=$GLOBALS['TYPO3_DB']->sql_query($str_s2p);
 while ($row_s2p=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_s2p)) {
-	$str3="SELECT * from static_countries where cn_short_en='".addslashes($this->post['cc'])."'";
+	$str3="SELECT * from static_countries where cn_short_en='".addslashes($this->post['d_cc'])."'";
 	$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 	$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
 	$user_country=$row3['cn_iso_nr'];
