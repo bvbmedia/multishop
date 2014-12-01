@@ -14,7 +14,12 @@ if ($this->conf['products_listing_tmpl_path']) {
 // Extract the subparts from the template
 $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
-$subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
+$subparts['ITEM']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
+$subparts['ITEM_1']=$this->cObj->getSubpart($subparts['template'], '###ITEM_1###');
+$subparts['ITEM_2']=$this->cObj->getSubpart($subparts['template'], '###ITEM_2###');
+if ($subparts['ITEM_1']) {
+	$oddEvenMarker=1;
+}
 if (!$this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM'] && !$this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_ORDERBY_FORM']) {
 	// clear coupon html
 	// because the DISCOUNT_MODULE_WRAPPER is inside the CART_FOOTER wrapper we have to substitute it on the footer
@@ -25,9 +30,20 @@ if (!$this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM'] && !$this-
 	$subparts['template']=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartHeader);
 }
 $contentItem='';
+$itemCounter=0;
 foreach ($products as $current_product) {
+	$itemCounter++;
+	$markerKey='ITEM';
+	if ($oddEvenMarker) {
+		if ($subparts['ITEM_'.$itemCounter]) {
+			$markerKey='ITEM_'.$itemCounter;
+		} else {
+			$markerKey='ITEM_1';
+			$itemCounter=1;
+		}
+	}
 	$output=array();
-	$final_price=mslib_fe::final_products_price($current_product);
+	$current_product['final_price']=mslib_fe::final_products_price($current_product);
 	$where='';
 	if ($current_product['categories_id']) {
 		// get all cats to generate multilevel fake url
@@ -64,19 +80,18 @@ foreach ($products as $current_product) {
 			$output[$key]='<div class="no_image"></div>';
 		}
 	}
-
 	if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
 		$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	}
 	if ($current_product['products_price']<>$current_product['final_price']) {
 		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
-			$old_price=$current_product['products_price']*(1+$current_product['tax_rate']);
+			$current_product['old_price']=$current_product['products_price']*(1+$current_product['tax_rate']);
 		} else {
-			$old_price=$current_product['products_price'];
+			$current_product['old_price']=$current_product['products_price'];
 		}
-		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($current_product['old_price']).'</div><div class="specials_price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	} else {
-		$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	}
 	if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 		$output['admin_icons']='<div class="admin_menu">
@@ -106,6 +121,11 @@ foreach ($products as $current_product) {
 	$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 	$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
 	$markerArray['PRODUCTS_URL']=$current_product['products_url'];
+	$markerArray['OLD_PRICE']=mslib_fe::amount2Cents($current_product['old_price']);
+	$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
+	$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'],2,',','.');
+	$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'],2,',','.');
+
 	// STOCK INDICATOR
 	$product_qty=$current_product['products_quantity'];
 	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
@@ -158,7 +178,7 @@ foreach ($products as $current_product) {
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof
-	$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
+	$contentItem.=$this->cObj->substituteMarkerArray($subparts[$markerKey], $markerArray, '###|###');
 }
 // fill the row marker with the expanded rows
 $subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
@@ -173,6 +193,8 @@ $subpartArray['###CURRENT_CATEGORIES_NAME###']='';
 if (is_array($current) && $current['categories_name']) {
 	$subpartArray['###CURRENT_CATEGORIES_NAME###']='<h1>'.trim($current['categories_name']).'</h1>';
 }
+$subpartArray['###ITEM_1###']='';
+$subpartArray['###ITEM_2###']='';
 $subpartArray['###ITEM###']=$contentItem;
 $product_listing_form_content='';
 if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM']) {
