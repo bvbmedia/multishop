@@ -11,12 +11,12 @@ require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart
 $mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
-$mslib_cart->setCountry($this->post['b_cc']);
+$tmp_countries=mslib_fe::getCountryByName($this->post['d_cc']);
+$mslib_cart->setCountry($this->post['b_cc'], $tmp_countries['cn_iso_nr']);
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart=$mslib_cart->getCart();
 $payment_method=mslib_fe::getPaymentMethod($this->post['tx_multishop_pi1']['pid'], 'p.id', $countries_id, true);
-$tmp_countries=mslib_fe::getCountryByName($this->post['d_cc']);
 $countries_id=$tmp_countries['cn_iso_nr'];
 if ($payment_method['handling_costs']) {
 	if (!strstr($payment_method['handling_costs'], "%")) {

@@ -1795,14 +1795,22 @@ class tx_mslib_cart extends tslib_pibase {
 		if (!$shipping_method) {
 			return 0;
 		}
-		$priceArray=mslib_fe::getShippingCosts($this->cart['user']['countries_id'], $shipping_method);
+		if (isset($this->cart['user']['delivery_countries_id']) && !empty($this->cart['user']['delivery_countries_id'])) {
+			$priceArray=mslib_fe::getShippingCosts($this->cart['user']['delivery_countries_id'], $shipping_method);
+		} else {
+			$priceArray=mslib_fe::getShippingCosts($this->cart['user']['countries_id'], $shipping_method);
+		}
 		$price=$priceArray['shipping_costs'];
 		if ($price) {
 			$this->cart['user']['shipping_method_costs']=$price;
 		} else {
 			$this->cart['user']['shipping_method_costs']=0;
 		}
-		$shipping_method=mslib_fe::getShippingMethod($shipping_method, 's.id', $this->cart['user']['countries_id']);
+		if (isset($this->cart['user']['delivery_countries_id']) && !empty($this->cart['user']['delivery_countries_id'])) {
+			$shipping_method=mslib_fe::getShippingMethod($shipping_method, 's.id', $this->cart['user']['delivery_countries_id']);
+		} else {
+			$shipping_method=mslib_fe::getShippingMethod($shipping_method, 's.id', $this->cart['user']['countries_id']);
+		}
 		if ($shipping_method['tax_id'] && $this->cart['user']['shipping_method_costs']) {
 			$this->cart['user']['shipping_total_tax_rate']=$shipping_method['tax_rate'];
 			if ($shipping_method['country_tax_rate']) {
@@ -1897,12 +1905,16 @@ class tx_mslib_cart extends tslib_pibase {
 		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
 		$GLOBALS['TSFE']->storeSessionData();
 	}
-	function setCountry($countries_name) {
+	function setCountry($countries_name, $delivery_country='') {
 		$str3="SELECT * from static_countries where cn_short_en='".addslashes($countries_name)."' ";
 		$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 		$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
 		$this->cart['user']['countries_id']=$row3['cn_iso_nr'];
 		$this->cart['user']['country']=$row3['cn_short_en'];
+		$this->cart['user']['delivery_countries_id']=$row3['cn_iso_nr'];
+		if (!empty($delivery_country)) {
+			$this->cart['user']['delivery_countries_id']=$delivery_country;
+		}
 		self::storeCart();
 		return $this->cart['user']['countries_id'];
 	}
