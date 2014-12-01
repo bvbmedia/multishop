@@ -228,6 +228,7 @@ table#product_import_table th,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table th a { color:#fff; }
 table#product_import_table td,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table td { border-right:1px solid #999; border-bottom:1px solid #999; font:12px Arial, Helvetica, sans-serif; color:#333; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table.msAdminTooltipTable td { white-space:normal; }
 /* table#product_import_table tr:hover td,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table tr:hover td,
 table#product_import_table tr.odd:hover td,
