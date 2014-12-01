@@ -80,7 +80,6 @@ foreach ($dates as $key=>$value) {
 //$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
 $content.='</tr>';
 $content.='<tr class="even">';
-$total_amount=0;
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
@@ -106,6 +105,7 @@ foreach ($dates as $key=>$value) {
 				<th valign="top">Product</td>
 			</tr>
 		';
+		$total_amount=0;
 		while (($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			if (!$tr_type or $tr_type=='even') {
 				$tr_type='odd';
