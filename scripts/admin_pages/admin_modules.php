@@ -6,7 +6,8 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$(".msadminTooltip").tooltip({
-		position: "bottom"
+		placement: \'auto\',
+		html: true
 	});
 	$(".tab_content").hide();
 	$("ul.tabs li:first").addClass("active").show();
