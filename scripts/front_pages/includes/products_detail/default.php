@@ -15,6 +15,18 @@ if (!$product['products_id']) {
 	$output_array['http_header']='HTTP/1.0 404 Not Found';
 	$content='<div class="main-title"><h1>The product is not existing</h1></div>';
 } else {
+	if ($this->conf['imageWidth']) {
+		$this->imageWidth=$this->conf['imageWidth'];
+	}
+	if (!$this->imageWidth) {
+		$this->imageWidth='300';
+	}
+	if ($this->conf['imageWidthExtraImages']) {
+		$this->imageWidthExtraImages=$this->conf['imageWidthExtraImages'];
+	}
+	if (!$this->imageWidthExtraImages) {
+		$this->imageWidthExtraImages='50';
+	}
 	if ($product['minimum_quantity']>0) {
 		$qty=$product['minimum_quantity'];
 	} else {
@@ -215,7 +227,7 @@ if (!$product['products_id']) {
 	$output['products_extra_description']=$product['products_extra_description'];
 	$output['products_image']='<div class="image">';
 	if ($product['products_image']) {
-		$image='<a id="thumb_0" rel="'.$this->conf['jQueryPopup_rel'].'" class="'.$this->conf['jQueryPopup_rel'].'" href="'.mslib_befe::getImagePath($product['products_image'], 'products', 'normal').'"><img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '300').'"></a>';
+		$image='<a id="thumb_0" rel="'.$this->conf['jQueryPopup_rel'].'" class="'.$this->conf['jQueryPopup_rel'].'" href="'.mslib_befe::getImagePath($product['products_image'], 'products', 'normal').'"><img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'"></a>';
 	} else {
 		$image='<div class="no_image"></div>';
 	}
@@ -224,7 +236,7 @@ if (!$product['products_id']) {
 	for ($i=1; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
 		if ($product['products_image'.$i]) {
 			$tmpoutput.='<li>';
-			$tmpoutput.='<a id="thumb_'.$i.'" rel="'.$this->conf['jQueryPopup_rel'].'" class="'.$this->conf['jQueryPopup_rel'].'" href="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', 'normal').'"><img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'"></a>';
+			$tmpoutput.='<a id="thumb_'.$i.'" rel="'.$this->conf['jQueryPopup_rel'].'" class="'.$this->conf['jQueryPopup_rel'].'" href="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', 'normal').'"><img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', $this->imageWidthExtraImages).'"></a>';
 			$tmpoutput.='</li>';
 		}
 	}
