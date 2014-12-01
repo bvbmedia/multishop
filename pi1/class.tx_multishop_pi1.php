@@ -142,11 +142,14 @@ class tx_multishop_pi1 extends tslib_pibase {
 		}
 		$this->LOCAL_LANG_loaded = 0;
 		$this->pi_loadLL();
-		// load language cookie for the backend eof		
+		// load language cookie for the backend eof
+		// disabled the code so developer can work with config.absRefPrefix too
+		/*
 		if (!$GLOBALS['TSFE']->config['config']['baseURL']) {
 			echo 'config.baseURL='.$this->FULL_HTTP_URL.' is not set yet. Please go to the TYPO3 template setup field editor and add it.';
 			die();
 		}
+		*/
 		// setting coming from typoscript or from flexform
 		if ($this->conf['method']) {
 			$this->method = $this->conf['method'];
