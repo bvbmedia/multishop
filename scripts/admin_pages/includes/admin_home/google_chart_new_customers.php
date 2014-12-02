@@ -43,7 +43,7 @@ $compiledWidget['content']='
           title: \'\',
 		  height:100,
           hAxis: {title: \'\', titleTextStyle: {color: \'red\'}},
-          vAxis: {title: \''.$this->pi_getLL('admin_label_users').'\', titleTextStyle: {color: \'red\'}},
+          vAxis: {title: \''.addslashes($this->pi_getLL('admin_label_users')).'\', titleTextStyle: {color: \'red\'}},
 		  legend: {position: \'none\'},
 			chartArea: {
 				left: 60,

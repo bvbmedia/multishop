@@ -8,11 +8,11 @@ if (count($products)<0) {
 	$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 } else {
 	if ($this->get['tx_multishop_pi1']['is_proposal']) {
-		$content.='<div class="account-field">	
+		$content.='<div class="account-field">
 			<h1>'.$this->pi_getLL('admin_label_create_quotation').'</h1>
 		</div>';
 	} else {
-		$content.='<div class="account-field">	
+		$content.='<div class="account-field">
 			<h1>'.$this->pi_getLL('admin_label_create_order').'</h1>
 		</div>';
 	}
@@ -67,23 +67,23 @@ if (count($products)<0) {
 		$birthday_validation='';
 		if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
 			$birthday_validation='
-			$("#birthday_visitor").datepicker({ 
+			$("#birthday_visitor").datepicker({
 				dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
 				altField: "#birthday",
 				altFormat: "yy-mm-dd",
 				changeMonth: true,
 				changeYear: true,
-				showOtherMonths: true,  
-				yearRange: "-100:+0" 
+				showOtherMonths: true,
+				yearRange: "-100:+0"
 			});
-			$("#delivery_birthday_visitor").datepicker({ 
+			$("#delivery_birthday_visitor").datepicker({
 				dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
 				altField: "#delivery_birthday",
 				altFormat: "yy-mm-dd",
 				changeMonth: true,
 				changeYear: true,
-				showOtherMonths: true,  
-				yearRange: "-100:+0" 
+				showOtherMonths: true,
+				yearRange: "-100:+0"
 			});';
 		}
 		$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript">
@@ -149,7 +149,7 @@ if (count($products)<0) {
 		<div class="account-field">
 			<label class="account-address_address_ext" for="address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
 			<input type="text" name="address_ext" id="address_ext" class="address_ext" value="'.htmlspecialchars($user['address_ext']).'" >
-        </div>		
+        </div>
         </div>
 		<div class="account-field">
 			<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
@@ -231,171 +231,171 @@ if (count($products)<0) {
 						$("#customer_details_form").hide();
 						$("#ms_checkout_direct").submit();
 					}
-				});			
+				});
 				if (jQuery("#checkboxdifferent_delivery_address").is(\':checked\')) {
 					// set the h5validate attributes for required delivery data
 					$(\'#delivery_radio\').attr(\'required\', \'required\');
 					$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-					$(\'#delivery_radio\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_radio\').attr(\'title\', \''.addslashes($this->pi_getLL('gender_is_required', 'Title is required')).' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+
 					$(\'#delivery_first_name\').attr(\'required\', \'required\');
 					$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-					$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_first_name\').attr(\'title\', \''.addslashes($this->pi_getLL('first_name_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					$(\'#delivery_last_name\').attr(\'required\', \'required\');
 					$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-					$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_last_name\').attr(\'title\', \''.addslashes($this->pi_getLL('surname_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					$(\'#delivery_address\').attr(\'required\', \'required\');
 					$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-					$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_address\').attr(\'title\', \''.addslashes($this->pi_getLL('street_address_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					$(\'#delivery_address_number\').attr(\'required\', \'required\');
 					$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-					$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_address_number\').attr(\'title\', \''.addslashes($this->pi_getLL('street_number_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					$(\'#delivery_zip\').attr(\'required\', \'required\');
 					$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-					$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_zip\').attr(\'title\', \''.addslashes($this->pi_getLL('zip_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					$(\'#delivery_city\').attr(\'required\', \'required\');
 					$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-					$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_city\').attr(\'title\', \''.addslashes($this->pi_getLL('city_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					$(\'#delivery_country\').attr(\'required\', \'required\');
 					$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
-					$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-					
+					$(\'#delivery_country\').attr(\'title\', \''.addslashes($this->pi_getLL('country_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					$(\'#delivery_telephone\').attr(\'required\', \'required\');
 					$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-					$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-				
+					$(\'#delivery_telephone\').attr(\'title\', \''.addslashes($this->pi_getLL('telephone_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 					jQuery(\'#delivery_address_category\').show();
 				} else {
 					// remove the h5validate attributes
 					$(\'#delivery_radio\').removeAttr(\'required\');
 					$(\'#delivery_radio\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_radio\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_first_name\').removeAttr(\'required\');
 					$(\'#delivery_first_name\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_first_name\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_last_name\').removeAttr(\'required\');
 					$(\'#delivery_last_name\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_last_name\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_address\').removeAttr(\'required\');
 					$(\'#delivery_address\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_address\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_address_number\').removeAttr(\'required\');
 					$(\'#delivery_address_number\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_address_number\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_zip\').removeAttr(\'required\');
 					$(\'#delivery_zip\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_zip\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_city\').removeAttr(\'required\');
 					$(\'#delivery_city\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_city\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_country\').removeAttr(\'required\');
 					$(\'#delivery_country\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_country\').removeAttr(\'title\');
-					
+
 					$(\'#delivery_telephone\').removeAttr(\'required\');
 					$(\'#delivery_telephone\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_telephone\').removeAttr(\'title\');
-					
+
 					jQuery(\'#delivery_address_category\').hide();
 				}
-				
+
 				jQuery("#checkboxdifferent_delivery_address").click(function(event) {
 					jQuery(\'#delivery_address_category\').slideToggle(\'slow\', function(){});
-					
+
 					if ($("#checkboxdifferent_delivery_address").is(\':checked\')) {
 						// set the h5validate attributes for required delivery data
 						$(\'#delivery_radio\').attr(\'required\', \'required\');
 						$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-						$(\'#delivery_radio\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_radio\').attr(\'title\', \''.addslashes($this->pi_getLL('gender_is_required', 'Title is required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_first_name\').attr(\'required\', \'required\');
 						$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-						$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_first_name\').attr(\'title\', \''.addslashes($this->pi_getLL('first_name_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_last_name\').attr(\'required\', \'required\');
 						$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-						$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_last_name\').attr(\'title\', \''.addslashes($this->pi_getLL('surname_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_address\').attr(\'required\', \'required\');
 						$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-						$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_address\').attr(\'title\', \''.addslashes($this->pi_getLL('street_address_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_address_number\').attr(\'required\', \'required\');
 						$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-						$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_address_number\').attr(\'title\', \''.addslashes($this->pi_getLL('street_number_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_zip\').attr(\'required\', \'required\');
 						$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-						$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_zip\').attr(\'title\', \''.addslashes($this->pi_getLL('zip_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_city\').attr(\'required\', \'required\');
 						$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-						$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_city\').attr(\'title\', \''.addslashes($this->pi_getLL('city_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_country\').attr(\'required\', \'required\');
 						$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
-						$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_country\').attr(\'title\', \''.addslashes($this->pi_getLL('country_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_telephone\').attr(\'required\', \'required\');
 						$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-						$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
-						
+						$(\'#delivery_telephone\').attr(\'title\', \''.addslashes($this->pi_getLL('telephone_is_required')).' ('.strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
+
 						$(\'#delivery_address_category\').show();
 					} else {
 						// remove the h5validate attributes
 						$(\'#delivery_radio\').removeAttr(\'required\');
 						$(\'#delivery_radio\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_radio\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_first_name\').removeAttr(\'required\');
 						$(\'#delivery_first_name\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_first_name\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_last_name\').removeAttr(\'required\');
 						$(\'#delivery_last_name\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_last_name\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_address\').removeAttr(\'required\');
 						$(\'#delivery_address\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_address\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_address_number\').removeAttr(\'required\');
 						$(\'#delivery_address_number\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_address_number\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_zip\').removeAttr(\'required\');
 						$(\'#delivery_zip\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_zip\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_city\').removeAttr(\'required\');
 						$(\'#delivery_city\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_city\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_country\').removeAttr(\'required\');
 						$(\'#delivery_country\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_country\').removeAttr(\'title\');
-						
+
 						$(\'#delivery_telephone\').removeAttr(\'required\');
 						$(\'#delivery_telephone\').removeAttr(\'data-h5-errorid\');
 						$(\'#delivery_telephone\').removeAttr(\'title\');
-					
+
 						$(\'#delivery_address_category\').hide();
-					}	 		
+					}
 				});
-			});	
+			});
 			</script>
 			<div class="step">
 			<div class="account-field">
@@ -412,7 +412,7 @@ if (count($products)<0) {
 		 <div class="step">
 			<div class="account-field">
 				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).':</label>
-				<input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="'.htmlspecialchars($user['delivery_company']).'">		
+				<input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="'.htmlspecialchars($user['delivery_company']).'">
 			</div>
 			<div class="account-field">
 				<label class="account-firstname" for="delivery_first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>
@@ -422,17 +422,17 @@ if (count($products)<0) {
 				<label class="account-lastname" for="delivery_last_name">'.ucfirst($this->pi_getLL('last_name')).'*</label>
 				<input type="text" name="delivery_last_name" id="delivery_last_name" class="delivery_last-name left-this" value="'.htmlspecialchars($user['delivery_last_name']).'" ><div id="invalid-delivery_last_name" class="error-space" style="display:none"></div>
 		    </div>
-		 </div>	
+		 </div>
 			<div class="account-field">
 				<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
 				<input  type="text" name="delivery_street_name" id="delivery_address" class="delivery_address left-this" value="'.htmlspecialchars($user['delivery_street_name']).'"><div id="invalid-delivery_address" class="error-space" style="display:none"></div>
 				<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
-				<input type="text" name="delivery_address_number" id="delivery_address_number" class="delivery_address-number" value="'.htmlspecialchars($user['delivery_address_number']).'" ><div id="invalid-delivery_address_number" class="error-space" style="display:none"></div>    
+				<input type="text" name="delivery_address_number" id="delivery_address_number" class="delivery_address-number" value="'.htmlspecialchars($user['delivery_address_number']).'" ><div id="invalid-delivery_address_number" class="error-space" style="display:none"></div>
 			</div>
 			<div class="account-field">
 				<label class="account-address_delivery_address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
 				<input type="text" name="delivery_address_ext" id="delivery_address_ext" class="delivery_address_ext" value="'.htmlspecialchars($user['delivery_address_ext']).'" >
-			</div>			
+			</div>
 			<div class="account-field">
 				<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'*:</label>
 				<input type="text" name="delivery_zip" id="delivery_zip" class="delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'"><div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
@@ -453,13 +453,13 @@ if (count($products)<0) {
 			</div>
 			<div class="account-field">
 				<label for="delivery_telephone">'.ucfirst($this->pi_getLL('telephone')).'*:</label>
-				<input type="text" name="delivery_telephone" id="delivery_telephone" class="delivery_telephone" value="'.htmlspecialchars($user['delivery_telephone']).'"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>	
+				<input type="text" name="delivery_telephone" id="delivery_telephone" class="delivery_telephone" value="'.htmlspecialchars($user['delivery_telephone']).'"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>
 				<label for="delivery_mobile" class="account_mobile">'.ucfirst($this->pi_getLL('mobile')).':</label>
 				<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile" value="'.htmlspecialchars($user['delivery_mobile']).'">
 			</div>';
 		$content.='<div id="delivery_address_category" class="hide"><div class="main-heading"><h2>'.$this->pi_getLL('delivery_address').'</h2></div>'.$tmpcontent.'</div></div>';
 		$content.='<div id="bottom-navigation">
-						<div id="navigation"> 							
+						<div id="navigation">
 	 						<input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/>
 	 						<input type="submit" id="submit" value="'.htmlspecialchars($this->pi_getLL('next')).'"/>
 							<input name="tx_multishop_pi1[is_proposal]" type="hidden" value="'.$this->get['tx_multishop_pi1']['is_proposal'].'" />
