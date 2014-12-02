@@ -38,7 +38,8 @@ if ($contentType=='specials_listing_page') {
 			'lifeTime'=>$this->cacheLifeTime
 		);
 		$Cache_Lite=new Cache_Lite($options);
-		$string=$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
+		//$string=$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
+		$string=md5(serialize($this->conf)).$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 	}
 	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 		// $content.='<div class="main-heading"><h2>'.$this->pi_getLL('specials').'</h2></div>';

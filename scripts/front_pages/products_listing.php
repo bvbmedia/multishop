@@ -12,7 +12,7 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		'lifeTime'=>$this->ms['MODULES']['CACHE_TIME_OUT_LISTING_PAGES']
 	);
 	$Cache_Lite=new Cache_Lite($options);
-	$string=$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
+	$string=md5(serialize($this->conf)).$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 }
 if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get($string)) {
 	if ($this->get['p']) {
