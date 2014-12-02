@@ -186,6 +186,36 @@ class tx_mslib_catalog {
 				switch ($sortByField) {
 					case 'products_price':
 						$content.='<div class="main-heading"><h2>Sorting products price '.$orderBy.' done</h2></div>';
+						// try to sort the subcats
+						$content.=$item.'<br />';
+						// try to find and sort the products
+						$query_array=array();
+						$query_array['select'][]='p2c.categories_id, p.products_id, IF(s.status, s.specials_new_products_price, p.products_price) as final_price';
+						$query_array['from'][]='tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c';
+						$query_array['where'][]='p.products_status=1 and p.page_uid=\''.$this->showCatalogFromPage.'\' and p.products_id=pd.products_id and p.products_id=p2c.products_id';
+						$query_array['order_by'][]='final_price '.$orderBy;
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
+							(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
+							(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
+							(is_array($query_array['group_by']) ? implode(",", $query_array['group_by']) : ''), // GROUP BY...
+							(is_array($query_array['order_by']) ? implode(",", $query_array['order_by']) : ''), // ORDER BY...
+							(is_array($query_array['limit']) ? implode(",", $query_array['limit']) : '') // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$counter=0;
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$updateArray=array();
+							$updateArray['sort_order']=$counter;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id='.$row['products_id'].' and categories_id='.$row['categories_id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$updateArray=array();
+							$updateArray['sort_order']=$counter;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id='.$row['products_id'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$counter++;
+						}
+						// per category is not optimal when using wide products search
+						/*
 						mslib_fe::getSubcats($subcategories_array, 0);
 						if (count($subcategories_array)) {
 							foreach ($subcategories_array as $item) {
@@ -219,6 +249,7 @@ class tx_mslib_catalog {
 								}
 							}
 						}
+						*/
 						break;
 					case 'products_name':
 						$content.='<div class="main-heading"><h2>Sorting products name on alphabet '.$orderBy.' done</h2></div>';
