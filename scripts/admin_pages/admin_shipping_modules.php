@@ -37,7 +37,7 @@ if ($this->post) {
 				}
 			}
 			$this->ms['show_main']=1;
-			header('Location: /' . mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
+			header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
 		}
 	} else if ($this->post['sub']=='add_shipping_method' && $this->post['shipping_method_code']) {
 		$erno=array();
@@ -79,7 +79,7 @@ if ($this->post) {
 					}
 				}
 				$this->ms['show_main']=1;
-				header('Location: /' . mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
+				header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules'));
 			}
 		}
 	}
@@ -183,11 +183,11 @@ jQuery(document).ready(function($) {
 		if (!$("#name_0").val()) {
 			e.preventDefault();
 			$("#name_0").focus();
-			alert("'.$this->pi_getLL('shipping_name_is_required').'!");
+			alert("'.addslashes($this->pi_getLL('shipping_name_is_required')).'!");
 		} else if (!$("#custom_code").val()) {
 			e.preventDefault();
 			$("#custom_code").focus();
-			alert("'.$this->pi_getLL('code_is_required').'!");
+			alert("'.addslashes($this->pi_getLL('code_is_required')).'!");
 		} else {
 			return true;
 		}

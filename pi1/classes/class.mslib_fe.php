@@ -4019,12 +4019,15 @@ class mslib_fe {
 		}
 		return $field;
 	}
-	public function getShoppingcartShippingCostsOverview($countries_id, $shipping_method_id='') {
-		if (!is_numeric($countries_id)) {
+	public function getShoppingcartShippingCostsOverview($billing_countries_id, $delivery_countries_id, $shipping_method_id='') {
+		if (!is_numeric($billing_countries_id)) {
+			return false;
+		}
+		if (!is_numeric($delivery_countries_id)) {
 			return false;
 		}
 		if (!$shipping_method_id) {
-			$shipping_methods=mslib_fe::loadShippingMethods(0, $countries_id, true);
+			$shipping_methods=mslib_fe::loadShippingMethods(0, $delivery_countries_id, true);
 			$shipping_array=array();
 			foreach ($shipping_methods as $shipping_method) {
 				$shipping_array[]=$shipping_method;
@@ -4033,7 +4036,7 @@ class mslib_fe {
 		}
 		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
-			'c.shipping_method_id=\''.$shipping_method_id.'\' and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
+			'c.shipping_method_id=\''.$shipping_method_id.'\' and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$delivery_countries_id.'\'', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
 			'' // LIMIT ...
@@ -4041,7 +4044,7 @@ class mslib_fe {
 		$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry3)) {
 			$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
-			$shipping_method=mslib_fe::getShippingMethod($shipping_method_id, 's.id', $countries_id);
+			$shipping_method=mslib_fe::getShippingMethod($shipping_method_id, 's.id', $billing_countries_id);
 			//hook to let other plugins further manipulate the settings
 			if ($row3['shipping_costs_type']=='weight') {
 				$total_weight=mslib_fe::countCartWeight();
@@ -4080,7 +4083,7 @@ class mslib_fe {
 			if (strstr($shipping_cost, ",")) {
 				$steps=explode(",", $shipping_cost);
 				// calculate total costs
-				$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+				$subtotal=mslib_fe::countCartTotalPrice(1, 0, $billing_countries_id);
 				$count=0;
 				foreach ($steps as $step) {
 					// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro

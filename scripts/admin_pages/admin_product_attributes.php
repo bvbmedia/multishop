@@ -262,7 +262,7 @@ if ($rows) {
 			data:"option_id=" + optid,
 			dataType:"json",
 			success: function(s) {
-				var dialog_title="'.$this->pi_getLL('admin_label_edit_option').': " + s.options_title;
+				var dialog_title="'.addslashes($this->pi_getLL('admin_label_edit_option')).': " + s.options_title;
 				var dialog_body=\'<div class="edit_dialog_input_wrapper">\';
 				dialog_body+=\'<input type="hidden" value="\' + optid + \'" name="option_id">\';
 				$.each(s.options, function(i, v){
@@ -270,7 +270,7 @@ if ($rows) {
 					dialog_body+=\'<label>\' + v.lang_title + \' : </label>\';
 					dialog_body+=\'<div class="edit_dialog_input">\';
 					dialog_body+=\'<input type="text" class="edit_option_inputs" name="option_names[\' + optid + \'][\' + i + \']" value="\' + v.options_name + \'"/>\';
-					dialog_body+=\'<span class="option_description_label">'.$this->pi_getLL('description').'</span>\';
+					dialog_body+=\'<span class="option_description_label">'.addslashes($this->pi_getLL('description')).'</span>\';
 					dialog_body+=\'<textarea class="edit_option_inputs" name="option_desc[\' + optid + \'][\' + i + \']">\' + v.options_desc + \'</textarea>\';
 					dialog_body+=\'</div>\';
 					dialog_body+=\'</div>\';
@@ -288,7 +288,7 @@ if ($rows) {
 			data:"relation_id=" + relation_id,
 			dataType:"json",
 			success: function(s) {
-				var dialog_title="'.$this->pi_getLL('admin_label_edit_option').': " + s.options_name + " - '.$this->pi_getLL('admin_value').': " + s.options_values_name;
+				var dialog_title="'.addslashes($this->pi_getLL('admin_label_edit_option')).': " + s.options_name + " - '.addslashes($this->pi_getLL('admin_value')).': " + s.options_values_name;
 				var dialog_body=\'<div class="edit_dialog_input_wrapper">\';
 				dialog_body+=\'<input type="hidden" class="edit_option_values_inputs" value="\' + relation_id + \'" name="data_id">\';
 				$.each(s.results, function(i, v) {
@@ -296,7 +296,7 @@ if ($rows) {
 					dialog_body+=\'<label>\' + v.lang_title + \' : </label>\';
 					dialog_body+=\'<div class="edit_dialog_input">\';
 					dialog_body+=\'<input type="text" class="edit_option_values_inputs" name="option_values[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_values + \'"/>\';
-					dialog_body+=\'<span class="option_description_label">'.$this->pi_getLL('description').'</span>\';
+					dialog_body+=\'<span class="option_description_label">'.addslashes($this->pi_getLL('description')).'</span>\';
 					dialog_body+=\'<textarea class="edit_option_values_inputs" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']">\' + v.lang_description + \'</textarea>\';
 					dialog_body+=\'</div>\';
 					dialog_body+=\'</div>\';
@@ -416,7 +416,7 @@ if ($rows) {
 						if (s.status=="OK") {
 							new_option_html+=\'<li id="options_\' + s.option_id + \'">\';
 							new_option_html+=\'<h2>\';
-							new_option_html+=\'<span class="option_id">'.$this->pi_getLL('admin_label_option_name').': \' + s.option_name + \' (ID: \' + s.option_id + \')</span>\';
+							new_option_html+=\'<span class="option_id">'.addslashes($this->pi_getLL('admin_label_option_name')).': \' + s.option_name + \' (ID: \' + s.option_id + \')</span>\';
 							new_option_html+=\'<span class="option_edit">\';
 							new_option_html+=\'<a href="#" class="edit_options msadmin_button" rel="\' + s.option_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
 							new_option_html+=\'<a href="#" class="delete_options msadmin_button" rel="\' + s.option_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
@@ -426,7 +426,7 @@ if ($rows) {
 							new_option_html+=\'<div class="option_settings">\';
 							new_option_html+=s.options_groups
 							new_option_html+=\'<span class="listing_type">\';
-							new_option_html+=\''.$this->pi_getLL('admin_label_listing_type').': \';
+							new_option_html+=\''.addslashes($this->pi_getLL('admin_label_listing_type')).': \';
 							new_option_html+=s.listtype;
 							new_option_html+=\'</span>\';
 							new_option_html+=\'<span class="required">\';
@@ -438,16 +438,16 @@ if ($rows) {
 							new_option_html+=\'</span>\';
 							new_option_html+=\'<span class="hide_in_cart">\';
 							if (s.hide_in_cart=="1") {
-								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'\';
+								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'\';
 							} else {
-								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" /> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'\';
+								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" /> '.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'\';
 							}
 							new_option_html+=\'</span>\';
 							new_option_html+=\'</div>\';
 							new_option_html+=\'<div class="option_values">\';
-							new_option_html+=\'<a href="#" class="msadmin_button fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'">'.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>&nbsp;\';
+							new_option_html+=\'<a href="#" class="msadmin_button fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'">'.addslashes($this->pi_getLL('show_attributes_values', 'SHOW VALUES')).'</a>&nbsp;\';
 							new_option_html+=\'<ul class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
-							new_option_html+=\'<li id="last_line_\' + s.option_id + \'"><a href="#" class="msadmin_button add_attributes_values" rel="\' + s.option_id + \'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + s.option_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
+							new_option_html+=\'<li id="last_line_\' + s.option_id + \'"><a href="#" class="msadmin_button add_attributes_values" rel="\' + s.option_id + \'">'.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + s.option_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
 							new_option_html+=\'</ul>\';
 							new_option_html+=\'<input type="hidden" name="values_fetched_\' + s.option_id + \'" id="values_fetched_\' + s.option_id + \'" value="0" />\';
 							new_option_html+=\'</div>\';
@@ -459,7 +459,7 @@ if ($rows) {
 					}
 				});
 			} else {
-				msDialog("ERROR", "'.$this->pi_getLL('admin_label_error_option_name_empty').'");
+				msDialog("ERROR", "'.addslashes($this->pi_getLL('admin_label_error_option_name_empty')).'");
 			}
 		});
 	  	$(document).on("click", ".edit_options", function() {
@@ -523,11 +523,11 @@ if ($rows) {
 					var values_data=\'\';
 					values_data+=\'<li id="option_values_\' + s.values_id + \'" class="option_values_\' + optid + \'_\' + s.values_id + \' \'+li_class+\'">\';
 					values_data+=\'<span class="values_id">\';
-					values_data+=\''.$this->pi_getLL('admin_label_option_value').': \';
+					values_data+=\''.addslashes($this->pi_getLL('admin_label_option_value')).': \';
 					values_data+=s.values_name;
 					values_data+=\'</span>\';
 					values_data+=\'<span class="values_image">\';
-					values_data+=\'<label for="attribute_values_image\' + s.pov2po_id + \'">'.$this->pi_getLL('admin_image').'</label>\';
+					values_data+=\'<label for="attribute_values_image\' + s.pov2po_id + \'">'.addslashes($this->pi_getLL('admin_image')).'</label>\';
 					values_data+=\'<div id="attribute_values_image\' + s.pov2po_id + \'">\';
 					values_data+=\'<noscript>\';
 					values_data+=\'<input name="attribute_values_image\' + s.pov2po_id + \'" type="file" />\';
@@ -553,7 +553,7 @@ if ($rows) {
 							file_type: \'attribute_values_image\' + s.pov2po_id
 						},
 						template: \'<div class="qq-uploader">\' +
-								  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
+								  \'<div class="qq-upload-drop-area"><span>'.addslashes($this->pi_getLL('admin_label_drop_files_here_to_upload')).'</span></div>\' +
 								  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 								  \'<ul class="qq-upload-list"></ul>\' +
 								  \'</div>\',
@@ -601,12 +601,12 @@ if ($rows) {
 								attributesValues[v.values_id]={id: v.values_id, text: v.values_name}
 								values_data+=\'<li id="option_values_\' + v.values_id + \'" class="option_values_\' + opt_id + \'_\' + v.values_id + \' \'+classItem+\'">\';
 								values_data+=\'<span class="values_id">\';
-								values_data+=\''.$this->pi_getLL('admin_label_option_value').': \';
+								values_data+=\''.addslashes($this->pi_getLL('admin_label_option_value')).': \';
 								values_data+=v.values_name;
 								values_data+=\'</span>\';
 								if (v.values_image!=\'disabled\') {
 									values_data+=\'<span class="values_image">\';
-									values_data+=\'<label for="attribute_values_image\' + v.pov2po_id + \'">'.$this->pi_getLL('admin_image').'</label>\';
+									values_data+=\'<label for="attribute_values_image\' + v.pov2po_id + \'">'.addslashes($this->pi_getLL('admin_image')).'</label>\';
 									values_data+=\'<div id="attribute_values_image\' + v.pov2po_id + \'">\';
 									values_data+=\'<noscript>\';
 									values_data+=\'<input name="attribute_values_image\' + v.pov2po_id + \'" type="file" />\';
@@ -622,7 +622,6 @@ if ($rows) {
 								values_data+=\'</span>\';
 								values_data += \'</li>\';
 								$(container_id).append(values_data);
-
 								if (v.values_image!=\'disabled\') {
 									var attribute_values_name=\'attribute_values_image_\' + v.pov2po_id;
 									attributeImageUploader[v.pov2po_id] = new qq.FileUploader({
@@ -654,25 +653,25 @@ if ($rows) {
 								}
 
 							});
-							var values_data= \'<li id="last_line_\' + opt_id + \'"><a href="#" class="msadmin_button add_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
+							var values_data= \'<li id="last_line_\' + opt_id + \'"><a href="#" class="msadmin_button add_attributes_values" rel="\' + opt_id + \'">'.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
 							$(container_id).append(values_data);
 
 							$(fetched_id).val("1");
 							$(container_id).show();
-							$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
+							$(button_label_id).html("'.addslashes($this->pi_getLL('admin_label_hide_values')).'");
 						} else {
 							$(container_id).show();
-							$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
+							$(button_label_id).html("'.addslashes($this->pi_getLL('admin_label_hide_values')).'");
 						}
 					}
 				});
 			} else if ($(fetched_id).val() == "1") {
 				if ($(container_id).is(":hidden")) {
 					$(container_id).show();
-					$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
+					$(button_label_id).html("'.addslashes($this->pi_getLL('admin_label_hide_values')).'");
 				} else {
 					$(container_id).hide();
-					$(button_label_id).html("'.$this->pi_getLL('show_attributes_values').'");
+					$(button_label_id).html("'.addslashes($this->pi_getLL('show_attributes_values')).'");
 				}
 			}
 		});
@@ -701,10 +700,10 @@ if ($rows) {
 			var button_label_id = "#button_label_" + opt_id;
 			if ($(container_id).is(":hidden")) {
 				$(container_id).show();
-				$(button_label_id).html("'.$this->pi_getLL('admin_label_hide_values').'");
+				$(button_label_id).html("'.addslashes($this->pi_getLL('admin_label_hide_values')).'");
 			} else {
 				$(container_id).hide();
-				$(button_label_id).html("'.$this->pi_getLL('show_attributes_values').'");
+				$(button_label_id).html("'.addslashes($this->pi_getLL('show_attributes_values')).'");
 			}
 		});
 		$(document).on("click", ".delete_options", function(e) {

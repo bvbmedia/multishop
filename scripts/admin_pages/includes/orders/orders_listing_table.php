@@ -288,7 +288,7 @@ $headerData.='
 			var orders_id=$(this).attr("rel");
 			var orders_status_id=$("option:selected", this).val();
 			var orders_status_label=$("option:selected", this).text();
-			if (confirm("'.$this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x').')) {
+			if (confirm("'.addslashes($this->pi_getLL('admin_label_js_do_you_want_to_change_orders_id_x_to_status_x')).')) {
 				$.ajax({
 					type:   "POST",
 					url:    "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",

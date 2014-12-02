@@ -17,9 +17,18 @@ switch ($this->ms['page']) {
 		break;
 	case 'get_shoppingcart_shippingcost_overview':
 		$return_data=array();
-		$country_id=$this->post['tx_multishop_pi1']['country_id'];
+		if ($this->tta_user_info['default']['country']) {
+			$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
+		} else {
+			$iso_customer=$this->tta_shop_info;
+		}
+		if (!$iso_customer['cn_iso_nr']) {
+			// fall back (had issue with admin notification)
+			$iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
+		}
+		$delivery_country_id=$this->post['tx_multishop_pi1']['country_id'];
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
-		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($country_id);
+		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id);
 		$count_cart_incl_vat=0;
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$count_cart_incl_vat=1;
@@ -29,7 +38,7 @@ switch ($this->ms['page']) {
 			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs'];
 			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs']);
 		}
-		$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $country_id)+$return_data['shipping_cost']);
+		$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr'])+$return_data['shipping_cost']);
 		$return_data['shipping_method']=$shipping_cost_data;
 		echo json_encode($return_data);
 		exit();

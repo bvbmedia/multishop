@@ -40,26 +40,26 @@ jQuery().ready(function($){
 	browser_width=$(document).width();
 	browser_height=$(document).height();
 	$(document).on("click", ".toggle_advanced_options", function(){
-		var value=$(this).val();				
-		if (value==\''.$this->pi_getLL('admin_show_options').'\')
+		var value=$(this).val();
+		if (value==\''.addslashes($this->pi_getLL('admin_show_options')).'\')
 		{
 			$.cookie("hide_advanced_options", "0", { expires: 7, path: \'/\', domain: \''.$this->server['HTTP_HOST'].'\'});
-			$(this).val("'.$this->pi_getLL('admin_hide_options').'");
+			$(this).val("'.addslashes($this->pi_getLL('admin_hide_options')).'");
 			$(".toggle_advanced_option").show();
 		}
 		else
 		{
 			$.cookie("hide_advanced_options", "1", { expires: 7, path: \'/\', domain: \''.$this->server['HTTP_HOST'].'\'});
-			$(this).val("'.$this->pi_getLL('admin_show_options').'");
+			$(this).val("'.addslashes($this->pi_getLL('admin_show_options')).'");
 			$(".toggle_advanced_option").hide();
 		}
 	});
-});			
+});
 </script>
 <link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/print.css" media="print" />
 ';
 /*
-<script type="text/javascript" src="'.$this->FULL_HTTP_URL_MS.'js/jquery.textarea-expander.js"></script> 
+<script type="text/javascript" src="'.$this->FULL_HTTP_URL_MS.'js/jquery.textarea-expander.js"></script>
 */
 if (strstr($this->conf['admin_template_folder'], "/")) {
 	$prefixed_url=$this->FULL_HTTP_URL;

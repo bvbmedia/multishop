@@ -161,7 +161,7 @@ if ($this->post) {
 				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\''.$customer_id.'\'');
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-					foreach ($this->post['payment_method'] as $payment_method_id => $value) {
+					foreach ($this->post['payment_method'] as $payment_method_id=>$value) {
 						$updateArray=array();
 						$updateArray['customers_id']=$customer_id;
 						$updateArray['method_id']=$payment_method_id;
@@ -172,7 +172,7 @@ if ($this->post) {
 					}
 				}
 				if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-					foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
+					foreach ($this->post['shipping_method'] as $shipping_method_id=>$value) {
 						$updateArray=array();
 						$updateArray['customers_id']=$customer_id;
 						$updateArray['method_id']=$shipping_method_id;
@@ -296,7 +296,7 @@ if ($this->post) {
 				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\''.$customer_id.'\'');
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-					foreach ($this->post['payment_method'] as $payment_method_id => $value) {
+					foreach ($this->post['payment_method'] as $payment_method_id=>$value) {
 						$updateArray=array();
 						$updateArray['customers_id']=$customer_id;
 						$updateArray['method_id']=$payment_method_id;
@@ -307,7 +307,7 @@ if ($this->post) {
 					}
 				}
 				if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-					foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
+					foreach ($this->post['shipping_method'] as $shipping_method_id=>$value) {
 						$updateArray=array();
 						$updateArray['customers_id']=$customer_id;
 						$updateArray['method_id']=$shipping_method_id;
@@ -433,7 +433,7 @@ $images_tab_block.='
 	<input name="tx_multishop_pi1[image]" id="ajax_fe_user_image" type="hidden" value="" />';
 if ($_REQUEST['action']=='edit_product' and $this->post['image']) {
 	$images_tab_block.='<img src="'.mslib_befe::getImagePath($this->post['image'], 'products', '50').'">';
-	$images_tab_block.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+	$images_tab_block.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 }
 $images_tab_block.='</div>';
 $images_tab_block.='
@@ -565,7 +565,6 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
 						</div>';
 	}
 }
-
 switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
