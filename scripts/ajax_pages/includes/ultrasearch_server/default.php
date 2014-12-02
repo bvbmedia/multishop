@@ -1064,9 +1064,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$orderby[]	= 'score desc';
 		}
 	}
-	if (is_numeric($this->post['categories_id'])) {
-		$parent_id=$this->post['categories_id'];
-	}
+	//if (is_numeric($this->post['categories_id'])) {
+	//	$parent_id=$this->post['categories_id'];
+	//}
 	if (is_numeric($parent_id) and $parent_id > 0) {
 		if ($this->ms['MODULES']['FLAT_DATABASE']) {
 			$string='(';
@@ -1206,32 +1206,36 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	if (is_array($this->post['tx_multishop_pi1']['categories']) and count($this->post['tx_multishop_pi1']['categories'])) {
 		$sub_filter=array();
 		foreach ($this->post['tx_multishop_pi1']['categories'] as $categories_id) {
-			if ($this->ms['MODULES']['FLAT_DATABASE']) {
-				$string='(';
-				for ($i=0;$i<4;$i++) {
-					if ($i>0) $string.=" or ";
-					$string.="pf.categories_id_".$i." = '".$categories_id."'";
-				}
-				$string.=')';
-				if ($string) {
-					$sub_filter[]=$string;
-				}
-				//
-			} else {
-				$cats=mslib_fe::get_subcategory_ids($categories_id);
-				$cats[]=$categories_id;
-				if(is_array($this->post['categories_id_extra'])){
-					$cats = array();
-					foreach ($this->post['categories_id_extra'] as $key_id=>$catid){
-						$cats_extra=mslib_fe::get_subcategory_ids($catid);
-						$cats[]=$catid;
-						$cats=array_merge($cats_extra, $cats);
+			if (is_numeric($categories_id)) {
+				if ($this->ms['MODULES']['FLAT_DATABASE']) {
+					$string='(';
+					for ($i=0;$i<4;$i++) {
+						if ($i>0) $string.=" or ";
+						$string.="pf.categories_id_".$i." = '".$categories_id."'";
 					}
+					$string.=')';
+					if ($string) {
+						$sub_filter[]=$string;
+					}
+					//
+				} else {
+					$cats=mslib_fe::get_subcategory_ids($categories_id);
+					$cats[]=$categories_id;
+					if(is_array($this->post['categories_id_extra'])){
+						$cats = array();
+						foreach ($this->post['categories_id_extra'] as $key_id=>$catid){
+							$cats_extra=mslib_fe::get_subcategory_ids($catid);
+							$cats[]=$catid;
+							$cats=array_merge($cats_extra, $cats);
+						}
+					}
+					$sub_filter[]="p2c.categories_id IN (".implode(",",$cats).")";
 				}
-				$sub_filter[]="p2c.categories_id IN (".implode(",",$cats).")";
 			}
 		}
-		$filter[]='('.implode(" OR ",$sub_filter).')';
+		if (count($sub_filter)) {
+			$filter[]='('.implode(" OR ",$sub_filter).')';
+		}
 	}
 	if (is_array($this->post['sort_filter']) and count($this->post['sort_filter'])>0) {
 		$test_orderby = $this->post['sort_filter'][0];
