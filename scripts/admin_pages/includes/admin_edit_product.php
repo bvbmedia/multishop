@@ -272,12 +272,16 @@ jQuery(document).ready(function($) {
 	'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 	$(document).on(\'click\', "#cropEditor", function(e) {
 		e.preventDefault();
+		var cropall=0;
+		if ($("#onecrop_for_all").prop("checked")) {
+			cropall=1;
+		}
 		var image_name=$(this).attr("rel");
 		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
 		jQuery.ajax({
 			type:"POST",
 			url:href,
-			data: "imagename=" + image_name,
+			data: "imagename=" + image_name + "&cropall=init",
 			dataType: "json",
 			success: function(r) {
 				//do something with the sorted data
@@ -289,6 +293,7 @@ jQuery(document).ready(function($) {
 					image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><span class="msBackendButton continueState"><input type="button" id="crop_restore" value="restore image" /></span></div>\';
 					image_interface+=\'<div id="minsize_settings_btn_wrapper" style="display:none"><label for="remove_minsize"><input type="checkbox" id="remove_minsize" checked="checked" /> Lock minimal size of crop selection</label></div>\';
 					image_interface+=\'<div id="aspectratio_settings_btn_wrapper" style="display:none"><label for="remove_aspectratio"><input type="checkbox" id="remove_aspectratio" checked="checked" /> Lock aspect ratio of crop selection</label></div>\';
+					image_interface+=\'<div id="onecrop_for_all_btn_wrapper"><label for="onecrop_for_all_btn_wrapper"><input type="checkbox" id="onecrop_for_all" checked="checked" />Crop all thumbnails size with same coordinates angle</label></div>\';
 					image_interface+=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
 					image_interface+=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="50" />\';
 					image_interface+=\'<input type="hidden" id="jCropX" name="tx_multishop_pi1[jCropX]" class="jcrop_coords" value="" />\';
@@ -298,7 +303,7 @@ jQuery(document).ready(function($) {
 					image_interface+=\'<input type="hidden" id="default_minsize_settings" name="default_minsize_settings" class="jcrop_coords" value="\' + r.minsize[50] + \'" />\';
 					image_interface+=\'<input type="hidden" id="default_aspectratio_settings" name="default_aspectratio_settings" class="jcrop_coords" value="\' + r.aspectratio[50] + \'" />\';
 					image_interface+=\'</div>\';
-					image_interface+=\'<div id="crop_thumb_image_list">\';
+					image_interface+=\'<div id="crop_thumb_image_list" style="display:none">\';
 					image_interface+=\'<ul>\';
 					image_interface+=\'<li><span>thumbs list:</span></li>\';
 					image_interface+=\'<li><a href="#" class="load_image_ready_for_crop active_thumbs" rel="\' + image_name + \'::50"><span>50</span></a></li>\';
@@ -316,6 +321,13 @@ jQuery(document).ready(function($) {
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
 						$("#aspectratio_settings_btn_wrapper").hide();
+						$("#onecrop_for_all_btn_wrapper").hide();
+						$("#onecrop_for_all").prop("checked", false);
+						if (r.crop_all_checked) {
+							$("#crop_thumb_image_list").hide();
+						} else {
+							$("#crop_thumb_image_list").show();
+						}
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
@@ -323,6 +335,14 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
+						$("#onecrop_for_all_btn_wrapper").show();
+						if (r.crop_all_checked) {
+							$("#onecrop_for_all").prop("checked", true);
+							$("#crop_thumb_image_list").hide();
+						} else {
+							$("#onecrop_for_all").prop("checked", false);
+							$("#crop_thumb_image_list").show();
+						}
 						activate_jcrop_js(r.aspectratio[50], r.minsize[50], r.setselect[50], r.truesize[50]);
 					}
 				}
@@ -333,17 +353,22 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		var tmp=$(this).attr("rel").split("::");
 		var current_obj=$(this);
+		var cropall=0;
+		console.log($("#onecrop_for_all").prop("checked"));
+		if ($("#onecrop_for_all").prop("checked")) {
+			cropall=1;
+		}
 		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
 		jQuery.ajax({
 			type:"POST",
 			url:href,
-			data: "imagename=" + tmp[0] + "&size=" + tmp[1],
+			data: "imagename=" + tmp[0] + "&size=" + tmp[1] + "&cropall=" + cropall,
 			dataType: "json",
 			success: function (r) {
 				//do something with the sorted data
 				if (r.status=="OK") {
 					var new_image=\'<img src="\' + r.images[tmp[1]] + \'" id="cropbox"/>\';
-					$(".crop_image").removeClass("active_thumbs");
+					$(".load_image_ready_for_crop").removeClass("active_thumbs");
 					$(current_obj).addClass("active_thumbs");
 					$(".jcrop_coords").val("");
 					$("#jCropImageName").val(tmp[0]);
@@ -357,6 +382,8 @@ jQuery(document).ready(function($) {
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
 						$("#aspectratio_settings_btn_wrapper").hide();
+						$("#onecrop_for_all_btn_wrapper").hide();
+						$("#crop_thumb_image_list").show();
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
@@ -364,6 +391,14 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
+						if (r.crop_all_checked) {
+							$("#onecrop_for_all_btn_wrapper").show();
+							$("#onecrop_for_all").prop("checked", true);
+							$("#crop_thumb_image_list").hide();
+						} else {
+							$("#onecrop_for_all").prop("checked", false);
+							$("#crop_thumb_image_list").show();
+						}
 						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]], r.truesize[tmp[1]]);
 					}
 				}
@@ -373,10 +408,14 @@ jQuery(document).ready(function($) {
 	$(document).on(\'click\', "#crop_save", function(e) {
 		e.preventDefault();
 		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=crop_product_image').'";
+		var cropall=0;
+		if ($("#onecrop_for_all").prop("checked")) {
+			cropall=1;
+		}
 		jQuery.ajax({
 			type:"POST",
 			url:href,
-			data: $(".jcrop_coords").serialize() + "&pid='.(isset($this->get['pid']) && $this->get['pid']>0 ? $this->get['pid'] : '').'",
+			data: $(".jcrop_coords").serialize() + "&cropall=" + cropall + "&pid='.(isset($this->get['pid']) && $this->get['pid']>0 ? $this->get['pid'] : '').'",
 			dataType: "json",
 			success: function(r) {
 				//do something with the sorted data
@@ -393,6 +432,14 @@ jQuery(document).ready(function($) {
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
 						$("#aspectratio_settings_btn_wrapper").hide();
+						$("#crop_thumb_image_list").show();
+						if (r.crop_all_checked) {
+							$("#onecrop_for_all_btn_wrapper").show();
+							$("#onecrop_for_all").prop("checked", true);
+						} else {
+							$("#onecrop_for_all_btn_wrapper").hide();
+							$("#onecrop_for_all").prop("checked", false);
+						}
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
@@ -400,6 +447,16 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
+						$("#crop_thumb_image_list").show();
+						if (r.crop_all_checked) {
+							$("#onecrop_for_all_btn_wrapper").show();
+							$("#onecrop_for_all").prop("checked", true);
+						} else {
+							$("#onecrop_for_all_btn_wrapper").hide();
+							$("#onecrop_for_all").prop("checked", false);
+						}
+						//$("#onecrop_for_all_btn_wrapper").show();
+						//$("#onecrop_for_all").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
 				}
@@ -409,10 +466,14 @@ jQuery(document).ready(function($) {
 	$(document).on(\'click\',"#crop_restore",function(e) {
 		e.preventDefault();
 		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=restore_crop_image').'";
+		var cropall=0;
+		if ($("#onecrop_for_all").prop("checked")) {
+			cropall=1;
+		}
 		jQuery.ajax({
 			type:"POST",
 			url:href,
-			data: $(".jcrop_coords").serialize() + "&pid='.(isset($this->get['pid']) && $this->get['pid']>0 ? $this->get['pid'] : '').'",
+			data: $(".jcrop_coords").serialize() + "&restoreall=" + cropall + "&pid='.(isset($this->get['pid']) && $this->get['pid']>0 ? $this->get['pid'] : '').'",
 			dataType: "json",
 			success: function(r) {
 				//do something with the sorted data
@@ -429,6 +490,15 @@ jQuery(document).ready(function($) {
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
 						$("#aspectratio_settings_btn_wrapper").hide();
+						$("#onecrop_for_all_btn_wrapper").hide();
+						$("#crop_thumb_image_list").show();
+						if (r.crop_all_checked) {
+							$("#onecrop_for_all_btn_wrapper").show();
+							$("#onecrop_for_all").prop("checked", true);
+						} else {
+							$("#onecrop_for_all_btn_wrapper").hide();
+							$("#onecrop_for_all").prop("checked", false);
+						}
 					} else {
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
@@ -436,6 +506,15 @@ jQuery(document).ready(function($) {
 						$("#remove_minsize").prop("checked", true);
 						$("#aspectratio_settings_btn_wrapper").show();
 						$("#remove_aspectratio").prop("checked", true);
+						if (r.crop_all_checked) {
+							$("#crop_thumb_image_list").hide();
+							$("#onecrop_for_all_btn_wrapper").show();
+							$("#onecrop_for_all").prop("checked", true);
+						} else {
+							$("#crop_thumb_image_list").show();
+							$("#onecrop_for_all_btn_wrapper").hide();
+							$("#onecrop_for_all").prop("checked", false);
+						}
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
 				}
@@ -458,6 +537,13 @@ jQuery(document).ready(function($) {
 		});
 		jcrop_api.focus();
 	});
+	$(document).on("change", "#onecrop_for_all", function(){
+		if ($(this).prop("checked")) {
+			$("#crop_thumb_image_list").hide();
+		} else {
+			$("#crop_thumb_image_list").show();
+		}
+	});
 	' : '').'
 	$(document).on(\'click\',".delete_product_images",function(e) {
 		e.preventDefault();
@@ -465,7 +551,7 @@ jQuery(document).ready(function($) {
 		var img_ctr=tmp_img_attr[0];
 		var img_filename=tmp_img_attr[1];
 		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=delete_products_images').'";
-		if (confirm(\'Are you sure?\')) {
+		if (confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'?\')) {
 			jQuery.ajax({
 				type:"POST",
 				url:href,
