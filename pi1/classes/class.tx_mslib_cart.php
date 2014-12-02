@@ -2180,7 +2180,7 @@ class tx_mslib_cart extends tslib_pibase {
 			$markerArray=array();
 			$markerArray['PRODUCTS_TOTAL_PRICE_LABEL']=$this->pi_getLL('total_price');
 			$markerArray['PRODUCTS_SUB_TOTAL_PRICE_LABEL']=$this->pi_getLL('subtotal');
-			$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
+			$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('subtotal');
 			$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents($this->cart['summarize']['sub_total_including_vat']);
 			$markerArray['PRODUCTS_TOTAL_PRICE']=mslib_fe::amount2Cents($this->cart['summarize']['sub_total']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
