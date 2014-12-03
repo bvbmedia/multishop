@@ -233,8 +233,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 			if (isset($this->cookie['sortbysb']) && !empty($this->cookie['sortbysb']) && isset($this->get['tx_multishop_pi1']['sortbysb']) && !empty($this->get['tx_multishop_pi1']['sortbysb'])) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='pf.';
+					$tbl_m='pf.';
 				} else {
 					$tbl='p.';
+					$tbl_m='m.';
 				}
 				switch ($this->cookie['sortbysb']) {
 					case 'best_selling_asc':
@@ -259,9 +261,18 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 					case 'new_desc':
 						$orderby[]=$tbl."products_date_added asc";
 						break;
+					case 'manufacturers_asc':
+						$orderby[]=$tbl_m."manufacturers_name asc";
+						break;
+					case 'manufacturers_desc':
+						$orderby[]=$tbl_m."manufacturers_name desc";
+						break;
 				}
 			}
+			//$this->msDebug=true;
 			$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit_per_page, $orderby, array(), $select, $where, 0, $extra_from, array(), 'products_listing', '', 0, 1, $extra_join);
+			//echo $this->msDebugInfo;
+			//die();
 			$products=$pageset['products'];
 			// load products listing
 			$products_compare=true;

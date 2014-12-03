@@ -697,6 +697,8 @@
             <label index="special_price_expired">expire date</label>
             <label index="products_per_page">Products per page</label>
             <label index="sort_by">Sort by</label>
+            <label index="sortby_options_label_manufacturers_asc">Manufacturers (asc)</label>
+            <label index="sortby_options_label_manufacturers_desc">Manufacturers (desc)</label>
             <label index="sortby_options_label_bestselling_asc">Best selling (asc)</label>
             <label index="sortby_options_label_bestselling_desc">Best selling (desc)</label>
             <label index="sortby_options_label_price_asc">Price (asc)</label>

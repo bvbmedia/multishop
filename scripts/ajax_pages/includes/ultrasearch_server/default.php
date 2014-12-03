@@ -713,6 +713,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldSortByItem';
 				$formFieldItem[$count_select]['options'][0] = $this->pi_getLL('default');
 				$sortby_options = array();
+				$sortby_options['manufacturers_asc']=$this->pi_getLL('sortby_options_label_manufacturers_asc', 'Manufacturers (asc)');
+				$sortby_options['manufacturers_desc']=$this->pi_getLL('sortby_options_label_manufacturers_desc', 'Manufacturers (desc)');
 				$sortby_options['best_selling_asc'] = $this->pi_getLL('sortby_options_label_bestselling_asc', 'Best selling (asc)');
 				$sortby_options['best_selling_desc'] = $this->pi_getLL('sortby_options_label_bestselling_desc', 'Best selling (desc)');
 				$sortby_options['price_asc'] = $this->pi_getLL('sortby_options_label_price_asc', 'Price (asc)');
@@ -1273,8 +1275,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	if (isset($this->cookie['sortbysb']) && !empty($this->cookie['sortbysb'])) {
 		if ($this->ms['MODULES']['FLAT_DATABASE']) {
 			$tbl='pf.';
+			$tbl_m='pf.';
 		} else {
 			$tbl='p.';
+			$tbl_m='m.';
 		}
 		switch ($this->cookie['sortbysb']) {
 			case 'best_selling_asc':
@@ -1298,6 +1302,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				break;
 			case 'new_desc':
 				$orderby[]	=$tbl."products_date_added asc";
+				break;
+			case 'manufacturers_asc':
+				$orderby[]=$tbl_m."manufacturers_name asc";
+				break;
+			case 'manufacturers_desc':
+				$orderby[]=$tbl_m."manufacturers_name desc";
 				break;
 		}
 	}

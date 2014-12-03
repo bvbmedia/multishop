@@ -124,8 +124,10 @@ if (is_numeric($this->get['manufacturers_id'])) {
 			if (isset($this->cookie['sortbysb']) && !empty($this->cookie['sortbysb']) && isset($this->get['tx_multishop_pi1']['sortbysb']) && !empty($this->get['tx_multishop_pi1']['sortbysb'])) {
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='pf.';
+					$tbl_m='pf.';
 				} else {
 					$tbl='p.';
+					$tbl_m='m.';
 				}
 				switch ($this->cookie['sortbysb']) {
 					case 'best_selling_asc':
@@ -149,6 +151,12 @@ if (is_numeric($this->get['manufacturers_id'])) {
 						break;
 					case 'new_desc':
 						$orderby[]=$tbl."products_date_added asc";
+						break;
+					case 'manufacturers_asc':
+						$orderby[]=$tbl_m."manufacturers_name asc";
+						break;
+					case 'manufacturers_desc':
+						$orderby[]=$tbl_m."manufacturers_name desc";
 						break;
 				}
 			}

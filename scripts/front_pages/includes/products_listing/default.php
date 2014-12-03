@@ -227,6 +227,8 @@ if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM']) {
 }
 if ($this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_ORDERBY_FORM']) {
 	$sortby_options=array();
+	$sortby_options['manufacturers_asc']=$this->pi_getLL('sortby_options_label_manufacturers_asc', 'Manufacturers (asc)');
+	$sortby_options['manufacturers_desc']=$this->pi_getLL('sortby_options_label_manufacturers_desc', 'Manufacturers (desc)');
 	$sortby_options['best_selling_asc']=$this->pi_getLL('sortby_options_label_bestselling_asc', 'Best selling (asc)');
 	$sortby_options['best_selling_desc']=$this->pi_getLL('sortby_options_label_bestselling_desc', 'Best selling (desc)');
 	$sortby_options['price_asc']=$this->pi_getLL('sortby_options_label_price_asc', 'Price (asc)');
