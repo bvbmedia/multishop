@@ -218,6 +218,19 @@ if ($this->get['edit']) {
 		$lngproduct[$tmprow['language_id']]=$tmprow;
 	}
 	$psp=$payment_methods[$row['provider']];
+	// psp mail templates
+	if (!isset($psp['vars']['order_confirmation'])) {
+		$psp['vars']['order_confirmation']['type']='psp_mail_template';
+	}
+	if (!isset($psp['vars']['order_paid'])) {
+		$psp['vars']['order_paid']['type']='psp_mail_template';
+	}
+	if (!isset($psp['vars']['order_thank_you_page'])) {
+		$psp['vars']['order_thank_you_page']['type']='psp_mail_template';
+	}
+	if (!isset($psp['vars']['order_payment_reminder'])) {
+		$psp['vars']['order_payment_reminder']['type']='psp_mail_template';
+	}
 	$inner_content=mslib_fe::parsePaymentMethodEditForm($psp, unserialize($row['vars']), 1);
 	$tmpcontent.='<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 		<input name="sub" type="hidden" value="update_payment_method" />
@@ -334,6 +347,19 @@ if ($this->get['edit']) {
 			$content.='</div>';
 		}
 		$psp=$payment_methods[$this->get['payment_method_code']];
+		// psp mail templates
+		if (!isset($psp['vars']['order_confirmation'])) {
+			$psp['vars']['order_confirmation']['type']='psp_mail_template';
+		}
+		if (!isset($psp['vars']['order_paid'])) {
+			$psp['vars']['order_paid']['type']='psp_mail_template';
+		}
+		if (!isset($psp['vars']['order_thank_you_page'])) {
+			$psp['vars']['order_thank_you_page']['type']='psp_mail_template';
+		}
+		if (!isset($psp['vars']['order_payment_reminder'])) {
+			$psp['vars']['order_payment_reminder']['type']='psp_mail_template';
+		}
 		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='<div class="account-field">

@@ -3618,6 +3618,17 @@ class mslib_fe {
 									$content.='</select>';
 								}
 								break;
+							case 'psp_mail_template':
+								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates();
+								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
+									$content.='<select name="'.$field_key.'" id="'.$field_key.'">';
+									$content.='<option value="0">-- order mail templates --</option>'."\n";
+									foreach ($all_orders_psp_mail_template as $row) {
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+									}
+									$content.='</select>';
+								}
+								break;
 						}
 						$content.='</div>';
 					}
@@ -5065,6 +5076,21 @@ class mslib_fe {
 		}
 		return mslib_fe::htmlBox($header_label, $page[0]['content']);
 	}
+	public function getCMSType($cms_id) {
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.type', // SELECT ...
+			'tx_multishop_cms c', // FROM ...
+			'c.id=\''.$cms_id.'\' and c.status = 1', // WHERE...
+			'', // GROUP BY...
+			'c.sort_order', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$pages=array();
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			return $row['type'];
+		}
+	}
 	public function htmlBox($header_label='', $content='', $heading_type='2') {
 		if (!$header_label and !$content) {
 			return '';
@@ -5118,6 +5144,17 @@ class mslib_fe {
 				$status[$row['id']]=$row;
 			}
 			return $status;
+		}
+	}
+	public function getOrderPSPMailTemplates($language_id=0) {
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.*, cd.name', 'tx_multishop_cms c, tx_multishop_cms_description cd', 'cd.language_id=\''.$language_id.'\' and (c.page_uid=0 or c.page_uid=\''.$this->showCatalogFromPage.'\') and c.id=cd.id and (c.type like \'email_order_confirmation%\' or c.type like \'payment_reminder_email_templates%\' or c.type like \'email_order_paid_letter%\' or c.type like \'order_received_thank_you_page%\')', '', 'cd.name', '');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$order_email_template=array();
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$order_email_template[$row['id']]=$row;
+			}
+			return $order_email_template;
 		}
 	}
 	public function getOrderStatusName($id, $language_id=0) {
