@@ -276,18 +276,18 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					if ($tmpArray['payment_method']) {
 						$psp_data=mslib_fe::loadPaymentMethod($tmpArray['payment_method']);
 						$psp_vars=unserialize($psp_data['vars']);
-						if (isset($psp_vars['order_payment_reminder']) && $psp_vars['order_payment_reminder']>0) {
+						if (isset($psp_vars['order_payment_reminder'])) {
 							$psp_mail_template['order_payment_reminder']=mslib_fe::getCMSType($psp_vars['order_payment_reminder']);
 						}
 					}
-					if (isset($psp_mail_template['order_payment_reminder']) && !empty($psp_mail_template['order_payment_reminder'])) {
+					if (isset($psp_mail_template['order_payment_reminder'])) {
 						$page=mslib_fe::getCMScontent($psp_mail_template['order_payment_reminder'], $GLOBALS['TSFE']->sys_language_uid);
 					} else {
 						$cms_type='payment_reminder_email_templates_'.$tmpArray['payment_method'];
 						$page=mslib_fe::getCMScontent($cms_type, $GLOBALS['TSFE']->sys_language_uid);
-					}
-					if (!count($page[0])) {
-						$page=mslib_fe::getCMScontent('payment_reminder_email_templates', $GLOBALS['TSFE']->sys_language_uid);
+						if (!count($page[0])) {
+							$page=mslib_fe::getCMScontent('payment_reminder_email_templates', $GLOBALS['TSFE']->sys_language_uid);
+						}
 					}
 					if ($page[0]['name']) {
 						$reminder_cms_content='';

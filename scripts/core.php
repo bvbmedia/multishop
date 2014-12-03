@@ -376,20 +376,20 @@ switch ($this->ms['page']) {
 				if ($order['payment_method']) {
 					$psp_data=mslib_fe::loadPaymentMethod($order['payment_method']);
 					$psp_vars=unserialize($psp_data['vars']);
-					if (isset($psp_vars['order_thank_you_page']) && $psp_vars['order_thank_you_page']>0) {
+					if (isset($psp_vars['order_thank_you_page'])) {
 						$psp_mail_template['order_thank_you_page']=mslib_fe::getCMSType($psp_vars['order_thank_you_page']);
 					}
 				}
 				// first try to load the custom thank you page based on the payment method
-				if (isset($psp_mail_template['order_thank_you_page']) && !empty($psp_mail_template['order_thank_you_page'])) {
+				if (isset($psp_mail_template['order_thank_you_page'])) {
 					$page=mslib_fe::getCMScontent($psp_mail_template['order_thank_you_page'], $GLOBALS['TSFE']->sys_language_uid);
 				} else {
 					if ($order['payment_method']) {
 						$page=mslib_fe::getCMScontent('order_received_thank_you_page_'.$order['payment_method'], $GLOBALS['TSFE']->sys_language_uid);
 					}
-				}
-				if (!count($page[0])) {
-					$page=mslib_fe::getCMScontent('order_received_thank_you_page', $GLOBALS['TSFE']->sys_language_uid);
+					if (!count($page[0])) {
+						$page=mslib_fe::getCMScontent('order_received_thank_you_page', $GLOBALS['TSFE']->sys_language_uid);
+					}
 				}
 				// custom hook that can be controlled by third-party plugin
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout.php']['checkoutThankYouPageMarkerPreProc'])) {
