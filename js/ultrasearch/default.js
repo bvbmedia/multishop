@@ -134,7 +134,15 @@ jQuery(document).ready(function ($) {
             }
             pagination_wrapper += "</ul></div>";
             // PAGINATION EOF
-            var content = '<div class="tx-multishop-pi1"><div id="tx_multishop_pi1_core">' + listing_products + '</div></div>' + pagination_wrapper;
+            var content = '';
+            content += '<h1>' + data.resultSet.current_categories.name + '</h1>';
+            if (data.resultSet.categories_description.header != "") {
+                content += '<div class="category_header_content ">' + data.resultSet.categories_description.header + '</div>';
+            }
+            content += '<div class="tx-multishop-pi1"><div id="tx_multishop_pi1_core">' + listing_products + '</div></div>' + pagination_wrapper;
+            if (data.resultSet.categories_description.footer != "") {
+                content += '<div class="category_footer_content ">' + data.resultSet.categories_description.footer + '</div>';
+            }
             $(content_middle).append(ultrasearcch_resultset_header + content);
             if (typeof Cufon != "undefined") {
                 //object exists
