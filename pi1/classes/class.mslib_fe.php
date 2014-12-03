@@ -5314,16 +5314,16 @@ class mslib_fe {
 				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
-					$message[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
+					$messages[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
 				}
 			} else {
 				$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-					$message[]=$this->pi_getLL('admin_label_store_tt_address_not_found');
+					$messages[]=$this->pi_getLL('admin_label_store_tt_address_not_found');
 				} else {
 					$res=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-					$message[]=sprintf($this->pi_getLL('admin_label_store_tt_address_id_found'), $res['uid']);
+					$messages[]=sprintf($this->pi_getLL('admin_label_store_tt_address_id_found'), $res['uid']);
 				}
 			}
 			// now some constants eof
