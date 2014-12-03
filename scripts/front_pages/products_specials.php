@@ -2,10 +2,8 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-if (!is_numeric($this->limit)) {
-	$this->limit=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
-} else {
-	$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=$this->limit;
+if ($this->productsLimit) {
+	$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']=$this->productsLimit;
 }
 $filter=array();
 $having=array();
@@ -115,7 +113,7 @@ if ($contentType=='specials_listing_page') {
 			}
 			$filter[]='('.$tbl.'categories_id IN ('.implode(",", $cats).'))';
 		}
-		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_specials');
+		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, array(), array(), 'products_specials');
 		$products=$pageset['products'];
 		if (!$products) {
 			// return nothing
@@ -132,7 +130,7 @@ if ($contentType=='specials_listing_page') {
 				}
 			}
 			// pagination
-			if (!$this->hidePagination and $pageset['total_rows']>$this->limit) {
+			if (!$this->hidePagination and $pageset['total_rows']>$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']) {
 				if (!isset($this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']) || $this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']=='default') {
 					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');
 				} else {
@@ -258,6 +256,7 @@ if ($contentType=='specials_listing_page') {
 		if ($this->no_database_results) {
 			return '';
 		}
+		$limit_per_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
 		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_specials', '', 0, 1, $extrajoin);
 		$products=$pageset['products'];
 		if (!count($products)) {
