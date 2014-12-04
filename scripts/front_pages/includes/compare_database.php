@@ -217,6 +217,54 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select id from tx_multishop_categories_crop_image_coordinate limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="CREATE TABLE `tx_multishop_categories_crop_image_coordinate` (
+		  `id` int(11) auto_increment,
+		  `categories_id` int(11) default '0',
+		  `image_filename` varchar(255) default '',
+		  `image_size` varchar(10) DEFAULT '',
+		  `coordinate_x` int(11) default '0',
+		  `coordinate_y` int(11) default '0',
+		  `coordinate_w` int(11) default '0',
+		  `coordinate_h` int(11) default '0',
+		  PRIMARY KEY (`id`),
+		  KEY `categories_id` (`categories_id`),
+		  KEY `image_filename` (`image_filename`),
+		  KEY `image_size` (`image_size`),
+		  KEY `coordinate_x` (`coordinate_x`),
+		  KEY `coordinate_y` (`coordinate_y`),
+		  KEY `coordinate_w` (`coordinate_w`),
+		  KEY `coordinate_h` (`coordinate_h`)
+		);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select id from tx_multishop_manufacturers_crop_image_coordinate limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="CREATE TABLE `tx_multishop_manufacturers_crop_image_coordinate` (
+		  `id` int(11) auto_increment,
+		  `manufacturers_id` int(11) default '0',
+		  `image_filename` varchar(255) default '',
+		  `image_size` varchar(10) DEFAULT '',
+		  `coordinate_x` int(11) default '0',
+		  `coordinate_y` int(11) default '0',
+		  `coordinate_w` int(11) default '0',
+		  `coordinate_h` int(11) default '0',
+		  PRIMARY KEY (`id`),
+		  KEY `manufacturers_id` (`manufacturers_id`),
+		  KEY `image_filename` (`image_filename`),
+		  KEY `image_size` (`image_size`),
+		  KEY `coordinate_x` (`coordinate_x`),
+		  KEY `coordinate_y` (`coordinate_y`),
+		  KEY `coordinate_w` (`coordinate_w`),
+		  KEY `coordinate_h` (`coordinate_h`)
+		);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// for later when we want private customer_id and orders_id per shop
 	$str="select tx_multishop_customer_id from fe_users limit 1";
@@ -244,7 +292,6 @@ if (!$skipMultishopUpdates) {
 	}
 	*/
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
-
 	// CREATE / UPDATE MULTISHOP SETTINGS. CAN BE FURTHER CONTROLLED BY THIRD PARTY PLUGINS.
 	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/configuration/tx_multishop_configuration_group.php');
 	foreach ($records as $record) {

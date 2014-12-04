@@ -183,6 +183,19 @@ switch ($_REQUEST['action']) {
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
 						}
+						if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
+							$crop_images_data=mslib_befe::getRecords($item['categories_id'], 'tx_multishop_categories_crop_image_coordinate', 'categories_id');
+							if (is_array($crop_images_data) && count($crop_images_data)) {
+								foreach ($crop_images_data as $crop_image_data) {
+									$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
+									$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'categories', $src_image_size);
+									$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'categories', 'original');
+									// backup original
+									copy($src, $src.'-ori-'.$image_size);
+									mslib_befe::cropImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h'], 'categories');
+								}
+							}
+						}
 					}
 					break;
 				case 'manufacturers':
@@ -199,6 +212,19 @@ switch ($_REQUEST['action']) {
 								$updateArray['manufacturers_image']=$newFilename;
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=\''.$item['manufacturers_id'].'\'', $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
+						}
+						if ($this->ms['MODULES']['ADMIN_CROP_MANUFACTURERS_IMAGES']) {
+							$crop_images_data=mslib_befe::getRecords($item['manufacturers_id'], 'tx_multishop_manufacturers_crop_image_coordinate', 'manufacturers_id');
+							if (is_array($crop_images_data) && count($crop_images_data)) {
+								foreach ($crop_images_data as $crop_image_data) {
+									$src_image_size=($crop_image_data['image_size']=='enlarged' ? 'normal' : $crop_image_data['image_size']);
+									$src=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'manufacturers', $src_image_size);
+									$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'manufacturers', 'original');
+									// backup original
+									copy($src, $src.'-ori-'.$image_size);
+									mslib_befe::cropImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h'], 'manufacturers');
+								}
 							}
 						}
 					}
@@ -235,7 +261,7 @@ switch ($_REQUEST['action']) {
 									$src_original=$this->DOCUMENT_ROOT.mslib_befe::getImagePath($crop_image_data['image_filename'], 'products', 'original');
 									// backup original
 									copy($src, $src.'-ori-'.$image_size);
-									mslib_befe::cropProductImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h']);
+									mslib_befe::cropImage($src, $src_original, $crop_image_data['image_size'], $crop_image_data['coordinate_x'], $crop_image_data['coordinate_y'], $crop_image_data['coordinate_w'], $crop_image_data['coordinate_h'], 'products');
 								}
 							}
 						}

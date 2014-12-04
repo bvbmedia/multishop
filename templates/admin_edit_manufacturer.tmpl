@@ -1,24 +1,44 @@
 <!-- ###TEMPLATE### begin -->
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(".tab_content").hide();
+        $("ul.tabs li:first").addClass("active").show();
+        $(".tab_content:first").show();
+        $("ul.tabs li").click(function () {
+            $("ul.tabs li").removeClass("active");
+            $(this).addClass("active");
+            $(".tab_content").hide();
+            var activeTab = $(this).find("a").attr("href");
+            $(activeTab).fadeIn(0);
+            return false;
+        });
+        $(document).on('click', ".delete_manufacturers_images", function (e) {
+            e.preventDefault();
+            var img_filename = $(this).attr("rel");
+            href = "###AJAX_URL_DELETE_MANUFACTURERS_IMAGE###";
+            if (confirm('###ADMIN_LABEL_JS_ARE_YOU_SURE###?')) {
+                jQuery.ajax({
+                    type: "POST",
+                    url: href,
+                    data: "mid=###DELETE_IMAGES_MANUFACTURERS_ID###&image_filename=" + img_filename,
+                    dataType: "json",
+                    success: function (r) {
+                        //do something with the sorted data
+                        var image_action_div_id = ".image_action";
+                        var ajax_manufacturers_image_id = "#ajax_manufacturers_image";
+                        $(image_action_div_id).html("");
+                        $(ajax_manufacturers_image_id).val("");
+                    }
+                });
+            }
+        });
+    });
+</script>
 <form class="admin_manufacturers_edit blockSubmitForm" name="admin_manufacturers_edit_###MANUFACTURER_ID###" id="admin_manufacturers_edit_###MANUFACTURER_ID###" method="post" action="###MANUFACTURER_EDIT_FORM_URL###" enctype="multipart/form-data">
     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
     <input name="action" type="hidden" value="###VALUE_FORM_MANUFACTURER_ACTION_URL###" />
 
     <div class="main-heading"><h1>###MANUFACTURER_FORM_HEADING###</h1></div>
-    <script type="text/javascript">
-        jQuery(document).ready(function ($) {
-            $(".tab_content").hide();
-            $("ul.tabs li:first").addClass("active").show();
-            $(".tab_content:first").show();
-            $("ul.tabs li").click(function () {
-                $("ul.tabs li").removeClass("active");
-                $(this).addClass("active");
-                $(".tab_content").hide();
-                var activeTab = $(this).find("a").attr("href");
-                $(activeTab).fadeIn(0);
-                return false;
-            });
-        });
-    </script>
     <div id="tab-container" class="msadminVerticalTabs">
         <ul class="tabs" id="admin_orders">
             <li class="active"><a href="#category_main">###ADMIN_LABEL_TABS_DETAILS###</a></li>
@@ -40,10 +60,17 @@
                         </noscript>
                     </div>
                     <input name="ajax_manufacturers_image" id="ajax_manufacturers_image" type="hidden" value="" />
-                    <!-- ###MANUFACTURER_IMAGES### begin -->
-                    <img src="###MANUFACTURER_IMAGES_SRC###">
-                    <a href="###MANUFACTURER_IMAGES_DELETE_LINK###" onclick="return confirm('###ADMIN_LABEL_JS_ARE_YOU_SURE###')"><img src="###FULL_HTTP_URL###templates/images/icons/delete2.png" border="0" alt="delete image"></a>
-                    <!-- ###MANUFACTURER_IMAGES### end -->
+
+                    <div class="image_action">
+                        <!-- ###MANUFACTURER_IMAGES### begin -->
+                        <img src="###MANUFACTURER_IMAGES_SRC###">
+
+                        <div class="image_tools">
+                            ###MANUFACTURERS_IMAGE_CROP_BUTTON###
+                            <a href="#" class="delete_manufacturers_images" rel="###MANUFACTURER_IMAGES_FILENAME###"><img src="###FULL_HTTP_URL###templates/images/icons/delete2.png" border="0" alt="delete image"></a>
+                        </div>
+                        <!-- ###MANUFACTURER_IMAGES### end -->
+                    </div>
                 </div>
                 <script type="text/javascript">
                     jQuery(document).ready(function ($) {
@@ -58,11 +85,12 @@
                             template: '<div class="qq-uploader">' +
                                     '<div class="qq-upload-drop-area"><span>###ADMIN_LABEL_DROP_FILES_HERE_TO_UPLOAD###</span></div>' +
                                     '<div class="qq-upload-button">###MANUFACTURER_IMAGES_LABEL_CHOOSE_IMAGE###</div>' +
-                                    '<ul class="qq-upload-list"></ul>' +
+                                    '<ul class="qq-upload-list" id="qq-upload-list-ul"></ul>' +
                                     '</div>',
                             onComplete: function (id, fileName, responseJSON) {
                                 var filenameServer = responseJSON['filename'];
                                 $("#ajax_manufacturers_image").val(filenameServer);
+                                ###MANUFACTURERS_IMAGE_CROP_JS###
                             },
                             debug: false
                         });

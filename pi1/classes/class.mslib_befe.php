@@ -601,8 +601,19 @@ class mslib_befe {
 			return $filename;
 		}
 	}
-	public function cropProductImage($filesrc, $filesrc_original, $thumb_size, $coords_x, $coords_y, $coords_w, $coords_h) {
-		$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_' . strtoupper($thumb_size)]);
+	public function cropImage($filesrc, $filesrc_original, $thumb_size, $coords_x, $coords_y, $coords_w, $coords_h, $image_type='products') {
+		switch ($image_type) {
+			case 'manufacturers':
+				$format=explode("x", $this->ms['MODULES']['MANUFACTURER_IMAGE_SIZE_NORMAL']);
+				break;
+			case 'categories':
+				$format=explode("x", $this->ms['MODULES']['CATEGORY_IMAGE_SIZE_NORMAL']);
+				break;
+			case 'products':
+			default:
+				$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_'.strtoupper($thumb_size)]);
+				break;
+		}
 		$targ_w=(($coords_w<$format[0])? $coords_w : $format[0]); //$coords_w;
 		$targ_h=(($coords_h<$format[1])? $coords_h : $format[1]); //$coords_h;
 		$jpeg_quality=90;

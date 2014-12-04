@@ -394,6 +394,18 @@ if ($this->post) {
 		}
 	}
 	if ($catid) {
+		if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
+			if ($update_category_image) {
+				$image_filename=$update_category_image;
+				$image_crop_data=mslib_befe::getRecord($image_filename, 'tx_multishop_categories_crop_image_coordinate', 'image_filename', array('categories_id=\'0\''));
+				if (is_array($image_crop_data) && $image_crop_data['id']>0) {
+					$updateArray=array();
+					$updateArray['categories_id']=$catid;
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_crop_image_coordinate', 'id=\''.$image_crop_data['id'].'\'', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
+			}
+		}
 		foreach ($this->post['categories_name'] as $key=>$value) {
 			$str="select 1 from tx_multishop_categories_description where categories_id='".$catid."' and language_id='".$key."'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -474,16 +486,6 @@ if ($this->post) {
 		$str="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id='".$_REQUEST['cid']."' and c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$category=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		if ($this->get['delete_image'] and is_numeric($this->get['cid'])) {
-			if ($category[$this->get['delete_image']]) {
-				mslib_befe::deleteCategoryImage($category[$this->get['delete_image']]);
-				$updateArray=array();
-				$updateArray[$this->get['delete_image']]='';
-				$category[$this->get['delete_image']]='';
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\''.$this->get['cid'].'\'', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			}
-		}
 		$str="SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id='".$this->get['cid']."' and c.categories_id=cd.categories_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -552,11 +554,17 @@ if ($this->post) {
 			<input type="hidden" name="parent_id" id="parent_id" class="categoriesIdSelect2BigDropWider" value="'.$category['parent_id'].'" />
 		</div>';
 		//'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
-		$categories_image='';
+		$categories_image='<div class="image_action">';
 		if ($_REQUEST['action']=='edit_category' and $category['categories_image']) {
 			$categories_image.='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'">';
-			$categories_image.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&action=edit_category&delete_image=categories_image').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+			$categories_image.='<div class="image_tools">';
+			if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
+				$categories_image.=' <a href="#" id="cropEditor" rel="'.$category['categories_image'].'"><span>crop</span></a>';
+			}
+			$categories_image.=' <a  class="delete_categories_images" rel="\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+			$categories_image.='</div>';
 		}
+		$categories_image.='</div>';
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['addItemsToTabDetails'])) {
 			$params=array(
@@ -767,6 +775,24 @@ if ($this->post) {
 		$subpartArray['###LABEL_STATUS_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_IMAGE###']=$this->pi_getLL('admin_image');
 		$subpartArray['###UPLOAD_IMAGE_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images');
+		$subpartArray['###DELETE_IMAGES_CATEGORIES_ID###']=$category['categories_id'];
+		$subpartArray['###LABEL_ARE_YOU_SURE###']=addslashes($this->pi_getLL('admin_label_js_are_you_sure'));
+		$subpartArray['###AJAX_URL_DELETE_CATEGORIES_IMAGE###']=mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=delete_categories_images');
+		$subpartArray['###CATEGORIES_IMAGE_CROP_JS###']='';
+		if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
+			$subpartArray['###CATEGORIES_IMAGE_CROP_JS###']='
+			var filenameLocationServer = responseJSON[\'fileLocation\'];
+			// hide the qq-upload status
+			$("#qq-upload-list-ul").hide();
+			// display instantly uploaded image
+			$(".image_action").empty();
+			var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
+			new_image+=\'<div class="image_tools">\';
+			new_image+=\'<a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
+			new_image+=\'<a href="#" class="delete_categories_images" rel="\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+			new_image+=\'</div>\';
+			$(".image_action").html(new_image);';
+		}
 		$subpartArray['###LABEL_CHOOSE_IMAGE###']=addslashes(htmlspecialchars($this->pi_getLL('choose_image')));
 		$subpartArray['###CATEGORIES_IMAGE###']=$categories_image;
 		$subpartArray['###LABEL_CATEGORIES_EXTERNAL_URL###']=$this->pi_getLL('admin_external_url');
@@ -829,6 +855,234 @@ if ($this->post) {
 		$js_extra=array();
 		$plugins_extra_tab['tabs_header']=array();
 		$plugins_extra_tab['tabs_content']=array();
+		// crop images
+		if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
+			$jcrop_js='
+<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.Jcrop.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.color.js"></script>
+<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/css/jquery.Jcrop.css" type="text/css" />';
+			$GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_js;
+			$js_extra['functions'][]='
+var jcrop_api;
+var bounds, boundx, boundy, scaled;
+function activate_jcrop_js(aspecratio, minsize, setselect, truesize) {
+	jcrop_api=$(\'#cropbox\').Jcrop({
+		onChange: updateCoords,
+		onSelect: updateCoords,
+		aspectRatio: aspecratio,
+		minSize: minsize,
+		setSelect: setselect,
+		trueSize: truesize,
+		boxWidth: 640,
+		boxHeight: 480
+	},function(){
+		jcrop_api = this;
+		bounds = jcrop_api.getBounds();
+		boundx = bounds[0];
+		boundy = bounds[1];
+		scaled = jcrop_api.tellScaled();
+
+		var new_scale_x2=minsize[0]==null?50:minsize[0];
+		var new_scale_y2=minsize[1]==null?50:minsize[1];
+		if (parseInt(minsize[0])>parseInt(scaled.x2)) {
+			new_scale_x2=scaled.x2;
+		}
+		if (parseInt(minsize[1])>parseInt(scaled.y2)) {
+			new_scale_y2=scaled.y2;
+		}
+		$("#default_minsize_settings").val(new_scale_x2 + "," + new_scale_y2);
+		jcrop_api.setOptions({
+			minSize: [new_scale_x2, new_scale_y2],
+			setSelect: [0, 0, new_scale_x2, new_scale_y2],
+		});
+	});
+}
+function updateCoords(c) {
+	$(\'#jCropX\').val(c.x);
+	$(\'#jCropY\').val(c.y);
+	$(\'#jCropW\').val(c.w);
+	$(\'#jCropH\').val(c.h);
+}
+function cropEditorDialog(textTitle, textBody) {
+    maxwidth = typeof maxwidth !== \'undefined\' ? maxwidth : 1100;
+    var dialog = $(\'<div/>\', {
+        id: \'dialog\',
+        title: textTitle
+    });
+    dialog.append(textBody);
+    dialog.dialog({
+        width: 670,
+        modal: true,
+        body: "",
+        resizable: false,
+        open: function () {
+            // right button (OK button) must be the default button when user presses enter key
+            $(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').focus();
+        },
+        close: function() {
+        	$(this).dialog("close");
+			$(this).remove();
+        },
+        buttons: {
+            "ok": {
+                text: "Close",
+                class: \'msOkButton msBackendButton backState arrowRight arrowPosLeft\',
+                click: function () {
+                    $(this).dialog("close");
+                    $(this).remove();
+                }
+            }
+        }
+    });
+}';
+			$js_extra['triggers'][]='
+$(document).on(\'click\', "#cropEditor", function(e) {
+	e.preventDefault();
+	var image_name=$(this).attr("rel");
+	href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop&tx_multishop_pi1[crop_section]=categories').'";
+	jQuery.ajax({
+		type:"POST",
+		url:href,
+		data: "imagename=" + image_name,
+		dataType: "json",
+		success: function(r) {
+			//do something with the sorted data
+			if (r.status=="OK") {
+				var image_interface=\'<div id="crop_editor_wrapper">\';
+				image_interface+=\'<div id="crop_main_window_editor" align="center"><img src="\' + r.images["enlarged"] + \'" id="cropbox" /></div>\';
+				image_interface+=\'<div id="crop_thumb_image_button">\';
+				image_interface+=\'<div id="crop_save_btn_wrapper""><span class="msBackendButton continueState"><input type="button" id="crop_save" value="crop & save" /></span></div>\';
+				image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><span class="msBackendButton continueState"><input type="button" id="crop_restore" value="restore image" /></span></div>\';
+				image_interface+=\'<div id="minsize_settings_btn_wrapper" style="display:none"><label for="remove_minsize"><input type="checkbox" id="remove_minsize" checked="checked" /> Lock minimal size of crop selection</label></div>\';
+				image_interface+=\'<div id="aspectratio_settings_btn_wrapper" style="display:none"><label for="remove_aspectratio"><input type="checkbox" id="remove_aspectratio" checked="checked" /> Lock aspect ratio of crop selection</label></div>\';
+				image_interface+=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
+				image_interface+=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="enlarged" />\';
+				image_interface+=\'<input type="hidden" id="jCropX" name="tx_multishop_pi1[jCropX]" class="jcrop_coords" value="" />\';
+				image_interface+=\'<input type="hidden" id="jCropY" name="tx_multishop_pi1[jCropY]" class="jcrop_coords" value="" />\';
+				image_interface+=\'<input type="hidden" id="jCropW" name="tx_multishop_pi1[jCropW]" class="jcrop_coords" value="" />\';
+				image_interface+=\'<input type="hidden" id="jCropH" name="tx_multishop_pi1[jCropH]" class="jcrop_coords" value="" />\';
+				image_interface+=\'<input type="hidden" id="default_minsize_settings" name="default_minsize_settings" class="jcrop_coords" value="\' + r.minsize["enlarged"] + \'" />\';
+				image_interface+=\'<input type="hidden" id="default_aspectratio_settings" name="default_aspectratio_settings" class="jcrop_coords" value="\' + r.aspectratio["enlarged"] + \'" />\';
+				image_interface+=\'</div>\';
+				image_interface+=\'</div>\';
+				cropEditorDialog("Crop image " + image_name + " [enlarged]", image_interface);
+				// default for first time loading is enlarged
+				if (r.disable_crop_button=="disabled") {
+					$("#crop_save_btn_wrapper").hide();
+					$("#crop_restore_btn_wrapper").show();
+					$("#minsize_settings_btn_wrapper").hide();
+					$("#aspectratio_settings_btn_wrapper").hide();
+				} else {
+					$("#crop_save_btn_wrapper").show();
+					$("#crop_restore_btn_wrapper").hide();
+					$("#minsize_settings_btn_wrapper").show();
+					$("#remove_minsize").prop("checked", true);
+					$("#aspectratio_settings_btn_wrapper").show();
+					$("#remove_aspectratio").prop("checked", true);
+					activate_jcrop_js(r.aspectratio["enlarged"], r.minsize["enlarged"], r.setselect["enlarged"], r.truesize["enlarged"]);
+				}
+			}
+		}
+	});
+});
+$(document).on(\'click\', "#crop_save", function(e) {
+	e.preventDefault();
+	href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=crop_product_image&tx_multishop_pi1[crop_section]=categories').'";
+	var cropall=0;
+	if ($("#onecrop_for_all").prop("checked")) {
+		cropall=1;
+	}
+	jQuery.ajax({
+		type:"POST",
+		url:href,
+		data: $(".jcrop_coords").serialize() + "&cid='.(isset($this->get['cid']) && $this->get['cid']>0 ? $this->get['cid'] : '').'",
+		dataType: "json",
+		success: function(r) {
+			//do something with the sorted data
+			if (r.status=="OK") {
+				var new_image=\'<img src="\' + r.images[$("#jCropImageSize").val()] + \'" id="cropbox"/>\';
+				$("#jCropX").val("");
+				$("#jCropY").val("");
+				$("#jCropW").val("");
+				$("#jCropH").val("");
+				$("#crop_main_window_editor").empty();
+				$("#crop_main_window_editor").html(new_image);
+				if (r.disable_crop_button=="disabled") {
+					$("#crop_save_btn_wrapper").hide();
+					$("#crop_restore_btn_wrapper").show();
+					$("#minsize_settings_btn_wrapper").hide();
+					$("#aspectratio_settings_btn_wrapper").hide();
+				} else {
+					$("#crop_save_btn_wrapper").show();
+					$("#crop_restore_btn_wrapper").hide();
+					$("#minsize_settings_btn_wrapper").show();
+					$("#remove_minsize").prop("checked", true);
+					$("#aspectratio_settings_btn_wrapper").show();
+					$("#remove_aspectratio").prop("checked", true);
+					activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
+				}
+			}
+		}
+	});
+});
+$(document).on(\'click\',"#crop_restore",function(e) {
+	e.preventDefault();
+	href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=restore_crop_image&tx_multishop_pi1[crop_section]=categories').'";
+	var cropall=0;
+	if ($("#onecrop_for_all").prop("checked")) {
+		cropall=1;
+	}
+	jQuery.ajax({
+		type:"POST",
+		url:href,
+		data: $(".jcrop_coords").serialize() + "cid='.(isset($this->get['cid']) && $this->get['cid']>0 ? $this->get['cid'] : '').'",
+		dataType: "json",
+		success: function(r) {
+			//do something with the sorted data
+			if (r.status=="OK") {
+				var new_image=\'<img src="\' + r.images[$("#jCropImageSize").val()] + \'" id="cropbox"/>\';
+				$("#jCropX").val("");
+				$("#jCropY").val("");
+				$("#jCropW").val("");
+				$("#jCropH").val("");
+				$("#crop_main_window_editor").empty();
+				$("#crop_main_window_editor").html(new_image);
+				if (r.disable_crop_button=="disabled") {
+					$("#crop_save_btn_wrapper").hide();
+					$("#crop_restore_btn_wrapper").show();
+					$("#minsize_settings_btn_wrapper").hide();
+					$("#aspectratio_settings_btn_wrapper").hide();
+				} else {
+					$("#crop_save_btn_wrapper").show();
+					$("#crop_restore_btn_wrapper").hide();
+					$("#minsize_settings_btn_wrapper").show();
+					$("#remove_minsize").prop("checked", true);
+					$("#aspectratio_settings_btn_wrapper").show();
+					$("#remove_aspectratio").prop("checked", true);
+					activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
+				}
+			}
+		}
+	});
+});
+$(document).on("change", "#remove_minsize", function(){
+	jcrop_api.setOptions(this.checked? {
+		minSize: $("#default_minsize_settings").val().split(",")
+	}: {
+		minSize: [0,0]
+	});
+	jcrop_api.focus();
+});
+$(document).on("change", "#remove_aspectratio", function(){
+	jcrop_api.setOptions(this.checked? {
+		aspectRatio: $("#default_aspectratio_settings").val()
+	}: {
+		aspectRatio: 0
+	});
+	jcrop_api.focus();
+});
+';
+		}
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'])) {
 			$params=array(

@@ -1477,7 +1477,6 @@ CREATE TABLE `tx_multishop_feeds_stock_excludelist` (
   KEY `exclude_id` (`exclude_id`),
   KEY `exclude_type` (`exclude_type`)
 );
-
 CREATE TABLE `tx_multishop_sessions` (
   `id` int(11) auto_increment,
   `customer_id` int(11) default '0',
@@ -1502,7 +1501,6 @@ CREATE TABLE `tx_multishop_sessions` (
   KEY `segment_type` (`segment_type`),
   KEY `segment_id` (`segment_id`)
 );
-
 CREATE TABLE `tx_multishop_product_crop_image_coordinate` (
   `id`             INT(11) AUTO_INCREMENT,
   `products_id` INT(11) DEFAULT '0',
@@ -1514,6 +1512,42 @@ CREATE TABLE `tx_multishop_product_crop_image_coordinate` (
   `coordinate_h`   INT(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `products_id` (`products_id`),
+  KEY `image_filename` (`image_filename`),
+  KEY `image_size` (`image_size`),
+  KEY `coordinate_x` (`coordinate_x`),
+  KEY `coordinate_y` (`coordinate_y`),
+  KEY `coordinate_w` (`coordinate_w`),
+  KEY `coordinate_h` (`coordinate_h`)
+);
+CREATE TABLE `tx_multishop_categories_crop_image_coordinate` (
+  `id`             INT(11) AUTO_INCREMENT,
+  `categories_id`  INT(11) DEFAULT '0',
+  `image_filename` VARCHAR(255) DEFAULT '',
+  `image_size`     VARCHAR(10) DEFAULT '',
+  `coordinate_x`   INT(11) DEFAULT '0',
+  `coordinate_y`   INT(11) DEFAULT '0',
+  `coordinate_w`   INT(11) DEFAULT '0',
+  `coordinate_h`   INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `categories_id` (`categories_id`),
+  KEY `image_filename` (`image_filename`),
+  KEY `image_size` (`image_size`),
+  KEY `coordinate_x` (`coordinate_x`),
+  KEY `coordinate_y` (`coordinate_y`),
+  KEY `coordinate_w` (`coordinate_w`),
+  KEY `coordinate_h` (`coordinate_h`)
+);
+CREATE TABLE `tx_multishop_manufacturers_crop_image_coordinate` (
+  `id`               INT(11) AUTO_INCREMENT,
+  `manufacturers_id` INT(11) DEFAULT '0',
+  `image_filename`   VARCHAR(255) DEFAULT '',
+  `image_size`       VARCHAR(10) DEFAULT '',
+  `coordinate_x`     INT(11) DEFAULT '0',
+  `coordinate_y`     INT(11) DEFAULT '0',
+  `coordinate_w`     INT(11) DEFAULT '0',
+  `coordinate_h`     INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `manufacturers_id` (`manufacturers_id`),
   KEY `image_filename` (`image_filename`),
   KEY `image_size` (`image_size`),
   KEY `coordinate_x` (`coordinate_x`),

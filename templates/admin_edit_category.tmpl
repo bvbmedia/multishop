@@ -13,6 +13,26 @@ jQuery(document).ready(function ($) {
         $(activeTab).fadeIn(0);
         return false;
     });
+    $(document).on('click', ".delete_categories_images", function (e) {
+        e.preventDefault();
+        var img_filename = $(this).attr("rel");
+        href = "###AJAX_URL_DELETE_CATEGORIES_IMAGE###";
+        if (confirm('###LABEL_ARE_YOU_SURE###?')) {
+            jQuery.ajax({
+                type: "POST",
+                url: href,
+                data: "cid=###DELETE_IMAGES_CATEGORIES_ID###&image_filename=" + img_filename,
+                dataType: "json",
+                success: function (r) {
+                    //do something with the sorted data
+                    var image_action_div_id = ".image_action";
+                    var ajax_categories_image_id = "#ajax_categories_image";
+                    $(image_action_div_id).html("");
+                    $(ajax_categories_image_id).val("");
+                }
+            });
+        }
+    });
     ###JS_TRIGGERS_EXTRA###
 });
 </script>
@@ -65,7 +85,6 @@ jQuery(document).ready(function ($) {
                     <input name="ajax_categories_image" id="ajax_categories_image" type="hidden" value="" />
                     ###CATEGORIES_IMAGE###
                 </div>
-
                 <script type="text/javascript">
                     jQuery(document).ready(function ($) {
                         var categories_name = $("#categories_name_0").val();
@@ -79,11 +98,12 @@ jQuery(document).ready(function ($) {
                             template: '<div class="qq-uploader">' +
                                     '<div class="qq-upload-drop-area"><span>###ADMIN_LABEL_DROP_FILES_HERE_TO_UPLOAD###</span></div>' +
                                     '<div class="qq-upload-button">###LABEL_CHOOSE_IMAGE###</div>' +
-                                    '<ul class="qq-upload-list"></ul>' +
+                                    '<ul class="qq-upload-list" id="qq-upload-list-ul"></ul>' +
                                     '</div>',
                             onComplete: function (id, fileName, responseJSON) {
                                 var filenameServer = responseJSON['filename'];
                                 $("#ajax_categories_image").val(filenameServer);
+                                ###CATEGORIES_IMAGE_CROP_JS###
                             },
                             debug: false
                         });

@@ -1769,6 +1769,28 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
+	'configuration_title'=>'Crop categories images',
+	'configuration_key'=>'ADMIN_CROP_CATEGORIES_IMAGES',
+	'configuration_value'=>'0',
+	'description'=>'Crop categories images',
+	'group_id'=>'2',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Crop manufacturers images',
+	'configuration_key'=>'ADMIN_CROP_MANUFACTURERS_IMAGES',
+	'configuration_value'=>'0',
+	'description'=>'Crop manufacturers images',
+	'group_id'=>'2',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Display popup link in details page to show shipping cost',
 	'configuration_key'=>'DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_DETAIL_PAGE',
 	'configuration_value'=>'0',
