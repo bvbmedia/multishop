@@ -2071,6 +2071,21 @@ class mslib_fe {
 			return $product;
 		}
 	}
+	public function getProductName($pid) {
+		if (!is_numeric($pid)) {
+			return false;
+		}
+		$str=$GLOBALS['TYPO3_DB']->SELECTquery('products_name', // SELECT ...
+			'tx_multishop_products_description', // FROM ...
+			'products_id=\''.$pid.'\' and language_id=\''.$this->sys_language_uid.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		return $rs['products_name'];
+	}
 	public function getOrdersProductName($pid) {
 		if (!is_numeric($pid)) {
 			return false;
