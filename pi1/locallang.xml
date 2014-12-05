@@ -1835,6 +1835,8 @@
             <label index="special_price_expired">vervaldatum</label>
             <label index="products_per_page">Producten per pagina</label>
             <label index="sort_by">Sorteer op</label>
+            <label index="sortby_options_label_manufacturers_asc">Fabrikant (oplopend)</label>
+            <label index="sortby_options_label_manufacturers_desc">Fabrikant (aflopend)</label>
             <label index="sortby_options_label_bestselling_asc">Meest verkocht (opvolgend)</label>
             <label index="sortby_options_label_bestselling_desc">Meest verkocht (aflopend)</label>
             <label index="sortby_options_label_price_asc">Prijs (opvolgend)</label>
