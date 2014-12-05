@@ -778,17 +778,41 @@ if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 }
 $subpartArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
+// plugin marker place holder
+$plugins_extra_tab=array();
+$js_extra=array();
+$plugins_extra_tab['tabs_header']=array();
+$plugins_extra_tab['tabs_content']=array();
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerTmplPreProc'])) {
 	$params=array(
 		'subpartArray'=>&$subpartArray,
-		'user'=>&$user
+		'user'=>&$user,
+		'plugins_extra_tab'=>&$plugins_extra_tab,
+		'js_extra'=>&$js_extra
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerTmplPreProc'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom page hook that can be controlled by third-party plugin eof
+if (!count($plugins_extra_tab['tabs_header']) && !count($plugins_extra_tab['tabs_content'])) {
+	$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']='';
+	$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']='';
+} else {
+	$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_header']);
+	$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
+}
+if (!count($js_extra['functions'])) {
+	$subpartArray['###JS_FUNCTIONS_EXTRA###']='';
+} else {
+	$subpartArray['###JS_FUNCTIONS_EXTRA###']=implode("\n", $js_extra['functions']);
+}
+if (!count($js_extra['triggers'])) {
+	$subpartArray['###JS_TRIGGERS_EXTRA###']='';
+} else {
+	$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
+}
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 if ($customer_id) {
 	require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
