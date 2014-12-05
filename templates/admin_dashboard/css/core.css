@@ -55,10 +55,10 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number li span { display:block; height:21px; border:1px solid #cdcdcd; font-weight:bold; padding:6px 6px 0; border-radius:4px; line-height:16px; }
 #msadmin_content #pagenav_container_list_wrapper ul#pagenav_container_list li.pagenav_number li a { color:#999; }
 
-#msAdminSearchByCharNav { width:100%; } 
-#msAdminSearchByCharNav ul { list-style: none; text-align: center; }
-#msAdminSearchByCharNav ul li { display: inline; background: none; font-weight:900; padding-left:10px; font:18px Arial, Helvetica, sans-serif }
-#msAdminSearchByCharNav ul li .active {  }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav { width:100%; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul { list-style: none; text-align: center; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul li { display: inline; background: none; font-weight:900; padding-left:10px; font:18px Arial, Helvetica, sans-serif }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul li .active {  }
 
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable { border-collapse:collapse; width:100%; }
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable th.msOrderDetailsHeadingImage { }
