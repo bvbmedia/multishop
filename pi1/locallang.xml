@@ -764,7 +764,7 @@
             <label index="admin_label_ean">EAN</label>
             <label index="admin_label_sku">SKU</label>
             <label index="admin_label_vendor_code">Vendor code</label>
-            <label index="admin_label_js_do_you_want_to_change_orders_id_x_to_status_x">Do you want to change orders id: "+orders_id+" to status: "+orders_status_label</label>
+            <label index="admin_label_js_do_you_want_to_change_orders_id_x_to_status_x">Do you want to change orders id: OrdersId to status: OrdersStatusLabel</label>
             <label index="admin_multiple_categories">CATEGORIES NAME</label>
             <label index="admin_label_no_feeds">no feeds</label>
             <label index="payment_reminder_email_templates">Payment reminder email templates</label>
@@ -1902,7 +1902,7 @@
             <label index="admin_label_ean">EAN</label>
             <label index="admin_label_sku">SKU</label>
             <label index="admin_label_vendor_code">Fabrikant code</label>
-            <label index="admin_label_js_do_you_want_to_change_orders_id_x_to_status_x">Wilt u de bestelstatus wijzigen van bestelnummer: "+orders_id+" naar: "+orders_status_label</label>
+            <label index="admin_label_js_do_you_want_to_change_orders_id_x_to_status_x">Wilt u de bestelstatus wijzigen van bestelnummer: OrdersId naar: OrdersStatusLabel</label>
             <label index="admin_multiple_categories">NAAM CATEGORIE</label>
             <label index="admin_label_no_feeds">geen productbestanden</label>
             <label index="payment_reminder_email_templates">Betaalherinnering email sjabloon</label>
@@ -3355,7 +3355,7 @@
             <label index="admin_label_items_to_delete">Artikel löschen</label>
             <label index="admin_label_js_are_you_sure">Sind Sie sicher?</label>
             <label index="admin_label_js_define_product_name_first_in_details_tabs">Den Produktnamen zuerst in der Tabelle Detail definieren.</label>
-            <label index="admin_label_js_do_you_want_to_change_orders_id_x_to_status_x">Wollen Sie die Auftrags-ID von: &quot;+ orders_id +&quot;, zum Status: &quot;+ orders_status_label&quot; ändern</label>
+            <label index="admin_label_js_do_you_want_to_change_orders_id_x_to_status_x">Wollen Sie die Auftrags-ID von: OrdersId, zum Status: OrdersStatusLabel ändern</label>
             <label index="admin_label_js_please_select_category_for_this_product">Bitte wählen Sie die Kategorie für diesen Artikel</label>
             <label index="admin_label_js_product_name_is_empty">Der Artikelname ist leer</label>
             <label index="admin_label_link_download_as_excel">Download als Excel-Tabelle</label>
