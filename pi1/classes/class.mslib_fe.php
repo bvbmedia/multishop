@@ -3595,7 +3595,7 @@ class mslib_fe {
 					break;
 				case 'vars':
 					foreach ($value as $field_key=>$vars) {
-						$content.='<div class="account-field"><label for="radio">'.$field_key.'</label>';
+						$content.='<div class="account-field" id="'.$field_key.'_divwrapper"><label for="radio">'.$field_key.'</label>';
 						switch ($vars['type']) {
 							case 'input':
 								$content.='<input name="'.$field_key.'" id="'.$field_key.'" type="text" value="'.(isset($selected_values[$field_key]) ? htmlspecialchars($selected_values[$field_key]) : '').'" />';
@@ -3603,7 +3603,7 @@ class mslib_fe {
 							case 'radio':
 								if (count($vars['options'])>0) {
 									foreach ($vars['options'] as $radio_option) {
-										$content.=' <input name="'.$field_key.'" id="'.$field_key.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><span>'.$radio_option.'</span>';
+										$content.=' <input name="'.$field_key.'" id="'.$field_key.'_'.$radio_option.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><span>'.$radio_option.'</span>';
 									}
 								}
 								break;
@@ -3661,7 +3661,7 @@ class mslib_fe {
 				case 'vars':
 					foreach ($value as $field_key=>$vars) {
 						$content.='
-						<div class="account-field">
+						<div class="account-field" id="'.$field_key.'_divwrapper">
 							<label for="radio">'.$field_key.'</label>';
 						switch ($vars['type']) {
 							case 'input':
