@@ -83,12 +83,14 @@ foreach ($products as $current_product) {
 	if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
 		$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	}
-	if ($current_product['products_price']<>$current_product['final_price']) {
+	if (round($current_product['products_price'],2)<>round($current_product['final_price'],2)) {
 		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
 			$current_product['old_price']=$current_product['products_price']*(1+$current_product['tax_rate']);
 		} else {
 			$current_product['old_price']=$current_product['products_price'];
 		}
+	}
+	if (round($current_product['old_price'],2)<>round($current_product['final_price'],2)) {
 		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($current_product['old_price']).'</div><div class="specials_price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	} else {
 		$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
