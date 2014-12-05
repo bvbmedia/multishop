@@ -2819,7 +2819,7 @@ if ($this->post['action']=='category-insert') {
 			} else {
 				$time_running=number_format(($running_seconds), 0, '.', '').' seconds';
 			}
-			file_put_contents($this->msLogFile, 'Import task completed on: '.date("Y-m-d G:i:s", time()).' and took: '.$time_running.".\n", FILE_APPEND);
+			file_put_contents($this->msLogFile, print_r($stats,1)."\n".'Import task completed on: '.date("Y-m-d G:i:s", time()).' and took: '.$time_running.".\n", FILE_APPEND);
 		}
 	}
 }
