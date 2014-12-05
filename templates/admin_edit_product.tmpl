@@ -656,7 +656,7 @@ jQuery(document).ready(function ($) {
             $(".qq-uploader").before('<span class="file-upload-hidden">###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###</span>');
             $(".qq-uploader").hide();
         }
-        $(document).on("keyup", "#products_name_0", function () {
+        $(document).on("change", "#products_name_0", function () {
             if ($("#products_name_0").val() != "") {
                 $(".file-upload-hidden").hide();
                 $(".qq-uploader").show();
@@ -664,7 +664,7 @@ jQuery(document).ready(function ($) {
                 $(".qq-uploader").hide();
                 $(".file-upload-hidden").show();
             }
-    });
+        });
         $(document).on("click", ".payment_method_cb", function () {
             var current_cb_id = $(this).attr("id");
             var current_id = $(this).attr("rel");
