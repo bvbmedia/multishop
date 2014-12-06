@@ -1,35 +1,38 @@
 <!-- ###TEMPLATE### begin -->
 <script type="text/javascript">
-    jQuery(document).ready(function ($) {
+###JS_FUNCTIONS_EXTRA###
+jQuery(document).ready(function ($) {
+    $(".tab_content").hide();
+    $("ul.tabs li:first").addClass("active").show();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function () {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
         $(".tab_content").hide();
-        $("ul.tabs li:first").addClass("active").show();
-        $(".tab_content:first").show();
-        $("ul.tabs li").click(function () {
-            $("ul.tabs li").removeClass("active");
-            $(this).addClass("active");
-            $(".tab_content").hide();
-            var activeTab = $(this).find("a").attr("href");
-            $(activeTab).fadeIn(0);
-            return false;
-        });
-        if ($(".error_msg ul.ul-display-error li").length > 0) {
-            var lochash = '#edit_customer';
-            if (lochash != '') {
-                var li_this = $("ul > li").find("a[href='" + lochash + "']").parent();
-                if (li_this.length > 0) {
-                    $("ul.tabs li").removeClass("active");
-                    $(li_this).addClass("active");
-                    $(".tab_content").hide();
-                    $(lochash).fadeIn(0);
-                }
+        var activeTab = $(this).find("a").attr("href");
+        $(activeTab).fadeIn(0);
+        return false;
+    });
+    if ($(".error_msg ul.ul-display-error li").length > 0) {
+        var lochash = '#edit_customer';
+        if (lochash != '') {
+            var li_this = $("ul > li").find("a[href='" + lochash + "']").parent();
+            if (li_this.length > 0) {
+                $("ul.tabs li").removeClass("active");
+                $(li_this).addClass("active");
+                $(".tab_content").hide();
+                $(lochash).fadeIn(0);
             }
         }
-    });
+    }
+    ###JS_TRIGGERS_EXTRA###
+});
 </script>
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">
         ###DETAILS_TAB###
         <li><a href="#edit_customer">###ADMIN_LABEL_TABS_EDIT_CUSTOMER###</a></li>
+        ###LABEL_EXTRA_PLUGIN_TABS###
     </ul>
     <div class="tab_container">
         <!-- ###DETAILS### begin -->
@@ -175,6 +178,7 @@
                 </form>
             </div>
         </div>
+        ###CONTENT_EXTRA_PLUGIN_TABS###
     </div>
 </div>
 <div id="ajax_message" class="ajax_message"></div>
