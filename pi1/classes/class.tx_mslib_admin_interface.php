@@ -164,11 +164,11 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			<div class="msHorizontalOverflowWrapper">
 			<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">
 			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">';
-					$tableContent.='<tr>';
-					foreach ($enabledCols as $col=>$valArray) {
-						$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
-					}
-					$tableContent.='
+			$tableContent.='<tr>';
+			foreach ($params['tableColumns'] as $col=>$valArray) {
+				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
+			}
+			$tableContent.='
 			<th>'.$that->pi_getLL('admin_action').'</th>
 			</tr>';
 			$summarize=array();
@@ -179,7 +179,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 					$tr_type='even';
 				}
 				$tableContent.='<tr class="'.$tr_type.'">';
-				foreach ($enabledCols as $col=>$valArray) {
+				foreach ($params['tableColumns'] as $col=>$valArray) {
 					switch ($valArray['valueType']) {
 						case 'download_invoice':
 							$row[$col]='<a href="uploads/tx_multishopexactonline/'.$row[$col].'" target="_blank">'.$row[$col].'</a>';
@@ -198,7 +198,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			}
 			// SUMMARIZE
 			$tableContent.='<tr>';
-			foreach ($enabledCols as $col=>$valArray) {
+			foreach ($params['tableColumns'] as $col=>$valArray) {
 				switch ($valArray['valueType']) {
 					case 'currency':
 						$row[$col]=mslib_fe::amount2Cents($summarize[$col], 0);
@@ -237,8 +237,8 @@ class tx_mslib_admin_interface extends tslib_pibase {
 					<table width="100%">
 						<tr>
 							<td nowrap valign="top">';
-			foreach ($params['searchForm']['fields'] as $key => $val) {
-				$content.='<input name="'.$key.'" type="hidden" value="'.htmlspecialchars($val).'" />'."\n";
+			foreach ($params['searchForm']['hiddenFields'] as $key => $val) {
+				$searchForm.='<input name="'.$key.'" type="hidden" value="'.htmlspecialchars($val).'" />'."\n";
 			}
 			$searchForm.='
 								<div class="formfield-container-wrapper">
