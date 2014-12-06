@@ -152,17 +152,46 @@ class tx_mslib_admin_import extends tslib_pibase {
 					file_put_contents($file_location, $str);
 				}
 			}
+			if ($this->ms['mode']=='edit' and is_array($data) and count($data) and $filename) {
+				if ($filename) {
+					$data[1]['filename']=$filename;
+					$this->post['filename']=$filename;
+				}
+				$string=serialize($data);
+				$updateArray=array();
+				$updateArray['data']=$string;
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$_REQUEST['job_id'], $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+			if ($file_location and $this->ms['mode']=='edit') {
+				// if file not exists then show form to upload new file
+				if (!file_exists($file_location)) {
+					$content.='<h2>Feed no longer available</h2>'.$file_location.' is not existing.';
+				}
+			}
 			if ((file_exists($file_location) or $that->post['database_name'])) {
 				if (!$that->post['database_name']) {
 					$str=mslib_fe::file_get_contents($file_location);
 				}
 				if ($that->post['parser_template']) {
-					if (strstr($that->post['parser_template'], "..")) {
-						die();
+					$processed=0;
+					$rows=array();
+					/*
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'])) {
+						$params=array(
+							'parser_template'=>&$this->post['parser_template'],
+							'prefix_source_name'=>$this->post['prefix_source_name'],
+							'str'=>$str,
+							'file_location'=>&$file_location,
+							'rows'=>&$rows,
+							'table_cols'=>&$table_cols,
+							'processed'=>&$processed
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
+							t3lib_div::callUserFunction($funcRef, $params, $this);
+						}
 					}
-					// include a pre-defined xml to php array converter
-					require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$that->post['parser_template'].".php");
-					// include a pre-defined xml to php array converter eof
+					*/
 				} else {
 					if ($that->post['database_name']) {
 						if ($that->ms['mode']=='edit') {
@@ -170,7 +199,22 @@ class tx_mslib_admin_import extends tslib_pibase {
 						} else {
 							$limit='10';
 						}
-						$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $that->post['database_name'], '', '', '', $limit);
+						if (strstr(strtolower($that->post['database_name']),'select ')) {
+							// its not a table name, its a full query
+							$that->databaseMode='query';
+							$str=$that->post['database_name'].' LIMIT '.$limit;
+							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+							if ($that->conf['debugEnabled']=='1') {
+								$logString='Load records for importer query: '.$str;
+								t3lib_div::devLog($logString, 'multishop',-1);
+							}
+							$datarows=array();
+							while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+								$datarows[]=$row;
+							}
+						} else {
+							$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $that->post['database_name'], '', '', '', $limit);
+						}
 						$i=0;
 						$table_cols=array();
 						foreach ($datarows as $datarow) {
@@ -181,122 +225,94 @@ class tx_mslib_admin_import extends tslib_pibase {
 								$s++;
 							}
 							$i++;
+							if ($i==5) {
+								break;
+							}
+						}
+					} elseif ($that->post['format']=='xml') {
+						// try the generic way
+						if (!$that->ms['mode']=='edit') {
+							$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$that->post['cid'].'-'.time().'.txt';
+							if (!$handle=fopen($that->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
+								exit;
+							}
+							if (fwrite($handle, $str)===FALSE) {
+								exit;
+							}
+							fclose($handle);
+						}
+						// try the generic way
+						$objXML=new xml2Array();
+						$arrOutput=$objXML->parse($str);
+						$i=0;
+						$s=0;
+						$rows=array();
+						foreach ($arrOutput[0]['children'] as $item) {
+							foreach ($item['children'] as $internalitem) {
+								$rows[$i][$s]=$internalitem['tagData'];
+								$s++;
+							}
+//					foreach ($item['attrs'] as $key => $value)
+//					{
+//						$rows[$i][$s] = $value;
+//						$s++;
+//					}
+							$i++;
+							$s=0;
+							if ($i==5) {
+								break;
+							}
 						}
 					} else {
-						if ($that->post['format']=='excel') {
-							// try the generic way
-							if (!$that->ms['mode']=='edit') {
-								$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$that->post['cid'].'-'.time().'.txt';
-								if (!$handle=fopen($that->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
-									exit();
-								}
-								if (fwrite($handle, $str)===false) {
-									exit();
+						if ($that->post['os']=='linux') {
+							$splitter="\n";
+						} else {
+							$splitter="\r\n";
+						}
+						// csv
+						if ($that->post['delimiter']=="tab") {
+							$delimiter="\t";
+						} elseif ($that->post['delimiter']=="dash") {
+							$delimiter="|";
+						} elseif ($that->post['delimiter']=="dotcomma") {
+							$delimiter=";";
+						} elseif ($that->post['delimiter']=="comma") {
+							$delimiter=",";
+						} else {
+							$delimiter="\t";
+						}
+						if ($that->post['backquotes']) {
+							$backquotes='"';
+						} else {
+							$backquotes='"';
+						}
+						if ($that->post['format']=='txt') {
+							$row=1;
+							$rows=array();
+							if (($handle=fopen($file_location, "r"))!==FALSE) {
+								$counter=0;
+								while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+									//print_r($data);
+									if ($that->post['escape_first_line']) {
+										if ($counter==0) {
+											$table_cols=$data;
+										} else {
+											$rows[]=$data;
+										}
+									} else {
+										$rows[]=$data;
+									}
+									$counter++;
+									if ($counter==5) {
+										break;
+									}
 								}
 								fclose($handle);
 							}
-							// excel
-							require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
-							$phpexcel=PHPExcel_IOFactory::load($file_location);
-							foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
-								$counter=0;
-								foreach ($worksheet->getRowIterator() as $row) {
-									$cellIterator=$row->getCellIterator();
-									$cellIterator->setIterateOnlyExistingCells(false);
-									foreach ($cellIterator as $cell) {
-										$clean_products_data=ltrim(rtrim($cell->getCalculatedValue(), " ,"), " ,");
-										$clean_products_data=trim($clean_products_data);
-										if ($row->getRowIndex()>1) {
-											$rows[$counter-1][]=$clean_products_data;
-										} else {
-											$table_cols[]=t3lib_div::strtolower($clean_products_data);
-										}
-									}
-									$counter++;
-								}
-							}
-							// excel eof
-						} else {
-							if ($that->post['format']=='xml') {
-								// try the generic way
-								if (!$that->ms['mode']=='edit') {
-									$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$that->post['cid'].'-'.time().'.txt';
-									if (!$handle=fopen($that->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
-										exit();
-									}
-									if (fwrite($handle, $str)===false) {
-										exit();
-									}
-									fclose($handle);
-								}
-								// try the generic way
-								$objXML=new xml2Array();
-								$arrOutput=$objXML->parse($str);
-								$i=0;
-								$s=0;
-								$rows=array();
-								foreach ($arrOutput[0]['children'] as $item) {
-									foreach ($item['children'] as $internalitem) {
-										$rows[$i][$s]=$internalitem['tagData'];
-										$s++;
-									}
-									$i++;
-									$s=0;
-								}
-							} else {
-								if ($that->post['os']=='linux') {
-									$splitter="\n";
-								} else {
-									$splitter="\r\n";
-								}
-								// csv
-								if ($that->post['delimiter']=="tab") {
-									$delimiter="\t";
-								} else {
-									if ($that->post['delimiter']=="dash") {
-										$delimiter="|";
-									} else {
-										if ($that->post['delimiter']=="dotcomma") {
-											$delimiter=";";
-										} else {
-											if ($that->post['delimiter']=="comma") {
-												$delimiter=",";
-											} else {
-												$delimiter="\t";
-											}
-										}
-									}
-								}
-								if ($that->post['backquotes']) {
-									$backquotes='"';
-								} else {
-									$backquotes='"';
-								}
-								if ($that->post['format']=='txt') {
-									$row=1;
-									$rows=array();
-									if (($handle=fopen($file_location, "r"))!==false) {
-										$counter=0;
-										while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
-											if ($that->post['escape_first_line']) {
-												if ($counter==0) {
-													$table_cols=$data;
-												} else {
-													$rows[]=$data;
-												}
-											} else {
-												$rows[]=$data;
-											}
-											$counter++;
-										}
-										fclose($handle);
-									}
-								}
-								// csv
-							}
 						}
+						// csv
 					}
-					// try the generic way eof
+					// try the generic way eol
 				}
 				$tmpcontent='';
 				$tmpcontent.='<form id="product_import_form" class="" name="form1" method="post" action="'.$params['postForm']['actionUrl'].'">
@@ -560,42 +576,84 @@ class tx_mslib_admin_import extends tslib_pibase {
 						$str=mslib_fe::file_get_contents($file);
 					}
 					if ($that->post['parser_template']) {
-						// include a pre-defined xml to php array way
-						require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$that->post['parser_template'].".php");
-						// include a pre-defined xml to php array way eof
+						$processed=0;
+						$rows=array();
+						/*
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['TmpproductImportParserTemplateProc'])) {
+							$params=array(
+								'parser_template'=>&$that->post['parser_template'],
+								'prefix_source_name'=>$that->post['prefix_source_name'],
+								'str'=>$str,
+								'rows'=>&$rows,
+								'file_location'=>&$file,
+								'table_cols'=>&$table_cols,
+								'processed'=>&$processed
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['TmpproductImportParserTemplateProc'] as $funcRef) {
+								t3lib_div::callUserFunction($funcRef, $params, $that);
+							}
+						}
+						*/
 					} else {
 						if ($that->post['database_name']) {
-							if ($log_file) {
-								file_put_contents($log_file, $that->FULL_HTTP_URL.' - loading random products.('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
-							}
 							if (is_numeric($that->get['limit'])) {
 								$limit=$that->get['limit'];
 							} else {
 								$limit=2000;
 							}
-							$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $that->post['database_name'], '', '', '', $limit);
-							$total_datarows=count($datarows);
-							if ($log_file) {
-								if ($total_datarows) {
-									file_put_contents($log_file, $that->FULL_HTTP_URL.' - random products loaded, now starting the import.('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
-								} else {
-									file_put_contents($log_file, $that->FULL_HTTP_URL.' - no products needed to be imported'."\n", FILE_APPEND);
+							if (strstr(strtolower($that->post['database_name']),'select ')) {
+								$that->databaseMode='query';
+								// its not a table name, its a full query
+								$that->databaseMode='query';
+								$str=$that->post['database_name'].' LIMIT '.$limit;
+								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+								if ($that->conf['debugEnabled']=='1') {
+									$logString='Load records for importer query: '.$str;
+									t3lib_div::devLog($logString, 'multishop',-1);
+								}
+								$datarows=array();
+								while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+									$datarows[]=$row;
+								}
+							} else {
+								// get primary key first
+								$str="show index FROM ".$that->post['database_name'].' where Key_name = \'PRIMARY\'';
+								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+								$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+								$primaryKeyColumn=$row['Column_name'];
+								$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+									$that->post['database_name'], // FROM ...
+									'', // WHERE.
+									'', // GROUP BY...
+									'', // ORDER BY...
+									$limit // LIMIT ...
+								);
+								$qry=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$datarows=array();
+								while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+									$datarows[]=$row;
+									if ($primaryKeyColumn and isset($row[$primaryKeyColumn])) {
+										$str2="delete from ".$that->post['database_name']." where ".$primaryKeyColumn."='".$row[$primaryKeyColumn]."'";
+										$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+									}
 								}
 							}
+							$total_datarows=count($datarows);
+							if ($that->msLogFile) {
+								file_put_contents($that->msLogFile, $that->HTTP_HOST.' - loaded ('.$total_datarows.') records. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+							}
 							$i=0;
+							$rows=array();
 							foreach ($datarows as $datarow) {
 								$s=0;
 								foreach ($datarow as $datacol) {
 									$rows[$i][$s]=$datacol;
 									$s++;
 								}
-								// delete here
-								// get first column name
-								$str="delete from ".$that->post['database_name']." where internal_id='".$rows[$i][0]."'";
-								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								$i++;
 							}
-						} else if ($that->post['format']=='excel') {
+						} elseif ($that->post['format']=='excel') {
+							// excel
 							require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 							$phpexcel=PHPExcel_IOFactory::load($file);
 							foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
@@ -616,7 +674,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 								}
 							}
 							// excel eof
-						} else if ($that->post['format']=='xml') {
+						} elseif ($that->post['format']=='xml') {
 							$objXML=new xml2Array();
 							$arrOutput=$objXML->parse($str);
 							$i=0;
@@ -649,11 +707,11 @@ class tx_mslib_admin_import extends tslib_pibase {
 							// csv
 							if ($that->post['delimiter']=="tab") {
 								$delimiter="\t";
-							} else if ($that->post['delimiter']=="dash") {
+							} elseif ($that->post['delimiter']=="dash") {
 								$delimiter="|";
-							} else if ($that->post['delimiter']=="dotcomma") {
+							} elseif ($that->post['delimiter']=="dotcomma") {
 								$delimiter=";";
-							} else if ($that->post['delimiter']=="comma") {
+							} elseif ($that->post['delimiter']=="comma") {
 								$delimiter=",";
 							} else {
 								$delimiter="\t";
@@ -666,9 +724,9 @@ class tx_mslib_admin_import extends tslib_pibase {
 							if ($that->post['format']=='txt') {
 								$row=1;
 								$rows=array();
-								if (($handle=fopen($file, "r"))!==false) {
+								if (($handle=fopen($file, "r"))!==FALSE) {
 									$counter=0;
-									while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
+									while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
 										if ($that->post['escape_first_line']) {
 											if ($counter==0) {
 												$table_cols=$data;
@@ -686,8 +744,20 @@ class tx_mslib_admin_import extends tslib_pibase {
 							// csv
 						}
 					}
-					$teller=0;
+					$item_counter=0;
 					$inserteditems=array();
+					$global_start_time=microtime(TRUE);
+					$start_time=microtime(TRUE);
+					$total_datarows=count($rows);
+					if ($that->msLogFile) {
+						if ($total_datarows) {
+							// sometimes the preload takes so long that the database connection is lost.
+							$GLOBALS['TYPO3_DB']->connectDB();
+							file_put_contents($that->msLogFile, $that->HTTP_HOST.' - '.$params['importKey'].' importer loaded, now starting the import. ('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+						} else {
+							file_put_contents($that->msLogFile, $that->HTTP_HOST.' - no records needed to be imported'."\n", FILE_APPEND);
+						}
+					}
 					// $global_start_time = microtime();
 					foreach ($rows as $row) {
 						foreach ($row as $key=>$col) {
@@ -852,7 +922,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 					}
 					$schedule_content.='</td>
 			<td align="center">
-			<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=delete_category" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"></a>
+			<a href="'.$params['postForm']['actionUrl'].'&delete=1&&job_id='.$job['id'].'&action=delete_job" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"></a>
 			</td>
 			<td align="center">
 				';
