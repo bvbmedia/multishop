@@ -24,7 +24,7 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_admin_interface extends tslib_pibase {
-	function renderAdminInterface($params, &$that) {
+	function renderInterface($params, &$that) {
 		$updateCookie=0;
 		if ($that->get['Search'] and ($that->get['limit']!=$that->cookie['limit'])) {
 			$that->cookie['limit']=$that->get['limit'];
