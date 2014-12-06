@@ -96,8 +96,6 @@ class tx_mslib_admin_import extends tslib_pibase {
 			}
 			header('Location: '.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'#tasks');
 		}
-//$default_country=mslib_fe::getCountryByIso($that->ms['MODULES']['COUNTRY_ISO_NR']);
-		$default_country=$that->tta_shop_info['country'];
 		$GLOBALS['TSFE']->additionalHeaderData['tx_multishop_pi1_block_ui']=mslib_fe::jQueryBlockUI();
 		if ($that->post['job_id']) {
 			$that->get['job_id']=$that->post['job_id'];
@@ -755,8 +753,8 @@ class tx_mslib_admin_import extends tslib_pibase {
 			$that->ms['show_default_form']=1;
 		}
 		if ($that->ms['show_default_form']) {
-			$that->ms['upload_customerfeed_form']='<div id="upload_customerfeed_form">';
-			$that->ms['upload_customerfeed_form'].='
+			$that->ms['upload_'.$params['importKey'].'feed_form']='<div id="upload_'.$params['importKey'].'feed_form">';
+			$that->ms['upload_'.$params['importKey'].'feed_form'].='
 	<fieldset>
 	<legend>'.$that->pi_getLL('source').'</legend>
 	<fieldset style="margin-top:5px;"><legend>'.$that->pi_getLL('file').'</legend>
@@ -771,7 +769,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 			 * <li>URL <input name="file_url" type="text" /></li> <li>Database table
 			 * <input name="database_name" type="text" /></li>
 			 */
-			$that->ms['upload_customerfeed_form'].='
+			$that->ms['upload_'.$params['importKey'].'feed_form'].='
 	<fieldset><legend>'.ucfirst($that->pi_getLL('format')).'</legend>
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
@@ -805,7 +803,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 	';
 			$content.='
 	 <form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">
-	 '.$that->ms['upload_customerfeed_form'].'
+	 '.$that->ms['upload_'.$params['importKey'].'feed_form'].'
 	</form>';
 // load the jobs templates
 			$str="SELECT * from tx_multishop_import_jobs where page_uid='".$that->shop_pid."' and type='".addslashes($params['importKey'])."' order by prefix_source_name asc, id desc";
