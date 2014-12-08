@@ -3610,7 +3610,7 @@ class mslib_fe {
 					break;
 				case 'vars':
 					foreach ($value as $field_key=>$vars) {
-						$content.='<div class="account-field" id="'.$field_key.'_divwrapper"><label for="radio">'.$field_key.'</label>';
+						$content.='<div class="account-field" id="'.$field_key.'_divwrapper"><label for="radio">'.$this->pi_getLL(mslib_befe::strtolower($field_key), $field_key).'</label>';
 						switch ($vars['type']) {
 							case 'input':
 								$content.='<input name="'.$field_key.'" id="'.$field_key.'" type="text" value="'.(isset($selected_values[$field_key]) ? htmlspecialchars($selected_values[$field_key]) : '').'" />';

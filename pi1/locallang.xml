@@ -1152,6 +1152,15 @@
             <label index="buy">Buy</label>
             <label index="view">View</label>
             <label index="select_members">Select members</label>
+            <label index="success_status">Success status</label>
+            <label index="cancelled_status">Cancel status</label>
+            <label index="pending_status">Pending status</label>
+            <label index="denied_status">Denied status</label>
+            <label index="exception_status">Exception status</label>
+            <label index="order_confirmation">Order confirmation e-mail cms template</label>
+            <label index="order_paid">Order paid e-mail cms template</label>
+            <label index="order_thank_you_page">Order thank you page e-mail cms template</label>
+            <label index="order_payment_reminder">Order payment reminder e-mail cms template</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
