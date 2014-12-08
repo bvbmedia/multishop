@@ -3633,16 +3633,49 @@ class mslib_fe {
 									$content.='</select>';
 								}
 								break;
-							case 'psp_mail_template':
-								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates();
+							case 'psp_mail_template_email_order_confirmation':
+								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('email_order_confirmation');
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
-									$content.='<select name="'.$field_key.'" id="'.$field_key.'">';
-									$content.='<option value="0">-- order mail templates --</option>'."\n";
 									foreach ($all_orders_psp_mail_template as $row) {
 										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
 									}
-									$content.='</select>';
 								}
+								$content.='</select>';
+								break;
+							case 'psp_mail_template_email_order_paid_letter':
+								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('email_order_paid_letter');
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<option value="0">-- order mail templates --</option>'."\n";
+								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
+									foreach ($all_orders_psp_mail_template as $row) {
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+									}
+								}
+								$content.='</select>';
+								break;
+							case 'psp_mail_template_order_received_thank_you_page':
+								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('order_received_thank_you_page');
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<option value="0">-- order mail templates --</option>'."\n";
+								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
+									foreach ($all_orders_psp_mail_template as $row) {
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+									}
+								}
+								$content.='</select>';
+								break;
+							case 'psp_mail_template_payment_reminder_email_templates':
+								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('payment_reminder_email_templates');
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<option value="0">-- order mail templates --</option>'."\n";
+								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
+									foreach ($all_orders_psp_mail_template as $row) {
+										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].' ('.$row['type'].')</option>'."\n";
+									}
+								}
+								$content.='</select>';
 								break;
 						}
 						$content.='</div>';
@@ -5161,8 +5194,8 @@ class mslib_fe {
 			return $status;
 		}
 	}
-	public function getOrderPSPMailTemplates($language_id=0) {
-		$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.*, cd.name', 'tx_multishop_cms c, tx_multishop_cms_description cd', 'cd.language_id=\''.$language_id.'\' and (c.page_uid=0 or c.page_uid=\''.$this->showCatalogFromPage.'\') and c.id=cd.id and (c.type like \'email_order_confirmation%\' or c.type like \'payment_reminder_email_templates%\' or c.type like \'email_order_paid_letter%\' or c.type like \'order_received_thank_you_page%\')', '', 'cd.name', '');
+	public function getOrderPSPMailTemplates($psp_mail_cms_type, $language_id=0) {
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.*, cd.name', 'tx_multishop_cms c, tx_multishop_cms_description cd', 'cd.language_id=\''.$language_id.'\' and (c.page_uid=0 or c.page_uid=\''.$this->showCatalogFromPage.'\') and c.id=cd.id and (c.type like \''.$psp_mail_cms_type.'%\')', '', 'cd.name', '');
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$order_email_template=array();
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
