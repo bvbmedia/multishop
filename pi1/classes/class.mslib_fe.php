@@ -3610,7 +3610,40 @@ class mslib_fe {
 					break;
 				case 'vars':
 					foreach ($value as $field_key=>$vars) {
-						$content.='<div class="account-field" id="'.$field_key.'_divwrapper"><label for="radio">'.$this->pi_getLL(mslib_befe::strtolower($field_key), $field_key).'</label>';
+						$lang_key='';
+						switch ($field_key) {
+							case 'success_status':
+								$lang_key='payment_accepted_page';
+								break;
+							case 'cancelled_status':
+								$lang_key='payment_cancelled_page';
+								break;
+							case 'pending_status':
+								$lang_key='payment_pending_page';
+								break;
+							case 'denied_status':
+								$lang_key='payment_denied_page';
+								break;
+							case 'exception_status':
+								$lang_key='payment_exception_page';
+								break;
+							case 'declined_status':
+								$lang_key='payment_declined_page';
+								break;
+							case 'order_confirmation':
+								$lang_key='email_order_confirmation_letter';
+								break;
+							case 'order_paid':
+								$lang_key='email_order_paid_letter';
+								break;
+							case 'order_thank_you_page':
+								$lang_key='checkout_finished_page';
+								break;
+							case 'order_payment_reminder':
+								$lang_key='payment_reminder_email_templates';
+								break;
+						}
+						$content.='<div class="account-field" id="'.$field_key.'_divwrapper"><label for="radio">'.$this->pi_getLL($lang_key, $field_key).'</label>';
 						switch ($vars['type']) {
 							case 'input':
 								$content.='<input name="'.$field_key.'" id="'.$field_key.'" type="text" value="'.(isset($selected_values[$field_key]) ? htmlspecialchars($selected_values[$field_key]) : '').'" />';
