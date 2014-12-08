@@ -95,7 +95,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 		$this->server['QUERY_STRING'] = t3lib_div::getIndpEnv('QUERY_STRING');
 		$this->server['REMOTE_ADDR'] = t3lib_div::getIndpEnv('REMOTE_ADDR');
 		$this->REMOTE_ADDR = t3lib_div::getIndpEnv('REMOTE_ADDR');
-		$this->server['HTTP_HOST'] = t3lib_div::strtolower(t3lib_div::getIndpEnv('TYPO3_HOST_ONLY'));		
+		$this->server['HTTP_HOST'] = mslib_befe::strtolower(t3lib_div::getIndpEnv('TYPO3_HOST_ONLY'));
 		$tmp=explode("?",$this->server['REQUEST_URI']);
 		$this->server['REQUEST_URI']=$tmp[0];
 		$this->server['REQUEST_URI']=preg_replace("/^\//is",'',$this->server['REQUEST_URI']);			
@@ -112,7 +112,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 		}	
 		if ($this->server['HTTP_REFERER'] and !$this->cookie['HTTP_REFERER']) {
 			$host=@parse_url($this->server['HTTP_REFERER']);
-			if (is_array($host) and t3lib_div::strtolower($host['host']) != $this->server['HTTP_HOST']) {
+			if (is_array($host) and mslib_befe::strtolower($host['host']) != $this->server['HTTP_HOST']) {
 				$this->cookie['HTTP_REFERER']=$this->server['HTTP_REFERER'];
 				$GLOBALS['TSFE']->fe_user->setKey('ses','tx_multishop_cookie',$this->cookie);
 				$GLOBALS['TSFE']->storeSessionData();

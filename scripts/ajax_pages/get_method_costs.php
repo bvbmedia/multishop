@@ -42,7 +42,7 @@ if ($payment_method_costs and $payment_method['tax_rate']) {
 $payment_method_code=$payment_method['code'];
 if (strlen($payment_method['name'])>1) {
 	$char=substr($payment_method['name'], 1, 1);
-	if ($char==t3lib_div::strtolower($char)) {
+	if ($char==mslib_befe::strtolower($char)) {
 		$payment_method['name']=lcfirst($payment_method['name']);
 	}
 } else {
@@ -76,7 +76,7 @@ if (count($available_sid)>0) {
 	$shipping_method_code=$shipping_method['code'];
 	if (strlen($shipping_method['name'])>1) {
 		$char=substr($shipping_method['name'], 1, 1);
-		if ($char==t3lib_div::strtolower($char)) {
+		if ($char==mslib_befe::strtolower($char)) {
 			$shipping_method['name']=lcfirst($shipping_method['name']);
 		}
 	} else {

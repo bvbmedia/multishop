@@ -367,7 +367,7 @@ class mslib_befe {
 		$array=explode(".", $filename);
 		$folder_name=substr(preg_replace("/\\.+?$/is", "", trim($array[0])), 0, 3);
 		$folder_name=preg_replace("/\\-$/", "", $folder_name);
-		return t3lib_div::strtolower($folder_name);
+		return mslib_befe::strtolower($folder_name);
 	}
 	public function resizeProductImage($original_path, $filename, $module_path, $run_in_background=0) {
 		if (!$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality']) {
@@ -2794,7 +2794,7 @@ class mslib_befe {
 			if ($orders_status) {
 				$orders_status_name=mslib_fe::getOrderStatusName($orders_status, 0);
 				$keys=array();
-				$keys[]='email_order_status_changed_'.t3lib_div::strtolower($orders_status_name);
+				$keys[]='email_order_status_changed_'.mslib_befe::strtolower($orders_status_name);
 				$keys[]='email_order_status_changed';
 				foreach ($keys as $key) {
 					//$page=mslib_fe::getCMScontent($key,$GLOBALS['TSFE']->sys_language_uid);
@@ -3063,7 +3063,7 @@ class mslib_befe {
 		// Set default language
 		$defaultLanguageISOCode=trim($this->conf['defaultLanguageISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultLanguageISOCode'])) : 'EN';
 		$this->ms['MODULES']['COUNTRY_ISO_NR']=trim($this->conf['defaultCountryISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultCountryISOCode'])) : '';
-		$languages[]=t3lib_div::strtolower($defaultLanguageISOCode).($this->ms['MODULES']['COUNTRY_ISO_NR'] ? '_'.$this->ms['MODULES']['COUNTRY_ISO_NR'] : '');
+		$languages[]=mslib_befe::strtolower($defaultLanguageISOCode).($this->ms['MODULES']['COUNTRY_ISO_NR'] ? '_'.$this->ms['MODULES']['COUNTRY_ISO_NR'] : '');
 		$this->languagesUids[]='0';
 		// Get the language codes and labels for the languages set in the plugin list
 		$selectFields=$tableA.'.uid, '.$tableA.'.title, '.$tableB.'.*';

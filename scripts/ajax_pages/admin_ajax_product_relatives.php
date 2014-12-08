@@ -131,7 +131,7 @@ if ($this->post['req']=='init') {
 		}
 		$filter=array();
 		if (strlen($this->post['keypas'])>1) {
-			$filter[]="A.products_name LIKE '%".trim(t3lib_div::strtolower($this->post['keypas']))."%'";
+			$filter[]="A.products_name LIKE '%".trim(mslib_befe::strtolower($this->post['keypas']))."%'";
 		}
 		$filter[]="p.page_uid='".$this->showCatalogFromPage."' and A.products_id=p.products_id";
 		if (is_array($relations_data) and count($relations_data)) {

@@ -370,11 +370,11 @@ if (count($cart['products'])>0) {
 		}
 		// load enabled countries to array eof
 		if (count($enabled_countries)==1) {
-			$deliver_to_sb.='<input name="deliver_to_country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+			$deliver_to_sb.='<input name="deliver_to_country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 		} else {
 			$default_country=mslib_fe::getCountryByIso($this->tta_shop_info['cn_iso_nr']);
 			foreach ($enabled_countries as $country) {
-				$tmpcontent_con.='<option value="'.t3lib_div::strtolower($country['cn_short_en']).'" '.((t3lib_div::strtolower($default_country['cn_short_en'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+				$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($default_country['cn_short_en'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 			}
 			if ($tmpcontent_con) {
 				$deliver_to_sb.='

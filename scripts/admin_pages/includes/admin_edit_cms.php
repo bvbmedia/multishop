@@ -110,7 +110,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$orders_status=mslib_fe::getAllOrderStatus(0);
 	if (is_array($orders_status) and count($orders_status)) {
 		foreach ($orders_status as $item) {
-			$types['email_order_status_changed_'.t3lib_div::strtolower($item['name'])]=$this->pi_getLL('email_order_status_changed_letter').' ('.$item['name'].')';
+			$types['email_order_status_changed_'.mslib_befe::strtolower($item['name'])]=$this->pi_getLL('email_order_status_changed_letter').' ('.$item['name'].')';
 		}
 	}
 	$types['order_received_thank_you_page']=htmlspecialchars($this->pi_getLL('checkout_finished_page'));

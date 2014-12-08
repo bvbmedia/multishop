@@ -678,7 +678,7 @@ if ($this->ms['show_main']) {
 		}
 	}
 	$tmpcontent.='</ul></div>';
-	$content.=mslib_fe::returnBoxedHTML(ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent);
+	$content.=mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent);
 	$tmpcontent='';
 	// shipping method admin system eof
 }

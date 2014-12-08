@@ -209,7 +209,7 @@ if (!empty($filename)) {
 				if ($row->getRowIndex()>1) {
 					$colcontent[$row_counter][$col_counter]=$clean_products_data;
 				} else {
-					$colname[$col_counter]=t3lib_div::strtolower($clean_products_data);
+					$colname[$col_counter]=mslib_befe::strtolower($clean_products_data);
 				}
 				$col_counter++;
 			}

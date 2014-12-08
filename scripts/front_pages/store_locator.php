@@ -28,7 +28,7 @@ while ($row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3)) {
 			$this->get['tx_multishop_pi1']['country']=$row3['cn_iso_2'];
 		}
 	}
-	$content.='<option value="'.t3lib_div::strtolower($row3['cn_iso_2']).'" '.((t3lib_div::strtolower($this->get['tx_multishop_pi1']['country'])==t3lib_div::strtolower($row3['cn_iso_2'])) ? 'selected' : '').'>'.htmlspecialchars($row3['cn_short_local']).'</option>'."\n";
+	$content.='<option value="'.mslib_befe::strtolower($row3['cn_iso_2']).'" '.((mslib_befe::strtolower($this->get['tx_multishop_pi1']['country'])==mslib_befe::strtolower($row3['cn_iso_2'])) ? 'selected' : '').'>'.htmlspecialchars($row3['cn_short_local']).'</option>'."\n";
 }
 $content.='</select>
 </div>

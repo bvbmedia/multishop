@@ -703,7 +703,7 @@ if ($this->ms['show_main']) {
 		}
 	}
 	$tmpcontent.='</ul></div>';
-	$content.=mslib_fe::returnBoxedHTML(ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_payment_methods'))), $tmpcontent);
+	$content.=mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))), $tmpcontent);
 	$tmpcontent='';
 	// payment method admin system eof
 }

@@ -25,7 +25,7 @@ function getOptionValueExtraID($optval) {
 
 // -----------------------------------------------------------
 if (isset($this->get['cid']) && $this->get['cid']>0) {
-	$filename="producten_category_".t3lib_div::strtolower(mslib_fe::getNameCategoryById($this->get['cid']))."_".date('dmY').".xls";
+	$filename="producten_category_".mslib_befe::strtolower(mslib_fe::getNameCategoryById($this->get['cid']))."_".date('dmY').".xls";
 	$sql="select p.products_id, pd.products_name, p.products_model, cd.categories_name, p.products_price, cd.categories_id, p.products_weight, p.products_quantity, pd.products_shortdescription, pd.products_meta_keywords from tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_categories_description cd, tx_multishop_categories c, tx_multishop_products_to_categories p2c where cd.categories_id = ".$this->get['cid']." and c.status = 1 and cd.language_id = 0 and pd.language_id = 0 and p.products_status = 1 and p.products_id = pd.products_id and pd.products_id = p2c.products_id and p2c.categories_id = cd.categories_id and cd.categories_id = c.categories_id group by p.products_id order by pd.products_name";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($sql) or die('test: '.$sql);
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)==0) {
@@ -56,7 +56,7 @@ $dir=$this->DOCUMENT_ROOT;
 $export_file=$dir."uploads/tx_multishop/tmp/".$filename;
 // Creating a worksheet
 if ($this->get['cid']>0) {
-	$worksheet_name=t3lib_div::strtolower(mslib_fe::getNameCategoryById($this->get['cid']));
+	$worksheet_name=mslib_befe::strtolower(mslib_fe::getNameCategoryById($this->get['cid']));
 	$worksheet_name=str_replace(array(
 		'/',
 		'-',

@@ -14,7 +14,7 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['results']=$this->cObj->getSubpart($subparts['template'], '###RESULTS###');
 $subparts['cms_list']=$this->cObj->getSubpart($subparts['results'], '###CMS_LIST###');
 $subparts['noresults']=$this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
-//$tmpcontent.='<div class="main-heading"><h2>'.htmlspecialchars(ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_cms')))).'</h2></div>';
+//$tmpcontent.='<div class="main-heading"><h2>'.htmlspecialchars(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_cms')))).'</h2></div>';
 if (isset($this->get['download']) && $this->get['download']=='cms' && is_array($this->get['downloadCMS'])) {
 	$rowsData=array();
 	foreach ($this->get['downloadCMS'] as $cms_id) {

@@ -833,7 +833,7 @@ class mslib_fe {
 		if (mb_detect_encoding($input, 'UTF-8', true)=='UTF-8') {
 			$input=utf8_decode($input);
 		}
-		$input=t3lib_div::strtolower($input);
+		$input=mslib_befe::strtolower($input);
 		$input=strip_tags($input);
 		$input=str_replace("+", "-", $input);
 		$input=preg_replace("/[^[:alnum:]+]/i", "-", $input);
@@ -5503,7 +5503,7 @@ class mslib_fe {
 		return '{'.$json.'}'; //Return associative JSON
 	} //end array2json
 	public function strtotitle($strtochange) {
-		$strtochange=t3lib_div::strtolower($strtochange);
+		$strtochange=mslib_befe::strtolower($strtochange);
 		$string_array=explode(" ", $strtochange);
 		$fixed_str="";
 		foreach ($string_array as $part) {
@@ -5992,7 +5992,7 @@ class mslib_fe {
 		// Set default language
 		$defaultLanguageISOCode=trim($this->conf['defaultLanguageISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultLanguageISOCode'])) : 'EN';
 		$this->ms['MODULES']['COUNTRY_ISO_NR']=trim($this->conf['defaultCountryISOCode']) ? mslib_befe::strtoupper(trim($this->conf['defaultCountryISOCode'])) : '';
-		$languages[]=t3lib_div::strtolower($defaultLanguageISOCode).($this->ms['MODULES']['COUNTRY_ISO_NR'] ? '_'.$this->ms['MODULES']['COUNTRY_ISO_NR'] : '');
+		$languages[]=mslib_befe::strtolower($defaultLanguageISOCode).($this->ms['MODULES']['COUNTRY_ISO_NR'] ? '_'.$this->ms['MODULES']['COUNTRY_ISO_NR'] : '');
 		$this->languagesUids[]='0';
 		// Get the language codes and labels for the languages set in the plugin list
 		$selectFields=$tableA.'.uid, '.$tableA.'.title, '.$tableB.'.*';

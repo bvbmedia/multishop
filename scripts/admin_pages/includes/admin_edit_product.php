@@ -2130,9 +2130,9 @@ if ($this->post) {
 						<div class="product_staffel_price">
 							<table cellpadding="0" cellspacing="0">
 								<tr>
-									<td>'.t3lib_div::strtolower($this->pi_getLL('admin_from')).'</td>
-									<td>'.t3lib_div::strtolower($this->pi_getLL('admin_till')).'</td>
-									<td align="center">'.t3lib_div::strtolower($this->pi_getLL('admin_price')).'</td>
+									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_from')).'</td>
+									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_till')).'</td>
+									<td align="center">'.mslib_befe::strtolower($this->pi_getLL('admin_price')).'</td>
 									<td>&nbsp;</td>
 								</tr>';
 				$sp_rows=explode(';', $product['staffel_price']);

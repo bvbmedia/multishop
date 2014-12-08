@@ -458,7 +458,7 @@ if ($this->post['action']=='category-insert') {
 							if ($row->getRowIndex()>1) {
 								$rows[$counter-1][]=$clean_products_data;
 							} else {
-								$table_cols[]=t3lib_div::strtolower($clean_products_data);
+								$table_cols[]=mslib_befe::strtolower($clean_products_data);
 							}
 						}
 						$counter++;
@@ -983,7 +983,7 @@ if ($this->post['action']=='category-insert') {
 								if ($row->getRowIndex()>1) {
 									$rows[$counter-1][]=$clean_products_data;
 								} else {
-									$table_cols[]=t3lib_div::strtolower($clean_products_data);
+									$table_cols[]=mslib_befe::strtolower($clean_products_data);
 								}
 							}
 							$counter++;
@@ -2195,7 +2195,7 @@ if ($this->post['action']=='category-insert') {
 								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_specials', 'products_id='.$item['updated_products_id']);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
-							$content.=ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_product'))).' "<strong>'.($item['products_name'] ? $item['products_name'] : $item['extid']).'</strong>" '.$this->pi_getLL('has_been_adjusted').'.<br />';
+							$content.=ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))).' "<strong>'.($item['products_name'] ? $item['products_name'] : $item['extid']).'</strong>" '.$this->pi_getLL('has_been_adjusted').'.<br />';
 							if ($this->ms['target-cid'] && (!is_array($this->ms['products_to_categories_array']) || !count($this->ms['products_to_categories_array']))) {
 								$this->ms['products_to_categories_array']=array();
 								$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
@@ -2786,7 +2786,7 @@ if ($this->post['action']=='category-insert') {
 					 * // INSERT PRODUCT EOF //
 					 ***********************/
 					if ($item['added_products_id'] and !$skip) {
-						$content.=ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_product'))).' "<strong>'.$item['products_name'].'</strong>" '.$this->pi_getLL('has_been_added').'.<br />';
+						$content.=ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_product'))).' "<strong>'.$item['products_name'].'</strong>" '.$this->pi_getLL('has_been_added').'.<br />';
 					}
 				}
 //					echo ' ';
@@ -3040,7 +3040,7 @@ if ($this->post['action']!='product-import-preview') {
 		);
 		// load the jobs templates eof
 		$content.='
-		<h2>'.ucfirst(t3lib_div::strtolower($this->pi_getLL('admin_import_products'))).'</h2>
+		<h2>'.ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_import_products'))).'</h2>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			jQuery(".tab_content").hide();

@@ -254,7 +254,7 @@ if (mslib_fe::loggedin()) {
 						}
 						// load enabled countries to array eof
 						if (count($enabled_countries)==1) {
-							$content.='<input name="country" type="hidden" value="'.t3lib_div::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+							$content.='<input name="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 						} else {
 						$content.='
 					  	<div class="account-field col-sm-8" id="input-country">
@@ -265,7 +265,7 @@ if (mslib_fe::loggedin()) {
 								$this->post['country']=$default_country['cn_short_en'];
 							}
 							foreach ($enabled_countries as $country) {
-								$tmpcontent.='<option value="'.mslib_befe::strtoupper($country['cn_short_en']).'" '.((t3lib_div::strtolower($this->post['country'])==t3lib_div::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+								$tmpcontent.='<option value="'.mslib_befe::strtoupper($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 							}
 							if ($tmpcontent) {
 								$content.='

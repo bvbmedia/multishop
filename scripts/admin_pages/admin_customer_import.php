@@ -235,7 +235,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								if ($row->getRowIndex()>1) {
 									$rows[$counter-1][]=$clean_products_data;
 								} else {
-									$table_cols[]=t3lib_div::strtolower($clean_products_data);
+									$table_cols[]=mslib_befe::strtolower($clean_products_data);
 								}
 							}
 							$counter++;
@@ -632,7 +632,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								if ($row->getRowIndex()>1) {
 									$rows[$counter-1][]=$clean_products_data;
 								} else {
-									$table_cols[]=t3lib_div::strtolower($clean_products_data);
+									$table_cols[]=mslib_befe::strtolower($clean_products_data);
 								}
 							}
 							$counter++;

@@ -667,7 +667,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 										if ($row->getRowIndex()>1) {
 											$rows[$counter-1][]=$clean_products_data;
 										} else {
-											$table_cols[]=t3lib_div::strtolower($clean_products_data);
+											$table_cols[]=mslib_befe::strtolower($clean_products_data);
 										}
 									}
 									$counter++;

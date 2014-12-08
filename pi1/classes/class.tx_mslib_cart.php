@@ -1986,7 +1986,7 @@ class tx_mslib_cart extends tslib_pibase {
 				if (!$product['products_image']) {
 					$item['ITEM_IMAGE']='<div class="no_image_50"></div>';
 				} else {
-					if (!strstr(t3lib_div::strtolower($product['products_image']), 'http://') and !strstr(t3lib_div::strtolower($product['products_image']), 'https://')) {
+					if (!strstr(mslib_befe::strtolower($product['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product['products_image']), 'https://')) {
 						$item['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
 					}
 					$item['ITEM_IMAGE']='<img src="'.$product['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
