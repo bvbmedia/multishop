@@ -111,7 +111,7 @@ $col++;
 $phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 3, number_format(($total_amount/$dayOfTheYear)*365, 2, ',', '.'));
 //$worksheet->setMerge(3, 0, 3, 13);
 // header
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4,mslib_befe::strtoupper(($this->pi_getLL('sales_volume_by_day')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4,mslib_befe::strtoupper($this->pi_getLL('sales_volume_by_day')));
 $phpexcel->getActiveSheet()->getStyle('A4')->applyFromArray($header_style);
 $phpexcel->getActiveSheet()->mergeCells('A4:N4');
 if ($currentMonth) {
@@ -126,15 +126,15 @@ for ($i=0; $i<$endDay; $i++) {
 }
 $col=0;
 $col_char='A';
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper(($this->pi_getLL('day')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper($this->pi_getLL('day')));
 $phpexcel->getActiveSheet()->getColumnDimension($col_char)->setWidth(16);
 $col_char++;
 $col++;
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper(($this->pi_getLL('amount')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper($this->pi_getLL('amount')));
 $phpexcel->getActiveSheet()->getColumnDimension($col_char)->setWidth(16);
 $col_char++;
 $col++;
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper(($this->pi_getLL('orders_id')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper($this->pi_getLL('orders_id')));
 $phpexcel->getActiveSheet()->mergeCells('C5:N5');
 $row=6;
 $col=0;

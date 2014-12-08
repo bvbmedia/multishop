@@ -61,12 +61,13 @@ class tx_multishop_pi1 extends tslib_pibase {
     * @param    array   $conf: configuration array from TS
     * @return   void
 	 */
-	function construct($conf) {	
+	function construct($conf) {
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_USER_INT_obj=1; 
-		$this->pi_initPIflexForm();	
-					
+		$this->pi_initPIflexForm();
+		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
+		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
 		$this->HTTP_HOST = t3lib_div::getIndpEnv('HTTP_HOST');
 		// Get the vhost full path (example: /var/www/html/domain.com/public_html/my_cms/)
 		$this->DOCUMENT_ROOT=PATH_site;
@@ -173,8 +174,6 @@ class tx_multishop_pi1 extends tslib_pibase {
 		if (!class_exists('Cache_Lite')) {
 			require_once(t3lib_extMgm::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/Lite.php');
 		}
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_payment.php');	
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_catalog.php');		
 	}

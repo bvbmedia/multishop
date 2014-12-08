@@ -7821,14 +7821,14 @@ class mslib_fe {
 				$row_local_tax_rate['country_tax_rate']=($row_local_tax_rate['country_tax_rate']/100)*100;
 				$tax_data['global'][]=$row_local_tax_rate;
 				if (!empty($row_shop_address['region'])) {
-					if (mslib_befe::strtolower($row_shop_address['region'])==strtolower($row_local_tax_rate['state_name']) && mslib_befe::strtolower(($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
+					if (mslib_befe::strtolower($row_shop_address['region'])==strtolower($row_local_tax_rate['state_name']) && mslib_befe::strtolower($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
 						$tax_data['local']=$row_local_tax_rate;
 					}
-					if (!count($tax_data['local']) && empty($row_local_tax_rate['state_name']) && mslib_befe::strtolower(($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
+					if (!count($tax_data['local']) && empty($row_local_tax_rate['state_name']) && mslib_befe::strtolower($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
 						$tax_data['local']=$row_local_tax_rate;
 					}
 				} else {
-					if (empty($row_local_tax_rate['state_name']) && mslib_befe::strtolower(($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
+					if (empty($row_local_tax_rate['state_name']) && mslib_befe::strtolower($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
 						$tax_data['local']=$row_local_tax_rate;
 					}
 				}
