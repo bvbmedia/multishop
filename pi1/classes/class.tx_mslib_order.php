@@ -241,10 +241,16 @@ class tx_mslib_order extends tslib_pibase {
 			$psp_data=mslib_fe::loadPaymentMethod($order['payment_method']);
 			$psp_vars=unserialize($psp_data['vars']);
 			if (isset($psp_vars['order_confirmation'])) {
-				$psp_mail_template['order_confirmation']=mslib_fe::getCMSType($psp_vars['order_confirmation']);
+				$psp_mail_template['order_confirmation']='';
+				if ($psp_vars['order_confirmation']>0) {
+					$psp_mail_template['order_confirmation']=mslib_fe::getCMSType($psp_vars['order_confirmation']);
+				}
 			}
 			if (isset($psp_vars['order_paid'])) {
-				$psp_mail_template['order_paid']=mslib_fe::getCMSType($psp_vars['order_paid']);
+				$psp_mail_template['order_paid']='';
+				if ($psp_mail_template['order_paid']>0) {
+					$psp_mail_template['order_paid']=mslib_fe::getCMSType($psp_vars['order_paid']);
+				}
 			}
 		}
 		// loading the email template
@@ -253,7 +259,10 @@ class tx_mslib_order extends tslib_pibase {
 			switch ($mail_template) {
 				case 'email_order_paid_letter':
 					if (isset($psp_mail_template['order_paid'])) {
-						$page=mslib_fe::getCMScontent($psp_mail_template['order_paid'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
+						$page=array();
+						if (!empty($psp_mail_template['order_paid'])) {
+							$page=mslib_fe::getCMScontent($psp_mail_template['order_paid'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
+						}
 					} else {
 						if ($order['payment_method']) {
 							$page=mslib_fe::getCMScontent('email_order_paid_letter_'.$order['payment_method'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
@@ -274,7 +283,10 @@ class tx_mslib_order extends tslib_pibase {
 		} else {
 			// normal order template
 			if (isset($psp_mail_template['order_confirmation'])) {
-				$page=mslib_fe::getCMScontent($psp_mail_template['order_confirmation'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
+				$page=array();
+				if (!empty($psp_mail_template['order_confirmation'])) {
+					$page=mslib_fe::getCMScontent($psp_mail_template['order_confirmation'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);
+				}
 			} else {
 				if ($order['payment_method']) {
 					$page=mslib_fe::getCMScontent('email_order_confirmation_'.$order['payment_method'], $GLOBALS['TSFE']->sys_language_uid, $loadFromPids);

@@ -527,12 +527,18 @@ switch ($this->ms['page']) {
 					$psp_data=mslib_fe::loadPaymentMethod($order['payment_method']);
 					$psp_vars=unserialize($psp_data['vars']);
 					if (isset($psp_vars['order_thank_you_page'])) {
-						$psp_mail_template['order_thank_you_page']=mslib_fe::getCMSType($psp_vars['order_thank_you_page']);
+						$psp_mail_template['order_thank_you_page']='';
+						if ($psp_vars['order_thank_you_page']>0) {
+							$psp_mail_template['order_thank_you_page']=mslib_fe::getCMSType($psp_vars['order_thank_you_page']);
+						}
 					}
 				}
 				// first try to load the custom thank you page based on the payment method
 				if (isset($psp_mail_template['order_thank_you_page'])) {
-					$page=mslib_fe::getCMScontent($psp_mail_template['order_thank_you_page'], $GLOBALS['TSFE']->sys_language_uid);
+					$page=array();
+					if (!empty($psp_mail_template['order_thank_you_page'])) {
+						$page=mslib_fe::getCMScontent($psp_mail_template['order_thank_you_page'], $GLOBALS['TSFE']->sys_language_uid);
+					}
 				} else {
 					if ($order['payment_method']) {
 						$page=mslib_fe::getCMScontent('order_received_thank_you_page_'.$order['payment_method'], $GLOBALS['TSFE']->sys_language_uid);
