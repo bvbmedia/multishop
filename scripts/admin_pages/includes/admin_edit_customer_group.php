@@ -152,23 +152,12 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['members_option']=$this->cObj->getSubpart($subparts['template'], '###MEMBERS_OPTION###');
 // now lets load the users
 $users=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
-$contentItem='';
+$members_selected=array();
 foreach ($users as $user) {
-	if (!$user['name']) {
-		$user['name']=$user['username'];
-	}
-	$markerArray=array();
-	$markerArray['LABEL_MEMBERS_USERID']=$user['uid'];
-	$markerArray['LABEL_MEMBERS_NAME']=$user['name'];
-	$markerArray['LABEL_MEMBERS_USERNAME']=$user['username'];
-	if (mslib_fe::inUserGroup($this->get['customer_group_id'], $user['usergroup'])) {
-		$markerArray['MEMBERS_SELECTED']=' selected="selected"';
-	} else {
-		$markerArray['MEMBERS_SELECTED']='';
-	}
-	$contentItem.=$this->cObj->substituteMarkerArray($subparts['members_option'], $markerArray, '###|###');
+	$members_selected[]=$user['uid'];
 }
 $subpartArray=array();
+$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER_GROUP###']=$this->pi_getLL('edit_group');
 $subpartArray['###LABEL_HEADING###']=$this->pi_getLL('edit_group');
 $subpartArray['###FORM_ACTION###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&customer_group_id='.$_REQUEST['customer_group_id']);
 $subpartArray['###CUSTOMER_GROUP_ID###']=$_REQUEST['customer_group_id'];
@@ -178,8 +167,8 @@ $subpartArray['###VALUE_GROUP_NAME###']=htmlspecialchars($group['title']);
 $subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 $subpartArray['###LABEL_DISCOUN###']=$this->pi_getLL('discount');
 $subpartArray['###VALUE_DISCOUNT###']=htmlspecialchars($group['tx_multishop_discount']);
+$subpartArray['###MEMBERS_SELECTED###']=implode(',', $members_selected);
 $subpartArray['###LABEL_MEMBERS###']='MEMBERS';
-$subpartArray['###MEMBERS_OPTION###']=$contentItem;
 $subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('save');
 $subpartArray['###VALUE_REFERRER###']='';
 if ($this->post['tx_multishop_pi1']['referrer']) {
@@ -188,16 +177,106 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 	$subpartArray['###VALUE_REFERRER###']=$_SERVER['HTTP_REFERER'];
 }
 $subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
+// plugin marker place holder
+$plugins_extra_tab=array();
+$js_extra=array();
+$plugins_extra_tab['tabs_header']=array();
+$plugins_extra_tab['tabs_content']=array();
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'])) {
 	$params=array(
 		'subpartArray'=>&$subpartArray,
-		'group'=>&$group
+		'group'=>&$group,
+		'plugins_extra_tab'=>&$plugins_extra_tab,
+		'js_extra'=>&$js_extra
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'] as $funcRef) {
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom page hook that can be controlled by third-party plugin eof
+if (!count($plugins_extra_tab['tabs_header']) && !count($plugins_extra_tab['tabs_content'])) {
+	$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']='';
+	$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']='';
+} else {
+	$subpartArray['###LABEL_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_header']);
+	$subpartArray['###CONTENT_EXTRA_PLUGIN_TABS###']=implode("\n", $plugins_extra_tab['tabs_content']);
+}
+if (!count($js_extra['functions'])) {
+	$subpartArray['###JS_FUNCTIONS_EXTRA###']='';
+} else {
+	$subpartArray['###JS_FUNCTIONS_EXTRA###']=implode("\n", $js_extra['functions']);
+}
+if (!count($js_extra['triggers'])) {
+	$subpartArray['###JS_TRIGGERS_EXTRA###']='';
+} else {
+	$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
+}
+$head='';
+$head.='
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	var usersSearchList=[];
+	var usersList=[];
+	var ajax_url="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_users').'"
+	$("#userIdSelect2").select2({
+		placeholder: "'.$this->pi_getLL('select_members').'",
+		multiple: true,
+		minimumInputLength: 0,
+		query: function(query) {
+			if (usersSearchList[query.term] !== undefined) {
+				query.callback({results: usersSearchList[query.term]});
+			} else {
+				$.ajax(ajax_url, {
+					data: {
+						q: query.term
+					},
+					dataType: "json"
+				}).done(function(data) {
+					usersSearchList[query.term]=data;
+					query.callback({results: data});
+				});
+			}
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				if (usersList[id] !== undefined) {
+					callback(usersList[id]);
+				} else {
+					$.ajax(ajax_url, {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						usersList[data.id]={id: data.id, text: data.text};
+						callback(data);
+					});
+				}
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "users_list_dropdown",
+		escapeMarkup: function (m) { return m; }
+	});
+}); //end of first load
+</script>';
+$GLOBALS['TSFE']->additionalHeaderData[]=$head;
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 ?>

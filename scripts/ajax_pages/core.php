@@ -4,6 +4,39 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+	case 'get_users':
+		$return_data=array();
+		$users=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
+		$counter=0;
+		if ($this->get['q']) {
+			foreach ($users as $user) {
+				if (strpos($user['name'], $this->get['q'])!==false) {
+					$return_data[$counter]['text']=$user['name'];
+					$return_data[$counter]['id']=$user['uid'];
+					$counter++;
+				}
+			}
+		} else if ($this->get['preselected_id']) {
+			$preselected_users=explode(',', $this->get['preselected_id']);
+			foreach ($users as $user) {
+				foreach ($preselected_users as $preselected_user) {
+					if ($user['uid']==$preselected_user) {
+						$return_data[$counter]['text']=$user['name'];
+						$return_data[$counter]['id']=$user['uid'];
+						$counter++;
+					}
+				}
+			}
+		} else {
+			foreach ($users as $user) {
+				$return_data[$counter]['text']=$user['name'];
+				$return_data[$counter]['id']=$user['uid'];
+				$counter++;
+			}
+		}
+		echo json_encode($return_data);
+		exit();
+		break;
 	case 'get_shoppingcart_shippingmethod_overview':
 		$return_data=array();
 		$country_cn_iso_nr=$this->post['tx_multishop_pi1']['country_id'];

@@ -1,32 +1,55 @@
 <!-- ###TEMPLATE### begin -->
-<div id="ms_edit_group">
-	<div class="main-heading"><h2>###LABEL_HEADING###</h2></div>
-	<form id="form1" name="form1" class="blockSubmitForm" method="post" action="###FORM_ACTION###" enctype="multipart/form-data">
-        <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###" >
-		<input name="customer_group_id" type="hidden" value="###CUSTOMER_GROUP_ID###" />
-		<input name="action" type="hidden" value="###FORM_INPUT_ACTION###" />
-		<div class="account-field">
-			<label>###LABEL_NAME###</label>
-			<input type="text" name="group_name" id="group_name" value="###VALUE_GROUP_NAME###" />
-		</div>
-		<div class="account-field">
-			<label>###LABEL_DISCOUN###</label>
-			<input type="text" name="discount" size="2" id="discount" value="###VALUE_DISCOUNT###" />
-		</div>
-		<div class="account-field">
-			<label>###LABEL_MEMBERS###</label>
-			<select id="users" class="multiselect" multiple="multiple" name="tx_multishop_pi1[users][]">
-			<!-- ###MEMBERS_OPTION### begin -->
-			<option value="###LABEL_MEMBERS_USERID###"###MEMBERS_SELECTED###>###LABEL_MEMBERS_NAME### (###LABEL_MEMBERS_USERNAME###)</option>
-			<!-- ###MEMBERS_OPTION### end -->
-			</select>
-		</div>
-        ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
-		<div class="account-field">
-			<label>&nbsp;</label>
-			<span class="msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" name="Submit" value="###LABEL_BUTTON_SAVE###" /></span>
-		</div>
-	</form>
+<script type="text/javascript">
+###JS_FUNCTIONS_EXTRA###
+jQuery(document).ready(function ($) {
+    $(".tab_content").hide();
+    $("ul.tabs li:first").addClass("active").show();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function () {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
+        $(".tab_content").hide();
+        var activeTab = $(this).find("a").attr("href");
+        $(activeTab).fadeIn(0);
+        return false;
+    });
+###JS_TRIGGERS_EXTRA###
+});
+</script>
+<div id="tab-container">
+    <ul class="tabs" id="admin_orders">
+        <li><a href="#edit_customer_group">###ADMIN_LABEL_TABS_EDIT_CUSTOMER_GROUP###</a></li>
+        ###LABEL_EXTRA_PLUGIN_TABS###
+    </ul>
+    <div class="tab_container">
+        <div style="display: block;" id="edit_customer_group" class="tab_content">
+            <div class="main-heading"><h2>###LABEL_HEADING###</h2></div>
+                <form id="form1" name="form1" class="blockSubmitForm" method="post" action="###FORM_ACTION###" enctype="multipart/form-data">
+                    <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###" >
+                    <input name="customer_group_id" type="hidden" value="###CUSTOMER_GROUP_ID###" />
+                    <input name="action" type="hidden" value="###FORM_INPUT_ACTION###" />
+                    <div class="account-field">
+                        <label>###LABEL_NAME###</label>
+                        <input type="text" name="group_name" id="group_name" value="###VALUE_GROUP_NAME###" />
+                    </div>
+                    <div class="account-field">
+                        <label>###LABEL_DISCOUN###</label>
+                        <input type="text" name="discount" size="2" id="discount" value="###VALUE_DISCOUNT###" />
+                    </div>
+                    <div class="account-field">
+                        <label>###LABEL_MEMBERS###</label>
+                        <input type="hidden" name="tx_multishop_pi1[users][]" id="userIdSelect2" value="###MEMBERS_SELECTED###" />
+                    </div>
+                    ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
+                    <div class="account-field">
+                        <label>&nbsp;</label>
+                        <span class="msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" name="Submit" value="###LABEL_BUTTON_SAVE###" /></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        ###CONTENT_EXTRA_PLUGIN_TABS###
+    </div>
 </div>
 <script type="text/javascript">
 jQuery(document).ready(function($) {
