@@ -2665,6 +2665,8 @@ class mslib_befe {
 		//if ($order['billing_mobile']) 			$billing_address.=ucfirst($this->pi_getLL('mobile')).': '.$order['billing_mobile']."<br />";
 		$array1=array();
 		$array2=array();
+		$array1[]='###GENDER_SALUTATION###';
+		$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
 		$array1[]='###DELIVERY_FIRST_NAME###';
 		$array2[]=$order['delivery_first_name'];
 		$array1[]='###DELIVERY_LAST_NAME###';
