@@ -43,7 +43,6 @@ foreach ($products as $current_product) {
 		}
 	}
 	$output=array();
-	$current_product['final_price']=mslib_fe::final_products_price($current_product);
 	$where='';
 	if ($current_product['categories_id']) {
 		// get all cats to generate multilevel fake url
@@ -80,20 +79,30 @@ foreach ($products as $current_product) {
 			$output[$key]='<div class="no_image"></div>';
 		}
 	}
-	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-		// FINAL PRICES MUST BE SHOWN INCLUDING VAT
-	} else {
-		// FINAL PRICES MUST BE SHOWN EXCLUDING VAT
+	$current_product['products_price_including_vat']=$current_product['products_price'];
+	$current_product['final_price_including_vat']=$current_product['final_price'];
+	if ($current_product['tax_rate']) {
+		if ($current_product['products_price']) {
+			$current_product['products_price_including_vat']=mslib_fe::final_products_price($current_product,1,1,0,'products_price');
+		}
+		if ($current_product['final_price']) {
+			$current_product['final_price_including_vat']=mslib_fe::final_products_price($current_product,1,1,0,'final_price');
+		}
 	}
-	if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
-		$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
+	if ($this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
+		} else {
+			$output['products_price'].='<div class="price_including_vat">'.$this->pi_getLL('including_vat').' '.mslib_fe::amount2Cents($current_product['final_price_including_vat']).'</div>';
+		}
+	}
+	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+		// OVERWRITE INCLUDING VAT PRICES SO THEY ARE PRINTED CORRECTLY
+		$current_product['products_price']=$current_product['products_price_including_vat'];
+		$current_product['final_price']=$current_product['final_price_including_vat'];
 	}
 	if (round($current_product['products_price'],2)<>round($current_product['final_price'],2)) {
-		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
-			$current_product['old_price']=$current_product['products_price']*(1+$current_product['tax_rate']);
-		} else {
-			$current_product['old_price']=$current_product['products_price'];
-		}
+		$current_product['old_price']=$current_product['products_price'];
 	}
 	if (round($current_product['old_price'],2) > 0 && round($current_product['old_price'],2)<>round($current_product['final_price'],2)) {
 		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($current_product['old_price']).'</div><div class="specials_price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
