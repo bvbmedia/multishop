@@ -379,39 +379,39 @@ if (count($cart['products'])<1) {
 					// set the h5validate attributes for required delivery data
 					$(\'#radio_delivery_gender_mr\').attr(\'required\', \'required\');
 					$(\'#radio_delivery_gender_mr\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-					$(\'#radio_delivery_gender_mr\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#radio_delivery_gender_mr\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_first_name\').attr(\'required\', \'required\');
 					$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-					$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_last_name\').attr(\'required\', \'required\');
 					$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-					$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_address\').attr(\'required\', \'required\');
 					$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-					$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_address_number\').attr(\'required\', \'required\');
 					$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-					$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_zip\').attr(\'required\', \'required\');
 					$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-					$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_city\').attr(\'required\', \'required\');
 					$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-					$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_country\').attr(\'required\', \'required\');
 					$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
-					$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					$(\'#delivery_telephone\').attr(\'required\', \'required\');
 					$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-					$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+					$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 					jQuery(\'#delivery_address_category\').show();
 				} else {
@@ -462,39 +462,39 @@ if (count($cart['products'])<1) {
 						// set the h5validate attributes for required delivery data
 						$(\'#radio_delivery_gender_mr\').attr(\'required\', \'required\');
 						$(\'#radio_delivery_gender_mr\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
-						$(\'#radio_delivery_gender_mr\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#radio_delivery_gender_mr\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_first_name\').attr(\'required\', \'required\');
 						$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
-						$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_last_name\').attr(\'required\', \'required\');
 						$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
-						$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_address\').attr(\'required\', \'required\');
 						$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
-						$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_address_number\').attr(\'required\', \'required\');
 						$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
-						$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_zip\').attr(\'required\', \'required\');
 						$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
-						$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_city\').attr(\'required\', \'required\');
 						$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
-						$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_country\').attr(\'required\', \'required\');
 						$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
-						$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_telephone\').attr(\'required\', \'required\');
 						$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
-						$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.strtolower($this->pi_getLL('delivery_address')).')\');
+						$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 
 						$(\'#delivery_address_category\').show();
 					} else {

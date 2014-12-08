@@ -611,7 +611,7 @@ class mslib_befe {
 				break;
 			case 'products':
 			default:
-				$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_'.strtoupper($thumb_size)]);
+				$format=explode("x", $this->ms['MODULES']['PRODUCT_IMAGE_SIZE_'.mslib_befe::strtoupper($thumb_size)]);
 				break;
 		}
 		$targ_w=(($coords_w<$format[0])? $coords_w : $format[0]); //$coords_w;

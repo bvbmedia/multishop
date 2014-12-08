@@ -412,12 +412,12 @@ if (is_numeric($this->get['orders_id'])) {
 		$dont_overide_billing_countries=false;
 		$dont_overide_delivery_countries=false;
 		foreach ($enabled_countries as $country) {
-			$billing_countries[]='<option value="'.strtolower($country['cn_short_en']).'" '.((strtolower($orders['billing_country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
-			if (strtolower($orders['billing_country'])==strtolower($country['cn_short_en'])) {
+			$billing_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($orders['billing_country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			if (mslib_befe::strtolower($orders['billing_country'])==strtolower($country['cn_short_en'])) {
 				$dont_overide_billing_countries=true;
 			}
-			$delivery_countries[]='<option value="'.strtolower($country['cn_short_en']).'" '.((strtolower($orders['delivery_country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
-			if (strtolower($orders['delivery_country'])==strtolower($country['cn_short_en'])) {
+			$delivery_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($orders['delivery_country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			if (mslib_befe::strtolower($orders['delivery_country'])==strtolower($country['cn_short_en'])) {
 				$dont_overide_delivery_countries=true;
 			}
 		}

@@ -663,21 +663,21 @@ switch ($_REQUEST['action']) {
 			$company_name=$customer_billing_address['company'];
 			$billing_street_address=$customer_billing_address['address'];
 			$billing_postcode=$customer_billing_address['zip'].' '.$customer_billing_address['city'];
-			$billing_country=ucwords(strtolower($customer_billing_address['country']));
+			$billing_country=ucwords(mslib_befe::strtolower($customer_billing_address['country']));
 		} else {
 			$company_name=$user['company'];
 			$billing_street_address=$user['address'];
 			$billing_postcode=$user['zip'].' '.$user['city'];
-			$billing_country=ucwords(strtolower($user['country']));
+			$billing_country=ucwords(mslib_befe::strtolower($user['country']));
 		}
 		if ($customer_delivery_address['address'] && $customer_delivery_address['zip'] && $customer_delivery_address['city']) {
 			$delivery_street_address=$customer_delivery_address['address'];
 			$delivery_postcode=$customer_delivery_address['zip'].' '.$customer_delivery_address['city'];
-			$delivery_country=ucwords(strtolower($customer_delivery_address['country']));
+			$delivery_country=ucwords(mslib_befe::strtolower($customer_delivery_address['country']));
 		} else {
 			$delivery_street_address=$user['address'];
 			$delivery_postcode=$user['zip'].' '.$user['city'];
-			$delivery_country=ucwords(strtolower($user['country']));
+			$delivery_country=ucwords(mslib_befe::strtolower($user['country']));
 		}
 		$markerArray['DETAILS_COMPANY_NAME']=$company_name;
 		if (!$markerArray['DETAILS_COMPANY_NAME']) {

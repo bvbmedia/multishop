@@ -103,7 +103,7 @@ $chars=array(
 	'all'
 );
 foreach ($chars as $char) {
-	$searchCharNav.='<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[searchByChar]='.$char.'&tx_multishop_pi1[page_section]=admin_manufacturers').'">'.strtoupper($char).'</a></li>';
+	$searchCharNav.='<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[searchByChar]='.$char.'&tx_multishop_pi1[page_section]=admin_manufacturers').'">'.mslib_befe::strtoupper($char).'</a></li>';
 }
 $searchCharNav.='</ul></div>';
 $limit_search_result_selectbox='<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>';

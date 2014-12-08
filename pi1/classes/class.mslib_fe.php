@@ -7520,7 +7520,7 @@ class mslib_fe {
 			$amount=urlencode($amount);
 			$from_Currency=urlencode($from_Currency);
 			$to_Currency=urlencode($to_Currency);
-			$url='http://www.google.com/finance/converter?a=1&from='.strtoupper($from_Currency).'&to='.strtoupper($to_Currency);
+			$url='http://www.google.com/finance/converter?a=1&from='.mslib_befe::strtoupper($from_Currency).'&to='.mslib_befe::strtoupper($to_Currency);
 			$ch=curl_init();
 			$timeout=0;
 			curl_setopt($ch, CURLOPT_URL, $url);
@@ -7533,7 +7533,7 @@ class mslib_fe {
 			preg_match_all($pattern, $rawdata, $matches);
 			$rate='';
 			if (isset($matches[1][0]) && !empty($matches[1][0])) {
-				$rate=str_replace(' '.strtoupper($to_Currency), '', $matches[1][0]);
+				$rate=str_replace(' '.mslib_befe::strtoupper($to_Currency), '', $matches[1][0]);
 			}
 			$currencyArray[$from_Currency][$to_Currency]=$rate;
 		}
@@ -7821,14 +7821,14 @@ class mslib_fe {
 				$row_local_tax_rate['country_tax_rate']=($row_local_tax_rate['country_tax_rate']/100)*100;
 				$tax_data['global'][]=$row_local_tax_rate;
 				if (!empty($row_shop_address['region'])) {
-					if (strtolower($row_shop_address['region'])==strtolower($row_local_tax_rate['state_name']) && strtolower($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
+					if (mslib_befe::strtolower($row_shop_address['region'])==strtolower($row_local_tax_rate['state_name']) && mslib_befe::strtolower(($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
 						$tax_data['local']=$row_local_tax_rate;
 					}
-					if (!count($tax_data['local']) && empty($row_local_tax_rate['state_name']) && strtolower($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
+					if (!count($tax_data['local']) && empty($row_local_tax_rate['state_name']) && mslib_befe::strtolower(($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
 						$tax_data['local']=$row_local_tax_rate;
 					}
 				} else {
-					if (empty($row_local_tax_rate['state_name']) && strtolower($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
+					if (empty($row_local_tax_rate['state_name']) && mslib_befe::strtolower(($row_shop_address['country'])==strtolower($row_local_tax_rate['country_name'])) {
 						$tax_data['local']=$row_local_tax_rate;
 					}
 				}

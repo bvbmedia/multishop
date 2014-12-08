@@ -374,7 +374,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 		$content.='<p><center>Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></center></p>';
 		$content.='<p><center>Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></center></p>';
 		$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-		$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.t3lib_div::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+		$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 		return $content;
 	}
 }

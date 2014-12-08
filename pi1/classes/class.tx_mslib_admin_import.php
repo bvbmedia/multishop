@@ -199,7 +199,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 						} else {
 							$limit='10';
 						}
-						if (strstr(strtolower($that->post['database_name']),'select ')) {
+						if (strstr(mslib_befe::strtolower($that->post['database_name']),'select ')) {
 							// its not a table name, its a full query
 							$that->databaseMode='query';
 							$str=$that->post['database_name'].' LIMIT '.$limit;
@@ -601,7 +601,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 							} else {
 								$limit=2000;
 							}
-							if (strstr(strtolower($that->post['database_name']),'select ')) {
+							if (strstr(mslib_befe::strtolower($that->post['database_name']),'select ')) {
 								$that->databaseMode='query';
 								// its not a table name, its a full query
 								$that->databaseMode='query';
