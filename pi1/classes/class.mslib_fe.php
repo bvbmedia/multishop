@@ -6661,6 +6661,10 @@ class mslib_fe {
 			if (!is_array($data['select'])) {
 				$data['select']=array('*');
 			}
+			if ($data['from'] && !is_array($data['from'])) {
+				$from=$data['from'];
+				$data['from']=array($from);
+			}
 			if (!is_array($data['where'])) {
 				$data['where']=array();
 			}

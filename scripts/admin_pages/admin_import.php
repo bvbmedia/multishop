@@ -434,7 +434,6 @@ if ($this->post['action']=='category-insert') {
 					}
 				}
 			} elseif ($this->post['format']=='excel') {
-				// try the generic way
 				if (!$this->ms['mode']=='edit') {
 					$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$this->post['cid'].'-'.time().'.txt';
 					if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
@@ -468,7 +467,7 @@ if ($this->post['action']=='category-insert') {
 						}
 					}
 				}
-				// excel eof
+				// excel eol
 			} elseif ($this->post['format']=='xml') {
 				// try the generic way
 				if (!$this->ms['mode']=='edit') {
@@ -552,7 +551,7 @@ if ($this->post['action']=='category-insert') {
 				}
 				// csv
 			}
-			// try the generic way eof
+			// try the generic way eol
 		}
 		$tmpcontent='';
 		if (!$rows) {
@@ -2895,7 +2894,7 @@ if ($this->post['action']!='product-import-preview') {
 				}
 				$schedule_content.='</td>
 				<td align="center">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&delete=1&job_id='.$job['id']).'&action=delete_category" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"></a>
+				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&delete=1&job_id='.$job['id']).'&action=delete_job" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"></a>
 				</td>
 				<td align="center">
 					';
