@@ -767,7 +767,7 @@
             <label index="admin_label_js_do_you_want_to_change_orders_id_x_to_status_x">Do you want to change orders id: OrdersId to status: OrdersStatusLabel</label>
             <label index="admin_multiple_categories">CATEGORIES NAME</label>
             <label index="admin_label_no_feeds">no feeds</label>
-            <label index="payment_reminder_email_templates">Payment reminder email templates</label>
+            <label index="payment_reminder_email_templates">Payment reminder email template</label>
             <label index="admin_label_cms_marker_first_name_delivery">First name (delivery)</label>
             <label index="admin_label_cms_marker_last_name_delivery">Last name (delivery)</label>
             <label index="admin_label_cms_marker_first_name_billing">First name (billing)</label>

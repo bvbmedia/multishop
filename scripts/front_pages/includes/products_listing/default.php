@@ -80,6 +80,11 @@ foreach ($products as $current_product) {
 			$output[$key]='<div class="no_image"></div>';
 		}
 	}
+	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+		// FINAL PRICES MUST BE SHOWN INCLUDING VAT
+	} else {
+		// FINAL PRICES MUST BE SHOWN EXCLUDING VAT
+	}
 	if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
 		$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	}
