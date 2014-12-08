@@ -265,6 +265,35 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	// cms table
+	$str="describe `tx_multishop_cms`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='id') {
+			if ($row['Type']=='int(3)') {
+				$str2="ALTER TABLE  `tx_multishop_cms` CHANGE  `id`  `id` int(11)";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$messages[]=$str2;
+			}
+		}
+	}
+	// cms table
+	$str="describe `tx_multishop_cms_description`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='id') {
+			if ($row['Type']=='int(3)') {
+				$str2="ALTER TABLE  `tx_multishop_cms_description` CHANGE  `id`  `id` int(11)";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$messages[]=$str2;
+			}
+			if ($row['Key']!='PRI') {
+				$str2="ALTER TABLE  `tx_multishop_cms_description` ADD PRIMARY KEY  (`id`, `language_id`)";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$messages[]=$str2;
+			}
+		}
+	}
 	/*
 	// for later when we want private customer_id and orders_id per shop
 	$str="select tx_multishop_customer_id from fe_users limit 1";

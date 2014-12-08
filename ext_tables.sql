@@ -143,7 +143,7 @@ CREATE TABLE `tx_multishop_categories_description` (
 );
 
 CREATE TABLE `tx_multishop_cms` (
-  `id` int(3) auto_increment,
+  `id` int(11) auto_increment,
   `status` tinyint(1) default '1',
   `html` int(1) default '0',
   `type` varchar(254) default '',
@@ -173,7 +173,7 @@ CREATE TABLE `tx_multishop_cms` (
 );
 
 CREATE TABLE `tx_multishop_cms_description` (
-  `id` int(3) default '0',
+  `id` int(1) default '0',
   `language_id` tinyint(2) default '0',
   `name` varchar(150) default '',
   `content` text,
@@ -181,6 +181,7 @@ CREATE TABLE `tx_multishop_cms_description` (
   `extra_heading` varchar(127) default '',
   `negative_keywords` text,
   `sqlstr` text,
+  PRIMARY KEY (`id`, `language_id`),
   KEY `pagina` (`name`),
   KEY `id` (`id`),
   KEY `language_id` (`language_id`),
