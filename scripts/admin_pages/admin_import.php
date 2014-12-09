@@ -1995,7 +1995,6 @@ if ($this->post['action']=='category-insert') {
 								}
 								// custom hook that can be controlled by third-party plugin eof
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', "page_uid=".$this->showCatalogFromPage." and products_id=".$item['updated_products_id'], $updateArray);
-								// TYPO3 6.2 NULL VALUE FIX
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$stats['products_updated']++;
 							}
@@ -2368,9 +2367,13 @@ if ($this->post['action']=='category-insert') {
 									t3lib_div::callUserFunction($funcRef, $params, $this);
 								}
 							}
-							// TYPO3 6.2 NULL VALUE FIX
-							if (!isset($updateArray['sku_code'])) {
-								$updateArray['sku_code']='';
+							// T3 6.2 NULL BUGFIXES
+							$requiredCols=array();
+							$requiredCols[]='sku_code';
+							foreach ($requiredCols as $requiredCol) {
+								if (!isset($updateArray[$requiredCol])) {
+									$updateArray[$requiredCol]='';
+								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $updateArray);
@@ -2416,6 +2419,14 @@ if ($this->post['action']=='category-insert') {
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductsDescriptionPreHook'] as $funcRef) {
 									t3lib_div::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							// T3 6.2 NULL BUGFIXES
+							$requiredCols=array();
+							$requiredCols[]='products_meta_title';
+							foreach ($requiredCols as $requiredCol) {
+								if (!isset($updateArray[$requiredCol])) {
+									$updateArray[$requiredCol]='';
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof

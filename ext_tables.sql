@@ -874,7 +874,7 @@ CREATE TABLE `tx_multishop_products_description` (
   `products_url` text,
   `products_viewed` int(5) default '0',
   `products_shortdescription` text,
-  `products_meta_keywords` varchar(254) default '',
+  `products_meta_keywords` varchar(254) default NULL,
   `ppc` tinyint(1) default '0',
   `form_code` text,
   `products_negative_keywords` varchar(255) default '',

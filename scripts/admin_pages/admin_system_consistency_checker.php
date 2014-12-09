@@ -182,6 +182,9 @@ if (count($option_values)) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 }
+// DELETE DUPLICATE CHAINS
+$query='DELETE FROM tx_multishop_products_options_values_to_products_options WHERE products_options_values_to_products_options_id IN (SELECT * FROM (SELECT products_options_values_to_products_options_id FROM tx_multishop_products_options_values_to_products_options GROUP BY products_options_id, products_options_values_id HAVING (COUNT(*) > 1)) AS A);';
+$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 $content.='<strong>'.count($option_values).'</strong> '.$this->pi_getLL('admin_label_x_attribute_option_to_value_chains_has_been_deleted').'.<br />';
 // chk 4 missing product images
 $content.='<div class="main-heading"><h2>'.$this->pi_getLL('admin_label_check_4').'</h2></div>';
