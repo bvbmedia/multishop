@@ -294,8 +294,26 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	// TYPO3 6 - NULL VALUES BUGFIX
+	$items=array();
+	$items[]=array('table'=>'tx_multishop_products_description','column'=>'products_meta_title','columnDefinition'=>'varchar(254)','allowNull'=>1);
+	$items[]=array('table'=>'tx_multishop_products_description','column'=>'products_meta_description','columnDefinition'=>'varchar(254)','allowNull'=>1);
+	foreach ($items as $item) {
+		$str="describe `".$item['table']."`";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+			if ($row['Field']==$item['column']) {
+				if ($row['Null']=='NO' && $item['allowNull']) {
+					$str2="ALTER TABLE  `".$item['table']."` CHANGE `".$item['column']."` `".$item['column']."` ".$item['columnDefinition']." default NULL";
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					$messages[]=$str2;
+				}
+			}
+		}
+	}
+	// TYPO3 6 - NULL VALUES BUGFIX EOL
 	/*
-	// for later when we want private customer_id and orders_id per shop
+	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -303,19 +321,6 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 		$str="UPDATE `fe_users` set tx_multishop_customer_id=uid where tx_multishop_customer_id='0'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-	}
-	$str="select id from tx_multishop_orders limit 1";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="ALTER TABLE tx_multishop_orders CHANGE orders_id orders_id INT(11) UNSIGNED NOT NULL default '0'";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-		$str="ALTER TABLE `tx_multishop_orders` DROP PRIMARY KEY";
-		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		$messages[]=$str;
-		$str="ALTER TABLE `tx_multishop_orders` ADD `id` int(11) auto_increment PRIMARY KEY FIRST";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}

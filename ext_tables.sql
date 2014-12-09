@@ -130,7 +130,7 @@ CREATE TABLE `tx_multishop_categories_description` (
   `template_file` varchar(150) default '',
   `cid` int(11) default '0',
   `did` int(11) default '0',
-  `meta_title` varchar(254) default '',
+  `meta_title` varchar(254) default null,
   `meta_description` text,
   `meta_keywords` text,
   PRIMARY KEY (`categories_id`,`language_id`),
@@ -339,7 +339,7 @@ CREATE TABLE `tx_multishop_manufacturers_cms` (
   `content_footer` text,
   `shortdescription` text,
   `negative_keywords` text,
-  `meta_title` varchar(254) default '',
+  `meta_title` varchar(254) default null,
   `meta_description` text,
   `meta_keywords` text,
   KEY `combined` (`manufacturers_id`,`language_id`),
@@ -515,6 +515,7 @@ CREATE TABLE `tx_multishop_orders` (
   KEY `coupon_discount_type` (`coupon_discount_type`),
   KEY `coupon_discount_value` (`coupon_discount_value`)
 ) COMMENT='Ordersysteem';
+
 CREATE TABLE `tx_multishop_orders_products` (
   `orders_products_id` int(11) auto_increment,
   `orders_id` int(11) default '0',
@@ -879,8 +880,8 @@ CREATE TABLE `tx_multishop_products_description` (
   `form_code` text,
   `products_negative_keywords` varchar(255) default '',
   `promotext` varchar(255) default '',
-  `products_meta_title` varchar(254) default '',
-  `products_meta_description` varchar(254) default '',
+  `products_meta_title` varchar(254) default NULL,
+  `products_meta_description` varchar(254) default NULL,
   `file_label` varchar(250) default '',
   `file_location` varchar(250) default '',
   `delivery_time` varchar(75) default '',
