@@ -50,7 +50,7 @@ if (is_array($all_orders_status) and count($all_orders_status)) {
 	if (is_array($all_orders_status) and count($all_orders_status)) {
 		$order_status_sb.='<ul class="horizontal_list order_status_checkbox" id="admin_sales_stats_order_status">';
 		foreach ($all_orders_status as $row) {
-			$order_status_sb.='<li><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" '.(in_array($row['id'], $this->get['tx_multishop_pi1']['status']) ?'checked="checked"':'').' class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /><label for="sales_stats_status_'.$row['id'].'">'.$row['name'].'</label></li>';
+			$order_status_sb.='<li><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" '.(in_array($row['id'], $this->get['tx_multishop_pi1']['status']) ? 'checked="checked"' : '').' class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /><label for="sales_stats_status_'.$row['id'].'">'.$row['name'].'</label></li>';
 		}
 		$order_status_sb.='</ul>';
 	}
@@ -201,7 +201,12 @@ foreach ($dates as $key=>$value) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_price_avrg=($total_price_avrg+$row['grand_total']);
 	}
-	$content.='<td align="right">'.mslib_fe::amount2Cents($total_price_avrg/$total_orders, 0).'</td>';
+	if ($total_price_avrg>0 && $total_orders>0) {
+		$totalSum=$total_price_avrg/$total_orders;
+	} else {
+		$totalSum=0;
+	}
+	$content.='<td align="right">'.mslib_fe::amount2Cents($totalSum, 0).'</td>';
 	$total_amount_avg=$total_amount_avg+$total_price_avrg;
 }
 if ($this->cookie['stats_year_sb']==date("Y") || !$this->cookie['stats_year_sb']) {
@@ -219,7 +224,12 @@ if ($this->cookie['stats_year_sb']==date("Y") || !$this->cookie['stats_year_sb']
 	$currentYear=0;
 	$currentMonth=0;
 }
-$content.='<td align="right" nowrap>'.mslib_fe::amount2Cents($total_amount_avg/$total_orders_avg, 0).'</td>';
+if ($total_amount_avg>0 && $total_orders_avg>0) {
+	$totalSum=$total_amount_avg/$total_orders_avg;
+} else {
+	$totalSum=0;
+}
+$content.='<td align="right" nowrap>'.mslib_fe::amount2Cents($totalSum, 0).'</td>';
 $content.='</tr>';
 if (!$tr_type or $tr_type=='even') {
 	$tr_type='odd';
@@ -277,11 +287,16 @@ foreach ($dates as $key=>$value) {
 	$users=array();
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$total_price=($total_price+$row['grand_total']);
-		$uids[]='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$row['orders_id'].'&action=edit_order',1).'">'.$row['orders_id'].'</a>';
+		$uids[]='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$row['orders_id'].'&action=edit_order', 1).'">'.$row['orders_id'].'</a>';
 		$total_daily_orders++;
 	}
+	if ($total_price>0 && $total_daily_orders>0) {
+		$totalSum=$total_price/$total_daily_orders;
+	} else {
+		$totalSum=0;
+	}
 	$content.='<td align="right">'.mslib_fe::amount2Cents($total_price, 0).'</td>';
-	$content.='<td align="right">'.mslib_fe::amount2Cents($total_price/$total_daily_orders, 0).'</td>';
+	$content.='<td align="right">'.mslib_fe::amount2Cents($totalSum, 0).'</td>';
 	if (count($uids)) {
 		$content.='<td>'.implode(", ", $uids).'</td>';
 	} else {

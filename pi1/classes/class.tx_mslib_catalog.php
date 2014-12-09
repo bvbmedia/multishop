@@ -208,11 +208,15 @@ class tx_mslib_catalog {
 							$updateArray['sort_order']=$counter;
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_id='.$row['products_id'].' and categories_id='.$row['categories_id'], $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-							$updateArray=array();
-							$updateArray['sort_order']=$counter;
+
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products', 'products_id='.$row['products_id'], $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							if ($this->ms['MODULES']['FLAT_DATABASE']) {
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_flat', 'products_id='.$row['products_id'], $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
 							$counter++;
+
 						}
 						// per category is not optimal when using wide products search
 						/*

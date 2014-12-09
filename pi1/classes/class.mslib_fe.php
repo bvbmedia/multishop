@@ -2544,6 +2544,7 @@ class mslib_fe {
 		if ($this->msDebug) {
 			$this->msDebugInfo.=$str."\n\n";
 		}
+		//error_log($str);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($rows>0) {
