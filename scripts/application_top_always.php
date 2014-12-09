@@ -240,8 +240,6 @@ if ($this->conf['disableMetatags']) {
 } else {
 	$this->disableMetatags=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'disableMetatags', 's_advanced');
 }
-// FlexForm custom settings
-$this->customSettings=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'customSettings', 's_advanced');
 if ($this->disableMetatags) {
 	$this->conf['disableMetatags']=1;
 }
@@ -252,6 +250,8 @@ if ($this->conf['settings.'] && is_array($this->conf['settings.']) && count($thi
 	}
 }
 // TypoScript custom settings (deprecated)
+// FlexForm custom settings
+$this->customSettings=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'customSettings', 's_advanced');
 if ($this->conf['customSettings']=='{$plugin.multishop.customSettings}') {
 	$this->conf['customSettings']='';
 }
@@ -275,8 +275,8 @@ if ($this->conf['custom_script']) {
 	$this->custom_script=$this->conf['custom_script'];
 }
 if ($this->custom_script) {
-	if (preg_match("/\.php$/", $this->custom_script)) {
-		$this->custom_script=preg_replace("/\.php$/", "", $this->custom_script);
+	if (preg_match("/\\.php$/", $this->custom_script)) {
+		$this->custom_script=preg_replace("/\\.php$/", "", $this->custom_script);
 	}
 	if ($this->custom_script) {
 		if (strstr($this->custom_script, "..")) {
