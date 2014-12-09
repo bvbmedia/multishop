@@ -20,7 +20,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	if (is_numeric($this->conf['filterCategoriesFormByCategoriesIdGetParam'])) {
 		$this->filterCategoriesFormByCategoriesIdGetParam = $this->conf['filterCategoriesFormByCategoriesIdGetParam'];
 	} else {
-		$this->filterCategoriesFormByCategoriesIdGetParam = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'filterCategoriesFormByCategoriesIdGetParam', 's_search');	
+		$this->filterCategoriesFormByCategoriesIdGetParam = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_filtered_by_current_category', 's_search');
 	}
 	// setting coming from typoscript or from flexform
 	if (is_numeric($this->conf['ultrasearch_exclude_negative_filter_values'])) {
@@ -33,19 +33,19 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	if ($this->conf['ultrasearch_target_element']) {
 		$this->ultrasearch_target_element = $this->conf['ultrasearch_target_element'];
 	} else {
-		$this->ultrasearch_target_element = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_target_element', 's_search');	
+		$this->ultrasearch_target_element = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_target_element', 's_search');
 	}
 	// setting coming from typoscript or from flexform
 	if ($this->conf['ultrasearch_javascript_client_file']) {
 		$this->ultrasearch_javascript_client_file = $this->conf['ultrasearch_javascript_client_file'];
 	} else {
-		$this->ultrasearch_javascript_client_file = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_javascript_client_file', 's_search');	
+		$this->ultrasearch_javascript_client_file = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_javascript_client_file', 's_search');
 	}
 	if (!$this->ultrasearch_javascript_client_file or $this->ultrasearch_javascript_client_file=='default.js') {
 		$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/default.js';
 	} else if ($this->ultrasearch_javascript_client_file) {
 		if (strstr($this->ultrasearch_javascript_client_file,"/")) {
-			$this->ultrasearch_javascript_client_file=$this->ultrasearch_javascript_client_file;	
+			$this->ultrasearch_javascript_client_file=$this->ultrasearch_javascript_client_file;
 		} else if ($this->ultrasearch_javascript_client_file) {
 			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/'.$this->ultrasearch_javascript_client_file;
 		} else {
@@ -55,7 +55,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	if (!$this->ultrasearch_target_element) {
 		$this->ultrasearch_target_element='#content';
 	}
-	$headers='			
+	$headers='
 	<script type="text/javascript">
 	var content_middle = "'.$this->ultrasearch_target_element.'";
 	var ultrasearch_categories_id;

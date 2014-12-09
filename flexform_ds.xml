@@ -286,8 +286,16 @@
 						  <type>check</type>
 						 </config>
 					</TCEforms>
-				</ultrasearch_filtered_by_current_category>	
-				<ultrasearch_target_element>
+				</ultrasearch_filtered_by_current_category>
+                <ultrasearch_exclude_negative_filter_values>
+                    <TCEforms>
+                        <label>Exclude attribute values from listing in the searchform when they do not have related products</label>
+                        <config>
+                            <type>check</type>
+                        </config>
+                    </TCEforms>
+                </ultrasearch_exclude_negative_filter_values>
+                <ultrasearch_target_element>
 					<TCEforms>
 					<label>Ultrasearch Target Element (example: #tx_multishop_pi1_core)</label>
 					<config>
