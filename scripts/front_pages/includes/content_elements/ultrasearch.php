@@ -17,10 +17,10 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	$this->no_database_results=1;
 } else {
 	// setting coming from typoscript or from flexform
-	if (is_numeric($this->conf['ultrasearch_filtered_by_current_category'])) {
-		$this->ultrasearch_filtered_by_current_category = $this->conf['ultrasearch_filtered_by_current_category'];
+	if (is_numeric($this->conf['filterCategoriesFormByCategoriesIdGetParam'])) {
+		$this->filterCategoriesFormByCategoriesIdGetParam = $this->conf['filterCategoriesFormByCategoriesIdGetParam'];
 	} else {
-		$this->ultrasearch_filtered_by_current_category = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_filtered_by_current_category', 's_search');	
+		$this->filterCategoriesFormByCategoriesIdGetParam = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'filterCategoriesFormByCategoriesIdGetParam', 's_search');	
 	}
 	// setting coming from typoscript or from flexform
 	if (is_numeric($this->conf['ultrasearch_exclude_negative_filter_values'])) {
@@ -61,14 +61,15 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	var ultrasearch_categories_id;
 	var ultrasearch_exclude_negative_filter_values;
 	var ultrasearch_fields=\''.base64_encode(($this->ultrasearch_fields)).'\';';
-	if ($this->ultrasearch_filtered_by_current_category and is_numeric($this->get['categories_id'])) {
-		$headers.='ultrasearch_categories_id=\''.$this->get['categories_id'].'\';';
+	if ($this->filterCategoriesFormByCategoriesIdGetParam and is_numeric($this->get['categories_id'])) {
+		//$headers.='ultrasearch_categories_id=\''.$this->get['categories_id'].'\';';
+		$headers.='filterCategoriesFormByCategoriesIdGetParam=\'1\';';
 	}
 	if ($this->ultrasearch_exclude_negative_filter_values) {
 		$headers.='ultrasearch_exclude_negative_filter_values=\'1\';';
 	}
 	$headers.='// location of the ultrasearch server
-	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'\';';
+	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam.'\';';
 	if ($this->hideHeader) {
 		$headers.='var ultrasearcch_resultset_header=\'\';';
 	} else {

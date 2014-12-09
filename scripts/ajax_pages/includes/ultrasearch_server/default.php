@@ -52,8 +52,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			unset($this->post['tx_multishop_pi1']['categories'][$key]);
 		}
 	}
+	if (is_numeric($this->get['filterCategoriesFormByCategoriesIdGetParam'])) {
+		$this->filterCategoriesFormByCategoriesIdGetParam=$this->get['filterCategoriesFormByCategoriesIdGetParam'];
+	}
+	//error_log('filterCategoriesFormByCategoriesIdGetParam : '.$this->get['ultrasearch_exclude_negative_filter_values']);
 	$parent_id=$this->categoriesStartingPoint;
-	if ($this->ultrasearch_filtered_by_current_category) {
+	if ($this->filterCategoriesFormByCategoriesIdGetParam) {
 		if (is_numeric($this->get['categories_id'])) {
 			$parent_id=$this->get['categories_id'];
 		}
@@ -294,7 +298,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$array=explode(":",$field);
 				$list_type=$array[1];
 				$parent_id=$this->categoriesStartingPoint;
-				if ($this->ultrasearch_filtered_by_current_category) {
+				if ($this->filterCategoriesFormByCategoriesIdGetParam) {
 					if (isset($this->get['categories_id'])) {
 						$parent_id=$this->get['categories_id'];
 					}
@@ -476,7 +480,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				break;
 			case 'manufacturers':
 				$formField['caption']=$this->pi_getLL('manufacturers');
-				if ($this->ultrasearch_filtered_by_current_category) {
+				if ($this->filterCategoriesFormByCategoriesIdGetParam) {
 					if ($this->ms['MODULES']['FLAT_DATABASE']) {
 						$str="SELECT manufacturers_id from tx_multishop_products_flat where (";
 						$tmpfilter=array();
@@ -813,7 +817,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							break;
 					}
 					$formField['caption']=$row['products_options_name'];
-					if ($this->ultrasearch_filtered_by_current_category) {
+					if ($this->filterCategoriesFormByCategoriesIdGetParam) {
 						$man_get_subscat = array();
 						$man_catsubs_id_data = array();
 						$man_get_subscat = mslib_fe::get_subcategory_ids($parent_id);
