@@ -1089,7 +1089,7 @@ if ($this->post['action']=='category-insert') {
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'])) {
 				$params=array(
-					'rows'=>$rows
+					'rows'=>&$rows
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'] as $funcRef) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
