@@ -328,15 +328,17 @@ class mslib_fe {
 		if ($sum and $product[$priceColumn]>0) {
 			$final_price=($product[$priceColumn]*$quantity);
 		}
-		if ($product['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
-			// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
-			if ($product['country_tax_rate'] && $product['region_tax_rate']) {
-				$country_tax_rate=mslib_fe::taxDecimalCrop($final_price*($product['country_tax_rate']));
-				$region_tax_rate=mslib_fe::taxDecimalCrop($final_price*($product['region_tax_rate']));
-				$final_price=$final_price+($country_tax_rate+$region_tax_rate);
-			} else {
-				$tax_rate=mslib_fe::taxDecimalCrop($final_price*($product['tax_rate']));
-				$final_price=$final_price+$tax_rate;
+		if ($this->conf['disableFeFromCalculatingVatPrices']!='1') {
+			if ($product['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
+				// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
+				if ($product['country_tax_rate'] && $product['region_tax_rate']) {
+					$country_tax_rate=mslib_fe::taxDecimalCrop($final_price*($product['country_tax_rate']));
+					$region_tax_rate=mslib_fe::taxDecimalCrop($final_price*($product['region_tax_rate']));
+					$final_price=$final_price+($country_tax_rate+$region_tax_rate);
+				} else {
+					$tax_rate=mslib_fe::taxDecimalCrop($final_price*($product['tax_rate']));
+					$final_price=$final_price+$tax_rate;
+				}
 			}
 		}
 		if ($add_currency) {
@@ -2062,10 +2064,12 @@ class mslib_fe {
 				}
 			}
 			// hook eof
-			$tax_ruleset=self::getTaxRuleSet($product['tax_id'], 0);
-			$product['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-			$product['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-			$product['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+			if ($this->conf['disableFeFromCalculatingVatPrices']!='1') {
+				$tax_ruleset=self::getTaxRuleSet($product['tax_id'], 0);
+				$product['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+				$product['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+				$product['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+			}
 			return $product;
 		}
 	}

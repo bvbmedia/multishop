@@ -169,7 +169,8 @@ CREATE TABLE `tx_multishop_cms` (
   KEY `sort_order` (`sort_order`),
   KEY `status` (`status`),
   KEY `parent_id` (`parent_id`),
-  KEY `hash` (`hash`)
+  KEY `hash` (`hash`),
+  KEY `page_uid` (`page_uid`)
 );
 
 CREATE TABLE `tx_multishop_cms_description` (
@@ -1074,11 +1075,13 @@ CREATE TABLE `tx_multishop_products_to_relative_products` (
   `products_to_relative_product_id` int(11) auto_increment,
   `products_id` int(11) default '0',
   `relative_product_id` int(11) default '0',
+  `relation_types` varchar(15) default 'cross-sell',
   PRIMARY KEY (`products_to_relative_product_id`),
   KEY `products_id` (`products_id`),
   KEY `relative_product_id` (`relative_product_id`),
   KEY `pid_to_relative_id` (`products_id`,`relative_product_id`),
-  KEY `relative_to_pid_id` (`relative_product_id`,`products_id`)
+  KEY `relative_to_pid_id` (`relative_product_id`,`products_id`),
+  KEY `relation_types` (`relation_types`)
 );
 
 

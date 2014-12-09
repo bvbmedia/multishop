@@ -312,6 +312,13 @@ if (!$skipMultishopUpdates) {
 		}
 	}
 	// TYPO3 6 - NULL VALUES BUGFIX EOL
+	$str="select relation_types from tx_multishop_products_to_relative_products limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_products_to_relative_products` ADD `relation_types` varchar(15) NOT NULL DEFAULT 'cross-sell', ADD INDEX (`relation_types`);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
