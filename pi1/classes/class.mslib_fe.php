@@ -301,7 +301,7 @@ class mslib_fe {
 		}
 		return $content;
 	}
-	public function final_products_price($product, $quantity=1, $add_currency=1, $ignore_minimum_quantity=0) {
+	public function final_products_price($product, $quantity=1, $add_currency=1, $ignore_minimum_quantity=0,$priceColumn='final_price') {
 		if (!$ignore_minimum_quantity) {
 			if ($quantity and $product['minimum_quantity']>$quantity) {
 				// check if the product has a minimum quantity
@@ -323,10 +323,10 @@ class mslib_fe {
 		if ($product['staffel_price']) {
 			$final_price=(mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity)/$quantity);
 		} else {
-			$final_price=($product['final_price']);
+			$final_price=($product[$priceColumn]);
 		}
-		if ($sum and $product['final_price']>0) {
-			$final_price=($product['final_price']*$quantity);
+		if ($sum and $product[$priceColumn]>0) {
+			$final_price=($product[$priceColumn]*$quantity);
 		}
 		if ($product['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
 			// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
