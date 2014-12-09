@@ -345,6 +345,9 @@ class tx_mslib_user {
 		if (!$captcha_code or $session['captcha_code']!=md5($captcha_code)) {
 			$erno[]=$this->ref->pi_getLL('captcha_code_is_invalid');
 		}
+		if (!$this->getGender() && $this->ref->ms['MODULES']['GENDER_INPUT_REQUIRED']) {
+			$erno[]=$this->ref->pi_getLL('please_select_your_salutation');
+		}
 		if (!$this->getEmail()) {
 			$erno[]=$this->ref->pi_getLL('no_email_address_has_been_specified');
 		}
