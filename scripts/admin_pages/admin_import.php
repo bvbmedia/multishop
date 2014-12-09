@@ -233,6 +233,13 @@ $this->ms['upload_productfeed_form'].='
 <li>'.$this->pi_getLL('file').' <input type="file" name="file" /></li>
 <li>URL <input name="file_url" type="text" /></li>
 <li>'.$this->pi_getLL('database_table').' <input name="database_name" type="text" /></li>
+<li>'.$this->pi_getLL('mapped_to_category').' <input type="hidden" name="cid" value="" class="importCategoryTargetTree" /></li>
+
+
+
+
+
+
 </ul>
 </fieldset>
 ';
@@ -275,7 +282,7 @@ $this->ms['upload_productfeed_form'].='
 </div>
 <input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 <input name="action" type="hidden" value="product-import-preview" />
-<input name="cid" class="cid" type="hidden" value="0" />
+<!-- <input name="cid" class="cid" type="hidden" value="0" /> -->
 </div>
 </div>
 </fieldset>
@@ -2826,7 +2833,7 @@ if ($this->post['action']!='product-import-preview') {
 	$tmptab='
 	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="blockSubmitForm">
 	'.$this->ms['upload_productfeed_form'].'
-				<input name="cid" type="hidden" value="0" />
+				<!-- <input name="cid" type="hidden" value="0" /> -->
 	</form>';
 	$tabs['Upload_To_Root']=array(
 		$this->pi_getLL('import_to_root'),
