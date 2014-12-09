@@ -135,7 +135,9 @@ jQuery(document).ready(function ($) {
             pagination_wrapper += "</ul></div>";
             // PAGINATION EOF
             var content = '';
-            content += '<h1>' + data.resultSet.current_categories.name + '</h1>';
+            if (data.resultSet.current_categories.name!="" && data.resultSet.current_categories.name!=null) {
+                content += '<h1>' + data.resultSet.current_categories.name + '</h1>';
+            }
             if (data.resultSet.categories_description.header != "") {
                 content += '<div class="category_header_content ">' + data.resultSet.categories_description.header + '</div>';
             }
