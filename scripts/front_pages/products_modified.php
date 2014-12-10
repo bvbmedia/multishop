@@ -85,6 +85,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 				if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
 				} else {
+					if (!$this->ms['MODULES']['PRODUCTS_LISTING_TYPE']) {
+						$this->ms['MODULES']['PRODUCTS_LISTING_TYPE']='default';
+					}
 					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing/'.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
 				}
 			}
