@@ -378,11 +378,24 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 	 * @return    array        Files unpacked
 	 */
 	function zipUnpack($file) {
-		/*
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']=':';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']='1';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']='0';
+		}
+		if (!isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos'])) {
+			$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']='1';
+		}
 		if (!(isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']))) {
 			return array();
 		}
-		*/
+		if (!(isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['split_char']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['pre_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['post_lines']) && isset($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip']['unzip']['file_pos']))) {
+			return array();
+		}
 		$path=dirname($file);
 		chdir($path);
 		// Unzip without overwriting existing files
