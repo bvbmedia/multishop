@@ -58,6 +58,11 @@ if ($this->post) {
 	if ($this->post['delivery_first_name']) {
 		$this->post['different_delivery_address']=1;
 	}
+	if (isset($this->post['tx_multishop_newsletter'])) {
+		$user['tx_multishop_newsletter']=$this->post['tx_multishop_newsletter'];
+	} else {
+		$user['tx_multishop_newsletter']=0;
+	}
 	if (!$this->post['different_delivery_address']) {
 		$user['delivery_email']=$this->post['email'];
 		$user['delivery_company']=$this->post['company'];
@@ -157,6 +162,7 @@ if ($this->post) {
 		}
 		$insertArray['gender']=$address['gender'];
 		$insertArray['date_of_birth']=$timestamp=strtotime($date_of_birth[2].'-'.$date_of_birth[1].'-'.$date_of_birth[0]);
+		$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid = '.$GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// add / update billing tt_address
