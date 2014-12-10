@@ -345,15 +345,16 @@ if (mslib_fe::loggedin()) {
 								<input type="password" name="password_confirm" class="password-confirm" id="password_confirm" value="'.htmlspecialchars($this->post['password_confirm']).'" />
 				  				<span class="error-space"></span>
 				  			</div>
-			  			</div>
-			  			<div class="account-field newsletter_checkbox">
+			  			</div>';
+						if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
+						$content.='
+						<div class="account-field newsletter_checkbox">
 							<div class="account-heading">
 				  				<h2>'.$this->pi_getLL('newsletter').'</h2>
 							</div>
 							<div class="account-boxes">'.$this->pi_getLL('subscribe_to_our_newsletter_description').'.</div>
-			  			</div>';
-						if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
-						$content.='<div class="checkboxAgreement newsletter_checkbox_message">
+			  			</div>
+						<div class="checkboxAgreement newsletter_checkbox_message">
 				  			<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($this->post['tx_multishop_newsletter'] ? ' checked="checked"' : '').' />
 							<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
 						</div>';

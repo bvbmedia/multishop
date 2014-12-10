@@ -53,8 +53,8 @@ if ($this->post) {
 	$user['email']=$this->post['email'];
 	$user['telephone']=$this->post['telephone'];
 	$date_of_birth=explode("-", $user['birthday']);
-	// billing details eof	
-	// delivery details	
+	// billing details eof
+	// delivery details
 	if ($this->post['delivery_first_name']) {
 		$this->post['different_delivery_address']=1;
 	}
@@ -330,24 +330,24 @@ if ($this->post) {
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
 				jQuery(\'#checkout\').h5Validate();
-			
+
 				'.($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY'] ? '
-				jQuery("#birthday_visitor").datepicker({ 
+				jQuery("#birthday_visitor").datepicker({
 					dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
 					altField: "#birthday",
 					altFormat: "yy-mm-dd",
 					changeMonth: true,
 					changeYear: true,
-					showOtherMonths: true,  
+					showOtherMonths: true,
 					yearRange: "'.(date("Y")-100).':'.date("Y").'"
 				});
-				jQuery("#delivery_birthday_visitor").datepicker({ 
+				jQuery("#delivery_birthday_visitor").datepicker({
 					dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
 					altField: "#delivery_birthday",
 					altFormat: "yy-mm-dd",
 					changeMonth: true,
 					changeYear: true,
-					showOtherMonths: true,  
+					showOtherMonths: true,
 					yearRange: "'.(date("Y")-100).':'.date("Y").'"
 				});' : '').'
 			}); //end of first load
@@ -381,7 +381,7 @@ if ($this->post) {
 	$content.='</div>
 	<div id="input-company" class="account-field col-sm-12">
 		<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
-		<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>	
+		<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>
 	</div>
 	<div id="input-firstname" class="account-field col-sm-4">
 		<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>
@@ -434,7 +434,7 @@ if ($this->post) {
 	</div>
 	<div id="input-extension" class="account-field col-sm-3">
 		<label for="address-ext" id="account-ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-		<input type="text" name="address_ext" class="address-ext" id="address-ext" value="'.htmlspecialchars($user['address_ext']).'"/>	
+		<input type="text" name="address_ext" class="address-ext" id="address-ext" value="'.htmlspecialchars($user['address_ext']).'"/>
 	</div>
 	<div id="input-city" class="account-field col-sm-3">
 		<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
@@ -524,7 +524,7 @@ if ($this->post) {
 	<div id="input-dextension" class="account-field col-sm-3">
 		<label for="delivery_address-ext" id="delivery_account-ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
 		<input type="text" name="delivery_address_ext" class="delivery_address-ext" id="delivery_address-ext" value="'.htmlspecialchars($user['delivery_address_ext']).'"/>
-	</div>		
+	</div>
 
 	<div id="input-dcity" class="account-field col-sm-3">
 		<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'*</label>
@@ -545,50 +545,67 @@ if ($this->post) {
 	</div>
 	</div>
 	';
-	$content.='<div id="live-validation-r" class="col-md-6"><div id="delivery_address_category"><h2 class="msFrontEditAccountHeading">'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'
+	$content.='<div id="live-validation-r" class=" col-md-6">
+		<div id="delivery_address_category">
+		<h2 class="msFrontEditAccountHeading">'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'
 	<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			// set the h5validate attributes for required delivery data
 			$(\'#delivery_radio\').attr(\'required\', \'required\');
 			$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
 			$(\'#delivery_radio\').attr(\'title\', \''.$this->pi_getLL('gender_is_required', 'Title is required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_first_name\').attr(\'required\', \'required\');
 			$(\'#delivery_first_name\').attr(\'data-h5-errorid\', \'invalid-delivery_first_name\');
 			$(\'#delivery_first_name\').attr(\'title\', \''.$this->pi_getLL('first_name_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_last_name\').attr(\'required\', \'required\');
 			$(\'#delivery_last_name\').attr(\'data-h5-errorid\', \'invalid-delivery_last_name\');
 			$(\'#delivery_last_name\').attr(\'title\', \''.$this->pi_getLL('surname_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_address\').attr(\'required\', \'required\');
 			$(\'#delivery_address\').attr(\'data-h5-errorid\', \'invalid-delivery_address\');
 			$(\'#delivery_address\').attr(\'title\', \''.$this->pi_getLL('street_address_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_address_number\').attr(\'required\', \'required\');
 			$(\'#delivery_address_number\').attr(\'data-h5-errorid\', \'invalid-delivery_address_number\');
 			$(\'#delivery_address_number\').attr(\'title\', \''.$this->pi_getLL('street_number_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_zip\').attr(\'required\', \'required\');
 			$(\'#delivery_zip\').attr(\'data-h5-errorid\', \'invalid-delivery_zip\');
 			$(\'#delivery_zip\').attr(\'title\', \''.$this->pi_getLL('zip_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_city\').attr(\'required\', \'required\');
 			$(\'#delivery_city\').attr(\'data-h5-errorid\', \'invalid-delivery_city\');
 			$(\'#delivery_city\').attr(\'title\', \''.$this->pi_getLL('city_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_country\').attr(\'required\', \'required\');
 			$(\'#delivery_country\').attr(\'data-h5-errorid\', \'invalid-delivery_country\');
 			$(\'#delivery_country\').attr(\'title\', \''.$this->pi_getLL('country_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
-			
+
 			$(\'#delivery_telephone\').attr(\'required\', \'required\');
 			$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
 			$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 		});
 	</script>
 	</div>
-	</div>
-	<div class="msFrontUserNameDetails">
+	</div>';
+	if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CREATE_ACCOUNT']) {
+		$content.='
+		<div class="msFrontNewsletterDetails">
+		<h2 class="msFrontEditAccountHeading">'.$this->pi_getLL('newsletter').'</h2>
+		<div class="row">
+						<div class="account-field newsletter_checkbox col-sm-12">
+							<div class="account-boxes">'.$this->pi_getLL('subscribe_to_our_newsletter_description').'.</div>
+			  			</div>
+						<div class="checkboxAgreement newsletter_checkbox_message col-sm-12">
+				  			<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($user['tx_multishop_newsletter']>0 ? ' checked="checked"' : '').' />
+							<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
+						</div>
+						</div>
+						</div>';
+	}
+	$content.='<div class="msFrontUserNameDetails">
 		<h2 class="msFrontEditAccountHeading">'.$this->pi_getLL('login_details').'</h2>
 		<div class="row">
 			<div id="input-username" class="account-field col-sm-12">
