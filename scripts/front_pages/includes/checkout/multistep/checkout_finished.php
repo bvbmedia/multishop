@@ -148,6 +148,8 @@ if (!$order_session['orders_id']) {
 	$array2[]='';
 	$array1[]='###CUSTOMER_ID###';
 	$array2[]=$order['customer_id'];
+	$array1[]='###CUSTOMER_COMMENTS###';
+	$array2[]=$order['customer_comments'];
 	// for on the site eof
 	$page=array();
 	// psp email template

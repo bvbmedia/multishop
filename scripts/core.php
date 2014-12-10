@@ -338,6 +338,8 @@ switch ($this->ms['page']) {
 			$array2[]='';
 			$array1[]='###CUSTOMER_ID###';
 			$array2[]=$order['customer_id'];
+			$array1[]='###CUSTOMER_COMMENTS###';
+			$array2[]=$order['customer_comments'];
 		}
 		$page=mslib_fe::getCMScontent($this->ms['page'], $GLOBALS['TSFE']->sys_language_uid);
 		if ($page[0]['name']) {
@@ -519,6 +521,8 @@ switch ($this->ms['page']) {
 				$array2[]='';
 				$array1[]='###CUSTOMER_ID###';
 				$array2[]=$order['customer_id'];
+				$array1[]='###CUSTOMER_COMMENTS###';
+				$array2[]=$order['customer_comments'];
 				// for on the site eof
 				$page=array();
 				// psp email template
