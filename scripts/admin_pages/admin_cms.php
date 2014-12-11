@@ -267,7 +267,11 @@ if (!count($pageset['dataset'])) {
 		}
 		$markerArray=array();
 		$markerArray['ROW_TYPE']=$tr_type;
-		$markerArray['CMS_ID_NR']=$row['id'];
+		if ($this->ROOTADMIN_USER) {
+			$markerArray['DOWNLOAD_CMS_CHECKBOX']='<td align="center" nowrap>
+            	<input type="checkbox" name="downloadCMS[]" class="download_cms_cb" value="'.$row['id'].'"/>
+            </td>';
+		}
 		$markerArray['CMS_ID']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.$row['id'].'</a>';
 		$markerArray['CMS_TITLE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['name']).'</a>';
 		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['type']).'</a>';
@@ -296,7 +300,6 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###LABEL_HEADER_CMS_ID###']=htmlspecialchars($this->pi_getLL('id'));
 	$subpartArray['###FOOTER_SORTBY_LINK_ID###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###LABEL_FOOTER_CMS_ID###']=htmlspecialchars($this->pi_getLL('id'));
-	$subpartArray['###LABEL_DOWNLOAD_SELECTED_CMS###']=$this->pi_getLL('download_selected_cms');
 	$key='name';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
@@ -330,6 +333,11 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###LABEL_FOOTER_STATUS###']=$this->pi_getLL('status');
 	$subpartArray['###LABEL_FOOTER_CMS_ACTION###']=$this->pi_getLL('action');
 	$subpartArray['###CMS_LIST###']=$contentItem;
+	if ($this->ROOTADMIN_USER) {
+		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<tr>
+				<td colspan="7"><input type="button" class="submit msadmin_button" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
+			</tr>';
+	}
 	$results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 	// pagination
 	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
@@ -343,9 +351,22 @@ $subpartArray=array();
 $subpartArray['###CMS_GROUP_ID###']=htmlspecialchars($group);
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 $subpartArray['###ADMIN_CMS_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&download=cms');
-$subpartArray['###LABEL_UPLOAD_CMS###']=$this->pi_getLL('upload_cms');
-$subpartArray['###ADMIN_CMS_UPLOAD_URL###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms');
-$subpartArray['###LABEL_FILE###']=$this->pi_getLL('file');
+//$subpartArray['###LABEL_UPLOAD_CMS###']=$this->pi_getLL('upload_cms');
+//$subpartArray['###ADMIN_CMS_UPLOAD_URL###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms');
+//$subpartArray['###LABEL_FILE###']=$this->pi_getLL('file');
+if ($this->ROOTADMIN_USER) {
+	$subpartArray['###IMPORT_CMS_FILE###']='
+		<fieldset id="scheduled_import_jobs_form">
+                <legend>'.$this->pi_getLL('upload_cms').'</legend>
+                <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="blockSubmitForm">
+                    <div class="account-field">
+                        <label for="upload_cms_file">'.$this->pi_getLL('file').'</label>
+                        <input type="file" name="cms_file">&nbsp;<input type="submit" name="upload_cms_file" class="submit msadmin_button" id="upload_cms_file" value="upload">
+                    </div>
+                </form>
+            </fieldset>
+		';
+}
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=htmlspecialchars($this->get['tx_multishop_pi1']['keyword']);
 $subpartArray['###LABEL_SEARCH###']=$this->pi_getLL('search');

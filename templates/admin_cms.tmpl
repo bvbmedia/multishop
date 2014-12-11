@@ -84,9 +84,7 @@
 				<tbody id="cms_group_###CMS_GROUP_ID###">
                 <!-- ###CMS_LIST### begin -->
                 <tr class="###ROW_TYPE###">
-                    <td align="center" nowrap>
-                        <input type="checkbox" name="downloadCMS[]" class="download_cms_cb" value="###CMS_ID_NR###"/>
-                    </td>
+                    ###DOWNLOAD_CMS_CHECKBOX###
                     <td align="right" nowrap>
                     ###CMS_ID###
 					</td>
@@ -116,25 +114,14 @@
 					<th width="50" nowrap>###LABEL_FOOTER_STATUS###</th>
 					<th>###LABEL_FOOTER_CMS_ACTION###</th>
 				</tr>
-                <tr>
-                    <td colspan="7"><input type="button" class="submit msadmin_button" id="dl_submit" value="###LABEL_DOWNLOAD_SELECTED_CMS###"/></td>
-                </tr>
+                ###DOWNLOAD_CMS_BUTTON###
             </table>
 			</div>
 			<!-- ###RESULTS### end -->
 			<!-- ###NORESULTS### begin -->
 			###LABEL_NO_RESULTS###
 			<!-- ###NORESULTS### end -->
-            <fieldset id="scheduled_import_jobs_form">
-                <legend>###LABEL_UPLOAD_CMS###</legend>
-                <form action="###ADMIN_CMS_UPLOAD_URL###" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="blockSubmitForm">
-                    <div class="account-field">
-                        <label for="upload_cms_file">###LABEL_FILE###</label>
-                        <input type="file" name="cms_file">&nbsp;<input type="submit" name="upload_cms_file" class="submit msadmin_button" id="upload_cms_file" value="upload">
-                    </div>
-                </form>
-            </fieldset>
-
+            ###IMPORT_CMS_FILE###
         </div>
     </div>
 </div>
