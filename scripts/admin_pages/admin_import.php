@@ -2860,9 +2860,10 @@ if ($this->post['action']!='product-import-preview') {
 			<th>'.ucfirst($this->pi_getLL('status')).'</th>
 			<th>'.ucfirst($this->pi_getLL('delete')).'</th>
 			<th>'.$this->pi_getLL('file_exists').'</th>
-			<th>'.$this->pi_getLL('upload_file').'</th>
-			<th>'.$this->pi_getLL('download_import_task').'</th>
-			';
+			<th>'.$this->pi_getLL('upload_file').'</th>';
+			if ($this->ROOTADMIN_USER) {
+				$schedule_content.='<th>'.$this->pi_getLL('download_import_task').'</th>';
+			}
 			$switch='';
 			$jsSelect2InitialValue=array();
 			$jsSelect2InitialValue[]='var categoriesIdTerm=[];';
@@ -2925,10 +2926,12 @@ if ($this->post['action']!='product-import-preview') {
 						<input name="job_id" type="hidden" value="'.$job['id'].'" />
 						<input name="action" type="hidden" value="edit_job" />
 					</form>
-				</td>
-				<td>
-					<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_import&download=task&job_id='.$job['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_import_task').'</i></a>
 				</td>';
+				if ($this->ROOTADMIN_USER) {
+					$schedule_content.='<td>
+						<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_import&download=task&job_id='.$job['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_import_task').'</i></a>
+					</td>';
+				}
 				$schedule_content.='</tr>';
 				// build the select2 cache
 				$cats=mslib_fe::Crumbar($job['categories_id']);
@@ -3025,22 +3028,24 @@ if ($this->post['action']!='product-import-preview') {
 			';
 			$tmptab='';
 		}
-		$schedule_content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_import_task').'</legend>
-			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-				<div class="account-field">
-					<label for="new_cron_name">'.$this->pi_getLL('name').'</label>
-					<input name="new_cron_name" type="text" value="" size="125">
-				</div>
-				<div class="account-field">
-					<label for="new_prefix_source_name">'.$this->pi_getLL('source_name').'</label>
-					<input name="new_prefix_source_name" type="text" value="" />
-				</div>
-				<div class="account-field">
-					<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
-					<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
-				</div>
-			</form>
-		</fieldset>';
+		if ($this->ROOTADMIN_USER) {
+			$schedule_content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_import_task').'</legend>
+				<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+					<div class="account-field">
+						<label for="new_cron_name">'.$this->pi_getLL('name').'</label>
+						<input name="new_cron_name" type="text" value="" size="125">
+					</div>
+					<div class="account-field">
+						<label for="new_prefix_source_name">'.$this->pi_getLL('source_name').'</label>
+						<input name="new_prefix_source_name" type="text" value="" />
+					</div>
+					<div class="account-field">
+						<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
+						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
+					</div>
+				</form>
+			</fieldset>';
+		}
 		$tabs['tasks']=array(
 			$this->pi_getLL('import_tasks'),
 			$schedule_content
