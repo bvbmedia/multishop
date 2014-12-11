@@ -3730,6 +3730,13 @@ class mslib_befe {
 		$array = $new_array;
 		return true;
 	}
+	/**
+	 * Check if a string is serialized
+	 * @param string $string
+	 */
+	public static function isSerializedString($string) {
+		return (@unserialize($string) !== false);
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);

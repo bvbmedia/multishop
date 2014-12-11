@@ -133,7 +133,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 				$filename=time();
 				$file_location=$that->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename;
 				$file_content=mslib_fe::file_get_contents($that->post['file_url']);
-				if (!$file_content or !mslib_fe::file_put_contents($file_location, $file_content)) {
+				if (!$file_content or !file_put_contents($file_location, $file_content)) {
 					die('cannot save the file or the file is empty');
 				}
 			} elseif ($that->ms['mode']=='edit') {
@@ -193,7 +193,29 @@ class tx_mslib_admin_import extends tslib_pibase {
 					}
 					*/
 				} else {
-					if ($that->post['database_name']) {
+					if ($str && mslib_befe::isSerializedString($str)) {
+						$tmpData=unserialize($str);
+						$counter=0;
+						foreach ($tmpData as $data) {
+							$colCounter=0;
+							if ($counter==0) {
+								$row=array();
+								foreach ($data as $key => $val) {
+									$row[]=$key;
+								}
+								$table_cols=$row;
+							}
+							$row=array();
+							foreach ($data as $key => $val) {
+								$row[]=$val;
+							}
+							$rows[]=$row;
+							$counter++;
+							if ($counter==5) {
+								break;
+							}
+						}
+					} elseif ($that->post['database_name']) {
 						if ($that->ms['mode']=='edit') {
 							$limit=10;
 						} else {
@@ -595,7 +617,26 @@ class tx_mslib_admin_import extends tslib_pibase {
 						}
 						*/
 					} else {
-						if ($that->post['database_name']) {
+						if ($str && mslib_befe::isSerializedString($str)) {
+							$tmpData=unserialize($str);
+							$counter=0;
+							foreach ($tmpData as $data) {
+								$colCounter=0;
+								if ($counter==0) {
+									$row=array();
+									foreach ($data as $key => $val) {
+										$row[]=$key;
+									}
+									$table_cols=$row;
+								}
+								$row=array();
+								foreach ($data as $key => $val) {
+									$row[]=$val;
+								}
+								$rows[]=$row;
+								$counter++;
+							}
+						} elseif ($that->post['database_name']) {
 							if (is_numeric($that->get['limit'])) {
 								$limit=$that->get['limit'];
 							} else {

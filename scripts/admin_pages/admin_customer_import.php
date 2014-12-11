@@ -159,7 +159,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 		$filename=time();
 		$file_location=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename;
 		$file_content=mslib_fe::file_get_contents($this->post['file_url']);
-		if (!$file_content or !mslib_fe::file_put_contents($file_location, $file_content)) {
+		if (!$file_content or !file_put_contents($file_location, $file_content)) {
 			die('cannot save the file or the file is empty');
 		}
 	} elseif ($this->ms['mode']=='edit') {
