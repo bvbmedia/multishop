@@ -360,6 +360,14 @@ switch ($this->ms['page']) {
 			// show standard thank you
 			if ($this->ms['page']=='psp_accepturl') {
 				$content.=$this->pi_getLL('your_payment_has_been_completed');
+			} else if ($this->ms['page']=='psp_pendingurl') {
+				$content.=$this->pi_getLL('your_payment_is_pending');
+			} else if ($this->ms['page']=='psp_declineurl') {
+				$content.=$this->pi_getLL('your_payment_is_declined');
+			} else if ($this->ms['page']=='psp_exceptionurl'){
+				$content.=$this->pi_getLL('your_payment_is_failed_');
+			} else if ($this->ms['page']=='psp_cancelurl') {
+				$content.=$this->pi_getLL('your_payment_has_been_cancelled');
 			} else {
 				$content.=$this->pi_getLL('your_payment_has_not_been_completed');
 			}

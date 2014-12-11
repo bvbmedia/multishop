@@ -1153,6 +1153,10 @@
             <label index="view">View</label>
             <label index="select_members">Select members</label>
             <label index="please_select_your_gender">Please select your salutation</label>
+            <label index="your_payment_is_pending">Your payment is pending</label>
+            <label index="your_payment_is_declined">Your payment is declined</label>
+            <label index="your_payment_is_failed_">Your payment is failed</label>
+            <label index="your_payment_has_been_cancelled">Your payment has been cancelled</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
