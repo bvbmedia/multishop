@@ -429,6 +429,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				<input name="delete" class="delete_property" type="button" value="delete" /><input name="disable" type="button" value="enable" />
 			</div>
 			';
+			$importer_add_aux_input=str_replace("\r\n", '', $importer_add_aux_input);
 			$importer_add_aux_input=str_replace("\n", '', $importer_add_aux_input);
 			$tmpcontent.='
 		<script type="text/javascript">

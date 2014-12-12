@@ -200,13 +200,13 @@ class tx_mslib_admin_import extends tslib_pibase {
 							$colCounter=0;
 							if ($counter==0) {
 								$row=array();
-								foreach ($data as $key => $val) {
+								foreach ($data as $key=>$val) {
 									$row[]=$key;
 								}
 								$table_cols=$row;
 							}
 							$row=array();
-							foreach ($data as $key => $val) {
+							foreach ($data as $key=>$val) {
 								$row[]=$val;
 							}
 							$rows[]=$row;
@@ -251,6 +251,41 @@ class tx_mslib_admin_import extends tslib_pibase {
 								break;
 							}
 						}
+					} elseif ($that->post['format']=='excel') {
+						if (!$that->ms['mode']=='edit') {
+							$filename='tmp-file-'.$GLOBALS['TSFE']->fe_user->user['uid'].'-cat-'.$that->post['cid'].'-'.time().'.txt';
+							if (!$handle=fopen($that->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
+								exit;
+							}
+							if (fwrite($handle, $str)===FALSE) {
+								exit;
+							}
+							fclose($handle);
+						}
+						// excel
+						require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+						$phpexcel=PHPExcel_IOFactory::load($file_location);
+						foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
+							$counter=0;
+							foreach ($worksheet->getRowIterator() as $row) {
+								$cellIterator=$row->getCellIterator();
+								$cellIterator->setIterateOnlyExistingCells(false);
+								foreach ($cellIterator as $cell) {
+									$clean_products_data=ltrim(rtrim($cell->getCalculatedValue(), " ,"), " ,");
+									$clean_products_data=trim($clean_products_data);
+									if ($row->getRowIndex()>1) {
+										$rows[$counter-1][]=$clean_products_data;
+									} else {
+										$table_cols[]=mslib_befe::strtolower($clean_products_data);
+									}
+								}
+								$counter++;
+								if ($counter==5) {
+									break;
+								}
+							}
+						}
+						// excel eol
 					} elseif ($that->post['format']=='xml') {
 						// try the generic way
 						if (!$that->ms['mode']=='edit') {
