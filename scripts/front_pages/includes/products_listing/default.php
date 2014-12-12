@@ -194,9 +194,9 @@ foreach ($products as $current_product) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	$markerArray['###PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT###']='';
+	$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']='';
 	if (count($plugins_item_extra_content)) {
-		$markerArray['###PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT###']=implode("\n", $plugins_item_extra_content);
+		$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']=implode("\n", $plugins_item_extra_content);
 	}
 	// custom hook that can be controlled by third-party plugin eof
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts[$markerKey], $markerArray, '###|###');
