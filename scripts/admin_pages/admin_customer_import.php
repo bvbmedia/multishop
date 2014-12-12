@@ -111,6 +111,8 @@ $coltypes['deleted']=$this->pi_getLL('deleted');
 $coltypes['discount']=$this->pi_getLL('discount');
 $coltypes['username']=$this->pi_getLL('username');
 $coltypes['title']=$this->pi_getLL('job_title');
+$coltypes['www']=$this->pi_getLL('website');
+$coltypes['crdate']=$this->pi_getLL('creation_date');
 $coltypes['tx_multishop_source_id']=$this->pi_getLL('customer_id_external_id_for_reference');
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
@@ -856,6 +858,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if ($item['coc_id']) {
 							$user['tx_multishop_coc_id']=$item['coc_id'];
 						}
+						if (isset($item['crdate'])) {
+							$user['crdate']=strtotime($item['crdate']);
+						}
 						$user['gender']=$item['gender'];
 						$user['date_of_birth']=$item['birthday'];
 						$user['title']=$item['title'];
@@ -981,7 +986,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								$user['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10, $user['username']));
 							}
 							$user['tstamp']=time();
-							$user['crdate']=time();
+							if (!$user['crdate']) {
+								$user['crdate']=time();
+							}
 							$user['tx_multishop_code']=md5(uniqid('', TRUE));
 							$user['pid']=$this->conf['fe_customer_pid'];
 							$user['page_uid']=$this->shop_pid;

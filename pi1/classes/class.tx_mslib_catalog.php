@@ -24,6 +24,105 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_catalog {
+	function getCategoryByName($categories_name='') {
+		$filter=array();
+		$filter[]='c.page_uid=\''.$this->showCatalogFromPage.'\'';
+		$filter[]='c.status = \'1\'';
+		if ($categories_name) {
+			$filter[]='cd.categories_name=\''.addslashes($categories_name).'\'';
+		}
+		$filter[]='cd.language_id='.$this->sys_language_uid.'';
+		$filter[]='c.categories_id=cd.categories_id';
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
+			'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+			implode(' AND ',$filter), // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			return $row;
+		}
+	}
+	function getProductByName($products_name,$categories_name='') {
+		$filter=array();
+		$filter[]='c.page_uid=\''.$this->showCatalogFromPage.'\'';
+		$filter[]='p.page_uid=\''.$this->showCatalogFromPage.'\'';
+		$filter[]='c.status = \'1\'';
+		$filter[]='p.products_status = \'1\'';
+		if ($categories_name) {
+			$filter[]='cd.categories_name=\''.addslashes($categories_name).'\'';
+		}
+		if ($products_name) {
+			$filter[]='pd.products_name=\''.addslashes($products_name).'\'';
+		}
+		$filter[]='pd.language_id='.$this->sys_language_uid.'';
+		$filter[]='cd.language_id='.$this->sys_language_uid.'';
+		$filter[]='c.categories_id=cd.categories_id';
+		$filter[]='p2c.products_id=p.products_id';
+		$filter[]='p.products_id=pd.products_id';
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name, p.products_id, pd.products_name', // SELECT ...
+			'tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_categories c, tx_multishop_categories_description cd, tx_multishop_products_to_categories p2c', // FROM ...
+			implode(' AND ',$filter), // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			return $row;
+		}
+	}
+	function createCategory($data) {
+		// ADD CATEGORY
+		$insertArray=array();
+		$insertArray['date_added']=time();
+		$insertArray['sort_order']=time();
+		$insertArray['status']=1;
+		$insertArray['page_uid']=$this->showCatalogFromPage;
+		$insertArray['parent_id']=$data['parent_id'];
+		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+		if ($id) {
+			$insertArray=array();
+			$insertArray['categories_id']=$id;
+			$insertArray['categories_name']=$data['categories_name'];
+			$insertArray['language_id']=$data['language_id'];
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			return $id;
+		}
+	}
+	function createProduct($data) {
+		// ADD PRODUCT
+		$insertArray=array();
+		$insertArray['products_date_added']=time();
+		$insertArray['products_status']=1;
+		$insertArray['page_uid']=$this->showCatalogFromPage;
+		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $insertArray);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+		if ($id) {
+			$insertArray=array();
+			$insertArray['products_id']=$id;
+			$insertArray['products_name']=$data['products_name'];
+			$insertArray['language_id']=$data['language_id'];
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_description', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+
+			$insertArray=array();
+			$insertArray['products_id']=$id;
+			$insertArray['categories_id']=$data['categories_id'];
+			$insertArray['sort_order']=time();
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			return $id;
+		}
+	}
 	function sortCatalog($sortItem, $sortByField, $orderBy='asc') {
 		set_time_limit(86400);
 		ignore_user_abort(true);
