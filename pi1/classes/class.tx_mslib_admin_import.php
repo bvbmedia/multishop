@@ -24,7 +24,16 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_admin_import extends tslib_pibase {
+	function initLanguage($ms_locallang) {
+		$this->pi_loadLL();
+		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
+		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		if ($this->altLLkey) {
+			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		}
+	}
 	function renderInterface($params, &$that) {
+		mslib_fe::init($that);
 		if ($that->get['delete'] and is_numeric($that->get['job_id'])) {
 			// delete job
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_import_jobs', 'id='.$that->get['job_id'].' and type=\''.addslashes($params['importKey']).'\'');

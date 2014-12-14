@@ -6728,7 +6728,11 @@ class mslib_fe {
 			$results=array();
 			$results['dataset']=array();
 			if (!is_array($data['select'])) {
-				$data['select']=array('*');
+				if ($data['select']) {
+					$data['select']=array($data['select']);
+				} else {
+					$data['select']=array('*');
+				}
 			}
 			if ($data['from'] && !is_array($data['from'])) {
 				$from=$data['from'];

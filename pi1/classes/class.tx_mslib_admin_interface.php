@@ -24,7 +24,16 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_admin_interface extends tslib_pibase {
+	function initLanguage($ms_locallang) {
+		$this->pi_loadLL();
+		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
+		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		if ($this->altLLkey) {
+			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		}
+	}
 	function renderInterface($params, &$that) {
+		mslib_fe::init($that);
 		// for pagination
 		$this->get=$that->get;
 		$updateCookie=0;
@@ -82,6 +91,17 @@ class tx_mslib_admin_interface extends tslib_pibase {
 		$limits[]='400';
 		$limits[]='450';
 		$limits[]='500';
+		$limits[]='600';
+		$limits[]='700';
+		$limits[]='800';
+		$limits[]='900';
+		$limits[]='1000';
+		$limits[]='1500';
+		$limits[]='2000';
+		$limits[]='2500';
+		$limits[]='3000';
+		$limits[]='3500';
+
 		foreach ($limits as $limit) {
 			$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$that->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 		}
@@ -159,7 +179,16 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			$p=0;
 			$queryData['offset']=0;
 		}
+		//$this->msDebug=1;
 		$pageset=mslib_fe::getRecordsPageSet($queryData);
+		/*
+		if ($this->msDebug) {
+			echo $this->msDebugInfo;
+			die();
+		}
+		*/
+		//echo print_r($queryData);
+		//die();
 		if (count($pageset['dataset'])) {
 			$tr_type='even';
 			$tableContent.='
@@ -191,8 +220,17 @@ class tx_mslib_admin_interface extends tslib_pibase {
 							$row[$col]=mslib_fe::amount2Cents($row[$col], 0);
 							break;
 						case 'timestamp':
-							if ($row[$col]) {
+							if (is_numeric($row[$col]) && $row[$col] >0) {
 								$row[$col]=strftime("%x %X", $row[$col]);
+							} else {
+								$row[$col]='';
+							}
+							break;
+						case 'timestamp_to_date':
+							if (is_numeric($row[$col]) && $row[$col] >0) {
+								$row[$col]=strftime("%x", $row[$col]);
+							} else {
+								$row[$col]='';
 							}
 							break;
 					}

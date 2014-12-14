@@ -753,6 +753,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					if ($item['uid']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['uid']);
 					} else {
+						if (!$item['email']) {
+							$item['email']=uniqid().'@UNKNOWN';
+						}
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['email']);
 					}
 					// custom hook that can be controlled by third-party plugin
@@ -899,6 +902,30 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							if ($user['address_ext']) {
 								$user['address'].='-'.$user['address_ext'];
 							}
+						} elseif ($user['address'] && !$user['street_name'] && !$user['address_number']) {
+							$street_address='';
+							$house_number='';
+							$addon_number='';
+							$street_data=explode(' ', $user['address']);
+							$house_number=$street_data[count($street_data)-1];
+							if (!preg_match('/[0-9]/isUm', $house_number)) {
+								$house_number=$street_data[count($street_data)-2].' '.$street_data[count($street_data)-1];
+								unset($street_data[count($street_data)-1]);
+								unset($street_data[count($street_data)-1]);
+							} else {
+								unset($street_data[count($street_data)-1]);
+							}
+							$street_address=implode(' ', $street_data);
+							$addon_number='';
+							$pattern_alpha='/([a-zA-Z])/isUm';
+							preg_match_all($pattern_alpha, $house_number, $alpha_result);
+							if (isset($alpha_result[1][0]) && !empty($alpha_result[1][0])) {
+								$addon_number=implode('', $alpha_result[1]);
+								$house_number=str_replace($addon_number, '', $house_number);
+							}
+							$user['street_name']=$street_address;
+							$user['address_number']=$house_number;
+							$user['address_ext']=$addon_number;
 						}
 						$user['telephone']=$item['telephone'];
 						$user['fax']=$item['fax'];
@@ -922,13 +949,13 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if (!$user_check['uid'] and $user['username']) {
 							$user_check=mslib_fe::getUser($user['username'], "username");
 						}
-						if (!$user_check['uid']) {
+						if (!$user_check['uid'] && $user['email']) {
 							$user_check=mslib_fe::getUser($user['email'], "email");
-							if ($user_check['uid']) {
+						}
+						if ($user_check['uid']) {
+							if (!$user['tx_multishop_source_id'] || ($user['tx_multishop_source_id']==$user_check['tx_multishop_source_id'])) {
 								$update=1;
 							}
-						} else {
-							$update=1;
 						}
 						// custom hook that can be controlled by third-party
 						// plugin

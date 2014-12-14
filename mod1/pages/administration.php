@@ -572,7 +572,8 @@ switch ($_REQUEST['action']) {
 										$addon_number=implode('', $alpha_result[1]);
 										$house_number=str_replace($addon_number, '', $house_number);
 									}
-									$insertArray['address']=$street_address;
+									$insertArray['address']=$row['entry_street_address'];
+									$insertArray['street_name']=$street_address;
 									$insertArray['address_number']=$house_number;
 									$insertArray['address_ext']=$addon_number;
 								}

@@ -103,6 +103,16 @@ class tx_mslib_catalog {
 		$insertArray['products_date_added']=time();
 		$insertArray['products_status']=1;
 		$insertArray['page_uid']=$this->showCatalogFromPage;
+		$insertArray['tax_id']=$data['tax_id'];
+		$insertArray['products_price']=$data['products_price'];
+		$insertArray['products_date_added']=$data['products_date_added'];
+		if (!$insertArray['products_date_added']) {
+			$insertArray['products_date_added']=time();
+		}
+		$insertArray['products_condition']=$data['products_condition'];
+		if (!$insertArray['products_condition']) {
+			$insertArray['products_condition']='new';
+		}
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$id=$GLOBALS['TYPO3_DB']->sql_insert_id();

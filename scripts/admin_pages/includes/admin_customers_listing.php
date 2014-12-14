@@ -28,7 +28,7 @@ foreach ($customers as $customer) {
 	if (!$customer['name']) {
 		$customer['name']=$customer['username'];
 	}
-	if ($customer['company']>0) {
+	if ($customer['company']) {
 		$name=$customer['company'];
 	} else {
 		$name=$customer['name'];

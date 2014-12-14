@@ -3112,6 +3112,19 @@ class mslib_befe {
 		}
 		return $f;
 	}
+	function getNestedItems($input, $level=array()) {
+		$output=array();
+		foreach ($input as $key=>$item) {
+			$level[]=$key;
+			if (is_array($item)) {
+				$output=(array)$output+(array)mslib_befe::getNestedItems($item, $level);
+			} else {
+				$output[mslib_fe::rewritenamein((string)implode('_', $level), '', 1)]=$item;
+			}
+			array_pop($level);
+		}
+		return $output;
+	}
 	public function loginAsUser($uid, $section='') {
 		if (!is_numeric($uid)) {
 			return false;

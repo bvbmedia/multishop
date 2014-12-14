@@ -594,8 +594,12 @@ class tx_mslib_order extends tslib_pibase {
 			}
 			$insertArray['address_number']=$address['address_number'];
 			$insertArray['address_ext']=$address['address_ext'];
-			$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].$insertArray['address_ext'];
-			$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
+			if ($address['address']) {
+				$insertArray['address']=$address['address'];
+			} else {
+				$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].$insertArray['address_ext'];
+				$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
+			}
 			$insertArray['zip']=$address['zip'];
 			$insertArray['telephone']=$address['telephone'];
 			$insertArray['city']=$address['city'];
@@ -642,7 +646,7 @@ class tx_mslib_order extends tslib_pibase {
 			$insertArray['billing_street_name']=$address['street_name'];
 			$insertArray['billing_address_number']=$address['address_number'];
 			$insertArray['billing_address_ext']=$address['address_ext'];
-			$insertArray['billing_address']=$address['street_name'].' '.$address['billing_address_number'].$address['billing_address_ext'];
+			$insertArray['billing_address']=$address['street_name'].' '.$address['address_number'].$address['address_ext'];
 			$insertArray['billing_address']=preg_replace('/\s+/', ' ', $insertArray['billing_address']);
 			$insertArray['billing_room']='';
 			$insertArray['billing_city']=$address['city'];
@@ -683,10 +687,10 @@ class tx_mslib_order extends tslib_pibase {
 				if (!$address['delivery_street_name']) {
 					$address['delivery_street_name']=$address['delivery_address'];
 				}
-				$insertArray['delivery_street_name']=$address['street_name'];
-				$insertArray['delivery_address_number']=$address['address_number'];
-				$insertArray['delivery_address_ext']=$address['address_ext'];
-				$insertArray['delivery_address']=$address['street_name'].' '.$address['delivery_address_number'].$address['delivery_address_ext'];
+				$insertArray['delivery_street_name']=$address['delivery_street_name'];
+				$insertArray['delivery_address_number']=$address['delivery_address_number'];
+				$insertArray['delivery_address_ext']=$address['delivery_address_ext'];
+				$insertArray['delivery_address']=$address['delivery_street_name'].' '.$address['delivery_address_number'].$address['delivery_address_ext'];
 				$insertArray['delivery_address']=preg_replace('/\s+/', ' ', $insertArray['delivery_address']);
 				$insertArray['delivery_city']=$address['delivery_city'];
 				$insertArray['delivery_zip']=$address['delivery_zip'];
@@ -706,6 +710,10 @@ class tx_mslib_order extends tslib_pibase {
 			$insertArray['payment_method_label']=$address['payment_method_label'];
 			$insertArray['shipping_method_costs']=$address['shipping_method_costs'];
 			$insertArray['payment_method_costs']=$address['payment_method_costs'];
+			// TYPO3 6.2 NULL VALUE BUGFIX
+			if (!$insertArray['customer_comments']) {
+				$insertArray['customer_comments']='';
+			}
 			$insertArray['hash']=md5(uniqid('', true));
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -718,10 +726,13 @@ class tx_mslib_order extends tslib_pibase {
 	}
 	function createOrdersProduct($orders_id, $orders_product=array()) {
 		if ($orders_id) {
+			$orders_product['orders_id']=$orders_id;
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $orders_product);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-			return $orders_products_id;
+			if ($orders_products_id) {
+				return $orders_products_id;
+			}
 		}
 	}
 	function printOrderDetailsTable($order, $template_type='site') {
