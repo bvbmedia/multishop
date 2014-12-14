@@ -3526,6 +3526,9 @@ class mslib_befe {
 				if ($product['products_model']) {
 					$tmpcontent.='<br/>Model: '.$product['products_model'];
 				}
+				if ($product['products_description']) {
+					$tmpcontent.='<br/>'.$product['products_description'];
+				}
 				if (!empty($product['ean_code'])) {
 					$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
 				}
