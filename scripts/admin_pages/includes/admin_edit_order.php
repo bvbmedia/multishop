@@ -2188,6 +2188,7 @@ if (is_numeric($this->get['orders_id'])) {
 				});
 			}
 		});
+		'.(($this->ms['MODULES']['ORDER_EDIT'] && !$orders['is_locked']) ? '
 		var result = jQuery(".orders_products_listing").sortable({
 			cursor:     "move",
 			items: "tbody.sortbody",
@@ -2206,6 +2207,7 @@ if (is_numeric($this->get['orders_id'])) {
 				});
 			}
 		});
+		' : '').'
 		var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
 		$(".tab_content").hide();
 		$("ul.tabs li:first").addClass("active").show();
