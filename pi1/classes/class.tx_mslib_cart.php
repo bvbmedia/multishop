@@ -1474,6 +1474,10 @@ class tx_mslib_cart extends tslib_pibase {
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+						// update orders_products sort_order
+						$updateOrderProductsSortOrder=array();
+						$updateOrderProductsSortOrder['sort_order']=$orders_products_id;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\''.$orders_products_id.'\'', $updateOrderProductsSortOrder);
 						if ($this->ms['MODULES']['SUBTRACT_STOCK']) {
 							if ($this->ms['MODULES']['PRODUCT_ATTRIBUTES_STOCK']) {
 								$sql_as_data=array();

@@ -4,6 +4,23 @@ if (!defined('TYPO3_MODE')) {
 }
 $content='';
 switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
+	case 'sort_orders_products':
+		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+			$no=1;
+			foreach ($this->post['orders_products_id'] as $orders_products_id) {
+				if (is_numeric($orders_products_id)) {
+					$where="orders_products_id = ".$orders_products_id."";
+					$updateArray=array(
+						'sort_order'=>$no
+					);
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', $where, $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$no++;
+				}
+			}
+		}
+		exit();
+		breaks;
 	case 'get_products':
 		$where=array();
 		$where[]='p.products_id=pd.products_id';

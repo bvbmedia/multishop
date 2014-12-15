@@ -563,6 +563,7 @@ CREATE TABLE `tx_multishop_orders_products` (
   `ean_code` varchar(50) default '',
   `sku_code` varchar(50) default '',
   `vendor_code` varchar(50) default '',
+  `sort_order` int(11) default '0',
   PRIMARY KEY (`orders_products_id`),
   KEY `orders_id` (`orders_id`),
   KEY `type` (`type`),
@@ -575,7 +576,8 @@ CREATE TABLE `tx_multishop_orders_products` (
   KEY `manufacturers_id` (`manufacturers_id`),
   KEY `ean_code` (`ean_code`),
   KEY `sku_code` (`sku_code`),
-  KEY `vendor_code` (`vendor_code`)
+  KEY `vendor_code` (`vendor_code`),
+  KEY `sort_order` (`sort_order`)
 ) COMMENT='Orderregels';
 
 CREATE TABLE `tx_multishop_orders_products_attributes` (

@@ -96,7 +96,13 @@ if (is_numeric($this->get['orders_id'])) {
 							if (empty($this->post['manual_product_price'])) {
 								$this->post['manual_product_price']='0';
 							}
-							$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."')";
+							// determine the sort order for the new orders products
+							$sql_sort_order="select sort_order from tx_multishop_orders_products where orders_id='".$this->get['orders_id']."' order by sort_order desc limit 1";
+							$qry_sort_order=$GLOBALS['TYPO3_DB']->sql_query($sql_sort_order);
+							$rs_sort_order=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_sort_order);
+							$new_sort_order=$rs_sort_order['sort_order']+1;
+							// insert new products
+							$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
 							$GLOBALS['TYPO3_DB']->sql_query($sql);
 							$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 							// insert the update attributes
@@ -377,7 +383,7 @@ if (is_numeric($this->get['orders_id'])) {
 			</div>';
 		// count total products
 		$total_amount=0;
-		$str2="SELECT * from tx_multishop_orders_products where orders_id='".$orders['orders_id']."'";
+		$str2="SELECT * from tx_multishop_orders_products where orders_id='".$orders['orders_id']."' order by sort_order asc";
 		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
 			$orders_products[]=$row;
@@ -984,7 +990,7 @@ if (is_numeric($this->get['orders_id'])) {
 <fieldset>
 <legend>'.$this->pi_getLL('product_details').'</legend>';
 		$tr_type='even';
-		$tmpcontent.='<table class="msZebraTable msadmin_border" width="100%">';
+		$tmpcontent.='<table class="msZebraTable msadmin_border orders_products_listing" width="100%">';
 		$order_product_level_th='';
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus();
@@ -995,6 +1001,7 @@ if (is_numeric($this->get['orders_id'])) {
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$total_product_header_col='<th class="cell_products_final_price">'.$this->pi_getLL('final_price_inc_vat').'</th>';
 		}
+		$tmpcontent.='<thead>';
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 			$tmpcontent.='<tr>';
 			$tmpcontent.='<th class="cell_products_id">'.$this->pi_getLL('products_id').'</th>';
@@ -1027,9 +1034,11 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.=$total_product_header_col;
 			$tmpcontent.='</tr>';
 		}
+		$tmpcontent.='</thead>';
 		$total_tax=0;
 		if (is_array($orders_products) and count($orders_products)) {
 			foreach ($orders_products as $order) {
+				$tmpcontent.='<tbody class="sortbody" id="orders_products_id_'.$order['orders_products_id'].'">';
 				if ($order['products_id']>0) {
 					$js_select2_cache_products[$order['products_id']]='Products['.$order['products_id'].']={id:"'.$order['products_id'].'", text:"'.$order['products_name'].'"}';
 				} else {
@@ -1439,6 +1448,7 @@ if (is_numeric($this->get['orders_id'])) {
 					<td>&nbsp;</td>
 					</tr>';
 				}
+				$tmpcontent.="</tbody>";
 			}
 		}
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
@@ -1871,9 +1881,9 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			// eof autocomplete for option
 			'.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
-			select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
-			select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-			select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+			select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+			select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+			select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
 			' : '').'
 			var add_new_attributes = function(optid_value, optvalid_value) {
 				var d = new Date();
@@ -2175,6 +2185,24 @@ if (is_numeric($this->get['orders_id'])) {
 					dataType: \'json\',
 					data: "tx_multishop_pi1[orders_id]='.$order['orders_id'].'&tx_multishop_pi1[order_product_id]=" + order_pid + "&tx_multishop_pi1[orders_status_id]=" + orders_status_id,
 					success: function(msg) {}
+				});
+			}
+		});
+		var result = jQuery(".orders_products_listing").sortable({
+			cursor:     "move",
+			items: "tbody.sortbody",
+			//axis:       "y",
+			update: function(e, ui) {
+				href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=sort_orders_products').'";
+				jQuery(this).sortable("refresh");
+				sorted = jQuery(this).sortable("serialize", "id");
+				jQuery.ajax({
+						type:   "POST",
+						url:    href,
+						data:   sorted,
+						success: function(msg) {
+								//do something with the sorted data
+						}
 				});
 			}
 		});

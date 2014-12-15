@@ -513,7 +513,7 @@ class tx_mslib_order extends tslib_pibase {
 		// load products
 		$total_amount=0;
 		$orders_products=array();
-		$str2="SELECT * from tx_multishop_orders_products where orders_id='".$orders['orders_id']."' order by orders_products_id";
+		$str2="SELECT * from tx_multishop_orders_products where orders_id='".$orders['orders_id']."' order by sort_order asc";
 		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2)) {
 			$row['products_tax_data']=unserialize($row['products_tax_data']);
