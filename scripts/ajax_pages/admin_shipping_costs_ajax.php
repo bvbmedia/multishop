@@ -110,7 +110,7 @@ if ($this->ADMIN_USER) {
 						<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'">'.$weight_next.' '.$this->pi_getLL('admin_shipping_kg').'</div></td>
 						<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'"> to </div></td>
 						<td>
-							<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
+							<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 								'.mslib_befe::createSelectboxWeightsList($zone_price[0], $zone_price[0]).'
 							</select>
 						</td>
@@ -146,12 +146,12 @@ if ($this->ADMIN_USER) {
 							<td>';
 						$disabled='';
 						if ($row_counter==1) {
-							$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
+							$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 									'.mslib_befe::createSelectboxWeightsList().'
 									</select>';
 						} else {
 							$disabled=' disabled="disabled"';
-							$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
+							$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 						}
 						$content.='</td>
 							<td width="100" align="right">
@@ -204,12 +204,12 @@ if ($this->ADMIN_USER) {
 						<td>';
 				$disabled='';
 				if ($row_counter==1) {
-					$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
+					$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 								'.mslib_befe::createSelectboxWeightsList().'
 								</select>';
 				} else {
 					$disabled=' disabled="disabled"';
-					$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
+					$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 				}
 				$content.='</td>
 						<td width="100" align="right">
@@ -307,19 +307,19 @@ if ($this->ADMIN_USER) {
 								o.parent().next().first().children().val(current_value);
 							}
 						});
-					}	
+					}
 				} else {
 					if (to_include_vat) {
 						// update the incl. vat
 						o.parent().next().first().children().val(0);
-		
+
 						// update the hidden excl vat
 						o.parent().next().next().first().children().val(0);
-		
+
 					} else {
 						// update the excl. vat
 						o.parent().prev().first().children().val(0);
-		
+
 						// update the hidden excl vat
 						o.parent().next().first().children().val(0);
 					}
@@ -327,11 +327,11 @@ if ($this->ADMIN_USER) {
 			}
 			function decimalCrop(float) {
 				var numbers = float.toString().split(".");
-				var prime 	= numbers[0];				
+				var prime 	= numbers[0];
 				if (numbers[1] > 0 && numbers[1] != "undefined") {
 					var decimal = new String(numbers[1]);
 				} else {
-					var decimal = "00";			
+					var decimal = "00";
 				}
 				var number = prime + "." + decimal.substr(0, 2);
 				return number;
