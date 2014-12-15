@@ -110,7 +110,7 @@ if ($this->ADMIN_USER) {
 						<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'">'.$weight_next.' '.$this->pi_getLL('admin_shipping_kg').'</div></td>
 						<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'"> to </div></td>
 						<td>
-							<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
+							<select name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 								'.mslib_befe::createSelectboxWeightsList($zone_price[0], $zone_price[0]).'
 							</select>
 						</td>
@@ -146,12 +146,12 @@ if ($this->ADMIN_USER) {
 							<td>';
 						$disabled='';
 						if ($row_counter==1) {
-							$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
+							$content.='<select name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 									'.mslib_befe::createSelectboxWeightsList().'
 									</select>';
 						} else {
 							$disabled=' disabled="disabled"';
-							$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
+							$content.='<select name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 						}
 						$content.='</td>
 							<td width="100" align="right">
@@ -204,12 +204,12 @@ if ($this->ADMIN_USER) {
 						<td>';
 				$disabled='';
 				if ($row_counter==1) {
-					$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
+					$content.='<select name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 								'.mslib_befe::createSelectboxWeightsList().'
 								</select>';
 				} else {
 					$disabled=' disabled="disabled"';
-					$content.='<select name="'.$this->post['shippingid'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
+					$content.='<select name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 				}
 				$content.='</td>
 						<td width="100" align="right">
