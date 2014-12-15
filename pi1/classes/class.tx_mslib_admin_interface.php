@@ -131,6 +131,13 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			}
 			$queryData['where'][]="(".implode(" OR ", $keywordOr).")";
 		}
+		if ($params['query']['where']) {
+			if (is_array($params['query']['where'])) {
+				$queryData['where']=array_merge(array_values($queryData['where']), array_values($params['query']['where']));
+			} else {
+				$queryData['where'][]=$params['query']['where'];
+			}
+		}
 		switch ($that->get['tx_multishop_pi1']['order_by']) {
 			default:
 				if (is_array($params['query']['defaultOrderByColumns']) && count($params['query']['defaultOrderByColumns'])) {
@@ -180,6 +187,8 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			$queryData['offset']=0;
 		}
 		//$this->msDebug=1;
+		//echo print_r($queryData);
+		//die();
 		$pageset=mslib_fe::getRecordsPageSet($queryData);
 		/*
 		if ($this->msDebug) {
@@ -218,6 +227,11 @@ class tx_mslib_admin_interface extends tslib_pibase {
 						case 'currency':
 							$summarize[$col]+=$row[$col];
 							$row[$col]=mslib_fe::amount2Cents($row[$col], 0);
+							break;
+						case 'domain_name':
+							if ($row[$col]) {
+								$row[$col]='<a href="http://'.$row[$col].'" target="_blank">'.$row[$col].'</a>';
+							}
 							break;
 						case 'timestamp':
 							if (is_numeric($row[$col]) && $row[$col] >0) {
