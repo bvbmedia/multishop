@@ -75,7 +75,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	} else {
 		$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h2>'.$this->pi_getLL('search').'</h2></div>\';';		
 	}
-	$headers.='var ultrasearch_message_no_results=\'<div class="main-heading"><h2>'.addslashes($this->pi_getLL('no_products_found_heading')).'</h2></div><p>'.addslashes($this->pi_getLL('no_products_found_description')).'</p>\';
+	$headers.='var ultrasearch_message_no_results=\'<div id="msFrontUltrasearchNoResults"><div class="main-heading"><h2>'.addslashes($this->pi_getLL('no_products_found_heading')).'</h2></div><p>'.addslashes($this->pi_getLL('no_products_found_description')).'</p></div>\';
 	</script>
 	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery-hashchange-master/jquery.ba-hashchange.min.js"></script>
 	<script type="text/javascript">

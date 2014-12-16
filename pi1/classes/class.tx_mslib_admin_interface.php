@@ -253,6 +253,12 @@ class tx_mslib_admin_interface extends tslib_pibase {
 							break;
 					}
 					$adjustedValue=$row[$col];
+					if ($valArray['href']) {
+						foreach ($row as $tmpCol => $tmpVal) {
+							$valArray['href']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['href']);
+						}
+						$adjustedValue='<a href="'.$valArray['href'].'">'.$adjustedValue.'</a>';
+					}
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['tableColumnsPreProc'])) {
 						$conf=array(
 							'col'=>&$col,
@@ -448,8 +454,18 @@ class tx_mslib_admin_interface extends tslib_pibase {
 		} else {
 			$content.=$searchForm.$tableContent;
 		}
-		$content.='<p><center>Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></center></p>';
-		$content.='<p><center>Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></center></p>';
+		if ($params['settings']['skipRecordCount'] || ($params['settings']['skipRecordCountWhenZeroResults'] && !$pageset['total_rows'])) {
+			$skipRecordCount=1;
+		}
+		if ($params['settings']['skipTotalCount'] || ($params['settings']['skipTotalCountWhenZeroResults'] && !$params['summarizeData']['totalRecordsInTable'])) {
+			$skipTotalCount=1;
+		}
+		if (!$skipRecordCount) {
+			$content.='<p><center>Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></center></p>';
+		}
+		if (!$skipTotalCount) {
+			$content.='<p><center>Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></center></p>';
+		}
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 			$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';

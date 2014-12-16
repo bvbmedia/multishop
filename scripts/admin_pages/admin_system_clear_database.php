@@ -59,11 +59,15 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$tables='tx_multishop_orders
 				tx_multishop_orders_products
 				tx_multishop_orders_products_attributes
-				tx_multishop_orders_status_history';
+				tx_multishop_orders_status_history
+				tx_multishop_invoices
+				';
 				$tableArray=explode("\n", $tables);
 				foreach ($tableArray as $table) {
-					$table=trim($table);
-					$qry=$GLOBALS['TYPO3_DB']->sql_query('TRUNCATE '.$table);
+					if ($table) {
+						$table=trim($table);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query('TRUNCATE '.$table);
+					}
 				}
 				/*
 				$query=$GLOBALS['TYPO3_DB']->sql_query("select orders_id from tx_multishop_orders where page_uid='".$this->showCatalogFromPage."'");

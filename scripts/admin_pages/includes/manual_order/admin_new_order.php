@@ -27,21 +27,34 @@ if (count($products)<0) {
 			<select id="manual_order_customer_id" name="customer_id" width="300px"><option value="">'.htmlspecialchars($this->pi_getLL('existing_customer', 'Existing customers')).'</option>';
 		foreach ($customers as $customer) {
 			if ($customer['email']) {
+				$itemTitle='';
 				if ($customer['company']) {
-					$name=$customer['company'];
-				} else {
-					$name=$customer['name'];
+					$itemTitle=$customer['company'];
+				}
+				if ($customer['name'] && $customer['name'] !=$customer['company']) {
+					$itemTitle=$customer['name'];
+				}
+				$itemArray=array();
+				if ($customer['name']) {
+					$itemArray[]=array('label'=>$this->pi_getLL('name'),'value'=>$customer['name']);
+				}
+				if ($customer['email']) {
+					$itemArray[]=array('label'=>$this->pi_getLL('email'),'value'=>$customer['email']);
+				}
+				if ($customer['username']) {
+					$itemArray[]=array('label'=>$this->pi_getLL('username'),'value'=>$customer['username']);
+				}
+				if ($customer['address']) {
+					$itemArray[]=array('label'=>$this->pi_getLL('address'),'value'=>$customer['address']);
+				}
+				if ($customer['telephone']) {
+					$itemArray[]=array('label'=>$this->pi_getLL('telephone'),'value'=>$customer['telephone']);
 				}
 				// CUSTOM HTML MARKUP FOR SELECT2
-				$htmlTitle='<h3>'.$name.'</h3>';
-				$htmlTitle.=$this->pi_getLL('admin_customer_id').': <strong>'.$customer['uid'].'</strong><br/>';
-				$htmlTitle.=$this->pi_getLL('name').': <strong>'.$customer['name'].'</strong><br/>';
-				$htmlTitle.=$this->pi_getLL('email').': <strong>'.$customer['email'].'</strong><br/>';
-				$htmlTitle.=$this->pi_getLL('username').': <strong>'.$customer['username'].'</strong><br/>';
-				$htmlTitle.=$this->pi_getLL('address').': <strong>'.$customer['address'].'</strong><br/>';
-				$htmlTitle.=$this->pi_getLL('telephone').': <strong>'.$customer['telephone'].'</strong><br/>';
-				//$title.='<span style="padding-left:10px;">'.$this->pi_getLL('email').'<br>bas<br/>: '.$customer['email'].'</span><span style="padding-left:10px;">'.$this->pi_getLL('admin_customer_id').': '.$customer['uid'].'</span>';
-				//$html='<table width="100%" border=3><tr><td>'.$title.'</td><td>'.$title.'</td><td>'.$customer['email'].'</td><td>'.$customer['uid'].'</td></tr></table>';
+				$htmlTitle='<h3>'.$itemTitle.'</h3>';
+				foreach ($itemArray as $rowItem) {
+					$htmlTitle.=$rowItem['label'].': <strong>'.$rowItem['value'].'</strong><br/>';
+				}
 				$content.='<option value="'.$customer['uid'].'">'.htmlspecialchars($htmlTitle).'</option>';
 			}
 		}
@@ -219,9 +232,6 @@ if (count($products)<0) {
 					formatSelection: function(item) {
 						return item.text;
 					},
-					formatSelection: function(item) {
-						return item.text;
-					},
 					escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
 				});
 				$(\'#manual_order_customer_id\').change(function() {
@@ -232,7 +242,7 @@ if (count($products)<0) {
 						$("#ms_checkout_direct").submit();
 					}
 				});
-				if (jQuery("#checkboxdifferent_delivery_address").is(\':checked\')) {
+				if ($("#checkboxdifferent_delivery_address").is(\':checked\')) {
 					// set the h5validate attributes for required delivery data
 					$(\'#delivery_radio\').attr(\'required\', \'required\');
 					$(\'#delivery_radio\').attr(\'data-h5-errorid\', \'invalid-delivery_gender\');
@@ -270,7 +280,7 @@ if (count($products)<0) {
 					$(\'#delivery_telephone\').attr(\'data-h5-errorid\', \'invalid-delivery_telephone\');
 					$(\'#delivery_telephone\').attr(\'title\', \''.addslashes($this->pi_getLL('telephone_is_required')).' ('.mslib_befe::strtolower(addslashes($this->pi_getLL('delivery_address'))).')\');
 
-					jQuery(\'#delivery_address_category\').show();
+					$(\'#delivery_address_category\').show();
 				} else {
 					// remove the h5validate attributes
 					$(\'#delivery_radio\').removeAttr(\'required\');
@@ -309,7 +319,7 @@ if (count($products)<0) {
 					$(\'#delivery_telephone\').removeAttr(\'data-h5-errorid\');
 					$(\'#delivery_telephone\').removeAttr(\'title\');
 
-					jQuery(\'#delivery_address_category\').hide();
+					$(\'#delivery_address_category\').hide();
 				}
 
 				jQuery("#checkboxdifferent_delivery_address").click(function(event) {
