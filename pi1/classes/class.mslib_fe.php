@@ -6782,6 +6782,8 @@ class mslib_fe {
 				if ($this->msDebug) {
 					$this->msDebugInfo.=$query."\n\n";
 				}
+				//echo $query;
+				//die();
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {

@@ -60,6 +60,9 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			$that->get['limit']=50;
 		}
 		$that->ms['MODULES']['PAGESET_LIMIT']=$that->get['limit'];
+		if ($params['settings']['limit'] && is_numeric($params['settings']['limit'])) {
+			$that->ms['MODULES']['PAGESET_LIMIT']=$params['settings']['limit'];
+		}
 		if (is_numeric($that->get['p'])) {
 			$p=$that->get['p'];
 		}
@@ -220,6 +223,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 				}
 				$tableContent.='<tr class="'.$tr_type.'">';
 				foreach ($params['tableColumns'] as $col=>$valArray) {
+					$originalValue=$row[$col];
 					switch ($valArray['valueType']) {
 						case 'download_invoice':
 							$row[$col]='<a href="uploads/tx_multishopexactonline/'.$row[$col].'" target="_blank">'.$row[$col].'</a>';
@@ -248,7 +252,22 @@ class tx_mslib_admin_interface extends tslib_pibase {
 							}
 							break;
 					}
-					$tableContent.='<td'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</td>';
+					$adjustedValue=$row[$col];
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['tableColumnsPreProc'])) {
+						$conf=array(
+							'col'=>&$col,
+							'row'=>&$row,
+							'originalValue'=>&$originalValue,
+							'adjustedValue'=>&$adjustedValue,
+							'params'=>&$params,
+							'valArray'=>&$valArray,
+							'summarize'=>&$summarize
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_import.php']['msAdminImportItemIterateProc'] as $funcRef) {
+							t3lib_div::callUserFunction($funcRef, $conf, $that);
+						}
+					}
+					$tableContent.='<td'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
 				}
 				$tableContent.='
 				<td>
@@ -275,7 +294,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			</div>
 			';
 			// pagination
-			if (!$that->ms['nopagenav'] and $pageset['total_rows']>$that->ms['MODULES']['PAGESET_LIMIT']) {
+			if (!$params['settings']['skipPaginationMarkup'] and $pageset['total_rows']>$that->ms['MODULES']['PAGESET_LIMIT']) {
 				$total_pages=ceil(($pageset['total_rows']/$that->ms['MODULES']['PAGESET_LIMIT']));
 				$tmp='';
 				$tmp.='<div id="pagenav_container_list_wrapper">
@@ -378,13 +397,15 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			}
 			// pagination eof
 		}
-		$content='
-		<div id="tab-container">
-		<ul class="tabs" id="admin_orders">
-			<li class="active"><a href="#CmsListing">'.$params['title'].'</a></li>
-		</ul>
-		<div class="tab_container">
-		';
+		if (!$params['settings']['skipTabMarkup']) {
+			$content='
+			<div id="tab-container">
+			<ul class="tabs" id="admin_orders">
+				<li class="active"><a href="#CmsListing">'.$params['title'].'</a></li>
+			</ul>
+			<div class="tab_container">
+			';
+		}
 		$searchForm='';
 		if ($params['settings']['enableKeywordSearch']) {
 			$searchForm='
@@ -415,18 +436,24 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			</form>
 			';
 		}
-		$content.='
-				<div style="display: block;" id="CmsListing" class="tab_content">
-					'.$searchForm.'
-					'.$tableContent.'
+		if (!$params['settings']['skipTabMarkup']) {
+			$content.='
+					<div style="display: block;" id="CmsListing" class="tab_content">
+						'.$searchForm.'
+						'.$tableContent.'
+					</div>
 				</div>
 			</div>
-		</div>
-		';
+			';
+		} else {
+			$content.=$searchForm.$tableContent;
+		}
 		$content.='<p><center>Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></center></p>';
 		$content.='<p><center>Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></center></p>';
-		$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-		$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+		if (!$params['settings']['skipFooterMarkup']) {
+			$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+			$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+		}
 		return $content;
 	}
 }

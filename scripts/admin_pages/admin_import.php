@@ -1369,17 +1369,19 @@ if ($this->post['action']=='category-insert') {
 					$item['products_vat_rate']=str_replace("%", "", $item['products_vat_rate']);
 				}
 				// custom hook that can be controlled by third-party plugin
+				$skipItem=0;
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIterateProc'])) {
 					$params=array(
 						'item'=>&$item,
-						'prefix_source_name'=>$this->post['prefix_source_name']
+						'prefix_source_name'=>$this->post['prefix_source_name'],
+						'skipItem'=>&$skipItem
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIterateProc'] as $funcRef) {
 						t3lib_div::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// custom hook that can be controlled by third-party plugin eof
-				if (!$item['products_name'] or $item['products_name']) {
+				if (!$skipItem) {
 					$hashed_id='';
 					if ($this->ms['target-cid']=='') {
 						$this->ms['target-cid']=$this->categoriesStartingPoint;

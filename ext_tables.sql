@@ -1124,14 +1124,14 @@ CREATE TABLE `tx_multishop_orders_export` (
 );
 
 CREATE TABLE `tx_multishop_invoices_export` (
-  `id`        INT(11) AUTO_INCREMENT,
-  `name`      VARCHAR(75) DEFAULT '',
-  `page_uid`  INT(11) DEFAULT '0',
-  `crdate`    INT(11) DEFAULT '0',
-  `fields`    TEXT,
-  `post_data` TEXT,
-  `code`      VARCHAR(150) DEFAULT '',
-  `status`    TINYINT(1) DEFAULT '0',
+  `id`        int(11) auto_increment,
+  `name`      varchar(75) default '',
+  `page_uid`  int(11) DEFAULT '0',
+  `crdate`    int(11) DEFAULT '0',
+  `fields`    text,
+  `post_data` text,
+  `code`      varchar(150) default '',
+  `status`    tinyint(1) default '0',
   PRIMARY KEY (`id`),
   KEY `code` (`code`)
 );

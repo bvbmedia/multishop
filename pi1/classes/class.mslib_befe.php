@@ -3196,12 +3196,14 @@ class mslib_befe {
 			if (isset($value) and isset($field) && $field != '') {
 				$queryArray['where'][]=$field.'=\''.addslashes($value).'\'';
 			}
-			if (is_array($additional_where) && count($additional_where)) {
+			if ($additional_where && is_array($additional_where) && count($additional_where)) {
 				foreach ($additional_where as $where) {
 					if ($where) {
 						$queryArray['where'][]=$where;
 					}
 				}
+			} elseif($additional_where) {
+				$queryArray['where'][]=$additional_where;
 			}
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
 				$queryArray['from'], // FROM ...
