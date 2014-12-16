@@ -278,7 +278,9 @@ if ($this->post) {
 		$this->post['parent_id']=0;
 	}
 	$updateArray=array();
-	$updateArray['custom_settings']=$this->post['custom_settings'];
+	if ($this->ROOTADMIN_USER) {
+		$updateArray['custom_settings']=$this->post['custom_settings'];
+	}
 	$updateArray['parent_id']=$this->post['parent_id'];
 	if (isset($this->post['hide_in_menu'])) {
 		$updateArray['hide_in_menu']=$this->post['hide_in_menu'];
@@ -502,6 +504,8 @@ if ($this->post) {
 		// Extract the subparts from the template
 		$subparts=array();
 		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
+		$subparts['advanced_settings_tab_button']=$this->cObj->getSubpart($subparts['template'], '###ADVANCED_SETTINGS_TAB_BUTTON###');
+		$subparts['advanced_settings_tab_content']=$this->cObj->getSubpart($subparts['template'], '###ADVANCED_SETTINGS_TAB_CONTENT###');
 		//if (!$category['parent_id']) {
 		//$category['parent_id']=$this->get['cid'];
 		//}
@@ -800,8 +804,6 @@ if ($this->post) {
 		$subpartArray['###EXTRA_DETAILS_FIELDS###']=$extra_fields;
 		$subpartArray['###CATEGORIES_CONTENT_BLOCK###']=$categories_content_block;
 		$subpartArray['###CATEGORIES_META_BLOCK###']=$categories_meta_block;
-		$subpartArray['###LABEL_ADVANCED_SETTINGS###']=$this->pi_getLL('admin_custom_configuration');
-		$subpartArray['###VALUE_ADVANCED_SETTINGS###']=htmlspecialchars($category['custom_settings']);
 		$subpartArray['###LABEL_BUTTON_CANCEL_FOOTER###']=$this->pi_getLL('cancel');
 		$subpartArray['###LABEL_BUTTON_SAVE_FOOTER###']=$this->pi_getLL('save');
 		$subpartArray['###CATEGORIES_ID_FOOTER0###']=$category['categories_id'];
@@ -849,7 +851,6 @@ if ($this->post) {
 		$subpartArray['###ADMIN_LABEL_TABS_DETAILS###']=$this->pi_getLL('admin_label_tabs_details');
 		$subpartArray['###ADMIN_LABEL_TABS_CONTENT###']=$this->pi_getLL('admin_label_tabs_content');
 		$subpartArray['###ADMIN_LABEL_TABS_META###']=$this->pi_getLL('admin_label_tabs_meta');
-		$subpartArray['###ADMIN_LABEL_TABS_ADVANCED###']=$this->pi_getLL('admin_label_tabs_advanced');
 		// plugin marker place holder
 		$plugins_extra_tab=array();
 		$js_extra=array();
@@ -1113,6 +1114,31 @@ $(document).on("change", "#remove_aspectratio", function(){
 		} else {
 			$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
 		}
+		// advanced settings tab button
+		$markerArray=array();
+		if (!$this->ROOTADMIN_USER) {
+			$markerArray['ADMIN_LABEL_TABS_ADVANCED']='';
+			$advanced_settings_tab_button='';
+		} else {
+			$markerArray['ADMIN_LABEL_TABS_ADVANCED']=$this->pi_getLL('admin_label_tabs_advanced');
+			$advanced_settings_tab_button=$this->cObj->substituteMarkerArray($subparts['advanced_settings_tab_button'], $markerArray, '###|###');
+		}
+		$subpartArray['###ADVANCED_SETTINGS_TAB_BUTTON###']=$advanced_settings_tab_button;
+		// advanced settings tab button eol
+		// advanced settings tab content
+		$markerArray=array();
+		if (!$this->ROOTADMIN_USER) {
+			$markerArray['LABEL_ADVANCED_SETTINGS']='';
+			$markerArray['VALUE_ADVANCED_SETTINGS']='';
+			$advanced_settings_tab_content='';
+		} else {
+			$markerArray['LABEL_ADVANCED_SETTINGS']=$this->pi_getLL('admin_custom_configuration');
+			$markerArray['VALUE_ADVANCED_SETTINGS']=htmlspecialchars($category['custom_settings']);
+			$advanced_settings_tab_content=$this->cObj->substituteMarkerArray($subparts['advanced_settings_tab_content'], $markerArray, '###|###');
+		}
+		// advanced settings tab content eol
+		$subpartArray['###ADVANCED_SETTINGS_TAB_BUTTON###']=$advanced_settings_tab_button;
+		$subpartArray['###ADVANCED_SETTINGS_TAB_CONTENT###']=$advanced_settings_tab_content;
 		$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 	}
 }
