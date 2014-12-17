@@ -3189,7 +3189,7 @@ class mslib_fe {
 			switch ($type) {
 				case 'payment':
 					// first we load all options
-					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
+					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
@@ -3220,7 +3220,7 @@ class mslib_fe {
 					break;
 				case 'shipping':
 					// first we load all options
-					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true);
+					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
@@ -3257,7 +3257,7 @@ class mslib_fe {
 			switch ($type) {
 				case 'payment':
 					// first we load all options
-					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
+					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($groups_id as $gid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
@@ -3288,7 +3288,7 @@ class mslib_fe {
 					break;
 				case 'shipping':
 					// first we load all options
-					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true);
+					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($groups_id as $gid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
@@ -3325,7 +3325,7 @@ class mslib_fe {
 			switch ($type) {
 				case 'payment':
 					// first we load all options
-					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true);
+					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
 						'tx_multishop_customers_method_mappings cmm, tx_multishop_payment_methods s', // FROM ...
 						's.status=1 and cmm.type=\''.$type.'\' and cmm.customers_id = \''.$user_id.'\' and cmm.method_id=s.id', // WHERE...
@@ -3383,7 +3383,7 @@ class mslib_fe {
 			return $allmethods;
 		}
 	}
-	public function loadShippingMethods($include_hidden_items=0, $user_country=0, $filter=false) {
+	public function loadShippingMethods($include_hidden_items=0, $user_country=0, $filter=false, $zone_sorting=false) {
 		$select=array();
 		$from=array();
 		$where=array();
@@ -3405,7 +3405,11 @@ class mslib_fe {
 			$where[]='c2z.zone_id = p2z.zone_id';
 			$where[]='p2z.shipping_method_id = s.id';
 			$where[]='s.id=d.id';
-			$orderby[]='s.sort_order';
+			if (!$zone_sorting) {
+				$orderby[]='s.sort_order';
+			} else {
+				$orderby[]='p2z.sort_order';
+			}
 		} else {
 			$select[]='*';
 			$from[]='tx_multishop_shipping_methods s';
@@ -3474,7 +3478,7 @@ class mslib_fe {
 			}
 		}
 	}
-	public function loadPaymentMethods($include_hidden_items=0, $user_country=0, $filter=false) {
+	public function loadPaymentMethods($include_hidden_items=0, $user_country=0, $filter=false, $zone_sorting=false) {
 		$select=array();
 		$from=array();
 		$where=array();
@@ -3496,7 +3500,11 @@ class mslib_fe {
 			$where[]='c2z.zone_id = p2z.zone_id';
 			$where[]='p2z.payment_method_id = s.id';
 			$where[]='s.id=d.id';
-			$orderby[]='s.sort_order';
+			if (!$zone_sorting) {
+				$orderby[]='s.sort_order';
+			} else {
+				$orderby[]='p2z.sort_order';
+			}
 		} else {
 			$select[]='*';
 			$from[]='tx_multishop_payment_methods s';
@@ -4126,7 +4134,7 @@ class mslib_fe {
 			return false;
 		}
 		if (!$shipping_method_id) {
-			$shipping_methods=mslib_fe::loadShippingMethods(0, $delivery_countries_id, true);
+			$shipping_methods=mslib_fe::loadShippingMethods(0, $delivery_countries_id, true, true);
 			$shipping_array=array();
 			foreach ($shipping_methods as $shipping_method) {
 				$shipping_array[]=$shipping_method;
@@ -4286,7 +4294,7 @@ class mslib_fe {
 			return false;
 		}
 		$product_data=mslib_fe::getProduct($products_id);
-		$shipping_methods=mslib_fe::loadShippingMethods(0, $countries_id, true);
+		$shipping_methods=mslib_fe::loadShippingMethods(0, $countries_id, true, true);
 		$shipping_array=array();
 		foreach ($shipping_methods as $shipping_method) {
 			$shipping_array[]=$shipping_method;
@@ -5888,16 +5896,26 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['label']=$this->pi_getLL('admin_payment_methods');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
+			/*
+			 * removed from menu, merged into payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_zone_payment_mappings');
+			*/
+			/*
+			 * removed from menu, merged into shipping methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['label']=$this->pi_getLL('admin_shipping_zone_mapping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_zone_shipping_mappings');
+			*/
+			/*
+			 * removed from menu, merged into shipping/payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['label']=$this->pi_getLL('admin_mappings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_payment_mappings');
+			*/
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_costs']['label']=$this->pi_getLL('admin_shipping_costs');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_costs']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_zones']['label']=$this->pi_getLL('admin_zones');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_zones']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_zones');
+
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['label']=$this->pi_getLL('admin_system');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['description']=$this->pi_getLL('admin_system').'.';
 			if ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or $this->conf['cacheConfiguration']) {

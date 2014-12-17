@@ -382,6 +382,15 @@ switch ($this->ms['page']) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		// make sure the payment fallback marker are replaced with empty string if the plugin not installed
+		$array1=array();
+		$array2=array();
+		$array1[]='###PAYMENT_FALLBACK_LINK###';
+		$array2[]='';
+		$array1[]='###PAYMENT_PAGE_LINK###';
+		$array2[]='';
+		$content=str_replace($array1, $array2, $content);
+
 		// custom hook that can be controlled by third-party plugin eof
 		break;
 	// psp thank you or error pages eof

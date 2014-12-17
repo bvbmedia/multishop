@@ -3,6 +3,48 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 if ($this->post) {
+	if (is_array($this->post['shipping_zone']) && count($this->post['shipping_zone'])) {
+		$shipping_methods=mslib_fe::loadShippingMethods();
+		$zones=mslib_fe::loadAllCountriesZones();
+		foreach ($zones['zone_id'] as $zone_id) {
+			foreach ($shipping_methods as $shipping_method) {
+				if ($this->post['shipping_zone'][$zone_id][$shipping_method['id']]) {
+					// add mapping
+					$insertArray=array();
+					$insertArray['zone_id']=$zone_id;
+					$insertArray['shipping_method_id']=$shipping_method['id'];
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_to_zones', $insertArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				} else {
+					// delete mapping
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_shipping_methods_to_zones', 'zone_id=\''.$zone_id.'\' and shipping_method_id=\''.$shipping_method['id'].'\'');
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
+			}
+		}
+		header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_method_zone_mappings');
+	}
+	if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
+		$shipping_methods=mslib_fe::loadShippingMethods();
+		$payment_methods=mslib_fe::loadPaymentMethods();
+		foreach ($shipping_methods as $shipping_method) {
+			foreach ($payment_methods as $payment_method) {
+				if ($this->post['checkbox'][$shipping_method['id']][$payment_method['id']]) {
+					// add mapping
+					$insertArray=array();
+					$insertArray['shipping_method']=$shipping_method['id'];
+					$insertArray['payment_method']=$payment_method['id'];
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_shipping_mappings', $insertArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				} else {
+					// delete mapping
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_shipping_mappings', 'shipping_method=\''.$shipping_method['id'].'\' and payment_method=\''.$payment_method['id'].'\'');
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
+			}
+		}
+		header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_payment_mappings');
+	}
 	if ($this->post['sub']=='update_shipping_method' && $this->post['shipping_method_id']) {
 		// update shipping method
 		$row=mslib_fe::getShippingMethod($this->post['shipping_method_id'], 's.id');
@@ -84,7 +126,7 @@ if ($this->post) {
 		}
 	}
 }
-$GLOBALS['TSFE']->additionalHeaderData[]='
+$GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods_edit']='
 <link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
 <link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
@@ -435,6 +477,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	$this->ms['show_main']=1;
 }
 if ($this->ms['show_main']) {
+	$tmpcontent='';
 	if (is_numeric($this->get['status']) and is_numeric($this->get['shipping_method_id'])) {
 		$updateArray=array();
 		$updateArray['status']=$this->get['status'];
@@ -572,9 +615,14 @@ if ($this->ms['show_main']) {
 		if (count($active_shop)>1) {
 			$tmpcontent.='<th>'.$this->pi_getLL('shop', 'Shop').'</th>';
 		}
-		$tmpcontent.='<th>'.$this->pi_getLL('shipping_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th><th width="30">'.ucfirst($this->pi_getLL('download')).'</th></tr>
-		<tbody class="sortable_content">
-		';
+		$tmpcontent.='<th>'.$this->pi_getLL('shipping_method').'</th>';
+		$tmpcontent.='<th width="60">'.$this->pi_getLL('template').'</th>';
+		$tmpcontent.='<th width="120">'.$this->pi_getLL('date_added').'</th>';
+		$tmpcontent.='<th width="60">'.$this->pi_getLL('status').'</th>';
+		$tmpcontent.='<th width="30">'.$this->pi_getLL('action').'</th>';
+		$tmpcontent.='<th width="30">'.ucfirst($this->pi_getLL('download')).'</th>';
+		$tmpcontent.='</tr>';
+		$tmpcontent.='<tbody class="sortable_content">';
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			//		$tmpcontent.='<h3>'.$cat['name'].'</h3>';
 			if (!$tr_type or $tr_type=='even') {
@@ -628,30 +676,6 @@ if ($this->ms['show_main']) {
 			</form>
 		</fieldset>';
 	$tmpcontent.='<p class="float_right"><a href="#" id="add_shipping_method" class="admin_menu_add label">'.$this->pi_getLL('add_shipping_method').'</a></p>';
-	$tmpcontent.='
-	<script type="text/javascript">
-	jQuery(document).ready(function($) {
-		// sortables
-		var result2	= jQuery("#admin_modules_listing tbody.sortable_content").sortable({
-				cursor:     "move",
-			//axis:       "y",
-			update: function(e, ui) {
-				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
-				jQuery(this).sortable("refresh");
-				sorted = jQuery(this).sortable("serialize", "id");
-				jQuery.ajax({
-						type:   "POST",
-						url:    href,
-						data:   sorted,
-						success: function(msg) {
-								//do something with the sorted data
-						}
-				});
-			}
-		});
-		// sortables eof
-	});
-	</script>';
 	$tmpcontent.='<div id="flexible_container"><ul id="admin_shipping_methods_list" style="display:none;">';
 	$innercount=0;
 	$count=0;
@@ -678,10 +702,218 @@ if ($this->ms['show_main']) {
 		}
 	}
 	$tmpcontent.='</ul></div>';
-	$content.=mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent);
+	//tabs array
+	$tabs=array();
+	// shipping methods tab
+	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), 'id'=>'admin_shipping_methods', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent));
+	// shipping methods to zones mapping
 	$tmpcontent='';
+	// load all shipping methods
+	$shipping_methods=mslib_fe::loadShippingMethods();
+	$zones=mslib_fe::loadAllCountriesZones();
+	if (count($zones['zone_id'])) {
+		$tmpcontent.='<div class="main-heading"><h2>'.$this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings').'</h2></div>';
+		$colspan=4;
+		$tr_type='even';
+		if (count($shipping_methods)) {
+			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+			$tmpcontent.='<tr>';
+			// zone header
+			$zone_cols=array();
+			foreach ($zones['zone_id'] as $zone_idx=>$zone_id) {
+				$tmpcontent.='<th>'.$zones['zone_name'][$zone_idx].' ('.implode('<br/> ', $zones['countries'][$zone_id]).')</th>';
+				$zone_cols[]=$zone_id;
+			}
+			$tmpcontent.='</tr>';
+			$tmpcontent.='<tr>';
+			// shipping method rows
+			foreach ($zone_cols as $zone_id) {
+				// load all shipping methods
+				//$shipping_method_zones=mslib_fe::loadZoneShippingMethods($zone_id);
+				//$shipping_methods=array_merge($shipping_method_zones, $shipping_methods);
+				$tmpcontent.='<td>';
+				$tmpcontent.='<table class="sortable_column">';
+				$shipping_methods_sorted=array();
+				$unsorted_number=99;
+				$sort_number=50;
+				foreach ($shipping_methods as $shipping_method) {
+					$sql_check="select id, sort_order from tx_multishop_shipping_methods_to_zones where zone_id = ".$zone_id." and shipping_method_id = ".$shipping_method['id'];
+					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+						$rs_check=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
+						$shipping_method['checked']=true;
+						if ($rs_check['sort_order']>0) {
+							$shipping_methods_sorted[$rs_check['sort_order']]=$shipping_method;
+						} else {
+							$shipping_methods_sorted[$sort_number]=$shipping_method;
+						}
+						$sort_number++;
+					} else {
+						$shipping_method['checked']=false;
+						$shipping_methods_sorted[$unsorted_number]=$shipping_method;
+						$unsorted_number++;
+					}
+				}
+				ksort($shipping_methods_sorted);
+				foreach ($shipping_methods_sorted as $shipping_method) {
+					$vars=unserialize($shipping_method['vars']);
+					if ($shipping_method['checked']) {
+						$tmpcontent.='<tr id="shipping_zone_['.$zone_id.']_'.$shipping_method['id'].'" class="row_sortable">';
+						$tmpcontent.='<td><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" checked="checked" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></td>';
+					} else {
+						$tmpcontent.='<tr class="row_unsortable">';
+						$tmpcontent.='<td><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></td>';
+					}
+					$tmpcontent.='</tr>';
+				}
+
+				$tmpcontent.='</table>';
+				$tmpcontent.='</td>';
+			}
+			$tmpcontent.='</tr>';
+			$tmpcontent.='</table>';
+			$tmpcontent.='<input name="param" type="hidden" value="update_mapping" />';
+			$tmpcontent.='</form>';
+		} else {
+			$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
+		}
+	} else {
+		$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
+	}
+	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings'))), 'id'=>'admin_shipping_method_zone_mappings', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping'))), $tmpcontent));
+	// shipping to payment mappings
+	$tmpcontent='';
+	$payment_methods=mslib_fe::loadPaymentMethods();
+	if (count($payment_methods)) {
+		//$tmpcontent.='<div class="main-heading"><h2>'.$this->pi_getLL('shipping_to_payment_mapping').'</h2></div>';
+		$colspan=4;
+		$tr_type='even';
+		if (count($shipping_methods)) {
+			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+			$tmpcontent.='<tr><th>&nbsp;</th>';
+			foreach ($payment_methods as $payment_method) {
+				$tmpcontent.='<th>'.$payment_method['name'].'</th>';
+			}
+			$tmpcontent.='</tr>';
+			foreach ($shipping_methods as $row) {
+				//		$content.='<h3>'.$cat['name'].'</h3>';
+				if (!$tr_type or $tr_type=='even') {
+					$tr_type='odd';
+				} else {
+					$tr_type='even';
+				}
+				$tmpcontent.='<tr class="'.$tr_type.'">
+			<td><strong>'.$row['name'].'</strong></td>';
+				foreach ($payment_methods as $payment_method) {
+					$tmpcontent.='<td>';
+					$tmpcontent.='<input name="checkbox['.$row['id'].']['.$payment_method['id'].']" type="checkbox" value="1" onclick="this.form.submit();" ';
+					$str2="SELECT * from tx_multishop_payment_shipping_mappings where payment_method='".$payment_method['id']."' and shipping_method='".$row['id']."'";
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2)>0) {
+						$tmpcontent.='checked';
+					}
+					$tmpcontent.=' /></td>';
+				}
+				$tmpcontent.='</tr>';
+			}
+			$tmpcontent.='</table>';
+			$tmpcontent.='<input name="param" type="hidden" value="update_mapping" /></form>';
+		} else {
+			$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
+		}
+	} else {
+		$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
+	}
+	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_payment_mapping'))), 'id'=>'admin_shipping_payment_mappings', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_payment_mapping'))), $tmpcontent));
+	// render the tabs
+	$tab_button='';
+	$tab_content='';
+	foreach ($tabs as $tab) {
+		$tab_button.='<li><a href="#'.$tab['id'].'">'.$tab['label'].'</a></li>';
+		$tab_content.='<div style="display: block;" id="'.$tab['id'].'" class="tab_content">';
+		$tab_content.=$tab['content'];
+		$tab_content.='</div>';
+	}
+	$tabs_element='<div id="tab-container">';
+	$tabs_element.='<ul class="tabs" id="admin_orders">';
+	$tabs_element.=$tab_button;
+	$tabs_element.='</ul>';
+	$tabs_element.='<div class="tab_container">';
+	$tabs_element.=$tab_content;
+	$tabs_element.='</div>';
+	$tabs_element.='</div>'; // parent #tab_container
+	// flush to render variable
+	$content=$tabs_element;
 	// shipping method admin system eof
 }
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+// javascript for shipping methods
+$GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods']='
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	// sortables
+	var result2	= jQuery("#admin_modules_listing tbody.sortable_content").sortable({
+		cursor: "move",
+		//axis: "y",
+		update: function(e, ui) {
+			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
+			jQuery(this).sortable("refresh");
+			sorted = jQuery(this).sortable("serialize", "id");
+			jQuery.ajax({
+				type:   "POST",
+				url:    href,
+				data:   sorted,
+				success: function(msg) {
+					//do something with the sorted data
+				}
+			});
+		}
+	});
+	jQuery(".sortable_column").sortable({
+		cursor: "move",
+		//axis: "y",
+		items: "tr.row_sortable",
+		update: function(e, ui) {
+			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=zone_method_sortables').'";
+			jQuery(this).sortable("refresh");
+			sorted = jQuery(this).sortable("serialize", "id");
+			jQuery.ajax({
+				type:   "POST",
+				url:    href,
+				data:   sorted,
+				success: function(msg) {
+					//do something with the sorted data
+				}
+			});
+		}
+	});
+	// sortables eof
+	// tabs js
+	$(".tab_content").hide();
+    $("ul.tabs li:first").addClass("active").show();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function () {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
+        $(".tab_content").hide();
+        var activeTab = $(this).find("a").attr("href");
+        $(activeTab).fadeIn(0);
+        return false;
+    });
+    // auto activate the tabs based on hash
+    var lochash=window.location.hash;
+	if (lochash!=\'\') {
+		var li_this = $("ul > li").find("a[href=\'" + lochash + "\']").parent();
+		if (li_this.length > 0) {
+			$("ul.tabs li").removeClass("active");
+			$(li_this).addClass("active");
+			$(".tab_content").hide();
+			$(lochash).fadeIn(0);
+		}
+	}
+});
+</script>';
 ?>

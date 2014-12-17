@@ -739,8 +739,10 @@ CREATE TABLE `tx_multishop_payment_methods_to_zones` (
   `id` int(11) auto_increment,
   `zone_id` int(4) default '0',
   `payment_method_id` int(11) default '0',
+  `sort_order` int(11) default '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `zone_id` (`zone_id`,`payment_method_id`)
+  UNIQUE KEY `zone_id` (`zone_id`,`payment_method_id`),
+  KEY `sort_order` (`sort_order`)
 );
 
 CREATE TABLE `tx_multishop_payment_shipping_mappings` (
@@ -1459,8 +1461,10 @@ CREATE TABLE `tx_multishop_shipping_methods_to_zones` (
   `id` int(11) auto_increment,
   `zone_id` int(4) default '0',
   `shipping_method_id` int(11) default '0',
+  `sort_order` int(11) default '0',
   PRIMARY KEY (`id`),
-  UNIQUE unique_zone_id (zone_id,shipping_method_id)
+  UNIQUE unique_zone_id (zone_id,shipping_method_id),
+  KEY `sort_order` (`sort_order`)
 );
 
 CREATE TABLE `tx_multishop_feeds_excludelist` (

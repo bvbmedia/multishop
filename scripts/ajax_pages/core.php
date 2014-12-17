@@ -40,7 +40,7 @@ switch ($this->ms['page']) {
 	case 'get_shoppingcart_shippingmethod_overview':
 		$return_data=array();
 		$country_cn_iso_nr=$this->post['tx_multishop_pi1']['country_id'];
-		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true);
+		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
 		$return_data['shipping_methods']=array();
 		foreach ($shipping_methods as $shipping_method) {
 			$return_data['shipping_methods'][]=$shipping_method;
@@ -1678,6 +1678,45 @@ switch ($this->ms['page']) {
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods', $where, $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$no++;
+					}
+				}
+			}
+		}
+		exit();
+		break;
+	case 'zone_method_sortables':
+		if ($this->ADMIN_USER) {
+			$key='shipping_zone_';
+			if (is_array($this->post[$key]) and count($this->post[$key])) {
+				$no=1;
+				foreach ($this->post[$key] as $zone_id => $smid) {
+					foreach ($smid as $shipping_id) {
+						if (is_numeric($shipping_id)) {
+							$where="zone_id = '".$zone_id . "' and shipping_method_id = '".$shipping_id."'";
+							$updateArray=array(
+								'sort_order'=>$no
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_to_zones', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$no++;
+						}
+					}
+				}
+			}
+			$key='payment_zone_';
+			if (is_array($this->post[$key]) and count($this->post[$key])) {
+				$no=1;
+				foreach ($this->post[$key] as $zone_id => $pmid) {
+					foreach ($pmid as $payment_id) {
+						if (is_numeric($payment_id)) {
+							$where="zone_id = '".$zone_id . "' and payment_method_id = '".$payment_id."'";
+							$updateArray=array(
+								'sort_order'=>$no
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_to_zones', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$no++;
+						}
 					}
 				}
 			}

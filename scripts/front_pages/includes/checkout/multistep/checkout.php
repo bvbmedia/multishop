@@ -124,11 +124,11 @@ if (is_array($cart['products']) and $count_products) {
 	if (!count($payment_methods)) {
 		// nothing is loaded. this cant be valid so let's load the default methods.
 		// loading payment methods
-		$payment_methods=mslib_fe::loadPaymentMethods(0, $user_country, true);
+		$payment_methods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 	}
 	if (!count($shipping_methods)) {
 		// loading shipping methods eof
-		$shipping_methods=mslib_fe::loadShippingMethods(0, $delivery_user_country, true);
+		$shipping_methods=mslib_fe::loadShippingMethods(0, $delivery_user_country, true, true);
 	}
 }
 if (count($shipping_methods)==0 and count($payment_methods)==0) {
