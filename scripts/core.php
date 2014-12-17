@@ -390,6 +390,7 @@ switch ($this->ms['page']) {
 		$array1[]='###PAYMENT_PAGE_LINK###';
 		$array2[]='';
 		$content=str_replace($array1, $array2, $content);
+
 		// custom hook that can be controlled by third-party plugin eof
 		break;
 	// psp thank you or error pages eof

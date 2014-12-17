@@ -126,7 +126,7 @@ if ($this->post) {
 		}
 	}
 }
-$GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods']='
+$GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods_edit']='
 <link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
 <link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
@@ -615,9 +615,14 @@ if ($this->ms['show_main']) {
 		if (count($active_shop)>1) {
 			$tmpcontent.='<th>'.$this->pi_getLL('shop', 'Shop').'</th>';
 		}
-		$tmpcontent.='<th>'.$this->pi_getLL('shipping_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th><th width="30">'.ucfirst($this->pi_getLL('download')).'</th></tr>
-		<tbody class="sortable_content">
-		';
+		$tmpcontent.='<th>'.$this->pi_getLL('shipping_method').'</th>';
+		$tmpcontent.='<th width="60">'.$this->pi_getLL('template').'</th>';
+		$tmpcontent.='<th width="120">'.$this->pi_getLL('date_added').'</th>';
+		$tmpcontent.='<th width="60">'.$this->pi_getLL('status').'</th>';
+		$tmpcontent.='<th width="30">'.$this->pi_getLL('action').'</th>';
+		$tmpcontent.='<th width="30">'.ucfirst($this->pi_getLL('download')).'</th>';
+		$tmpcontent.='</tr>';
+		$tmpcontent.='<tbody class="sortable_content">';
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			//		$tmpcontent.='<h3>'.$cat['name'].'</h3>';
 			if (!$tr_type or $tr_type=='even') {
@@ -701,10 +706,10 @@ if ($this->ms['show_main']) {
 	$tabs=array();
 	// shipping methods tab
 	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), 'id'=>'admin_shipping_methods', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent));
-	// load all shipping methods
-	$shipping_methods=mslib_fe::loadShippingMethods();
 	// shipping methods to zones mapping
 	$tmpcontent='';
+	// load all shipping methods
+	$shipping_methods=mslib_fe::loadShippingMethods();
 	$zones=mslib_fe::loadAllCountriesZones();
 	if (count($zones['zone_id'])) {
 		$tmpcontent.='<div class="main-heading"><h2>'.$this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings').'</h2></div>';
@@ -714,31 +719,67 @@ if ($this->ms['show_main']) {
 			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 			$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<tr>';
-			$tmpcontent.='<th width="100px">Zones</th>';
-			$tmpcontent.='<th colspan="'.count($shipping_methods).'">Shipping</th>';
-			$tmpcontent.='</tr>';
+			// zone header
+			$zone_cols=array();
 			foreach ($zones['zone_id'] as $zone_idx=>$zone_id) {
-				$tmpcontent.='<tr>';
-				$tmpcontent.='<td>'.$zones['zone_name'][$zone_idx].' ('.implode('<br/> ', $zones['countries'][$zone_id]).')</td>';
+				$tmpcontent.='<th>'.$zones['zone_name'][$zone_idx].' ('.implode('<br/> ', $zones['countries'][$zone_id]).')</th>';
+				$zone_cols[]=$zone_id;
+			}
+			$tmpcontent.='</tr>';
+			$tmpcontent.='<tr>';
+			// shipping method rows
+			foreach ($zone_cols as $zone_id) {
+				// load all shipping methods
+				//$shipping_method_zones=mslib_fe::loadZoneShippingMethods($zone_id);
+				//$shipping_methods=array_merge($shipping_method_zones, $shipping_methods);
+				$tmpcontent.='<td>';
+				$tmpcontent.='<table class="sortable_column">';
+				$shipping_methods_sorted=array();
+				$unsorted_number=99;
+				$sort_number=50;
 				foreach ($shipping_methods as $shipping_method) {
-					$vars=unserialize($shipping_method['vars']);
-					$sql_check="select id from tx_multishop_shipping_methods_to_zones where zone_id = ".$zone_id." and shipping_method_id = ".$shipping_method['id'];
+					$sql_check="select id, sort_order from tx_multishop_shipping_methods_to_zones where zone_id = ".$zone_id." and shipping_method_id = ".$shipping_method['id'];
 					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
-						$tmpcontent.='<td><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" checked="checked" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></td>';
+						$rs_check=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_check);
+						$shipping_method['checked']=true;
+						if ($rs_check['sort_order']>0) {
+							$shipping_methods_sorted[$rs_check['sort_order']]=$shipping_method;
+						} else {
+							$shipping_methods_sorted[$sort_number]=$shipping_method;
+						}
+						$sort_number++;
 					} else {
-						$tmpcontent.='<td><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></td>';
+						$shipping_method['checked']=false;
+						$shipping_methods_sorted[$unsorted_number]=$shipping_method;
+						$unsorted_number++;
 					}
 				}
-				$tmpcontent.='</tr>';
+				ksort($shipping_methods_sorted);
+				foreach ($shipping_methods_sorted as $shipping_method) {
+					$vars=unserialize($shipping_method['vars']);
+					if ($shipping_method['checked']) {
+						$tmpcontent.='<tr id="shipping_zone_['.$zone_id.']_'.$shipping_method['id'].'" class="row_sortable">';
+						$tmpcontent.='<td><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" checked="checked" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></td>';
+					} else {
+						$tmpcontent.='<tr class="row_unsortable">';
+						$tmpcontent.='<td><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></td>';
+					}
+					$tmpcontent.='</tr>';
+				}
+
+				$tmpcontent.='</table>';
+				$tmpcontent.='</td>';
 			}
+			$tmpcontent.='</tr>';
 			$tmpcontent.='</table>';
-			$tmpcontent.='<input name="param" type="hidden" value="update_mapping" /></form>';
+			$tmpcontent.='<input name="param" type="hidden" value="update_mapping" />';
+			$tmpcontent.='</form>';
 		} else {
-			$tmpcontent.='Currently there isn\'t any shipping methods defined.';
+			$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
 		}
 	} else {
-		$tmpcontent.='Currently there isn\'t any shipping methods defined.';
+		$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
 	}
 	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings'))), 'id'=>'admin_shipping_method_zone_mappings', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping'))), $tmpcontent));
 	// shipping to payment mappings
@@ -819,6 +860,24 @@ jQuery(document).ready(function($) {
 		//axis: "y",
 		update: function(e, ui) {
 			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
+			jQuery(this).sortable("refresh");
+			sorted = jQuery(this).sortable("serialize", "id");
+			jQuery.ajax({
+				type:   "POST",
+				url:    href,
+				data:   sorted,
+				success: function(msg) {
+					//do something with the sorted data
+				}
+			});
+		}
+	});
+	jQuery(".sortable_column").sortable({
+		cursor: "move",
+		//axis: "y",
+		items: "tr.row_sortable",
+		update: function(e, ui) {
+			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=zone_method_sortables').'";
 			jQuery(this).sortable("refresh");
 			sorted = jQuery(this).sortable("serialize", "id");
 			jQuery.ajax({

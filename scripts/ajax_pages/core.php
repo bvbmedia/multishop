@@ -1684,6 +1684,45 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'zone_method_sortables':
+		if ($this->ADMIN_USER) {
+			$key='shipping_zone_';
+			if (is_array($this->post[$key]) and count($this->post[$key])) {
+				$no=1;
+				foreach ($this->post[$key] as $zone_id => $smid) {
+					foreach ($smid as $shipping_id) {
+						if (is_numeric($shipping_id)) {
+							$where="zone_id = '".$zone_id . "' and shipping_method_id = '".$shipping_id."'";
+							$updateArray=array(
+								'sort_order'=>$no
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_to_zones', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$no++;
+						}
+					}
+				}
+			}
+			$key='payment_zone_';
+			if (is_array($this->post[$key]) and count($this->post[$key])) {
+				$no=1;
+				foreach ($this->post[$key] as $zone_id => $pmid) {
+					foreach ($pmid as $payment_id) {
+						if (is_numeric($payment_id)) {
+							$where="zone_id = '".$zone_id . "' and payment_method_id = '".$payment_id."'";
+							$updateArray=array(
+								'sort_order'=>$no
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_payment_methods_to_zones', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$no++;
+						}
+					}
+				}
+			}
+		}
+		exit();
+		break;
 	case 'product':
 		if ($this->ADMIN_USER) {
 			// custom page hook that can be controlled by third-party plugin

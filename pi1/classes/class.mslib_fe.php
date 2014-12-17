@@ -5888,17 +5888,21 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['label']=$this->pi_getLL('admin_payment_methods');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
-
+			/*
+			 * removed from menu, merged into payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_zone_payment_mappings');
-
-			// removed from menu, merged into shipping methods page
-			//$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['label']=$this->pi_getLL('admin_shipping_zone_mapping');
-			//$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_zone_shipping_mappings');
-
+			*/
+			/*
+			 * removed from menu, merged into shipping methods page
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['label']=$this->pi_getLL('admin_shipping_zone_mapping');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_zone_mapping']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_zone_shipping_mappings');
+			*/
+			/*
+			 * removed from menu, merged into shipping/payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['label']=$this->pi_getLL('admin_mappings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_payment_mappings');
-
+			*/
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_costs']['label']=$this->pi_getLL('admin_shipping_costs');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_costs']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_zones']['label']=$this->pi_getLL('admin_zones');
