@@ -55,6 +55,7 @@ class mslib_fe {
 		$this->categoriesStartingPoint=&$ref->categoriesStartingPoint;
 		$this->REMOTE_ADDR=&$ref->REMOTE_ADDR;
 		$this->cookie=&$ref->cookie;
+		$this->msDebugInfo=&$ref->msDebugInfo;
 		$this->initLanguage($ref->LOCAL_LANG);
 	}
 	/**
@@ -6763,6 +6764,10 @@ class mslib_fe {
 			if (!is_array($data['where'])) {
 				$data['where']=array();
 			}
+			if ($data['group_by'] && !is_array($data['group_by'])) {
+				$tmp=$data['group_by'];
+				$data['group_by']=array($tmp);
+			}
 			if (!is_array($data['group_by'])) {
 				$data['group_by']=array();
 			}
@@ -6779,7 +6784,7 @@ class mslib_fe {
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
 				implode(',', $data['from']), // FROM ...
 				implode(' AND ', $data['where']), // WHERE...
-				'', // GROUP BY...
+				implode(',',$data['group_by']), // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
 			);
@@ -6787,8 +6792,12 @@ class mslib_fe {
 				$this->msDebugInfo.=$query."\n\n";
 			}
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			$results['total_rows']=$row['total'];
+			if ($data['group_by']) {
+				$results['total_rows']=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
+			} else {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				$results['total_rows']=$row['total'];
+			}
 			if ($results['total_rows']) {
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $data['select']), // SELECT ...
 					implode(',', $data['from']), // FROM ...
@@ -6800,8 +6809,6 @@ class mslib_fe {
 				if ($this->msDebug) {
 					$this->msDebugInfo.=$query."\n\n";
 				}
-				//echo $query;
-				//die();
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
