@@ -82,7 +82,7 @@ if ($this->post) {
 	}
 }
 $active_shop=mslib_fe::getActiveShop();
-$GLOBALS['TSFE']->additionalHeaderData[]='
+$GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods']='
 <link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
 <link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
@@ -645,33 +645,7 @@ if ($this->ms['show_main']) {
 				</div>
 			</form>
 		</fieldset>';
-	$tmpcontent.='<p class="float_right"><a href="#" id="add_payment_method" class="admin_menu_add label">'.$this->pi_getLL('add_payment_method').'</a></p>
-	';
-	$tmpcontent.='
-	<script type="text/javascript">
-	jQuery(document).ready(function($) {
-		// sortables
-		var result2	= jQuery("#admin_modules_listing tbody.sortable_content").sortable({
-				cursor:     "move",
-			//axis:       "y",
-			update: function(e, ui) {
-				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
-				jQuery(this).sortable("refresh");
-				sorted = jQuery(this).sortable("serialize", "id");
-				jQuery.ajax({
-						type:   "POST",
-						url:    href,
-						data:   sorted,
-						success: function(msg) {
-								//do something with the sorted data
-						}
-				});
-			}
-		});
-		// sortables eof
-	});
-	</script>
-	';
+	$tmpcontent.='<p class="float_right"><a href="#" id="add_payment_method" class="admin_menu_add label">'.$this->pi_getLL('add_payment_method').'</a></p>';
 	$tmpcontent.='<div id="flexible_container"><ul id="admin_payment_methods_list" class="hide">';
 	$innercount=0;
 	$count=0;
@@ -703,10 +677,119 @@ if ($this->ms['show_main']) {
 		}
 	}
 	$tmpcontent.='</ul></div>';
-	$content.=mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))), $tmpcontent);
+	//tabs array
+	$tabs=array();
+	// shipping methods tab
+	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))), 'id'=>'admin_payment_methods', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))), $tmpcontent));
+	// payment methods to zone mappings
 	$tmpcontent='';
+	$shipping_methods=mslib_fe::loadShippingMethods();
+	$payment_methods=mslib_fe::loadPaymentMethods();
+	$zones=mslib_fe::loadAllCountriesZones();
+	if (count($zones['zone_id'])) {
+		$colspan=4;
+		$tr_type='even';
+		if (count($payment_methods)) {
+			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+			$tmpcontent.='<tr>';
+			$tmpcontent.='<th width="100px">Zones</th>';
+			$tmpcontent.='<th colspan="'.count($payment_methods).'">Payments</th>';
+			$tmpcontent.='</tr>';
+			foreach ($zones['zone_id'] as $zone_idx=>$zone_id) {
+				$tmpcontent.='<tr>';
+				$tmpcontent.='<td>'.$zones['zone_name'][$zone_idx].' ('.implode('<br/> ', $zones['countries'][$zone_id]).')</td>';
+				foreach ($payment_methods as $payment_method) {
+					$vars=unserialize($payment_method['vars']);
+					$sql_check="select id from tx_multishop_payment_methods_to_zones where zone_id = ".$zone_id." and payment_method_id = ".$payment_method['id'];
+					$qry_check=$GLOBALS['TYPO3_DB']->sql_query($sql_check);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_check)) {
+						$tmpcontent.='<td><input type="checkbox" name="payment_zone['.$zone_id.']['.$payment_method['id'].']" id="payment_zone_'.$zone_id.'_'.$payment_method['id'].'" checked="checked" onclick="this.form.submit()"><label for="payment_zone_'.$zone_id.'_'.$payment_method['id'].'">'.$vars['name'][0].'</label></td>';
+					} else {
+						$tmpcontent.='<td><input type="checkbox" name="payment_zone['.$zone_id.']['.$payment_method['id'].']" id="payment_zone_'.$zone_id.'_'.$payment_method['id'].'" onclick="this.form.submit()"><label for="payment_zone_'.$zone_id.'_'.$payment_method['id'].'">'.$vars['name'][0].'</label></td>';
+					}
+				}
+				$tmpcontent.='</tr>';
+			}
+			$tmpcontent.='</table>';
+			$tmpcontent.='<input name="param" type="hidden" value="update_mapping" /></form>';
+		} else {
+			$tmpcontent.='Currently there isn\'t any shipping methods defined.';
+		}
+	} else {
+		$tmpcontent.='Currently there isn\'t any payment methods defined.';
+	}
+	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_zone_mapping'))), 'id'=>'payment_to_zone_mapping', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_zone_mapping'))), $tmpcontent));
+
+	// render the tabs
+	$tab_button='';
+	$tab_content='';
+	foreach ($tabs as $tab) {
+		$tab_button.='<li><a href="#'.$tab['id'].'">'.$tab['label'].'</a></li>';
+		$tab_content.='<div style="display: block;" id="'.$tab['id'].'" class="tab_content">';
+		$tab_content.=$tab['content'];
+		$tab_content.='</div>';
+	}
+	$tabs_element='<div id="tab-container">';
+	$tabs_element.='<ul class="tabs" id="admin_orders">';
+	$tabs_element.=$tab_button;
+	$tabs_element.='</ul>';
+	$tabs_element.='<div class="tab_container">';
+	$tabs_element.=$tab_content;
+	$tabs_element.='</div>';
+	$tabs_element.='</div>'; // parent #tab_container
+	// flush to render variable
+	$content=$tabs_element;
 	// payment method admin system eof
 }
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods']='
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	// sortables
+	var result2	= jQuery("#admin_modules_listing tbody.sortable_content").sortable({
+		cursor: "move",
+		//axis: "y",
+		update: function(e, ui) {
+			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
+			jQuery(this).sortable("refresh");
+			sorted = jQuery(this).sortable("serialize", "id");
+			jQuery.ajax({
+				type:   "POST",
+				url:    href,
+				data:   sorted,
+				success: function(msg) {
+						//do something with the sorted data
+				}
+			});
+		}
+	});
+	// sortables eof
+	// tabs js
+	$(".tab_content").hide();
+    $("ul.tabs li:first").addClass("active").show();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function () {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
+        $(".tab_content").hide();
+        var activeTab = $(this).find("a").attr("href");
+        $(activeTab).fadeIn(0);
+        return false;
+    });
+    // auto activate the tabs based on hash
+    var lochash=window.location.hash;
+	if (lochash!=\'\') {
+		var li_this = $("ul > li").find("a[href=\'" + lochash + "\']").parent();
+		if (li_this.length > 0) {
+			$("ul.tabs li").removeClass("active");
+			$(li_this).addClass("active");
+			$(".tab_content").hide();
+			$(lochash).fadeIn(0);
+		}
+	}
+});
+</script>
+';
 ?>
