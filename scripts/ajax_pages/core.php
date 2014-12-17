@@ -40,7 +40,7 @@ switch ($this->ms['page']) {
 	case 'get_shoppingcart_shippingmethod_overview':
 		$return_data=array();
 		$country_cn_iso_nr=$this->post['tx_multishop_pi1']['country_id'];
-		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true);
+		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
 		$return_data['shipping_methods']=array();
 		foreach ($shipping_methods as $shipping_method) {
 			$return_data['shipping_methods'][]=$shipping_method;

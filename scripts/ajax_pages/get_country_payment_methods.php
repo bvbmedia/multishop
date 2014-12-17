@@ -61,7 +61,7 @@ foreach ($load_mappings_order as $mapping) {
 if (!count($payment_methods)) {
 	// nothing is loaded. this cant be valid so let's load the default methods.
 	// load payment method based on store origin country
-	$payment_methods=mslib_fe::loadPaymentMethods(0, $countries_id, true);
+	$payment_methods=mslib_fe::loadPaymentMethods(0, $countries_id, true, true);
 }
 $data=array();
 $k=0;
