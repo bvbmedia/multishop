@@ -292,6 +292,9 @@ if ($this->get['invoices_export_hash']) {
 					case 'invoice_reversal_related_id':
 						$excelCols[]=$row['reversal_related_id'];
 						break;
+					case 'order_total_vat':
+						$excelCols[]=number_format($order_tax_data['total_orders_tax'], 2, ',', '.');
+						break;
 				}
 			}
 			// new rows
