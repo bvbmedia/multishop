@@ -2095,7 +2095,7 @@ if ($this->post['action']=='category-insert') {
 								$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
 								if (is_array($record) && $record['products_id']) {
 									$updateArray['page_uid']=$this->showCatalogFromPage;
-									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$language_id, $updateArray);
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\') and language_id='.$language_id, $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								} else {
 									$updateArray['products_id']=$item['updated_products_id'];
@@ -2122,7 +2122,7 @@ if ($this->post['action']=='category-insert') {
 										$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
 										if ($record['products_id']) {
 											$updateArray['page_uid']=$this->showCatalogFromPage;
-											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND page_uid=\''.$this->showCatalogFromPage.'\' and language_id='.$langKey, $updateArray2);
+											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\') and language_id='.$langKey, $updateArray2);
 											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 										} else {
 											// add new record
@@ -2912,7 +2912,7 @@ if ($this->post['action']!='product-import-preview') {
 				if ($data[1]['filename']) {
 					$file_location=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$data[1]['filename'];
 					if (file_exists($file_location)) {
-						$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
+						$schedule_content.='<a href="uploads/tx_multishop/tmp/'.$data[1]['filename'].'"><span class="admin_status_green" alt="Enable"></span></a>';
 					} else {
 						$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
 					}
