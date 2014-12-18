@@ -178,6 +178,11 @@ class tx_mslib_admin_interface extends tslib_pibase {
 		} else {
 			$queryData['from']=$params['query']['from'];
 		}
+		if (is_array($params['query']['group_by'])) {
+			$queryData['group_by']=implode(',', $params['query']['group_by']);
+		} elseif($params['query']['group_by']) {
+			$queryData['group_by'][]=$params['query']['group_by'];
+		}
 		$queryData['order_by']=$orderby;
 		$queryData['limit']=$that->ms['MODULES']['PAGESET_LIMIT'];
 		if (is_numeric($that->get['p'])) {
@@ -215,7 +220,9 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			<th>'.$that->pi_getLL('admin_action').'</th>
 			</tr>';
 			$summarize=array();
+			$recordCounter=0;
 			foreach ($pageset['dataset'] as $row) {
+				$recordCounter++;
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
 				} else {
@@ -225,6 +232,9 @@ class tx_mslib_admin_interface extends tslib_pibase {
 				foreach ($params['tableColumns'] as $col=>$valArray) {
 					$originalValue=$row[$col];
 					switch ($valArray['valueType']) {
+						case 'recordCounter':
+							$row[$col]=$recordCounter;
+							break;
 						case 'download_invoice':
 							$row[$col]='<a href="uploads/tx_multishopexactonline/'.$row[$col].'" target="_blank">'.$row[$col].'</a>';
 							break;

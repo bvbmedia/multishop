@@ -31,7 +31,7 @@ if (count($products)<0) {
 				if ($customer['company']) {
 					$itemTitle=$customer['company'];
 				}
-				if ($customer['name'] && $customer['name'] !=$customer['company']) {
+				if (!$itemTitle && ($customer['name'] && $customer['name'] !=$customer['company'])) {
 					$itemTitle=$customer['name'];
 				}
 				$itemArray=array();
