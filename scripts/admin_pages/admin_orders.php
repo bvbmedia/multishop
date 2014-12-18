@@ -373,7 +373,8 @@ $option_search=array(
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-	"payment_method"=>$this->pi_getLL('admin_payment_method')
+	"payment_method"=>$this->pi_getLL('admin_payment_method'),
+	"order_products"=>$this->pi_getLL('admin_order_products'),
 );
 asort($option_search);
 $type_search=$this->post['type_search'];
@@ -453,13 +454,21 @@ if ($this->post['skeyword']) {
 			//print_r($option_fields);
 			$items=array();
 			foreach ($option_fields as $fields=>$label) {
-				$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
+				if ($fields=='orders_id') {
+					$items[]="o.".$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
+				} else if ($fields=='order_products') {
+					$items[]="(op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
+				} else {
+					$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
+				}
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
 			$filter[]=implode(" or ", $items);
+			$from[]=' tx_multishop_orders_products op';
+			$where[]=' o.orders_id=op.orders_id';
 			break;
 		case 'orders_id':
-			$filter[]=" orders_id='".addslashes($this->post['skeyword'])."'";
+			$filter[]=" o.orders_id='".addslashes($this->post['skeyword'])."'";
 			break;
 		case 'invoice':
 			$filter[]=" invoice_id LIKE '%".addslashes($this->post['skeyword'])."%'";
@@ -490,6 +499,11 @@ if ($this->post['skeyword']) {
 			break;
 		case 'customer_id':
 			$filter[]=" customer_id='".addslashes($this->post['skeyword'])."'";
+			break;
+		case 'order_products':
+			$filter[]=" (op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
+			$from[]=' tx_multishop_orders_products op';
+			$where[]=' o.orders_id=op.orders_id';
 			break;
 	}
 }

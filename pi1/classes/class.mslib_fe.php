@@ -6975,7 +6975,7 @@ class mslib_fe {
 		}
 		$where_clause=' where o.deleted=0';
 		if (count($where)>0) {
-			$where_clause.='and ';
+			$where_clause.=' and ';
 			$where_clause.=implode($where, ',');
 		}
 		if (is_array($filter) and count($filter)>0) {

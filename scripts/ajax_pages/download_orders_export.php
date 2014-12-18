@@ -255,6 +255,9 @@ if ($this->get['orders_export_hash']) {
 							}
 						}
 						break;
+					case 'order_total_vat':
+						$excelCols[]=number_format($order_tax_data['total_orders_tax'], 2, ',', '.');
+						break;
 				}
 			}
 			// new rows

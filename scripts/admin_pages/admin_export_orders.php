@@ -2,6 +2,69 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if (isset($this->get['download']) && $this->get['download']=='export_orders_task' && is_numeric($this->get['orders_export_id'])) {
+	$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+		'tx_multishop_orders_export ', // FROM ...
+		'id= \''.$this->get['orders_export_id'].'\'', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+		$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		$serial_value=array();
+		foreach ($data as $key_idx=>$key_val) {
+			if ($key_idx!='id' && $key_idx!='page_uid') {
+				$serial_value[$key_idx]=$key_val;
+			}
+		}
+		$serial_data='';
+		if (count($serial_value)>0) {
+			$serial_data=serialize($serial_value);
+		}
+		$filename='multishop_export_order_record_'.date('YmdHis').'.txt';
+		$filepath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$filename;
+		file_put_contents($filepath, $serial_data);
+		header("Content-disposition: attachment; filename={$filename}"); //Tell the filename to the browser
+		header('Content-type: application/octet-stream'); //Stream as a binary file! So it would force browser to download
+		readfile($filepath); //Read and stream the file
+		@unlink($filepath);
+		exit();
+	}
+}
+if (isset($this->get['upload']) && $this->get['upload']=='export_orders_task' && $_FILES) {
+	if (!$_FILES['export_orders_record_file']['error']) {
+		$filename=$_FILES['export_orders_record_file']['name'];
+		$target=$this->DOCUMENT_ROOT.'/uploads/tx_multishop'.$filename;
+		if (move_uploaded_file($_FILES['export_orders_record_file']['tmp_name'], $target)) {
+			$task_content=file_get_contents($target);
+			$unserial_task_data=unserialize($task_content);
+			$insertArray=array();
+			$insertArray['page_uid']=$this->showCatalogFromPage;
+			foreach ($unserial_task_data as $col_name=>$col_val) {
+				if ($col_name=='code') {
+					$insertArray[$col_name]=md5(uniqid());
+				} else if ($col_name=='name' && isset($this->post['new_name']) && !empty($this->post['new_name'])) {
+					$insertArray[$col_name]=$this->post['new_name'];
+				} else if ($col_name=='crdate') {
+					$insertArray[$col_name]=time();
+				} else {
+					$insertArray[$col_name]=$col_val;
+				}
+			}
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_export', $insertArray);
+
+
+
+
+
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			@unlink($target);
+		}
+	}
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_export_orders'));
+}
 // defining the types
 $array=array();
 $array['orders_id']=$this->pi_getLL('feed_exporter_fields_label_orders_id');
@@ -33,6 +96,7 @@ $array['payment_cost_excl_vat']=$this->pi_getLL('feed_exporter_fields_label_paym
 $array['payment_cost_incl_vat']=$this->pi_getLL('feed_exporter_fields_label_payment_costs_incl_vat');
 $array['payment_cost_vat_rate']=$this->pi_getLL('feed_exporter_fields_label_payment_costs_tax_rate');
 $array['order_products']=$this->pi_getLL('feed_exporter_fields_label_order_products');
+$array['order_total_vat']=$this->pi_getLL('feed_exporter_fields_label_order_total_vat');
 /*
 $array['products_id']='Products id';
 $array['products_name']='Products name';
@@ -354,6 +418,7 @@ if ($this->ms['show_main']) {
 			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>
+			<th width="100">'.htmlspecialchars($this->pi_getLL('download_export_record')).'</th>
 		</tr>
 		';
 		foreach ($orders as $order) {
@@ -390,16 +455,30 @@ if ($this->ms['show_main']) {
 			</td>
 			<td width="50">
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&section=edit').'" class="admin_menu_edit">edit</a>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';
+				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&delete=1').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="Remove"></a>';
 			$content.='
 			</td>
-			</tr>
-			';
+			<td>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=export_orders_task&orders_export_id='.$order['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_export_record').'</i></a>
+			</td>
+			</tr>';
 		}
 		$content.='</table>';
 	} else {
 		$content.='<h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_orders_export_created')).'</h3>';
 	}
+	$content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_export_record').'</legend>
+		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_export_orders&upload=export_orders_task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+			<div class="account-field">
+				<label for="new_name">'.$this->pi_getLL('name').'</label>
+				<input name="new_name" type="text" value="" />
+			</div>
+			<div class="account-field">
+				<label for="upload_export_orders_file">'.$this->pi_getLL('file').'</label>
+				<input type="file" name="export_orders_record_file">&nbsp;<input type="submit" name="upload_export_orders_file" class="submit msadmin_button" id="upload_export_orders_file" value="upload">
+			</div>
+		</form>
+	</fieldset>';
 	$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="msBackendButton continueState arrowRight arrowPosLeft float_right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a>';
 }
 ?>

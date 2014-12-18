@@ -1159,6 +1159,10 @@
             <label index="your_payment_has_been_cancelled">Your payment has been cancelled</label>
             <label index="admin_label_currently_no_payment_method_defined">Currently there isn't any payment method defined.</label>
             <label index="payment_to_shipping_mapping">Payment to shipping mappings</label>
+            <label index="download_export_record">Download export record</label>
+            <label index="import_export_record">Upload export record</label>
+            <label index="feed_exporter_fields_label_order_total_vat">Order total VAT</label>
+            <label index="admin_order_products">Order products</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
