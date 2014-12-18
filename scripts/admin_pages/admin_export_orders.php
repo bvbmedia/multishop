@@ -418,7 +418,7 @@ if ($this->ms['show_main']) {
 			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('download_export_record')).'</th>
+			<th width="100">'.htmlspecialchars($this->pi_getLL('download_export_record')).'</th>
 		</tr>
 		';
 		foreach ($orders as $order) {
