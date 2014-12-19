@@ -1166,6 +1166,7 @@
             <label index="create_invoice_for_selected_orders">Create invoice for selected orders</label>
             <label index="admin_label_manufacturers_advice_price">Manufacturers advice price</label>
             <label index="payment_condition">Payment condition</label>
+            <label index="feed_exporter_fields_label_manufacturers_advice_price">Manufacturers advice price</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -2189,7 +2190,6 @@
             <label index="admin_order_products">Order products</label>
             <label index="create_invoice_for_selected_orders">Factuur aanmaken voor geselecteerde bestellingen</label>
             <label index="admin_label_manufacturers_advice_price">Leverancier adviesprijs</label>
-            <label index="payment_condition">Betaalconditie</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
