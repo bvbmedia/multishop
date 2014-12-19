@@ -7014,6 +7014,8 @@ class mslib_fe {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		$array['total_rows']=$row['total'];
 		$str=$select_clause.$from_clause.$where_clause.$having_clause.$orderby_clause.$limit_clause;
+		//echo $str;
+		//die();
 //		error_log($str);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);

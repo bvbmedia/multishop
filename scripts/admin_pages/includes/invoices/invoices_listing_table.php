@@ -19,6 +19,7 @@ $headercol.='
 <th>'.$this->pi_getLL('customers').'</th>
 <th width="50">'.$this->pi_getLL('order_date').'</th>
 <th width="50">'.$this->pi_getLL('payment_method').'</th>
+<th width="50">'.$this->pi_getLL('payment_condition').'</th>
 <th width="50">'.$this->pi_getLL('amount').'</th>
 <th width="50">'.$this->pi_getLL('admin_paid').'</th>
 ';
@@ -49,7 +50,8 @@ foreach ($invoices as $invoice) {
 	$tmp.='<td align="left" nowrap>'.mslib_fe::getShopNameByPageUid($invoice['page_uid']).'</td>';
 	$tmp.='<td align="left" nowrap><a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank">'.$link_name.'</a></td>';
 	$tmp.='<td align="right" nowrap>'.strftime("%x", $invoice['crdate']).'</td>';
-	$tmp.='<td align="right" nowrap>'.strftime("%x", $invoice['payment_method_label']).'</td>';
+	$tmp.='<td align="right" nowrap>'.$invoice['payment_method_label'].'</td>';
+	$tmp.='<td align="right" nowrap>'.$invoice['payment_condition'].'</td>';
 	$tmp.='<td align="right" nowrap>'.mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['amount'], 0).'</td>';
 	$tmp.='<td align="center" nowrap>';
 	if (!$invoice['paid']) {

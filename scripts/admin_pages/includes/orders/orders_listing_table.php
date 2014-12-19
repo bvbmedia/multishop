@@ -29,6 +29,7 @@ foreach ($tmporders as $order) {
 	} else {
 		$tr_type='even';
 	}
+	$master_shop_col='';
 	if ($this->masterShop) {
 		$master_shop_col='<td align="left" nowrap>'.mslib_fe::getShopNameByPageUid($order['page_uid']).'</td>';
 	}

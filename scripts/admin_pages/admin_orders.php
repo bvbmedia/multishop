@@ -464,18 +464,21 @@ if ($this->post['skeyword']) {
 			//print_r($option_fields);
 			$items=array();
 			foreach ($option_fields as $fields=>$label) {
-				if ($fields=='orders_id') {
-					$items[]="o.".$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
-				} else if ($fields=='order_products') {
-					$items[]="(op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
-				} else {
-					$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
+				switch($fields) {
+					case 'orders_id':
+						$items[]="o.".$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
+						break;
+					case 'order_products':
+						//$items[]="(op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
+						$items[]=" orders_id IN (SELECT op.orders_id from tx_multishop_orders_products op where op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
+						break;
+					default:
+						$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
+						break;
 				}
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
 			$filter[]=implode(" or ", $items);
-			$from[]=' tx_multishop_orders_products op';
-			$where[]=' o.orders_id=op.orders_id';
 			break;
 		case 'orders_id':
 			$filter[]=" o.orders_id='".addslashes($this->post['skeyword'])."'";
@@ -511,9 +514,12 @@ if ($this->post['skeyword']) {
 			$filter[]=" customer_id='".addslashes($this->post['skeyword'])."'";
 			break;
 		case 'order_products':
+			$filter[]=" orders_id IN (SELECT op.orders_id from tx_multishop_orders_products op where op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
+			/*
 			$filter[]=" (op.products_name LIKE '%".addslashes($this->post['skeyword'])."%' or op.products_description LIKE '%".addslashes($this->post['skeyword'])."%')";
 			$from[]=' tx_multishop_orders_products op';
 			$where[]=' o.orders_id=op.orders_id';
+			*/
 			break;
 	}
 }
