@@ -1163,7 +1163,7 @@
             <label index="import_export_record">Upload export record</label>
             <label index="feed_exporter_fields_label_order_total_vat">Order total VAT</label>
             <label index="admin_order_products">Order products</label>
-            <label index="create_invoice_for_selected_orders">Create invoice for selectedorders</label>
+            <label index="create_invoice_for_selected_orders">Create invoice for selected orders</label>
             <label index="admin_label_manufacturers_advice_price">Manufacturers advice price</label>
         </languageKey>
         <languageKey index="nl" type="array">
@@ -2174,6 +2174,20 @@
             <label index="countries">Landen</label>
             <label index="buy">Kopen</label>
             <label index="view">Bekijken</label>
+            <label index="select_members">Selecteer leden</label>
+            <label index="please_select_your_gender">Selecteer begroeting</label>
+            <label index="your_payment_is_pending">Je betaling is lopende</label>
+            <label index="your_payment_is_declined">Je betaling is geweigerd</label>
+            <label index="your_payment_is_failed_">Je betaling is mislukt</label>
+            <label index="your_payment_has_been_cancelled">Je betaling is geannuleerd</label>
+            <label index="admin_label_currently_no_payment_method_defined">Op dit moment zijn er geen betaalmethodees ingesteld.</label>
+            <label index="payment_to_shipping_mapping">Betaal- naar aflevermethode koppelingen</label>
+            <label index="download_export_record">Download export record</label>
+            <label index="import_export_record">Upload export record</label>
+            <label index="feed_exporter_fields_label_order_total_vat">Order totaal BTW</label>
+            <label index="admin_order_products">Order products</label>
+            <label index="create_invoice_for_selected_orders">Factuur aanmaken voor geselecteerde bestellingen</label>
+            <label index="admin_label_manufacturers_advice_price">Leverancier adviesprijs</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>
