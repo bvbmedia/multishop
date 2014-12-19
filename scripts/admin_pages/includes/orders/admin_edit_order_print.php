@@ -92,7 +92,7 @@ if (is_numeric($this->get['orders_id'])) {
 							'.$order['billing_name'].'<br />
 							'.$order['billing_address'].'<br />
 							'.$order['billing_zip'].' '.$order['billing_city'].'<br />
-							'.$order['billing_country'].'<br /><br />
+							'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br /><br />
 							'.$order['billing_email'].'<br />
 							'.$order['billing_telephone'].'<BR />
 							'.$order['billing_mobile'].'<BR />
@@ -110,7 +110,7 @@ if (is_numeric($this->get['orders_id'])) {
 							'.$order['delivery_name'].'<br />
 							'.$order['delivery_address'].'<br />
 							'.$order['delivery_zip'].' '.$order['delivery_city'].'<br />
-							'.$order['delivery_country'].'<br /><br />
+							'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']).'<br /><br />
 							'.$order['delivery_email'].'<br />
 							'.$order['delivery_telephone'].'<BR />
 							'.$order['delivery_mobile'].'<BR />
