@@ -116,6 +116,9 @@ if ($this->get['feed_hash']) {
 						case 'products_url':
 							$tmpcontent.='link';
 							break;
+						case 'manufacturers_advice_price':
+							$tmpcontent.='manufacturers advice price';
+							break;
 						default:
 							// if key name is attribute option, print the option name. else print key name
 							if ($attributes[$field]) {
@@ -242,7 +245,7 @@ if ($this->get['feed_hash']) {
 					}
 					if ($oldsearch) {
 						if ($this->ms['MODULES']['REGULAR_SEARCH_MODE']=='%keyword') {
-							// do normal indexed search					
+							// do normal indexed search
 							if ($this->ms['MODULES']['SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION']) {
 								$filter[]="(".$tbl."products_name like '%".addslashes($this->get['skeyword'])."' or ".$tbl."products_description like '%".addslashes($this->get['skeyword'])."%' ".$extra_columns.")";
 							} else {
@@ -298,7 +301,7 @@ if ($this->get['feed_hash']) {
 						if ($string) {
 							$filter[]=$string;
 						}
-						// 
+						//
 					} else {
 						$cats=mslib_fe::get_subcategory_ids($parent_id);
 						$cats[]=$parent_id;
@@ -639,6 +642,9 @@ if ($this->get['feed_hash']) {
 						break;
 					case 'products_weight':
 						$tmpcontent.=$row['products_weight'];
+						break;
+					case 'manufacturers_advice_price':
+						$tmpcontent.=$row['manufacturers_advice_price'];
 						break;
 					case 'custom_field':
 						$tmpcontent.=$fields_values[$counter];

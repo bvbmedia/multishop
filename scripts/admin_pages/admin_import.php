@@ -129,7 +129,9 @@ $coltypes['products_specials_section']='Specials section';
 $coltypes['products_order_unit_code']='Products order unit code';
 $coltypes['products_order_unit_id']='Products order unit id';
 $coltypes['alert_quantity_threshold']='Alert minimum stock quantity threshold';
-
+if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
+	$coltypes['manufacturers_advice_price']='Manufacturers advice price';
+}
 for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
 	$x2=$x;
 	if ($x2==0) {
@@ -1909,6 +1911,9 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['alert_quantity_threshold'])) {
 								$updateArray['alert_quantity_threshold']=$item['alert_quantity_threshold'];
 							}
+							if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT'] && isset($item['manufacturers_advice_price'])) {
+								$updateArray['manufacturers_advice_price']=$item['manufacturers_advice_price'];
+							}
 							if (isset($item['products_capital_price'])) {
 								$updateArray['product_capital_price']=$item['products_capital_price'];
 							}
@@ -2307,6 +2312,9 @@ if ($this->post['action']=='category-insert') {
 							}
 							if (isset($item['alert_quantity_threshold'])) {
 								$updateArray['alert_quantity_threshold']=$item['alert_quantity_threshold'];
+							}
+							if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT'] && isset($item['manufacturers_advice_price'])) {
+								$updateArray['manufacturers_advice_price']=$item['manufacturers_advice_price'];
 							}
 							if ($item['products_capital_price']) {
 								$updateArray['product_capital_price']=$item['products_capital_price'];
