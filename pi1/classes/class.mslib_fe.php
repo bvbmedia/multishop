@@ -4687,20 +4687,22 @@ class mslib_fe {
 		);
 		$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 		$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
-		if ($countries_id>0) {
-			$tax_ruleset=self::taxRuleSet($row3['tax_id'], 0, $countries_id, 0);
-		} else {
-			$tax_ruleset=self::getTaxRuleSet($row3['tax_id'], 0);
-		}
-		$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-		$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-		$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-		if ($filter) {
-			if ($row3['enable_on_default']>0) {
+		if (is_array($row3)) {
+			if ($countries_id>0) {
+				$tax_ruleset=self::taxRuleSet($row3['tax_id'], 0, $countries_id, 0);
+			} else {
+				$tax_ruleset=self::getTaxRuleSet($row3['tax_id'], 0);
+			}
+			$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+			$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+			$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+			if ($filter) {
+				if ($row3['enable_on_default']>0) {
+					return $row3;
+				}
+			} else {
 				return $row3;
 			}
-		} else {
-			return $row3;
 		}
 	}
 	public function getPaymentMethod($string, $key='p.id', $countries_id=0, $filter=false,$sys_language_uid='') {
@@ -4717,20 +4719,22 @@ class mslib_fe {
 			);
 			$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 			$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
-			if ($countries_id>0) {
-				$tax_ruleset=self::taxRuleSet($row3['tax_id'], 0, $countries_id, 0);
-			} else {
-				$tax_ruleset=self::getTaxRuleSet($row3['tax_id'], 0);
-			}
-			$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-			$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-			$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-			if ($filter) {
-				if ($row3['enable_on_default']>0) {
+			if (is_array($row3)) {
+				if ($countries_id>0) {
+					$tax_ruleset=self::taxRuleSet($row3['tax_id'], 0, $countries_id, 0);
+				} else {
+					$tax_ruleset=self::getTaxRuleSet($row3['tax_id'], 0);
+				}
+				$row3['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+				$row3['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+				$row3['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+				if ($filter) {
+					if ($row3['enable_on_default']>0) {
+						return $row3;
+					}
+				} else {
 					return $row3;
 				}
-			} else {
-				return $row3;
 			}
 		}
 	}
