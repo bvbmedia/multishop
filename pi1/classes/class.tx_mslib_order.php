@@ -710,6 +710,7 @@ class tx_mslib_order extends tslib_pibase {
 			$insertArray['payment_method_label']=$address['payment_method_label'];
 			$insertArray['shipping_method_costs']=$address['shipping_method_costs'];
 			$insertArray['payment_method_costs']=$address['payment_method_costs'];
+			$insertArray['payment_condition']=$address['payment_condition'];
 			// TYPO3 6.2 NULL VALUE BUGFIX
 			if (!$insertArray['customer_comments']) {
 				$insertArray['customer_comments']='';
