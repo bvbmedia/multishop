@@ -162,15 +162,15 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-	$str="select payment_due_period from tx_multishop_orders";
+	$str="select payment_condition from tx_multishop_orders";
 	if (!$qry=$GLOBALS['TYPO3_DB']->sql_query($str)) {
-		$str="ALTER TABLE `tx_multishop_orders` ADD `payment_due_period` varchar(50) NULL DEFAULT '', ADD INDEX (`payment_due_period`);";
+		$str="ALTER TABLE `tx_multishop_orders` ADD `payment_condition` varchar(50) NULL DEFAULT '', ADD INDEX (`payment_condition`);";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-	$str="select tx_multishop_payment_due_period from fe_users";
+	$str="select tx_multishop_payment_condition from fe_users";
 	if (!$qry=$GLOBALS['TYPO3_DB']->sql_query($str)) {
-		$str="ALTER TABLE `fe_users` ADD `tx_multishop_payment_due_period` varchar(50) NULL DEFAULT '', ADD INDEX (`tx_multishop_payment_due_period`);";
+		$str="ALTER TABLE `fe_users` ADD `tx_multishop_payment_condition` varchar(50) NULL DEFAULT '', ADD INDEX (`tx_multishop_payment_condition`);";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
