@@ -6520,6 +6520,7 @@ class mslib_fe {
 					$insertArray['hash']=$hash;
 					$insertArray['amount']=mslib_fe::getOrderTotalPrice($orders_id);
 					$insertArray['discount']=$order['discount'];
+					$insertArray['payment_condition']=$order['payment_condition'];
 					if ($order['billing_company']) {
 						$name=$order['billing_company'];
 					} else {
@@ -7038,10 +7039,11 @@ class mslib_fe {
 		}
 		// do normal search (join the seperate tables)
 		$select_clause='SELECT ';
+		$select[]='i.crdate,i.paid';
 		if (count($select)>0) {
 			$select_clause.=implode(',', $select);
 		}
-		$from_clause=',i.crdate,i.paid from tx_multishop_invoices i left join tx_multishop_orders o on o.orders_id=i.orders_id';
+		$from_clause=' from tx_multishop_invoices i left join tx_multishop_orders o on o.orders_id=i.orders_id';
 		if (count($from)>0) {
 			$from_clause.=', ';
 			$from_clause.=implode(',', $from);
@@ -7079,6 +7081,7 @@ class mslib_fe {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		$array['total_rows']=$row['total'];
 		$str=$select_clause.$from_clause.$where_clause.$having_clause.$orderby_clause.$limit_clause;
+
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($rows>0) {

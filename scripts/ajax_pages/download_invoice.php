@@ -44,16 +44,16 @@ if ($invoice['orders_id']) {
 			$markerArray['###INVOICE_FOOTER_BACKGROUND_IMAGE###']='';
 		}
 		$markerArray['###LABEL_INVOICE_HEADER###']=$this->pi_getLL('invoice');
-		if (!empty($order['delivery_company'])) {
-			$markerArray['###DELIVERY_COMPANY###']='<strong>'.$order['delivery_company'].'</strong><br/>';
+		if (!empty($order['billing_company'])) {
+			$markerArray['###BILLING_COMPANY###']='<strong>'.$order['billing_company'].'</strong><br/>';
 		} else {
-			$markerArray['###DELIVERY_COMPANY###']='';
+			$markerArray['###BILLING_COMPANY###']='';
 		}
-		$markerArray['###DELIVERY_NAME###']=$order['delivery_name'];
-		$markerArray['###DELIVERY_ADDRESS###']=$order['delivery_address'];
-		$markerArray['###DELIVERY_ZIP###']=$order['delivery_zip'];
-		$markerArray['###DELIVERY_CITY###']=$order['delivery_city'];
-		$markerArray['###DELIVERY_COUNTRY###']=ucfirst($order['delivery_country']);
+		$markerArray['###BILLING_NAME###']=$order['billing_name'];
+		$markerArray['###BILLING_ADDRESS###']=$order['billing_address'];
+		$markerArray['###BILLING_ZIP###']=$order['billing_zip'];
+		$markerArray['###BILLING_CITY###']=$order['billing_city'];
+		$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
 		$markerArray['###LABEL_CUSTOMER_ID###']=$this->pi_getLL('admin_customer_id');
 		$markerArray['###CUSTOMER_ID###']=$order['customer_id'];
 		$markerArray['###LABEL_ORDER_ID###']=$this->pi_getLL('orders_id');
