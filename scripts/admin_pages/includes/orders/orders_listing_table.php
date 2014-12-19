@@ -131,6 +131,8 @@ $actions['mail_selected_orders_to_customer']=$this->pi_getLL('mail_selected_orde
 $actions['mail_selected_orders_to_merchant']=$this->pi_getLL('mail_selected_orders_to_merchant', 'Mail selected orders to merchant');
 $actions['export_selected_order_to_xls']=$this->pi_getLL('export_selected_order_to_xls', 'Export selected orders to Excel');
 $actions['mail_selected_orders_for_payment_reminder']=$this->pi_getLL('mail_selected_orders_for_payment_reminder', 'Mail selected orders for payment reminder');
+$actions['create_invoice_for_selected_orders']=$this->pi_getLL('create_invoice_for_selected_orders', 'Create invoice for selected orders');
+
 // extra action
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionSelectboxProc'])) {
 	$params=array('actions'=>&$actions);
