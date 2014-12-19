@@ -360,6 +360,14 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	// add manufacturers_advice_price columns to products tabel
+	$str="select manufacturers_advice_price from tx_multishop_products limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_products` ADD `manufacturers_advice_price` decimal(24,14) NOT NULL DEFAULT '0.00000000000000', ADD INDEX (`manufacturers_advice_price`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

@@ -1163,6 +1163,7 @@
             <label index="import_export_record">Upload export record</label>
             <label index="feed_exporter_fields_label_order_total_vat">Order total VAT</label>
             <label index="admin_order_products">Order products</label>
+            <label index="admin_label_manufacturers_advice_price">Manufacturers advice price</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

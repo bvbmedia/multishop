@@ -813,6 +813,8 @@ CREATE TABLE `tx_multishop_products` (
   `starttime` int(11) default '0',
   `endtime` int(11) default '0',
   `specials_price_percentage` varchar(4) default '0',
+  `manufacturers_advice_price` decimal(24,14) default '0.00000000000000',
+  `manufacturers_advertise_price` decimal(24,14) default '0.00000000000000',
   PRIMARY KEY (`products_id`),
   KEY `products_price` (`products_price`),
   KEY `products_model` (`products_model`),
@@ -840,7 +842,8 @@ CREATE TABLE `tx_multishop_products` (
   KEY `products_date_available` (`products_date_available`),
   KEY `foreign_source_name` (`foreign_source_name`),
   KEY `foreign_products_id` (`foreign_products_id`),
-  KEY `specials_price_percentage` (`specials_price_percentage`)
+  KEY `specials_price_percentage` (`specials_price_percentage`),
+  KEY `manufacturers_advice_price` (`manufacturers_advice_price`)
 ) ;
 
 

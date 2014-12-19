@@ -904,6 +904,11 @@ if ($this->post) {
 	if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
 		$updateArray['specials_price_percentage']=$this->post['specials_price_percentage'];
 	}
+	if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
+		if (isset($this->post['manufacturers_advice_price'])) {
+			$updateArray['manufacturers_advice_price']=$this->post['manufacturers_advice_price'];
+		}
+	}
 	if ($_REQUEST['action']=='edit_product' and is_numeric($this->post['pid'])) {
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'])) {
@@ -1874,6 +1879,7 @@ if ($this->post) {
 		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 		$subparts['js_header']=$this->cObj->getSubpart($subparts['template'], '###JS_HEADER###');
 		$subparts['details_content']=$this->cObj->getSubpart($subparts['template'], '###DETAILS_CONTENT###');
+		$subparts['manufacturers_advice_price']=$this->cObj->getSubpart($subparts['template'], '###MANUFACTURERS_ADVICE_PRICE###');
 		if ($_REQUEST['action']=='add_product') {
 			$heading_page='<h1>'.$this->pi_getLL('admin_add_new_product').'</h1>';
 		} else {
@@ -3960,6 +3966,21 @@ if ($this->post) {
 		$subpartArray['###ADMIN_LABEL_JS_PRODUCT_NAME_IS_EMPTY###']=$this->pi_getLL('admin_label_js_product_name_is_empty');
 		$subpartArray['###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###']=$this->pi_getLL('admin_label_js_define_product_name_first_in_details_tabs');
 		$subpartArray['###ADMIN_LABEL_PRODUCT_NOT_LOADED_SORRY_WE_CANT_FIND_IT###']=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
+		if (!$this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
+			$subpartArray['###MANUFACTURERS_ADVICE_PRICE###']='';
+		} else {
+			$manufacturers_advice_price_tax=mslib_fe::taxDecimalCrop(($product['manufacturers_advice_price']*$product_tax_rate)/100);
+			$manufacturers_advice_price_excl_vat_display=mslib_fe::taxDecimalCrop($product['manufacturers_advice_price'], 2, false);
+			$manufacturers_advice_price_incl_vat_display=mslib_fe::taxDecimalCrop($product['manufacturers_advice_price']+$manufacturers_advice_price_tax, 2, false);
+			$subpartArray['###LABEL_MANUFACTURERS_ADVIES_PRICE###']=$this->pi_getLL('admin_label_manufacturers_advice_price');
+			$subpartArray['###LABEL_EXCLUDING_VAT3###']=$this->pi_getLL('excluding_vat');
+			$subpartArray['###LABEL_INCLUDING_VAT3###']=$this->pi_getLL('including_vat');
+			$subpartArray['###LABEL_CURRENCY6###']=mslib_fe::currency();
+			$subpartArray['###LABEL_CURRENCY7###']=mslib_fe::currency();
+			$subpartArray['###VALUE_EXCL_VAT_MANUFACTURERS_ADVICE_PRICE###']=$manufacturers_advice_price_excl_vat_display;
+			$subpartArray['###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###']=$manufacturers_advice_price_incl_vat_display;
+			$subpartArray['###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###']=$product['manufacturers_advice_price'];
+		}
 		$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 	} else {
 		$content.=$this->pi_getLL('admin_label_product_not_loaded_sorry_we_cant_find_it');
