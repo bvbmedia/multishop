@@ -31,7 +31,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 	case 'create_invoice_for_selected_orders':
 		if (is_array($this->post['selected_orders']) && count($this->post['selected_orders'])) {
 			foreach ($this->post['selected_orders'] as $orders_id) {
-				$order=mslib_fe::getOrder($this->post['orders_id']);
+				$order=mslib_fe::getOrder($orders_id);
 				if ($order['orders_id']) {
 					mslib_fe::createOrderInvoice($order['orders_id']);
 				}
