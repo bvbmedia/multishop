@@ -174,6 +174,13 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select tx_multishop_language from fe_users";
+	if (!$qry=$GLOBALS['TYPO3_DB']->sql_query($str)) {
+		$str="ALTER TABLE `fe_users` ADD `tx_multishop_language` varchar(2) NULL DEFAULT '', ADD INDEX (`tx_multishop_language`);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+
 
 	$str="select related_to from tx_multishop_products_to_categories limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

@@ -1090,7 +1090,7 @@
             <label index="usergroup">usergroup</label>
             <label index="deleted">deleted</label>
             <label index="job_title">job title</label>
-            <label index="customer_id_external_id_for_reference">customer id(external id for reference)</label>
+            <label index="customer_id_external_id_for_reference">customer id (external id for reference)</label>
             <label index="choose_manufacturers">choose manufacturers</label>
             <label index="admin_mass_updater_warning_a">Please be careful with this module.</label>
             <label index="admin_mass_updater_warning_b">This form is created to agressively update all products. It can be handful if you want to update the prices of each product and/or to change the VAT id for each product.</label>
@@ -1167,6 +1167,7 @@
             <label index="admin_label_manufacturers_advice_price">Manufacturers advice price</label>
             <label index="payment_condition">Payment condition</label>
             <label index="feed_exporter_fields_label_manufacturers_advice_price">Manufacturers advice price</label>
+            <label index="website">Website</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>
@@ -2192,6 +2193,7 @@
             <label index="admin_label_manufacturers_advice_price">Leverancier adviesprijs</label>
             <label index="payment_condition">Betaalconditie</label>
             <label index="feed_exporter_fields_label_manufacturers_advice_price">Fabrikant adviesprijs</label>
+            <label index="website">Website</label>
         </languageKey>
         <languageKey index="fi" type="array">
             <label index="list_mode_1">Malli 1</label>

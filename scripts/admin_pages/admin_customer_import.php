@@ -113,7 +113,9 @@ $coltypes['username']=$this->pi_getLL('username');
 $coltypes['title']=$this->pi_getLL('job_title');
 $coltypes['www']=$this->pi_getLL('website');
 $coltypes['crdate']=$this->pi_getLL('creation_date');
+$coltypes['language_code_2char_iso']=$this->pi_getLL('language_code','Language (2 char ISO code)');
 $coltypes['tx_multishop_source_id']=$this->pi_getLL('customer_id_external_id_for_reference');
+
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
 	$params=array(
@@ -198,7 +200,22 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				} else {
 					$limit='10';
 				}
-				$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $this->post['database_name'], '', '', '', $limit);
+				if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+					// its not a table name, its a full query
+					$this->databaseMode='query';
+					$str=$this->post['database_name'].' LIMIT '.$limit;
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					if ($this->conf['debugEnabled']=='1') {
+						$logString='Load records for importer query: '.$str;
+						t3lib_div::devLog($logString, 'multishop',-1);
+					}
+					$datarows=array();
+					while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+						$datarows[]=$row;
+					}
+				} else {
+					$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $this->post['database_name'], '', '', '', $limit);
+				}
 				$i=0;
 				$table_cols=array();
 				foreach ($datarows as $datarow) {
@@ -599,13 +616,49 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					} else {
 						$limit=2000;
 					}
-					$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $this->post['database_name'], '', '', '', $limit);
+					if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+						$this->databaseMode='query';
+						// its not a table name, its a full query
+						$this->databaseMode='query';
+						$str=$this->post['database_name'].' LIMIT '.$limit;
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						if ($this->conf['debugEnabled']=='1') {
+							$logString='Load records for importer query: '.$str;
+							t3lib_div::devLog($logString, 'multishop',-1);
+						}
+						$datarows=array();
+						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+							$datarows[]=$row;
+						}
+					} else {
+						// get primary key first
+						$str="show index FROM ".$this->post['database_name'].' where Key_name = \'PRIMARY\'';
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+						$primaryKeyColumn=$row['Column_name'];
+						$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+							$this->post['database_name'], // FROM ...
+							'', // WHERE.
+							'', // GROUP BY...
+							'', // ORDER BY...
+							$limit // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$datarows=array();
+						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+							$datarows[]=$row;
+							if ($primaryKeyColumn and isset($row[$primaryKeyColumn])) {
+								$str2="delete from ".$this->post['database_name']." where ".$primaryKeyColumn."='".$row[$primaryKeyColumn]."'";
+								$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+							}
+						}
+					}
 					$total_datarows=count($datarows);
 					if ($log_file) {
 						if ($total_datarows) {
-							file_put_contents($log_file, $this->FULL_HTTP_URL.' - random products loaded, now starting the import.('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
+							file_put_contents($log_file, $this->FULL_HTTP_URL.' - random customer records loaded, now starting the import.('.date("Y-m-d G:i:s").")\n", FILE_APPEND);
 						} else {
-							file_put_contents($log_file, $this->FULL_HTTP_URL.' - no products needed to be imported'."\n", FILE_APPEND);
+							file_put_contents($log_file, $this->FULL_HTTP_URL.' - no customer records needed to be imported'."\n", FILE_APPEND);
 						}
 					}
 					$i=0;
@@ -615,10 +668,6 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							$rows[$i][$s]=$datacol;
 							$s++;
 						}
-						// delete here
-						// get first column name
-						$str="delete from ".$this->post['database_name']." where internal_id='".$rows[$i][0]."'";
-						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						$i++;
 					}
 				} else if ($this->post['format']=='excel') {
@@ -852,6 +901,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if (isset($item['deleted'])) {
 							$user['deleted']=$item['deleted'];
 						}
+						if (isset($item['language_code_2char_iso'])) {
+							$user['tx_multishop_language']=$item['language_code_2char_iso'];
+						}
 						if (isset($item['tx_multishop_discount'])) {
 							$user['tx_multishop_discount']=$item['discount'];
 						}
@@ -1065,6 +1117,8 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 									$name[]='email: '.$user['email'];
 								}
 								$content.=implode(" / ", $name).' has been added.<br />';
+							} else {
+								$content.=implode(" / ", $name).' has been FAILED. Query:<br />'.$query.'<br/>';
 							}
 						}
 						if ($uid) {

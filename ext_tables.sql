@@ -30,6 +30,7 @@ CREATE TABLE `fe_users` (
   `tx_multishop_coc_id` varchar(127) default '',
   `tx_multishop_quick_checkout` tinyint(1) default '0',
   `tx_multishop_customer_id` int(11) default '0',
+  `tx_multishop_language` varchar(127) null default '',
   KEY `username` (`username`),
   KEY `is_online` (`is_online`),
   KEY `pid` (`pid`,`username`),
@@ -60,7 +61,8 @@ CREATE TABLE `fe_users` (
   KEY `vat_id` (`tx_multishop_vat_id`),
   KEY `coc_id` (`tx_multishop_coc_id`),
   KEY `tx_multishop_quick_checkout` (`tx_multishop_quick_checkout`),
-  KEY `tx_multishop_customer_id` (`tx_multishop_customer_id`)
+  KEY `tx_multishop_customer_id` (`tx_multishop_customer_id`),
+  KEY `tx_multishop_language` (`tx_multishop_language`)
 );
 
 CREATE TABLE `tx_multishop_cart_contents` (

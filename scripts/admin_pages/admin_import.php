@@ -424,7 +424,22 @@ if ($this->post['action']=='category-insert') {
 				} else {
 					$limit='10';
 				}
-				$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $this->post['database_name'], '', '', '', $limit);
+				if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+					// its not a table name, its a full query
+					$this->databaseMode='query';
+					$str=$this->post['database_name'].' LIMIT '.$limit;
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					if ($this->conf['debugEnabled']=='1') {
+						$logString='Load records for importer query: '.$str;
+						t3lib_div::devLog($logString, 'multishop',-1);
+					}
+					$datarows=array();
+					while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+						$datarows[]=$row;
+					}
+				} else {
+					$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $this->post['database_name'], '', '', '', $limit);
+				}
 				$i=0;
 				$table_cols=array();
 				foreach ($datarows as $datarow) {
@@ -944,20 +959,41 @@ if ($this->post['action']=='category-insert') {
 					} else {
 						$limit=2000;
 					}
-					$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-						$this->post['database_name'], // FROM ...
-						'', // WHERE.
-						'', // GROUP BY...
-						'', // ORDER BY...
-						$limit // LIMIT ...
-					);
-					$qry=$GLOBALS['TYPO3_DB']->sql_query($query);
-					$datarows=array();
-					while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-						$datarows[]=$row;
-						if ($primaryKeyColumn and isset($row[$primaryKeyColumn])) {
-							$str2="delete from ".$this->post['database_name']." where ".$primaryKeyColumn."='".$row[$primaryKeyColumn]."'";
-							$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+						$this->databaseMode='query';
+						// its not a table name, its a full query
+						$this->databaseMode='query';
+						$str=$this->post['database_name'].' LIMIT '.$limit;
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						if ($this->conf['debugEnabled']=='1') {
+							$logString='Load records for importer query: '.$str;
+							t3lib_div::devLog($logString, 'multishop',-1);
+						}
+						$datarows=array();
+						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+							$datarows[]=$row;
+						}
+					} else {
+						// get primary key first
+						$str="show index FROM ".$this->post['database_name'].' where Key_name = \'PRIMARY\'';
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+						$primaryKeyColumn=$row['Column_name'];
+						$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+							$this->post['database_name'], // FROM ...
+							'', // WHERE.
+							'', // GROUP BY...
+							'', // ORDER BY...
+							$limit // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($query);
+						$datarows=array();
+						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+							$datarows[]=$row;
+							if ($primaryKeyColumn and isset($row[$primaryKeyColumn])) {
+								$str2="delete from ".$this->post['database_name']." where ".$primaryKeyColumn."='".$row[$primaryKeyColumn]."'";
+								$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+							}
 						}
 					}
 					$total_datarows=count($datarows);
