@@ -210,7 +210,11 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			$tr_type='even';
 			$tableContent.='
 			<div class="msHorizontalOverflowWrapper">
-			<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">
+			';
+			if (!$params['settings']['disableForm']) {
+				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';
+			}
+			$tableContent.='
 			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">';
 			$tableContent.='<tr>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
@@ -305,8 +309,11 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			}
 			$tableContent.='<th></th></tr>';
 			// SUMMARIZE EOF
-			$tableContent.='</table>
-			</form>
+			$tableContent.='</table>';
+			if (!$params['settings']['disableForm']) {
+				$tableContent.='</form>';
+			}
+			$tableContent.='
 			</div>
 			';
 			// pagination

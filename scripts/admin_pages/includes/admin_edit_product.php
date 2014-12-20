@@ -3815,6 +3815,8 @@ if ($this->post) {
 		$subpartArray['###VALUE_EXCL_VAT_CAPITAL_PRICE###']=htmlspecialchars($capital_price_excl_vat_display);
 		$subpartArray['###VALUE_INCL_VAT_CAPITAL_PRICE###']=htmlspecialchars($capital_price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_CAPITAL_PRICE###']=htmlspecialchars($product['product_capital_price']);
+		$subpartArray['###CUSTOM_MARKER_ABOVE_PRICE_FORM_FIELD###']='';
+		$subpartArray['###CUSTOM_MARKER_ABOVE_VAT_RATE_FORM_FIELD###']='';
 		$subpartArray['###INPUT_STAFFEL_PRICE_BLOCK###']=$staffel_price_block;
 		$subpartArray['###LABEL_STOCK###']=mslib_befe::strtoupper($this->pi_getLL('admin_stock'));
 		$subpartArray['###VALUE_STOCK###']=$product['products_quantity'];
