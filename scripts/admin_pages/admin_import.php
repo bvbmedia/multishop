@@ -505,8 +505,7 @@ if ($this->post['action']=='category-insert') {
 					fclose($handle);
 				}
 				// try the generic way
-				$objXML=new xml2Array();
-				$arrOutput=$objXML->parse($str);
+				$arrOutput=mslib_fe::xml2array($str);
 				$i=0;
 				$s=0;
 				$rows=array();
@@ -1036,8 +1035,7 @@ if ($this->post['action']=='category-insert') {
 					}
 					// excel eof
 				} elseif ($this->post['format']=='xml') {
-					$objXML=new xml2Array();
-					$arrOutput=$objXML->parse($str);
+					$arrOutput=mslib_fe::xml2array($str);
 					$i=0;
 					$s=0;
 					$rows=array();
@@ -1433,6 +1431,8 @@ if ($this->post['action']=='category-insert') {
 					for ($x=1; $x<=$max_category_level; $x++) {
 						if ($item['categories_name'.$x]) {
 							$item['categories_name'.$x]=trim($item['categories_name'.$x]);
+							// sometimes importer can have &amp; characters as category name. lets convert it to plain text first
+							$item['categories_name'.$x]=html_entity_decode($item['categories_name'.$x],ENT_QUOTES,'UTF-8');
 							if ($hashed_id) {
 								$hashed_id.=' / ';
 							}
@@ -1781,6 +1781,8 @@ if ($this->post['action']=='category-insert') {
 							sleep(35);
 						}
 						if ($item['products_name']) {
+							// sometimes importer can have &amp; characters as products name. lets convert it to plain text first
+							$item['products_name']=html_entity_decode($item['products_name'],ENT_QUOTES,'UTF-8');
 							// if productsname is supplied
 							// if the date available is only a year, add the default month and day
 							if ($item['products_date_added'] and strlen($item['products_date_added'])==4) {

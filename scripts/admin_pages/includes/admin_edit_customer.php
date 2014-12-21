@@ -493,6 +493,7 @@ $subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
 $subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
 $subpartArray['###VALUE_IMAGE###']=$images_tab_block;
+$subpartArray['###CUSTOM_MARKER_BELOW_IMAGE_FORM_FIELD###']='';
 $subpartArray['###LABEL_BUTTON_ADMIN_CANCEL###']=$this->pi_getLL('admin_cancel');
 $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
@@ -769,6 +770,7 @@ $subpartArray['###INVALID_EMAIL_MESSAGE###']=$this->pi_getLL('email_is_required'
 $subpartArray['###INVALID_USERNAME_MESSAGE###']=$this->pi_getLL('username_is_required');
 $subpartArray['###INVALID_PASSWORD_MESSAGE###']=$this->pi_getLL('password_is_required');
 $telephone_validation='';
+/*
 if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 	if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
 		$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'"';
@@ -776,6 +778,7 @@ if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 		$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'" pattern=".{'.$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER'].'}"';
 	}
 }
+*/
 $subpartArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 // plugin marker place holder
