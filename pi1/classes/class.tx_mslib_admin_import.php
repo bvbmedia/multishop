@@ -991,7 +991,11 @@ class tx_mslib_admin_import extends tslib_pibase {
 					$schedule_content.='<td>'.$job['prefix_source_name'].'</td>
 			<td><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=edit_job">'.$job['name'].'</a></td>
 			';
-					$schedule_content.='<td nowrap align="right">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
+					$lastRun='';
+					if ($job['last_run']> 0) {
+						$lastRun=date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']);
+					}
+					$schedule_content.='<td nowrap align="right">'.$lastRun.'</td>';
 					if (!$job['period']) {
 						$schedule_content.='<td>manual<br /><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=run_job&limit=99999999" class="msadmin_button" onClick="return CONFIRM(\''.addslashes($that->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$that->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999" >/dev/null 2>&1').'" ><i>'.$that->pi_getLL('run_by_crontab').'</i></a></td>';
 					} else {

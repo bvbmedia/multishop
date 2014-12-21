@@ -375,6 +375,24 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select predefined_variables from tx_multishop_import_jobs limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_import_jobs` ADD `predefined_variables` text null default ''";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="describe `tx_multishop_import_jobs`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='type') {
+			if ($row['Type']=='varchar(32)') {
+				$str2="ALTER TABLE  `tx_multishop_import_jobs` CHANGE  `type`  `type` varchar(254)";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$messages[]=$str2;
+			}
+		}
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
