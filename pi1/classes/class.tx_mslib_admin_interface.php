@@ -220,8 +220,8 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
 			}
+			//<th>'.$that->pi_getLL('admin_action').'</th>
 			$tableContent.='
-			<th>'.$that->pi_getLL('admin_action').'</th>
 			</tr>';
 			$summarize=array();
 			$recordCounter=0;
@@ -265,6 +265,38 @@ class tx_mslib_admin_interface extends tslib_pibase {
 								$row[$col]='';
 							}
 							break;
+						case 'form':
+							$content.='<form method="';
+							switch($valArray['formAction']) {
+								case 'post':
+									$content.='POST';
+									break;
+								case 'get':
+								default:
+									$content.='GET';
+									break;
+							}
+							$content.='" action="'.$valArray['actionUrl'].'" enctype="multipart/form-data">';
+							if ($valArray['content']) {
+								$content.=$valArray['content'];
+							}
+							if (is_array($valArray['hiddenFields'])) {
+								foreach ($valArray['hiddenFields'] as $hiddenFieldKey => $hiddenFieldVal) {
+									foreach ($row as $tmpCol => $tmpVal) {
+										$hiddenFieldVal=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$hiddenFieldVal);
+									}
+									$content.='<input name="'.$hiddenFieldKey.'" type="hidden" value="'.$hiddenFieldVal.'" />';
+								}
+							}
+							$content.='</form>';
+							$row[$col]=$content;
+							break;
+						case 'content':
+							foreach ($row as $tmpCol => $tmpVal) {
+								$valArray['content']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['content']);
+							}
+							$row[$col]=$valArray['content'];
+							break;
 					}
 					$adjustedValue=$row[$col];
 					if ($valArray['href']) {
@@ -289,9 +321,11 @@ class tx_mslib_admin_interface extends tslib_pibase {
 					}
 					$tableContent.='<td'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
 				}
+				/*
 				$tableContent.='
 				<td>
 				</td>';
+				*/
 				$tableContent.='</tr>';
 			}
 			// SUMMARIZE
@@ -307,7 +341,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 				}
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 			}
-			$tableContent.='<th></th></tr>';
+			$tableContent.='</tr>';
 			// SUMMARIZE EOF
 			$tableContent.='</table>';
 			if (!$params['settings']['disableForm']) {

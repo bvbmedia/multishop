@@ -34,6 +34,9 @@ class tx_mslib_admin_import extends tslib_pibase {
 	}
 	function renderInterface($params, &$that) {
 		mslib_fe::init($that);
+		if ($that->post['job_id']) {
+			$that->get['job_id']=$that->post['job_id'];
+		}
 		if ($that->get['delete'] and is_numeric($that->get['job_id'])) {
 			// delete job
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_import_jobs', 'id='.$that->get['job_id'].' and type=\''.addslashes($params['importKey']).'\'');
@@ -58,6 +61,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 				$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+				$jobArray=$row;
 				$serial_value=array();
 				foreach ($data as $key_idx=>$key_val) {
 					if ($key_idx!='id' && $key_idx!='page_uid') {
@@ -106,8 +110,22 @@ class tx_mslib_admin_import extends tslib_pibase {
 			header('Location: '.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'#tasks');
 		}
 		$GLOBALS['TSFE']->additionalHeaderData['tx_multishop_pi1_block_ui']=mslib_fe::jQueryBlockUI();
-		if ($that->post['job_id']) {
-			$that->get['job_id']=$that->post['job_id'];
+		if (is_numeric($that->post['job_id']) && $that->post['action']=='import-preview') {
+			if ($that->post['job_id']) {
+				$that->get['job_id']=$that->post['job_id'];
+			}
+			$str="SELECT * from tx_multishop_import_jobs where id='".$that->post['job_id']."' and type='".addslashes($params['importKey'])."'";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+			$jobArray=$row;
+			$updateArray=array();
+			$cron_data=array();
+			$cron_data[0]=array();
+			$that->post['cron_period']='';
+			$cron_data[1]=$that->post;
+			$updateArray['data']=serialize($cron_data);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$that->post['job_id'],$updateArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 		if ($that->post['action']=='import-preview' or (is_numeric($that->get['job_id']) and $_REQUEST['action']=='edit_job')) {
 			// preview
@@ -117,6 +135,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 				$str="SELECT * from tx_multishop_import_jobs where id='".$that->get['job_id']."' and type='".addslashes($params['importKey'])."'";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+				$jobArray=$row;
 				$data=unserialize($row['data']);
 				// copy the previous post data to the current post so it can run the job
 				// again
@@ -185,22 +204,6 @@ class tx_mslib_admin_import extends tslib_pibase {
 				if ($that->post['parser_template']) {
 					$processed=0;
 					$rows=array();
-					/*
-					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'])) {
-						$params=array(
-							'parser_template'=>&$this->post['parser_template'],
-							'prefix_source_name'=>$this->post['prefix_source_name'],
-							'str'=>$str,
-							'file_location'=>&$file_location,
-							'rows'=>&$rows,
-							'table_cols'=>&$table_cols,
-							'processed'=>&$processed
-						);
-						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
-						}
-					}
-					*/
 				} else {
 					if ($str && mslib_befe::isSerializedString($str)) {
 						$tmpData=unserialize($str);
@@ -230,14 +233,14 @@ class tx_mslib_admin_import extends tslib_pibase {
 						} else {
 							$limit='10';
 						}
-						if (strstr(mslib_befe::strtolower($that->post['database_name']),'select ')) {
+						if (strstr(mslib_befe::strtolower($that->post['database_name']), 'select ')) {
 							// its not a table name, its a full query
 							$that->databaseMode='query';
 							$str=$that->post['database_name'].' LIMIT '.$limit;
 							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 							if ($that->conf['debugEnabled']=='1') {
 								$logString='Load records for importer query: '.$str;
-								t3lib_div::devLog($logString, 'multishop',-1);
+								t3lib_div::devLog($logString, 'multishop', -1);
 							}
 							$datarows=array();
 							while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -266,7 +269,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 							if (!$handle=fopen($that->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 								exit;
 							}
-							if (fwrite($handle, $str)===FALSE) {
+							if (fwrite($handle, $str)===false) {
 								exit;
 							}
 							fclose($handle);
@@ -302,7 +305,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 							if (!$handle=fopen($that->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 								exit;
 							}
-							if (fwrite($handle, $str)===FALSE) {
+							if (fwrite($handle, $str)===false) {
 								exit;
 							}
 							fclose($handle);
@@ -355,9 +358,9 @@ class tx_mslib_admin_import extends tslib_pibase {
 						if ($that->post['format']=='txt') {
 							$row=1;
 							$rows=array();
-							if (($handle=fopen($file_location, "r"))!==FALSE) {
+							if (($handle=fopen($file_location, "r"))!==false) {
 								$counter=0;
-								while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+								while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
 									//print_r($data);
 									if ($that->post['escape_first_line']) {
 										if ($counter==0) {
@@ -511,6 +514,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 					</script>
 						';
 				}
+				//$tmpcontent.=self::renderImportJobProperties($params,$that);
 				$tmpcontent.='
 				<fieldset>
 					<legend>'.$that->pi_getLL('save_import_task').'</legend>
@@ -609,6 +613,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 					$str="SELECT * from tx_multishop_import_jobs where id='".$that->get['job_id']."'".' and type=\''.addslashes($params['importKey']).'\'';
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+					$jobArray=$row;
 					$data=unserialize($row['data']);
 					// copy the previous post data to the current post so it can run the
 					// job again
@@ -668,13 +673,13 @@ class tx_mslib_admin_import extends tslib_pibase {
 								$colCounter=0;
 								if ($counter==0) {
 									$row=array();
-									foreach ($data as $key => $val) {
+									foreach ($data as $key=>$val) {
 										$row[]=$key;
 									}
 									$table_cols=$row;
 								}
 								$row=array();
-								foreach ($data as $key => $val) {
+								foreach ($data as $key=>$val) {
 									$row[]=$val;
 								}
 								$rows[]=$row;
@@ -686,7 +691,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 							} else {
 								$limit=2000;
 							}
-							if (strstr(mslib_befe::strtolower($that->post['database_name']),'select ')) {
+							if (strstr(mslib_befe::strtolower($that->post['database_name']), 'select ')) {
 								$that->databaseMode='query';
 								// its not a table name, its a full query
 								$that->databaseMode='query';
@@ -694,7 +699,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								if ($that->conf['debugEnabled']=='1') {
 									$logString='Load records for importer query: '.$str;
-									t3lib_div::devLog($logString, 'multishop',-1);
+									t3lib_div::devLog($logString, 'multishop', -1);
 								}
 								$datarows=array();
 								while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -809,9 +814,9 @@ class tx_mslib_admin_import extends tslib_pibase {
 							if ($that->post['format']=='txt') {
 								$row=1;
 								$rows=array();
-								if (($handle=fopen($file, "r"))!==FALSE) {
+								if (($handle=fopen($file, "r"))!==false) {
 									$counter=0;
-									while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+									while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
 										if ($that->post['escape_first_line']) {
 											if ($counter==0) {
 												$table_cols=$data;
@@ -831,8 +836,8 @@ class tx_mslib_admin_import extends tslib_pibase {
 					}
 					$item_counter=0;
 					$inserteditems=array();
-					$global_start_time=microtime(TRUE);
-					$start_time=microtime(TRUE);
+					$global_start_time=microtime(true);
+					$start_time=microtime(true);
 					$total_datarows=count($rows);
 					if ($that->msLogFile) {
 						if ($total_datarows) {
@@ -862,6 +867,12 @@ class tx_mslib_admin_import extends tslib_pibase {
 							// if($tmpitem[$that->post['select'][0]] and $cols > 0)
 							// {
 							$item=array();
+							if ($jobArray['predefined_variables']) {
+								$array=unserialize($jobArray['predefined_variables']);
+								foreach ($array as $col => $val) {
+									$item[$col]=$val;
+								}
+							}
 							// if the source is a database table name add the unique id
 							// so we can delete it after the import
 							if ($that->post['database_name']) {
@@ -908,59 +919,11 @@ class tx_mslib_admin_import extends tslib_pibase {
 			$that->ms['show_default_form']=1;
 		}
 		if ($that->ms['show_default_form']) {
-			$that->ms['upload_'.$params['importKey'].'feed_form']='<div id="upload_'.$params['importKey'].'feed_form">';
-			$that->ms['upload_'.$params['importKey'].'feed_form'].='
-	<fieldset>
-	<legend>'.$that->pi_getLL('source').'</legend>
-	<fieldset style="margin-top:5px;"><legend>'.$that->pi_getLL('file').'</legend>
-	<ul>
-	<li><input type="file" name="file" /></li>
-	<li>URL <input name="file_url" type="text" /></li>
-	<li>'.$that->pi_getLL('database_table').' <input name="database_name" type="text" /></li>
-	</ul>
-	</fieldset>
-	';
-			/*
-			 * <li>URL <input name="file_url" type="text" /></li> <li>Database table
-			 * <input name="database_name" type="text" /></li>
-			 */
-			$that->ms['upload_'.$params['importKey'].'feed_form'].='
-	<fieldset><legend>'.ucfirst($that->pi_getLL('format')).'</legend>
-	<script type="text/javascript">
-	jQuery(document).ready(function($) {
-		$(document).on("click", ".hide_advanced_import_radio", function() {
-			$(this).parent().find(".hide").hide();
-		});
-		$(document).on("click", ".advanced_import_radio", function() {
-			$(this).parent().find(".hide").show();
-		});
-	});
-	</script>
-  <input name="format" type="radio" value="excel" checked class="hide_advanced_import_radio" /> Excel
-  <input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML
-  <input name="format" type="radio" value="txt" class="advanced_import_radio" /> TXT/CSV
-<div class="hide">
-	'.$that->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
-	  <option value="dotcomma">'.$that->pi_getLL('dotcomma').'</option>
-	  <option value="comma">'.$that->pi_getLL('comma').'</option>
-	  <option value="tab">'.$that->pi_getLL('tab').'</option>
-	  <option value="dash">'.$that->pi_getLL('dash').'</option>
-	</select>
-	<BR /><input name="backquotes" type="checkbox" value="1" /> '.$that->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
-	<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$that->pi_getLL('ignore_first_line').'
-	<input type="checkbox" name="os" id="os" value="linux" /> '.$that->pi_getLL('unix_file').'
-	<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$that->pi_getLL('consolidate').'
-</div>
-	<input type="submit" name="Submit" class="submit submit_block" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
-	<input name="action" type="hidden" value="import-preview" />
-	</fieldset>
-	</div>
-	';
-			$content.='
-	 <form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">
-	 '.$that->ms['upload_'.$params['importKey'].'feed_form'].'
-	</form>';
-// load the jobs templates
+			$that->ms['upload_'.$params['importKey'].'feed_form'].=self::renderImportJobProperties($params,$that);
+			$content.='<form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">';
+			$content.=$that->ms['upload_'.$params['importKey'].'feed_form'];
+			$content.='</form>';
+			// load the jobs templates
 			$str="SELECT * from tx_multishop_import_jobs where page_uid='".$that->shop_pid."' and type='".addslashes($params['importKey'])."' order by prefix_source_name asc, id desc";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$jobs=array();
@@ -992,7 +955,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 			<td><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=edit_job">'.$job['name'].'</a></td>
 			';
 					$lastRun='';
-					if ($job['last_run']> 0) {
+					if ($job['last_run']>0) {
 						$lastRun=date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']);
 					}
 					$schedule_content.='<td nowrap align="right">'.$lastRun.'</td>';
@@ -1045,10 +1008,8 @@ class tx_mslib_admin_import extends tslib_pibase {
 				$schedule_content.='</table>
 		</fieldset>
 		<script type="text/javascript">
-		jQuery(document).ready(function($)
-		{
-			$(".copy_to_clipboard").click(function(event)
-			{
+		jQuery(document).ready(function($) {
+			$(".copy_to_clipboard").click(function(event) {
 				event.preventDefault();
 				var string=$(this).attr("rel");
 				$.blockUI({
@@ -1066,25 +1027,73 @@ class tx_mslib_admin_import extends tslib_pibase {
 				//$tabs['tasks']=array($that->pi_getLL('import_tasks'),$schedule_content);
 			}
 			// load the jobs templates eof
-			$content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('upload_import_task').'</legend>
-		<form action="'.$params['postForm']['actionUrl'].'&upload=task" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-			<div class="account-field">
-				<label for="new_cron_name">'.$that->pi_getLL('name').'</label>
-				<input name="new_cron_name" type="text" value="" size="125">
-			</div>
-			<div class="account-field">
-				<label for="new_prefix_source_name">'.$that->pi_getLL('source_name').'</label>
-				<input name="new_prefix_source_name" type="text" value="" />
-			</div>
-			<div class="account-field">
-				<label for="upload_task_file">'.$that->pi_getLL('file').'</label>
-				<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
-			</div>
-		</form>
-	</fieldset>';
+			$content.='
+			<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('upload_import_task').'</legend>
+				<form action="'.$params['postForm']['actionUrl'].'&upload=task" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+					<div class="account-field">
+						<label for="new_cron_name">'.$that->pi_getLL('name').'</label>
+						<input name="new_cron_name" type="text" value="" size="125">
+					</div>
+					<div class="account-field">
+						<label for="new_prefix_source_name">'.$that->pi_getLL('source_name').'</label>
+						<input name="new_prefix_source_name" type="text" value="" />
+					</div>
+					<div class="account-field">
+						<label for="upload_task_file">'.$that->pi_getLL('file').'</label>
+						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
+					</div>
+				</form>
+			</fieldset>';
 		}
 		$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 		$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+		return $content;
+	}
+	function renderImportJobProperties($params, &$that) {
+		$content='<div id="upload_'.$params['importKey'].'feed_form">';
+		$content.='
+		<fieldset>
+		<legend>'.$that->pi_getLL('source').'</legend>
+		<fieldset style="margin-top:5px;"><legend>'.$that->pi_getLL('file').'</legend>
+		<ul>
+		<li><input type="file" name="file" /></li>
+		<li>URL <input name="file_url" type="text" /></li>
+		<li>'.$that->pi_getLL('database_table').' <input name="database_name" type="text" /></li>
+		</ul>
+		</fieldset>
+		';
+		$content.='
+		<fieldset><legend>'.ucfirst($that->pi_getLL('format')).'</legend>
+			<script type="text/javascript">
+				jQuery(document).ready(function($) {
+					$(document).on("click", ".hide_advanced_import_radio", function() {
+						$(this).parent().find(".hide").hide();
+					});
+					$(document).on("click", ".advanced_import_radio", function() {
+						$(this).parent().find(".hide").show();
+					});
+				});
+			</script>
+		<input name="format" type="radio" value="excel" checked class="hide_advanced_import_radio" /> Excel
+		<input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML
+		<input name="format" type="radio" value="txt" class="advanced_import_radio" /> TXT/CSV
+		<div class="hide">
+		'.$that->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
+		<option value="dotcomma">'.$that->pi_getLL('dotcomma').'</option>
+		<option value="comma">'.$that->pi_getLL('comma').'</option>
+		<option value="tab">'.$that->pi_getLL('tab').'</option>
+		<option value="dash">'.$that->pi_getLL('dash').'</option>
+		</select>
+		<BR /><input name="backquotes" type="checkbox" value="1" /> '.$that->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
+		<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$that->pi_getLL('ignore_first_line').'
+		<input type="checkbox" name="os" id="os" value="linux" /> '.$that->pi_getLL('unix_file').'
+		<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$that->pi_getLL('consolidate').'
+		</div>
+		<input type="submit" name="Submit" class="submit submit_block" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
+		<input name="action" type="hidden" value="import-preview" />
+		</fieldset>
+		</div>
+		';
 		return $content;
 	}
 }
