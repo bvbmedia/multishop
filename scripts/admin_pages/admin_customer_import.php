@@ -115,6 +115,7 @@ $coltypes['www']=$this->pi_getLL('website');
 $coltypes['crdate']=$this->pi_getLL('creation_date');
 $coltypes['language_code_2char_iso']=$this->pi_getLL('language_code','Language (2 char ISO code)');
 $coltypes['tx_multishop_source_id']=$this->pi_getLL('customer_id_external_id_for_reference');
+$coltypes['tx_multishop_payment_condition']=$this->pi_getLL('payment_condition','payment condition');
 
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
@@ -801,11 +802,22 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					}
 					if ($item['uid']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['uid']);
-					} else {
-						if (!$item['email']) {
-							$item['email']=uniqid().'@UNKNOWN';
-						}
+					} elseif($item['tx_multishop_source_id']) {
+						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['tx_multishop_source_id']);
+					} elseif($item['company']) {
+						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['company']);
+					} elseif($item['full_name']) {
+						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['full_name']);
+					} elseif($item['first_name'] && $item['middle_name'] && $item['last_name']) {
+						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['first_name'].'_'.$item['middle_name'].'_'.$item['last_name']);
+					} elseif($item['first_name'] && $item['last_name']) {
+						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['first_name'].'_'.$item['last_name']);
+					} elseif($item['last_name']) {
+						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['last_name']);
+					} elseif(isset($item['email']) && $item['email'] !='') {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['email']);
+					} else {
+						$item['extid']=md5($this->post['prefix_source_name'].'_'.serialize($item));
 					}
 					// custom hook that can be controlled by third-party plugin
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterItemIterateProc'])) {
@@ -820,11 +832,23 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					}
 					// custom hook that can be controlled by third-party plugin
 					// eof
+					if (!$item['email']) {
+						$item['email']=uniqid().'@UNKNOWN';
+					}
 					if ($item['email']) {
-						// first combine the values to 1 array
 						if (!$item['username']) {
-							$item['username']=$item['email'];
+							if ($item['uid']) {
+								$username='';
+								if ($item['company_name']) {
+									$username.=str_replace('-','',mslib_fe::rewritenamein($item['company_name']));
+								}
+								$username.=$item['uid'];
+								$item['username']=$username;
+							} else {
+								$item['username']=$item['email'];
+							}
 						}
+						// first combine the values to 1 array
 						$usergroups=array();
 						$usergroups[]=$this->conf['fe_customer_usergroup'];
 						if ($item['usergroup']) {
@@ -864,17 +888,34 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							}
 						}
 						$user=array();
+						if (isset($item['tx_multishop_source_id'])) {
+							$user['tx_multishop_source_id']=$item['tx_multishop_source_id'];
+						}
 						if ($item['uid']) {
 							$user['uid']=$item['uid'];
+							if (!$item['tx_multishop_source_id']) {
+								$user['tx_multishop_source_id']=$item['uid'];
+							}
 						}
-						$user['username']=$item['username'];
-						$user['usergroup']=implode(",", $usergroups);
-						$user['first_name']=$item['first_name'];
-						$user['middle_name']=$item['middle_name'];
-						$user['last_name']=$item['last_name'];
-						$item['first_name']=preg_replace('/\s+/', ' ', $item['first_name']);
-						$item['last_name']=preg_replace('/\s+/', ' ', $item['last_name']);
-						if (!$item['full_name']) {
+						if ($item['username']) {
+							$user['username']=$item['username'];
+						}
+						if (is_array($usergroups)) {
+							$user['usergroup']=implode(",", $usergroups);
+						}
+						if ($item['first_name']) {
+							$item['first_name']=preg_replace('/\s+/', ' ', $item['first_name']);
+							$user['first_name']=$item['first_name'];
+						}
+						if ($item['middle_name']) {
+							$item['middle_name']=preg_replace('/\s+/', ' ', $item['middle_name']);
+							$user['middle_name']=$item['middle_name'];
+						}
+						if ($item['last_name']) {
+							$item['last_name']=preg_replace('/\s+/', ' ', $item['last_name']);
+							$user['last_name']=$item['last_name'];
+						}
+						if (!$item['full_name'] && ($item['first_name'] || $item['last_name'])) {
 							$fullname=array();
 							if ($item['first_name']!='') {
 								$fullname[]=$item['first_name'];
@@ -890,9 +931,15 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 //								$item['full_name'] = preg_replace('/\s+/', ' ', $item['full_name']);
 							}
 						}
-						$user['name']=$item['full_name'];
-						$user['company']=$item['company_name'];
-						$user['tx_multishop_newsletter']=$item['newsletter'];
+						if ($item['full_name']) {
+							$user['name']=$item['full_name'];
+						}
+						if ($item['company_name']) {
+							$user['company']=$item['company_name'];
+						}
+						if (isset($item['newsletter'])) {
+							$user['tx_multishop_newsletter']=$item['newsletter'];
+						}
 						$user['status']='1';
 						$user['disable']='0';
 						if (isset($item['disable'])) {
@@ -900,6 +947,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						}
 						if (isset($item['deleted'])) {
 							$user['deleted']=$item['deleted'];
+						}
+						if (isset($item['tx_multishop_payment_condition'])) {
+							$user['tx_multishop_payment_condition']=$item['tx_multishop_payment_condition'];
 						}
 						if (isset($item['language_code_2char_iso'])) {
 							$user['tx_multishop_language']=$item['language_code_2char_iso'];
@@ -916,12 +966,22 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if (isset($item['crdate'])) {
 							$user['crdate']=strtotime($item['crdate']);
 						}
-						$user['gender']=$item['gender'];
-						$user['date_of_birth']=$item['birthday'];
-						$user['title']=$item['title'];
-						$user['zip']=$item['zip'];
-						$user['city']=$item['city'];
-						if (isset($item['country'])) {
+						if (isset($item['gender']) && $item['gender'] !='') {
+							$user['gender']=$item['gender'];
+						}
+						if ($item['birthday']) {
+							$user['date_of_birth']=$item['birthday'];
+						}
+						if ($item['title']) {
+							$user['title']=$item['title'];
+						}
+						if ($item['zip']) {
+							$user['zip']=$item['zip'];
+						}
+						if ($item['city']) {
+							$user['city']=$item['city'];
+						}
+						if (isset($item['country']) && $item['country'] != '') {
 							if ($item['country']=='') {
 								$item['country']=$default_country;
 							} else {
@@ -944,11 +1004,21 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								}
 							}
 						}
-						$user['www']=$item['www'];
-						$user['street_name']=$item['street_name'];
-						$user['address_number']=$item['address_number'];
-						$user['address_ext']=$item['address_ext'];
-						$user['address']=$item['address'];
+						if ($item['www']) {
+							$user['www']=$item['www'];
+						}
+						if ($item['street_name']) {
+							$user['street_name']=$item['street_name'];
+						}
+						if ($item['address_number']) {
+							$user['address_number']=$item['address_number'];
+						}
+						if ($item['address_ext']) {
+							$user['address_ext']=$item['address_ext'];
+						}
+						if ($item['address']) {
+							$user['address']=$item['address'];
+						}
 						if (!$user['address'] and ($user['street_name'] and $user['address_number'])) {
 							$user['address']=$user['street_name'].' '.$user['address_number'];
 							if ($user['address_ext']) {
@@ -979,12 +1049,16 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							$user['address_number']=$house_number;
 							$user['address_ext']=$addon_number;
 						}
-						$user['telephone']=$item['telephone'];
-						$user['fax']=$item['fax'];
-						$user['email']=$item['email'];
-						if ($item['tx_multishop_source_id']) {
-							$user['tx_multishop_source_id']=$item['tx_multishop_source_id'];
+						if ($item['telephone']) {
+							$user['telephone']=$item['telephone'];
 						}
+						if ($item['fax']) {
+							$user['fax']=$item['fax'];
+						}
+						if ($item['email']) {
+							$user['email']=$item['email'];
+						}
+
 						if ($item['password_hashed']) {
 							$user['password']=$item['password_hashed'];
 						} elseif ($item['password']) {
@@ -994,18 +1068,19 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						$user_check=array();
 						if ($user['uid']) {
 							$user_check=mslib_fe::getUser($user['uid'], "uid");
-						}
-						if (!$user_check['uid'] and $user['tx_multishop_source_id']) {
-							$user_check=mslib_fe::getUser($user['tx_multishop_source_id'], "tx_multishop_source_id");
-						}
-						if (!$user_check['uid'] and $user['username']) {
-							$user_check=mslib_fe::getUser($user['username'], "username");
-						}
-						if (!$user_check['uid'] && $user['email']) {
-							$user_check=mslib_fe::getUser($user['email'], "email");
+						} else {
+							if ($user['tx_multishop_source_id']) {
+								$user_check=mslib_fe::getUser($user['tx_multishop_source_id'], "tx_multishop_source_id");
+							}
+							if ($user['username']) {
+								$user_check=mslib_fe::getUser($user['username'], "username");
+							}
+							if ($user['email']) {
+								$user_check=mslib_fe::getUser($user['email'], "email");
+							}
 						}
 						if ($user_check['uid']) {
-							if (!$user['tx_multishop_source_id'] || ($user['tx_multishop_source_id']==$user_check['tx_multishop_source_id'])) {
+							if (!$user['tx_multishop_source_id'] || ($user['tx_multishop_source_id']==$user_check['tx_multishop_source_id']) || ($user['uid']==$user_check['uid'])) {
 								$update=1;
 							}
 						}
@@ -1101,6 +1176,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								if (!isset($user[$requiredCol])) {
 									$user[$requiredCol]='';
 								}
+							}
+							if (!isset($user['tx_multishop_source_id']) && $user['uid']) {
+								$user['tx_multishop_source_id']=$user['uid'];
 							}
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $user);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);

@@ -404,15 +404,28 @@ if ($this->ADMIN_USER) {
 					} else {
 						$tr_type='even';
 					}
+					/*
 					if (!$customer['company']) {
 						$customer['company']='N/A';
 					}
 					if (!$customer['name']) {
 						$customer['name']=$customer['username'];
 					}
+					*/
+					$name=array();
+					if ($customer['company']) {
+						$name[]=$customer['company'];
+					}
+					if ($customer['name']) {
+						$name[]=$customer['name'];
+					}
+					if (!count($name)) {
+						$name[]=$customer['username'];
+					}
+					$name[]=$customer['uid'];
 					$prod=array();
 					$prod['is_children']=true;
-					$prod['Name']=substr($customer['name'], 0, 50);
+					$prod['Name']=substr(implode(' - ',$name), 0, 50);
 					$prod['id']=md5($customer['name']);
 					$prod['text']=$customer['name'];
 					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
