@@ -703,7 +703,9 @@ if ($this->ADMIN_USER) {
 			$params=array(
 				'data_json'=>&$data_json,
 				'next_page'=>&$next_page,
-				'section'=>&$section
+				'section'=>&$section,
+				'page'=>&$p,
+
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'] as $funcRef) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
