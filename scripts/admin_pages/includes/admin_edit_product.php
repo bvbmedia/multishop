@@ -3886,11 +3886,11 @@ if ($this->post) {
 		$subpartArray['###LABEL_ORDER_UNIT###']=$this->pi_getLL('admin_order_unit', 'Order Unit');
 		$subpartArray['###INPUT_PRODUCT_UNIT###']=$order_unit;
 		$subpartArray['###LABEL_MINIMUM_QTY###']=$this->pi_getLL('admin_minimum_quantity');
-		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) ? $product['minimum_quantity'] : '1');
+		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity'] !='0' ? $product['minimum_quantity'] : '');
 		$subpartArray['###LABEL_MAXIMUM_QTY###']=$this->pi_getLL('admin_maximum_quantity');
 		$subpartArray['###VALUE_MAXIMUM_QTY###']=($product['maximum_quantity'] ? $product['maximum_quantity'] : '');
 		$subpartArray['###LABEL_QTY_MULTIPLICATION###']=$this->pi_getLL('admin_quantity_multiplication');
-		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication'] ? $product['products_multiplication'] : '');
+		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication'] !='0.00' ? $product['products_multiplication'] : '');
 		$subpartArray['###LABEL_VIRTUAL_PRODUCT###']=$this->pi_getLL('admin_virtual_product', 'Virtual Product');
 		$subpartArray['###LABEL_FILE_NUMBER_OF_DOWNLOADS###']=$this->pi_getLL('file_number_of_downloads', 'NUMBER OF DOWNLOADS');
 		$subpartArray['###VALUE_FILE_NUMBER_OF_DOWNLOADS###']=($product['file_number_of_downloads'] ? $product['file_number_of_downloads'] : '');
