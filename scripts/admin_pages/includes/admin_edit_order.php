@@ -438,7 +438,7 @@ if (is_numeric($this->get['orders_id'])) {
 		} else {
 			$delivery_countries=array_merge(array('<option value="'.$orders['delivery_country'].'">'.$orders['delivery_country'].'</option>'), $delivery_countries);
 		}
-		$delivery_countries_sb='<select name="tx_multishop_pi1[delivery_country]" id="edit_delivery_country">'.implode("\n", $delivery_countries).'</select>';
+		$delivery_countries_sb='<select name="tx_multishop_pi1[delivery_country]" id="edit_delivery_country" required="required">'.implode("\n", $delivery_countries).'</select>';
 		$editOrderFormFieldset=array();
 		$tmpcontent.='
 	<div class="tabs-fieldset" id="address_details">
@@ -501,13 +501,8 @@ if (is_numeric($this->get['orders_id'])) {
 			<input name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" required="required" />
 			</div>
 			<div class="account-field">';
-			if (!empty($orders['billing_telephone'])) {
-				$tmpcontent.='<label>'.ucfirst($this->pi_getLL('telephone')).'*:</label>
-				<input name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" required="required" />';
-			} else {
-				$tmpcontent.='<label>'.ucfirst($this->pi_getLL('telephone')).':</label>
-				<input name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" />';
-			}
+			$tmpcontent.='<label>'.ucfirst($this->pi_getLL('telephone')).'*:</label>
+			<input name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" required="required" />';
 			$tmpcontent.='</div>
 			<div class="account-field">
 			<label>'.ucfirst($this->pi_getLL('mobile')).':</label>
@@ -587,16 +582,16 @@ if (is_numeric($this->get['orders_id'])) {
 			</div>
 			<div class="account-field">
 			<label>'.ucfirst($this->pi_getLL('name')).'*:</label>
-			<input name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" />
+			<input name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" required="required" />
 			</div>
 			<div class="account-field">
 			<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
-			<input name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" />
+			<input name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" required="required" />
 			<span  class="error-space left-this"></span>
 			</div>
 			<div class="account-field">
 			<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
-			<input name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" /><span class="error-space left-this"></span></div>
+			<input name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" required="required" /><span class="error-space left-this"></span></div>
 			<div class="account-field">
 			<label class="delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
 			<input name="tx_multishop_pi1[delivery_address_ext]" type="text" id="edit_delivery_address_ext" value="'.$orders['delivery_address_ext'].'" /><span class="error-space left-this"></span>
@@ -607,11 +602,11 @@ if (is_numeric($this->get['orders_id'])) {
 			</div>
 			<div class="account-field">
 			<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
-			<input name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" /><span class="error-space"></span>
+			<input name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" required="required" /><span class="error-space"></span>
 			</div>
 			<div class="account-field">
 			<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
-			<input name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" /><span class="error-space"></span>
+			<input name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" required="required" /><span class="error-space"></span>
 			</div>
 			<div class="account-field">
 			<label>'.ucfirst($this->pi_getLL('country')).'*:</label>
@@ -619,11 +614,11 @@ if (is_numeric($this->get['orders_id'])) {
 			</div>
 			<div class="account-field">
 			<label>'.ucfirst($this->pi_getLL('email')).'*:</label>
-			<input name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
+			<input name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" required="required" />
 			</div>
 			<div class="account-field">
 			<label>'.ucfirst($this->pi_getLL('telephone')).'*:</label>
-			<input name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
+			<input name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" required="required" />
 			</div>
 			<div class="account-field">
 			<label>'.ucfirst($this->pi_getLL('mobile')).':</label>
