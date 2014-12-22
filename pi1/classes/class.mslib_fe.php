@@ -633,9 +633,9 @@ class mslib_fe {
 					if (!is_array($value)) {
 						if ((strlen($value)>0) && ($key!=session_name()) && ($key!='error') && (!mslib_fe::tep_in_array($key, $exclude_array))) {
 							if ($hidden_fields) {
-								$get_url.='<input name="'.$key.'" type="hidden" value="'.rawurlencode($value).'">'."\n";
+								$get_url.='<input name="'.$key.'" type="hidden" value="'.htmlspecialchars($value).'">'."\n";
 							} else {
-								$get_url.=$key.'='.rawurlencode(htmlentities($value)).'&';
+								$get_url.=$key.'='.urlencode(htmlentities($value)).'&';
 							}
 						}
 					} else {
@@ -645,9 +645,9 @@ class mslib_fe {
 									$string=$key.'['.$$key.']';
 									if (!mslib_fe::tep_in_array($string, $exclude_array)) {
 										if ($hidden_fields) {
-											$get_url.='<input name="'.$key.rawurlencode('['.$$key.']').'" type="hidden" value="'.rawurlencode($$value).'">'."\n";
+											$get_url.='<input name="'.$key.rawurlencode('['.$$key.']').'" type="hidden" value="'.htmlspecialchars($$value).'">'."\n";
 										} else {
-											$get_url.=$key.rawurlencode('['.$$key.']').'='.rawurlencode(htmlentities($$value)).'&';
+											$get_url.=$key.rawurlencode('['.$$key.']').'='.urlencode(htmlentities($$value)).'&';
 										}
 									}
 								}
@@ -657,7 +657,7 @@ class mslib_fe {
 										foreach ($v as $final_key=>$final_value) {
 											$string=$key.'['.$$key.']['.$k.']';
 											if (!mslib_fe::tep_in_array($string, $exclude_array)) {
-												$get_url.=$key.rawurlencode('['.$$key.']').rawurlencode('['.$k.']['.$final_key.']').'='.rawurlencode(htmlentities($final_value)).'&';
+												$get_url.=$key.rawurlencode('['.$$key.']').rawurlencode('['.$k.']['.$final_key.']').'='.urlencode(htmlentities($final_value)).'&';
 											}
 										}
 									} else {
@@ -665,9 +665,9 @@ class mslib_fe {
 											$string=$key.'['.$$key.']['.$k.']';
 											if (!mslib_fe::tep_in_array($string, $exclude_array)) {
 												if ($hidden_fields) {
-													$get_url.='<input name="'.$key.rawurlencode('['.$$$key.'][]').'" type="hidden" value="'.rawurlencode($v).'">'."\n";
+													$get_url.='<input name="'.$key.rawurlencode('['.$$$key.'][]').'" type="hidden" value="'.htmlspecialchars($v).'">'."\n";
 												} else {
-													$get_url.=$key.rawurlencode('['.$$key.']['.$k.']').'='.rawurlencode(htmlentities($v)).'&';
+													$get_url.=$key.rawurlencode('['.$$key.']['.$k.']').'='.urlencode(htmlentities($v)).'&';
 												}
 											}
 										}
