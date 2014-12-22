@@ -705,6 +705,7 @@ if ($this->ADMIN_USER) {
 				'next_page'=>&$next_page,
 				'section'=>&$section,
 				'page'=>&$p,
+				'offset'=>&$offset
 
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'] as $funcRef) {
