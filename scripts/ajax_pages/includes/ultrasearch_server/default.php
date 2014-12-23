@@ -706,6 +706,13 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 			break;
 			case 'sortby_filter':
+				$array=explode(":",$field);
+				if ($array[1]) {
+					$sortByTypes=explode(',',$array[1]);
+				}
+				if (!is_array($sortByTypes)) {
+					$sortByTypes=array();
+				}
 				$formField['caption'] = $this->pi_getLL('sort_by', 'Sort by:');
 				$options = array();
 				$formFieldItem = array();
@@ -717,20 +724,32 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldSortByItem';
 				$formFieldItem[$count_select]['options'][0] = $this->pi_getLL('default');
 				$sortby_options = array();
-				$sortby_options['manufacturers_asc']=$this->pi_getLL('sortby_options_label_manufacturers_asc', 'Manufacturers (asc)');
-				$sortby_options['manufacturers_desc']=$this->pi_getLL('sortby_options_label_manufacturers_desc', 'Manufacturers (desc)');
-				$sortby_options['best_selling_asc'] = $this->pi_getLL('sortby_options_label_bestselling_asc', 'Best selling (asc)');
-				$sortby_options['best_selling_desc'] = $this->pi_getLL('sortby_options_label_bestselling_desc', 'Best selling (desc)');
-				$sortby_options['price_asc'] = $this->pi_getLL('sortby_options_label_price_asc', 'Price (asc)');
-				$sortby_options['price_desc'] = $this->pi_getLL('sortby_options_label_price_desc', 'Price (desc)');
-				$sortby_options['new_asc'] = $this->pi_getLL('sortby_options_label_new_asc', 'New (asc)');
-				$sortby_options['new_desc'] = $this->pi_getLL('sortby_options_label_new_desc', 'New (desc)');
-				foreach ($sortby_options as $sortby_key => $sortby_label) {
-					if (isset($this->cookie['sortbysb']) && $sortby_key == $this->cookie['sortbysb']) {
-						$formFieldItem[$count_select]['options'][$sortby_key]['selected'] = 'selected';
-						$formFieldItem[$count_select]['options'][$sortby_key]['html'] = $sortby_label;
-					} else {
-						$formFieldItem[$count_select]['options'][$sortby_key]['html'] = $sortby_label;
+				// TypoScript example hiding the manufacturers filters:
+				// lib.msUltrasearchForm.ultrasearch_fields=input_keywords;submit;sortby_filter:-manufacturers;categories:checkbox;
+				if (!in_array('-manufacturers',$sortByTypes)) {
+					$sortby_options['manufacturers_asc']=$this->pi_getLL('sortby_options_label_manufacturers_asc', 'Manufacturers (asc)');
+					$sortby_options['manufacturers_desc']=$this->pi_getLL('sortby_options_label_manufacturers_desc', 'Manufacturers (desc)');
+				}
+				if (!in_array('-popular',$sortByTypes)) {
+					$sortby_options['best_selling_asc'] = $this->pi_getLL('sortby_options_label_bestselling_asc', 'Best selling (asc)');
+					$sortby_options['best_selling_desc'] = $this->pi_getLL('sortby_options_label_bestselling_desc', 'Best selling (desc)');
+				}
+				if (!in_array('-price',$sortByTypes)) {
+					$sortby_options['price_asc'] = $this->pi_getLL('sortby_options_label_price_asc', 'Price (asc)');
+					$sortby_options['price_desc'] = $this->pi_getLL('sortby_options_label_price_desc', 'Price (desc)');
+				}
+				if (!in_array('-new',$sortByTypes)) {
+					$sortby_options['new_asc'] = $this->pi_getLL('sortby_options_label_new_asc', 'New (asc)');
+					$sortby_options['new_desc'] = $this->pi_getLL('sortby_options_label_new_desc', 'New (desc)');
+				}
+				if (count($sortby_options)) {
+					foreach ($sortby_options as $sortby_key => $sortby_label) {
+						if (isset($this->cookie['sortbysb']) && $sortby_key == $this->cookie['sortbysb']) {
+							$formFieldItem[$count_select]['options'][$sortby_key]['selected'] = 'selected';
+							$formFieldItem[$count_select]['options'][$sortby_key]['html'] = $sortby_label;
+						} else {
+							$formFieldItem[$count_select]['options'][$sortby_key]['html'] = $sortby_label;
+						}
 					}
 				}
 				if (!count($formFieldItem)) {

@@ -320,11 +320,16 @@ if ($this->get['feed_hash']) {
 					$select[]='(select cd.content from tx_multishop_categories_description cd where cd.language_id=pf.language_id and cd.categories_id=pf.categories_id) as categories_content_top';
 					$select[]='(select cd.content_footer from tx_multishop_categories_description cd where cd.language_id=pf.language_id and cd.categories_id=pf.categories_id) as categories_content_bottom';
 				}
-				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 999999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds');
+				if ($feed['include_disabled']) {
+					$includeDisabled=1;
+				} else {
+					$includeDisabled=0;
+				}
+				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 999999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds','',0,1,array(),$includeDisabled);
 				$products=$pageset['products'];
 				if ($pageset['total_rows']>0) {
 					foreach ($pageset['products'] as $row) {
-						$product=mslib_fe::getProduct($row['products_id']);
+						$product=mslib_fe::getProduct($row['products_id'],'','',$includeDisabled);
 						if ($product['products_id']) {
 							// TEMPORARY DISABLE THIS IF CONDITION, CAUSE PRODUCTFEED WAS MISSING ATTRIBUTE VALUES IN FLAT ENABLED SHOP
 							//if (!$this->ms['MODULES']['FLAT_DATABASE']) {

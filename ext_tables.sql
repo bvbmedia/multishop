@@ -1113,6 +1113,7 @@ CREATE TABLE `tx_multishop_product_feeds` (
   `code` varchar(150) default '',
   `status` tinyint(1) default '0',
   `include_header` tinyint(1) default '0',
+  `include_disabled` tinyint(1) default '0',
   `feed_type` varchar(50) default '',
   `post_data` text,
   `plain_text` tinyint(1) default '0',

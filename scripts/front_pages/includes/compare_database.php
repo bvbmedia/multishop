@@ -404,6 +404,13 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	$str="select include_disabled from tx_multishop_product_feeds limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE  `tx_multishop_product_feeds` ADD include_disabled tinyint(1) NULL DEFAULT '0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	$str="describe `tx_multishop_products`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

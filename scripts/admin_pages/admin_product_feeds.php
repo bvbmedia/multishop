@@ -168,6 +168,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$updateArray['utm_campaign']=$this->post['utm_campaign'];
 			$updateArray['status']=$this->post['status'];
 			$updateArray['include_header']=$this->post['include_header'];
+			$updateArray['include_disabled']=$this->post['include_disabled'];
 			$updateArray['plain_text']=$this->post['plain_text'];
 			$updateArray['delimiter']=$this->post['delimiter'];
 			if (isset($this->post['feed_type']) && !empty($this->post['feed_type'])) {
@@ -270,6 +271,13 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				<select name="include_header">
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 					<option value="1"'.(($this->post['include_header']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
+				</select>
+		</div>
+		<div class="account-field hide_pf">
+				<label>'.htmlspecialchars($this->pi_getLL('include_disabled_products','Include disabled products')).'</label>
+				<select name="include_disabled">
+					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
+					<option value="1"'.(($this->post['include_disabled']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 				</select>
 		</div>
 		<div class="account-field">

@@ -340,6 +340,11 @@ class tx_mslib_cart extends tslib_pibase {
 					if ($this->post['quantity']<0) {
 						$this->post['quantity']=0;
 					}
+					// PROTECTION
+					if (!$product['products_multiplication'] || !is_float($product['products_multiplication'])) {
+						$this->post['quantity']=round($this->post['quantity'],0);
+						$cart['products'][$shopping_cart_item]['qty']=round($cart['products'][$shopping_cart_item]['qty'],0);
+					}
 					$current_quantity=$cart['products'][$shopping_cart_item]['qty'];
 					if (!$this->post['tx_multishop_pi1']['cart_item']) {
 						$this->post['quantity']=$current_quantity+$this->post['quantity'];
@@ -594,6 +599,10 @@ class tx_mslib_cart extends tslib_pibase {
 										$current_quantity=$cart['products'][$product['products_id']]['qty'];
 										$cart['products'][$product['products_id']]=$product;
 										$cart['products'][$product['products_id']]['qty']=$current_quantity+$rel_carty_quantity;
+										// PROTECTION
+										if (!$product['products_multiplication'] || !is_float($product['products_multiplication'])) {
+											$cart['products'][$product['products_id']]['qty']=round($cart['products'][$product['products_id']]['qty'],0);
+										}
 										$cart['products'][$product['products_id']]['link']=$link;
 										if ($product['minimum_quantity']>$cart['products'][$product['products_id']]['qty']) {
 											$cart['products'][$product['products_id']]['qty']=$product['minimum_quantity'];
@@ -680,6 +689,10 @@ class tx_mslib_cart extends tslib_pibase {
 							$cart['products'][$shopping_cart_item]['final_price']=(mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty)/$qty);
 						}
 						$cart['products'][$shopping_cart_item]['qty']=$qty;
+						// PROTECTION
+						if (!$product['products_multiplication'] || !is_float($product['products_multiplication'])) {
+							$cart['products'][$shopping_cart_item]['qty']=round($cart['products'][$shopping_cart_item]['qty'],0);
+						}
 						if ($product['minimum_quantity']>$cart['products'][$shopping_cart_item]['qty']) {
 							$cart['products'][$shopping_cart_item]['qty']=$product['minimum_quantity'];
 						}

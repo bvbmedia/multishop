@@ -307,13 +307,13 @@ if (!$product['products_id']) {
 		$(".qty_minus").click(function() {
 			var qty = parseFloat($("#quantity").val());
 			if (qty > stepSize) {
-				var new_val = parseFloat(qty - stepSize).toFixed(2);
+				var new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
 				$("#quantity").val(new_val);
 			}
 		});
 		$(".qty_plus").click(function() {
 			var qty = parseFloat($("#quantity").val());
-			var new_val = parseFloat(qty + stepSize).toFixed(2);
+			var new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
 			$("#quantity").val(new_val);
 		});
 	';
