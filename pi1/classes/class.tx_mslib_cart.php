@@ -340,10 +340,10 @@ class tx_mslib_cart extends tslib_pibase {
 					if ($this->post['quantity']<0) {
 						$this->post['quantity']=0;
 					}
-					// PROTECTION
-					if (!$product['products_multiplication'] || !is_float($product['products_multiplication'])) {
+					// PROTECTION WHEN PRODUCT MULTIPLICATION IS NOT A FLOAT WE HAVE TO CAST THE QUANTITY AS INTEGER
+					if (!$product['products_multiplication'] || (int) $product['products_multiplication'] == $product['products_multiplication']) {
 						$this->post['quantity']=round($this->post['quantity'],0);
-						$cart['products'][$shopping_cart_item]['qty']=round($cart['products'][$shopping_cart_item]['qty'],0);
+						$cart['products'][$shopping_cart_item]['qty']=(int) $cart['products'][$shopping_cart_item]['qty'];
 					}
 					$current_quantity=$cart['products'][$shopping_cart_item]['qty'];
 					if (!$this->post['tx_multishop_pi1']['cart_item']) {
@@ -599,9 +599,9 @@ class tx_mslib_cart extends tslib_pibase {
 										$current_quantity=$cart['products'][$product['products_id']]['qty'];
 										$cart['products'][$product['products_id']]=$product;
 										$cart['products'][$product['products_id']]['qty']=$current_quantity+$rel_carty_quantity;
-										// PROTECTION
-										if (!$product['products_multiplication'] || !is_float($product['products_multiplication'])) {
-											$cart['products'][$product['products_id']]['qty']=round($cart['products'][$product['products_id']]['qty'],0);
+										// PROTECTION WHEN PRODUCT MULTIPLICATION IS NOT A FLOAT WE HAVE TO CAST THE QUANTITY AS INTEGER
+										if (!$product['products_multiplication'] || (int) $product['products_multiplication']==$product['products_multiplication']) {
+											$cart['products'][$product['products_id']]['qty']=(int) $cart['products'][$product['products_id']]['qty'];
 										}
 										$cart['products'][$product['products_id']]['link']=$link;
 										if ($product['minimum_quantity']>$cart['products'][$product['products_id']]['qty']) {
@@ -689,9 +689,9 @@ class tx_mslib_cart extends tslib_pibase {
 							$cart['products'][$shopping_cart_item]['final_price']=(mslib_fe::calculateStaffelPrice($product['staffel_price'], $qty)/$qty);
 						}
 						$cart['products'][$shopping_cart_item]['qty']=$qty;
-						// PROTECTION
-						if (!$product['products_multiplication'] || !is_float($product['products_multiplication'])) {
-							$cart['products'][$shopping_cart_item]['qty']=round($cart['products'][$shopping_cart_item]['qty'],0);
+						// PROTECTION WHEN PRODUCT MULTIPLICATION IS NOT A FLOAT WE HAVE TO CAST IT AS INTEGER
+						if (!$product['products_multiplication'] || (int) $product['products_multiplication'] == $product['products_multiplication']) {
+							$cart['products'][$shopping_cart_item]['qty']=(int) $cart['products'][$shopping_cart_item]['qty'];
 						}
 						if ($product['minimum_quantity']>$cart['products'][$shopping_cart_item]['qty']) {
 							$cart['products'][$shopping_cart_item]['qty']=$product['minimum_quantity'];
