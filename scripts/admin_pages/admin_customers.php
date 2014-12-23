@@ -19,6 +19,8 @@ if ($this->post) {
 					}
 				}
 			}
+			header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
+			exit();
 			break;
 		default:
 			// post processing by third party plugins
@@ -28,10 +30,10 @@ if ($this->post) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
+			header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
+			exit();
 			break;
 	}
-	header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
-	exit();
 }
 if (is_numeric($this->get['disable']) and is_numeric($this->get['customer_id'])) {
 	if ($this->get['disable']) {
