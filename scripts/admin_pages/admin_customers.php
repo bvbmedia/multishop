@@ -9,7 +9,7 @@ if ($GLOBALS['TSFE']->fe_user->user['uid'] and $this->get['login_as_customer'] &
 		mslib_befe::loginAsUser($user['uid'], 'admin_customers');
 	}
 }
-if ($this->post) {
+if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($this->post['tx_multishop_pi1']['action'])) {
 	switch ($this->post['tx_multishop_pi1']['action']) {
 		case 'delete_selected_customers':
 			if (is_array($this->post['selected_customers']) and count($this->post['selected_customers'])) {
@@ -19,8 +19,6 @@ if ($this->post) {
 					}
 				}
 			}
-			header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
-			exit();
 			break;
 		default:
 			// post processing by third party plugins
@@ -30,10 +28,10 @@ if ($this->post) {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
-			exit();
 			break;
 	}
+	header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
+	exit();
 }
 if (is_numeric($this->get['disable']) and is_numeric($this->get['customer_id'])) {
 	if ($this->get['disable']) {
