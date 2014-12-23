@@ -1168,6 +1168,7 @@
             <label index="payment_condition">Payment condition</label>
             <label index="feed_exporter_fields_label_manufacturers_advice_price">Manufacturers advice price</label>
             <label index="website">Website</label>
+            <label index="delete_selected_customers">Delete selected customers</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="list_mode_1">Mode 1</label>

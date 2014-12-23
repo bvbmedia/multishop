@@ -9,23 +9,30 @@ if ($GLOBALS['TSFE']->fe_user->user['uid'] and $this->get['login_as_customer'] &
 		mslib_befe::loginAsUser($user['uid'], 'admin_customers');
 	}
 }
-$GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript">
-var checkAll = function() {
-	for (var x = 0; x < 100; x++) {
-		if (document.getElementById(\'ordid_\' + x) != null) {
-			document.getElementById(\'ordid_\' + x).checked = true;
-		}
+if ($this->post) {
+	switch ($this->post['tx_multishop_pi1']['action']) {
+		case 'delete_selected_customers':
+			if (is_array($this->post['selected_customers']) and count($this->post['selected_customers'])) {
+				foreach ($this->post['selected_customers'] as $customer_id) {
+					if (is_numeric($customer_id)) {
+						mslib_befe::deleteCustomer($customer_id);
+					}
+				}
+			}
+			break;
+		default:
+			// post processing by third party plugins
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'])) {
+				$params=array();
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			break;
 	}
+	header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
+	exit();
 }
-var uncheckAll = function() {
-	for (var x = 0; x < 100; x++) {
-		if (document.getElementById(\'ordid_\' + x) != null) {
-			document.getElementById(\'ordid_\' + x).checked = false;
-		}
-	}
-}
-</script>';
 if (is_numeric($this->get['disable']) and is_numeric($this->get['customer_id'])) {
 	if ($this->get['disable']) {
 		mslib_befe::disableCustomer($this->get['customer_id']);
@@ -139,7 +146,7 @@ $formTopSearch='
 <div id="search-orders">
 	<table width="100%">
 		<tr>
-			<td valign="top">				
+			<td valign="top">
 					<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
 					<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 					<input name="type" type="hidden" value="2003" />
@@ -150,17 +157,17 @@ $formTopSearch='
 						<select name="tx_multishop_pi1[search_by]">
 							<option value="all">'.$this->pi_getLL('all').'</option>
 							'.$option_item.'
-						</select>						
+						</select>
 						<input type="submit" name="Search" class="msadmin_button" value="'.$this->pi_getLL('search').'" />
-					</div>	
+					</div>
 					<div class="formfield-wrapper">
 						<label for="includeDeletedAccounts">'.$this->pi_getLL('show_deleted_accounts').'</label>
 						<input type="checkbox" class="PrettyInput" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
-					</div>	
+					</div>
 					</div>
 			</td>
 			<td nowrap valign="top" align="right" class="searchLimit">
-				<div style="float:right;">			
+				<div style="float:right;">
 					<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
 					<select name="limit">';
 $limits=array();
@@ -186,7 +193,7 @@ foreach ($limits as $limit) {
 $formTopSearch.='
 					</select>
 				</div>
-			</td>			
+			</td>
 		</tr>
 	</table>
 	'.$searchCharNav.'
@@ -308,7 +315,7 @@ if ($pageset['total_rows']>0 && isset($pageset['customers'])) {
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$content.=$tmp;
 	}
-	// pagination eof	
+	// pagination eof
 }
 $tmp=$content;
 $content='';
@@ -318,33 +325,51 @@ $tabs['CustomersListing']=array(
 	$tmp
 );
 $tmp='';
+$extra_selected_customers_action_js_filters='';
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersExtraJSForSelectedActions'])) {
+	$params=array('extra_selected_customers_action_js_filters'=>$extra_selected_customers_action_js_filters);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersExtraJSForSelectedActions'] as $funcRef) {
+		t3lib_div::callUserFunction($funcRef, $params, $this);
+	}
+}
 $content.='
-<script type="text/javascript">      
+<script type="text/javascript">
 jQuery(document).ready(function($) {
-	jQuery(".tab_content").hide(); 
+	jQuery(".tab_content").hide();
 	jQuery("ul.tabs li:first").addClass("active").show();
 	jQuery(".tab_content:first").show();
 	jQuery("ul.tabs li").click(function() {
 		jQuery("ul.tabs li").removeClass("active");
-		jQuery(this).addClass("active"); 
+		jQuery(this).addClass("active");
 		jQuery(".tab_content").hide();
 		var activeTab = jQuery(this).find("a").attr("href");
 		jQuery(activeTab).fadeIn(0);
 		return false;
 	});
-             		
+
     jQuery(\'#order_date_from\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
-		timeFormat: \'HH:mm:ss\'         		
+		timeFormat: \'HH:mm:ss\'
     });
-             		
+
 	jQuery(\'#order_date_till\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
-		timeFormat: \'HH:mm:ss\'         		
+		timeFormat: \'HH:mm:ss\'
     });
- 
+	jQuery(\'#check_all_1\').click(function() {
+		checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
+	});
+	jQuery(document).on(\'submit\', \'#customers_listing\', function(){
+		if (jQuery(\'#selected_customers_action\').val()==\'delete_selected_customers\') {
+			if (confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')) {
+				return true;
+			}
+			return false;
+		}
+		'.$extra_selected_customers_action_js_filters.'
+	});
 });
 </script>
 <div id="tab-container">

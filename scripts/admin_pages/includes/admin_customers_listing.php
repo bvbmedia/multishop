@@ -111,7 +111,42 @@ foreach ($customers as $customer) {
 	}
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['customers'], $markerArray, '###|###');
 }
+
 $subpartArray=array();
+
+$actions=array();
+$actions['delete_selected_customers']=$this->pi_getLL('delete_selected_customers');
+// extra action
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionSelectboxProc'])) {
+	$params=array('actions'=>&$actions);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionSelectboxProc'] as $funcRef) {
+		t3lib_div::callUserFunction($funcRef, $params, $this);
+	}
+}
+$formFields=array();
+$formFields['customers_list_action']='
+<select name="tx_multishop_pi1[action]" id="selected_customers_action">
+<option value="">'.$this->pi_getLL('choose_action').'</option>';
+foreach ($actions as $key=>$value) {
+	//$tmp.='<option value="'.$key.'"'. ($this->get['tx_multishop_pi1']['action']==$key?' selected':'').'>'.$value.'</option>';
+	$formFields['customers_list_action'].='<option value="'.$key.'">'.$value.'</option>';
+}
+$formFields['customers_list_action'].='</select>';
+// extra input
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionExtraInputProc'])) {
+	$params=array('formFields'=>&$formFields);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionExtraInputProc'] as $funcRef) {
+		t3lib_div::callUserFunction($funcRef, $params, $this);
+	}
+}
+$formFields['submit_button']='<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
+$form_fields_block='<div id="msAdminCustomersListingActionForm">';
+foreach ($formFields as $key=>$formField) {
+	$form_fields_block.='<div class="msAdminCustomersFormField" id="msAdminCustomersFormField'.$key.'">'.$formField.'</div>';
+}
+$form_fields_block.='</div>';
+$subpartArray['###FORM_FIELDS_LISTING_ACTION_BLOCK###']=$form_fields_block;
+$subpartArray['###FORM_ACTION_URL_CUSTOMERS_BULK_ACTION###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
 $query_string=mslib_fe::tep_get_all_get_params(array(
 	'tx_multishop_pi1[action]',
 	'tx_multishop_pi1[order_by]',
