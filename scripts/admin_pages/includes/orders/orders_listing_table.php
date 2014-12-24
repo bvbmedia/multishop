@@ -99,7 +99,7 @@ foreach ($tmporders as $order) {
 	}
 	$markerArray['EDIT_ORDER_POPUP_WIDTH']=$edit_order_popup_width;
 	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
-	$markerArray['ORDER_TOOLTIP_DATA_URL']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&tx_multishop_pi1[orders_id]='.$order['orders_id']);
+	//$markerArray['ORDER_TOOLTIP_DATA_URL']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&tx_multishop_pi1[orders_id]='.$order['orders_id']);
 	$markerArray['ORDER_CUSTOMER_NAME']=$customer_name;
 	$markerArray['ORDER_CREATE_DATE']=strftime("%x %X", $order['crdate']);
 	$markerArray['ORDER_GRAND_TOTAL']=mslib_fe::amount2Cents($order['grand_total'], 0);
@@ -344,7 +344,7 @@ $headerData.='});
 					}
 				});
 			}
-		})
+		});
 		$(\'#check_all_1\').click(function(){
 			checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
 		});

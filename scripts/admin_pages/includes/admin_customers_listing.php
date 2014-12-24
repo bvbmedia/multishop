@@ -77,6 +77,7 @@ foreach ($customers as $customer) {
 	}
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
+	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
 	$markerArray['CUSTOMERS_UID']=$customer['uid'];
 	$markerArray['CUSTOMERS_EDIT_LINK']=$customer_edit_link;
 	$markerArray['CUSTOMERS_USERNAME']=$customer['username'];
@@ -228,6 +229,10 @@ $subpartArray['###LABEL_FOOTER_CUSTOMER_TURN_OVER_THIS_YEAR###']=ucfirst($this->
 $subpartArray['###LABEL_FOOTER_CUSTOMER_LOGIN_AS_USER###']=ucfirst($this->pi_getLL('login_as_user'));
 $subpartArray['###LABEL_FOOTER_CUSTOMER_STATUS###']=ucfirst($this->pi_getLL('status'));
 $subpartArray['###LABEL_FOOTER_CUSTOMER_DELETE###']=ucfirst($this->pi_getLL('delete'));
+
+$subpartArray['###CUSTOM_MARKER_1_HEADER###']='';
+$subpartArray['###CUSTOM_MARKER_1_BODY###']='';
+$subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
 $subpartArray['###CUSTOMERS###']=$contentItem;
 $master_shop_header='';
 if ($this->masterShop) {

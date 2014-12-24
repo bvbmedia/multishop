@@ -653,6 +653,12 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'getAdminCustomersListingDetails':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/get_admin_customers_listing_details.php');
+		}
+		exit();
+		break;
 	case 'getAdminOrdersListingDetails':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/get_admin_orders_listing_details.php');

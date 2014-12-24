@@ -2584,7 +2584,7 @@
             <label index="week">week</label>
             <label index="are_you_sure">Are you sure</label>
             <label index="add_order_status">Add order status</label>
-            <label index="fax">fax</label>
+            <label index="fax">Fax</label>
             <label index="product_feeds">Product Feeds</label>
             <label index="created">Created</label>
             <label index="modified">Modified</label>
@@ -2989,7 +2989,7 @@
             <label index="are_you_sure">Apakah Anda yakin</label>
             <label index="add_order_status">Tambahkan status pesanan</label>
             <label index="admin_stores">TOKO</label>
-            <label index="fax">fax</label>
+            <label index="fax">Fax</label>
             <label index="product_feeds">Umpan Produk</label>
             <label index="created">Membuat</label>
             <label index="modified">Modifikasi</label>

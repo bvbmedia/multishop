@@ -332,7 +332,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
-$content.='
+$GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	jQuery(".tab_content").hide();
@@ -346,13 +346,11 @@ jQuery(document).ready(function($) {
 		jQuery(activeTab).fadeIn(0);
 		return false;
 	});
-
     jQuery(\'#order_date_from\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
 		timeFormat: \'HH:mm:ss\'
     });
-
 	jQuery(\'#order_date_till\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
@@ -360,6 +358,33 @@ jQuery(document).ready(function($) {
     });
 	jQuery(\'#check_all_1\').click(function() {
 		checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
+	});
+	$(".tooltip").tooltip({
+		position: "down",
+		placement: \'auto\',
+		html: true
+	});
+	var tooltip_is_shown=\'\';
+	$(\'.tooltip\').on(\'show.bs.tooltip\', function () {
+		var customer_id=$(this).attr(\'rel\');
+		var that=$(this);
+		if (tooltip_is_shown != customer_id) {
+			tooltip_is_shown=customer_id;
+			$.ajax({
+				type:   "POST",
+				url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminCustomersListingDetails&').'\',
+				data:   \'tx_multishop_pi1[customer_id]=\'+customer_id,
+				dataType: "json",
+				success: function(data) {
+					that.next().html(data.html);
+					that.tooltip(\'show\', {
+						position: \'down\',
+						placement: \'auto\',
+						html: true
+					});
+				}
+			});
+		}
 	});
 	jQuery(document).on(\'submit\', \'#customers_listing\', function(){
 		if (jQuery(\'#selected_customers_action\').val()==\'delete_selected_customers\') {
@@ -372,6 +397,8 @@ jQuery(document).ready(function($) {
 	});
 });
 </script>
+';
+$content.='
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">';
 $count=0;
