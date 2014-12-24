@@ -29,6 +29,7 @@ $fields['tx_multishop_newsletter']='newsletter';
 $fields['tx_multishop_discount']='discount';
 $fields['tx_multishop_vat_id']='VAT ID';
 $fields['tx_multishop_coc_id']='CoC ID';
+$fields['disable']='disable';
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_export.php']['msCustomersExportFieldsHook'])) {
 	$params=array(
@@ -50,7 +51,7 @@ if (isset($this->get['tx_multishop_pi1']['limit']) and strstr($this->get['tx_mul
 		$limit=$tmpArray[0].','.$tmpArray[1];
 	}
 }
-$filter[]='disable=0 and deleted=0';
+$filter[]='deleted=0';
 $str=$GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $field_keys), // SELECT ...
 	'fe_users', // FROM ...
 	implode(' AND ', $filter), // WHERE...
