@@ -43,7 +43,27 @@ switch ($this->get['action']) {
 		foreach ($datarows as $row) {
 			if ($row['type']=='products_image') {
 				$array=array();
-				$str2="SELECT * from tx_multishop_products where (products_image='".addslashes($row['file'])."' or products_image1='".addslashes($row['file'])."' or products_image2='".addslashes($row['file'])."' or products_image3='".addslashes($row['file'])."' or products_image4='".addslashes($row['file'])."')";
+
+				$filter=array();
+				$tmpOrFilter=array();
+				if (!$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']) {
+					$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']=5;
+				}
+				for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+					$i=$x;
+					if ($i==0) {
+						$i='';
+					}
+					$tmpOrFilter[]='products_image'.$i.'=\''.addslashes($row['file']).'\'';
+				}
+				$filter[]='('.implode(' OR ',$tmpOrFilter).')';
+				$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+					'tx_multishop_products', // FROM ...
+					implode(' AND ',$filter), // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+				);
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry2)) {
 					$stats['orphan']++;
