@@ -281,7 +281,7 @@ def("DOMPDF_ENABLE_JAVASCRIPT", true);
  *
  * @var bool
  */
-def("DOMPDF_ENABLE_REMOTE", true);
+def("DOMPDF_ENABLE_REMOTE", false);
 
 /**
  * The debug output log
