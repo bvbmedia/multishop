@@ -266,7 +266,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 							}
 							break;
 						case 'form':
-							$content.='<form method="';
+							$content='<form method="';
 							switch($valArray['formAction']) {
 								case 'post':
 									$content.='POST';
