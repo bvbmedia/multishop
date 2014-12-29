@@ -608,6 +608,25 @@ class tx_mslib_admin_import extends tslib_pibase {
 				$that->ms['show_default_form']=1;
 			}
 			if (!$that->post['skip_import']) {
+				if (!$that->get['job_id'] && $that->post['cron_data']) {
+					$data=unserialize($that->post['cron_data']);
+					if (is_numeric($data['job_id'])) {
+						// NEW STUFF FOR 123 IMPORT APPROACH WITH PREDEFINED VALUES TEST
+						$that->get['job_id']=$data['job_id'];
+						// load the job
+						$str="SELECT * from tx_multishop_import_jobs where id='".$that->get['job_id']."'".' and type=\''.addslashes($params['importKey']).'\'';
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+						$jobArray=$row;
+						$cron_data=array();
+						$cron_data[0]=array();
+						$that->post['cron_period']='';
+						$cron_data[1]=$that->post;
+						$updateArray['data']=serialize($cron_data);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$that->get['job_id'],$updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				}
 				if (is_numeric($that->get['job_id'])) {
 					// load the job
 					$str="SELECT * from tx_multishop_import_jobs where id='".$that->get['job_id']."'".' and type=\''.addslashes($params['importKey']).'\'';
@@ -867,12 +886,6 @@ class tx_mslib_admin_import extends tslib_pibase {
 							// if($tmpitem[$that->post['select'][0]] and $cols > 0)
 							// {
 							$item=array();
-							if ($jobArray['predefined_variables']) {
-								$array=unserialize($jobArray['predefined_variables']);
-								foreach ($array as $col => $val) {
-									$item[$col]=$val;
-								}
-							}
 							// if the source is a database table name add the unique id
 							// so we can delete it after the import
 							if ($that->post['database_name']) {
@@ -889,6 +902,12 @@ class tx_mslib_admin_import extends tslib_pibase {
 									$item[$that->post['select'][$i]]='';
 								}
 								$input[$that->post['select'][$i]]=$that->post['input'][$i];
+							}
+							if ($jobArray['predefined_variables']) {
+								$array=unserialize($jobArray['predefined_variables']);
+								foreach ($array as $col => $val) {
+									$item[$col]=$val;
+								}
 							}
 							// custom hook that can be controlled by third-party plugin
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_import.php']['msAdminImportItemIterateProc'])) {
