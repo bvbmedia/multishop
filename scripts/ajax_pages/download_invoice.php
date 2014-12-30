@@ -65,24 +65,44 @@ if ($invoice['orders_id']) {
 		$markerArray['###LABEL_INVOICE_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
 		$markerArray['###INVOICE_PAYMENT_METHOD###']=$order['payment_method_label'];
 		$markerArray['###INVOICE_ORDER_DETAILS###']=mslib_befe::printInvoiceOrderDetailsTable($order, $invoice['invoice_id'], $prefix);
-		$content_cms_header=mslib_fe::getCMScontent('pdf_invoice_header_message', $GLOBALS['TSFE']->sys_language_uid);
-		if (!empty($content_cms_header[0]['content'])) {
-			$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='<div class="content_header_message">
-			<br/><br/>
-			'.$content_cms_header[0]['content'].'
-			<br/><br/>
-			</div>';
-		} else {
-			$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='<br/><br/>';
+
+		// CMS HEADER
+		$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='';
+		$cmsKeys=array();
+		if ($order['payment_method']) {
+			$cmsKeys[]='pdf_invoice_header_message_'.$order['payment_method'];
 		}
-		$content_cms_footer=mslib_fe::getCMScontent('pdf_invoice_footer_message', $GLOBALS['TSFE']->sys_language_uid);
-		if (!empty($content_cms_footer[0]['content'])) {
-			$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']='<div class="content_footer_message" style="page-break-before:auto">
-			<br/><br/><br/>
-			'.$content_cms_footer[0]['content'].'
-			</div>';
-		} else {
-			$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']='';
+		$cmsKeys[]='pdf_invoice_header_message';
+		foreach ($cmsKeys as $cmsKey) {
+			$content_cms_header=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
+			if (!empty($content_cms_header[0]['content'])) {
+				$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='<div class="content_header_message">
+				<br/><br/><br/>
+				'.$content_cms_header[0]['content'].'
+				</div>';
+			}
+			if (is_array($content_cms_header)) {
+				break;
+			}
+		}
+		// CMS FOOTER
+		$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']='';
+		$cmsKeys=array();
+		if ($order['payment_method']) {
+			$cmsKeys[]='pdf_invoice_footer_message_'.$order['payment_method'];
+		}
+		$cmsKeys[]='pdf_invoice_footer_message';
+		foreach ($cmsKeys as $cmsKey) {
+			$content_cms_footer=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
+			if (!empty($content_cms_footer[0]['content'])) {
+				$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']='<div class="content_footer_message" style="page-break-before:auto">
+				<br/><br/><br/>
+				'.$content_cms_footer[0]['content'].'
+				</div>';
+			}
+			if (is_array($content_cms_footer)) {
+				break;
+			}
 		}
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
 		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.inc.php');

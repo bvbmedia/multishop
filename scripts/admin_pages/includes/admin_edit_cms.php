@@ -106,7 +106,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		}
 	}
 	$types['email_order_status_changed']=htmlspecialchars($this->pi_getLL('email_order_status_changed_letter'));
-	$types['email_order_status_changed']=$this->pi_getLL('email_order_status_changed_letter').' (Default)';
+	$types['email_order_status_changed']=$this->pi_getLL('email_order_status_changed_letter').' ('.$this->pi_getLL('default').')';
 	$orders_status=mslib_fe::getAllOrderStatus(0);
 	if (is_array($orders_status) and count($orders_status)) {
 		foreach ($orders_status as $item) {
@@ -132,8 +132,18 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$types['create_account_thank_you_page']=$this->pi_getLL('create_account_thank_you_page');
 	$types['email_alert_quantity_threshold_letter']=$this->pi_getLL('email_alert_quantity_threshold_letter', 'Alert quantity threshold e-mail content');
 	// invoice pdf
-	$types['pdf_invoice_header_message']=$this->pi_getLL('pdf_invoice_header_message', 'PDF Invoice header message before order details table');
-	$types['pdf_invoice_footer_message']=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Invoice footer message after order details table');
+	$types['pdf_invoice_header_message']=$this->pi_getLL('pdf_invoice_header_message', 'PDF Invoice header message before order details table').' ('.$this->pi_getLL('default').')';
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
+			$types['pdf_invoice_header_message_'.$key]=$this->pi_getLL('pdf_invoice_header_message', 'PDF Invoice header message before order details table').' ('.$key.')';
+		}
+	}
+	$types['pdf_invoice_footer_message']=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Invoice footer message after order details table').' ('.$this->pi_getLL('default').')';
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
+			$types['pdf_invoice_footer_message_'.$key]=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Invoice footer message after order details table').' ('.$key.')';
+		}
+	}
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
 		$params=array('types'=>&$types);
