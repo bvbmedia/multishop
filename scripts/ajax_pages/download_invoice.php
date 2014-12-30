@@ -62,10 +62,21 @@ if ($invoice['orders_id']) {
 		$markerArray['###ORDER_DATE###']=strftime("%x", $order['crdate']);
 		$markerArray['###LABEL_INVOICE_DATE###']=$this->pi_getLL('invoice_date');
 		$markerArray['###INVOICE_DATE###']=strftime("%x", $invoice['crdate']);
-		$markerArray['###LABEL_INVOICE_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
-		$markerArray['###INVOICE_PAYMENT_METHOD###']=$order['payment_method_label'];
+
+		$markerArray['###LABEL_INVOICE_PAYMENT_METHOD###']='';
+		$markerArray['###INVOICE_PAYMENT_METHOD###']='';
+		if ($order['payment_method_label']) {
+			$markerArray['###LABEL_INVOICE_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
+			$markerArray['###INVOICE_PAYMENT_METHOD###']=$order['payment_method_label'];
+		}
 		$markerArray['###INVOICE_ORDER_DETAILS###']=mslib_befe::printInvoiceOrderDetailsTable($order, $invoice['invoice_id'], $prefix);
 
+		$markerArray['###LABEL_YOUR_VAT_ID###']='';
+		$markerArray['###YOUR_VAT_ID###']='';
+		if ($order['billing_vat_id']) {
+			$markerArray['###LABEL_YOUR_VAT_ID###']=$this->pi_getLL('your_vat_id');
+			$markerArray['###YOUR_VAT_ID###']=$order['billing_vat_id'];
+		}
 		// CMS HEADER
 		$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='';
 		$cmsKeys=array();
@@ -187,6 +198,13 @@ if ($invoice['orders_id']) {
 		$array2[]=strftime("%x", $order['expected_delivery_date']);
 		$array1[]='###CUSTOMER_COMMENTS###';
 		$array2[]=$order['customer_comments'];
+
+		$array1[]='###PAYMENT_DUE_DATE###';
+		if ($order['payment_condition']) {
+			$array2[]=strftime("%x", strtotime('+'.$order['payment_condition'].' day',$invoice['crdate']));
+		} else {
+			$array2[]='';
+		}
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
@@ -205,6 +223,14 @@ if ($invoice['orders_id']) {
 		if ($markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']) {
 			$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']=str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']);
 		}
+		$markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###']='';
+		$markerArray['###INVOICE_PAYMENT_CONDITION###']='';
+		if ($order['payment_condition']) {
+			$markerArray['###LABEL_INVOICE_PAYMENT_CONDITION###']=$this->pi_getLL('payment_condition');
+			$markerArray['###INVOICE_PAYMENT_CONDITION###']=$order['payment_condition'].' '.$this->pi_getLL('days');
+		}
+
+
 		// MARKERS EOL
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
 		//echo $tmpcontent;

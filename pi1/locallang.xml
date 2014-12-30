@@ -1160,6 +1160,8 @@
 			<label index="zip">zip</label>
 			<label index="zip_is_required">Zip is a required field.</label>
             <label index="admin_edit_order_products_description">Order products description</label>
+			<label index="days">days</label>
+			<label index="your_vat_id">Your VAT-id</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
@@ -4657,6 +4659,8 @@
 			<label index="zip">postcode</label>
 			<label index="zip_is_required">Postcode is verplicht</label>
 			<label index="admin_edit_order_products_description">Beschrijving bestelregel</label>
+			<label index="days">dagen</label>
+			<label index="your_vat_id">Uw BTW-nummer</label>
 		</languageKey>
 		<languageKey index="no"></languageKey>
 		<languageKey index="pl"></languageKey>

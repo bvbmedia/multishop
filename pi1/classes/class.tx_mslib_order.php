@@ -656,7 +656,7 @@ class tx_mslib_order extends tslib_pibase {
 			$insertArray['billing_telephone']=$address['telephone'];
 			$insertArray['billing_mobile']=$address['mobile'];
 			$insertArray['billing_fax']='';
-			$insertArray['billing_vat_id']='';
+			$insertArray['billing_vat_id']=$address['tx_multishop_vat_id'];
 			if (!$address['different_delivery_address']) {
 				$insertArray['delivery_email']=$insertArray['billing_email'];
 				$insertArray['delivery_company']=$insertArray['billing_company'];
@@ -676,6 +676,7 @@ class tx_mslib_order extends tslib_pibase {
 				$insertArray['delivery_telephone']=$insertArray['billing_telephone'];
 				$insertArray['delivery_region']=$insertArray['billing_region'];
 				$insertArray['delivery_name']=$insertArray['billing_name'];
+				$insertArray['delivery_vat_id']=$insertArray['billing_vat_id'];
 			} else {
 				$insertArray['delivery_company']=$address['delivery_company'];
 				$insertArray['delivery_first_name']=$address['delivery_first_name'];
@@ -700,7 +701,7 @@ class tx_mslib_order extends tslib_pibase {
 				$insertArray['delivery_telephone']=$address['delivery_telephone'];
 				$insertArray['delivery_mobile']=$address['delivery_mobile'];
 				$insertArray['delivery_fax']='';
-				$insertArray['delivery_vat_id']='';
+				$insertArray['delivery_vat_id']=$address['delivery_vat_id'];
 			}
 			$insertArray['bill']=1;
 			if ($address['forceCustomCrdate']) {
