@@ -55,12 +55,20 @@ if (is_numeric($this->get['orders_id'])) {
 							if (empty($this->post['product_price'])) {
 								$this->post['product_price']='0';
 							}
-							$order_products_description='';
+							$updateArray=array();
+							$updateArray['products_id']=$this->post['products_id'];
+							$updateArray['qty']=$this->post['product_qty'];
+							$updateArray['products_name']=$this->post['product_name'];
 							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['order_products_description'])) {
-								$order_products_description=', products_description=\''.addslashes($this->post['order_products_description']).'\'';
+								$updateArray['products_description']=$this->post['order_products_description'];
 							}
-							$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
-							$GLOBALS['TYPO3_DB']->sql_query($sql);
+							$updateArray['products_price']=$this->post['product_price'];
+							$updateArray['final_price']=$this->post['product_price'];
+							$updateArray['products_tax']=$this->post['product_tax'];
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_id = \''.(int)$this->get['orders_id'].'\' and orders_products_id = \''.(int)$this->post['orders_products_id'].'\'', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							//$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
+							//$GLOBALS['TYPO3_DB']->sql_query($sql);
 							// clean up the order product attributes to prepare the update
 							$sql="delete from tx_multishop_orders_products_attributes where orders_id = ".$this->get['orders_id']." and orders_products_id = ".$this->post['orders_products_id'];
 							$GLOBALS['TYPO3_DB']->sql_query($sql);
@@ -88,8 +96,19 @@ if (is_numeric($this->get['orders_id'])) {
 											$optvalid=$this->post['edit_manual_values'][$x];
 											$optvalname=mslib_fe::getNameOptions($optvalid);
 										}
-										$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
-										$GLOBALS['TYPO3_DB']->sql_query($sql);
+										$insertArray=array();
+										$insertArray['orders_id']=(int)$this->get['orders_id'];
+										$insertArray['orders_products_id']=$orders_products_id;
+										$insertArray['products_options']=$optname;
+										$insertArray['products_options_values']=$optvalname;
+										$insertArray['options_values_price']=$this->post['edit_manual_price'][$x];
+										$insertArray['price_prefix']=$price_prefix;
+										$insertArray['products_options_id']=$optid;
+										$insertArray['products_options_values_id']=$optvalid;
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertArray);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										//$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$this->post['orders_products_id']."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
+										//$GLOBALS['TYPO3_DB']->sql_query($sql);
 									}
 								}
 							}
@@ -101,19 +120,27 @@ if (is_numeric($this->get['orders_id'])) {
 								$this->post['manual_product_price']='0';
 							}
 							// determine the sort order for the new orders products
-							$sql_sort_order="select sort_order from tx_multishop_orders_products where orders_id='".$this->get['orders_id']."' order by sort_order desc limit 1";
+							$sql_sort_order="select sort_order from tx_multishop_orders_products where orders_id='".(int)$this->get['orders_id']."' order by sort_order desc limit 1";
 							$qry_sort_order=$GLOBALS['TYPO3_DB']->sql_query($sql_sort_order);
 							$rs_sort_order=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_sort_order);
 							$new_sort_order=$rs_sort_order['sort_order']+1;
-							$manual_order_products_description_field='';
-							$manual_order_products_description_value='';
-							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['manual_order_products_description'])) {
-								$manual_order_products_description_field=', products_description';
-								$manual_order_products_description_value=', \''.addslashes($this->post['manual_order_products_description']).'\'';
-							}
 							// insert new products
-							$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name".$manual_order_products_description_field.", products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."'".$manual_order_products_description_value.", '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
-							$GLOBALS['TYPO3_DB']->sql_query($sql);
+							$insertArray=array();
+							$insertArray['orders_id']=(int)$this->get['orders_id'];
+							$insertArray['products_id']=(int)$this->post['manual_products_id'];
+							$insertArray['qty']=$this->post['manual_product_qty'];
+							$insertArray['products_name']=$this->post['manual_product_name'];
+							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['manual_order_products_description'])) {
+								$insertArray['products_description']=$this->post['manual_order_products_description'];
+							}
+							$insertArray['products_price']=$this->post['manual_product_price'];
+							$insertArray['final_price']=$this->post['manual_product_price'];
+							$insertArray['products_tax']=$this->post['manual_product_tax'];
+							$insertArray['sort_order']=$new_sort_order;
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							//$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name".$manual_order_products_description_field.", products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."'".$manual_order_products_description_value.", '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
+							//$GLOBALS['TYPO3_DB']->sql_query($sql);
 							$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 							// insert the update attributes
 							$count_manual_attributes=count($this->post['edit_manual_option']);
@@ -139,8 +166,19 @@ if (is_numeric($this->get['orders_id'])) {
 											$optvalid=$this->post['edit_manual_values'][$x];
 											$optvalname=mslib_fe::getNameOptions($optvalid);
 										}
-										$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
-										$GLOBALS['TYPO3_DB']->sql_query($sql);
+										$insertArray=array();
+										$insertArray['orders_id']=(int)$this->get['orders_id'];
+										$insertArray['orders_products_id']=$orders_products_id;
+										$insertArray['products_options']=$optname;
+										$insertArray['products_options_values']=$optvalname;
+										$insertArray['options_values_price']=$this->post['edit_manual_price'][$x];
+										$insertArray['price_prefix']=$price_prefix;
+										$insertArray['products_options_id']=$optid;
+										$insertArray['products_options_values_id']=$optvalid;
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertArray);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										//$sql="insert into tx_multishop_orders_products_attributes (orders_id, orders_products_id, products_options, products_options_values, options_values_price, price_prefix, attributes_values, products_options_id, products_options_values_id) values ('".$this->get['orders_id']."', '".$orders_products_id."', '".$optname."', '".$optvalname."', '".$this->post['edit_manual_price'][$x]."', '".$price_prefix."', NULL, '".$optid."', '".$optvalid."')";
+										//$GLOBALS['TYPO3_DB']->sql_query($sql);
 									}
 								}
 							}
@@ -1262,7 +1300,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$tmpcontent.='<tr class="'.$tr_type.' order_products_description">';
 						$tmpcontent.='<td>&nbsp;</td>';
 						$tmpcontent.='<td>&nbsp;</td>';
-						$tmpcontent.='<td>'.$order['products_description'].'</td>';
+						$tmpcontent.='<td>'.nl2br($order['products_description']).'</td>';
 						$tmpcontent.='<td>&nbsp;</td>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							$tmpcontent.='<td>&nbsp;</td>';
