@@ -74,14 +74,14 @@ if ($invoice['orders_id']) {
 		}
 		$cmsKeys[]='pdf_invoice_header_message';
 		foreach ($cmsKeys as $cmsKey) {
-			$content_cms_header=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
-			if (!empty($content_cms_header[0]['content'])) {
+			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
+			if (!empty($page[0]['content'])) {
 				$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='<div class="content_header_message">
 				<br/><br/><br/>
-				'.$content_cms_header[0]['content'].'
+				'.$page[0]['content'].'
 				</div>';
 			}
-			if (is_array($content_cms_header)) {
+			if (is_array($page)) {
 				break;
 			}
 		}
@@ -93,18 +93,122 @@ if ($invoice['orders_id']) {
 		}
 		$cmsKeys[]='pdf_invoice_footer_message';
 		foreach ($cmsKeys as $cmsKey) {
-			$content_cms_footer=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
-			if (!empty($content_cms_footer[0]['content'])) {
+			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
+			if (!empty($page[0]['content'])) {
 				$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']='<div class="content_footer_message" style="page-break-before:auto">
 				<br/><br/><br/>
-				'.$content_cms_footer[0]['content'].'
+				'.$page[0]['content'].'
 				</div>';
 			}
-			if (is_array($content_cms_footer)) {
+			if (is_array($page)) {
 				break;
 			}
 		}
+		// MARKERS
+		$array1=array();
+		$array2=array();
+		$array1[]='###BILLING_FULL_NAME###';
+		$array2[]=$full_customer_name;
+		$array1[]='###FULL_NAME###';
+		$array2[]=$full_customer_name;
+		$array1[]='###BILLING_NAME###';
+		$array2[]=$order['billing_name'];
+		$array1[]='###BILLING_FIRST_NAME###';
+		$array2[]=$order['billing_first_name'];
+		$array1[]='###BILLING_LAST_NAME###';
+		$array2[]=preg_replace('/\s+/', ' ', $order['billing_middle_name'].' '.$order['billing_last_name']);
+		$array1[]='###BILLING_EMAIL###';
+		$array2[]=$order['billing_email'];
+		$array1[]='###BILLING_TELEPHONE###';
+		$array2[]=$order['billing_telephone'];
+		$array1[]='###BILLING_MOBILE###';
+		$array2[]=$order['billing_mobile'];
+		// full delivery name
+		$array1[]='###DELIVERY_NAME###';
+		$array2[]=$order['delivery_name'];
+		$array1[]='###DELIVERY_FULL_NAME###';
+		$array2[]=$delivery_full_customer_name;
+		$array1[]='###DELIVERY_FIRST_NAME###';
+		$array2[]=$order['delivery_first_name'];
+		$array1[]='###DELIVERY_LAST_NAME###';
+		$array2[]=preg_replace('/\s+/', ' ', $order['delivery_middle_name'].' '.$order['delivery_last_name']);
+		$array1[]='###DELIVERY_EMAIL###';
+		$array2[]=$order['delivery_email'];
+		$array1[]='###DELIVERY_TELEPHONE###';
+		$array2[]=$order['delivery_telephone'];
+		$array1[]='###DELIVERY_MOBILE###';
+		$array2[]=$order['delivery_mobile'];
+		$array1[]='###CUSTOMER_EMAIL###';
+		$array2[]=$order['billing_email'];
+		$time=$order['crdate'];
+		$long_date=strftime($this->pi_getLL('full_date_format'), $time);
+		$array1[]='###ORDER_DATE_LONG###'; // ie woensdag 23 juni, 2010
+		$array2[]=$long_date;
+		// backwards compatibility
+		$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
+		$array2[]=$long_date;
+		$time=time();
+		$long_date=strftime($this->pi_getLL('full_date_format'), $time);
+		$array1[]='###CURRENT_DATE_LONG###'; // ie woensdag 23 juni, 2010
+		$array2[]=$long_date;
+		$array1[]='###STORE_NAME###';
+		$array2[]=$this->ms['MODULES']['STORE_NAME'];
+		$array1[]='###TOTAL_AMOUNT###';
+		$array2[]=mslib_fe::amount2Cents($order['total_amount']);
+		$array1[]='###PROPOSAL_NUMBER###';
+		$array2[]=$order['orders_id'];
+		$array1[]='###ORDER_NUMBER###';
+		$array2[]=$order['orders_id'];
+		$array1[]='###ORDER_LINK###';
+		$array2[]='';
+		$array1[]='###ORDER_STATUS###';
+		$array2[]=$order['orders_status'];
+		$array1[]='###TRACK_AND_TRACE_CODE###';
+		$array2[]=$order['track_and_trace_code'];
+		$array1[]='###BILLING_ADDRESS###';
+		$array2[]=$billing_address;
+		$array1[]='###DELIVERY_ADDRESS###';
+		$array2[]=$delivery_address;
+		$array1[]='###CUSTOMER_ID###';
+		$array2[]=$order['customer_id'];
+		$array1[]='###INVOICE_NUMBER###';
+		$array2[]=$invoice['invoice_id'];
+		$array1[]='###INVOICE_ID###';
+		$array2[]=$invoice['invoice_id'];
+		$array1[]='###INVOICE_LINK###';
+		$array2[]=$invoice_link;
+		$array1[]='###ORDER_DETAILS###';
+		$array2[]=$ORDER_DETAILS;
+		$array1[]='###SHIPPING_METHOD###';
+		$array2[]=$order['shipping_method_label'];
+		$array1[]='###PAYMENT_METHOD###';
+		$array2[]=$order['payment_method_label'];
+		$array1[]='###EXPECTED_DELIVERY_DATE###';
+		$array2[]=strftime("%x", $order['expected_delivery_date']);
+		$array1[]='###CUSTOMER_COMMENTS###';
+		$array2[]=$order['customer_comments'];
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
+			$params=array(
+				'array1'=>&$array1,
+				'array2'=>&$array2,
+				'order'=>&$order,
+				'mail_template'=>$mail_template
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if ($markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']) {
+			$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']=str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']);
+		}
+		if ($markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']) {
+			$markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']=str_replace($array1, $array2, $markerArray['###INVOICE_CONTENT_FOOTER_MESSAGE###']);
+		}
+		// MARKERS EOL
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
+		//echo $tmpcontent;
+		//die();
 		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
 		$content=$tmpcontent;
 		$dompdf = new DOMPDF();
