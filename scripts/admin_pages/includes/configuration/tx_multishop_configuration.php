@@ -481,6 +481,17 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
+	'configuration_title'=>'This module enables to print the payment condition on the footer in the PDF invoice',
+	'configuration_key'=>'INVOICE_PRINT_PAYMENT_CONDITION_ON_FOOTER',
+	'configuration_value'=>'0',
+	'description'=>'Prints the payment condition on the footer of the PDF invoice.',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'This module enable to print order packing list',
 	'configuration_key'=>'PACKING_LIST_PRINT',
 	'configuration_value'=>'1',
