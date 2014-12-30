@@ -55,7 +55,11 @@ if (is_numeric($this->get['orders_id'])) {
 							if (empty($this->post['product_price'])) {
 								$this->post['product_price']='0';
 							}
-							$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."', products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
+							$order_products_description='';
+							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['order_products_description'])) {
+								$order_products_description=', products_description=\''.addslashes($this->post['order_products_description']).'\'';
+							}
+							$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
 							$GLOBALS['TYPO3_DB']->sql_query($sql);
 							// clean up the order product attributes to prepare the update
 							$sql="delete from tx_multishop_orders_products_attributes where orders_id = ".$this->get['orders_id']." and orders_products_id = ".$this->post['orders_products_id'];
@@ -101,8 +105,14 @@ if (is_numeric($this->get['orders_id'])) {
 							$qry_sort_order=$GLOBALS['TYPO3_DB']->sql_query($sql_sort_order);
 							$rs_sort_order=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_sort_order);
 							$new_sort_order=$rs_sort_order['sort_order']+1;
+							$manual_order_products_description_field='';
+							$manual_order_products_description_value='';
+							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['manual_order_products_description'])) {
+								$manual_order_products_description_field=', products_description';
+								$manual_order_products_description_value=', \''.addslashes($this->post['manual_order_products_description']).'\'';
+							}
 							// insert new products
-							$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name, products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
+							$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name".$manual_order_products_description_field.", products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."'".$manual_order_products_description_value.", '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
 							$GLOBALS['TYPO3_DB']->sql_query($sql);
 							$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 							// insert the update attributes
@@ -1230,6 +1240,39 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 				}
 				$tmpcontent.='</tr>';
+				if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
+					if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
+						$tmpcontent.='<tr class="'.$tr_type.' order_products_description">';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>';
+						$tmpcontent.='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').'</label>';
+						$tmpcontent.='<textarea rows="8" cols="75" id="order_products_description" name="order_products_description">'.$order['products_description'].'</textarea></td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+							$tmpcontent.='<td>&nbsp;</td>';
+						}
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td align="right">&nbsp;</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='</tr>';
+					}
+				} else {
+					if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($order['products_description'])) {
+						$tmpcontent.='<tr class="'.$tr_type.' order_products_description">';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>'.$order['products_description'].'</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+							$tmpcontent.='<td>&nbsp;</td>';
+						}
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td align="right">&nbsp;</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='</tr>';
+					}
+				}
 				if ($orders_products_attributes[$order['orders_products_id']]) {
 					$attr_counter=0;
 					if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
@@ -1439,9 +1482,12 @@ if (is_numeric($this->get['orders_id'])) {
 					<td><input type="button" id="edit_add_attributes" class="msadmin_button" value="add attribute"></td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					<td>&nbsp;</td>
-					</tr>';
+					<td>&nbsp;</td>';
+					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+						$tmpcontent.='<td>&nbsp;</td>';
+					}
+					$tmpcontent.='<td>&nbsp;</td>';
+					$tmpcontent.='</tr>';
 				}
 				$tmpcontent.="</tbody>";
 			}
@@ -1502,6 +1548,22 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='</td>';
 			$tmpcontent.='';
 			$tmpcontent.='</tr>';
+			if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
+				$tmpcontent.='<tr class="manual_add_new_product" style="display:none">';
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='<td>';
+				$tmpcontent.='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').'</label>';
+				$tmpcontent.='<textarea rows="8" cols="75" id="manual_order_products_description" name="manual_order_products_description"></textarea></td>';
+				$tmpcontent.='<td>&nbsp;</td>';
+				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
+					$tmpcontent.='<td>&nbsp;</td>';
+				}
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='<td align="right">&nbsp;</td>';
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='</tr>';
+			}
 			$tmpcontent.='<tr class="manual_add_new_product" id="last_edit_product_row" style="display:none">';
 			$tmpcontent.='<td>&nbsp;</td>';
 			$tmpcontent.='<td>&nbsp;</td>';

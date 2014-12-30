@@ -1159,6 +1159,7 @@
 			<label index="your_payment_is_pending">Your payment is pending</label>
 			<label index="zip">zip</label>
 			<label index="zip_is_required">Zip is a required field.</label>
+            <label index="admin_edit_order_products_description">Order products description</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
