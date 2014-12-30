@@ -385,6 +385,8 @@ if ($this->ADMIN_USER) {
 			$orderby=array();
 			$where=array();
 			$orderby=array();
+			$orderby[]='company';
+			$orderby[]='name';
 			$select=array();
 			if (strlen($this->get['q'])>0) {
 				$items=array();
@@ -392,6 +394,7 @@ if ($this->ADMIN_USER) {
 				$items[]="f.name like '%".addslashes($this->get['q'])."%'";
 				$items[]="f.email like '%".addslashes($this->get['q'])."%'";
 				$items[]="f.username like '%".addslashes($this->get['q'])."%'";
+				$items[]="f.country like '%".addslashes($this->get['q'])."%'";
 				$filter[]='('.implode(" or ", $items).')';
 				$filter[]='(f.disable=0 and f.deleted=0)';
 			}

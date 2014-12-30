@@ -297,6 +297,27 @@ class tx_mslib_admin_interface extends tslib_pibase {
 							}
 							$row[$col]=$valArray['content'];
 							break;
+						case 'booleanToggle':
+							$status_html='';
+							if (!$row[$col]) {
+								$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
+								if ($valArray['hrefEnable']) {
+									foreach ($row as $tmpCol => $tmpVal) {
+										$valArray['hrefEnable']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['hrefEnable']);
+									}
+									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+								}
+							} else {
+								if ($valArray['hrefDisable']) {
+									foreach ($row as $tmpCol => $tmpVal) {
+										$valArray['hrefDisable']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['hrefDisable']);
+									}
+									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+								}
+								$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
+							}
+							$row[$col]=$status_html;
+							break;
 					}
 					$adjustedValue=$row[$col];
 					if ($valArray['href']) {
