@@ -1269,7 +1269,9 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$tmpcontent.='<td>&nbsp;</td>';
 						$tmpcontent.='<td align="right">&nbsp;</td>';
-						$tmpcontent.='<td>&nbsp;</td>';
+						if (!$orders['is_locked']) {
+							$tmpcontent.='<td>&nbsp;</td>';
+						}
 						$tmpcontent.='</tr>';
 					}
 				}
