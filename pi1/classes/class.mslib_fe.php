@@ -6480,14 +6480,12 @@ class mslib_fe {
 			$rs_inv=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($query);
 			$prefix=$this->ms['MODULES']['INVOICE_PREFIX'].date("Y");
 			if (preg_match("/^".$prefix."/", $rs_inv['invoice_id'])) {
-				//$invoice_id = ((int) $rs_inv['invoice_id'] + 1);
-				if ($this->ms['MODULES']['INVOICE_PREFIX']) {
-					$rs_inv['invoice_id']=str_replace($this->ms['MODULES']['INVOICE_PREFIX'], '', $rs_inv['invoice_id']);
-				}
-				// if prefix not empty, the (int) will convert the whole invoice id to 1
-				$invoice_id=((int)$rs_inv['invoice_id']+1);
-				if ($this->ms['MODULES']['INVOICE_PREFIX']) {
-					$invoice_id=$this->ms['MODULES']['INVOICE_PREFIX'].$invoice_id;
+				$rs_inv['invoice_id']=preg_replace('/^'.$prefix.'/','',$rs_inv['invoice_id']);
+				// if prefix not empty, the (int) will convert the whole invoice id to 1. we also prepend with a digit (9) so the zeros will be remained (otherwise 00001 gets 1)
+				$invoice_id=((int)'9'.$rs_inv['invoice_id']+1);
+				$invoice_id=substr($invoice_id,1,strlen($invoice_id));
+				if ($prefix) {
+					$invoice_id=$prefix.$invoice_id;
 				}
 			} else {
 				$invoice_id=$this->ms['MODULES']['INVOICE_PREFIX'].date("Y").'00001';

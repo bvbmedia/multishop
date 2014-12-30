@@ -703,7 +703,11 @@ class tx_mslib_order extends tslib_pibase {
 				$insertArray['delivery_vat_id']='';
 			}
 			$insertArray['bill']=1;
-			$insertArray['crdate']=time();
+			if ($address['forceCustomCrdate']) {
+				$insertArray['crdate']=$address['forceCustomCrdate'];
+			} else {
+				$insertArray['crdate']=time();
+			}
 			$insertArray['shipping_method']=$address['shipping_method'];
 			$insertArray['shipping_method_label']=$address['shipping_method_label'];
 			$insertArray['payment_method']=$address['payment_method'];
