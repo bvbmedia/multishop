@@ -4656,6 +4656,7 @@
 			<label index="your_payment_is_pending">Je betaling is lopende</label>
 			<label index="zip">postcode</label>
 			<label index="zip_is_required">Postcode is verplicht</label>
+			<label index="admin_edit_order_products_description">Beschrijving bestelregel</label>
 		</languageKey>
 		<languageKey index="no"></languageKey>
 		<languageKey index="pl"></languageKey>
