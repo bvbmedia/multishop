@@ -74,6 +74,8 @@ if ($this->post) {
 		$updateArray['telephone']=$this->post['telephone'];
 		$updateArray['mobile']=$this->post['mobile'];
 		$updateArray['tx_multishop_discount']=$this->post['tx_multishop_discount'];
+		$updateArray['tx_multishop_payment_condition']=$this->post['tx_multishop_payment_condition'];
+
 		if ($this->post['password']) {
 			$updateArray['password']=mslib_befe::getHashedPassword($this->post['password']);
 		}
@@ -633,6 +635,10 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_HIDDEN_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
 		$subpartArray['###LABEL_DISCOUNT###']=ucfirst($this->pi_getLL('discount'));
 		$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
+		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
+		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
+
+
 		$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
 		$subpartArray['###VALUE_CUSTOMER_ID###']=$this->get['tx_multishop_pi1']['cid'];
 		if ($_GET['action']=='edit_customer') {

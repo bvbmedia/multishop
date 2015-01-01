@@ -7,6 +7,7 @@
         #invoice_header { position: fixed; top:-150px; height: 150px}
         #invoice_footer { position: fixed; bottom:-60px; height: 60px;}
         #invoice_content { font-family:arial, helvetica, sans-serif; font-size: 13px; margin:0px 60px 0px 125px; z-index:0; }
+        #customerDetailsHeader {padding-bottom:50px;}
         .valign_top { vertical-align:text-top; }
         #orderDetailsPDFInvoice {}
     </style>
@@ -19,7 +20,7 @@
     ###INVOICE_FOOTER_BACKGROUND_IMAGE###
 </div>
 <div id="invoice_content">
-    <table width="100%" border="0">
+    <table width="100%" border="0" id="customerDetailsHeader">
         <tr>
             <td width="50%">&nbsp;</td>
             <td width="50%" align="center" style="font-size:34px"><strong>###LABEL_INVOICE_HEADER###</strong></td>
@@ -65,7 +66,7 @@
                         <td>###INVOICE_PAYMENT_CONDITION###</td>
                     </tr>
                     <tr>
-                        <td width="130px"><strong>###LABEL_YOUR_VAT_ID###</strong></td>
+                        <td valign="top"><strong>###LABEL_YOUR_VAT_ID###</strong></td>
                         <td>###YOUR_VAT_ID###</td>
                     </tr>
                 </table>
