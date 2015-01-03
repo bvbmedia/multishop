@@ -3792,7 +3792,7 @@ class mslib_fe {
 		</div>';
 		return $output;
 	}
-	public function amount2Cents($amount, $customer_currency=1, $include_currency_symbol=1) {
+	public function amount2Cents($amount, $customer_currency=1, $include_currency_symbol=1,$cropZeroDecimals=1) {
 		$cu_thousands_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_thousands_point'];
 		$cu_decimal_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_decimal_point'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
@@ -3813,11 +3813,13 @@ class mslib_fe {
 			//TODO: 2015-01-03 disabled calling this method, because we use the symbol directly from static_currencies table
 			//$output.=mslib_fe::currency(1, $customer_currency);
 		}
-		if ($array[1]=='00') {
-			$array[1]='-';
-		}
-		if ($array[1]==',00') {
-			$array[1]=',-';
+		if ($cropZeroDecimals) {
+			if ($array[1]=='00') {
+				$array[1]='-';
+			}
+			if ($array[1]==',00') {
+				$array[1]=',-';
+			}
 		}
 		$output.=$array[0].$cu_decimal_point.'</span><span class="amount_cents">'.$array[1].'</span>';
 		//hook to let other plugins further manipulate the query
