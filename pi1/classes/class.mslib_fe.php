@@ -3805,7 +3805,13 @@ class mslib_fe {
 		$array[0]=number_format($array[0], 0, '', $cu_thousands_point);
 		$output='<span class="amount">';
 		if ($include_currency_symbol) {
-			$output.=mslib_fe::currency(1, $customer_currency);
+			if ($customer_currency) {
+				$output.=$this->ms['MODULES']['CUSTOMER_CURRENCY_ARRAY']['cu_symbol_left'];
+			} else {
+				$output.=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_symbol_left'];
+			}
+			//TODO: 2015-01-03 disabled calling this method, because we use the symbol directly from static_currencies table
+			//$output.=mslib_fe::currency(1, $customer_currency);
 		}
 		if ($array[1]=='00') {
 			$array[1]='-';

@@ -52,8 +52,12 @@ if ($invoice['orders_id']) {
 		$markerArray['###BILLING_NAME###']=$order['billing_name'];
 		$markerArray['###BILLING_ADDRESS###']=$order['billing_address'];
 		$markerArray['###BILLING_ZIP###']=$order['billing_zip'];
-		$markerArray['###BILLING_CITY###']=$order['billing_city'];
-		$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
+		$markerArray['###BILLING_CITY###']=mslib_befe::strtoupper($order['billing_city']);
+		$markerArray['###BILLING_COUNTRY###']='';
+		if (mslib_befe::strtolower($order['billing_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
+			// ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
+			$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
+		}
 		$markerArray['###LABEL_CUSTOMER_ID###']=$this->pi_getLL('admin_customer_id');
 		$markerArray['###CUSTOMER_ID###']=$order['customer_id'];
 		$markerArray['###LABEL_ORDER_ID###']=$this->pi_getLL('orders_id');
@@ -62,7 +66,8 @@ if ($invoice['orders_id']) {
 		$markerArray['###ORDER_DATE###']=strftime("%x", $order['crdate']);
 		$markerArray['###LABEL_INVOICE_DATE###']=$this->pi_getLL('invoice_date');
 		$markerArray['###INVOICE_DATE###']=strftime("%x", $invoice['crdate']);
-
+		$markerArray['###LABEL_INVOICE_NUMBER###']=$this->pi_getLL('invoice_number');
+		$markerArray['###INVOICE_NUMBER###']=$invoice['invoice_id'];
 		$markerArray['###LABEL_INVOICE_PAYMENT_METHOD###']='';
 		$markerArray['###INVOICE_PAYMENT_METHOD###']='';
 		if ($order['payment_method_label']) {
@@ -115,13 +120,14 @@ if ($invoice['orders_id']) {
 				break;
 			}
 		}
+
 		// MARKERS
 		$array1=array();
 		$array2=array();
 		$array1[]='###BILLING_FULL_NAME###';
-		$array2[]=$full_customer_name;
+		$array2[]=$order['billing_name'];
 		$array1[]='###FULL_NAME###';
-		$array2[]=$full_customer_name;
+		$array2[]=$order['billing_name'];
 		$array1[]='###BILLING_NAME###';
 		$array2[]=$order['billing_name'];
 		$array1[]='###BILLING_FIRST_NAME###';
@@ -138,7 +144,7 @@ if ($invoice['orders_id']) {
 		$array1[]='###DELIVERY_NAME###';
 		$array2[]=$order['delivery_name'];
 		$array1[]='###DELIVERY_FULL_NAME###';
-		$array2[]=$delivery_full_customer_name;
+		$array2[]=$order['delivery_name'];
 		$array1[]='###DELIVERY_FIRST_NAME###';
 		$array2[]=$order['delivery_first_name'];
 		$array1[]='###DELIVERY_LAST_NAME###';
@@ -198,6 +204,12 @@ if ($invoice['orders_id']) {
 		$array2[]=strftime("%x", $order['expected_delivery_date']);
 		$array1[]='###CUSTOMER_COMMENTS###';
 		$array2[]=$order['customer_comments'];
+		$array1[]='###PAYMENT_CONDITION###';
+		if ($order['payment_condition']) {
+			$array2[]=$order['payment_condition'].' '.$this->pi_getLL('days');
+		} else {
+			$array2[]='';
+		}
 
 		$array1[]='###PAYMENT_DUE_DATE###';
 		if ($order['payment_condition']) {

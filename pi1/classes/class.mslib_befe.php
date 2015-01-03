@@ -3491,20 +3491,20 @@ class mslib_befe {
 	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='') {
 		$orders_tax_data=$order['orders_tax_data'];
 		$tmpcontent='<table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" id="orderDetailsPDFInvoice">';
-		$tmpcontent.='<tr>';
-		$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
-		$tmpcontent.='</tr>';
+		//$tmpcontent.='<tr>';
+		//$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
+		//$tmpcontent.='</tr>';
 		$tmpcontent.='<tr style="background-color:#000; color:#fff;">
-					  <td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
-					  <td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
+					  <td align="right" class="cell_qty">'.ucfirst($this->pi_getLL('qty')).'</td>
+					  <td align="left" class="cell_products_name">'.$this->pi_getLL('products_name').'</td>';
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
 						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
-						  <td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+						  <td align="right" class="cell_products_final_price">'.$this->pi_getLL('final_price_inc_vat').'</td>';
 		} else {
 			$tmpcontent.='<td align="right" class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
 						  <td align="right" class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
-						  <td align="right" class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+						  <td align="right" class="cell_products_final_price align_right">'.$this->pi_getLL('final_price_ex_vat').'</td>';
 		}
 		$tmpcontent.='</tr>';
 		$total_tax=0;
@@ -3521,7 +3521,7 @@ class mslib_befe {
 				$tmpcontent.='<tr class="'.$tr_type.'">';
 				$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.number_format($product['qty']).'</td>';
 				$product_tmp=mslib_fe::getProduct($product['products_id']);
-				$tmpcontent.='<td align="left" class="cell_products_name valign_top" style="padding-left:10px">'.$product['products_name'];
+				$tmpcontent.='<td align="left" class="cell_products_name valign_top">'.$product['products_name'];
 				if ($product['products_article_number']) {
 					$tmpcontent.=' ('.$product['products_article_number'].')';
 				}
@@ -3553,21 +3553,21 @@ class mslib_befe {
 				$tmpcontent.='</tr>';
 				// start for new page
 				if ($od_rows_count%20==0) {
-					$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2" style="page-break-before: always; margin-top:200px">';
+					$tmpcontent.='</table><table class="msadmin_border" width="100%" border="0" cellspacing="0" cellpadding="2">';
 					$tmpcontent.='<tr>';
 					$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
 					$tmpcontent.='</tr>';
 					$tmpcontent.='<tr style="background-color:#000; color:#fff;">
-					  <td align="right" class="cell_qty" style="padding-right:5px; width:5%">'.ucfirst($this->pi_getLL('qty')).'</td>
-					  <td align="center" class="cell_products_name" style="padding-right:5px; width:50%">'.$this->pi_getLL('products_name').'</td>';
+					  <td align="right" class="cell_qty">'.ucfirst($this->pi_getLL('qty')).'</td>
+					  <td align="left" class="cell_products_name">'.$this->pi_getLL('products_name').'</td>';
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
 						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
-						  <td align="right" class="cell_products_final_price" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+						  <td align="right" class="cell_products_final_price">'.$this->pi_getLL('final_price_inc_vat').'</td>';
 					} else {
 						$tmpcontent.='<td class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
 						  <td class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
-						  <td class="cell_products_final_price align_right" style="padding-right:5px; width:20%">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+						  <td class="cell_products_final_price align_right">'.$this->pi_getLL('final_price_ex_vat').'</td>';
 					}
 					$tmpcontent.='</tr>';
 				}
@@ -3575,7 +3575,7 @@ class mslib_befe {
 					foreach ($product['attributes'] as $tmpkey=>$options) {
 						if ($options['products_options_values']) {
 							$od_rows_count++;
-							$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td align="left" style="padding-left:10px">'.$options['products_options'].': '.$options['products_options_values'].'</td>';
+							$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td align="left">'.$options['products_options'].': '.$options['products_options_values'].'</td>';
 							$cell_products_normal_price='';
 							$cell_products_vat='';
 							$cell_products_final_price='';

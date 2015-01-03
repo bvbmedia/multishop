@@ -9,7 +9,7 @@
         #invoice_content { font-family:arial, helvetica, sans-serif; font-size: 13px; margin:0px 60px 0px 125px; z-index:0; }
         #customerDetailsHeader {padding-bottom:50px;}
         .valign_top { vertical-align:text-top; }
-        #orderDetailsPDFInvoice {}
+        #orderDetailsPDFInvoice td { vertical-align:text-top; padding: 3px;}
     </style>
 </head>
 <body>
@@ -33,7 +33,7 @@
                             ###BILLING_COMPANY###
                             <strong>###BILLING_NAME###</strong><br/>
                             <strong>###BILLING_ADDRESS###</strong><br/>
-                            <strong>###BILLING_ZIP### ###BILLING_CITY###</strong><br/>
+                            <strong>###BILLING_ZIP###&nbsp;&nbsp;###BILLING_CITY###</strong><br/>
                             <strong>###BILLING_COUNTRY###</strong><br/><br/>
                         </td>
                     </tr>
@@ -52,6 +52,10 @@
                     <tr>
                         <td><strong>###LABEL_ORDER_DATE###</strong></td>
                         <td>###ORDER_DATE###</td>
+                    </tr>
+                    <tr>
+                        <td><strong>###LABEL_INVOICE_NUMBER###</strong></td>
+                        <td>###INVOICE_NUMBER###</td>
                     </tr>
                     <tr>
                         <td><strong>###LABEL_INVOICE_DATE###</strong></td>

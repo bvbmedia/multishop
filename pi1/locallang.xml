@@ -4567,7 +4567,7 @@
 			<label index="street_address_is_required">Straatnaam is verplicht</label>
 			<label index="street_address_number">huisnummer</label>
 			<label index="street_number_is_required">Huisnummer is verplicht</label>
-			<label index="sub_total">Sub-totaal</label>
+			<label index="sub_total">Subtotaal</label>
 			<label index="submit">verstuur</label>
 			<label index="submit_button_label">Click here to submit value</label>
 			<label index="subscribe_to_our_newsletter">Ik meld mij aan voor de nieuwsbrief</label>
