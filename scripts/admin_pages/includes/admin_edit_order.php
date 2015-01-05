@@ -329,6 +329,9 @@ if (is_numeric($this->get['orders_id'])) {
 					if (isset($this->post['edit_discount_value'])) {
 						$updateArray['discount']=$this->post['edit_discount_value'];
 					}
+					if (isset($this->post['order_payment_condition'])) {
+						$updateArray['payment_condition']=$this->post['order_payment_condition'];
+					}
 					$keys=array();
 					$keys[]='company';
 					$keys[]='name';
@@ -983,6 +986,21 @@ if (is_numeric($this->get['orders_id'])) {
 		}
 		$orderDetailsItem.='</li>';
 		$orderDetails[]=$orderDetailsItem;
+		if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
+			$orderDetailsItem='';
+			$orderDetailsItem='<li>';
+			$orderDetailsItem.='<label>'.$this->pi_getLL('payment_condition').'</label>';
+			if (!$orders['is_locked']) {
+				$orderDetailsItem.='<input type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" style="width:90px" /> ' . $this->pi_getLL('days');
+			} else {
+				$orderDetailsItem.='<span>'.$orders['payment_condition'].' '.$this->pi_getLL('days').'</span>';
+			}
+			$orderDetailsItem.='</li>';
+			$orderDetails[]=$orderDetailsItem;
+		}
+
+
+
 		$orderDetailsItem='';
 		if ($orders['customer_comments']) {
 			$orderDetailsItem='<li id="customer_comments"><label>'.$this->pi_getLL('customer_comments').'</label>
