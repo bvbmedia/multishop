@@ -105,7 +105,7 @@ $option_search=array(
 	"customer_id"=>$this->pi_getLL('admin_customer_id'),
 	"billing_email"=>$this->pi_getLL('admin_customer_email'),
 	"delivery_name"=>$this->pi_getLL('admin_customer_name'),
-	"crdate"=>$this->pi_getLL('admin_order_date'),
+	//"crdate"=>$this->pi_getLL('admin_order_date'),
 	"billing_zip"=>$this->pi_getLL('admin_zip'),
 	"billing_city"=>$this->pi_getLL('admin_city'),
 	"billing_address"=>$this->pi_getLL('admin_address'),
@@ -136,6 +136,28 @@ if ($p>0) {
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
+$all_orders_status=mslib_fe::getAllOrderStatus();
+$orders_status_list='<select name="orders_status_search" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
+if (is_array($all_orders_status)) {
+	$order_status_search_selected=false;
+	foreach ($all_orders_status as $row) {
+		$orders_status_list.='<option value="'.$row['id'].'" '.(($this->get['orders_status_search']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
+		if ($this->get['orders_status_search']==$row['id']) {
+			$order_status_search_selected=true;
+		}
+	}
+}
+$orders_status_list.='</select>';
+$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
+$customer_groups_input='';
+if (is_array($groups) and count($groups)) {
+	$customer_groups_input.='<select id="groups" class="multiselect" name="usergroup" style="width:200px">'."\n";
+	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
+	foreach ($groups as $group) {
+		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->get['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
+	}
+	$customer_groups_input.='</select>'."\n";
+}
 $form_orders_search='<div id="search-orders">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
@@ -146,7 +168,7 @@ $form_orders_search='<div id="search-orders">
 			<td>
 				<div style="float:right;">
 					<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-					<select name="limit">
+					<select name="limit" style="width:60px">
 					';
 $limits=array();
 $limits[]='15';
@@ -165,9 +187,15 @@ $form_orders_search.='
 				</div>
 				<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
 				<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-				<select name="type_search"><option value="all">'.$this->pi_getLL('all').'</option>
+				<select name="type_search" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 				</select>
+				'.$customer_groups_input.'
+				'.$orders_status_list.'
+				<div class="formfield-wrapper">
+					<label for="order_date_from">'.$this->pi_getLL('from').':</label><input type="text" name="order_date_from" id="invoice_date_from" value="'.$this->post['order_date_from'].'">
+					<label for="order_date_till">'.$this->pi_getLL('to').':</label><input type="text" name="order_date_till" id="invoice_date_till" value="'.$this->post['order_date_till'].'">
+				</div>
 				<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
 				<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
 				<input type="submit" name="Search" value="'.htmlspecialchars($this->pi_getLL('search')).'"></input>
@@ -225,21 +253,38 @@ if ($this->get['skeyword']) {
 			$filter[]=" o.billing_company LIKE '%".addslashes($this->get['skeyword'])."%'";
 			break;
 		case 'shipping_method':
-			$filter[]=" o.shipping_method LIKE '%".addslashes($this->get['skeyword'])."%'";
+			$filter[]=" (o.shipping_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.shipping_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
 			break;
 		case 'payment_method':
-			$filter[]=" o.payment_method LIKE '%".addslashes($this->get['skeyword'])."%'";
+			$filter[]=" (o.payment_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.payment_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
 			break;
 		case 'customer_id':
 			$filter[]=" o.customer_id LIKE '%".addslashes($this->get['skeyword'])."%'";
 			break;
-		case 'crdate':
+		/*case 'crdate':
 			$start_time=date("Y-m-d", strtotime($this->get['skeyword']))." 00:00:00";
 			$till_time=date("Y-m-d", strtotime($this->get['skeyword']))." 23:59:59";
 			$filter[]=" crdate BETWEEN '".addslashes($start_time)."' and '".addslashes($till_time)."'";
 			$ors[]=" ($type_search >= $date_search) ";
-			break;
+			break;*/
 	}
+}
+
+if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
+	list($from_date, $from_time)=explode(" ", $this->get['invoice_date_from']);
+	list($fd, $fm, $fy)=explode('/', $from_date);
+	list($till_date, $till_time)=explode(" ", $this->get['invoice_date_till']);
+	list($td, $tm, $ty)=explode('/', $till_date);
+	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
+	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
+	$column='i.crdate';
+	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
+}
+if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
+	$filter[]=' i.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users').')';
+}
+if ($this->get['orders_status_search']>0) {
+	$filter[]="(o.status='".$this->get['orders_status_search']."')";
 }
 if ($this->cookie['paid_invoices_only']) {
 	$filter[]="(i.paid='1')";
@@ -293,7 +338,17 @@ jQuery(document).ready(function($) {
 		$(activeTab).fadeIn(0);
 		return false;
 	});
-
+	$("#invoice_date_from").datetimepicker({
+		dateFormat: "dd/mm/yy",
+		showSecond: true,
+		timeFormat: "HH:mm:ss"
+	});
+	$("#invoice_date_till").datetimepicker({
+		dateFormat: "dd/mm/yy",
+		showSecond: true,
+		timeFormat: "HH:mm:ss"
+	});
+	$("select").select2();
 });
 </script>
 <div id="tab-container">

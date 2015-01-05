@@ -385,7 +385,6 @@ $option_search=array(
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
 	"payment_method"=>$this->pi_getLL('admin_payment_method'),
 	"order_products"=>$this->pi_getLL('admin_order_products'),
-	"order_products"=>$this->pi_getLL('admin_order_products'),
 	"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),
 	"billing_telephone"=>$this->pi_getLL('telephone')
 );
@@ -508,10 +507,10 @@ if ($this->post['skeyword']) {
 			$filter[]=" billing_company LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'shipping_method':
-			$filter[]=" shipping_method LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$filter[]=" (shipping_method_label '%".addslashes($this->post['skeyword'])."%' or shipping_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
 			break;
 		case 'payment_method':
-			$filter[]=" payment_method LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$filter[]=" (payment_method LIKE '%".addslashes($this->post['skeyword'])."%' or payment_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
 			break;
 		case 'customer_id':
 			$filter[]=" customer_id='".addslashes($this->post['skeyword'])."'";
@@ -551,6 +550,9 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
 //die();
 if ($this->post['orders_status_search']>0) {
 	$filter[]="(o.status='".$this->post['orders_status_search']."')";
+}
+if (isset($this->post['usergroup']) && $this->post['usergroup']>0) {
+	$filter[]=' o.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->post['usergroup'], 'fe_users').')';
 }
 if ($this->cookie['payment_status']=='paid_only') {
 	$filter[]="(o.paid='1')";
@@ -631,6 +633,16 @@ if ($this->cookie['payment_status']=='unpaid_only') {
 	$payment_status_select.='<option value="unpaid_only">'.$this->pi_getLL('show_unpaid_orders_only').'</option>';
 }
 $payment_status_select.='</select>';
+$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
+$customer_groups_input='';
+if (is_array($groups) and count($groups)) {
+	$customer_groups_input.='<select id="groups" class="multiselect" name="usergroup" style="width:200px">'."\n";
+	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
+	foreach ($groups as $group) {
+		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->post['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
+	}
+	$customer_groups_input.='</select>'."\n";
+}
 $subpartArray=array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
@@ -638,6 +650,7 @@ $subpartArray['###SHOP_PID###']=$this->shop_pid;
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
+$subpartArray['###USERGROUP_SELECTBOX###']=$customer_groups_input;
 $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###']=$orders_status_list;
 $subpartArray['###VALUE_SEARCH###']=htmlspecialchars($this->pi_getLL('search'));
 $subpartArray['###LABEL_DATE_FROM###']=$this->pi_getLL('from');

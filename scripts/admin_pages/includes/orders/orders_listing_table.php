@@ -39,7 +39,7 @@ foreach ($tmporders as $order) {
 		$customer_name=$order['billing_name'];
 	}
 	//<div class="orders_status_button_gray" title="'.htmlspecialchars($order['orders_status']).'">'.$order['orders_status'].'</div>
-	$order_status_selectbox='<select name="orders_status" class="change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'">
+	$order_status_selectbox='<select name="orders_status" class="change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'" style="width:200px">
 		<option value="">'.$this->pi_getLL('choose').'</option>';
 	if (is_array($all_orders_status)) {
 		foreach ($all_orders_status as $item) {
@@ -169,7 +169,7 @@ foreach ($actions as $key=>$value) {
 	$formFields['orders_list_action'].='<option value="'.$key.'">'.$value.'</option>';
 }
 $formFields['orders_list_action'].='</select>';
-$formFields['update_to_order_status']='<select name="tx_multishop_pi1[update_to_order_status]" id="msadmin_order_status_select"><option value="">'.$this->pi_getLL('choose').'</option>';
+$formFields['update_to_order_status']='<select name="tx_multishop_pi1[update_to_order_status]" id="msadmin_order_status_select" style="width:200px"><option value="">'.$this->pi_getLL('choose').'</option>';
 if (is_array($all_orders_status)) {
 	foreach ($all_orders_status as $row) {
 		$formFields['update_to_order_status'].='<option value="'.$row['id'].'" '.(($order['status']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
