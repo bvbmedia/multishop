@@ -385,6 +385,9 @@ $option_search=array(
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
 	"payment_method"=>$this->pi_getLL('admin_payment_method'),
 	"order_products"=>$this->pi_getLL('admin_order_products'),
+	"order_products"=>$this->pi_getLL('admin_order_products'),
+	"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),
+	"billing_telephone"=>$this->pi_getLL('telephone')
 );
 asort($option_search);
 $type_search=$this->post['type_search'];
@@ -406,12 +409,12 @@ if ($p>0) {
 	$offset=0;
 }
 // orders search
-$option_item='<select name="type_search"><option value="all">'.$this->pi_getLL('all').'</option>';
+$option_item='<select name="type_search" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>';
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->post['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
 $option_item.='</select>';
-$orders_status_list='<select name="orders_status_search"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
+$orders_status_list='<select name="orders_status_search" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
 	foreach ($all_orders_status as $row) {
@@ -422,7 +425,7 @@ if (is_array($all_orders_status)) {
 	}
 }
 $orders_status_list.='</select>';
-$limit_selectbox='<select name="limit">';
+$limit_selectbox='<select name="limit" style="width:60px">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -521,6 +524,12 @@ if ($this->post['skeyword']) {
 			$where[]=' o.orders_id=op.orders_id';
 			*/
 			break;
+		case 'billing_country':
+			$filter[]=" billing_country LIKE '%".addslashes($this->post['skeyword'])."%'";
+			break;
+		case 'billing_telephone':
+			$filter[]=" billing_telephone LIKE '%".addslashes($this->post['skeyword'])."%'";
+			break;
 	}
 }
 if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
@@ -609,7 +618,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_orders_found').'.';
 	$no_results=$this->cObj->substituteMarkerArrayCached($subparts['orders_noresults'], array(), $subpartArray);
 }
-$payment_status_select='<select name="payment_status">
+$payment_status_select='<select name="payment_status" style="width:250px">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
 if ($this->cookie['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
@@ -646,5 +655,12 @@ $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.$content.'</div>';
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$("select").select2();
+});
+</script>
+';
 
 ?>

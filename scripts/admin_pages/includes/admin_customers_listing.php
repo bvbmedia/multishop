@@ -126,7 +126,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $formFields=array();
 $formFields['customers_list_action']='
-<select name="tx_multishop_pi1[action]" id="selected_customers_action">
+<select name="tx_multishop_pi1[action]" id="selected_customers_action" style="width:250px">
 <option value="">'.$this->pi_getLL('choose_action').'</option>';
 foreach ($actions as $key=>$value) {
 	//$tmp.='<option value="'.$key.'"'. ($this->get['tx_multishop_pi1']['action']==$key?' selected':'').'>'.$value.'</option>';
