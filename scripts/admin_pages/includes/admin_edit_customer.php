@@ -393,13 +393,17 @@ if (count($enabled_countries)==1) {
 	$countries_input.='<input name="delivery_country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 } else {
 	foreach ($enabled_countries as $country) {
-		$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+		if ($this->get['action']=='add_customer') {
+			$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->tta_shop_info['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+		} else {
+			$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+		}
 		$tmpcontent_con_delivery.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($this->post['delivery_country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 	}
 	if ($tmpcontent_con) {
 		$countries_input='
 		<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
-		<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
+		<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'" style="width:295px">
 		<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 		'.$tmpcontent_con.'
 		</select>
@@ -458,6 +462,7 @@ jQuery(document).ready(function($) {
 		},
 		debug: false
 	});
+	$("select").select2();
 });
 </script>';
 // now lets load the users
@@ -763,6 +768,8 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###DETAILS_TAB###']='';
 		$subpartArray['###DETAILS###']='';
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
+		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
+		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
 		break;
 }
 // h5validate message

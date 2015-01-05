@@ -130,6 +130,7 @@ if (is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_cms_description', 'id=\''.$this->get['cms_id'].'\'');
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_cms'));
 }
 if ($this->get['Search'] and ($this->get['cmsLimit']!=$this->cookie['cmsLimit'])) {
 	$this->cookie['cmsLimit']=$this->get['cmsLimit'];

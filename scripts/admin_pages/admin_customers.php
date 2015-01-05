@@ -98,7 +98,11 @@ $option_search=array(
 	"f.name"=>$this->pi_getLL('admin_customer_name'),
 	"f.username"=>$this->pi_getLL('username'),
 	"f.email"=>$this->pi_getLL('admin_customer_email'),
-	"f.uid"=>$this->pi_getLL('admin_customer_id')
+	"f.uid"=>$this->pi_getLL('admin_customer_id'),
+	"f.city"=>$this->pi_getLL('admin_city'),
+	"f.country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),
+	"f.zip"=>$this->pi_getLL('admin_zip'),
+	"f.telephone"=>$this->pi_getLL('telephone')
 );
 asort($option_search);
 $option_item='';
@@ -154,7 +158,7 @@ $formTopSearch='
 					<div class="formfield-container-wrapper">
 					<div class="formfield-wrapper">
 						<label>'.ucfirst($this->pi_getLL('keyword')).'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
-						<select name="tx_multishop_pi1[search_by]">
+						<select name="tx_multishop_pi1[search_by]" style="width:200px">
 							<option value="all">'.$this->pi_getLL('all').'</option>
 							'.$option_item.'
 						</select>
@@ -169,7 +173,7 @@ $formTopSearch='
 			<td nowrap valign="top" align="right" class="searchLimit">
 				<div style="float:right;">
 					<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-					<select name="limit">';
+					<select name="limit" style="width:60px">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -222,6 +226,18 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 		case 'f.username':
 			$filter[]="f.username like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
 			break;
+		case 'f.city':
+			$filter[]="f.city like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
+			break;
+		case 'f.country':
+			$filter[]="f.country like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
+			break;
+		case 'f.zip':
+			$filter[]="f.zip like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
+			break;
+		case 'f.telephone':
+			$filter[]="f.telephone like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
+			break;
 		default:
 			$option_fields=$option_search;
 			$items=array();
@@ -247,6 +263,12 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 				}
 				$keywordOr[]="f.company like '".$this->sqlKeyword."'";
 				$keywordOr[]="f.name like '".$this->sqlKeyword."'";
+				$keywordOr[]="f.email like '".$this->sqlKeyword."'";
+				$keywordOr[]="f.username like '".$this->sqlKeyword."'";
+				$keywordOr[]="f.city like '".$this->sqlKeyword."'";
+				$keywordOr[]="f.country like '".$this->sqlKeyword."'";
+				$keywordOr[]="f.zip like '".$this->sqlKeyword."'";
+				$keywordOr[]="f.telephone like '".$this->sqlKeyword."'";
 			}
 		}
 		$filter[]="(".implode(" OR ", $keywordOr).")";
@@ -395,6 +417,7 @@ jQuery(document).ready(function($) {
 		}
 		'.$extra_selected_customers_action_js_filters.'
 	});
+	$("select").select2();
 });
 </script>
 ';

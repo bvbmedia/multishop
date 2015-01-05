@@ -816,7 +816,7 @@ if (is_numeric($this->get['orders_id'])) {
 				} else if ($(this).attr("id") == "edit_billing_city") {
 					billing_details += $(this).val() + "<br/>";
 				} else if ($(this).attr("id") == "edit_billing_country") {
-					billing_details += $(this).val() + "<br/><br/>";
+					billing_details += $(this).find(\':selected\').text() + "<br/><br/>";
 				} else if ($(this).attr("id") == "edit_billing_email") {
 					if ($(this).val() != "") {
 						billing_details += "'.$this->pi_getLL('email').': <a href=\"mailto:" + $(this).val() + "\">" + $(this).val() + "</a><br/>";
@@ -882,7 +882,7 @@ if (is_numeric($this->get['orders_id'])) {
 				} else if ($(this).attr("id") == "edit_delivery_city") {
 					delivery_details += $(this).val() + "<br/>";
 				} else if ($(this).attr("id") == "edit_delivery_country") {
-					delivery_details += $(this).val() + "<br/><br/>";
+					delivery_details += $(this).find(\':selected\').text() + "<br/><br/>";
 				} else if ($(this).attr("id") == "edit_delivery_email") {
 					if ($(this).val() != "") {
 						delivery_details += "'.$this->pi_getLL('email').': <a href=\"mailto:" + $(this).val() + "\">" + $(this).val() + "</a><br/>";
