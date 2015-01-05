@@ -92,6 +92,25 @@ foreach ($tmporders as $order) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['ORDER_ID']=$order['orders_id'];
+
+	$markerArray['INVOICE_NUMBER']='';
+	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+		$markerArray['INVOICE_NUMBER']='<td align="right">';
+		$filter=array();
+		$invoices=mslib_befe::getRecords($order['orders_id'],'tx_multishop_invoices i','i.orders_id',$filter);
+
+		$links=array();
+		if (is_array($invoices) && count($invoices)) {
+			foreach ($invoices as $invoice) {
+				$invoice=mslib_fe::getInvoice($invoice['id'],'id');
+				$links[]='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank">'.$invoice['invoice_id'].'</a>';
+			}
+		}
+		if (count($links)) {
+			$markerArray['INVOICE_NUMBER'].=implode('<br/>',$links);
+		}
+		$markerArray['INVOICE_NUMBER'].='</td>';
+	}
 	if (isset($this->get['tx_multishop_pi1']['is_proposal'])) {
 		$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
 	} else {
@@ -194,6 +213,12 @@ $master_shop_header='';
 if ($this->masterShop) {
 	$master_shop_header='<th width="75" class="cell_store">'.$this->pi_getLL('store').'</th>';
 }
+$subpartArray['###HEADER_INVOICE_NUMBER###']='';
+$subpartArray['###FOOTER_INVOICE_NUMBER###']='';
+if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+	$subpartArray['###HEADER_INVOICE_NUMBER###']='<th width="50" class="cell_invoice_id">'.$this->pi_getLL('invoice_number').'</th>';
+	$subpartArray['###FOOTER_INVOICE_NUMBER###']='<th width="50" class="cell_invoice_id">'.$this->pi_getLL('invoice_number').'</th>';
+}
 $subpartArray['###HEADER_MASTER_SHOP###']=$master_shop_header;
 $subpartArray['###FOOTER_MASTER_SHOP###']=$master_shop_header;
 $subpartArray['###LABEL_HEADER_CUSTOMER###']=$this->pi_getLL('customer');
@@ -253,6 +278,9 @@ $subpartArray['###LABEL_FOOTER_MODIFIED###']=$this->pi_getLL('modified_on', 'Mod
 $subpartArray['###LABEL_HEADER_PAID###']=$this->pi_getLL('admin_paid');
 $subpartArray['###LABEL_FOOTER_PAID###']=$this->pi_getLL('admin_paid');
 $extra_header='';
+if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+	$extra_header='<th width="50">&nbsp;</th>';
+}
 if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT'] || $page_type=='proposals') {
 	$extra_header='<th width="50">&nbsp;</th>';
 }

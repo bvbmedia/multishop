@@ -559,7 +559,7 @@ class tx_mslib_order extends tslib_pibase {
 			$orders['subtotal_tax'] = ($orders['subtotal_tax'] + $extra_vat);
 		} */
 		$orders['total_amount']=round($orders['orders_tax_data']['grand_total'], 2);
-		if ($orders['total_amount']<0.01) {
+		if ($orders['total_amount'] > 0 && $orders['total_amount'] <0.01) {
 			$orders['total_amount']=0;
 		}
 		//round($orders['subtotal_amount']+$orders['subtotal_tax']+$orders['payment_method_costs']+$orders['shipping_method_costs']-$orders['discount'],2);
