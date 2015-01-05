@@ -62,6 +62,26 @@ if (is_array($erno) and count($erno)>0) {
 	$content.='</ul>';
 	$content.='</div>';
 }
+if ($this->get['tx_multishop_pi1']['action']) {
+	switch ($this->get['tx_multishop_pi1']['action']) {
+		case 'delete':
+			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_tax_rule_groups', 'rules_group_id=\''.$this->get['tx_multishop_pi1']['rules_group_id'].'\'');
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			break;
+		case 'update_default_status':
+			if (intval($this->get['tx_multishop_pi1']['rules_group_id'])) {
+				$updateArray=array();
+				$updateArray['default_status']=1;
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_tax_rule_groups', 'rules_group_id=\''.$this->get['tx_multishop_pi1']['rules_group_id'].'\'', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				$updateArray=array();
+				$updateArray['default_status']=0;
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_tax_rule_groups', 'rules_group_id <> \''.$this->get['tx_multishop_pi1']['rules_group_id'].'\'', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+			break;
+	}
+}
 if ($this->get['delete'] and is_numeric($this->get['rules_group_id'])) {
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_tax_rule_groups', 'rules_group_id=\''.$this->get['rules_group_id'].'\'');
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -77,13 +97,13 @@ $content.='
 		<legend>ADD / UPDATE TAX RULES GROUP</legend>
 		<div class="account-field">
 				<label for="">Name</label>
-				<input type="text" name="name" id="name" value="'.$this->post['name'].'"> 
+				<input type="text" name="name" id="name" value="'.$this->post['name'].'">
 		</div>
 		<div class="account-field">
 				<label for="">Status</label>
 				<input name="status" type="radio" value="1" '.((!isset($this->post['status']) or $this->post['status']==1) ? 'checked' : '').' /> on
 				<input name="status" type="radio" value="0" '.((isset($this->post['status']) and $this->post['status']==0) ? 'checked' : '').' /> off
-		</div>		
+		</div>
 		<div class="account-field">
 				<label for="">&nbsp;</label>
 				<input name="rules_group_id" type="hidden" value="'.$this->post['rules_group_id'].'" />
@@ -138,7 +158,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 			$query="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$tab_content.='
-			<ul class="category_listing_ul_'.$counter.'" id="msAdmin_category_listing_ul">		
+			<ul class="category_listing_ul_'.$counter.'" id="msAdmin_category_listing_ul">
 			';
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$tab_content.='<li class="item_'.$counter.'">';
@@ -209,14 +229,14 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 		}
 	}
 	$content.='
-	<script type="text/javascript"> 
+	<script type="text/javascript">
 	jQuery(document).ready(function($) {
 		jQuery(".tab_content").hide();
 		jQuery("ul.tabs li:first").addClass("active").show();
 		jQuery(".tab_content:first").show();
 		jQuery("ul.tabs li").click(function() {
 			jQuery("ul.tabs li").removeClass("active");
-			jQuery(this).addClass("active"); 
+			jQuery(this).addClass("active");
 			jQuery(".tab_content").hide();
 			var activeTab = jQuery(this).find("a").attr("href");
 			jQuery(activeTab).show();
@@ -231,10 +251,10 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 		$count++;
 		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
 	}
-	$content.='      
+	$content.='
 		</ul>
 		<div class="tab_container">
-	
+
 		';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
@@ -246,7 +266,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 		';
 	}
 	$content.=$save_block.'
-	
+
 		</div>
 	</div>
 	';
@@ -265,10 +285,11 @@ if (!$this->get['edit']) {
 	if (count($tax_rules_groups)) {
 		$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
 		<tr>
-			<th>ID</th>
-			<th>Name</th>
-			<th>Status</th>
-			<th>Action</th>
+			<th width="50">ID</th>
+			<th>'.$this->pi_getLL('name').'</th>
+			<th width="50">Status</th>
+			<th width="50">'.$this->pi_getLL('default', 'Default').'</th>
+			<th width="50">'.$this->pi_getLL('action').'</th>
 		</tr>
 		';
 		foreach ($tax_rules_groups as $tax_rules_group) {
@@ -280,11 +301,27 @@ if (!$this->get['edit']) {
 				<td>
 					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['name'].'</a>
 				</td>
-				<td>
-					'.$tax_rules_group['status'].'
-				</td>			
-				<td>
-					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&delete=1').'">delete</a>
+				<td align="center">';
+			if (!$tax_rules_group['status']) {
+				$content.='';
+				$content.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
+			} else {
+				$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
+				$content.='';
+			}
+			$content .='</td>
+				<td align="center">';
+			if (!$tax_rules_group['default_status']) {
+				$content.='';
+				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+			} else {
+				$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
+				$content.='';
+			}
+			$content.='
+				</td>
+				<td class="align_center">
+					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=delete&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id']).'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a>
 				</td>
 			</tr>
 			';

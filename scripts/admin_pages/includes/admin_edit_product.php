@@ -2012,7 +2012,12 @@ if ($this->post) {
 		$data=mslib_fe::getTaxRuleSet($product['tax_id'], $product['products_price']);
 		$product_tax_rate=$data['total_tax_rate'];
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-			$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['rules_group_id']==$product['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
+			if ($this->get['action']=='add_product') {
+				$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['default_status']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
+			} else {
+				$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['rules_group_id']==$product['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
+			}
+
 		}
 		$input_vat_rate.='</select>';
 		if ($_REQUEST['action']=='edit_product') {
