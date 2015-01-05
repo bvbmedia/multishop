@@ -5,17 +5,22 @@ if (!defined('TYPO3_MODE')) {
 switch ($this->get['tx_multishop_pi1']['action']) {
 	case 'mail_invoices':
 		// send invoices by mail
+		$erno=array();
 		if ($this->get['tx_multishop_pi1']['mailto'] and is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
 			$attachments=array();
 			foreach ($this->get['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
-					$invoice=mslib_fe::getInvoice($invoice, 'invoice_id');
-					// invoice as attachment
-					$invoice_path=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$invoice['invoice_id'].'.pdf';
-					$invoice_data=mslib_fe::file_get_contents($this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']));
-					// write temporary to disk
-					file_put_contents($invoice_path, $invoice_data);
-					$attachments[]=$invoice_path;
+					$invoice=mslib_fe::getInvoice($invoice,'id');
+					if ($invoice['id']) {
+						// invoice as attachment
+						$invoice_path=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$invoice['invoice_id'].'.pdf';
+						$invoice_data=mslib_fe::file_get_contents($this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']));
+						// write temporary to disk
+						file_put_contents($invoice_path, $invoice_data);
+						$attachments[]=$invoice_path;
+					} else {
+						$erno[]='Cannot retrieve invoice: '.$invoice;
+					}
 				}
 			}
 			if (count($attachments)) {
@@ -35,7 +40,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
 			foreach ($this->get['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
-					$invoice=mslib_fe::getInvoice($invoice, 'invoice_id');
+					$invoice=mslib_fe::getInvoice($invoice,'id');
 					if ($invoice['id'] and $invoice['reversal_invoice']==0) {
 						mslib_fe::generateReversalInvoice($invoice['id']);
 					}
@@ -48,7 +53,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
 			foreach ($this->get['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
-					$invoice=mslib_fe::getInvoice($invoice, 'invoice_id');
+					$invoice=mslib_fe::getInvoice($invoice,'id');
 					if ($invoice['id']) {
 						$order=mslib_fe::getOrder($invoice['orders_id']);
 						if ($order['orders_id']) {
@@ -192,6 +197,7 @@ if ($this->get['skeyword']) {
 				$items[]='o.'.$fields." LIKE '%".addslashes($this->get['skeyword'])."%'";
 			}
 			$items[]="o.delivery_name LIKE '%".addslashes($this->get['skeyword'])."%'";
+			$items[]="i.invoice_id LIKE '%".addslashes($this->get['skeyword'])."%'";
 			$filter[]=implode(" or ", $items);
 			break;
 		case 'orders_id':

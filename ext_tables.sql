@@ -309,16 +309,18 @@ CREATE TABLE `tx_multishop_invoices` (
   `store_currency` char(3) default '',
   `customer_currency` char(3) default '',
   `currency_rate` varchar(15) default '1',
+  `date_mail_last_sent` int(11) null default '0',
   PRIMARY KEY (`id`),
   KEY `orders_id` (`orders_id`),
   KEY `status` (`status`),
   KEY `invoice_id` (`invoice_id`),
   KEY `date` (`crdate`),
-  KEY `payed` (`paid`),
+  KEY `paid` (`paid`),
   KEY `hash` (`hash`),
   KEY `customer_id` (`customer_id`),
   KEY `reversal_invoice` (`reversal_invoice`),
-  KEY `reversal_related_id` (`reversal_related_id`)
+  KEY `reversal_related_id` (`reversal_related_id`),
+  KEY `date_mail_last_sent` (`date_mail_last_sent`)
 );
 
 CREATE TABLE `tx_multishop_manufacturers` (
@@ -474,6 +476,7 @@ CREATE TABLE `tx_multishop_orders` (
   `orders_tax_data` text,
   `status_last_modified` int(11) default '0',
   `reminder_sent` tinyint(1) default '0',
+  `date_mail_last_sent` int(11) null default '0',
   `grand_total` decimal(24,14) default '0.00000000000000',
   `billing_street_name` varchar(75) default '',
   `delivery_street_name` varchar(75) default '',
@@ -484,12 +487,12 @@ CREATE TABLE `tx_multishop_orders` (
   `coupon_discount_type`  VARCHAR(25) DEFAULT 'percentage',
   `coupon_discount_value` DECIMAL(24, 14) DEFAULT '0.00000000000000',
   PRIMARY KEY (`orders_id`),
-  KEY `klanten_id` (`customer_id`),
+  KEY `customer_id` (`customer_id`),
   KEY `bu` (`page_uid`),
   KEY `status` (`status`),
   KEY `ordercreated` (`ordercreated`),
   KEY `factureren` (`bill`),
-  KEY `payed` (`paid`),
+  KEY `paid` (`paid`),
   KEY `by_phone` (`by_phone`),
   KEY `deleted` (`deleted`),
   KEY `crdate` (`crdate`),
@@ -520,7 +523,8 @@ CREATE TABLE `tx_multishop_orders` (
   KEY `user_agent` (`user_agent`),
   KEY `coupon_code` (`coupon_code`),
   KEY `coupon_discount_type` (`coupon_discount_type`),
-  KEY `coupon_discount_value` (`coupon_discount_value`)
+  KEY `coupon_discount_value` (`coupon_discount_value`),
+  KEY `date_mail_last_sent` (`date_mail_last_sent`)
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (

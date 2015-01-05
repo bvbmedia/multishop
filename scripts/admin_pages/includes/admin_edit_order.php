@@ -1222,6 +1222,9 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					$row[3]=mslib_fe::amount2Cents($order['final_price'], 0);
 					$row[4]=number_format($order['products_tax'], 2);
+					if (!isset($order['products_tax'])) {
+						$order['products_tax']='0';
+					}
 					$row[4]=str_replace('.00', '', $order['products_tax']).'%';
 					$row[5]=mslib_fe::amount2Cents($order['qty']*$order['final_price'], 0);
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {

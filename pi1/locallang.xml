@@ -1162,6 +1162,7 @@
             <label index="admin_edit_order_products_description">Order products description</label>
 			<label index="days">days</label>
 			<label index="your_vat_id">Your VAT-id</label>
+			<label index="date_last_sent">Date last sent</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
@@ -4661,6 +4662,7 @@
 			<label index="admin_edit_order_products_description">Beschrijving bestelregel</label>
 			<label index="days">dagen</label>
 			<label index="your_vat_id">Uw BTW-nummer</label>
+			<label index="date_last_sent">Datum laatst verzonden</label>
 		</languageKey>
 		<languageKey index="no"></languageKey>
 		<languageKey index="pl"></languageKey>

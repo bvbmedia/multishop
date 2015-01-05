@@ -2,11 +2,14 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+if (!$this->get['tx_multishop_pi1']['hash']) {
+	die();
+}
 $hash=$this->get['tx_multishop_pi1']['hash'];
 $invoice=mslib_fe::getInvoice($hash, 'hash');
-$pdf_filename = 'invoice_'.$hash.'.pdf';
-$pdfoutput = $this->DOCUMENT_ROOT.'uploads/tx_multishop/invoice_'.$hash.'.pdf';
-if ($invoice['orders_id']) {
+$pdfFileName = 'invoice_'.$hash.'.pdf';
+$pdfFilePath = $this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
+if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePath)) && $invoice['orders_id']) {
 	if ($invoice['reversal_invoice']) {
 		$prefix='-';
 	} else {
@@ -217,6 +220,8 @@ if ($invoice['orders_id']) {
 		} else {
 			$array2[]='';
 		}
+		$array1[]='###GENDER_SALUTATION###';
+		$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
@@ -258,10 +263,12 @@ if ($invoice['orders_id']) {
 		$font = Font_Metrics::get_font("arial", "bold");
 		$canvas->page_text(500, 795, $this->pi_getLL('page','page').' {PAGE_NUM} '.$this->pi_getLL('of','of').' {PAGE_COUNT}', $font, 11, array(0,0,0));
 		// SAVE AS FILE
-		file_put_contents($pdfoutput, $dompdf->output(array('compress' => 0)));
+		file_put_contents($pdfFilePath, $dompdf->output(array('compress' => 0)));
 	}
 }
-header("Content-type:application/pdf");
-readfile($pdfoutput);
+if (file_exists($pdfFilePath)) {
+	header("Content-type:application/pdf");
+	readfile($pdfFilePath);
+}
 exit();
 ?>

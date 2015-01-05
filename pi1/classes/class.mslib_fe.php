@@ -1262,6 +1262,7 @@ class mslib_fe {
 			$mail=new PHPMailer();
 			$mail->CharSet='UTF-8';
 			$mail->Encoding='base64';
+			$mail->XMailer = ' ';
 			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
 				$mail->IsSMTP();
 				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
@@ -1336,6 +1337,7 @@ class mslib_fe {
 			$mail=new PHPMailer();
 			$mail->CharSet='UTF-8';
 			$mail->Encoding='base64';
+			$mail->XMailer = ' ';
 			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
 				$mail->IsSMTP();
 				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];

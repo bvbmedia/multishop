@@ -411,6 +411,21 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select date_mail_last_sent from tx_multishop_orders limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_orders` ADD date_mail_last_sent int(11) null default '0',ADD KEY `date_mail_last_sent` (`date_mail_last_sent`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select date_mail_last_sent from tx_multishop_invoices limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_invoices` ADD date_mail_last_sent int(11) null default '0',ADD KEY `date_mail_last_sent` (`date_mail_last_sent`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+
 	/*
 	$str="describe `tx_multishop_products`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
