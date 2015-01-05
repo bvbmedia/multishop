@@ -152,6 +152,7 @@ if ($this->post['proceed_order']) {
 		} else {
 			$insertArray['by_phone']=1;
 		}
+		$insertArray['hash']=md5(uniqid('', true));
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1']['insertOrderPreHook'])) {
 			// hook
 			$params=array(
@@ -165,7 +166,7 @@ if ($this->post['proceed_order']) {
 		}
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		// now add the order eof		
+		// now add the order eof
 		$orders_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 		// redirect back to orders and let highslide open it
 		$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$orders_id.'&tx_multishop_pi1[is_manual]=1&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal'], 1);
