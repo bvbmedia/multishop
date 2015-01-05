@@ -3519,7 +3519,7 @@ class mslib_befe {
 					$tr_type='even';
 				}
 				$tmpcontent.='<tr class="'.$tr_type.'">';
-				$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.number_format($product['qty']).'</td>';
+				$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.$prefix.number_format($product['qty']).'</td>';
 				$product_tmp=mslib_fe::getProduct($product['products_id']);
 				$tmpcontent.='<td align="left" class="cell_products_name valign_top">'.$product['products_name'];
 				if ($product['products_article_number']) {
@@ -3543,12 +3543,12 @@ class mslib_befe {
 				$tmpcontent.='</td>';
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.mslib_fe::amount2Cents($product['final_price']+$product['products_tax_data']['total_tax'], 0,1,0).'</td>';
-					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.mslib_fe::amount2Cents(($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0,1,0).'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.mslib_fe::amount2Cents($prefix.$product['final_price']+$product['products_tax_data']['total_tax'], 0,1,0).'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.mslib_fe::amount2Cents($prefix.($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0,1,0).'</td>';
 				} else {
-					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.mslib_fe::amount2Cents($product['final_price'], 0,1,0).'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.mslib_fe::amount2Cents($prefix.$product['final_price'], 0,1,0).'</td>';
 					$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.mslib_fe::amount2Cents(($product['qty']*$product['final_price']), 0,1,0).'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.mslib_fe::amount2Cents($prefix.($product['qty']*$product['final_price']), 0,1,0).'</td>';
 				}
 				$tmpcontent.='</tr>';
 				if (is_array($product['attributes']) && count($product['attributes'])) {
@@ -3563,11 +3563,11 @@ class mslib_befe {
 								if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 									$attributes_price=$options['price_prefix'].$options['options_values_price']+$options['attributes_tax_data']['tax'];
 									$total_attributes_price=$attributes_price*$product['qty'];
-									$cell_products_normal_price=mslib_fe::amount2Cents(($attributes_price), 0,1,0);
-									$cell_products_final_price=mslib_fe::amount2Cents(($total_attributes_price), 0,1,0);
+									$cell_products_normal_price=mslib_fe::amount2Cents($prefix.($attributes_price), 0,1,0);
+									$cell_products_final_price=mslib_fe::amount2Cents($prefix.($total_attributes_price), 0,1,0);
 								} else {
-									$cell_products_normal_price=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price']), 0,1,0);
-									$cell_products_final_price=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price'])*$product['qty'], 0,1,0);
+									$cell_products_normal_price=mslib_fe::amount2Cents($prefix.($options['price_prefix'].$options['options_values_price']), 0,1,0);
+									$cell_products_final_price=mslib_fe::amount2Cents($prefix.($options['price_prefix'].$options['options_values_price'])*$product['qty'], 0,1,0);
 								}
 							}
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -3600,43 +3600,43 @@ class mslib_befe {
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$tmpcontent.='<tr>
 						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('sub_total').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0,1,0).'</span></td>
+						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['orders_tax_data']['sub_total'], 0,1,0).'</span></td>
 					</tr>';
 			$content_vat='<tr>
 						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('included_vat_amount').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0,1,0).'</span></td>
+						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$orders_tax_data['total_orders_tax'], 0,1,0).'</span></td>
 					</tr>';
 			if ($order['shipping_method_costs']>0) {
 				$content_shipping_costs='<tr>
 							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('shipping_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0,1,0).'</span></td>
+							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0,1,0).'</span></td>
 						</tr>';
 			}
 			if ($order['payment_method_costs']>0) {
 				$content_payment_costs='<tr>
 							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('payment_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0,1,0).'</span></td>
+							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0,1,0).'</span></td>
 						</tr>';
 			}
 		} else {
 			$tmpcontent.='<tr>
 						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('sub_total').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($order['subtotal_amount'],0,1,0).'</span></td>
+						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['subtotal_amount'],0,1,0).'</span></td>
 					</tr>';
 			$content_vat='<tr>
 						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('vat').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0,1,0).'</span></td>
+						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$orders_tax_data['total_orders_tax'], 0,1,0).'</span></td>
 					</tr>';
 			if ($order['shipping_method_costs']>0) {
 				$content_shipping_costs='<tr>
 							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('shipping_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs'], 0,1,0).'</span></td>
+							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['shipping_method_costs'], 0,1,0).'</span></td>
 						</tr>';
 			}
 			if ($order['payment_method_costs']>0) {
 				$content_payment_costs='<tr>
 							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('payment_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs'], 0,1,0).'</span></td>
+							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['payment_method_costs'], 0,1,0).'</span></td>
 						</tr>';
 			}
 		}
@@ -3657,12 +3657,12 @@ class mslib_befe {
 		if ($order['discount']>0) {
 			$tmpcontent.='<tr>
 					<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('discount').'</label></td>
-					<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($order['discount'], 0,1,0).'</span></td>
+					<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['discount'], 0,1,0).'</span></td>
 				</tr>';
 		}
 		$tmpcontent.='<tr>
 				<td align="right" class="grandTotalLabel"><label><strong>'.$this->pi_getLL('total').'</strong></label></td>
-				<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0,1,0).'</span></td>
+				<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$orders_tax_data['grand_total'], 0,1,0).'</span></td>
 			</tr>';
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$tmpcontent.=$content_vat;
