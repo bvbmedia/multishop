@@ -425,6 +425,13 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select default_status from tx_multishop_tax_rule_groups limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_tax_rule_groups` ADD default_status tinyint(1) null default '0',ADD KEY `default_status` (`default_status`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 
 	/*
 	$str="describe `tx_multishop_products`";

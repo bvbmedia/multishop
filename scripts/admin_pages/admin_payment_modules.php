@@ -360,11 +360,15 @@ if ($this->get['edit']) {
 		</div>
 		<div class="account-field">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
-		<select name="tax_id" id="tax_id"><option value="0"'.$this->pi_getLL('admin_label_no_tax').'</option>';
+		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+		if (!$this->get['payment_method_id']) {
+			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['default_status']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+		} else {
+			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+		}
 	}
 	$tmpcontent.='
 		</select>
@@ -472,7 +476,11 @@ if ($this->get['edit']) {
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+			if (!$this->get['payment_method_id']) {
+				$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['default_status']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+			} else {
+				$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
+			}
 		}
 		$tmpcontent.='
 		</select>
