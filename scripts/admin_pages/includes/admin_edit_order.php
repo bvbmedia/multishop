@@ -58,7 +58,11 @@ if (is_numeric($this->get['orders_id'])) {
 							$updateArray=array();
 							$updateArray['products_id']=$this->post['products_id'];
 							$updateArray['qty']=$this->post['product_qty'];
-							$updateArray['products_name']=$this->post['product_name'];
+							if (isset($this->post['custom_manual_product_name']) && !empty($this->post['custom_manual_product_name'])) {
+								$updateArray['products_name']=$this->post['custom_manual_product_name'];
+							} else {
+								$updateArray['products_name']=$this->post['product_name'];
+							}
 							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['order_products_description'])) {
 								$updateArray['products_description']=$this->post['order_products_description'];
 							}
@@ -129,7 +133,11 @@ if (is_numeric($this->get['orders_id'])) {
 							$insertArray['orders_id']=(int)$this->get['orders_id'];
 							$insertArray['products_id']=(int)$this->post['manual_products_id'];
 							$insertArray['qty']=$this->post['manual_product_qty'];
-							$insertArray['products_name']=$this->post['manual_product_name'];
+							if (isset($this->post['custom_manual_product_name']) && !empty($this->post['custom_manual_product_name'])) {
+								$insertArray['products_name']=$this->post['custom_manual_product_name'];
+							} else {
+								$insertArray['products_name']=$this->post['manual_product_name'];
+							}
 							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['manual_order_products_description'])) {
 								$insertArray['products_description']=$this->post['manual_order_products_description'];
 							}
@@ -1152,6 +1160,19 @@ if (is_numeric($this->get['orders_id'])) {
 					} else {
 						$tmpcontent.='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:400px" />';
 					}
+					if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
+						if ($order['products_id']>0) {
+							$original_pn=mslib_fe::getProductName($order['products_id']);
+							$custom_product_name='';
+							if ($original_pn!=$order['products_name']) {
+								$custom_product_name=$order['products_name'];
+							}
+							$tmpcontent.='<div id="custom_manual_product_name_wrapper"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="'.$custom_product_name.'" width="300px" /></div>';
+						} else {
+							$tmpcontent.='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
+						}
+
+					}
 					$tmpcontent.='</td>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 						$tmpcontent.='<td align="center" class="cell_products_status">';
@@ -1563,8 +1584,11 @@ if (is_numeric($this->get['orders_id'])) {
 					<input class="text" style="width:25px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />
 				</td>';
 			$tmpcontent.='<td align="left" valign="top" id="manual_add_product">
-				<input class="product_name" type="hidden" name="manual_products_id" value="" style="width:400px" tabindex="2" />
-			</td>';
+				<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:400px" tabindex="2" /></div>';
+			if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
+				$tmpcontent.='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
+			}
+			$tmpcontent.='</td>';
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 				$tmpcontent.='<td align="right">&nbsp;</td>';
 			}
@@ -1824,6 +1848,11 @@ if (is_numeric($this->get['orders_id'])) {
 						$("#product_tax").val("");
 						$("#display_product_price").val("0.00");
 						$("#product_price").val("0.00");
+						'.($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME'] ? '
+						$("#custom_manual_product_name_wrapper").hide();
+						$("#custom_manual_product_name").val("");
+						$("#custom_manual_product_name").prop("disabled", "disabled");
+						' : '').'
 					} else {
 						$("#edit_order_product_id").html(e.object.id);
 						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, qty: 1}, function(d){
@@ -1850,6 +1879,11 @@ if (is_numeric($this->get['orders_id'])) {
 								});
 							});
 						});
+						'.($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME'] ? '
+						$("#custom_manual_product_name_wrapper").show();
+						$("#custom_manual_product_name").val("");
+						$("#custom_manual_product_name").prop("disabled", false);
+						' : '').'
 					}
 					$("#product_name").val(e.object.text);
 					$("#product_qty").val("1");

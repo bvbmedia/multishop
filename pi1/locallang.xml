@@ -1163,6 +1163,8 @@
 			<label index="days">days</label>
 			<label index="your_vat_id">Your VAT-id</label>
 			<label index="date_last_sent">Date last sent</label>
+            <label index="admin_custom_product_name">Custom product name</label>
+            <label index="admin_current_custom_product_name">Current custom product name</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
