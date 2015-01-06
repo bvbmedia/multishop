@@ -137,7 +137,7 @@ foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
 $all_orders_status=mslib_fe::getAllOrderStatus();
-$orders_status_list='<select name="orders_status_search" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
+$orders_status_list='<select name="orders_status_search" class="invoice_select2" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
 	foreach ($all_orders_status as $row) {
@@ -151,7 +151,7 @@ $orders_status_list.='</select>';
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<select id="groups" class="multiselect" name="usergroup" style="width:200px">'."\n";
+	$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup" style="width:200px">'."\n";
 	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 	foreach ($groups as $group) {
 		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->get['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
@@ -177,7 +177,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 }
 $payment_method_input='';
 if (is_array($payment_methods) and count($payment_methods)) {
-	$payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
+	$payment_method_input.='<select id="payment_method" class="invoice_select2" name="payment_method" style="width:200px">'."\n";
 	$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
 	foreach ($payment_methods as $payment_method_code=>$payment_method) {
 		$payment_method_input.='<option value="'.$payment_method_code.'"'.($this->get['payment_method']==$payment_method_code ? ' selected="selected"' : '').'>'.$payment_method.'</option>'."\n";
@@ -194,7 +194,7 @@ $form_orders_search='<div id="search-orders">
 			<td>
 				<div style="float:right;">
 					<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-					<select name="limit" style="width:60px">
+					<select name="limit">
 					';
 $limits=array();
 $limits[]='15';
@@ -213,7 +213,7 @@ $form_orders_search.='
 				</div>
 				<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
 				<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-				<select name="type_search" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
+				<select name="type_search" class="invoice_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 				</select>
 				'.$customer_groups_input.'
@@ -382,7 +382,7 @@ jQuery(document).ready(function($) {
 		showSecond: true,
 		timeFormat: "HH:mm:ss"
 	});
-	$("select").select2();
+	$(".invoice_select2").select2();
 });
 </script>
 <div id="tab-container">
