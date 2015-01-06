@@ -383,7 +383,7 @@ $option_search=array(
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-	"payment_method"=>$this->pi_getLL('admin_payment_method'),
+	//"payment_method"=>$this->pi_getLL('admin_payment_method'),
 	"order_products"=>$this->pi_getLL('admin_order_products'),
 	"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),
 	"billing_telephone"=>$this->pi_getLL('telephone')
@@ -408,12 +408,12 @@ if ($p>0) {
 	$offset=0;
 }
 // orders search
-$option_item='<select name="type_search" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>';
+$option_item='<select name="type_search" class="order_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>';
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->post['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
 $option_item.='</select>';
-$orders_status_list='<select name="orders_status_search" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
+$orders_status_list='<select name="orders_status_search" class="order_select2" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
 	foreach ($all_orders_status as $row) {
@@ -424,7 +424,7 @@ if (is_array($all_orders_status)) {
 	}
 }
 $orders_status_list.='</select>';
-$limit_selectbox='<select name="limit" style="width:60px">';
+$limit_selectbox='<select name="limit">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -509,9 +509,9 @@ if ($this->post['skeyword']) {
 		case 'shipping_method':
 			$filter[]=" (shipping_method_label '%".addslashes($this->post['skeyword'])."%' or shipping_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
 			break;
-		case 'payment_method':
+		/*case 'payment_method':
 			$filter[]=" (payment_method LIKE '%".addslashes($this->post['skeyword'])."%' or payment_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
-			break;
+			break;*/
 		case 'customer_id':
 			$filter[]=" customer_id='".addslashes($this->post['skeyword'])."'";
 			break;
@@ -550,6 +550,13 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
 //die();
 if ($this->post['orders_status_search']>0) {
 	$filter[]="(o.status='".$this->post['orders_status_search']."')";
+}
+if (isset($this->get['payment_method']) && $this->post['payment_method']!='all') {
+	if ($this->post['payment_method']=='nopm') {
+		$filter[]="(o.payment_method is null)";
+	} else {
+		$filter[]="(o.payment_method='".$this->post['payment_method']."')";
+	}
 }
 if (isset($this->post['usergroup']) && $this->post['usergroup']>0) {
 	$filter[]=' o.customer_id IN (SELECT uid from fe_users where '.$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->post['usergroup'], 'fe_users').')';
@@ -620,7 +627,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_orders_found').'.';
 	$no_results=$this->cObj->substituteMarkerArrayCached($subparts['orders_noresults'], array(), $subpartArray);
 }
-$payment_status_select='<select name="payment_status" style="width:250px">
+$payment_status_select='<select name="payment_status" class="order_select2" style="width:250px">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
 if ($this->cookie['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
@@ -636,12 +643,38 @@ $payment_status_select.='</select>';
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<select id="groups" class="multiselect" name="usergroup" style="width:200px">'."\n";
+	$customer_groups_input.='<select id="groups" class="order_select2" name="usergroup" style="width:200px">'."\n";
 	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 	foreach ($groups as $group) {
 		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->post['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
 	}
 	$customer_groups_input.='</select>'."\n";
+}
+// payment method
+$payment_methods=array();
+$sql=$GLOBALS['TYPO3_DB']->SELECTquery('payment_method, payment_method_label', // SELECT ...
+	'tx_multishop_orders', // FROM ...
+	'', // WHERE...
+	'payment_method', // GROUP BY...
+	'payment_method_label', // ORDER BY...
+	'' // LIMIT ...
+);
+$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+	if (empty($row['payment_method_label'])) {
+		$row['payment_method']='nopm';
+		$row['payment_method_label']='Empty payment method';
+	}
+	$payment_methods[$row['payment_method']]=$row['payment_method_label'];
+}
+$payment_method_input='';
+if (is_array($payment_methods) and count($payment_methods)) {
+	$payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
+	$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
+	foreach ($payment_methods as $payment_method_code=>$payment_method) {
+		$payment_method_input.='<option value="'.$payment_method_code.'"'.($this->post['payment_method']==$payment_method_code ? ' selected="selected"' : '').'>'.$payment_method.'</option>'."\n";
+	}
+	$payment_method_input.='</select>'."\n";
 }
 $subpartArray=array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order');
@@ -651,6 +684,7 @@ $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
 $subpartArray['###USERGROUP_SELECTBOX###']=$customer_groups_input;
+$subpartArray['###PAYMENT_METHOD_SELECTBOX###']=$payment_method_input;
 $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###']=$orders_status_list;
 $subpartArray['###VALUE_SEARCH###']=htmlspecialchars($this->pi_getLL('search'));
 $subpartArray['###LABEL_DATE_FROM###']=$this->pi_getLL('from');
@@ -671,7 +705,7 @@ $content='<div class="fullwidth_div">'.$content.'</div>';
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$("select").select2();
+	$(".order_select2").select2();
 });
 </script>
 ';

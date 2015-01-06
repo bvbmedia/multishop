@@ -110,8 +110,8 @@ $option_search=array(
 	"billing_city"=>$this->pi_getLL('admin_city'),
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
-	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
-	"payment_method"=>$this->pi_getLL('admin_payment_method')
+	"shipping_method"=>$this->pi_getLL('admin_shipping_method')
+	//"payment_method"=>$this->pi_getLL('admin_payment_method')
 );
 asort($option_search);
 $type_search=$this->get['type_search'];
@@ -158,6 +158,32 @@ if (is_array($groups) and count($groups)) {
 	}
 	$customer_groups_input.='</select>'."\n";
 }
+// payment method
+$payment_methods=array();
+$sql=$GLOBALS['TYPO3_DB']->SELECTquery('payment_method, payment_method_label', // SELECT ...
+	'tx_multishop_orders', // FROM ...
+	'', // WHERE...
+	'payment_method', // GROUP BY...
+	'payment_method_label', // ORDER BY...
+	'' // LIMIT ...
+);
+$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+	if (empty($row['payment_method_label'])) {
+		$row['payment_method']='nopm';
+		$row['payment_method_label']='Empty payment method';
+	}
+	$payment_methods[$row['payment_method']]=$row['payment_method_label'];
+}
+$payment_method_input='';
+if (is_array($payment_methods) and count($payment_methods)) {
+	$payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
+	$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
+	foreach ($payment_methods as $payment_method_code=>$payment_method) {
+		$payment_method_input.='<option value="'.$payment_method_code.'"'.($this->get['payment_method']==$payment_method_code ? ' selected="selected"' : '').'>'.$payment_method.'</option>'."\n";
+	}
+	$payment_method_input.='</select>'."\n";
+}
 $form_orders_search='<div id="search-orders">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
@@ -191,6 +217,7 @@ $form_orders_search.='
 				'.$option_item.'
 				</select>
 				'.$customer_groups_input.'
+				'.$payment_method_input.'
 				'.$orders_status_list.'
 				<div class="formfield-wrapper">
 					<label for="order_date_from">'.$this->pi_getLL('from').':</label><input type="text" name="order_date_from" id="invoice_date_from" value="'.$this->post['order_date_from'].'">
@@ -255,9 +282,9 @@ if ($this->get['skeyword']) {
 		case 'shipping_method':
 			$filter[]=" (o.shipping_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.shipping_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
 			break;
-		case 'payment_method':
+		/*case 'payment_method':
 			$filter[]=" (o.payment_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.payment_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
-			break;
+			break;*/
 		case 'customer_id':
 			$filter[]=" o.customer_id LIKE '%".addslashes($this->get['skeyword'])."%'";
 			break;
@@ -285,6 +312,13 @@ if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
 }
 if ($this->get['orders_status_search']>0) {
 	$filter[]="(o.status='".$this->get['orders_status_search']."')";
+}
+if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') {
+	if ($this->get['payment_method']=='nopm') {
+		$filter[]="(o.payment_method is null)";
+	} else {
+		$filter[]="(o.payment_method='".$this->get['payment_method']."')";
+	}
 }
 if ($this->cookie['paid_invoices_only']) {
 	$filter[]="(i.paid='1')";
