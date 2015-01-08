@@ -59,7 +59,7 @@ body { background:#000 url(../images/msadmin_dash_bg.gif) left top repeat-x; fon
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul { list-style: none; text-align: center; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul li { display: inline; background: none; font-weight:900; padding-left:10px; font:18px Arial, Helvetica, sans-serif }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul li .active {  }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul li a { color:#fff; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content #msAdminSearchByCharNav ul li a { color:#fff;  }
 
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable { border-collapse:collapse; width:100%; }
 #msadmin_content #tx_multishop_pi1_core #tab-container table#product_import_table table#msOrderDetailsTable th.msOrderDetailsHeadingImage { }

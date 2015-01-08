@@ -170,7 +170,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label { width:24%; padding:7px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.labelInbetween { clear:none; width:20%; text-align:center; padding-left:10px; padding-right:10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper input[type="text"],
-#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper select { width:76%; margin-right:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper select { width:76%; margin-right:0;  }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="text"],
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders select {
     height:26px;
