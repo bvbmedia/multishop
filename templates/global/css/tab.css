@@ -139,25 +139,40 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content { min-height:500px; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tooltip.fade { z-index:100; }
 
-#tx_multishop_pi1_core #tab-container #search-orders { /* overflow:hidden; border-left:1px solid #cdcdcd; border-right:1px solid #cdcdcd; padding:20px 0 0 10px; */ }
-#tx_multishop_pi1_core #tab-container #search-orders table { border:none; margin:0; }
-#tx_multishop_pi1_core #tab-container #search-orders table td { padding:0; }
-#tx_multishop_pi1_core #tab-container #search-orders label,
-#tx_multishop_pi1_core #tab-container #search-orders input,
-#tx_multishop_pi1_core #tab-container #search-orders select { float:left; margin:0 10px 0 0; }
-#tx_multishop_pi1_core #tab-container #search-orders .searchLimit select { margin:0; }
-#tx_multishop_pi1_core #tab-container #search-orders label { clear:none; float:left; display:block; padding:3px 0 0; }
-#tx_multishop_pi1_core #tab-container #search-orders input[type="submit"] { border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; text-transform:uppercase; margin:0 3px; padding:2px 6px; cursor:pointer; }
-#tx_multishop_pi1_core #tab-container #search-orders input[type="submit"]:hover { background:#e2e2e2; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders table { border:none; margin:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders table td { padding:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders label,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders select { float:left; margin:0 10px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .searchLimit select { margin:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .searchLimit > * { white-space:nowrap; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .searchLimit > div label { padding-right:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders label { clear:left; float:left !important; display:block !important; color:#fff; margin:0; padding:7px 10px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"] { height:26px; border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; text-transform:uppercase; margin:0 3px; padding:2px 6px; cursor:pointer; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"]:hover { background:#e2e2e2; }
 
-#tx_multishop_pi1_core #tab-container #search-orders { border:1px solid #cdcdcd; background:#f7f7f7; margin:0 0 20px; padding:15px; border-radius:6px; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper { overflow:visible; width:auto; margin:0 -10px; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper * { box-sizing:border-box; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper:after { clear:both; display:table; content:""; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .col-sm-4 { float:left; width:33.33%; padding:0 10px; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper input[type="text"],
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper select {
-    width:76%;
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders { border:1px solid #cdcdcd;
+    border-color:rgba(0,0,0,.5);
+    background-color: #333;
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0,#333),color-stop(0.5,#555));
+    background-image: -webkit-linear-gradient(center bottom,#333 0%,#555 50%);
+    background-image: -moz-linear-gradient(center bottom,#333 0%,#555 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr ='#555555',endColorstr ='#333333',GradientType = 0);
+    background-image: linear-gradient(top,#333 0%,#555 50%);
+    margin:0 0 20px; padding:15px; border-radius:6px;
+    box-shadow:0 0 24px rgba(0,0,0,.8) inset;
+}
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper { overflow:visible; width:auto; margin:0 -10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders * { box-sizing:border-box; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .formfield-wrapper { float:none; overflow:visible; padding:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper:after { clear:both; display:table; content:""; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .col-sm-4 { float:left; width:33.33%; padding:0 10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label { width:24%; padding:7px 0 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.labelInbetween { clear:none; width:20%; text-align:center; padding-left:10px; padding-right:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper input[type="text"],
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper select { width:76%; margin-right:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="text"],
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders select {
     height:26px;
     border-color:#aaa;
     background-color: #fff;
@@ -171,12 +186,21 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
     padding:0 8px;
     border-radius:4px;
 }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container.order_select2 { float:left; width:76% !important; margin:0 0 8px; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label { clear:left; float:left; width:24%; margin:0; padding:7px 0 0; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.prettyCheckbox.checkbox { width:100%; line-height:27px; padding:0 0 0 24%; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.prettyCheckbox.checkbox span.holderWrap { margin-top:4px; }
-#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .col-sm-12.formfield-wrapper { width:100%; margin:0; padding:10px 10px 0; }
-#tx_multishop_pi1_core #tab-container #search-orders input[type="submit"] { float:right; margin:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="text"]#skeyword { margin-right:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .select2-container { float:left; margin:0 0 8px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders label.prettyCheckbox.checkbox { width:100%; line-height:27px; padding:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders label.prettyCheckbox.checkbox span.holderWrap { margin-top:4px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .col-sm-12.formfield-wrapper { width:100%; margin:0; padding:10px 10px 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.prettyCheckbox.checkbox { padding:0 0 0 24%; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container { width:76% !important; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_autogen1,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_groups,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_payment_method,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_autogen5,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #invoice_date_from,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #invoice_date_till { width:28% !important; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .col-sm-12.formfield-wrapper input[type="submit"] { float:right; margin:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"].msadmin_button { height:26px; margin-left:10px; }
 
 #tx_multishop_pi1_core #tab-container .tab_container { overflow:auto; width:100%; border:none; background:none; font:12px Arial, Helvetica, sans-serif; margin:0 0 10px; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content { border:1px solid #cdcdcd; border-top:none; background:#fff; padding:10px; border-radius:0 0 5px 5px; }
