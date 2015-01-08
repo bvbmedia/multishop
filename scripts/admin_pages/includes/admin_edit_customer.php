@@ -18,10 +18,12 @@ if ($this->post) {
 		$edit_mode=1;
 		$user=mslib_fe::getUser($this->post['tx_multishop_pi1']['cid']);
 		if ($user['email']<>$this->post['email']) {
-			// check if the emailaddress is not already in use
-			$usercheck=mslib_fe::getUser($this->post['email'], 'email');
-			if ($usercheck['uid']) {
-				$erno[]='Email address is already in use by '.$usercheck['name'].' ('.$usercheck['username'].')';
+			if (!$this->ms['MODULES']['ADMIN_ALLOW_DUPLICATE_CUSTOMERS_EMAIL_ADDRESS']) {
+				// check if the emailaddress is not already in use
+				$usercheck=mslib_fe::getUser($this->post['email'], 'email');
+				if ($usercheck['uid']) {
+					$erno[]='Email address is already in use by '.$usercheck['name'].' ('.$usercheck['username'].')';
+				}
 			}
 		}
 		if ($user['username']<>$this->post['username']) {
@@ -32,10 +34,12 @@ if ($this->post) {
 			}
 		}
 	} else {
-		// check if the emailaddress is not already in use
-		$usercheck=mslib_fe::getUser($this->post['email'], 'email');
-		if ($usercheck['uid']) {
-			$erno[]='Email address is already in use by '.$usercheck['name'].' ('.$usercheck['username'].')';
+		if (!$this->ms['MODULES']['ADMIN_ALLOW_DUPLICATE_CUSTOMERS_EMAIL_ADDRESS']) {
+			// check if the emailaddress is not already in use
+			$usercheck=mslib_fe::getUser($this->post['email'], 'email');
+			if ($usercheck['uid']) {
+				$erno[]='Email address is already in use by '.$usercheck['name'].' ('.$usercheck['username'].')';
+			}
 		}
 		// check if the emailaddress is not already in use
 		$usercheck=mslib_fe::getUser($this->post['username'], 'username');
