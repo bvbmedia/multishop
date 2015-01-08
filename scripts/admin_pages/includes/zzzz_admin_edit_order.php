@@ -69,17 +69,6 @@ if (is_numeric($this->get['orders_id'])) {
 							$updateArray['products_price']=$this->post['product_price'];
 							$updateArray['final_price']=$this->post['product_price'];
 							$updateArray['products_tax']=$this->post['product_tax'];
-							// hook for adding new items to details fieldset
-							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'])) {
-								// hook
-								$params=array(
-									'updateArray'=>&$updateArray
-								);
-								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
-								}
-								// hook oef
-							}
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_id = \''.(int)$this->get['orders_id'].'\' and orders_products_id = \''.(int)$this->post['orders_products_id'].'\'', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							//$sql="update tx_multishop_orders_products set products_id = '".$this->post['products_id']."', qty = '".$this->post['product_qty']."', products_name ='".addslashes($this->post['product_name'])."'".$order_products_description.", products_price = '".addslashes($this->post['product_price'])."', final_price = '".$this->post['product_price']."', products_tax = '".$this->post['product_tax']."' where orders_id = ".$this->get['orders_id']." and orders_products_id = '".$this->post['orders_products_id']."'";
@@ -156,17 +145,6 @@ if (is_numeric($this->get['orders_id'])) {
 							$insertArray['final_price']=$this->post['manual_product_price'];
 							$insertArray['products_tax']=$this->post['manual_product_tax'];
 							$insertArray['sort_order']=$new_sort_order;
-							// hook for adding new items to details fieldset
-							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'])) {
-								// hook
-								$params=array(
-									'insertArray'=>&$insertArray
-								);
-								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
-								}
-								// hook oef
-							}
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							//$sql="insert into tx_multishop_orders_products (orders_id, products_id, qty, products_name".$manual_order_products_description_field.", products_price, final_price, products_tax, sort_order) values ('".$this->get['orders_id']."', '".$this->post['manual_products_id']."', '".$this->post['manual_product_qty']."', '".addslashes($this->post['manual_product_name'])."'".$manual_order_products_description_value.", '".$this->post['manual_product_price']."', '".$this->post['manual_product_price']."', '".$this->post['manual_product_tax']."', '".$new_sort_order."')";
@@ -1028,6 +1006,9 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem.='</li>';
 			$orderDetails[]=$orderDetailsItem;
 		}
+
+
+
 		$orderDetailsItem='';
 		if ($orders['customer_comments']) {
 			$orderDetailsItem='<li id="customer_comments"><label>'.$this->pi_getLL('customer_comments').'</label>
@@ -1077,69 +1058,56 @@ if (is_numeric($this->get['orders_id'])) {
 <div class="tabs-fieldset" id="product_details">
 <fieldset>
 <legend>'.$this->pi_getLL('product_details').'</legend>';
-		// initiate the array for holding rows data
-		$order_products_table=array();
-		$order_products_header_data=array();
 		$tr_type='even';
 		$tmpcontent.='<table class="msZebraTable msadmin_border orders_products_listing" width="100%">';
+		$order_product_level_th='';
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus();
+			$order_product_level_th='<th class="cell_status">'.$this->pi_getLL('order_status').'</th>';
 		}
-		// order products header definition
-		// products id header col
-		$order_products_header_data['products_id']['class']='cell_products_id';
-		$order_products_header_data['products_id']['value']=$this->pi_getLL('products_id');
-		// products qty header col
-		$order_products_header_data['products_qty']['class']='cell_products_qty';
-		$order_products_header_data['products_qty']['value']=$this->pi_getLL('qty');
-		// products name header col
-		$order_products_header_data['products_name']['class']='cell_products_name';
-		$order_products_header_data['products_name']['value']=$this->pi_getLL('products_name');
-		// products order status header col
-		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-			$order_products_header_data['products_order_status']['class']='cell_status';
-			$order_products_header_data['products_order_status']['value']=$this->pi_getLL('order_status');
-		}
-		// products vat header col
+		$vat_header_col='<th class="cell_products_vat">'.$this->pi_getLL('vat').'</th>';
+		$total_product_header_col='<th class="cell_products_final_price">'.$this->pi_getLL('final_price_ex_vat').'</th>';
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$order_products_header_data['products_vat']['class']='cell_products_vat';
-			$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
+			$total_product_header_col='<th class="cell_products_final_price">'.$this->pi_getLL('final_price_inc_vat').'</th>';
 		}
-		// products normal price header col
-		$order_products_header_data['products_normal_price']['class']='cell_products_normal_price';
-		$order_products_header_data['products_normal_price']['value']=$this->pi_getLL('normal_price');
-		// products vat header col
-		if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$order_products_header_data['products_vat']['class']='cell_products_vat';
-			$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
-		}
-		// products price total header col
-		$order_products_header_data['products_final_price']['class']='cell_products_final_price';
-		$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_ex_vat');
-		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_inc_vat');
-		}
+		$tmpcontent.='<thead>';
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-			$order_products_header_data['products_action']['class']='';
-			$order_products_header_data['products_action']['value']='&nbsp;';
-		}
-		// custom hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableHeader'])) {
-			$params=array(
-				'orders'=>&$orders,
-				'order_products_header_data'=>&$order_products_header_data
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableHeader'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+			$tmpcontent.='<tr>';
+			$tmpcontent.='<th class="cell_products_id">'.$this->pi_getLL('products_id').'</th>';
+			$tmpcontent.='<th class="cell_products_qty">'.$this->pi_getLL('qty').'</th>';
+			$tmpcontent.='<th class="cell_products_name">'.$this->pi_getLL('products_name').'</th>';
+			$tmpcontent.=$order_product_level_th;
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$tmpcontent.=$vat_header_col;
 			}
+			$tmpcontent.='<th class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</th>';
+			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$tmpcontent.=$vat_header_col;
+			}
+			$tmpcontent.=$total_product_header_col;
+			$tmpcontent.='<th>&nbsp;</th>';
+			$tmpcontent.='</tr>';
+		} else {
+			$tmpcontent.='<tr>';
+			$tmpcontent.='<th class="cell_products_id">'.$this->pi_getLL('products_id').'</th>';
+			$tmpcontent.='<th class="cell_products_qty">'.$this->pi_getLL('qty').'</th>';
+			$tmpcontent.='<th class="cell_products_name">'.$this->pi_getLL('products_name').'</th>';
+			$tmpcontent.=$order_product_level_th;
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$tmpcontent.=$vat_header_col;
+			}
+			$tmpcontent.='<th class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</th>';
+			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$tmpcontent.=$vat_header_col;
+			}
+			$tmpcontent.=$total_product_header_col;
+			$tmpcontent.='</tr>';
 		}
-		// custom hook that can be controlled by third-party plugin eof
-		$order_products_table['header']['head']['class']='';
-		$order_products_table['header']['head']['value']=$order_products_header_data;
-		// order products header definition eol
+		$tmpcontent.='</thead>';
 		$total_tax=0;
 		if (is_array($orders_products) and count($orders_products)) {
 			foreach ($orders_products as $order) {
+				$tmpcontent.='<tbody class="sortbody" id="orders_products_id_'.$order['orders_products_id'].'">';
 				if ($order['products_id']>0) {
 					$js_select2_cache_products[$order['products_id']]='Products['.$order['products_id'].']={id:"'.$order['products_id'].'", text:"'.$order['products_name'].'"}';
 				} else {
@@ -1151,10 +1119,7 @@ if (is_numeric($this->get['orders_id'])) {
 				} else {
 					$tr_type='even';
 				}
-				$tbody_tag_class='sortbody';
-				$tbody_tag_id='orders_products_id_'.$order['orders_products_id'];
-				$order_products_table['body'][$tbody_tag_id]['tbody_class']=$tbody_tag_class;
-				$order_products_body_data=array();
+				$tmpcontent.='<tr class="'.$tr_type.'">';
 				if (($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) and ($this->get['edit_product']==1 && $this->get['order_pid']==$order['orders_products_id'])) {
 					$customer_country=mslib_fe::getCountryByName($orders['billing_country']);
 					$current_product_tax=($order['products_tax']/100);
@@ -1177,25 +1142,23 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 					}
 					$vat_sb.='</select>';
+					$vat_input_row_col='<td align="right" class="cell_products_vat">'.$vat_sb.'</td>';
+					$total_product_row_col='<td align="right" class="cell_products_final_price" id="edit_order_product_final_price">'.mslib_fe::amount2Cents($order['final_price'], 0).'</td>';
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$total_product_row_col='<td align="right" class="cell_products_final_price" id="edit_order_product_final_price">'.mslib_fe::amount2Cents($order['qty']*($order['final_price']+$order_products_tax_data['total_tax']), 0).'</td>';
+					}
 					// cols
-					// products id col
-					$order_products_body_data['products_id']['align']='right';
-					$order_products_body_data['products_id']['class']='cell_products_products_id';
-					$order_products_body_data['products_id']['id']='edit_order_product_id';
-					$order_products_body_data['products_id']['value']=$order['products_id'];
-					// products qty col
-					$order_products_body_data['products_qty']['align']='right';
-					$order_products_body_data['products_qty']['class']='cell_products_qty';
-					$order_products_body_data['products_qty']['value']='<input type="hidden" name="product_name" id="product_name" value="'.$order['products_name'].'">';
-					$order_products_body_data['products_qty']['value'].='<input type="hidden" name="orders_products_id" value="'.$order['orders_products_id'].'">';
-					$order_products_body_data['products_qty']['value'].='<input class="text" style="width:25px" type="text" id="product_qty" name="product_qty" value="'.round($order['qty'], 13).'" />';
-					// products name col
-					$order_products_body_data['products_name']['align']='left';
-					$order_products_body_data['products_name']['class']='cell_products_name';
+					$tmpcontent.='<td align="right" class="cell_products_products_id" id="edit_order_product_id">'.$order['products_id'].'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_qty">';
+					$tmpcontent.='<input type="hidden" name="product_name" id="product_name" value="'.$order['products_name'].'">';
+					$tmpcontent.='<input type="hidden" name="orders_products_id" value="'.$order['orders_products_id'].'">';
+					$tmpcontent.='<input class="text" style="width:25px" type="text" id="product_qty" name="product_qty" value="'.round($order['qty'], 13).'" />';
+					$tmpcontent.='</td>';
+					$tmpcontent.='<td align="left" class="cell_products_name">';
 					if ($order['products_id']>0) {
-						$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:400px" />';
+						$tmpcontent.='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:400px" />';
 					} else {
-						$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:400px" />';
+						$tmpcontent.='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:400px" />';
 					}
 					if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
 						if ($order['products_id']>0) {
@@ -1204,55 +1167,41 @@ if (is_numeric($this->get['orders_id'])) {
 							if ($original_pn!=$order['products_name']) {
 								$custom_product_name=$order['products_name'];
 							}
-							$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="'.$custom_product_name.'" width="300px" /></div>';
+							$tmpcontent.='<div id="custom_manual_product_name_wrapper"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="'.$custom_product_name.'" width="300px" /></div>';
 						} else {
-							$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
+							$tmpcontent.='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
 						}
 
 					}
+					$tmpcontent.='</td>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-						// products status col
-						$order_products_body_data['products_status']['align']='center';
-						$order_products_body_data['products_status']['class']='cell_products_status';
-						$order_products_body_data['products_status']['value']='<select name="order_product_status" class="change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
+						$tmpcontent.='<td align="center" class="cell_products_status">';
+						//<div class="orders_status_button_gray" title="'.htmlspecialchars($order['orders_status']).'">'.$order['orders_status'].'</div>
+						$tmpcontent.='<select name="order_product_status" class="change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
 						<option value="">'.$this->pi_getLL('choose').'</option>';
 						if (is_array($all_orders_status)) {
 							foreach ($all_orders_status as $item) {
-								$order_products_body_data['products_status']['value'].='<option value="'.$item['id'].'"'.($item['id']==$order['status'] ? ' selected' : '').'>'.$item['name'].'</option>'."\n";
+								$tmpcontent.='<option value="'.$item['id'].'"'.($item['id']==$order['status'] ? ' selected' : '').'>'.$item['name'].'</option>'."\n";
 							}
 						}
-						$order_products_body_data['products_status']['value'].='</select>';
+						$tmpcontent.='</select>';
+						$tmpcontent.='</td>';
 					}
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						// products vat col
-						$order_products_body_data['products_vat']['align']='right';
-						$order_products_body_data['products_vat']['class']='cell_products_vat';
-						$order_products_body_data['products_vat']['value']=$vat_sb;
+						$tmpcontent.=$vat_input_row_col;
 					}
-					// products price col
-					$order_products_body_data['products_normal_price']['align']='right';
-					$order_products_body_data['products_normal_price']['class']='cell_products_normal_price';
-					$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
+					$tmpcontent.='<td align="right" class="cell_products_normal_price" id="edit_order_product_price">';
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" id="display_product_price" value="'.($order['final_price']+$order_products_tax_data['total_tax']).'" />
-						<input type="hidden" name="products_normal_price" id="product_price" value="'.($order['final_price']).'" />';
+						$tmpcontent.='<input class="text" style="width:44px" type="text" id="display_product_price" value="'.($order['final_price']+$order_products_tax_data['total_tax']).'" />
+						<input type="hidden" name="product_price" id="product_price" value="'.($order['final_price']).'" />';
 					} else {
-						$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" name="product_price" id="product_price" value="'.$order['final_price'].'" />';
+						$tmpcontent.='<input class="text" style="width:44px" type="text" name="product_price" id="product_price" value="'.$order['final_price'].'" />';
 					}
+					$tmpcontent.='</td>';
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						// products vat col
-						$order_products_body_data['products_vat']['align']='right';
-						$order_products_body_data['products_vat']['class']='cell_products_vat';
-						$order_products_body_data['products_vat']['value']=$vat_sb;
+						$tmpcontent.=$vat_input_row_col;
 					}
-					// product final price
-					$order_products_body_data['products_final_price']['align']='right';
-					$order_products_body_data['products_final_price']['class']='cell_products_final_price';
-					$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
-					$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($order['final_price'], 0);
-					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($order['qty']*($order['final_price']+$order_products_tax_data['total_tax']), 0);
-					}
+					$tmpcontent.=$total_product_row_col;
 				} else {
 					$row=array();
 					$where='';
@@ -1332,128 +1281,78 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
-					// products id col
-					$order_products_body_data['products_id']['align']='right';
-					$order_products_body_data['products_id']['class']='cell_products_products_id';
-					$order_products_body_data['products_id']['id']='edit_order_product_id';
-					$order_products_body_data['products_id']['value']=$row[0];
-					// products qty col
-					$order_products_body_data['products_qty']['align']='right';
-					$order_products_body_data['products_qty']['class']='cell_products_qty';
-					$order_products_body_data['products_qty']['value']=round($row[1], 13);
-					// products name col
-					$order_products_body_data['products_name']['align']='left';
-					$order_products_body_data['products_name']['class']='cell_products_name';
-					$order_products_body_data['products_name']['value']=$row[2];
+					$vat_input_row_col='<td align="right" class="cell_products_vat">'.$row[4].'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_products_id">'.$row[0].'</td>';
+					$tmpcontent.='<td align="right" class="cell_products_qty">'.round($row[1], 13).'</td>';
+					$tmpcontent.='<td align="left" class="cell_products_name">'.$row[2].'</td>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-						// products status col
-						$order_products_body_data['products_status']['align']='center';
-						$order_products_body_data['products_status']['class']='cell_products_status';
-						$order_products_body_data['products_status']['value']='<select name="order_product_status" class="change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
+						$tmpcontent.='<td align="center" class="cell_products_status">';
+						//<div class="orders_status_button_gray" title="'.htmlspecialchars($order['orders_status']).'">'.$order['orders_status'].'</div>
+						$tmpcontent.='<select name="order_product_status" class="change_order_product_status" rel="'.$order['orders_products_id'].'" id="orders_'.$order['orders_products_id'].'">
 						<option value="">'.$this->pi_getLL('choose').'</option>';
 						if (is_array($all_orders_status)) {
 							foreach ($all_orders_status as $item) {
-								$order_products_body_data['products_status']['value'].='<option value="'.$item['id'].'"'.($item['id']==$order['status'] ? ' selected' : '').'>'.$item['name'].'</option>'."\n";
+								$tmpcontent.='<option value="'.$item['id'].'"'.($item['id']==$order['status'] ? ' selected' : '').'>'.$item['name'].'</option>'."\n";
 							}
 						}
-						$order_products_body_data['products_status']['value'].='</select>';
+						$tmpcontent.='</select>';
+						$tmpcontent.='</td>';
 					}
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						// products vat col
-						$order_products_body_data['products_vat']['align']='right';
-						$order_products_body_data['products_vat']['class']='cell_products_vat';
-						$order_products_body_data['products_vat']['value']=$row[4];
+						$tmpcontent.=$vat_input_row_col;
 					}
-					// products price col
-					$order_products_body_data['products_normal_price']['align']='right';
-					$order_products_body_data['products_normal_price']['class']='cell_products_normal_price';
-					$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
-					$order_products_body_data['products_normal_price']['value']=$row[3];
+					$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$row[3].'</td>';
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						// products vat col
-						$order_products_body_data['products_vat']['align']='right';
-						$order_products_body_data['products_vat']['class']='cell_products_vat';
-						$order_products_body_data['products_vat']['value']=$row[4];
+						$tmpcontent.=$vat_input_row_col;
 					}
-					// product final price
-					$order_products_body_data['products_final_price']['align']='right';
-					$order_products_body_data['products_final_price']['class']='cell_products_final_price';
-					$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
-					$order_products_body_data['products_final_price']['value']=$row[5];
+					$tmpcontent.='<td align="right" class="cell_products_final_price">'.$row[5].'</td>';
 				}
 				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 					if (!$this->get['edit_product'] || ($this->get['edit_product'] && $this->get['order_pid']!=$order['orders_products_id'])) {
-						$product_action_button='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="msadmin_button order_product_action">';
-						$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="msadmin_button order_product_action"></a>';
+						$tmpcontent.='<td align="right" class="cell_products_action">';
+						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="msadmin_button order_product_action">';
+						$tmpcontent.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="msadmin_button order_product_action"></a>';
+						$tmpcontent.='</td>';
 					} else {
-						$product_action_button='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button order_product_action">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button submit_button order_product_action">';
+						$tmpcontent.='<td align="right" class="cell_products_action">';
+						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button order_product_action">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button submit_button order_product_action">';
+						$tmpcontent.='</td>';
 					}
-					// product final price
-					$order_products_body_data['products_action']['align']='right';
-					$order_products_body_data['products_action']['class']='cell_products_action';
-					$order_products_body_data['products_action']['value']=$product_action_button;
 				}
-				$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+				$tmpcontent.='</tr>';
 				if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
 					if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
-						$order_products_body_data=array();
-						// products id col
-						$order_products_body_data['products_id']['value']='';
-						// products qty col
-						$order_products_body_data['products_qty']['value']='';
-						// products name col
-						$order_products_body_data['products_name']['value']='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>
-						<textarea rows="8" cols="75" id="order_products_description" name="order_products_description">'.$order['products_description'].'</textarea>';
+						$tmpcontent.='<tr class="'.$tr_type.' order_products_description">';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>';
+						$tmpcontent.='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>';
+						$tmpcontent.='<textarea rows="8" cols="75" id="order_products_description" name="order_products_description">'.$order['products_description'].'</textarea></td>';
+						$tmpcontent.='<td>&nbsp;</td>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-							// products status col
-							$order_products_body_data['products_status']['value']='';
+							$tmpcontent.='<td>&nbsp;</td>';
 						}
-						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-							// products vat col
-							$order_products_body_data['products_vat']['value']='';
-						}
-						// products price col
-						$order_products_body_data['products_normal_price']['value']='';
-						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-							// products vat col
-							$order_products_body_data['products_vat']['value']='';
-						}
-						// product final price
-						$order_products_body_data['products_final_price']['value']='';
-						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-							$order_products_body_data['products_action']['value']='';
-						}
-						$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type.' order_products_description', 'value'=>$order_products_body_data);
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td align="right">&nbsp;</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='</tr>';
 					}
 				} else {
 					if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($order['products_description'])) {
-						$order_products_body_data=array();
-						// products id col
-						$order_products_body_data['products_id']['value']='';
-						// products qty col
-						$order_products_body_data['products_qty']['value']='';
-						// products name col
-						$order_products_body_data['products_name']['value'].=nl2br($order['products_description']);
+						$tmpcontent.='<tr class="'.$tr_type.' order_products_description">';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td>'.nl2br($order['products_description']).'</td>';
+						$tmpcontent.='<td>&nbsp;</td>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-							// products status col
-							$order_products_body_data['products_status']['value']='';
+							$tmpcontent.='<td>&nbsp;</td>';
 						}
-						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-							// products vat col
-							$order_products_body_data['products_vat']['value']='';
+						$tmpcontent.='<td>&nbsp;</td>';
+						$tmpcontent.='<td align="right">&nbsp;</td>';
+						if (!$orders['is_locked']) {
+							$tmpcontent.='<td>&nbsp;</td>';
 						}
-						// products price col
-						$order_products_body_data['products_normal_price']['value']='';
-						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-							// products vat col
-							$order_products_body_data['products_vat']['value']='';
-						}
-						// product final price
-						$order_products_body_data['products_final_price']['value']='';
-						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-							$order_products_body_data['products_action']['value']='';
-						}
-						$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type.' order_products_description', 'value'=>$order_products_body_data);
+						$tmpcontent.='</tr>';
 					}
 				}
 				if ($orders_products_attributes[$order['orders_products_id']]) {
@@ -1479,7 +1378,6 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						if (count($manual_attr['optname'])>0) {
 							foreach ($manual_attr['optname'] as $idx=>$optname) {
-								$order_products_body_data=array();
 								$attributes_data=$manual_attr['attributes_data'][$idx];
 								$attributes_tax_data=unserialize($attributes_data['attributes_tax_data']);
 								$attributes_qty=$attributes_data['qty'];
@@ -1488,61 +1386,52 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($manual_attr['optprice'][$idx]>0) {
 									$optprice=$manual_attr['optprice'][$idx];
 								}
-								// products id col
-								$order_products_body_data['products_id']['value']='';
-								// products qty col
-								$order_products_body_data['products_qty']['value']='';
-								// products name col
-								$order_products_body_data['products_name']['align']='left';
-								$order_products_body_data['products_name']['value']='<div class="product_attributes_wrapper">';
-								$order_products_body_data['products_name']['value'].='<span class="products_attributes_option">';
+								$tmpcontent.='<tr class="'.$tr_type.' manual_new_attributes">';
+								$tmpcontent.='<td>&nbsp;</td>';
+								$tmpcontent.='<td>&nbsp;</td>';
+								$tmpcontent.='<td align="left">';
+								$tmpcontent.='<div class="product_attributes_wrapper">';
+								$tmpcontent.='<span class="products_attributes_option">';
 								if ($attributes_data['products_options_id']>0) {
-									$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$attributes_data['products_options_id'].'"/> ';
-									$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="0"/>';
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$attributes_data['products_options_id'].'"/> ';
+									$tmpcontent.='<input type="hidden" name="is_manual_option[]"value="0"/>';
 								} else {
-									$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$optname.'"/> ';
-									$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="1"/>';
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$optname.'"/> ';
+									$tmpcontent.='<input type="hidden" name="is_manual_option[]"value="1"/>';
 								}
-								$order_products_body_data['products_name']['value'].='</span>';
-								$order_products_body_data['products_name']['value'].='<span> : </span>';
-								$order_products_body_data['products_name']['value'].='<span class="products_attributes_values">';
+								$tmpcontent.='</span>';
+								$tmpcontent.='<span> : </span>';
+								$tmpcontent.='<span class="products_attributes_values">';
 								if ($attributes_data['products_options_values_id']>0) {
-									$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
-									$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="0"/>';
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
+									$tmpcontent.='<input type="hidden" name="is_manual_value[]"value="0"/>';
 								} else {
-									$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
-									$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="1"/>';
+									$tmpcontent.='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
+									$tmpcontent.='<input type="hidden" name="is_manual_value[]"value="1"/>';
 								}
-								$order_products_body_data['products_name']['value'].='</span>';
-								$order_products_body_data['products_name']['value'].='</div>';
+								$tmpcontent.='</span>';
+								$tmpcontent.='</div>';
+								$tmpcontent.='</td>';
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-									// products status col
-									$order_products_body_data['products_status']['value']='';
+									$tmpcontent.='<td align="right">&nbsp;</td>';
 								}
 								if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-									// products vat col
-									$order_products_body_data['products_vat']['value']='';
+									$tmpcontent.='<td align="right"><input type="text" name="edit_manual_price[]" class="text" style="width:44px" value="'.$optprice.'"></td>';
 								}
-								// products price col
-								$order_products_body_data['products_normal_price']['value']='';
+								$tmpcontent.='<td align="right">&nbsp;</td>';
 								if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-									$order_products_body_data['products_vat']['class']='right';
-									$order_products_body_data['products_vat']['value']='<input type="text" class="text edit_manual_price" style="width:44px" value="'.($optprice+$attributes_tax_data['tax']).'">';
-									$order_products_body_data['products_vat']['value'].='<input type="hidden" name="edit_manual_price[]" value="'.$optprice.'">';
-									// product final price
-									$order_products_body_data['products_final_price']['align']='right';
-									$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents(($optprice+$attributes_tax_data['tax'])*$attributes_qty, 0);
+									$tmpcontent.='<td align="right">';
+									$tmpcontent.='<input type="text" class="text edit_manual_price" style="width:44px" value="'.($optprice+$attributes_tax_data['tax']).'">';
+									$tmpcontent.='<input type="hidden" name="edit_manual_price[]" value="'.$optprice.'">';
+									$tmpcontent.='</td>';
+									$tmpcontent.='<td align="right">'.mslib_fe::amount2Cents(($optprice+$attributes_tax_data['tax'])*$attributes_qty, 0).'</td>';
 								} else {
-									// product final price
-									$order_products_body_data['products_final_price']['align']='right';
-									$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($optprice, 0);
+									$tmpcontent.='<td align="right">'.mslib_fe::amount2Cents($optprice, 0).'</td>';
 								}
 								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-									// product final price
-									$order_products_body_data['products_action']['align']='left';
-									$order_products_body_data['products_action']['value']='<input type="button" class="msadmin_button remove_attributes" value="-">';
+									$tmpcontent.='<td align="left"><input type="button" class="msadmin_button remove_attributes" value="-"></td>';
 								}
-								$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+								$tmpcontent.='</tr>';
 								$attr_counter++;
 							}
 						}
@@ -1561,13 +1450,7 @@ if (is_numeric($this->get['orders_id'])) {
 								$rowCheck=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 							}
 							$attributes_tax_data=unserialize($options['attributes_tax_data']);
-							$order_products_body_data=array();
-							// products id col
-							$order_products_body_data['products_id']['value']='';
-							// products qty col
-							$order_products_body_data['products_qty']['value']='';
-							// products name col
-							$order_products_body_data['products_name']['align']='left';
+							$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td>&nbsp;</td>';
 							if ($rowCheck['listtype']=='file') {
 								if ($options['products_options_values']) {
 									$filePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/order_resources/'.rawurlencode($options['products_options_values']);
@@ -1595,9 +1478,9 @@ if (is_numeric($this->get['orders_id'])) {
 										}
 									}
 								}
-								$order_products_body_data['products_name']['value']='<a href="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/order_resources/'.rawurlencode($options['products_options_values']).'" class="msAdminDownloadIcon" target="_blank">'.$options['products_options'].': '.$options['products_options_values'].$htmlContent.'</a>';
+								$tmpcontent.='<td align="left"><a href="'.$this->FULL_HTTP_URL.'uploads/tx_multishop/order_resources/'.rawurlencode($options['products_options_values']).'" class="msAdminDownloadIcon" target="_blank">'.$options['products_options'].': '.$options['products_options_values'].$htmlContent.'</a></td>';
 							} else {
-								$order_products_body_data['products_name']['value']=$options['products_options'].': '.$options['products_options_values'];
+								$tmpcontent.='<td align="left">'.$options['products_options'].': '.$options['products_options_values'].'</td>';
 							}
 							$cell_products_normal_price='';
 							$cell_products_vat='';
@@ -1613,27 +1496,18 @@ if (is_numeric($this->get['orders_id'])) {
 								$cell_products_vat=$row[4];
 							}
 							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-								// products status col
-								$order_products_body_data['products_status']['value']='';
+								$tmpcontent.='<td align="right">&nbsp;</td>';
 							}
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								// products vat col
-								$order_products_body_data['products_vat']['value']='';
+								$tmpcontent.='<td align="right" class="cell_products_vat">&nbsp;</td>';
 							}
-							// products normal price col
-							$order_products_body_data['products_normal_price']['align']='right';
-							$order_products_body_data['products_normal_price']['class']='cell_products_normal_price';
-							$order_products_body_data['products_normal_price']['value']=$cell_products_normal_price;
+							$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
 							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								// products vat col
-								$order_products_body_data['products_vat']['value']='';
+								$tmpcontent.='<td align="right" class="cell_products_vat">&nbsp;</td>';
 							}
-							// product final price
-							$order_products_body_data['products_final_price']['align']='right';
-							$order_products_body_data['products_final_price']['class']='cell_products_final_price';
-							$order_products_body_data['products_final_price']['value']=$cell_products_final_price;
+							$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
 							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-								$order_products_body_data['products_action']['value']='';
+								$tmpcontent.='<td align="right">&nbsp;</td>';
 							}
 							// count the vat
 							if ($options['options_values_price'] and $order['products_tax']) {
@@ -1646,7 +1520,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
 							}
-							$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+							$tmpcontent.='</tr>';
 						}
 					}
 				} else {
@@ -1654,40 +1528,26 @@ if (is_numeric($this->get['orders_id'])) {
 						$sql_option="select po.products_options_name, po.products_options_id from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id where (po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$order['products_id']." group by pa.options_id";
 						$qry_option=$GLOBALS['TYPO3_DB']->sql_query($sql_option);
 						while (($rs_option=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_option))!=false) {
-							$order_products_body_data=array();
-							// products id col
-							$order_products_body_data['products_id']['value']='';
-							// products qty col
-							$order_products_body_data['products_qty']['value']='';
-							// products name col
-							$order_products_body_data['products_name']['align']='left';
-							$order_products_body_data['products_name']['value']=$rs_option['products_options_name'].': ';
-							$order_products_body_data['products_name']['value'].='<select name="option['.$rs_option['products_options_id'].']" id="option_'.$rs_option['products_options_id'].'">';
+							$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td>&nbsp;</td>';
+							$tmpcontent.='<td align="left">'.$rs_option['products_options_name'].': ';
+							$tmpcontent.='<select name="option['.$rs_option['products_options_id'].']" id="option_'.$rs_option['products_options_id'].'">';
 							$sql_optval="select pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id = pov.products_options_values_id where pov.language_id = '".$this->sys_language_uid."' and pa.options_id = '".$rs_option['products_options_id']."' and pa.products_id = ".$order['products_id'];
 							$qry_optval=$GLOBALS['TYPO3_DB']->sql_query($sql_optval);
 							while (($rs_optval=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_optval))!=false) {
-								$order_products_body_data['products_name']['value'].='<option value="'.$rs_optval['options_values_id'].'">'.$rs_optval['products_options_values_name'].'</option>';
+								$tmpcontent.='<option value="'.$rs_optval['options_values_id'].'">'.$rs_optval['products_options_values_name'].'</option>';
 							}
-							$order_products_body_data['products_name']['value'].='</select>';
+							$tmpcontent.='</select>';
+							$tmpcontent.='</td>';
 							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-								// products status col
-								$order_products_body_data['products_status']['value']='';
+								$tmpcontent.='<td align="right">&nbsp;</td>';
 							}
-							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								// products vat col
-								$order_products_body_data['products_vat']['value']='';
-							}
-							$order_products_body_data['products_normal_price']['value']='';
-							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								// products vat col
-								$order_products_body_data['products_vat']['value']='';
-							}
-							$order_products_body_data['products_final_price']['value']='';
+							$tmpcontent.='<td align="right">&nbsp;</td>';
+							$tmpcontent.='<td align="right">&nbsp;</td>';
+							$tmpcontent.='<td align="right">&nbsp;</td>';
 							if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-								// product action col
-								$order_products_body_data['products_action']['value']='';
+								$tmpcontent.='<td align="right">&nbsp;</td>';
 							}
-							$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+							$tmpcontent.='</tr>';
 						}
 					}
 				}
@@ -1698,77 +1558,39 @@ if (is_numeric($this->get['orders_id'])) {
 					$total_tax=$total_tax+$item_tax;
 				}
 				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked'] and $this->get['edit_product'] and ($this->get['order_pid']==$order['orders_products_id'])) {
-					$order_products_body_data=array();
-					// products id col
-					$order_products_body_data['products_id']['value']='';
-					// products qty col
-					$order_products_body_data['products_qty']['value']='';
-					// products name col
-					$order_products_body_data['products_name']['align']='left';
-					$order_products_body_data['products_name']['value']='<input type="button" id="edit_add_attributes" class="msadmin_button" value="add attribute">';
+					$tmpcontent.='<tr id="last_edit_product_row">
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td><input type="button" id="edit_add_attributes" class="msadmin_button" value="add attribute"></td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-						// products status col
-						$order_products_body_data['products_status']['value']='';
+						$tmpcontent.='<td>&nbsp;</td>';
 					}
-					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						// products vat col
-						$order_products_body_data['products_vat']['value']='';
-					}
-					$order_products_body_data['products_normal_price']['value']='';
-					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						// products vat col
-						$order_products_body_data['products_vat']['value']='';
-					}
-					$order_products_body_data['products_final_price']['value']='';
-					if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-						// product action col
-						$order_products_body_data['products_action']['value']='';
-					}
-					$order_products_table['body'][$tbody_tag_id]['rows'][]=array('id'=>'last_edit_product_row', 'value'=>$order_products_body_data);
+					$tmpcontent.='<td>&nbsp;</td>';
+					$tmpcontent.='</tr>';
 				}
-				// custom hook that can be controlled by third-party plugin
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'])) {
-					$params=array(
-						'order'=>&$order,
-						'tbody_tag_id'=>&$tbody_tag_id,
-						'order_products_table_body'=>&$order_products_table['body']
-					);
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
-					}
-				}
-				// custom hook that can be controlled by third-party plugin eof
+				$tmpcontent.="</tbody>";
 			}
 		}
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 			$colspan=8;
-			$order_products_body_data=array();
-			// products id col
-			$order_products_body_data['products_id']['th']=true;
-			$order_products_body_data['products_id']['colspan']=$colspan;
-			$order_products_body_data['products_id']['style']='text-align:left;';
-			$order_products_body_data['products_id']['value']=$this->pi_getLL('add_item_to_order');
-			$order_products_table['body']['manual_add_new_product_header']['rows'][]=array('class'=>'manual_add_new_product', 'style'=>'display:none', 'value'=>$order_products_body_data);
-			// manual new product
-			$order_products_body_data=array();
-			// products id col
-			$order_products_body_data['products_id']['value']='';
-			// products qty col
-			$order_products_body_data['products_qty']['align']='right';
-			$order_products_body_data['products_qty']['valign']='top';
-			$order_products_body_data['products_qty']['value']='<input type="hidden" name="manual_product_name" id="product_name" value="">';
-			$order_products_body_data['products_qty']['value'].='<input class="text" style="width:25px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />';
-			// products name col
-			$order_products_body_data['products_name']['align']='left';
-			$order_products_body_data['products_name']['valign']='top';
-			$order_products_body_data['products_name']['id']='manual_add_product';
-			$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:400px" tabindex="2" /></div>';
+			$tmpcontent.='<tr class="manual_add_new_product" style="display:none"><th colspan="'.$colspan.'" style="text-align:left;">'.$this->pi_getLL('add_item_to_order').'</th></tr>';
+			$tmpcontent.='<tr class="odd manual_add_new_product" style="display:none">';
+			$tmpcontent.='<td align="right">&nbsp;</td>
+				<td align="right" valign="top">
+					<input type="hidden" name="manual_product_name" id="product_name" value="">
+					<input class="text" style="width:25px" type="text" name="manual_product_qty" id="manual_product_qty" value="1" tabindex="1" />
+				</td>';
+			$tmpcontent.='<td align="left" valign="top" id="manual_add_product">
+				<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:400px" tabindex="2" /></div>';
 			if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
-				$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
+				$tmpcontent.='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
 			}
+			$tmpcontent.='</td>';
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-				// products status col
-				$order_products_body_data['products_status']['value']='';
+				$tmpcontent.='<td align="right">&nbsp;</td>';
 			}
 			$customer_country=mslib_fe::getCountryByName($orders['billing_country']);
 			$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
@@ -1791,205 +1613,57 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$vat_sb.='</select>';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				// products vat col
-				$order_products_body_data['products_vat']['align']='right';
-				$order_products_body_data['products_vat']['valign']='top';
-				$order_products_body_data['products_vat']['class']='cell_products_vat';
-				$order_products_body_data['products_vat']['value']=$vat_sb;
+				$tmpcontent.='<td align="right" class="cell_products_vat" valign="top">'.$vat_sb.'</td>';
 			}
-			// product normal price col
-			$order_products_body_data['products_normal_price']['align']='right';
-			$order_products_body_data['products_normal_price']['valign']='top';
+			$tmpcontent.='<td align="right" valign="top">';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" id="display_product_price" value="" tabindex="3"/>';
-				$order_products_body_data['products_normal_price']['value'].='<input type="hidden" name="manual_product_price" id="product_price" value=""/>';
+				$tmpcontent.='<input class="text" style="width:44px" type="text" id="display_product_price" value="" tabindex="3"/>';
+				$tmpcontent.='<input type="hidden" name="manual_product_price" id="product_price" value=""/>';
 			} else {
-				$order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" name="manual_product_price" id="product_price" value="" tabindex="3"/>';
+				$tmpcontent.='<input class="text" style="width:44px" type="text" name="manual_product_price" id="product_price" value="" tabindex="3"/>';
 			}
+			$tmpcontent.='</td>';
 			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				// products vat col
-				$order_products_body_data['products_vat']['align']='right';
-				$order_products_body_data['products_vat']['valign']='top';
-				$order_products_body_data['products_vat']['class']='cell_products_vat';
-				$order_products_body_data['products_vat']['value']=$vat_sb;
+				$tmpcontent.='<td align="right" class="cell_products_vat" valign="top">'.$vat_sb.'</td>';
 			}
-			// product final price col
-			$order_products_body_data['products_final_price']['value']='';
-			// product action col
-			$order_products_body_data['products_action']['align']='right';
-			$order_products_body_data['products_action']['class']='cell_products_action';
-			$order_products_body_data['products_action']['value']='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button">&nbsp;';
-			$order_products_body_data['products_action']['value'].='<input type="submit" value="'.$this->pi_getLL('add').'" class="msadmin_button submit_button">';
-			$order_products_table['body']['manual_add_new_product']['rows'][]=array('class'=>'odd manual_add_new_product', 'style'=>'display:none', 'value'=>$order_products_body_data);
-			// order product description
+			$tmpcontent.='<td align="right" id="manual_final_price">&nbsp;</td>';
+			$tmpcontent.='<td align="right" class="cell_products_action">';
+			$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button">&nbsp;';
+			$tmpcontent.='<input type="submit" value="'.$this->pi_getLL('add').'" class="msadmin_button submit_button">';
+			$tmpcontent.='</td>';
+			$tmpcontent.='';
+			$tmpcontent.='</tr>';
 			if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
-				$order_products_body_data=array();
-				// products id col
-				$order_products_body_data['products_id']['value']='';
-				// products qty col
-				$order_products_body_data['products_qty']['value']='';
-				// products name col
-				$order_products_body_data['products_name']['value']='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>';
-				$order_products_body_data['products_name']['value'].='<textarea rows="8" cols="75" id="manual_order_products_description" name="manual_order_products_description"></textarea>';
+				$tmpcontent.='<tr class="manual_add_new_product" style="display:none">';
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='<td>';
+				$tmpcontent.='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>';
+				$tmpcontent.='<textarea rows="8" cols="75" id="manual_order_products_description" name="manual_order_products_description"></textarea></td>';
+				$tmpcontent.='<td>&nbsp;</td>';
 				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-					// products status col
-					$order_products_body_data['products_status']['value']='';
+					$tmpcontent.='<td>&nbsp;</td>';
 				}
-				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					// products vat col
-					$order_products_body_data['products_vat']['value']='';
-				}
-				$order_products_body_data['products_normal_price']['value']='';
-				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					// products vat col
-					$order_products_body_data['products_vat']['value']='';
-				}
-				$order_products_body_data['products_final_price']['value']='';
-				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-					// product action col
-					$order_products_body_data['products_action']['value']='';
-				}
-				$order_products_table['body']['manual_add_new_product_description']['rows'][]=array('class'=>'manual_add_new_product', 'style'=>'display:none', 'value'=>$order_products_body_data);
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='<td align="right">&nbsp;</td>';
+				$tmpcontent.='<td>&nbsp;</td>';
+				$tmpcontent.='</tr>';
 			}
-			$order_products_body_data=array();
-			// products id col
-			$order_products_body_data['products_id']['value']='';
-			// products qty col
-			$order_products_body_data['products_qty']['value']='';
-			// products name col
-			$order_products_body_data['products_name']['style']='border:0px solid #fff';
-			$order_products_body_data['products_name']['value']='<input type="button" class="msadmin_button" value="add attribute" id="add_attributes" />';
-			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-				// products status col
-				$order_products_body_data['products_status']['value']='';
-			}
-			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				// products vat col
-				$order_products_body_data['products_vat']['value']='';
-			}
-			$order_products_body_data['products_normal_price']['value']='';
-			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				// products vat col
-				$order_products_body_data['products_vat']['value']='';
-			}
-			$order_products_body_data['products_final_price']['value']='';
-			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				// product action col
-				$order_products_body_data['products_action']['value']='';
-			}
-			$order_products_table['body']['last_edit_product_row']['rows'][]=array('class'=>'manual_add_new_product', 'id'=>'last_edit_product_row', 'style'=>'display:none', 'value'=>$order_products_body_data);
+			$tmpcontent.='<tr class="manual_add_new_product" id="last_edit_product_row" style="display:none">';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td style="border:0px solid #fff"><input type="button" class="msadmin_button" value="add attribute" id="add_attributes" /></td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='<td>&nbsp;</td>';
+			$tmpcontent.='</tr>';
 			if (!isset($this->get['edit_product'])) {
-				$order_products_body_data=array();
-				// products id col
-				$order_products_body_data['products_id']['colspan']=$colspan;
-				$order_products_body_data['products_id']['style']='text-align:left;';
-				$order_products_body_data['products_id']['value']='<a href="#" id="button_manual_new_product" class="msadmin_button">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a>';
-				$order_products_table['body']['add_new_product_button']['rows'][]=array('value'=>$order_products_body_data);
+				$tmpcontent.='<tr><td colspan="'.$colspan.'" style="text-align:left;"><a href="#" id="button_manual_new_product" class="msadmin_button">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a></td></tr>';
 			}
 		} else {
 			$colspan=7;
 		}
-		// custom hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'])) {
-			$params=array(
-				'orders'=>&$orders,
-				'colspan'=>&$colspan,
-				'order_products_table'=>&$order_products_table['body']
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
-			}
-		}
-		// custom hook that can be controlled by third-party plugin eof
-		//echo "<pre>";
-		//print_r($order_products_table);
-		//die();
-		if (is_array($order_products_table) && count($order_products_table)) {
-			// order products table header
-			foreach ($order_products_table['header'] as $header_data) {
-				$tmpcontent.='<thead>';
-				$tmpcontent.='<tr>';
-				foreach ($header_data['value'] as $header_col) {
-					$tmpcontent.='<th class="'.$header_col['class'].'">'.$header_col['value'].'</th>';
-				}
-				$tmpcontent.='</tr>';
-				$tmpcontent.='</thead>';
-			}
-			// order products table body
-			foreach ($order_products_table['body'] as $tbody_tag_id=>$body_data) {
-				$use_tbody=false;
-				if (strpos($tbody_tag_id, 'orders_products_id')!==false) {
-					$use_tbody=true;
-					$tmpcontent.='<tbody id="'.$tbody_tag_id.'" class="'.$body_data['tbody_class'].'">';
-				}
-				if (is_array($body_data['rows']) && count($body_data['rows'])) {
-					foreach ($body_data['rows'] as $body_rows_data) {
-						$row_class='';
-						$row_id='';
-						$row_style='';
-						$row_align='';
-						$row_valign='';
-						if (isset($body_rows_data['class'])) {
-							$row_class=' class="'.$body_rows_data['class'].'"';
-						}
-						if (isset($body_rows_data['id'])) {
-							$row_id=' id="'.$body_rows_data['id'].'"';
-						}
-						if (isset($body_rows_data['style'])) {
-							$row_style=' style="'.$body_rows_data['style'].'"';
-						}
-						if (isset($body_rows_data['align'])) {
-							$row_align=' align="'.$body_rows_data['align'].'"';
-						}
-						if (isset($body_rows_data['valign'])) {
-							$row_valign=' valign="'.$body_rows_data['valign'].'"';
-						}
-						$tmpcontent.='<tr'.$row_class.$row_id.$row_style.$row_align.$row_valign.'>';
-						foreach ($body_rows_data['value'] as $body_col) {
-							$col_class='';
-							$col_id='';
-							$col_style='';
-							$col_align='';
-							$col_valign='';
-							$col_span='';
-							if (isset($body_col['class'])) {
-								$col_class=' class="'.$body_col['class'].'"';
-							}
-							if (isset($body_col['id'])) {
-								$col_id=' id="'.$body_col['id'].'"';
-							}
-							if (isset($body_col['style'])) {
-								$col_style=' style="'.$body_col['style'].'"';
-							}
-							if (isset($body_col['align'])) {
-								$col_align=' align="'.$body_col['align'].'"';
-							}
-							if (isset($body_col['valign'])) {
-								$col_valign=' valign="'.$body_col['valign'].'"';
-							}
-							if (isset($body_col['colspan'])) {
-								$col_span=' colspan="'.$body_col['colspan'].'"';
-							}
-							if (empty($body_col['value'])) {
-								$body_col['value']='&nbsp;';
-							}
-							$col_type='td';
-							if (isset($body_col['th']) && $body_col['th']) {
-								$col_type='th';
-							}
-							$tmpcontent.='<'.$col_type.$col_class.$col_id.$col_style.$col_align.$col_valign.$col_span.'>'.$body_col['value'].'</'.$col_type.'>';
-						}
-						$tmpcontent.='</tr>';
-					}
-				}
-				if ($use_tbody) {
-					$tmpcontent.='</tbody>';
-				}
-			}
-		}
-		//echo '<pre>';
-		//print_r($order_products_table);
-		//die();
 //		$tmpcontent.='<tr><td colspan="'.$colspan.'"><hr class="hr"></td></tr>';
 		$orders_tax_data=unserialize($orders['orders_tax_data']);
 		$tmpcontent.='<tr><td align="right" colspan="'.$colspan.'" class="">';
