@@ -197,8 +197,12 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_groups,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_payment_method,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_autogen5,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_orders_status_search,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container#s2id_type_search,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #invoice_date_from,
-#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #invoice_date_till { width:28% !important; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #invoice_date_till,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #order_date_from,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #order_date_till { width:28% !important; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .col-sm-12.formfield-wrapper input[type="submit"] { float:right; margin:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"].msadmin_button { height:26px; margin-left:10px; }
 
