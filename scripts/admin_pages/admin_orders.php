@@ -408,12 +408,12 @@ if ($p>0) {
 	$offset=0;
 }
 // orders search
-$option_item='<select name="type_search" class="order_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>';
+$option_item='<select name="type_search" class="order_select2" style="width:200px" id="type_search"><option value="all">'.$this->pi_getLL('all').'</option>';
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->post['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
 $option_item.='</select>';
-$orders_status_list='<select name="orders_status_search" class="order_select2" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
+$orders_status_list='<select name="orders_status_search" id="orders_status_search" class="order_select2" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
 	foreach ($all_orders_status as $row) {
@@ -424,7 +424,7 @@ if (is_array($all_orders_status)) {
 	}
 }
 $orders_status_list.='</select>';
-$limit_selectbox='<select name="limit">';
+$limit_selectbox='<select name="limit" id="limit">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -627,7 +627,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_orders_found').'.';
 	$no_results=$this->cObj->substituteMarkerArrayCached($subparts['orders_noresults'], array(), $subpartArray);
 }
-$payment_status_select='<select name="payment_status" class="order_select2" style="width:250px">
+$payment_status_select='<select name="payment_status" id="payment_status" class="order_select2" style="width:250px">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
 if ($this->cookie['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
@@ -682,9 +682,13 @@ $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
+$subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('admin_search_on', 'Search on');
 $subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
+$subpartArray['###LABEL_USERGROUP###']=$this->pi_getLL('usergroup');
 $subpartArray['###USERGROUP_SELECTBOX###']=$customer_groups_input;
+$subpartArray['###LABEL_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
 $subpartArray['###PAYMENT_METHOD_SELECTBOX###']=$payment_method_input;
+$subpartArray['###LABEL_ORDER_STATUS###']=$this->pi_getLL('order_status');
 $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###']=$orders_status_list;
 $subpartArray['###VALUE_SEARCH###']=htmlspecialchars($this->pi_getLL('search'));
 $subpartArray['###LABEL_DATE_FROM###']=$this->pi_getLL('from');
@@ -693,6 +697,7 @@ $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###']=$this->post['order_date_till'];
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###']=$this->pi_getLL('filter_by_date_status_last_modified', 'Filter by date status last modified');
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###']=($this->post['search_by_status_last_modified'] ? ' checked' : '');
+$subpartArray['###LABEL_PAYMENT_STATUS###']=$this->pi_getLL('order_payment_status');;
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###']=$payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;

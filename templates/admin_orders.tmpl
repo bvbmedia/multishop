@@ -36,38 +36,39 @@
                 <div id="search-orders">
                     <input name="id" type="hidden" value="###SHOP_PID###" />
                     <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
-                    <table width="100%">
-                        <tr>
-                            <td valign="top">
-                                <div class="formfield-container-wrapper">
-                                    <div class="formfield-wrapper">
-                                        <label>###LABEL_KEYWORD###</label>
-                                        <input type="text" name="skeyword" value="###VALUE_KEYWORD###">
-                                        ###OPTION_ITEM_SELECTBOX###
-                                        ###USERGROUP_SELECTBOX###
-                                        ###PAYMENT_METHOD_SELECTBOX###
-                                        ###ORDERS_STATUS_LIST_SELECTBOX###
-                                        <input type="submit" name="Search" value="###VALUE_SEARCH###" />
-                                    </div>
-                                    <div class="formfield-wrapper">
-                                        <label for="order_date_from">###LABEL_DATE_FROM###:</label><input type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###"><label
-                                            for="order_date_till">###LABEL_DATE_TO###:</label><input type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
-                                        <label for="search_by_status_last_modified">###LABEL_FILTER_LAST_MODIFIED###</label>
-                                        <input type="checkbox" class="PrettyInput" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1"###FILTER_BY_LAST_MODIFIED_CHECKED### >
-                                    </div>
-                                    <div class="formfield-wrapper">
-                                        ###PAYMENT_STATUS_SELECTBOX###
-                                    </div>
-                                </div>
-                            </td>
-                            <td nowrap valign="top" align="right" class="searchLimit">
-                                <div style="float:right;">
-                                    <label>###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
-                                    ###RESULTS_LIMIT_SELECTBOX###
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+                    <div class="row formfield-container-wrapper">
+                        <div class="col-sm-4 formfield-wrapper">
+                            <label>###LABEL_KEYWORD###</label>
+                            <input type="text" name="skeyword" value="###VALUE_KEYWORD###">
+                            <label for="type_search">###LABEL_SEARCH_ON###</label>
+                            ###OPTION_ITEM_SELECTBOX###
+                            <label for="groups">###LABEL_USERGROUP###</label>
+                            ###USERGROUP_SELECTBOX###
+                        </div>
+                        <div class="col-sm-4 formfield-wrapper">
+                            <label for="order_date_from">###LABEL_DATE_FROM###:</label>
+                            <input type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###">
+                            <label for="order_date_till">###LABEL_DATE_TO###:</label>
+                            <input type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
+                            <label for="search_by_status_last_modified">###LABEL_FILTER_LAST_MODIFIED###</label>
+                            <input type="checkbox" class="PrettyInput" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1"###FILTER_BY_LAST_MODIFIED_CHECKED### >
+                        </div>
+                        <div class="col-sm-4 formfield-wrapper">
+                            <label for="payment_status">###LABEL_PAYMENT_STATUS###</label>
+                            ###PAYMENT_STATUS_SELECTBOX###
+                            <label for="payment_method">###LABEL_PAYMENT_METHOD###</label>
+                            ###PAYMENT_METHOD_SELECTBOX###
+                            <label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
+                            ###ORDERS_STATUS_LIST_SELECTBOX###
+                            <label for="limit">###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+                            ###RESULTS_LIMIT_SELECTBOX###
+                        </div>
+                    </div>
+                    <div class="row formfield-container-wrapper">
+                        <div class="col-sm-12 formfield-wrapper">
+                            <input type="submit" name="Search" value="###VALUE_SEARCH###" />
+                        </div>
+                    </div>
                 </div>
                 <!-- ###RESULTS### begin -->
                 <div class="msHorizontalOverflowWrapper">
