@@ -74,9 +74,11 @@ $content.='<div class="order_stats_mode_wrapper">
 </div>';
 $content.='
 <form method="get" id="orders_stats_form" class="float_right">
+<input name="id" type="hidden" value="'.$this->get['id'].'" />
 <div class="stat-years float_right">'.$temp_year.'</div>
 <input name="type" type="hidden" value="2003" />
 <input name="Search" type="hidden" value="1" />
+<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_orders" />
 <input name="tx_multishop_pi1[stats_section]" type="hidden" value="turnoverPerMonth" />
 <div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /><label for="checkbox_paid_orders_only">'.$this->pi_getLL('show_paid_orders_only').'</label></div>
 </form>
