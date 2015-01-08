@@ -268,6 +268,7 @@ if (!count($pageset['dataset'])) {
 		}
 		$markerArray=array();
 		$markerArray['ROW_TYPE']=$tr_type;
+		$markerArray['DOWNLOAD_CMS_CHECKBOX']='';
 		if ($this->ROOTADMIN_USER) {
 			$markerArray['DOWNLOAD_CMS_CHECKBOX']='<td align="center" nowrap>
             	<input type="checkbox" name="downloadCMS[]" class="download_cms_cb" value="'.$row['id'].'"/>
@@ -334,7 +335,12 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###LABEL_FOOTER_STATUS###']=$this->pi_getLL('status');
 	$subpartArray['###LABEL_FOOTER_CMS_ACTION###']=$this->pi_getLL('action');
 	$subpartArray['###CMS_LIST###']=$contentItem;
+	$subpartArray['###HEADER_CHECKALL_COLUMN###']='';
+	$subpartArray['###FOOTER_CHECKALL_COLUMN###']='';
+	$subpartArray['###DOWNLOAD_CMS_BUTTON###']='';
 	if ($this->ROOTADMIN_USER) {
+		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap><input type="checkbox" id="checkAllCMS"/></th>';
+		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap>&nbsp;</th>';
 		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<tr>
 				<td colspan="7"><input type="button" class="submit msadmin_button" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
 			</tr>';
@@ -355,6 +361,7 @@ $subpartArray['###ADMIN_CMS_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_
 //$subpartArray['###LABEL_UPLOAD_CMS###']=$this->pi_getLL('upload_cms');
 //$subpartArray['###ADMIN_CMS_UPLOAD_URL###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms');
 //$subpartArray['###LABEL_FILE###']=$this->pi_getLL('file');
+$subpartArray['###IMPORT_CMS_FILE###']='';
 if ($this->ROOTADMIN_USER) {
 	$subpartArray['###IMPORT_CMS_FILE###']='
 		<fieldset id="scheduled_import_jobs_form">
