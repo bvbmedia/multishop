@@ -3519,7 +3519,7 @@ class mslib_befe {
 					$tr_type='even';
 				}
 				$tmpcontent.='<tr class="'.$tr_type.'">';
-				$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.$prefix.number_format($product['qty']).'</td>';
+				$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.round($product['qty'],2).'</td>';
 				$product_tmp=mslib_fe::getProduct($product['products_id']);
 				$tmpcontent.='<td align="left" class="cell_products_name valign_top">'.$product['products_name'];
 				if ($product['products_article_number']) {

@@ -82,6 +82,15 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 			}
 		}
 		break;
+	default:
+		// post processing by third party plugins
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'])) {
+			$params=array();
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		break;
 }
 if ($this->get['Search'] and ($this->get['paid_invoices_only']!=$this->cookie['paid_invoices_only'])) {
 	$this->cookie['paid_invoices_only']=$this->get['paid_invoices_only'];

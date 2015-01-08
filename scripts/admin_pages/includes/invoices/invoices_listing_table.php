@@ -86,6 +86,13 @@ $actions['create_reversal_invoice']=$this->pi_getLL('create_reversal_invoice_for
 $actions['mail_invoices']=$this->pi_getLL('mail_selected_invoices');
 $actions['update_selected_invoices_to_paid']=$this->pi_getLL('update_selected_invoices_to_paid');
 $actions['update_selected_invoices_to_not_paid']=$this->pi_getLL('update_selected_invoices_to_not_paid');
+// extra action
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesActionSelectboxProc'])) {
+	$params=array('actions'=>&$actions);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesActionSelectboxProc'] as $funcRef) {
+		t3lib_div::callUserFunction($funcRef, $params, $this);
+	}
+}
 $tmp.='
 <select name="tx_multishop_pi1[action]" id="selected_invoices_action">
 <option value="">'.$this->pi_getLL('choose_action').'</option>
