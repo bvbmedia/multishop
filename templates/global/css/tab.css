@@ -175,6 +175,8 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label { clear:left; float:left; width:24%; margin:0; padding:7px 0 0; }
 #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.prettyCheckbox.checkbox { width:100%; line-height:27px; padding:0 0 0 24%; }
 #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.prettyCheckbox.checkbox span.holderWrap { margin-top:4px; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .col-sm-12.formfield-wrapper { width:100%; margin:0; padding:10px 10px 0; }
+#tx_multishop_pi1_core #tab-container #search-orders input[type="submit"] { float:right; margin:0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container { overflow:auto; width:100%; border:none; background:none; font:12px Arial, Helvetica, sans-serif; margin:0 0 10px; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content { border:1px solid #cdcdcd; border-top:none; background:#fff; padding:10px; border-radius:0 0 5px 5px; }
