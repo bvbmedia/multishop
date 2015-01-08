@@ -148,32 +148,39 @@ foreach ($chars as $char) {
 $searchCharNav.='</ul></div>';
 $formTopSearch='
 <div id="search-orders">
-	<table width="100%">
-		<tr>
-			<td valign="top">
-					<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
-					<input name="id" type="hidden" value="'.$this->shop_pid.'" />
-					<input name="type" type="hidden" value="2003" />
-					<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customers" />
-					<div class="formfield-container-wrapper">
-					<div class="formfield-wrapper">
-						<label>'.ucfirst($this->pi_getLL('keyword')).'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
-						<select name="tx_multishop_pi1[search_by]" style="width:200px">
-							<option value="all">'.$this->pi_getLL('all').'</option>
-							'.$option_item.'
-						</select>
-						<input type="submit" name="Search" class="msadmin_button" value="'.$this->pi_getLL('search').'" />
-					</div>
-					<div class="formfield-wrapper">
-						<label for="includeDeletedAccounts">'.$this->pi_getLL('show_deleted_accounts').'</label>
-						<input type="checkbox" class="PrettyInput" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
-					</div>
-					</div>
-			</td>
-			<td nowrap valign="top" align="right" class="searchLimit">
-				<div style="float:right;">
-					<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-					<select name="limit" style="width:60px">';
+	<div class="row formfield-container-wrapper">
+		<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
+		<input name="id" type="hidden" value="'.$this->shop_pid.'" />
+		<input name="type" type="hidden" value="2003" />
+		<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customers" />
+		<div class="col-sm-4 formfield-wrapper">
+			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
+			<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
+			<label for="type_search">'.$this->pi_getLL('admin_search_on', 'Search on').'</label>
+			<select name="tx_multishop_pi1[search_by]" style="width:200px">
+				<option value="all">'.$this->pi_getLL('all').'</option>
+				'.$option_item.'
+			</select>
+			<label for="groups">###LABEL_USERGROUP###</label>
+			###USERGROUP_SELECTBOX###
+		</div>
+		<div class="col-sm-4 formfield-wrapper">
+			<label for="order_date_from">###LABEL_DATE_FROM###:</label>
+			<input type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###">
+			<label for="order_date_till">###LABEL_DATE_TO###:</label>
+			<input type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
+			<label for="includeDeletedAccounts">'.$this->pi_getLL('show_deleted_accounts').'</label>
+			<input type="checkbox" class="PrettyInput" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
+		</div>
+		<div class="col-sm-4 formfield-wrapper">
+			<label for="payment_status">###LABEL_PAYMENT_STATUS###</label>
+			###PAYMENT_STATUS_SELECTBOX###
+			<label for="payment_method">###LABEL_PAYMENT_METHOD###</label>
+			###PAYMENT_METHOD_SELECTBOX###
+			<label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
+			###ORDERS_STATUS_LIST_SELECTBOX###
+			<label for="limit">'.$this->pi_getLL('limit_number_of_records_to').':</label>
+			<select name="limit" id="limit">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -196,10 +203,13 @@ foreach ($limits as $limit) {
 }
 $formTopSearch.='
 					</select>
-				</div>
-			</td>
-		</tr>
-	</table>
+		</div>
+	</div>
+	<div class="row formfield-container-wrapper">
+		<div class="col-sm-12 formfield-wrapper">
+			<input type="submit" name="Search" class="msadmin_button" value="'.$this->pi_getLL('search').'" />
+		</div>
+	</div>
 	'.$searchCharNav.'
 </div>';
 $filter=array();

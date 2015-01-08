@@ -1729,6 +1729,7 @@ if (is_numeric($this->get['orders_id'])) {
 				// custom hook that can be controlled by third-party plugin
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'])) {
 					$params=array(
+						'orders'=>&$orders,
 						'order'=>&$order,
 						'tbody_tag_id'=>&$tbody_tag_id,
 						'order_products_table_body'=>&$order_products_table['body']
@@ -1910,7 +1911,31 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='<thead>';
 				$tmpcontent.='<tr>';
 				foreach ($header_data['value'] as $header_col) {
-					$tmpcontent.='<th class="'.$header_col['class'].'">'.$header_col['value'].'</th>';
+					$col_class='';
+					$col_id='';
+					$col_style='';
+					$col_align='';
+					$col_valign='';
+					$col_span='';
+					if (isset($header_col['class'])) {
+						$col_class=' class="'.$header_col['class'].'"';
+					}
+					if (isset($header_col['id'])) {
+						$col_id=' id="'.$header_col['id'].'"';
+					}
+					if (isset($header_col['style'])) {
+						$col_style=' style="'.$header_col['style'].'"';
+					}
+					if (isset($header_col['align'])) {
+						$col_align=' align="'.$header_col['align'].'"';
+					}
+					if (isset($header_col['valign'])) {
+						$col_valign=' valign="'.$header_col['valign'].'"';
+					}
+					if (isset($header_col['colspan'])) {
+						$col_span=' colspan="'.$header_col['colspan'].'"';
+					}
+					$tmpcontent.='<th'.$col_class.$col_id.$col_style.$col_align.$col_valign.$col_span.'>'.$header_col['value'].'</th>';
 				}
 				$tmpcontent.='</tr>';
 				$tmpcontent.='</thead>';
