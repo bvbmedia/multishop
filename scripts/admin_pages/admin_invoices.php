@@ -202,17 +202,17 @@ $form_orders_search='<div id="search-orders">
 		<div class="col-sm-4 formfield-wrapper">
 			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
 			<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-			<label for="type_search"'.$this->pi_getLL('admin_search_on').'</label>
+			<label for="type_search">'.$this->pi_getLL('admin_search_on', 'Search on').'</label>
 			<select name="type_search" class="invoice_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 			</select>
-			<label for="groups">'.$this->pi_getLL('usergroup').'</label>
+			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
 			'.$customer_groups_input.'
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
 			<input type="text" name="order_date_from" id="invoice_date_from" value="'.$this->post['order_date_from'].'">
-			<label for="order_date_till">'.$this->pi_getLL('to').':</label>
+			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
 			<input type="text" name="order_date_till" id="invoice_date_till" value="'.$this->post['order_date_till'].'">
 			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
 			<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
@@ -220,7 +220,7 @@ $form_orders_search='<div id="search-orders">
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
 			'.$payment_method_input.'
-			<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
+			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
 			<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
 			<select name="limit">';
