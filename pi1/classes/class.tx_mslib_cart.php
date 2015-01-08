@@ -1432,7 +1432,8 @@ class tx_mslib_cart extends tslib_pibase {
 						$insertArray['products_description']=$value['products_shortdescription'];
 						if (is_array($value['attributes'])) {
 							// loading the attributes
-							$insertArray['products_description'].="\n".strip_tags(mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1));
+							//$insertArray['products_description'].="\n".strip_tags(mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1));
+							$insertArray['products_description'].="\n".mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1);
 							// loading the attributes eof
 						}
 						$insertArray['products_price']=$value['products_price'];
