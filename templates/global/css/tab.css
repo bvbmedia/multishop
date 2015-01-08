@@ -38,8 +38,11 @@ div.tooltip.fade:after { position:absolute; left:10px; bottom:-7px; border-top:7
 div.tooltip.fade { position:absolute !important; overflow:visible; margin:0; width:auto; min-width:100px; max-width:500px; border:none; box-shadow:0 4px 10px #999; }
 div.tooltip.fade.top { margin-top:-10px; }
 div.tooltip.fade.bottom { margin-top:10px; }
+div.tooltip.fade.bottom * { text-transform:none; }
 div.tooltip.fade.top:after { position:absolute; left:50%; margin-left:-7px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; }
 div.tooltip.fade.bottom:after { position:absolute; left:50%; margin-left:-7px; top:-7px; border-bottom:7px solid #fff; border-left:7px solid transparent; border-right:7px solid transparent; content:""; }
+#tx_multishop_pi1_core table#product_import_table th div.tooltip.fade.bottom a,
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table th div.tooltip.fade.bottom a { color:#285dab; }
 
 .align_left { text-align:left; }
 .align_right { text-align:right; }
