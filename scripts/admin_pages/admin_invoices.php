@@ -198,13 +198,32 @@ $form_orders_search='<div id="search-orders">
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
 	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 	<input name="type" type="hidden" value="2003" />
-	<table width="100%">
-		<tr>
-			<td>
-				<div style="float:right;">
-					<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-					<select name="limit">
-					';
+	<div class="row formfield-container-wrapper">
+		<div class="col-sm-4 formfield-wrapper">
+			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
+			<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
+			<label for="type_search"'.$this->pi_getLL('admin_search_on').'</label>
+			<select name="type_search" class="invoice_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
+				'.$option_item.'
+			</select>
+			<label for="groups">'.$this->pi_getLL('usergroup').'</label>
+			'.$customer_groups_input.'
+		</div>
+		<div class="col-sm-4 formfield-wrapper">
+			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
+			<input type="text" name="order_date_from" id="invoice_date_from" value="'.$this->post['order_date_from'].'">
+			<label for="order_date_till">'.$this->pi_getLL('to').':</label>
+			<input type="text" name="order_date_till" id="invoice_date_till" value="'.$this->post['order_date_till'].'">
+			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
+			<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
+		</div>
+		<div class="col-sm-4 formfield-wrapper">
+			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
+			'.$payment_method_input.'
+			<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
+			'.$orders_status_list.'
+			<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
+			<select name="limit">';
 $limits=array();
 $limits[]='15';
 $limits[]='20';
@@ -218,26 +237,14 @@ foreach ($limits as $limit) {
 	$form_orders_search.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
 $form_orders_search.='
-					</select>
-				</div>
-				<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
-				<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-				<select name="type_search" class="invoice_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
-				'.$option_item.'
-				</select>
-				'.$customer_groups_input.'
-				'.$payment_method_input.'
-				'.$orders_status_list.'
-				<div class="formfield-wrapper">
-					<label for="order_date_from">'.$this->pi_getLL('from').':</label><input type="text" name="order_date_from" id="invoice_date_from" value="'.$this->post['order_date_from'].'">
-					<label for="order_date_till">'.$this->pi_getLL('to').':</label><input type="text" name="order_date_till" id="invoice_date_till" value="'.$this->post['order_date_till'].'">
-				</div>
-				<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
-				<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
-				<input type="submit" name="Search" value="'.htmlspecialchars($this->pi_getLL('search')).'"></input>
-			</td>
-		</tr>
-	</table>
+			</select>
+		</div>
+	</div>
+	<div class="row formfield-container-wrapper">
+		<div class="col-sm-12 formfield-wrapper">
+			<input type="submit" name="Search" value="'.htmlspecialchars($this->pi_getLL('search')).'"></input>
+		</div>
+	</div>
 </div>';
 $filter=array();
 $from=array();
