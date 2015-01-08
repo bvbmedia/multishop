@@ -150,6 +150,34 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"] { border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; text-transform:uppercase; margin:0 3px; padding:2px 6px; cursor:pointer; }
 #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"]:hover { background:#e2e2e2; }
 
+#tx_multishop_pi1_core #tab-container #search-orders { border:1px solid #cdcdcd; background:#f7f7f7; margin:0 0 20px; padding:15px; border-radius:6px; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper { overflow:visible; width:auto; margin:0 -10px; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper * { box-sizing:border-box; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper:after { clear:both; display:table; content:""; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .col-sm-4 { float:left; width:33.33%; padding:0 10px; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper input[type="text"],
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper select {
+    width:76%;
+    height:26px;
+    border-color:#aaa;
+    background-color: #fff;
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0,#eee),color-stop(0.5,#fff));
+    background-image: -webkit-linear-gradient(center bottom,#eee 0%,#fff 50%);
+    background-image: -moz-linear-gradient(center bottom,#eee 0%,#fff 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr ='#ffffff',endColorstr ='#eeeeee',GradientType = 0);
+    background-image: linear-gradient(top,#fff 0%,#eee 50%);
+    line-height:27px;
+    margin:0 0 8px;
+    padding:0 8px;
+    border-radius:4px;
+}
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .select2-container.order_select2 { float:left; width:76% !important; margin:0 0 8px; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label { clear:left; float:left; width:24%; margin:0; padding:7px 0 0; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.prettyCheckbox.checkbox { width:100%; line-height:27px; padding:0 0 0 24%; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper label.prettyCheckbox.checkbox span.holderWrap { margin-top:4px; }
+#tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper .col-sm-12.formfield-wrapper { width:100%; margin:0; padding:10px 10px 0; }
+#tx_multishop_pi1_core #tab-container #search-orders input[type="submit"] { float:right; margin:0; }
+
 #tx_multishop_pi1_core #tab-container .tab_container { overflow:auto; width:100%; border:none; background:none; font:12px Arial, Helvetica, sans-serif; margin:0 0 10px; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content { border:1px solid #cdcdcd; border-top:none; background:#fff; padding:10px; border-radius:0 0 5px 5px; }
 #tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container .tab_content { border-top:1px solid #cdcdcd; border-radius:5px; }
