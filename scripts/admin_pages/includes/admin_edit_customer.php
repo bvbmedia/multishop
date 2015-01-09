@@ -396,14 +396,20 @@ if (count($enabled_countries)==1) {
 	$countries_input='<input name="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 	$countries_input.='<input name="delivery_country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 } else {
+	$billing_countries_option=array();
+	$delivery_countries_option=array();
 	foreach ($enabled_countries as $country) {
 		if ($this->get['action']=='add_customer') {
-			$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->tta_shop_info['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			$billing_countries_option[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->tta_shop_info['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 		} else {
-			$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+			$billing_countries_option[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 		}
-		$tmpcontent_con_delivery.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($this->post['delivery_country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+		$delivery_countries_option[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($this->post['delivery_country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 	}
+	ksort($billing_countries_option);
+	ksort($delivery_countries_option);
+	$tmpcontent_con=implode("\n", $billing_countries_option);
+	$tmpcontent_con_delivery=implode("\n", $delivery_countries_option);
 	if ($tmpcontent_con) {
 		$countries_input='
 		<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
