@@ -157,11 +157,19 @@ foreach ($chars as $char) {
 }
 $searchCharNav.='</ul></div>';
 
-$enabled_countries=mslib_fe::loadEnabledCountries();
-foreach ($enabled_countries as $country) {
-	$billing_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+$user_countries=mslib_befe::getRecords('', 'fe_users', '', array(), 'country', 'country asc');
+$fe_user_country=array();
+foreach ($user_countries as $user_country) {
+	$fe_user_country[]=$user_country['country'];
 }
-$billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $billing_countries).'</select>';
+$enabled_countries=mslib_fe::loadEnabledCountries();
+$fe_user_countries=array();
+foreach ($enabled_countries as $country) {
+	if (in_array(mslib_befe::strtolower($country['cn_short_en']), $fe_user_country)) {
+		$fe_user_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+	}
+}
+$user_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $fe_user_countries).'</select>';
 $formTopSearch='
 <div id="search-orders">
 	<div class="row formfield-container-wrapper">
@@ -190,7 +198,7 @@ $formTopSearch='
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="country">'.$this->pi_getLL('countries').'</label>
-			'.$billing_countries_sb.'
+			'.$user_countries_sb.'
 			<label for="limit">'.$this->pi_getLL('limit_number_of_records_to').':</label>
 			<select name="limit" id="limit">';
 $limits=array();
