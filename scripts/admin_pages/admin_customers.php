@@ -171,7 +171,7 @@ $formTopSearch='
 		<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customers" />
 		<div class="col-sm-4 formfield-wrapper">
 			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
-			<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
+			<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" class="customers_skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
 			<label for="type_search">'.$this->pi_getLL('admin_search_on', 'Search on').'</label>
 			<select class="invoice_select2" name="tx_multishop_pi1[search_by]" style="width:200px">
 				<option value="all">'.$this->pi_getLL('all').'</option>
