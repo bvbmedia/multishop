@@ -160,7 +160,7 @@ $searchCharNav.='</ul></div>';
 $user_countries=mslib_befe::getRecords('', 'fe_users', '', array(), 'country', 'country asc');
 $fe_user_country=array();
 foreach ($user_countries as $user_country) {
-	$fe_user_country[]=$user_country['country'];
+	$fe_user_country[]=mslib_befe::strtolower($user_country['country']);
 }
 $enabled_countries=mslib_fe::loadEnabledCountries();
 $fe_user_countries=array();

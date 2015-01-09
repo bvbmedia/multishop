@@ -682,7 +682,7 @@ if (is_array($payment_methods) and count($payment_methods)) {
 $order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
 $order_billing_country=array();
 foreach ($order_countries as $order_country) {
-	$order_billing_country[]=$order_country['billing_country'];
+	$order_billing_country[]=mslib_befe::strtolower($order_country['billing_country']);
 }
 $enabled_countries=mslib_fe::loadEnabledCountries();
 $billing_countries_array=array();
