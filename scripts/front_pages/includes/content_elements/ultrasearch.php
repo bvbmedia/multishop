@@ -69,13 +69,50 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$headers.='ultrasearch_exclude_negative_filter_values=\'1\';';
 	}
 	$headers.='// location of the ultrasearch server
-	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam.'\';';
+	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&manufacturers_id='.$this->get['manufacturers_id'].'&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam.'\';';
 	if ($this->hideHeader) {
 		$headers.='var ultrasearcch_resultset_header=\'\';';
 	} else {
-		$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h2>'.$this->pi_getLL('search').'</h2></div>\';';		
+		$cmsDescriptionArray=array();
+		if (isset($this->get['manufacturers_id']) && is_numeric($this->get['manufacturers_id'])) {
+			$strCms=$GLOBALS ['TYPO3_DB']->SELECTquery('m.manufacturers_id, mc.content, mc.content_footer, m.manufacturers_name', // SELECT ...
+				'tx_multishop_manufacturers m, tx_multishop_manufacturers_cms mc', // FROM ...
+				"m.manufacturers_id='".$this->get['manufacturers_id']."' AND m.status=1 and mc.language_id='".$this->sys_language_uid."' and m.manufacturers_id=mc.manufacturers_id", // WHERE.
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$qryCms=$GLOBALS['TYPO3_DB']->sql_query($strCms);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qryCms)) {
+				$rowCms=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryCms);
+				$cmsDescriptionArray['header_title']=$rowCms['manufacturers_name'];
+				$cmsDescriptionArray['content']=$rowCms['content'];
+				$cmsDescriptionArray['content_footer']=$rowCms['content_footer'];
+			}
+		} elseif (isset($this->get['categories_id']) && is_numeric($this->get['categories_id'])) {
+			$strCms=$GLOBALS ['TYPO3_DB']->SELECTquery('c.categories_id, cd.content, cd.content_footer, cd.categories_name', // SELECT ...
+				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+				"c.categories_id='".$this->get['categories_id']."' AND c.status=1 and cd.language_id='".$this->sys_language_uid."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id", // WHERE.
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+
+			$qryCms=$GLOBALS['TYPO3_DB']->sql_query($strCms);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qryCms)) {
+				$rowCms=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryCms);
+				$cmsDescriptionArray['header_title']=$rowCms['categories_name'];
+				$cmsDescriptionArray['content']=$rowCms['content'];
+				$cmsDescriptionArray['content_footer']=$rowCms['content_footer'];
+			}
+		}
+		if ($cmsDescriptionArray['header_title']) {
+			$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h1>'.htmlspecialchars($cmsDescriptionArray['header_title']).'</h1></div>\';';
+		} else {
+			$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h1>'.$this->pi_getLL('search').'</h1></div>\';';
+		}
 	}
-	$headers.='var ultrasearch_message_no_results=\'<div id="msFrontUltrasearchNoResults"><div class="main-heading"><h2>'.addslashes($this->pi_getLL('no_products_found_heading')).'</h2></div><p>'.addslashes($this->pi_getLL('no_products_found_description')).'</p></div>\';
+	$headers.='var ultrasearch_message_no_results=\'<div id="msFrontUltrasearchNoResults"><div class="main-heading"><h1>'.addslashes($this->pi_getLL('no_products_found_heading')).'</h1></div><p>'.addslashes($this->pi_getLL('no_products_found_description')).'</p></div>\';
 	</script>
 	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery-hashchange-master/jquery.ba-hashchange.min.js"></script>
 	<script type="text/javascript">

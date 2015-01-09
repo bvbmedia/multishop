@@ -65,6 +65,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$parent_id=$this->post['categories_id'];
 		}
 	}
+	if (is_numeric($this->get['manufacturers_id'])) {
+		if (!is_array($this->post['tx_multishop_pi1']['manufacturers'])) {
+			$this->post['tx_multishop_pi1']['manufacturers']=array();
+		}
+		if (!in_array($this->get['manufacturers_id'],$this->post['tx_multishop_pi1']['manufacturers'])) {
+			$this->post['tx_multishop_pi1']['manufacturers'][]=$this->get['manufacturers_id'];
+		}
+	}
 	if (is_numeric($parent_id) and $parent_id > 0) {
 		if ($this->ms['MODULES']['FLAT_DATABASE']) {
 			$string='(';
@@ -1441,32 +1449,56 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 		}
 	}
-	if (isset($this->get['categories_id']) && $this->get['categories_id']>0) {
-		$description_catid=$this->get['categories_id'];
-	}
-	$str=$GLOBALS ['TYPO3_DB']->SELECTquery('content, content_footer, categories_name', // SELECT ...
-		'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-		"c.status=1 and c.categories_id='".$description_catid."' and cd.language_id='".$this->sys_language_uid."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id", // WHERE.
-		'', // GROUP BY...
-		'', // ORDER BY...
-		'' // LIMIT ...
-	);
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$cat_description=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-	if (!$p || $p==1) {
-		$results['categories_description']['header']='';
-		$results['categories_description']['footer']='';
-		if (isset($cat_description['content']) && !empty($cat_description['content'])) {
-			$results['categories_description']['header']=$cat_description['content'];
+	// DEFAULT EMPTY
+	$cmsDescriptionArray=array();
+	$results['current_categories']['name']='';
+	$results['categories_description']['header']='';
+	$results['categories_description']['footer']='';
+	if (isset($this->get['manufacturers_id']) && is_numeric($this->get['manufacturers_id'])) {
+		$strCms=$GLOBALS ['TYPO3_DB']->SELECTquery('m.manufacturers_id, mc.content, mc.content_footer, m.manufacturers_name', // SELECT ...
+			'tx_multishop_manufacturers m, tx_multishop_manufacturers_cms mc', // FROM ...
+			"m.manufacturers_id='".$this->get['manufacturers_id']."' AND m.status=1 and mc.language_id='".$this->sys_language_uid."' and m.manufacturers_id=mc.manufacturers_id", // WHERE.
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$qryCms=$GLOBALS['TYPO3_DB']->sql_query($strCms);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qryCms)) {
+			$rowCms=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryCms);
+			//$cmsDescriptionArray['header_title']=$rowCms['manufacturers_name'];
+			$cmsDescriptionArray['content']=$rowCms['content'];
+			$cmsDescriptionArray['content_footer']=$rowCms['content_footer'];
 		}
-		if (isset($cat_description['content_footer']) && !empty($cat_description['content_footer'])) {
-			$results['categories_description']['footer']=$cat_description['content_footer'];
+	} elseif (isset($this->get['categories_id']) && is_numeric($this->get['categories_id'])) {
+		$strCms=$GLOBALS ['TYPO3_DB']->SELECTquery('c.categories_id, cd.content, cd.content_footer, cd.categories_name', // SELECT ...
+			'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+			"c.categories_id='".$this->get['categories_id']."' AND c.status=1 and cd.language_id='".$this->sys_language_uid."' and c.page_uid='".$this->showCatalogFromPage."' and c.categories_id=cd.categories_id", // WHERE.
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$qryCms=$GLOBALS['TYPO3_DB']->sql_query($strCms);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qryCms)) {
+			$rowCms=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryCms);
+			//$cmsDescriptionArray['header_title']=$rowCms['categories_name'];
+			$cmsDescriptionArray['content']=$rowCms['content'];
+			$cmsDescriptionArray['content_footer']=$rowCms['content_footer'];
 		}
-	} else {
-		$results['categories_description']['header']='';
-		$results['categories_description']['footer']='';
 	}
-	$results['current_categories']['name']=$cat_description['categories_name'];
+	//error_log(print_r($cmsDescriptionArray,1));
+	if (count($cmsDescriptionArray)) {
+		if (!$p || $p==1) {
+			if (isset($cmsDescriptionArray['content']) && !empty($cmsDescriptionArray['content'])) {
+				$results['categories_description']['header']=$cmsDescriptionArray['content'];
+			}
+			if (isset($cmsDescriptionArray['content_footer']) && !empty($cmsDescriptionArray['content_footer'])) {
+				$results['categories_description']['footer']=$cmsDescriptionArray['content_footer'];
+			}
+		}
+		if ($cmsDescriptionArray['header_title']) {
+			$results['current_categories']['name']=$cmsDescriptionArray['header_title'];
+		}
+	}
 	$results['products'] = $results_products;
 	$results['total_rows'] = $pageset['total_rows'];
 	$results['pagination']['offset'] = $offset;
