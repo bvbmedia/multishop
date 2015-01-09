@@ -4669,7 +4669,7 @@
 			<label index="date_last_sent">Datum laatst verzonden</label>
 			<label index="admin_custom_product_name">Afwijkende productnaam</label>
 			<label index="admin_current_custom_product_name">Huidige afwijkende productnaam</label>
-			<label index="type_your_keyword_here">type uw zoekwoord</label>
+			<label index="type_your_keyword_here">type zoekwoord</label>
 		</languageKey>
 		<languageKey index="no"></languageKey>
 		<languageKey index="pl"></languageKey>

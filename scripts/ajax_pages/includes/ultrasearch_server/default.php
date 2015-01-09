@@ -298,7 +298,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$formField['id']="skeyword";
 				$formField['caption']=ucfirst($this->pi_getLL('keyword'));
 				$formField['type']="text";
-				$formField['placeholder']=ucfirst($this->pi_getLL('type_your_keyword_here'));
+				$formField['placeholder']=$this->pi_getLL('type_your_keyword_here');
 				$formField['value']=$this->post['tx_multishop_pi1']['q'];
 			break;
 			case 'categories':
