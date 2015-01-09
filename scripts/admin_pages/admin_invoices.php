@@ -214,7 +214,7 @@ $form_orders_search='<div id="search-orders">
 		<div class="col-sm-4 formfield-wrapper">
 			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
 			<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-			<label for="type_search">'.$this->pi_getLL('admin_search_on', 'Search on').'</label>
+			<label for="type_search">'.$this->pi_getLL('search_for').'</label>
 			<select name="type_search" class="invoice_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 			</select>
