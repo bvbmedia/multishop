@@ -190,6 +190,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
     border-radius:4px;
 }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="text"]#skeyword { margin-right:10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="text"]#skeyword.customers_skeyword { margin-right:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .select2-container { float:left; margin:0 0 8px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders label.prettyCheckbox.checkbox { width:100%; line-height:27px; padding:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders label.prettyCheckbox.checkbox span.holderWrap { margin-top:4px; }
@@ -205,7 +206,9 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #invoice_date_from,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #invoice_date_till,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #order_date_from,
-#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #order_date_till { width:28% !important; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #order_date_till,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #crdate_from,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .row.formfield-container-wrapper #crdate_till { width:28% !important; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders .col-sm-12.formfield-wrapper input[type="submit"] { float:right; margin:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core #tab-container #search-orders input[type="submit"].msadmin_button { height:26px; margin-left:10px; }
 
