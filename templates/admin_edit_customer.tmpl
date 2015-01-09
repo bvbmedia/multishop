@@ -37,38 +37,41 @@ jQuery(document).ready(function ($) {
     <div class="tab_container">
         <!-- ###DETAILS### begin -->
         <div style="display: block;" id="view_customer" class="tab_content">
-            <div class="tabs-fieldset" id="address_details">
-                <fieldset>
-                    <h1 class="blackSquare">###DETAILS_COMPANY_NAME###</h1>
-
-                    <div class="msAdminBlock" id="msAdminBlockFeUserLogo">
-                        <div class="msAdminFeUserImageWrapper">
-                            ###CUSTOMER_IMAGE###
+            <div class="topfieldset">
+                <div class="tabs-fieldset" id="address_details">
+                    <fieldset>
+                        <h1 class="blackSquare">###DETAILS_COMPANY_NAME###</h1>
+                        <div class="msAdminBlock" id="msAdminBlockFeUserLogo">
+                            <div class="msAdminFeUserImageWrapper">
+                                ###CUSTOMER_IMAGE###
+                            </div>
                         </div>
-                    </div>
-                    <div class="msAdminBlock-full">
-                        <h3>###ADMIN_LABEL_CONTACT_INFO###</h3>
-                        ###BILLING_FULLNAME###
-                        ###BILLING_TELEPHONE###
-                        ###BILLING_EMAIL###
-                    </div>
-                    <div class="msAdminBlock">
-                        <h3>###ADMIN_LABEL_BILLING_ADDRESS###</h3>
+                        <h3>###CUSTOMER_ID###</h3>
+                        <div class="msAdminBlock-full">
+                            <h3>###ADMIN_LABEL_CONTACT_INFO###</h3>
+                            ###BILLING_FULLNAME###
+                            ###BILLING_TELEPHONE###
+                            ###BILLING_EMAIL###
+                        </div>
+                        <div class="msAdminBlock">
+                            <h3>###ADMIN_LABEL_BILLING_ADDRESS###</h3>
 
-                        <div class="address_details_container" id="billing_details_container">###BILLING_ADDRESS###</div>
-                    </div>
-                    <div class="msAdminBlock">
-                        <h3>###ADMIN_LABEL_DELIVERY_ADDRESS###</h3>
+                            <div class="address_details_container" id="billing_details_container">###BILLING_ADDRESS###</div>
+                        </div>
+                        <div class="msAdminBlock">
+                            <h3>###ADMIN_LABEL_DELIVERY_ADDRESS###</h3>
 
-                        <div class="address_details_container" id="delivery_details_container">###DELIVERY_ADDRESS###</div>
-                    </div>
-                </fieldset>
+                            <div class="address_details_container" id="delivery_details_container">###DELIVERY_ADDRESS###</div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="tabs-fieldset lastCol" id="order_google_map">
+                    <fieldset>
+                        <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="###GOOGLE_MAPS_URL_QUERY###"></iframe>
+                    </fieldset>
+                </div>
             </div>
-            <div class="tabs-fieldset lastCol" id="order_google_map">
-                <fieldset>
-                    <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="###GOOGLE_MAPS_URL_QUERY###"></iframe>
-                </fieldset>
-            </div>
+            ###CUSTOMER_RELATED_ORDERS_LISTING###
             <div class="clear_both"></div>
         </div>
         <!-- ###DETAILS### end -->

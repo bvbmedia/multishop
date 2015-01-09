@@ -701,13 +701,89 @@ switch ($_REQUEST['action']) {
 		}
 		$markerArray['BILLING_FULLNAME']=$fullname.'<br/>';
 		$markerArray['BILLING_TELEPHONE']=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
-		$markerArray['BILLING_EMAIL']=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address;
+		$markerArray['BILLING_EMAIL']=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
+		$markerArray['CUSTOMER_ID']='<strong>'.$this->pi_getLL('admin_customer_id').': '.$user['uid'].'</strong><br/>';
 		$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
 		$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
 		$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
 		$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
 		$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
 		$markerArray['ADMIN_LABEL_DELIVERY_ADDRESS']=$this->pi_getLL('admin_label_delivery_address');
+		// customers related orders listings
+		$filter=array();
+		$from=array();
+		$having=array();
+		$match=array();
+		$orderby=array();
+		$where=array();
+		$select=array();
+		$select[]='o.*';
+		$filter[]='o.customer_id='.$user['uid'];
+		$filter[]='o.page_uid='.$this->shop_pid;
+		$orders_pageset=mslib_fe::getOrdersPageSet($filter, 0, 10000, array('orders_id desc'), $having, $select, $where, $from);
+		$order_listing=$this->pi_getLL('no_orders_found');
+		if ($orders_pageset['total_rows']>0) {
+			$all_orders_status=mslib_fe::getAllOrderStatus();
+			$order_listing='<div class="msHorizontalOverflowWrapper">
+				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
+					<tr>
+						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
+						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
+						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
+						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
+						<th width="50" class="cell_payment_method">'.$this->pi_getLL('payment_method').'</th>
+						<th width="100" class="cell_status">'.$this->pi_getLL('order_status').'</th>
+						<th width="110" class="cell_date">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
+						<th width="50" class="cell_paid">'.$this->pi_getLL('admin_paid').'</th>
+					</tr>';
+					$tr_type='odd';
+					foreach ($orders_pageset['orders'] as $order) {
+						if (!isset($tr_type) || $tr_type=='odd') {
+							$tr_type='even';
+						} else {
+							$tr_type='odd';
+						}
+						if ($order['is_proposal']>0) {
+							$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
+						} else {
+							$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+						}
+						if (!$order['paid']) {
+							$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
+						} else {
+							$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
+						}
+						$order_listing.='<tr class="'.$tr_type.'">
+							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
+							<td align="right" nowrap>'.strftime("%x %X", $order['crdate']).'</td>
+							<td align="right" nowrap id="order_amount_###ORDER_ID###">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
+							<td align="center" nowrap id="shipping_method_###ORDER_ID###">'.$order['shipping_method_label'].'</td>
+							<td align="center" nowrap id="payment_method_###ORDER_ID###">'.$order['payment_method_label'].'</td>
+							<td align="left" nowrap>'.$all_orders_status[$order['status']]['name'].'</td>
+							<td align="right" nowrap>'.($order['status_last_modified'] ? strftime("%x %X", $order['status_last_modified']) : '').'</td>
+							<td align="center" nowrap>'.$paid_status.'</td>
+						</tr>';
+					}
+			$order_listing.='<tr>
+						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
+						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
+						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
+						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
+						<th width="50" class="cell_payment_method">'.$this->pi_getLL('payment_method').'</th>
+						<th width="100" class="cell_status">'.$this->pi_getLL('order_status').'</th>
+						<th width="110" class="cell_date">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
+						<th width="50" class="cell_paid">'.$this->pi_getLL('admin_paid').'</th>
+					</tr>
+				</table>
+			</div>';
+		}
+		$customer_related_orders_listing='<div class="" id="orders_details">';
+		$customer_related_orders_listing.='<fieldset>';
+		$customer_related_orders_listing.='<legend>'.$this->pi_getLL('orders').'</legend>';
+		$customer_related_orders_listing.=$order_listing;
+		$customer_related_orders_listing.='</fieldset>';
+		$customer_related_orders_listing.='</div>';
+		$markerArray['CUSTOMER_RELATED_ORDERS_LISTING']=$customer_related_orders_listing;
 		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
 		$subpartArray['###DETAILS_TAB###']='<li class="active"><a href="#view_customer">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
 		$subpartArray['###DETAILS###']=$customer_details;
