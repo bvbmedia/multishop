@@ -37,9 +37,7 @@ if (is_numeric($this->get['manufacturers_id'])) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$current=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		$content.='<div class="main-heading"><h1>'.$current['manufacturers_name'].'</h1></div>';
-		if ($current['content'] and !$p) {
-			$content.=mslib_fe::htmlBox('', $current['content'], '', 'msFrontManufacturersProductsListingCmsTop');
-		}
+		
 		// now the listing
 		if ($p>0) {
 			$extrameta=' (page '.$p.')';
