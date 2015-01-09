@@ -157,13 +157,15 @@ foreach ($chars as $char) {
 }
 $searchCharNav.='</ul></div>';
 
-$user_countries=mslib_befe::getRecords('', 'fe_users', '', array(), 'country', 'country asc');
+$user_countries=mslib_befe::getRecords('', 'fe_users f', '', array(), 'f.country', 'f.country asc');
 $fe_user_country=array();
 foreach ($user_countries as $user_country) {
 	if (!empty($user_country['country'])) {
-		$fe_user_country[]=$fe_user_countries[]='<option value="'.mslib_befe::strtolower($user_country['country']).'" '.((mslib_befe::strtolower($this->get['country'])==mslib_befe::strtolower($user_country['country'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $user_country['country'])).'</option>';
+		$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $user_country['country']));
+		$fe_user_country[$cn_localized_name]=$fe_user_countries[]='<option value="'.mslib_befe::strtolower($user_country['country']).'" '.((mslib_befe::strtolower($this->get['country'])==mslib_befe::strtolower($user_country['country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
 	}
 }
+ksort($fe_user_country);
 $user_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $fe_user_country).'</select>';
 $formTopSearch='
 <div id="search-orders">
