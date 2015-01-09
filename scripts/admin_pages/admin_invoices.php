@@ -193,6 +193,11 @@ if (is_array($payment_methods) and count($payment_methods)) {
 	}
 	$payment_method_input.='</select>'."\n";
 }
+$enabled_countries=mslib_fe::loadEnabledCountries();
+foreach ($enabled_countries as $country) {
+	$billing_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+}
+$billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $billing_countries).'</select>';
 $form_orders_search='<div id="search-orders">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
@@ -211,9 +216,9 @@ $form_orders_search='<div id="search-orders">
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
-			<input type="text" name="order_date_from" id="invoice_date_from" value="'.$this->post['order_date_from'].'">
+			<input type="text" name="invoice_date_from" id="invoice_date_from" value="'.$this->get['invoice_date_from'].'">
 			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
-			<input type="text" name="order_date_till" id="invoice_date_till" value="'.$this->post['order_date_till'].'">
+			<input type="text" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
 			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
 			<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
 		</div>
@@ -222,6 +227,8 @@ $form_orders_search='<div id="search-orders">
 			'.$payment_method_input.'
 			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
+			<label for="country">'.$this->pi_getLL('countries').'</label>
+			'.$billing_countries_sb.'
 			<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
 			<select name="limit">';
 $limits=array();
@@ -289,6 +296,9 @@ if ($this->get['skeyword']) {
 		case 'billing_city':
 			$filter[]=" o.billing_city LIKE '%".addslashes($this->get['skeyword'])."%'";
 			break;
+		/*case 'billing_country':
+			$filter[]=" o.billing_country LIKE '%".addslashes($this->post['skeyword'])."%'";
+			break;*/
 		case 'billing_address':
 			$filter[]=" o.billing_address LIKE '%".addslashes($this->get['skeyword'])."%'";
 			break;
@@ -338,6 +348,9 @@ if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') 
 }
 if ($this->cookie['paid_invoices_only']) {
 	$filter[]="(i.paid='1')";
+}
+if (isset($this->get['country']) && !empty($this->get['country'])) {
+	$filter[]="o.billing_country='".$this->get['country']."'";
 }
 if (!$this->masterShop) {
 	$filter[]='i.page_uid='.$this->showCatalogFromPage;

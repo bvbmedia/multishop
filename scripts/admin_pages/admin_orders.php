@@ -385,7 +385,7 @@ $option_search=array(
 	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
 	//"payment_method"=>$this->pi_getLL('admin_payment_method'),
 	"order_products"=>$this->pi_getLL('admin_order_products'),
-	"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),
+	/*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
 	"billing_telephone"=>$this->pi_getLL('telephone')
 );
 asort($option_search);
@@ -523,9 +523,9 @@ if ($this->post['skeyword']) {
 			$where[]=' o.orders_id=op.orders_id';
 			*/
 			break;
-		case 'billing_country':
+		/*case 'billing_country':
 			$filter[]=" billing_country LIKE '%".addslashes($this->post['skeyword'])."%'";
-			break;
+			break;*/
 		case 'billing_telephone':
 			$filter[]=" billing_telephone LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
@@ -613,6 +613,9 @@ $orderby[]=$order_by.' '.$order;
 if ($this->post['tx_multishop_pi1']['by_phone']) {
 	$filter[]='o.by_phone=1';
 }
+if (isset($this->post['country']) && !empty($this->post['country'])) {
+	$filter[]="o.billing_country='".$this->post['country']."'";
+}
 if ($this->post['tx_multishop_pi1']['is_proposal']) {
 	$filter[]='o.is_proposal=1';
 } else {
@@ -676,6 +679,12 @@ if (is_array($payment_methods) and count($payment_methods)) {
 	}
 	$payment_method_input.='</select>'."\n";
 }
+$enabled_countries=mslib_fe::loadEnabledCountries();
+$billing_countries_array=array();
+foreach ($enabled_countries as $country) {
+	$billing_countries_array[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+}
+$billing_countries_selectbox='<select class="order_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $billing_countries_array).'</select>';
 $subpartArray=array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
@@ -704,6 +713,8 @@ $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs_orders');
+$subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
+$subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_selectbox;
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.$content.'</div>';

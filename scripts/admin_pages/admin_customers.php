@@ -100,7 +100,7 @@ $option_search=array(
 	"f.email"=>$this->pi_getLL('admin_customer_email'),
 	"f.uid"=>$this->pi_getLL('admin_customer_id'),
 	"f.city"=>$this->pi_getLL('admin_city'),
-	"f.country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),
+	//"f.country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),
 	"f.zip"=>$this->pi_getLL('admin_zip'),
 	"f.telephone"=>$this->pi_getLL('telephone')
 );
@@ -108,6 +108,16 @@ asort($option_search);
 $option_item='';
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->get['tx_multishop_pi1']['search_by']==$key ? "selected" : "").'>'.$val.'</option>';
+}
+$groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
+$customer_groups_input='';
+if (is_array($groups) and count($groups)) {
+	$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup" style="width:200px">'."\n";
+	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
+	foreach ($groups as $group) {
+		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->get['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
+	}
+	$customer_groups_input.='</select>'."\n";
 }
 $searchCharNav='<div id="msAdminSearchByCharNav"><ul>';
 $chars=array();
@@ -146,6 +156,12 @@ foreach ($chars as $char) {
 	$searchCharNav.='<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[searchByChar]='.$char.'&tx_multishop_pi1[page_section]=admin_customers').'">'.mslib_befe::strtoupper($char).'</a></li>';
 }
 $searchCharNav.='</ul></div>';
+
+$enabled_countries=mslib_fe::loadEnabledCountries();
+foreach ($enabled_countries as $country) {
+	$billing_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+}
+$billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $billing_countries).'</select>';
 $formTopSearch='
 <div id="search-orders">
 	<div class="row formfield-container-wrapper">
@@ -157,28 +173,24 @@ $formTopSearch='
 			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
 			<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
 			<label for="type_search">'.$this->pi_getLL('admin_search_on', 'Search on').'</label>
-			<select name="tx_multishop_pi1[search_by]" style="width:200px">
+			<select class="invoice_select2" name="tx_multishop_pi1[search_by]" style="width:200px">
 				<option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 			</select>
-			<label for="groups">###LABEL_USERGROUP###</label>
-			###USERGROUP_SELECTBOX###
+			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
+			'.$customer_groups_input.'
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
-			<label for="order_date_from">###LABEL_DATE_FROM###:</label>
-			<input type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###">
-			<label for="order_date_till">###LABEL_DATE_TO###:</label>
-			<input type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
+			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
+			<input type="text" name="crdate_from" id="crdate_from" value="'.$this->get['crdate_from'].'">
+			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
+			<input type="text" name="crdate_till" id="crdate_till" value="'.$this->get['crdate_till'].'">
 			<label for="includeDeletedAccounts">'.$this->pi_getLL('show_deleted_accounts').'</label>
 			<input type="checkbox" class="PrettyInput" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
-			<label for="payment_status">###LABEL_PAYMENT_STATUS###</label>
-			###PAYMENT_STATUS_SELECTBOX###
-			<label for="payment_method">###LABEL_PAYMENT_METHOD###</label>
-			###PAYMENT_METHOD_SELECTBOX###
-			<label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
-			###ORDERS_STATUS_LIST_SELECTBOX###
+			<label for="country">'.$this->pi_getLL('countries').'</label>
+			'.$billing_countries_sb.'
 			<label for="limit">'.$this->pi_getLL('limit_number_of_records_to').':</label>
 			<select name="limit" id="limit">';
 $limits=array();
@@ -239,9 +251,9 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 		case 'f.city':
 			$filter[]="f.city like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
 			break;
-		case 'f.country':
+		/*case 'f.country':
 			$filter[]="f.country like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
-			break;
+			break;*/
 		case 'f.zip':
 			$filter[]="f.zip like '".addslashes($this->get['tx_multishop_pi1']['keyword'])."%'";
 			break;
@@ -276,7 +288,7 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 				$keywordOr[]="f.email like '".$this->sqlKeyword."'";
 				$keywordOr[]="f.username like '".$this->sqlKeyword."'";
 				$keywordOr[]="f.city like '".$this->sqlKeyword."'";
-				$keywordOr[]="f.country like '".$this->sqlKeyword."'";
+				//$keywordOr[]="f.country like '".$this->sqlKeyword."'";
 				$keywordOr[]="f.zip like '".$this->sqlKeyword."'";
 				$keywordOr[]="f.telephone like '".$this->sqlKeyword."'";
 			}
@@ -284,6 +296,7 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 		$filter[]="(".implode(" OR ", $keywordOr).")";
 	}
 }
+
 switch ($this->get['tx_multishop_pi1']['order_by']) {
 	case 'username':
 		$order_by='f.username';
@@ -328,6 +341,22 @@ if (!$this->get['tx_multishop_pi1']['show_deleted_accounts']) {
 }
 if (!$this->masterShop) {
 	$filter[]="f.page_uid='".$this->shop_pid."'";
+}
+if (!empty($this->get['crdate_from']) && !empty($this->get['crdate_till'])) {
+	list($from_date, $from_time)=explode(" ", $this->get['crdate_from']);
+	list($fd, $fm, $fy)=explode('/', $from_date);
+	list($till_date, $till_time)=explode(" ", $this->get['crdate_till']);
+	list($td, $tm, $ty)=explode('/', $till_date);
+	$start_time=strtotime($fy.'-'.$fm.'-'.$fd.' '.$from_time);
+	$end_time=strtotime($ty.'-'.$tm.'-'.$td.' '.$till_time);
+	$column='f.crdate';
+	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
+}
+if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
+	$filter[]=$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->get['usergroup'], 'fe_users');
+}
+if (isset($this->get['country']) && !empty($this->get['country'])) {
+	$filter[]="f.country='".$this->get['country']."'";
 }
 if (!$this->masterShop) {
 	$filter[]=$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
@@ -378,12 +407,12 @@ jQuery(document).ready(function($) {
 		jQuery(activeTab).fadeIn(0);
 		return false;
 	});
-    jQuery(\'#order_date_from\').datetimepicker({
+    jQuery(\'#crdate_from\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
 		timeFormat: \'HH:mm:ss\'
     });
-	jQuery(\'#order_date_till\').datetimepicker({
+	jQuery(\'#crdate_till\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
         showSecond: true,
 		timeFormat: \'HH:mm:ss\'
@@ -427,7 +456,7 @@ jQuery(document).ready(function($) {
 		}
 		'.$extra_selected_customers_action_js_filters.'
 	});
-	$("select").select2();
+	$(".invoice_select2").select2();
 });
 </script>
 ';
