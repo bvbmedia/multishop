@@ -1165,7 +1165,6 @@
 			<label index="date_last_sent">Date last sent</label>
             <label index="admin_custom_product_name">Custom product name</label>
             <label index="admin_current_custom_product_name">Current custom product name</label>
-            <label index="admin_search_on">Search on</label>
 			<label index="type_your_keyword_here">type keyword</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
