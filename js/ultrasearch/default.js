@@ -33,7 +33,7 @@ jQuery(document).ready(function ($) {
     $('#msFrontUltrasearchForm').submit(function () {
         // inside event callbacks 'this' is the DOM element so we first
         // wrap it in a jQuery object and then invoke ajaxSubmit
-        $(content_middle).html(jQuery('<p />').attr("id", "msFrontUltraSearchPreLoader").html('<div></div><span>One moment please...</span>'));
+        $(content_middle).html(jQuery('<p />').attr("id", "msFrontUltraSearchPreLoader").html('<div></div><span class="msFrontOneMomentPlease"></span>'));
 
         $(this).ajaxSubmit(options);
         return false;
