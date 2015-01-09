@@ -456,15 +456,19 @@ ul#ui-autocomplete-admin li.ui-menu-item .ui-edit-item a.ui-edit-view { backgrou
 
  .pb10 { margin-bottom:10px !important; }
 
-#msAdminOrdersListingActionForm { overflow:hidden; width:100%; margin:0; }
-#msAdminOrdersListingActionForm #msAdminOrdersFormField_orders_list_action select { float:left; margin:0 10px 10px 0; }
+#msAdminOrdersListingActionForm,
+#msAdminCustomersListingActionForm { overflow:hidden; width:100%; margin:0; }
+#msAdminOrdersListingActionForm #msAdminOrdersFormField_orders_list_action select,
+#msAdminCustomersListingActionForm #msAdminCustomersFormFieldcustomers_list_action select { float:left; margin:0 10px 10px 0; }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_update_to_order_status select { clear:none; float:left; margin:0 10px 0 0; padding:0; }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_mail_message fieldset { clear:left; }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_print_factuur_csv { }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_print_factuur_csv fieldset { clear:left; }
 #msAdminOrdersListingActionForm #msAdminOrdersFormField_print_factuur_csv fieldset .form-field { padding-top:10px; }
-#msAdminOrdersListingActionForm #msAdminOrdersFormField_submit_button { clear:none; float:left; margin:0 10px 20px 0; padding:0; }
-#msAdminOrdersListingActionForm #msAdminOrdersFormField_submit_button input { margin:0 !important; }
+#msAdminOrdersListingActionForm #msAdminOrdersFormField_submit_button,
+#msAdminCustomersListingActionForm #msAdminCustomersFormFieldsubmit_button { clear:none; float:left; margin:0 10px 20px 0; padding:0; }
+#msAdminOrdersListingActionForm #msAdminOrdersFormField_submit_button input,
+#msAdminCustomersListingActionForm #msAdminCustomersFormFieldsubmit_button input { margin:0 !important; }
 
 #msAdminOrdersFormField_mail_message .form-field { float:none; overflow:hidden; width:100%; padding:10px 0 0; }
 #msAdminOrdersFormField_mail_message .form-field label { display:block; width:100px; font-weight:bold; margin:0; padding:0 0 3px 0; }
