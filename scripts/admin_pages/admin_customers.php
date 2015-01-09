@@ -160,16 +160,11 @@ $searchCharNav.='</ul></div>';
 $user_countries=mslib_befe::getRecords('', 'fe_users', '', array(), 'country', 'country asc');
 $fe_user_country=array();
 foreach ($user_countries as $user_country) {
-	$fe_user_country[]=mslib_befe::strtolower($user_country['country']);
-}
-$enabled_countries=mslib_fe::loadEnabledCountries();
-$fe_user_countries=array();
-foreach ($enabled_countries as $country) {
-	if (in_array(mslib_befe::strtolower($country['cn_short_en']), $fe_user_country)) {
-		$fe_user_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
+	if (!empty($user_country['country'])) {
+		$fe_user_country[]=$fe_user_countries[]='<option value="'.mslib_befe::strtolower($user_country['country']).'" '.((mslib_befe::strtolower($this->get['country'])==mslib_befe::strtolower($user_country['country'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $user_country['country'])).'</option>';
 	}
 }
-$user_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $fe_user_countries).'</select>';
+$user_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $fe_user_country).'</select>';
 $formTopSearch='
 <div id="search-orders">
 	<div class="row formfield-container-wrapper">
