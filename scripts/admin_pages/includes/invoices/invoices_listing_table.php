@@ -7,10 +7,10 @@ $tr_type='even';
 $tmp='
 <table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_invoices_listing">
 <tr>
-	<td align="center" width="17">
+	<th align="center" width="17">
 		<label for="check_all_1"></label>
 		<input type="checkbox" class="PrettyInput" id="check_all_1">
-	</td>
+	</th>
 ';
 $headercol.='
 <th width="50" align="right">'.$this->pi_getLL('invoice_number').'</th>
@@ -40,17 +40,17 @@ foreach ($invoices as $invoice) {
 		$tr_type='even';
 	}
 	$tmp.='<tr class="'.$tr_type.'">';
-	$tmp.='<td nowrap>
+	$tmp.='<th nowrap>
 	<label for="checkbox_'.$invoice['id'].'"></label>
 	<input type="checkbox" name="selected_invoices[]" class="PrettyInput" id="checkbox_'.$invoice['id'].'" value="'.$invoice['id'].'">
-	</td>
+	</th>
 	';
 	$user=mslib_fe::getUser($invoice['customer_id']);
 	$link_name=$invoice['ordered_by'];
 	if ($user['username']) {
 		$link_name.=" (".$user['username'].")";
 	}
-	$tmp.='<th align="right" nowrap><a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank">'.$invoice['invoice_id'].'</a></th>';
+	$tmp.='<td align="right" nowrap><a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank">'.$invoice['invoice_id'].'</a></td>';
 	$tmp.='<td align="right" nowrap>'.$invoice['orders_id'].'</td>';
 	if ($this->masterShop) {
 		$tmp.='<td align="left" nowrap>'.mslib_fe::getShopNameByPageUid($invoice['page_uid']).'</td>';
