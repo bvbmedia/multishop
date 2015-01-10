@@ -125,8 +125,7 @@ jQuery(document).ready(function ($) {
 
                         <div id="invalid-address" class="error-space" style="display:none"></div>
                         <label class="account-addressnumber" for="address_number">###LABEL_STREET_ADDRESS_NUMBER###*</label>
-                        <input type="text" name="address_number" id="address_number" class="address-number" value="###VALUE_STREET_ADDRESS_NUMBER###" required="required" data-h5-errorid="invalid-address_number" title="###INVALID_ADDRESSNUMBER_MESSAGE###">
-                        <div id="invalid-address_number" class="error-space" style="display:none"></div>
+                        <input type="text" name="address_number" id="address_number" class="address-number" value="###VALUE_STREET_ADDRESS_NUMBER###">
                         <label class="account-address_ext" for="address_ext">###LABEL_ADDRESS_EXTENTION###</label>
                         <input type="text" name="address_ext" id="address_ext" class="address_ext" value="###VALUE_ADDRESS_EXTENTION###">
                     </div>
@@ -144,8 +143,11 @@ jQuery(document).ready(function ($) {
                     <div class="account-field">
                         <label for="email" id="account-email">###LABEL_EMAIL###*</label>
                         <input type="text" name="email" id="email" class="email" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
-
                         <div id="invalid-email" class="error-space" style="display:none"></div>
+
+                        <label for="www" id="account-www">###LABEL_WEBSITE###*</label>
+                        <input type="text" name="www" id="www" class="www" value="###VALUE_WEBSITE###">
+
                     </div>
                     <div class="account-field">
                         <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###*</label>

@@ -75,6 +75,7 @@ if ($this->post) {
 		$updateArray['city']=$this->post['city'];
 		$updateArray['country']=$this->post['country'];
 		$updateArray['email']=$this->post['email'];
+		$updateArray['www']=$this->post['www'];
 		$updateArray['telephone']=$this->post['telephone'];
 		$updateArray['mobile']=$this->post['mobile'];
 		$updateArray['tx_multishop_discount']=$this->post['tx_multishop_discount'];
@@ -635,6 +636,8 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###COUNTRIES_INPUT###']=$countries_input;
 		$subpartArray['###LABEL_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address'));
 		$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
+		$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
+		$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
 		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
 		$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
@@ -832,6 +835,9 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###COUNTRIES_INPUT###']=$countries_input;
 		$subpartArray['###LABEL_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address'));
 		$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
+		$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
+		$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
+
 		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
 		$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
