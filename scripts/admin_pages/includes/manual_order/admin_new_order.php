@@ -177,10 +177,17 @@ if (count($products)<0) {
 			$content.='<input name="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 			$content.='<input name="delivery_country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 		} else {
+			$billing_countries_option=array();
+			$delivery_countries_option=array();
 			foreach ($enabled_countries as $country) {
-				$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars($country['cn_short_en']).'</option>';
-				$tmpcontent_con_delivery.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['delivery_country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars($country['cn_short_en']).'</option>';
+				$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']));
+				$billing_countries_option[$cn_localized_name]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
+				$delivery_countries_option[$cn_localized_name]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['delivery_country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
 			}
+			ksort($billing_countries_option);
+			ksort($delivery_countries_option);
+			$tmpcontent_con=implode("\n", $billing_countries_option);
+			$tmpcontent_con_delivery=implode("\n", $delivery_countries_option);
 			if ($tmpcontent_con) {
 				$content.='<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 				<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">

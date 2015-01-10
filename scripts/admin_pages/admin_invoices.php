@@ -196,15 +196,11 @@ if (is_array($payment_methods) and count($payment_methods)) {
 $order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
 $order_billing_country=array();
 foreach ($order_countries as $order_country) {
-	$order_billing_country[]=$order_country['billing_country'];
+	$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
+	$order_billing_country[]='<option value="'.mslib_befe::strtolower($order_country['billing_country']).'" '.((mslib_befe::strtolower($this->post['country'])==strtolower($order_country['billing_country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
 }
-$enabled_countries=mslib_fe::loadEnabledCountries();
-foreach ($enabled_countries as $country) {
-	if (in_array(mslib_befe::strtolower($country['cn_short_en']), $order_billing_country)) {
-		$billing_countries[]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
-	}
-}
-$billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $billing_countries).'</select>';
+ksort($order_billing_country);
+$billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $order_billing_country).'</select>';
 $form_orders_search='<div id="search-orders">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
