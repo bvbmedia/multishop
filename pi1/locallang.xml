@@ -4357,7 +4357,7 @@
 			<label index="login">Inloggen</label>
 			<label index="login_as_user">Inloggen als gebruiker</label>
 			<label index="login_details">Inloggegevens</label>
-			<label index="login_details_description">Je e-mailadres en wachtwoord is nodig om toegang te krijgen tot je gegevens. Tevens zullen we je via dit e-mailadres op de hoogte houden van de status van uw bestellingen</label>
+			<label index="login_details_description">Je e-mailadres en wachtwoord zijn nodig om toegang te krijgen tot je gegevens. Tevens zullen we je via dit e-mailadres op de hoogte houden van de status van je bestellingen</label>
 			<label index="mail_selected_invoices">E-mail geselecteerde facturen</label>
 			<label index="mail_selected_orders_for_payment_reminder">Mail betaalherinnering voor geselecteerde bestellingen</label>
 			<label index="mail_selected_orders_to_customer">Mail geselecteerde bestellingen naar klant</label>
@@ -4466,7 +4466,7 @@
 			<label index="pdf_invoice_header_message">PDF factuur boven tekst boven de bestelregels tabel</label>
 			<label index="percentage">percentage</label>
 			<label index="personal_details">Persoonlijke gegevens</label>
-			<label index="personal_details_description">Velden met een markering voor verplicht zijn verplicht</label>
+			<label index="personal_details_description">Velden gemarkeerd met * zijn verplicht</label>
 			<label index="please_select_your_gender">Selecteer begroeting</label>
 			<label index="previous">vorige</label>
 			<label index="price">Prijs</label>
