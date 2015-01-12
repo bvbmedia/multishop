@@ -460,7 +460,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		if (!$this->get['payment_method_id']) {
+		if (!$this->get['shipping_method_id']) {
 			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['default_status']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';
 		} else {
 			$tmpcontent.='<option value="'.$tax_group['rules_group_id'].'" '.(($tax_group['rules_group_id']==$row['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($tax_group['name']).'</option>';

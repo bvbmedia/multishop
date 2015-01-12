@@ -1146,12 +1146,33 @@ if ($rows) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$array=array();
-				$array['language_id']=0;
-				$array['orders_status_id']=$row['id'];
-				$array['name']=$row['name'];
-				$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_description', $array);
-				$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+				$filter=array();
+				$filter[]='language_id=0';
+				if (!mslib_befe::ifExists($row['id'], 'tx_multishop_orders_status_description', 'orders_status_id', $filter)) {
+					$array=array();
+					$array['language_id']=0;
+					$array['orders_status_id']=$row['id'];
+					$array['name']=$row['name'];
+					$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_description', $array);
+					$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+				}
+			}
+		}
+	} else {
+		$query="select id,name from tx_multishop_orders_status";
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$filter=array();
+				$filter[]='language_id=0';
+				if (!mslib_befe::ifExists($row['id'], 'tx_multishop_orders_status_description', 'orders_status_id', $filter)) {
+					$array=array();
+					$array['language_id']=0;
+					$array['orders_status_id']=$row['id'];
+					$array['name']=$row['name'];
+					$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_status_description', $array);
+					$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+				}
 			}
 		}
 	}
