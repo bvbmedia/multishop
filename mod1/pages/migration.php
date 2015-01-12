@@ -31,7 +31,40 @@ switch ($_REQUEST['action']) {
 }
 $sourceShops=array();
 $targetShops=array();
+
+$pids=array();
 $shopPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_products', '', 'page_uid');
+if (is_array($shopPids) && count($shopPids)>0) {
+	foreach ($shopPids as $shopPid) {
+		if (!in_array($shopPid['page_uid'], $pids)) {
+			$pids[]=$shopPid['page_uid'];
+		}
+	}
+}
+$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'fe_users', '', 'page_uid');
+if (is_array($shopPids) && count($shopPids)>0) {
+	foreach($otherPids as $shopPid) {
+		if (!in_array($shopPid['page_uid'],$pids)) {
+			$pids[]=$shopPid['page_uid'];
+		}
+	}
+}
+$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_orders', '', 'page_uid');
+if (is_array($shopPids) && count($shopPids)>0) {
+	foreach($otherPids as $shopPid) {
+		if (!in_array($shopPid['page_uid'],$pids)) {
+			$pids[]=$shopPid['page_uid'];
+		}
+	}
+}
+$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_categories', '', 'page_uid');
+if (is_array($shopPids) && count($shopPids)>0) {
+	foreach($otherPids as $shopPid) {
+		if (!in_array($shopPid['page_uid'],$pids)) {
+			$pids[]=$shopPid['page_uid'];
+		}
+	}
+}
 $multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
 if (is_array($multishop_content_objects) && count($multishop_content_objects)>0) {
 	foreach ($multishop_content_objects as $content_object) {
@@ -42,10 +75,11 @@ if (is_array($multishop_content_objects) && count($multishop_content_objects)>0)
 		}
 	}
 }
-if (count($shopPids)) {
-	foreach ($shopPids as $record) {
-		if (!array_key_exists($record['page_uid'], $sourceShops)) {
-			$sourceShops[$record['page_uid']]='PID: '.$record['page_uid'].' (Unknown)';
+if (count($pids)) {
+	foreach ($pids as $pid) {
+		$record=t3lib_BEfunc::readPageAccess($pid, '');
+		if (!array_key_exists($pid, $sourceShops)) {
+			$sourceShops[$pid]='PID: '.$pid.' (Unknown)';
 		}
 	}
 }
