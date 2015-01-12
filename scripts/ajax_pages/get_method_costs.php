@@ -16,8 +16,8 @@ $mslib_cart->setCountry($this->post['b_cc'], $tmp_countries['cn_iso_nr']);
 $mslib_cart->setShippingMethod($this->post['tx_multishop_pi1']['sid']);
 $mslib_cart->setPaymentMethod($this->post['tx_multishop_pi1']['pid']);
 $cart=$mslib_cart->getCart();
-$payment_method=mslib_fe::getPaymentMethod($this->post['tx_multishop_pi1']['pid'], 'p.id', $countries_id, true);
 $countries_id=$tmp_countries['cn_iso_nr'];
+$payment_method=mslib_fe::getPaymentMethod($this->post['tx_multishop_pi1']['pid'], 'p.id', $countries_id, true);
 if ($payment_method['handling_costs']) {
 	if (!strstr($payment_method['handling_costs'], "%")) {
 		$payment_method_costs=$payment_method['handling_costs'];

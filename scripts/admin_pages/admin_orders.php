@@ -668,7 +668,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$row['payment_method']='nopm';
 		$row['payment_method_label']='Empty payment method';
 	}
-	$payment_methods[$row['payment_method']]=$row['payment_method_label'];
+	$payment_methods[$row['payment_method']]=$row['payment_method_label'] . ($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
 }
 $payment_method_input='';
 if (is_array($payment_methods) and count($payment_methods)) {
