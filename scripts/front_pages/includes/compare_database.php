@@ -469,7 +469,22 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
-
+	$required_indexes=array();
+	$required_indexes[]='crdate';
+	$indexes=array();
+	$table_name='tx_multishop_notification';
+	$str="show indexes from `".$table_name."` ";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$indexes[]=$rs['Key_name'];
+	}
+	foreach ($required_indexes as $required_index) {
+		if (!in_array($required_index, $indexes)) {
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+	}
 
 	/*
 	$str="describe `tx_multishop_products`";

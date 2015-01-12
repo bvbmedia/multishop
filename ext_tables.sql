@@ -393,6 +393,7 @@ CREATE TABLE `tx_multishop_notification` (
   PRIMARY KEY (`id`),
   KEY `unread` (`unread`),
   KEY `customer_id` (`customer_id`),
+  KEY `crdate` (`crdate`),
   KEY `message_type` (`message_type`),
   KEY `ip_address` (`ip_address`),
   KEY `session_id` (`session_id`)
