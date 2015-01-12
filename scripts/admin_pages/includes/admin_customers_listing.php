@@ -100,6 +100,7 @@ foreach ($customers as $customer) {
 	$markerArray['CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS']='return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')';
 	$markerArray['ADMIN_LABEL_ALT_REMOVE']=ucfirst($this->pi_getLL('admin_label_alt_remove'));
 	$markerArray['MASTER_SHOP']=$master_shop_col;
+	$markerArray['CUSTOM_MARKER_1_BODY']='';
 	// custom page hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customers_listing.php']['adminCustomersListingTmplIteratorPreProc'])) {
 		$params=array(
@@ -231,7 +232,6 @@ $subpartArray['###LABEL_FOOTER_CUSTOMER_STATUS###']=ucfirst($this->pi_getLL('sta
 $subpartArray['###LABEL_FOOTER_CUSTOMER_DELETE###']=ucfirst($this->pi_getLL('delete'));
 
 $subpartArray['###CUSTOM_MARKER_1_HEADER###']='';
-$subpartArray['###CUSTOM_MARKER_1_BODY###']='';
 $subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
 $subpartArray['###CUSTOMERS###']=$contentItem;
 $master_shop_header='';
