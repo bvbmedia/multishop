@@ -102,6 +102,7 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+
 	// V3 COMPARE DATABASE EOL
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN)
 	$str="select page_uid from tx_multishop_products_to_categories limit 1";
@@ -439,7 +440,24 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
+	$str="select id from tx_multishop_customers_export limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="CREATE TABLE `tx_multishop_customers_export` (
+			  `id` int(11) NULL AUTO_INCREMENT,
+			  `name` varchar(75) NULL,
+			  `page_uid` int(11) NULL DEFAULT '0',
+			  `crdate` int(11) NULL DEFAULT '0',
+			  `fields` text NULL,
+			  `post_data` text NULL,
+			  `code` varchar(150) NULL,
+			  `status` tinyint(1) NULL DEFAULT '0',
+			  PRIMARY KEY (`id`),
+			  KEY `code` (`code`)
+			);";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	$str="describe `tx_multishop_products`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

@@ -1579,3 +1579,15 @@ CREATE TABLE `tx_multishop_manufacturers_crop_image_coordinate` (
   KEY `coordinate_w` (`coordinate_w`),
   KEY `coordinate_h` (`coordinate_h`)
 );
+CREATE TABLE `tx_multishop_customers_export` (
+  `id`        int(11) auto_increment,
+  `name`      varchar(75) default '',
+  `page_uid`  int(11) DEFAULT '0',
+  `crdate`    int(11) DEFAULT '0',
+  `fields`    text,
+  `post_data` text,
+  `code`      varchar(150) default '',
+  `status`    tinyint(1) default '0',
+  PRIMARY KEY (`id`),
+  KEY `code` (`code`)
+);

@@ -275,7 +275,8 @@ switch ($this->ms['page']) {
 		break;
 	case 'admin_customer_export':
 		if ($this->ADMIN_USER) {
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_customer_export.php');
+			//require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_customer_export.php');
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_export_customers.php');
 		}
 		break;
 	case 'admin_useragent_export':
