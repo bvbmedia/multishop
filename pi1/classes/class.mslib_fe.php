@@ -7351,6 +7351,22 @@ class mslib_fe {
 			}
 		}
 	}
+	public function getCustomersExportWizard($string, $type='id') {
+		if ($string) {
+			switch ($type) {
+				case 'code':
+				case 'id':
+					$str="SELECT * from tx_multishop_customers_export where ".$type."='".addslashes($string)."'";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+					return $row;
+					break;
+				default:
+					return false;
+					break;
+			}
+		}
+	}
 	public function file_get_contents($filename, $force_gz=0) {
 		if ($filename) {
 			if (!preg_match("/^\//", $filename) and strstr($filename, ' ')) {
