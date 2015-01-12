@@ -2367,12 +2367,13 @@ if (is_numeric($this->get['orders_id'])) {
 					},
 					minimumInputLength: 0,
 					query: function(query) {
-						if (attributesSearchValues[query.term] !== undefined) {
-							query.callback({results: attributesSearchValues[query.term]});
+						var current_optid=$(selector_str).parent().prev().prev().children("input").val();
+						if (attributesSearchValues[query.term + "||" + current_optid] !== undefined) {
+							query.callback({results: attributesSearchValues[query.term + "||" + current_optid]});
 						} else {
 							$.ajax(ajax_url, {
 								data: {
-									q: query.term
+									q: query.term + "||optid=" +  $(selector_str).parent().prev().prev().children("input").val()
 								},
 								dataType: "json"
 							}).done(function(data) {
