@@ -215,6 +215,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 					$insertArray[$col_name]=$col_val;
 				}
 			}
+			$insertArray['type']='';
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_import_jobs', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			@unlink($target);
