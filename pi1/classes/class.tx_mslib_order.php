@@ -248,7 +248,7 @@ class tx_mslib_order extends tslib_pibase {
 			}
 			if (isset($psp_vars['order_paid'])) {
 				$psp_mail_template['order_paid']='';
-				if ($psp_mail_template['order_paid']>0) {
+				if ($psp_vars['order_paid']>0) {
 					$psp_mail_template['order_paid']=mslib_fe::getCMSType($psp_vars['order_paid']);
 				}
 			}
