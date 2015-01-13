@@ -35,12 +35,13 @@ div.tooltip .msAdminTooltipOrderDetailsAddressWrapper h3 { font:bold 12px Arial,
 /* div.tooltip.fade { position:absolute !important; overflow:visible; margin-left:300px; max-width:100px; margin-top:-10px; border:none; box-shadow:0 4px 10px #999; }
 div.tooltip.fade:after { position:absolute; left:10px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; } */
 
-div.tooltip.fade { position:absolute !important; overflow:visible; margin:0; width:auto; min-width:100px; max-width:500px; border:none; box-shadow:0 4px 10px #999; }
+div.tooltip.fade { position:absolute !important; overflow:visible; margin:0; width:auto; min-width:100px; border:none; box-shadow:0 4px 10px #999; }
 div.tooltip.fade.top { margin-top:-10px; }
 div.tooltip.fade.bottom { margin-top:10px; }
 div.tooltip.fade.bottom * { text-transform:none; }
 div.tooltip.fade.top:after { position:absolute; left:50%; margin-left:-7px; bottom:-7px; border-top:7px solid #e6e6e6; border-left:7px solid transparent; border-right:7px solid transparent; content:""; }
 div.tooltip.fade.bottom:after { position:absolute; left:50%; margin-left:-7px; top:-7px; border-bottom:7px solid #fff; border-left:7px solid transparent; border-right:7px solid transparent; content:""; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content div.tooltip.fade table#product_import_table.msAdminTooltipTable td { white-space:nowrap; }
 #tx_multishop_pi1_core table#product_import_table th div.tooltip.fade.bottom a,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table th div.tooltip.fade.bottom a { color:#285dab; }
 
@@ -963,3 +964,4 @@ span.viewfront a:hover { background:#e2e2e2; }
 
 .items_wrapper_unfolded { float:right; overflow:hidden; width:0; height:0; border-top:7px solid #fff; border-left:7px solid transparent; border-right:7px solid transparent; margin:6px 0 0; padding:0; }
 .items_wrapper_folded { float:right; overflow:hidden; width:0; height:0; border-left:7px solid #fff; border-top:6px solid transparent; border-bottom:6px solid transparent; margin:3px 3px 0 0; padding:0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core table .noWrap { white-space:nowrap; }
