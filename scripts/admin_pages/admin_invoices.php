@@ -249,7 +249,7 @@ $form_orders_search='<div id="search-orders">
 			<input type="text" name="invoice_date_from" id="invoice_date_from" value="'.$this->get['invoice_date_from'].'">
 			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
 			<input type="text" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
-			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
+			<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
 			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
 			<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
