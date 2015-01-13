@@ -382,7 +382,7 @@ $option_search=array(
 	"billing_city"=>$this->pi_getLL('admin_city'),
 	"billing_address"=>$this->pi_getLL('admin_address'),
 	"billing_company"=>$this->pi_getLL('admin_company'),
-	"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
+	//"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
 	//"payment_method"=>$this->pi_getLL('admin_payment_method'),
 	"order_products"=>$this->pi_getLL('admin_order_products'),
 	/*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
@@ -506,10 +506,10 @@ if ($this->post['skeyword']) {
 		case 'billing_company':
 			$filter[]=" billing_company LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
-		case 'shipping_method':
+		/*case 'shipping_method':
 			$filter[]=" (shipping_method_label '%".addslashes($this->post['skeyword'])."%' or shipping_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
 			break;
-		/*case 'payment_method':
+		case 'payment_method':
 			$filter[]=" (payment_method LIKE '%".addslashes($this->post['skeyword'])."%' or payment_method_label LIKE '%".addslashes($this->post['skeyword'])."%')";
 			break;*/
 		case 'customer_id':
@@ -551,11 +551,18 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
 if ($this->post['orders_status_search']>0) {
 	$filter[]="(o.status='".$this->post['orders_status_search']."')";
 }
-if (isset($this->get['payment_method']) && $this->post['payment_method']!='all') {
+if (isset($this->post['payment_method']) && $this->post['payment_method']!='all') {
 	if ($this->post['payment_method']=='nopm') {
 		$filter[]="(o.payment_method is null)";
 	} else {
 		$filter[]="(o.payment_method='".$this->post['payment_method']."')";
+	}
+}
+if (isset($this->post['shipping_method']) && $this->post['shipping_method']!='all') {
+	if ($this->post['shipping_method']=='nosm') {
+		$filter[]="(o.shipping_method is null)";
+	} else {
+		$filter[]="(o.shipping_method='".$this->post['shipping_method']."')";
 	}
 }
 if (isset($this->post['usergroup']) && $this->post['usergroup']>0) {
@@ -645,9 +652,9 @@ if ($this->cookie['payment_status']=='unpaid_only') {
 $payment_status_select.='</select>';
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
+$customer_groups_input.='<select id="groups" class="order_select2" name="usergroup" style="width:200px">'."\n";
+$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<select id="groups" class="order_select2" name="usergroup" style="width:200px">'."\n";
-	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 	foreach ($groups as $group) {
 		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->post['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
 	}
@@ -671,14 +678,41 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$payment_methods[$row['payment_method']]=$row['payment_method_label'] . ($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
 }
 $payment_method_input='';
+$payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
+$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
 if (is_array($payment_methods) and count($payment_methods)) {
-	$payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
-	$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
 	foreach ($payment_methods as $payment_method_code=>$payment_method) {
 		$payment_method_input.='<option value="'.$payment_method_code.'"'.($this->post['payment_method']==$payment_method_code ? ' selected="selected"' : '').'>'.$payment_method.'</option>'."\n";
 	}
 	$payment_method_input.='</select>'."\n";
 }
+// shipping method
+$shipping_methods=array();
+$sql=$GLOBALS['TYPO3_DB']->SELECTquery('shipping_method, shipping_method_label', // SELECT ...
+	'tx_multishop_orders', // FROM ...
+	'', // WHERE...
+	'shipping_method', // GROUP BY...
+	'shipping_method_label', // ORDER BY...
+	'' // LIMIT ...
+);
+$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+	if (empty($row['shipping_method_label'])) {
+		$row['shipping_method']='nosm';
+		$row['shipping_method_label']='Empty shipping method';
+	}
+	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'] . ($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
+}
+$shipping_method_input='';
+$shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method" style="width:200px">'."\n";
+$shipping_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_shipping_methods'))).'</option>'."\n";
+if (is_array($shipping_methods) and count($shipping_methods)) {
+	foreach ($shipping_methods as $shipping_method_code=>$shipping_method) {
+		$shipping_method_input.='<option value="'.$shipping_method_code.'"'.($this->post['shipping_method']==$shipping_method_code ? ' selected="selected"' : '').'>'.$shipping_method.'</option>'."\n";
+	}
+	$shipping_method_input.='</select>'."\n";
+}
+// billing country
 $order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
 $order_billing_country=array();
 foreach ($order_countries as $order_country) {
@@ -699,6 +733,8 @@ $subpartArray['###LABEL_USERGROUP###']=$this->pi_getLL('usergroup');
 $subpartArray['###USERGROUP_SELECTBOX###']=$customer_groups_input;
 $subpartArray['###LABEL_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
 $subpartArray['###PAYMENT_METHOD_SELECTBOX###']=$payment_method_input;
+$subpartArray['###LABEL_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
+$subpartArray['###SHIPPING_METHOD_SELECTBOX###']=$shipping_method_input;
 $subpartArray['###LABEL_ORDER_STATUS###']=$this->pi_getLL('order_status');
 $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###']=$orders_status_list;
 $subpartArray['###VALUE_SEARCH###']=htmlspecialchars($this->pi_getLL('search'));

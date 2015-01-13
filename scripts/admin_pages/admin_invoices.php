@@ -159,9 +159,9 @@ if (is_array($all_orders_status)) {
 $orders_status_list.='</select>';
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
+$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup" style="width:200px">'."\n";
+$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup" style="width:200px">'."\n";
-	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 	foreach ($groups as $group) {
 		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->get['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
 	}
@@ -185,14 +185,41 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$payment_methods[$row['payment_method']]=$row['payment_method_label'] . ($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
 }
 $payment_method_input='';
+$payment_method_input.='<select id="payment_method" class="invoice_select2" name="payment_method" style="width:200px">'."\n";
+$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
 if (is_array($payment_methods) and count($payment_methods)) {
-	$payment_method_input.='<select id="payment_method" class="invoice_select2" name="payment_method" style="width:200px">'."\n";
-	$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
 	foreach ($payment_methods as $payment_method_code=>$payment_method) {
 		$payment_method_input.='<option value="'.$payment_method_code.'"'.($this->get['payment_method']==$payment_method_code ? ' selected="selected"' : '').'>'.$payment_method.'</option>'."\n";
 	}
 	$payment_method_input.='</select>'."\n";
 }
+// shipping method
+$shipping_methods=array();
+$sql=$GLOBALS['TYPO3_DB']->SELECTquery('shipping_method, shipping_method_label', // SELECT ...
+	'tx_multishop_orders', // FROM ...
+	'', // WHERE...
+	'shipping_method', // GROUP BY...
+	'shipping_method_label', // ORDER BY...
+	'' // LIMIT ...
+);
+$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+	if (empty($row['shipping_method_label'])) {
+		$row['shipping_method']='nosm';
+		$row['shipping_method_label']='Empty shipping method';
+	}
+	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'] . ($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
+}
+$shipping_method_input='';
+$shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method" style="width:200px">'."\n";
+$shipping_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_shipping_methods'))).'</option>'."\n";
+if (is_array($shipping_methods) and count($shipping_methods)) {
+	foreach ($shipping_methods as $shipping_method_code=>$shipping_method) {
+		$shipping_method_input.='<option value="'.$shipping_method_code.'"'.($this->get['shipping_method']==$shipping_method_code ? ' selected="selected"' : '').'>'.$shipping_method.'</option>'."\n";
+	}
+	$shipping_method_input.='</select>'."\n";
+}
+// billing countries
 $order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
 $order_billing_country=array();
 foreach ($order_countries as $order_country) {
@@ -222,14 +249,16 @@ $form_orders_search='<div id="search-orders">
 			<input type="text" name="invoice_date_from" id="invoice_date_from" value="'.$this->get['invoice_date_from'].'">
 			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
 			<input type="text" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
+			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
+			'.$orders_status_list.'
 			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
 			<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
 			'.$payment_method_input.'
-			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
-			'.$orders_status_list.'
+			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
+			'.$shipping_method_input.'
 			<label for="country">'.$this->pi_getLL('countries').'</label>
 			'.$billing_countries_sb.'
 			<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
@@ -308,10 +337,10 @@ if ($this->get['skeyword']) {
 		case 'billing_company':
 			$filter[]=" o.billing_company LIKE '%".addslashes($this->get['skeyword'])."%'";
 			break;
-		case 'shipping_method':
+		/*case 'shipping_method':
 			$filter[]=" (o.shipping_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.shipping_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
 			break;
-		/*case 'payment_method':
+		case 'payment_method':
 			$filter[]=" (o.payment_method LIKE '%".addslashes($this->get['skeyword'])."%' or o.payment_method_label LIKE '%".addslashes($this->get['skeyword'])."%')";
 			break;*/
 		case 'customer_id':
@@ -347,6 +376,13 @@ if (isset($this->get['payment_method']) && $this->get['payment_method']!='all') 
 		$filter[]="(o.payment_method is null)";
 	} else {
 		$filter[]="(o.payment_method='".$this->get['payment_method']."')";
+	}
+}
+if (isset($this->get['shipping_method']) && $this->get['shipping_method']!='all') {
+	if ($this->get['shipping_method']=='nosm') {
+		$filter[]="(o.shipping_method is null)";
+	} else {
+		$filter[]="(o.shipping_method='".$this->get['shipping_method']."')";
 	}
 }
 if ($this->cookie['paid_invoices_only']) {
