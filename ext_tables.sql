@@ -419,6 +419,7 @@ CREATE TABLE `tx_multishop_orders` (
   `billing_mobile` varchar(150) default '',
   `billing_fax` varchar(150) default '',
   `billing_vat_id` varchar(150) default '',
+  `billing_coc_id` varchar(150) default '',
   `delivery_first_name` varchar(150) default '',
   `delivery_middle_name` varchar(150) default '',
   `delivery_last_name` varchar(150) default '',
