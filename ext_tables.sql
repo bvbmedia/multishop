@@ -805,7 +805,7 @@ CREATE TABLE `tx_multishop_products` (
   `contains_image` tinyint(1) default '0',
   `custom_settings` text,
   `products_multiplication` decimal(6,2) null default '0.00',
-  `minimum_quantity` int(11) default '0',
+  `minimum_quantity` decimal(6,2) default '1.00',
   `maximum_quantity` int(11) default '0',
   `sku_code` varchar(25) default '',
   `products_condition` varchar(20) default 'new',
@@ -1385,7 +1385,7 @@ CREATE TABLE `tx_multishop_undo_products` (
   `contains_image` tinyint(1) default '0',
   `custom_settings` text,
   `products_multiplication` int(11) default '0',
-  `minimum_quantity` int(11) default '1',
+  `minimum_quantity` decimal(6,2) default '1.00',
   `maximum_quantity` int(11) default '0',
   PRIMARY KEY (`id`)
 );
