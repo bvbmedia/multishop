@@ -186,9 +186,13 @@ class mslib_befe {
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
-										@unlink($original_path);
-										$original_path=$newOriginal_path;
-										$filename=$newFilename;
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
 									}
 									break;
 							}
@@ -295,9 +299,13 @@ class mslib_befe {
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
-										@unlink($original_path);
-										$original_path=$newOriginal_path;
-										$filename=$newFilename;
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
 									}
 									break;
 							}
@@ -420,9 +428,13 @@ class mslib_befe {
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
-										@unlink($original_path);
-										$original_path=$newOriginal_path;
-										$filename=$newFilename;
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
 									}
 									break;
 							}
