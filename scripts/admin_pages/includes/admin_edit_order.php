@@ -1230,7 +1230,6 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_vat']['value']=$vat_sb;
 					}
 					// products price col
-					$order_products_body_data['products_normal_price']['align']='right';
 					$order_products_body_data['products_normal_price']['class']='cell_products_normal_price';
 					$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
 					// incl excl vat input
@@ -1810,7 +1809,6 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_vat']['value']=$vat_sb;
 			}
 			// product normal price col
-			$order_products_body_data['products_normal_price']['align']='right';
 			$order_products_body_data['products_normal_price']['valign']='top';
 			$order_products_body_data['products_normal_price']['class']='cell_products_normal_price';
 			$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="msManualOrderProductPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>';
