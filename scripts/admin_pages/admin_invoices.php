@@ -165,8 +165,8 @@ if (is_array($groups) and count($groups)) {
 	foreach ($groups as $group) {
 		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->get['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
 	}
-	$customer_groups_input.='</select>'."\n";
 }
+$customer_groups_input.='</select>'."\n";
 // payment method
 $payment_methods=array();
 $sql=$GLOBALS['TYPO3_DB']->SELECTquery('payment_method, payment_method_label', // SELECT ...
@@ -191,8 +191,8 @@ if (is_array($payment_methods) and count($payment_methods)) {
 	foreach ($payment_methods as $payment_method_code=>$payment_method) {
 		$payment_method_input.='<option value="'.$payment_method_code.'"'.($this->get['payment_method']==$payment_method_code ? ' selected="selected"' : '').'>'.$payment_method.'</option>'."\n";
 	}
-	$payment_method_input.='</select>'."\n";
 }
+$payment_method_input.='</select>'."\n";
 // shipping method
 $shipping_methods=array();
 $sql=$GLOBALS['TYPO3_DB']->SELECTquery('shipping_method, shipping_method_label', // SELECT ...
@@ -217,8 +217,8 @@ if (is_array($shipping_methods) and count($shipping_methods)) {
 	foreach ($shipping_methods as $shipping_method_code=>$shipping_method) {
 		$shipping_method_input.='<option value="'.$shipping_method_code.'"'.($this->get['shipping_method']==$shipping_method_code ? ' selected="selected"' : '').'>'.$shipping_method.'</option>'."\n";
 	}
-	$shipping_method_input.='</select>'."\n";
 }
+$shipping_method_input.='</select>'."\n";
 // billing countries
 $order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 'billing_country', 'billing_country asc');
 $order_billing_country=array();
