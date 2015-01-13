@@ -109,14 +109,14 @@ if ($this->ADMIN_USER) {
 					<td class="align_right">'.round($product['qty'], 13).'</td>
 					<td><a href="'.$productLink.'" target="_blank">'.$product['products_name'].'</a></td>';
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-						$jsonData['html'].='<td class="align_right">'.mslib_fe::amount2Cents(($product['final_price']+$product['products_tax_data']['total_tax'])).'</td>';
+						$jsonData['html'].='<td class="align_right noWrap">'.mslib_fe::amount2Cents(($product['final_price']+$product['products_tax_data']['total_tax'])).'</td>';
 					} else {
-						$jsonData['html'].='<td class="align_right">'.mslib_fe::amount2Cents($product['final_price']).'</td>';
+						$jsonData['html'].='<td class="align_right noWrap">'.mslib_fe::amount2Cents($product['final_price']).'</td>';
 					}
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-						$jsonData['html'].='<td class="align_right">'.mslib_fe::amount2Cents($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])).'</td>';
+						$jsonData['html'].='<td class="align_right noWrap">'.mslib_fe::amount2Cents($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])).'</td>';
 					} else {
-						$jsonData['html'].='<td class="align_right">'.mslib_fe::amount2Cents($product['qty']*$product['final_price']).'</td>';
+						$jsonData['html'].='<td class="align_right noWrap">'.mslib_fe::amount2Cents($product['qty']*$product['final_price']).'</td>';
 					}
 					$jsonData['html'].='</tr>';
 					if (count($product['attributes'])) {
@@ -126,14 +126,14 @@ if ($this->ADMIN_USER) {
 							<td class="align_right">&nbsp;</td>
 							<td>'.$attributes['products_options'].': '.$attributes['products_options_values'].'</td>';
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-								$jsonData['html'].='<td class="align_right">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax']).'</td>';
+								$jsonData['html'].='<td class="align_right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax']).'</td>';
 							} else {
-								$jsonData['html'].='<td class="align_right">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($attributes['options_values_price']).'</td>';
+								$jsonData['html'].='<td class="align_right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($attributes['options_values_price']).'</td>';
 							}
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
-								$jsonData['html'].='<td class="align_right">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax'])).'</td>';
+								$jsonData['html'].='<td class="align_right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*(($attributes['price_prefix'].$attributes['options_values_price'])+$attributes['attributes_tax_data']['tax'])).'</td>';
 							} else {
-								$jsonData['html'].='<td class="align_right">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*$attributes['options_values_price']).'</td>';
+								$jsonData['html'].='<td class="align_right noWrap">'.($attributes['price_prefix']=='-' ? '- ' : '').mslib_fe::amount2Cents($product['qty']*$attributes['options_values_price']).'</td>';
 							}
 							$jsonData['html'].='</tr>';
 						}
