@@ -480,7 +480,13 @@ $content.='
 	</form>
     </div>
 </div>
-
+';
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$(".order_select2").select2();
+});
+</script>
 ';
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
