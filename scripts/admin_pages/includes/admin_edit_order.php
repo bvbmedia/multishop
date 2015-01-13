@@ -2232,9 +2232,17 @@ if (is_numeric($this->get['orders_id'])) {
 						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, qty: 1}, function(d){
 							if (d.tax_id) {
 								if ($("#product_tax").length>0) {
-									$("#product_tax").val(d.tax_id);
+									if ($("#product_tax").children().length>1) {
+										$("#product_tax").val(d.tax_id);
+									} else {
+										d.price_include_vat=false;
+									}
 								} else {
-									$("#manual_product_tax").val(d.tax_id);
+									if ($("#manual_product_tax").children().length>1) {
+										$("#manual_product_tax").val(d.tax_id);
+									} else {
+										d.price_include_vat=false;
+									}
 								}
 							}
 							if (d.price_include_vat) {
