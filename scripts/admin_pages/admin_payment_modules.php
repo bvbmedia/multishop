@@ -323,8 +323,9 @@ if ($this->get['edit']) {
 		$tmpcontent.='<div class="account-field">
 			<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 			<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
+
 		foreach ($active_shop as $pageinfo) {
-			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($row['page_uid']==$pageinfo['puid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
+			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
 		}
 		$tmpcontent.='</div>';
 	} else {
@@ -439,7 +440,7 @@ if ($this->get['edit']) {
 						<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 						<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked"/>&nbsp;'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
 			foreach ($active_shop as $pageinfo) {
-				$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['puid'].'"'.(($this->shop_pid==$pageinfo['puid']) ? ' checked="checked"' : '').' />&nbsp;'.$pageinfo['title'].'</span>';
+				$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($this->shop_pid==$pageinfo['uid']) ? ' checked="checked"' : '').' />&nbsp;'.$pageinfo['title'].'</span>';
 			}
 			$tmpcontent.='
 					</div>';
