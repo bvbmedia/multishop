@@ -241,7 +241,7 @@ $form_orders_search='<div id="search-orders">
 			<select name="type_search" class="invoice_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 			</select>
-			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
+			<label for="groups">'.$this->pi_getLL('usergroup').'</label>
 			'.$customer_groups_input.'
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
