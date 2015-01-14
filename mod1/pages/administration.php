@@ -175,7 +175,7 @@ switch ($_REQUEST['action']) {
 						if ($newFilename) {
 							$content.=$newFilename.'<BR>';
 							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
-								// FILE IS ALSO CONVERTED TO PNG. LETS UPDATE THE DATABASE
+								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
 								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
 								$updateArray=array();
 								$updateArray['categories_image']=$newFilename;
@@ -206,7 +206,7 @@ switch ($_REQUEST['action']) {
 						if ($newFilename) {
 							$content.=$newFilename.'<BR>';
 							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
-								// FILE IS ALSO CONVERTED TO PNG. LETS UPDATE THE DATABASE
+								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
 								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
 								$updateArray=array();
 								$updateArray['manufacturers_image']=$newFilename;
@@ -246,7 +246,7 @@ switch ($_REQUEST['action']) {
 							if ($newFilename) {
 								$content.=$newFilename.'<BR>';
 								if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
-									// FILE IS ALSO CONVERTED TO PNG. LETS UPDATE THE DATABASE
+									// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
 									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
 									$updateArray[$col]=$newFilename;
 								}

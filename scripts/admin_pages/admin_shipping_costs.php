@@ -275,7 +275,7 @@ if (count($shipping_methods)>0) {
 						<tr id="'.$zone_pid.'_Row_'.$i.'">
 							<td><div id="'.$zone_pid.'_Label_'.$i.'"><b> Level '.$i.':</b></div></td>
 							<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'">'.$weight_next.' '.$this->pi_getLL('admin_shipping_kg').'</div></td>
-							<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'"> to </div></td>
+							<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'"> '.$this->pi_getLL('up_to_and_including').' </div></td>
 							<td>';
 							if ($i>1) {
 								$content.='<select name="'.$row['id'].":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
@@ -315,7 +315,7 @@ if (count($shipping_methods)>0) {
 							$content.='
 								<td><div id="'.$zone_pid.'_Label_'.$i.'"><b> Level '.$i.':</b></div></td>
 								<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'" >0 '.$this->pi_getLL('admin_shipping_kg').'</div></td>
-								<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'" > to </div></td>
+								<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'" > '.$this->pi_getLL('up_to_and_including').' </div></td>
 								<td>';
 							$disabled='';
 							if ($row_counter==1) {

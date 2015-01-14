@@ -3776,7 +3776,7 @@ if ($this->post) {
 				$markerArray['STOCK_FEEDS_LIST']=$feed_stock_checkbox;
 			}
 			$exclude_stock_from_feed=$this->cObj->substituteMarkerArray($subparts['exclude_stock_from_feed'], $markerArray, '###|###');
-			$subpartArray['###EXCLUDE_STOCK_FROM_FEED_INPUT###']=$exclude_stock_from_feed;
+			$subpartArray['###EXCLUDE_FROM_FEED_INPUT###']=$exclude_stock_from_feed;
 		}
 		//exclude list products eol
 		/*

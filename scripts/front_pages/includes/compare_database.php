@@ -440,6 +440,13 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select billing_coc_id from tx_multishop_orders limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_orders` ADD billing_coc_id varchar(150) default null,ADD KEY `billing_coc_id` (`billing_coc_id`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	$str="select id from tx_multishop_customers_export limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -485,14 +492,12 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$str;
 		}
 	}
-
-	/*
 	$str="describe `tx_multishop_products`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if ($row['Field']=='minimum_quantity') {
 			if ($row['Type']=='int(11)') {
-				$str2="ALTER TABLE  `tx_multishop_products` CHANGE  `minimum_quantity`  `minimum_quantity` decimal(6,2) null default '0.00'";
+				$str2="ALTER TABLE  `tx_multishop_products` CHANGE  `minimum_quantity`  `minimum_quantity` decimal(6,2) null default '1.00'";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$messages[]=$str2;
 			}
@@ -503,13 +508,12 @@ if (!$skipMultishopUpdates) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if ($row['Field']=='maximum_quantity') {
 			if ($row['Type']=='int(11)') {
-				$str2="ALTER TABLE  `tx_multishop_products` CHANGE  `maximum_quantity`  `maximum_quantity` decimal(6,2) null default '0.00'";
+				$str2="ALTER TABLE  `tx_multishop_products` CHANGE  `maximum_quantity`  `maximum_quantity` decimal(6,2) null default '1.00'";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$messages[]=$str2;
 			}
 		}
 	}
-	*/
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

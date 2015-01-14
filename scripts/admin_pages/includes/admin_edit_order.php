@@ -1230,7 +1230,6 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_vat']['value']=$vat_sb;
 					}
 					// products price col
-					$order_products_body_data['products_normal_price']['align']='right';
 					$order_products_body_data['products_normal_price']['class']='cell_products_normal_price';
 					$order_products_body_data['products_normal_price']['id']='edit_order_product_price';
 					// incl excl vat input
@@ -1783,7 +1782,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_status']['value']='';
 			}
 			$customer_country=mslib_fe::getCountryByName($orders['billing_country']);
-			$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name', // SELECT ...
+			$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name, trg.default_status', // SELECT ...
 				'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
 				't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\''.$customer_country['cn_iso_nr'].'\'', // WHERE...
 				'', // GROUP BY...
@@ -1795,11 +1794,8 @@ if (is_numeric($this->get['orders_id'])) {
 			$vat_sb.='<option value="">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 			while ($rs_tx_sb=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb)) {
 				$sb_tax_rate=($rs_tx_sb['rate']/100);
-				if ($current_product_tax==$sb_tax_rate) {
-					$vat_sb.='<option value="'.$rs_tx_sb['tax_id'].'" selected="selected">'.$rs_tx_sb['name'].'</option>';
-				} else {
-					$vat_sb.='<option value="'.$rs_tx_sb['tax_id'].'">'.$rs_tx_sb['name'].'</option>';
-				}
+				$vat_sb.='<option value="'.$rs_tx_sb['tax_id'].'"'.(($rs_tx_sb['default_status']) ? ' selected' : '').'>'.$rs_tx_sb['name'].'</option>';
+
 			}
 			$vat_sb.='</select>';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1810,7 +1806,6 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_vat']['value']=$vat_sb;
 			}
 			// product normal price col
-			$order_products_body_data['products_normal_price']['align']='right';
 			$order_products_body_data['products_normal_price']['valign']='top';
 			$order_products_body_data['products_normal_price']['class']='cell_products_normal_price';
 			$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="msManualOrderProductPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>';

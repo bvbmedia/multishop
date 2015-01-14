@@ -836,6 +836,7 @@ if ($this->post['action']=='category-insert') {
 		$updateArray['data']=serialize($cron_data);
 		$updateArray['page_uid']=$this->showCatalogFromPage;
 		$updateArray['categories_id']=$this->post['cid'];
+		$updateArray['type']='';
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_import_jobs', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// we have to save the import job eof

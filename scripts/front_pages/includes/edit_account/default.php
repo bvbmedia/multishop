@@ -163,8 +163,30 @@ if ($this->post) {
 		$insertArray['gender']=$address['gender'];
 		$insertArray['date_of_birth']=$timestamp=strtotime($date_of_birth[2].'-'.$date_of_birth[1].'-'.$date_of_birth[0]);
 		$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'])) {
+			$params=array(
+				'insertArray'=>&$insertArray,
+				'uid'=>&$GLOBALS["TSFE"]->fe_user->user['uid']
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid = '.$GLOBALS["TSFE"]->fe_user->user['uid'], $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'])) {
+			$params=array(
+				'insertArray'=>&$insertArray,
+				'uid'=>&$GLOBALS["TSFE"]->fe_user->user['uid']
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		// add / update billing tt_address
 		$insertTTArray=array();
 		$insertTTArray['company']=$address['company'];
