@@ -360,24 +360,25 @@ $headerData.='});
 			  //Let\'s monitor popover content instead
 			  container.one(\'mouseleave\', function(){
 				  $.fn.popover.Constructor.prototype.leave.call(self, self);
+				  $(".popover-link").popover("hide");
 			  });
 			})
 		  }
 		};
 		$(".popover-link").popover({
 			position: "down",
-			placement: \'auto\',
+			placement: \'bottom\',
 			html: true,
 			trigger:"hover",
 			delay: {show: 20, hide: 200}
 		});
 		var tooltip_is_shown=\'\';
-		$(\'.popover-link\').on(\'show.bs.popover\', function () {
+		$(\'.popover-link\').on(\'show.bs.popover, mouseover\', function () {
 			var that=$(this);
-			$(".popover").remove();
+			//$(".popover").remove();
 			//$(".popover-link").popover(\'hide\');
 			var orders_id=$(this).attr(\'rel\');
-			if (tooltip_is_shown != orders_id) {
+			//if (tooltip_is_shown != orders_id) {
 				tooltip_is_shown=orders_id;
 				$.ajax({
 					type:   "POST",
@@ -385,16 +386,16 @@ $headerData.='});
 					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
 					dataType: "json",
 					success: function(data) {
-            			if (data.html!="") {
-            				that.next().html(data.html);
-            				that.popover(\'show\');
-
+            			if (data.content!="") {
+            				that.next().html(\'<div class="arrow"></div>\' + data.title + data.content);
+            				//that.next().popover("show");
+            				//$(that).popover(\'show\');
             			} else {
             				$(".popover").remove();
             			}
 					}
 				});
-			}
+			//}
 		});
 		$(\'#check_all_1\').click(function(){
 			checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
