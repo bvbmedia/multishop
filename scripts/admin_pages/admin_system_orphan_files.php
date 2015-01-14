@@ -10,29 +10,67 @@ ignore_user_abort(true);
 $content.='<div class="main-heading"><h1>Orphan files checker</h1></div>';
 switch ($this->get['action']) {
 	case 'import_product_images':
-		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_orphan_files', '');
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		$content.='<strong>Adding files</strong><br />';
-		$files=mslib_befe::listdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original']);
-		sort($files, SORT_LOCALE_STRING);
-		$tel=0;
-		// we go to reconnect to the DB, because sometimes when scripts takes too long, the database connection is lost.
-		$GLOBALS['TYPO3_DB']->connectDB();
-		foreach ($files as $f) {
-			$tel++;
-			$path_parts=pathinfo($f);
-			$insertArray=array(
-				'type'=>'products_image',
-				'orphan'=>0,
-				'path'=>$path_parts['dirname'],
-				'file'=>$path_parts['basename'],
-				'crdate'=>time()
-			);
-			$str2=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orphan_files', $insertArray);
-			$res2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-		}
-		if ($tel) {
-			$content.='We have added <strong>'.$tel.'</strong> files.';
+		$importTypes=array();
+		$importTypes[]='import_product_images';
+		$importTypes[]='import_categories_images';
+		$importTypes[]='import_manufacturers_images';
+		foreach($importTypes as $importType) {
+			switch ($importType) {
+				case 'import_product_images':
+					$objectType='products_image';
+					$objectFolderName='products';
+					$objectFolders=$this->ms['image_paths']['products'];
+					break;
+				case 'import_categories_images':
+					$objectType='categories_image';
+					$objectFolderName='categories';
+					$objectFolders=$this->ms['image_paths']['categories'];
+					break;
+				case 'import_manufacturers_images':
+					$objectType='manufacturers_image';
+					$objectFolderName='manufacturers';
+					$objectFolders=$this->ms['image_paths']['manufacturers'];
+					break;
+			}
+			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_orphan_files', 'type=\''.addslashes($objectType).'\'');
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			$content.='<strong>Adding files for queue: '.$objectFolderName.'</strong><br />';
+			$filesToInsert=array();
+			foreach ($objectFolders as $key=>$path) {
+				$content.='Scanning: '.$key.' folder.<br/>';
+				$files=mslib_befe::listdir($this->DOCUMENT_ROOT.$path);
+				sort($files, SORT_LOCALE_STRING);
+				// we go to reconnect to the DB, because sometimes when scripts takes too long, the database connection is lost.
+				$GLOBALS['TYPO3_DB']->connectDB();
+				foreach ($files as $f) {
+					$path_parts=pathinfo($f);
+					$path=str_replace('/images/'.$objectFolderName.'/'.$key.'/','/images/'.$objectFolderName.'/original/',$path_parts['dirname']);
+					if (!$filesToInsert[$path.'/'.$path_parts['basename']]) {
+						$filesToInsert[$path.'/'.$path_parts['basename']]=array('path'=>$path,'file'=>$path_parts['basename']);
+					}
+				}
+			}
+			// we go to reconnect to the DB, because sometimes when scripts takes too long, the database connection is lost.
+			$GLOBALS['TYPO3_DB']->connectDB();
+			$tel=0;
+			foreach ($filesToInsert as $file) {
+				$tel++;
+				$insertArray=array(
+					'type'=>$objectType,
+					'orphan'=>0,
+					'path'=>$file['path'],
+					'file'=>$file['file'],
+					'crdate'=>time()
+				);
+				$str2=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orphan_files', $insertArray);
+				$res2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+			}
+			if ($tel) {
+				$content.='We have added <strong>'.$tel.'</strong> files.';
+			} else {
+				$content.='No files found.';
+			}
+			$content.='<br/>';
 		}
 		break;
 	case 'scan_for_orphan_files':
@@ -41,40 +79,91 @@ switch ($this->get['action']) {
 		$stats['checked']=0;
 		$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_multishop_orphan_files');
 		foreach ($datarows as $row) {
-			if ($row['type']=='products_image') {
-				$array=array();
-
-				$filter=array();
-				$tmpOrFilter=array();
-				if (!$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']) {
-					$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']=5;
-				}
-				for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
-					$i=$x;
-					if ($i==0) {
-						$i='';
+			switch($row['type']) {
+				case 'products_image':
+					$array=array();
+					$filter=array();
+					$tmpOrFilter=array();
+					if (!$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']) {
+						$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']=5;
 					}
-					$tmpOrFilter[]='products_image'.$i.'=\''.addslashes($row['file']).'\'';
-				}
-				$filter[]='('.implode(' OR ',$tmpOrFilter).')';
-				$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
-					'tx_multishop_products', // FROM ...
-					implode(' AND ',$filter), // WHERE...
-					'', // GROUP BY...
-					'', // ORDER BY...
-					'' // LIMIT ...
-				);
-				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry2)) {
-					$stats['orphan']++;
-					$array['orphan']=1;
-				} else {
-					$array['orphan']=0;
-				}
-				$array['checked']=1;
-				$stats['checked']++;
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orphan_files', 'id=\''.$row['id'].'\'', $array);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+						$i=$x;
+						if ($i==0) {
+							$i='';
+						}
+						$tmpOrFilter[]='products_image'.$i.'=\''.addslashes($row['file']).'\'';
+					}
+					$filter[]='('.implode(' OR ',$tmpOrFilter).')';
+					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+						'tx_multishop_products', // FROM ...
+						implode(' AND ',$filter), // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry2)) {
+						$stats['orphan']++;
+						$array['orphan']=1;
+					} else {
+						$array['orphan']=0;
+					}
+					$array['checked']=1;
+					$stats['checked']++;
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orphan_files', 'id=\''.$row['id'].'\'', $array);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					break;
+				case 'categories_image':
+					$array=array();
+					$filter=array();
+					$tmpOrFilter=array();
+					$tmpOrFilter[]='categories_image=\''.addslashes($row['file']).'\'';
+					$filter[]='('.implode(' OR ',$tmpOrFilter).')';
+					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+						'tx_multishop_categories', // FROM ...
+						implode(' AND ',$filter), // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry2)) {
+						$stats['orphan']++;
+						$array['orphan']=1;
+					} else {
+						$array['orphan']=0;
+					}
+					$array['checked']=1;
+					$stats['checked']++;
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orphan_files', 'id=\''.$row['id'].'\'', $array);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					break;
+				case 'manufacturers_image':
+					$array=array();
+					$filter=array();
+					$tmpOrFilter=array();
+					$tmpOrFilter[]='manufacturers_image=\''.addslashes($row['file']).'\'';
+					$filter[]='('.implode(' OR ',$tmpOrFilter).')';
+					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+						'tx_multishop_manufacturers', // FROM ...
+						implode(' AND ',$filter), // WHERE...
+						'', // GROUP BY...
+						'', // ORDER BY...
+						'' // LIMIT ...
+					);
+					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+					if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry2)) {
+						$stats['orphan']++;
+						$array['orphan']=1;
+					} else {
+						$array['orphan']=0;
+					}
+					$array['checked']=1;
+					$stats['checked']++;
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orphan_files', 'id=\''.$row['id'].'\'', $array);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					break;
 			}
 		}
 		$content.='<strong>'.$stats['orphan'].'</strong> of <strong>'.$stats['checked'].'</strong> files were detected as orphan and could be deleted.';
@@ -87,9 +176,27 @@ switch ($this->get['action']) {
 		foreach ($datarows as $datarow) {
 			$stats['checked']++;
 			$deleted=0;
-			if ($datarow['type']=='products_image' and $datarow['path'] and $datarow['file']) {
-				foreach ($this->ms['image_paths']['products'] as $key=>$path) {
-					$path=str_replace('/original/', '/'.$key.'/', $datarow['path']);
+			switch($datarow['type']) {
+				case 'products_image':
+					$objectFolderName='products';
+					$objectFolders=$this->ms['image_paths']['products'];
+					break;
+				case 'categories_image':
+					$objectFolderName='categories';
+					$objectFolders=$this->ms['image_paths']['categories'];
+					break;
+				case 'manufacturers_image':
+					$objectFolderName='manufacturers';
+					$objectFolders=$this->ms['image_paths']['manufacturers'];
+					break;
+				default:
+					$objectFolderName='';
+					continue(2);
+					break;
+			}
+			if ($objectFolderName && $datarow['path'] and $datarow['file'] && is_array($objectFolders)) {
+				foreach ($objectFolders as $key=>$path) {
+					$path=str_replace('/images/'.$objectFolderName.'/original/', '/images/'.$objectFolderName.'/'.$key.'/', $datarow['path']);
 					$path.='/'.$datarow['file'];
 					if (unlink($path) or !file_exists($path)) {
 						$deleted=1;

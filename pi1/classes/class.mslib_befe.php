@@ -167,12 +167,35 @@ class mslib_befe {
 					if ($ext) {
 						if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG']) {
 							switch($ext) {
-								//case 'jpeg':
 								case 'png':
+									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.jpg';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.jpg';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
+									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									if (file_exists($newOriginal_path)) {
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
+									}
+									break;
+								//case 'jpeg':
 								case 'gif':
 									break;
 								default:
-									// IMAGE IS NOT PNG. CONVERTING IT TO PNG TO REDUCE THE FILESIZE
+									// IMAGE IS NOT PNG. MAYBE CONVERTING IT TO PNG REDUCES THE FILESIZE. LETS TRY
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.png';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
@@ -186,9 +209,13 @@ class mslib_befe {
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
-										@unlink($original_path);
-										$original_path=$newOriginal_path;
-										$filename=$newFilename;
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
 									}
 									break;
 							}
@@ -276,12 +303,35 @@ class mslib_befe {
 					if ($ext) {
 						if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG']) {
 							switch($ext) {
-								//case 'jpeg':
 								case 'png':
+									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.jpg';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.jpg';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
+									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									if (file_exists($newOriginal_path)) {
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
+									}
+									break;
+								//case 'jpeg':
 								case 'gif':
 									break;
 								default:
-									// IMAGE IS NOT PNG. CONVERTING IT TO PNG TO REDUCE THE FILESIZE
+									// IMAGE IS NOT PNG. MAYBE CONVERTING IT TO PNG REDUCES THE FILESIZE. LETS TRY
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.png';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
@@ -295,9 +345,13 @@ class mslib_befe {
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
-										@unlink($original_path);
-										$original_path=$newOriginal_path;
-										$filename=$newFilename;
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
 									}
 									break;
 							}
@@ -401,12 +455,35 @@ class mslib_befe {
 					if ($ext) {
 						if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG']) {
 							switch($ext) {
-								//case 'jpeg':
 								case 'png':
-								//case 'gif':
+									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
+									$fileArray=pathinfo($original_path);
+									$newFilename=$fileArray['filename'].'.jpg';
+									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+									if (file_exists($newOriginal_path)) {
+										do {
+											$newFilename=$fileArray['filename'].($i>0 ? '-'.$i : '').'.jpg';
+											$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
+											$i++;
+										} while (file_exists($newOriginal_path));
+									}
+									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									exec($command);
+									if (file_exists($newOriginal_path)) {
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
+									}
 									break;
+								//case 'jpeg':
+								//case 'gif':
+								//	break;
 								default:
-									// IMAGE IS NOT PNG. CONVERTING IT TO PNG TO REDUCE THE FILESIZE
+									// IMAGE IS NOT PNG. MAYBE CONVERTING IT TO PNG REDUCES THE FILESIZE. LETS TRY
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.png';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
@@ -420,9 +497,13 @@ class mslib_befe {
 									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
-										@unlink($original_path);
-										$original_path=$newOriginal_path;
-										$filename=$newFilename;
+										if (filesize($original_path) > filesize($newOriginal_path)) {
+											@unlink($original_path);
+											$original_path=$newOriginal_path;
+											$filename=$newFilename;
+										} else {
+											@unlink($newOriginal_path);
+										}
 									}
 									break;
 							}
