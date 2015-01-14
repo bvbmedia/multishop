@@ -1166,6 +1166,7 @@
 			<label index="your_vat_id">Your VAT-id</label>
 			<label index="zip">zip</label>
 			<label index="zip_is_required">Zip is a required field.</label>
+            <label index="up_to_and_including">up to and including</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
