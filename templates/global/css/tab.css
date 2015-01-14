@@ -992,5 +992,6 @@ div.popover .msAdminTooltipOrderDetailsAddressWrapper { overflow:hidden; width:1
 div.popover .msAdminTooltipBillingAddressDetails,
 div.popover .msAdminTooltipDeliveryAddressDetails { float:left; width:49.8%; font:12px Arial, Helvetica, sans-serif; }
 div.popover .msAdminTooltipOrderDetailsAddressWrapper h3 { font:bold 12px Arial, Helvetica, sans-serif; padding:0 0 3px; }
-div.popover .popover-content { overflow:visible; max-height:initial; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core div.popover .popover-content { overflow:visible; max-height:initial; font-size:12px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core div.popover .popover-content h1 { font-size:14px; }
 div.popover #adminOrderDetailsFooter { font-size:12px; }
