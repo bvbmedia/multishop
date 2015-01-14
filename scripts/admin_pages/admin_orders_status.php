@@ -8,11 +8,11 @@ if ($this->get['tx_multishop_pi1']['action']) {
 			if (intval($this->get['tx_multishop_pi1']['orders_status_id'])) {
 				$updateArray=array();
 				$updateArray['default_status']=1;
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id=\''.$this->get['tx_multishop_pi1']['orders_status_id'].'\'', $updateArray);
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id=\''.$this->get['tx_multishop_pi1']['orders_status_id'].'\' and page_uid='.$this->showCatalogFromPage, $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				$updateArray=array();
 				$updateArray['default_status']=0;
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id <> \''.$this->get['tx_multishop_pi1']['orders_status_id'].'\'', $updateArray);
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_status', 'id <> \''.$this->get['tx_multishop_pi1']['orders_status_id'].'\' and page_uid='.$this->showCatalogFromPage, $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 			break;

@@ -215,7 +215,6 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 					$insertArray[$col_name]=$col_val;
 				}
 			}
-			$insertArray['type']='';
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_import_jobs', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			@unlink($target);
@@ -837,6 +836,7 @@ if ($this->post['action']=='category-insert') {
 		$updateArray['data']=serialize($cron_data);
 		$updateArray['page_uid']=$this->showCatalogFromPage;
 		$updateArray['categories_id']=$this->post['cid'];
+		$updateArray['type']='';
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_import_jobs', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// we have to save the import job eof
