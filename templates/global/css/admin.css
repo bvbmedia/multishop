@@ -720,7 +720,7 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 }
 .popover.bottom > .arrow {
     top: -11px;
-    left: 50%;
+    left: 40px;
     margin-left: -11px;
     border-top-width: 0;
     border-bottom-color: #999;
