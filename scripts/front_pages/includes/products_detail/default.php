@@ -29,10 +29,10 @@ if (!$product['products_id']) {
 	}
 	$qty=1;
 	if ($product['minimum_quantity']>0) {
-		$qty=$product['minimum_quantity'];
+		$qty=round($product['minimum_quantity'], 2);
 	}
 	if ($product['products_multiplication']>0) {
-		$qty=$product['products_multiplication'];
+		$qty=round($product['products_multiplication'], 2);
 	}
 
 	if (!$this->conf['disableMetatags']) {
