@@ -425,7 +425,7 @@ jQuery(document).ready(function($) {
 	jQuery(\'#check_all_1\').click(function() {
 		checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
 	});
-	$(".tooltip").tooltip({
+	/*$(".tooltip").tooltip({
 		position: "down",
 		placement: \'auto\',
 		html: true
@@ -451,6 +451,42 @@ jQuery(document).ready(function($) {
 				}
 			});
 		}
+	});*/
+	$(".popover-link").popover({
+		position: "down",
+		placement: \'bottom\',
+		html: true,
+		trigger:"hover",
+		delay: {show: 20, hide: 200}
+	});
+	var tooltip_is_shown=\'\';
+	$(\'.popover-link\').on(\'show.bs.popover, mouseover\', function () {
+		var customer_id=$(this).attr(\'rel\');
+		var that=$(this);
+		//if (tooltip_is_shown != customer_id) {
+			tooltip_is_shown=customer_id;
+			$.ajax({
+				type:   "POST",
+				url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminCustomersListingDetails&').'\',
+				data:   \'tx_multishop_pi1[customer_id]=\'+customer_id,
+				dataType: "json",
+				success: function(data) {
+					if (data.html!="") {
+						that.next().html(\'<div class="arrow"></div><h3 class="popover-title">Customers</h3>\' + data.html);
+						//that.next().popover("show");
+						//$(that).popover(\'show\');
+					} else {
+						$(".popover").remove();
+					}
+					/*that.next().html(data.html);
+					that.tooltip(\'show\', {
+						position: \'down\',
+						placement: \'auto\',
+						html: true
+					});*/
+				}
+			});
+		//}
 	});
 	jQuery(document).on(\'submit\', \'#customers_listing\', function(){
 		if (jQuery(\'#selected_customers_action\').val()==\'delete_selected_customers\') {
