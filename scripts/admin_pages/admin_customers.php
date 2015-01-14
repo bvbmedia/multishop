@@ -491,7 +491,7 @@ jQuery(document).ready(function($) {
 				dataType: "json",
 				success: function(data) {
 					if (data.html!="") {
-						that.next().html(\'<div class="arrow"></div><h3 class="popover-title">Customers</h3>\' + data.html);
+						that.next().html(\'<div class="arrow"></div><h3 class="popover-title">Customers</h3><div class="popover-content">\' + data.html + \'</div>\');
 						//that.next().popover("show");
 						//$(that).popover(\'show\');
 					} else {
