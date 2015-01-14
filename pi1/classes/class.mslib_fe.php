@@ -2006,9 +2006,9 @@ class mslib_fe {
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+		$current_tstamp=time();
 		if ($product['specials_new_products_price']>0) {
 			$disable_special_price=false;
-			$current_tstamp=time();
 			if ($product['special_start_date']>0) {
 				if ($product['special_start_date']>$current_tstamp) {
 					$product['specials_new_products_price']=0;
@@ -2086,10 +2086,20 @@ class mslib_fe {
 					$product['categories_crumbar']=$product_crumbar_tree;
 				}
 			}
-			// hook
+			if ($product['starttime']>0) {
+				if ($product['starttime']>$current_tstamp) {
+					$disable_product=true;
+				}
+			}
+			if ($product['endtime']>0) {
+				if ($product['endtime']<=$current_tstamp) {
+					$disable_product=true;
+				}
+			}
 			if ($disable_product && !$include_disabled_products) {
 				return false;
 			}
+			// hook
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductArray'])) {
 				$params=array(
 					'product'=>&$product
@@ -2584,6 +2594,7 @@ class mslib_fe {
 		$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($rows>0) {
 			$tax_ruleset=array();
+			$current_tstamp=time();
 			while ($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 				} else {
@@ -2611,19 +2622,29 @@ class mslib_fe {
 							$product['categories_crumbar']=$product_crumbar_tree;
 						}
 					}
+					if ($product['starttime']>0) {
+						if ($product['starttime']>$current_tstamp) {
+							$disable_product=true;
+						}
+					}
+					if ($product['endtime']>0) {
+						if ($product['endtime']<=$current_tstamp) {
+							$disable_product=true;
+						}
+					}
 					if ($disable_product && !$include_disabled_products) {
 						continue;
 					}
 				}
 				if ($product['specials_new_products_price']>0) {
 					if ($product['special_start_date']>0) {
-						if ($product['special_start_date']>time()) {
+						if ($product['special_start_date']>$current_tstamp) {
 							$product['specials_new_products_price']=0;
 							$product['final_price']=$product['products_price'];
 						}
 					}
 					if ($product['special_expired_date']>0) {
-						if ($product['special_expired_date']<time()) {
+						if ($product['special_expired_date']<$current_tstamp) {
 							$product['specials_new_products_price']=0;
 							$product['final_price']=$product['products_price'];
 						}
