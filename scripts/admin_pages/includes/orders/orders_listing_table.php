@@ -364,7 +364,7 @@ $headerData.='});
 			})
 		  }
 		};
-		$(".tooltip").popover({
+		$(".popover-link").popover({
 			position: "down",
 			placement: \'auto\',
 			html: true,
@@ -372,10 +372,10 @@ $headerData.='});
 			delay: {show: 20, hide: 200}
 		});
 		var tooltip_is_shown=\'\';
-		$(\'.tooltip\').on(\'show.bs.popover\', function () {
+		$(\'.popover-link\').on(\'show.bs.popover\', function () {
 			var that=$(this);
 			$(".popover").remove();
-			//$(".tooltip").popover(\'hide\');
+			//$(".popover-link").popover(\'hide\');
 			var orders_id=$(this).attr(\'rel\');
 			if (tooltip_is_shown != orders_id) {
 				tooltip_is_shown=orders_id;
