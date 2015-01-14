@@ -348,12 +348,9 @@ $headerData.='});
 		'.($this->get['tx_multishop_pi1']['action']!='change_order_status_for_selected_orders' ? '$("#msadmin_order_status_select").hide();' : '').'
 		var originalLeave = $.fn.popover.Constructor.prototype.leave;
 		$.fn.popover.Constructor.prototype.leave = function(obj){
-		  var self = obj instanceof this.constructor ?
-			obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+		  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
 		  var container, timeout;
-
 		  originalLeave.call(this, obj);
-
 		  if(obj.currentTarget) {
 			container = $(obj.currentTarget).siblings(\'.popover\')
 			timeout = self.timeout;
