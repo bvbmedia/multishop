@@ -1342,7 +1342,11 @@ class tx_mslib_cart extends tslib_pibase {
 			$insertArray['language_id']=$this->sys_language_uid;
 			// get default orders status
 			$status=mslib_fe::getDefaultOrdersStatus($this->sys_language_uid);
-			$insertArray['status']=$status['id'];
+			if (is_array($status) && isset($status['id']) && $status['id']>0) {
+				$insertArray['status']=$status['id'];
+			} else {
+				$insertArray['status']='';
+			}
 			if (isset($this->cookie['HTTP_REFERER']) && !empty($this->cookie['HTTP_REFERER'])) {
 				$insertArray['http_referer']=$this->cookie['HTTP_REFERER'];
 			} else {
