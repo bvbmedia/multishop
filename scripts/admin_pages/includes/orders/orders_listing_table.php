@@ -346,15 +346,40 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $headerData.='});
 		'.($this->get['tx_multishop_pi1']['action']!='change_order_status_for_selected_orders' ? '$("#msadmin_order_status_select").hide();' : '').'
-		$(".tooltip").tooltip({
+		var originalLeave = $.fn.popover.Constructor.prototype.leave;
+		$.fn.popover.Constructor.prototype.leave = function(obj){
+		  var self = obj instanceof this.constructor ?
+			obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+		  var container, timeout;
+
+		  originalLeave.call(this, obj);
+
+		  if(obj.currentTarget) {
+			container = $(obj.currentTarget).siblings(\'.popover\')
+			timeout = self.timeout;
+			container.one(\'mouseenter\', function(){
+			  //We entered the actual popover – call off the dogs
+			  clearTimeout(timeout);
+			  //Let\'s monitor popover content instead
+			  container.one(\'mouseleave\', function(){
+				  $.fn.popover.Constructor.prototype.leave.call(self, self);
+			  });
+			})
+		  }
+		};
+		$(".tooltip").popover({
 			position: "down",
 			placement: \'auto\',
-			html: true
+			html: true,
+			trigger:"hover",
+			delay: {show: 20, hide: 200}
 		});
 		var tooltip_is_shown=\'\';
-		$(\'.tooltip\').on(\'show.bs.tooltip\', function () {
-			var orders_id=$(this).attr(\'rel\');
+		$(\'.tooltip\').on(\'show.bs.popover\', function () {
 			var that=$(this);
+			$(".popover").remove();
+			//$(".tooltip").popover(\'hide\');
+			var orders_id=$(this).attr(\'rel\');
 			if (tooltip_is_shown != orders_id) {
 				tooltip_is_shown=orders_id;
 				$.ajax({
@@ -363,12 +388,13 @@ $headerData.='});
 					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
 					dataType: "json",
 					success: function(data) {
-						that.next().html(data.html);
-            			that.tooltip(\'show\', {
-            				position: \'down\',
-               				placement: \'auto\',
-               				html: true
-            			});
+            			if (data.html!="") {
+            				that.next().html(data.html);
+            				that.popover(\'show\');
+
+            			} else {
+            				$(".popover").remove();
+            			}
 					}
 				});
 			}
