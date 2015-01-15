@@ -825,11 +825,15 @@ if ($this->post) {
 		$this->post['ean_code']=str_pad($this->post['ean_code'], 13, '0', STR_PAD_LEFT);
 		$updateArray['ean_code']=$this->post['ean_code'];
 	}
-	if (isset($this->post['starttime'])) {
+	if (isset($this->post['starttime']) && !empty($this->post['starttime_visitor'])) {
 		$updateArray['starttime']=strtotime($this->post['starttime']);
+	} else {
+		$updateArray['starttime']='';
 	}
-	if (isset($this->post['endtime'])) {
+	if (isset($this->post['endtime']) && !empty($this->post['endtime_visitor'])) {
 		$updateArray['endtime']=strtotime($this->post['endtime']);
+	} else {
+		$updateArray['endtime']='';
 	}
 	$updateArray['alert_quantity_threshold']=$this->post['alert_quantity_threshold'];
 	$updateArray['custom_settings']=$this->post['custom_settings'];
