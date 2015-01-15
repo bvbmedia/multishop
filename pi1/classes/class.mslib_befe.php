@@ -3821,6 +3821,21 @@ class mslib_befe {
 			return $array;
 		}
 	}
+	/**
+	 * Puts a key - element pair first into an array, while preserving
+	 * the keys.
+	 * @param array The array to shift into
+	 * @param mixed The new key
+	 * @param mixed The new element
+	 * @return int Number of elements in the new array
+	 */
+	function array_unshift_assoc(&$array, $key, $element) {
+		$array = array_reverse($array, true);
+		$array[$key] = $element;
+		$array = array_reverse($array, true);
+		return count($array);
+
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);

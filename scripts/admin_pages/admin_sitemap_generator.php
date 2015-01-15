@@ -15,7 +15,7 @@ if (!$this->get['skip_categories']) {
 	$links=array();
 	$links[]=$prefix_domain."\n";
 	$links[]=$prefix_domain.mslib_fe::typolink($this->shop_pid)."\n";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id=cd.categories_id and c.status=1");
+	$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.categories_id=cd.categories_id and c.status=1 and c.page_uid='".$this->showCatalogFromPage."'");
 	while (($categories=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$level=0;
 		$cats=mslib_fe::Crumbar($categories['categories_id']);

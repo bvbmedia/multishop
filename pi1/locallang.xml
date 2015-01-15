@@ -1167,6 +1167,7 @@
 			<label index="zip">zip</label>
 			<label index="zip_is_required">Zip is a required field.</label>
             <label index="up_to_and_including">up to and including</label>
+			<label index="feed_exporter_fields_label_products_multiplication">Multiplication</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>

@@ -429,7 +429,7 @@ if ($this->get['feed_hash']) {
 				}
 				break;
 			case 'categories':
-				$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.page_uid='".$this->shop_pid."' and c.status=1 and c.categories_id=cd.categories_id");
+				$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT * from tx_multishop_categories c, tx_multishop_categories_description cd where c.page_uid='".$this->showCatalogFromPage."' and c.status=1 and c.categories_id=cd.categories_id");
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 					if ($row['categories_id']) {
 						$cats=mslib_fe::Crumbar($row['categories_id']);
@@ -832,6 +832,9 @@ if ($this->get['feed_hash']) {
 						break;
 					case 'order_unit_name':
 						$tmpcontent.=$row['order_unit_name'];
+						break;
+					case 'products_multiplication':
+						$tmpcontent.=$row['products_multiplication'];
 						break;
 					case 'minimum_quantity':
 						$tmpcontent.=$row['minimum_quantity'];

@@ -105,6 +105,7 @@ $array['products_weight']=$this->pi_getLL('feed_exporter_fields_label_products_w
 $array['products_status']=$this->pi_getLL('feed_exporter_fields_label_products_status');
 $array['minimum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_minimum_quantity');
 $array['maximum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_maximum_quantity');
+$array['products_multiplication']=$this->pi_getLL('feed_exporter_fields_label_products_multiplication','Multiplication');
 $array['order_unit_name']=$this->pi_getLL('feed_exporter_fields_label_products_order_unit_name');
 $array['products_vat_rate']=$this->pi_getLL('feed_exporter_fields_label_products_vat_rate');
 $array['category_link']=$this->pi_getLL('feed_exporter_fields_label_category_link');
