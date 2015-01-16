@@ -224,7 +224,7 @@ table#product_import_table td.column_name,
 #tab-container .tab_container .tab_content table#product_import_table td.column_name { background:#333 url(../images/importer_th.gif) left top repeat-x; color:#fff; vertical-align:middle; }
 table#product_import_table th.cell_customer { width:90%; }
 table#product_import_table th,
-#tab-container .tab_container .tab_content table#product_import_table th { border-right:1px solid #999; white-space:nowrap; }
+#tab-container .tab_container .tab_content table#product_import_table th { border-right:1px solid #999; white-space:normal; }
 #tx_multishop_pi1_core table#product_import_table th a,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table th a { color:#fff; }
 table#product_import_table td,
