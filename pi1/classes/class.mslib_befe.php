@@ -169,6 +169,12 @@ class mslib_befe {
 							switch($ext) {
 								case 'png':
 									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
+									$command=t3lib_div::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$info=shell_exec($command);
+									if (strstr($info,'Alpha:')) {
+										// THIS IMAGE HAS A TRANSPARANT BACKGROUND SO WE MAY NOT CONVERT IT
+										break;
+									}
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.jpg';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
@@ -305,6 +311,12 @@ class mslib_befe {
 							switch($ext) {
 								case 'png':
 									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
+									$command=t3lib_div::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$info=shell_exec($command);
+									if (strstr($info,'Alpha:')) {
+										// THIS IMAGE HAS A TRANSPARANT BACKGROUND SO WE MAY NOT CONVERT IT
+										break;
+									}
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.jpg';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
@@ -457,6 +469,12 @@ class mslib_befe {
 							switch($ext) {
 								case 'png':
 									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
+									$command=t3lib_div::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$info=shell_exec($command);
+									if (strstr($info,'Alpha:')) {
+										// THIS IMAGE HAS A TRANSPARANT BACKGROUND SO WE MAY NOT CONVERT IT
+										break;
+									}
 									$fileArray=pathinfo($original_path);
 									$newFilename=$fileArray['filename'].'.jpg';
 									$newOriginal_path=$fileArray['dirname'].'/'.$newFilename;
