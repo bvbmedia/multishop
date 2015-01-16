@@ -224,7 +224,7 @@ table#product_import_table td.column_name,
 #tab-container .tab_container .tab_content table#product_import_table td.column_name { background:#333 url(../images/importer_th.gif) left top repeat-x; color:#fff; vertical-align:middle; }
 table#product_import_table th.cell_customer { width:90%; }
 table#product_import_table th,
-#tab-container .tab_container .tab_content table#product_import_table th { border-right:1px solid #999; white-space:nowrap; }
+#tab-container .tab_container .tab_content table#product_import_table th { border-right:1px solid #999; white-space:normal; }
 #tx_multishop_pi1_core table#product_import_table th a,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#product_import_table th a { color:#fff; }
 table#product_import_table td,
@@ -342,7 +342,7 @@ table.multishop_table input[type="text"],
 #tx_multishop_pi1_core .msadmin_button { display:inline-block; border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; text-transform:uppercase; margin:0 3px; padding:2px 6px; }
 #tx_multishop_pi1_core .msadmin_button:hover { background:#e2e2e2; text-decoration:none; cursor:pointer; }
 
-#msadmin_section #msadmin_content #tx_multishop_pi1_core a.msadmin_button { display:inline-block; border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; text-transform:uppercase; margin:0 3px; padding:2px 6px; white-space:nowrap; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core a.msadmin_button { display:inline-block; min-width:70px; border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-decoration:none; text-transform:uppercase; margin:0 3px; padding:2px 6px; white-space:nowrap; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core a.msadmin_button:hover { background:#e2e2e2; text-decoration:none; }
 
 #msadmin_section #msadmin_content #tx_multishop_pi1_core input.multishop_admin_submit { border:1px solid #7c7c7c; background:#d5d5d5 url(../images/submit_gradient.gif) left top repeat-x; font:12px Arial, Helvetica, sans-serif; color:#333; text-transform:uppercase; margin:0 3px; padding:2px 6px; cursor:pointer; }
