@@ -90,6 +90,16 @@ if (!$this->get['skip_products']) {
 		}
 	}
 }
+if (!$this->get['skip_manufacturers']) {
+	// MANUFACTURERS
+	$qry=$GLOBALS['TYPO3_DB']->sql_query("SELECT manufacturers_id from tx_multishop_manufacturers m where m.status=1");
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$link=mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=manufacturers_products_listing&manufacturers_id='.$row['manufacturers_id']);
+		if ($link) {
+			file_put_contents($log_file, $prefix_domain.$link."\n", FILE_APPEND|LOCK_EX);
+		}
+	}
+}
 @unlink($sitemap_file);
 @copy($log_file, $sitemap_file);
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_label_sitemap_creator').'</h1></div>';

@@ -323,7 +323,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$categories = mslib_fe::getSubcatsOnly($parent_id);
 				if (!is_array($categories)) {
 					$count_select = count($formField['elements']);
-					unset($formFieldItem);
+					unset($formField);
 					continue;
 				} else {
 					$options=array();
@@ -416,6 +416,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								$prefix='pf';
 							}
 							//print_r($tmpFilter);
+							// GET PRODUCT COUNT FOR CATEGORY FORMITEM
 							$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 							// count available records eof
 							if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
@@ -537,17 +538,17 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					case 'select':
 						$formField['type']="div";
 						$formField['class']="ui-dform-selectbox";
-					$formFieldItem[$count_select]['type'] = 'select';
+						$formFieldItem[$count_select]['type'] = 'select';
 						$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[manufacturers][]';
 						$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldManufacturersItem';
-					$formFieldItem[$count_select]['options'][0]=$this->pi_getLL('choose_manufacturers');
+						$formFieldItem[$count_select]['options'][0]=$this->pi_getLL('choose_manufacturers');
 					break;
 					case 'multiselect':
 					case 'list_multiple':
 					case 'select_multiple':
 						$formField['type']="div";
 						$formField['class']="ui-dform-selectbox-multiple";
-					$formFieldItem[$count_select]['type'] = 'select';
+						$formFieldItem[$count_select]['type'] = 'select';
 						$formFieldItem[$count_select]['name'] = 'tx_multishop_pi1[manufacturers][]';
 						$formFieldItem[$count_select]['id'] = 'msFrontUltrasearchFormFieldManufacturersItem';
 						$formFieldItem[$count_select]['multiple'] = 'multiple';
@@ -914,7 +915,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$totalCountWhereFlat=array();
 							$totalCountFromFlat=array_values($totalCountFromTmp['options']);
 							$totalCountWhereFlat=array_values($totalCountWhereTmp['options']);
+
+							// PRODUCT COUNT FOR ATTRIBUTE OPTION VALUE
+							//$this->msDebug=1;
 							$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
+							//error_log(print_r($tmpFilter,1).$this->msDebugInfo);
+							//die();
 							// count available records eof
 							if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
 								unset($formFieldItem[$counter]);
@@ -992,6 +998,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$formFields[]=array("type"=>"container","class"=>'ui-dform-container-'.$key,"html"=>$formField);
 		}
 	}
+	//error_log(print_r($formFields,1));
 	$formField=array();
 	$formField['name']="pageNum";
 	$formField['id']="pageNum";
@@ -1343,6 +1350,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		}
 	}
 	//error_log(print_r($filter, 1));
+	// GET PRODUCTS FOR LISTING
 	$pageset=mslib_fe::getProductsPageSet($filter,$offset,$limit,$orderby,$having,$select,$where,0,$from,array(),'ajax_products_search',$select_total_count,0,1,$extra_join);
 	//	error_log($pageset['total_rows']);
 	//	error_log($this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']);
