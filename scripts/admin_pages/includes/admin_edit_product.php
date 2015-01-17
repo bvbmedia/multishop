@@ -996,14 +996,16 @@ if ($this->post) {
 									'(page_uid=0 or page_uid=\''.$this->shop_pid.'\')'
 								));*/
 								//if (!is_array($p2c_record)) {
-								$updateArray=array();
+								/*$updateArray=array();
 								$updateArray['categories_id']=$catId;
 								$updateArray['products_id']=$prodid;
 								$updateArray['sort_order']=time();
 								$updateArray['page_uid']=$page_uid;
 								$updateArray['related_to']=$relCatId;
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
+								// create categories tree linking
+								tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $relCatId);
 								//}
 								// update the counterpart relation
 								$updateArray=array();
@@ -1168,14 +1170,16 @@ if ($this->post) {
 									'(page_uid=0 or page_uid=\''.$this->shop_pid.'\')'
 								));
 								if (!is_array($p2c_record)) {
-									$updateArray=array();
+									/*$updateArray=array();
 									$updateArray['categories_id']=$catId;
 									$updateArray['products_id']=$prodid;
 									$updateArray['sort_order']=time();
 									$updateArray['page_uid']=$page_uid;
 									$updateArray['related_to']=$relCatId;
 									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
+									// create categories tree linking
+									tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $relCatId);
 								}
 								// update the counterpart relation
 								$updateArray=array();
@@ -1263,14 +1267,16 @@ if ($this->post) {
 								'(page_uid=0 or page_uid=\''.$this->shop_pid.'\')'
 							));
 							if (!is_array($p2c_record)) {
-								$updateArray=array();
+								/*$updateArray=array();
 								$updateArray['categories_id']=$catId;
 								$updateArray['products_id']=$prodid;
 								$updateArray['sort_order']=time();
 								$updateArray['page_uid']=$page_uid;
 								$updateArray['related_to']=$relCatId;
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
+								// create categories tree linking
+								tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $relCatId);
 							}
 							// update the counterpart relation
 							$updateArray=array();

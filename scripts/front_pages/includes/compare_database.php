@@ -501,6 +501,7 @@ if (!$skipMultishopUpdates) {
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$messages[]=$str2;
 			}
+
 		}
 	}
 	$str="describe `tx_multishop_products`";
@@ -511,6 +512,61 @@ if (!$skipMultishopUpdates) {
 				$str2="ALTER TABLE  `tx_multishop_products` CHANGE  `maximum_quantity`  `maximum_quantity` decimal(6,2) null default '1.00'";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$messages[]=$str2;
+			}
+		}
+	}
+
+// add primary
+//ALTER TABLE  `tx_multishop_products_to_categories` ADD  `products_to_categories_id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;
+
+// drop current
+// `ALTER TABLE tx_multishop_products_to_categories DROP PRIMARY KEY`
+
+
+
+	$str="select products_to_categories_id from tx_multishop_products_to_categories limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		// drop the current primary
+		$str="ALTER TABLE tx_multishop_products_to_categories DROP PRIMARY KEY";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+
+		$str="ALTER TABLE  `tx_multishop_products_to_categories` ADD  `products_to_categories_id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+
+		// add the node_id col
+		$str="select node_id from tx_multishop_products_to_categories limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE `tx_multishop_products_to_categories` ADD node_id int(11) default '0',ADD KEY `node_id` (`node_id`)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+			// is_deepest col
+			$str="select is_deepest from tx_multishop_products_to_categories limit 1";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			if (!$qry) {
+				$str="ALTER TABLE `tx_multishop_products_to_categories` ADD is_deepest tinyint(1) default '0',ADD KEY `is_deepest` (`is_deepest`)";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+				// market for old p2c relation for removing at the end
+				$str="select current_relation from tx_multishop_products_to_categories limit 1";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				if (!$qry) {
+					$str="ALTER TABLE `tx_multishop_products_to_categories` ADD current_relation tinyint(1) default '0',ADD KEY `current_relation` (`current_relation`)";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					$messages[]=$str;
+					// set the current relation value to
+					$str="UPDATE `tx_multishop_products_to_categories` SET `current_relation`=1";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					// rebuild the p2c link
+					tx_mslib_catalog::compareDatabaseAlterProductToCategoryLinking();
+					// remove the entry
+					$str="DELETE FROM `tx_multishop_products_to_categories` WHERE `current_relation`=1";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+					// remove the col
+					$str="ALTER TABLE `tx_multishop_products_to_categories` DROP `current_relation`";
+					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				}
 			}
 		}
 	}

@@ -2275,6 +2275,8 @@ if ($this->post['action']=='category-insert') {
 									}
 									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									// create categories tree linking
+									tx_mslib_catalog::linkCategoriesTreeToProduct($item['updated_products_id'], $categories_id);
 								}
 							}
 						} elseif ($item['products_name']) {
@@ -2510,6 +2512,8 @@ if ($this->post['action']=='category-insert') {
 									}
 									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									// create categories tree linking
+									tx_mslib_catalog::linkCategoriesTreeToProduct($item['added_products_id'], $categories_id);
 									$inserteditems[$categories_id][]=$item['products_name'];
 								}
 							}

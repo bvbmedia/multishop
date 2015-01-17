@@ -1471,7 +1471,7 @@ class mslib_fe {
 				$string=$this->cObj->data['uid'].'_crum_'.$c.'_'.$languages_id.'_'.md5(serialize($output));
 			}
 			if (!$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content=$Cache_Lite->get($string))) {
-				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
+				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
 					'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 					'c.page_uid=\''.$page_uid.'\' and c.categories_id = \''.$c.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id = cd.categories_id', // WHERE...
 					'', // GROUP BY...
@@ -1489,7 +1489,8 @@ class mslib_fe {
 							'custom_settings'=>$data['custom_settings'],
 							'meta_title'=>$data['meta_title'],
 							'meta_description'=>$data['meta_description'],
-							'status'=>$data['status']
+							'status'=>$data['status'],
+							'page_uid'=>$data['page_uid']
 						);
 					}
 					if ($data['parent_id']>0 && $data['parent_id']<>$this->categoriesStartingPoint) {
