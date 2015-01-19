@@ -2273,10 +2273,10 @@ if ($this->post['action']=='category-insert') {
 										}
 										$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
 									}
-									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									/*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
 									// create categories tree linking
-									tx_mslib_catalog::linkCategoriesTreeToProduct($item['updated_products_id'], $categories_id);
+									tx_mslib_catalog::linkCategoriesTreeToProduct($item['updated_products_id'], $categories_id, $updateArray);
 								}
 							}
 						} elseif ($item['products_name']) {
@@ -2510,10 +2510,10 @@ if ($this->post['action']=='category-insert') {
 										}
 										$updateArray['sort_order']=$sortOrderArray['tx_multishop_products_to_categories']['sort_order'];
 									}
-									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									/*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
 									// create categories tree linking
-									tx_mslib_catalog::linkCategoriesTreeToProduct($item['added_products_id'], $categories_id);
+									tx_mslib_catalog::linkCategoriesTreeToProduct($item['added_products_id'], $categories_id, $updateArray);
 									$inserteditems[$categories_id][]=$item['products_name'];
 								}
 							}

@@ -128,10 +128,10 @@ class tx_mslib_catalog {
 			$insertArray['products_id']=$id;
 			$insertArray['categories_id']=$data['categories_id'];
 			$insertArray['sort_order']=time();
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			/*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
 			// create categories tree linking
-			tx_mslib_catalog::linkCategoriesTreeToProduct($id, $data['categories_id']);
+			tx_mslib_catalog::linkCategoriesTreeToProduct($id, $data['categories_id'], $insertArray);
 			return $id;
 		}
 	}
@@ -601,8 +601,8 @@ class tx_mslib_catalog {
 			}
 		}
 	}
-	function linkCategoriesTreeToProduct($pid, $deepest_cat_id, $related_to=0) {
-		$level=0;
+	function linkCategoriesTreeToProduct($pid, $deepest_cat_id, $dataArray=array()) {
+		$level=1;
 		$cats=mslib_fe::Crumbar($deepest_cat_id);
 		$cats=array_reverse($cats);
 		$count_cats=count($cats);
@@ -615,13 +615,19 @@ class tx_mslib_catalog {
 				if ($item['id']) {
 					if (!tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id'])) {
 						$insertArray=array();
-						$insertArray['categories_id']=$deepest_cat_id;
-						$insertArray['products_id']=$pid;
-						$insertArray['sort_order']=time();
-						$insertArray['page_uid']=$item['page_uid'];
-						$insertArray['related_to']=$related_to;
+						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
+							$insertArray['categories_id']=$deepest_cat_id;
+							$insertArray['products_id']=$pid;
+							$insertArray['sort_order']=time();
+							$insertArray['page_uid']=$item['page_uid'];
+							$insertArray['related_to']=0;
+						} else {
+							foreach ($dataArray as $idx=>$val) {
+								$insertArray[$idx]=$val;
+							}
+						}
 						$insertArray['node_id']=$item['id'];
-						if (($level+1)==$count_cats) {
+						if ($level==$count_cats) {
 							$insertArray['is_deepest']=1;
 						} else {
 							$insertArray['is_deepest']=0;
