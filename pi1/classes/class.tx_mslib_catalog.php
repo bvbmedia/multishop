@@ -602,6 +602,12 @@ class tx_mslib_catalog {
 		}
 	}
 	function linkCategoriesTreeToProduct($pid, $deepest_cat_id, $dataArray=array()) {
+		if (!is_numeric($pid)) {
+			return false;
+		}
+		if (!is_numeric($deepest_cat_id)) {
+			return false;
+		}
 		$level=1;
 		$cats=mslib_fe::Crumbar($deepest_cat_id);
 		$cats=array_reverse($cats);
