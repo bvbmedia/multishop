@@ -806,7 +806,7 @@ CREATE TABLE `tx_multishop_products` (
   `custom_settings` text,
   `products_multiplication` decimal(6,2) null default '0.00',
   `minimum_quantity` decimal(6,2) default '1.00',
-  `maximum_quantity` int(11) default '0',
+  `maximum_quantity` decimal(6,2) null default null,
   `sku_code` varchar(25) default '',
   `products_condition` varchar(20) default 'new',
   `file_number_of_downloads` int(11) default '0',
@@ -1386,7 +1386,7 @@ CREATE TABLE `tx_multishop_undo_products` (
   `custom_settings` text,
   `products_multiplication` int(11) default '0',
   `minimum_quantity` decimal(6,2) default '1.00',
-  `maximum_quantity` int(11) default '0',
+  `maximum_quantity` decimal(6,2) null default null,
   PRIMARY KEY (`id`)
 );
 

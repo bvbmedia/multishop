@@ -509,7 +509,7 @@ if (!$skipMultishopUpdates) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if ($row['Field']=='maximum_quantity') {
 			if ($row['Type']=='int(11)') {
-				$str2="ALTER TABLE  `tx_multishop_products` CHANGE  `maximum_quantity`  `maximum_quantity` decimal(6,2) null default '1.00'";
+				$str2="ALTER TABLE  `tx_multishop_products` CHANGE  `maximum_quantity`  `maximum_quantity` decimal(6,2) null default null";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$messages[]=$str2;
 			}
