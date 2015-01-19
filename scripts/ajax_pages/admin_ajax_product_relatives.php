@@ -56,7 +56,7 @@ if ($this->post['req']=='init') {
 						 tx_multishop_products_description pd
 					INNER JOIN tx_multishop_products_to_categories p2c ON pd.products_id = p2c.products_id
 					INNER JOIN tx_multishop_categories_description c ON p2c.categories_id = c.categories_id
-					'.$where.' AND (p2c.categories_id = '.$row['categories_id'].') and pd.language_id='.$this->sys_language_uid.' and c.language_id='.$this->sys_language_uid.'
+					'.$where.' AND (p2c.categories_id = '.$row['categories_id'].') and p2c.is_deepest=1 and pd.language_id='.$this->sys_language_uid.' and c.language_id='.$this->sys_language_uid.'
 					group by p.products_id ORDER BY pd.products_name ASC';
 					$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 					$cheking_check=0;
@@ -164,7 +164,7 @@ if ($this->post['req']=='init') {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
 				if ($row['categories_name']) {
 					$productFilter=$filter;
-					$productFilter[]='(B.categories_id = '.$row['categories_id'].' and A.products_id <> '.$this->post['pid'].')';
+					$productFilter[]='(B.categories_id = '.$row['categories_id'].' and B.is_deepest=1 and A.products_id <> '.$this->post['pid'].')';
 					$query2=$GLOBALS['TYPO3_DB']->SELECTquery('A.products_id, A.products_name, B.categories_id,C.categories_name', // SELECT ...
 						'tx_multishop_products p, tx_multishop_products_description A INNER JOIN tx_multishop_products_to_categories B ON A.products_id = B.products_id INNER JOIN tx_multishop_categories_description C ON B.categories_id = C.categories_id', // FROM ...
 						implode(" AND ", $productFilter), // WHERE...

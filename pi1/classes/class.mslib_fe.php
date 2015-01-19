@@ -1975,6 +1975,7 @@ class mslib_fe {
 			if ($categories_id) {
 				$where[]='p2c.categories_id=\''.$categories_id.'\'';
 			}
+			$where[]='p2c.is_deepest=1';
 		} else {
 			$select=array();
 			$select[]='*';
@@ -2162,7 +2163,7 @@ class mslib_fe {
 			$query_elements['select'][]='pd.products_name, p.products_id, c.categories_id';
 			$query_elements['from'][]='tx_multishop_products p, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd';
 			$query_elements['filter'][]="p.products_status=1 and c.categories_id='".$categories_id."' and pd.language_id='".$this->sys_language_uid."'";
-			$query_elements['where'][]='cd.language_id=pd.language_id and p.products_id=pd.products_id and p.products_id=p2c.products_id and c.categories_id=p2c.categories_id and c.categories_id=cd.categories_id';
+			$query_elements['where'][]='cd.language_id=pd.language_id and p.products_id=pd.products_id and p.products_id=p2c.products_id and c.categories_id=p2c.categories_id and c.categories_id=cd.categories_id and p2c.is_deepest=1';
 			$query_elements['orderby'][]="p2c.sort_order ".$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
 		} else {
 			$query_elements['select'][]='pf.products_name, pf.products_id, pf.categories_id';
@@ -2366,7 +2367,7 @@ class mslib_fe {
 				$where_clause=' p.products_status=1 ';
 			}
 			if (!$this->masterShop) {
-				$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
+				$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
 			}
 			$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
 			if (is_array($where) and count($where)>0) {
@@ -3150,7 +3151,7 @@ class mslib_fe {
 		}
 		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 			'tx_multishop_products_description pd, tx_multishop_products_to_categories p2c', // FROM ...
-			'pd.products_id=\''.$product_id.'\' and p2c.categories_id=\''.$category_id.'\' and pd.page_uid=\''.$page_uid.'\' and pd.layered_categories_id=\''.$category_id.'\' and pd.page_uid=p2c.page_uid and pd.products_id=p2c.products_id', // WHERE...
+			'pd.products_id=\''.$product_id.'\' and p2c.categories_id=\''.$category_id.'\' and pd.page_uid=\''.$page_uid.'\' and pd.layered_categories_id=\''.$category_id.'\' and p2c.is_deepest=1 and pd.page_uid=p2c.page_uid and pd.products_id=p2c.products_id', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
 			'' // LIMIT ...
@@ -7252,9 +7253,10 @@ class mslib_fe {
 				if ($categories_id) {
 					$str.=" and p2c.categories_id='".$categories_id."'";
 				}
+				$str.=" and p2c.is_deepest='1'";
 				$str.=" order by p2c.sort_order";
 			} else if ($categories_id) {
-				$str="SELECT *,p.staffel_price as staffel_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_status=1 and p2c.categories_id='".$categories_id."' and pd.language_id='".$this->sys_language_uid."' and cd.language_id='".$this->sys_language_uid."' and p.products_id=pd.products_id and  p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id order by p2c.sort_order";
+				$str="SELECT *,p.staffel_price as staffel_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id, tx_multishop_products_description pd, tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd where p.products_status=1 and p2c.categories_id='".$categories_id."' and pd.language_id='".$this->sys_language_uid."' and cd.language_id='".$this->sys_language_uid."' and p2c.is_deepest=1 and p.products_id=pd.products_id and  p.products_id=p2c.products_id and p2c.categories_id=c.categories_id and p2c.categories_id=cd.categories_id order by p2c.sort_order";
 			}
 		} else {
 			if ($products_id) {

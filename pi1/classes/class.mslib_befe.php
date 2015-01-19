@@ -2349,8 +2349,10 @@ class mslib_befe {
 			$insertArray['categories_id']=$target_categories_id;
 			$insertArray['products_id']=$products_id;
 			$insertArray['page_uid']=$this->showCatalogFromPage;
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+			//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			// create categories tree linking
+			$res=tx_mslib_catalog::linkCategoriesTreeToProduct($products_id, $target_categories_id, $insertArray);
 			if ($res) {
 				// enable lock indicator if product is originally coming from the products importer
 				$str=$GLOBALS['TYPO3_DB']->SELECTquery('products_id', // SELECT ...
@@ -2550,8 +2552,10 @@ class mslib_befe {
 					'sort_order'=>time(),
 					'page_uid'=>$this->showCatalogFromPage
 				);
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+				//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				// create categories tree linking
+				$res=tx_mslib_catalog::linkCategoriesTreeToProduct($id_product_new, $target_categories_id, $insertArray);
 				if ($res) {
 					if ($this->ms['MODULES']['FLAT_DATABASE']) {
 						mslib_befe::convertProductToFlat($id_product);

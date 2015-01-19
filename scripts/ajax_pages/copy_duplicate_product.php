@@ -18,8 +18,10 @@ if ($id_category==0) {
 				'products_id'=>$id_product,
 				'categories_id'=>$id_category
 			);
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+			//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			// create categories tree linking
+			tx_mslib_catalog::linkCategoriesTreeToProduct($id_product, $id_category, $insertArray);
 			echo "<p>Product succesfully copied</p>";
 			if ($this->ms['MODULES']['FLAT_DATABASE']) {
 				// if the flat database module is enabled we have to sync the changes to the flat table
@@ -114,7 +116,7 @@ if ($id_category==0) {
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 						$product_arr_new=$row;
 						$product_arr_new['products_id']=$id_product_new;
-						unset($product_arr_new['products_attributes_id']); //primary key 
+						unset($product_arr_new['products_attributes_id']); //primary key
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $product_arr_new);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -126,7 +128,7 @@ if ($id_category==0) {
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 						$product_arr_new=$row;
 						$product_arr_new['products_id']=$id_product_new;
-						unset($product_arr_new['specials_id']); //primary key 
+						unset($product_arr_new['specials_id']); //primary key
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_specials', $product_arr_new);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -142,7 +144,7 @@ if ($id_category==0) {
 						} else {
 							$product_arr_new['relative_product_id']=$id_product_new;
 						}
-						unset($product_arr_new['products_to_relative_product_id']); //primary key 
+						unset($product_arr_new['products_to_relative_product_id']); //primary key
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_relative_products', $product_arr_new);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -153,8 +155,10 @@ if ($id_category==0) {
 					'categories_id'=>$id_category,
 					'sort_order'=>time()
 				);
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+				//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				// create categories tree linking
+				$res=tx_mslib_catalog::linkCategoriesTreeToProduct($id_product_new, $id_category, $insertArray);
 				if ($res) {
 					echo "<p>Product succesfully duplicated</p>";
 					if ($this->ms['MODULES']['FLAT_DATABASE']) {

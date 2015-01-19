@@ -238,7 +238,7 @@ if ($contentType=='specials_listing_page') {
 				}
 			} */
 			//$str="SELECT p2c.categories_id, p.products_id, c.status as cat_status FROM tx_multishop_products p, tx_multishop_specials s, tx_multishop_products_to_categories p2c, tx_multishop_categories c where p.products_status=1 and p.products_id=s.products_id and p.products_id=p2c.products_id and p2c.categories_id = c.categories_id and c.status = 1 order by rand() limit ".$this->limit;
-			$str="SELECT p2c.categories_id, p.products_id, c.status as cat_status FROM tx_multishop_products p, tx_multishop_specials s, tx_multishop_products_to_categories p2c, tx_multishop_categories c where p.products_status=1 and p.products_id=s.products_id and p.products_id=p2c.products_id and p2c.categories_id = c.categories_id and c.status = 1 order by rand()";
+			$str="SELECT p2c.categories_id, p.products_id, c.status as cat_status FROM tx_multishop_products p, tx_multishop_specials s, tx_multishop_products_to_categories p2c, tx_multishop_categories c where p.products_status=1 and p2c.is_deepest=1 and p.products_id=s.products_id and p.products_id=p2c.products_id and p2c.categories_id = c.categories_id and c.status = 1 order by rand()";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$product_ids=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {

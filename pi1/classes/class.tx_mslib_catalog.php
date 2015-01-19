@@ -60,6 +60,7 @@ class tx_mslib_catalog {
 		}
 		$filter[]='pd.language_id='.$this->sys_language_uid.'';
 		$filter[]='cd.language_id='.$this->sys_language_uid.'';
+		$filter[]='p2c.is_deepest=1';
 		$filter[]='c.categories_id=cd.categories_id';
 		$filter[]='p2c.products_id=p.products_id';
 		$filter[]='p.products_id=pd.products_id';
@@ -644,6 +645,7 @@ class tx_mslib_catalog {
 					}
 				}
 			}
+			return true;
 		}
 	}
 	function isProductToCategoryLinkingExist($pid, $catid, $node_id) {
