@@ -3631,7 +3631,7 @@ class mslib_befe {
 				if ($product['products_model']) {
 					$tmpcontent.='<br/>Model: '.$product['products_model'];
 				}
-				if ($product['products_description'] && $this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
+				if ($product['products_description']) {
 					$tmpcontent.='<br/>'.nl2br($product['products_description']);
 				}
 				if (!empty($product['ean_code'])) {
