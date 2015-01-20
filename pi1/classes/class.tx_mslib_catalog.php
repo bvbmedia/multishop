@@ -613,10 +613,12 @@ class tx_mslib_catalog {
 		$cats=mslib_fe::Crumbar($deepest_cat_id);
 		$cats=array_reverse($cats);
 		$count_cats=count($cats);
-		// remove the deepest cat id record
-		unset($cats[$count_cats-1]);
-		//recount
-		$count_cats=count($cats);
+		if ($count_cats>1) {
+			// remove the deepest cat id record
+			unset($cats[$count_cats-1]);
+			//recount
+			$count_cats=count($cats);
+		}
 		if ($count_cats>0) {
 			foreach ($cats as $item) {
 				if ($item['id']) {
