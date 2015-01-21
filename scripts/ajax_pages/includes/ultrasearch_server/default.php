@@ -262,6 +262,19 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 		}
 	}
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchPreHook'])) {
+		$params=array(
+			'select'=>&$select,
+			'totalCountFilter'=>&$totalCountFilter,
+			'totalCountSubFilter'=>&$totalCountSubFilter,
+			'totalCountFrom'=>&$totalCountFrom,
+			'totalCountWhere'=>&$totalCountWhere,
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchPreHook'] as $funcRef) {
+			t3lib_div::callUserFunction($funcRef, $params, $this);
+		}
+	}
 	// counter query init eof
 	foreach ($fields as $field) {
 		// reset
@@ -779,219 +792,240 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$count_attributes = count($formField['elements']);
 				// attributes
 				$array=explode(":",$field);
-				if (strstr($array[1],'{asc}')) {
-					$order_column='pov.products_options_values_name';
-					$order_by='asc';
-					$array[1]=str_replace('{asc}','',$array[1]);
-				} else if (strstr($array[1],'{desc}')) {
-					$order_column='pov.products_options_values_name';
-					$order_by='desc';
-					$array[1]=str_replace('{desc}','',$array[1]);
-				} else {
-					$order_column='povp.sort_order';
-					$order_by='asc';
-				}
-				$option_id=$array[0];
-				$list_type=$array[1];
-				$query = $GLOBALS['TYPO3_DB']->SELECTquery(
-					'*',         // SELECT ...
-					'tx_multishop_products_options',  // FROM ...
-					'products_options_id=\''.$option_id.'\' and language_id=\''.$this->sys_language_uid.'\'',    // WHERE.
-					'',            // GROUP BY...
-					'',    // ORDER BY...
-					''            // LIMIT ...
-				);
-				$res = $GLOBALS['TYPO3_DB']->sql_query($query);
-				//if tx_multishop_products_options is not empty/category options is not empty
-				if($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
-					$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-					$i=0;
-					if (!$list_type) {
-						$list_type='list';
-					}
-					$order_column='sorting, pov.products_options_values_name';
-					if (!$order_by) {
+
+
+				if (is_numeric($array[0])) {
+					if (strstr($array[1],'{asc}')) {
+						$order_column='pov.products_options_values_name';
+						$order_by='asc';
+						$array[1]=str_replace('{asc}','',$array[1]);
+					} else if (strstr($array[1],'{desc}')) {
+						$order_column='pov.products_options_values_name';
+						$order_by='desc';
+						$array[1]=str_replace('{desc}','',$array[1]);
+					} else {
+						$order_column='povp.sort_order';
 						$order_by='asc';
 					}
-					$formFieldItem=array();
-					switch ($list_type) {
-						case 'list':
-						case 'select':
-							$formField['type']="div";
-							$formField['class']="ui-dform-selectbox";
-						$formFieldItem[$count_attributes]['type'] = 'select';
-							$formFieldItem[$count_attributes]['name'] = "tx_multishop_pi1[options][".$row['products_options_id']."][]";
-							$formFieldItem[$count_attributes]['id'] = 'msFrontUltrasearchFormFieldItemOption'.$option_id;
-						$formFieldItem[$count_attributes]['options'][0]=$this->pi_getLL('choose').' '.$row['products_options_name'];
-						break;
-						case 'multiselect':
-						case 'list_multiple':
-						case 'select_multiple':
-							$formField['type']="div";
-							$formField['class']="ui-dform-selectbox-multiple";
-						$formFieldItem[$count_attributes]['type'] = 'select';
-							$formFieldItem[$count_attributes]['name'] = "tx_multishop_pi1[options][".$row['products_options_id']."][]";
-							$formFieldItem[$count_attributes]['id'] = 'msFrontUltrasearchFormFieldItemOption'.$option_id;
-							$formFieldItem[$count_attributes]['multiple'] = 'multiple';
-							break;
-						case 'radio':
-							$formField['type']="div";
-							$formField['class']="ui-dform-radiobuttons";
-							break;
-						case 'checkbox':
-						default:
-							$formField['type']="div";
-							$formField['class']="ui-dform-checkboxes";
-							break;
-					}
-					$formField['caption']=$row['products_options_name'];
-					if ($this->filterCategoriesFormByCategoriesIdGetParam) {
-						$man_get_subscat = array();
-						$man_catsubs_id_data = array();
-						$man_get_subscat = mslib_fe::get_subcategory_ids($parent_id);
-						$man_catsubs_id_data[] = $parent_id;
-						if (count($man_get_subscat)) {
-							foreach ($man_get_subscat as $man_subcat_id_data) {
-								$man_catsubs_id_data[] = $man_subcat_id_data;
-							}
+					$option_id=$array[0];
+					$list_type=$array[1];
+					$query = $GLOBALS['TYPO3_DB']->SELECTquery(
+						'*',         // SELECT ...
+						'tx_multishop_products_options',  // FROM ...
+						'products_options_id=\''.$option_id.'\' and language_id=\''.$this->sys_language_uid.'\'',    // WHERE.
+						'',            // GROUP BY...
+						'',    // ORDER BY...
+						''            // LIMIT ...
+					);
+					$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+					//if tx_multishop_products_options is not empty/category options is not empty
+					if($GLOBALS['TYPO3_DB']->sql_num_rows($res) > 0) {
+						$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+						$i=0;
+						if (!$list_type) {
+							$list_type='list';
 						}
-						$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery(
+						$order_column='sorting, pov.products_options_values_name';
+						if (!$order_by) {
+							$order_by='asc';
+						}
+						$formFieldItem=array();
+						switch ($list_type) {
+							case 'list':
+							case 'select':
+								$formField['type']="div";
+								$formField['class']="ui-dform-selectbox";
+								$formFieldItem[$count_attributes]['type'] = 'select';
+								$formFieldItem[$count_attributes]['name'] = "tx_multishop_pi1[options][".$row['products_options_id']."][]";
+								$formFieldItem[$count_attributes]['id'] = 'msFrontUltrasearchFormFieldItemOption'.$option_id;
+								$formFieldItem[$count_attributes]['options'][0]=$this->pi_getLL('choose').' '.$row['products_options_name'];
+								break;
+							case 'multiselect':
+							case 'list_multiple':
+							case 'select_multiple':
+								$formField['type']="div";
+								$formField['class']="ui-dform-selectbox-multiple";
+								$formFieldItem[$count_attributes]['type'] = 'select';
+								$formFieldItem[$count_attributes]['name'] = "tx_multishop_pi1[options][".$row['products_options_id']."][]";
+								$formFieldItem[$count_attributes]['id'] = 'msFrontUltrasearchFormFieldItemOption'.$option_id;
+								$formFieldItem[$count_attributes]['multiple'] = 'multiple';
+								break;
+							case 'radio':
+								$formField['type']="div";
+								$formField['class']="ui-dform-radiobuttons";
+								break;
+							case 'checkbox':
+							default:
+								$formField['type']="div";
+								$formField['class']="ui-dform-checkboxes";
+								break;
+						}
+						$formField['caption']=$row['products_options_name'];
+						if ($this->filterCategoriesFormByCategoriesIdGetParam) {
+							$man_get_subscat = array();
+							$man_catsubs_id_data = array();
+							$man_get_subscat = mslib_fe::get_subcategory_ids($parent_id);
+							$man_catsubs_id_data[] = $parent_id;
+							if (count($man_get_subscat)) {
+								foreach ($man_get_subscat as $man_subcat_id_data) {
+									$man_catsubs_id_data[] = $man_subcat_id_data;
+								}
+							}
+							$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery(
 								'DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
 								'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p, tx_multishop_products_to_categories p2c',     // FROM ...
 								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = " . $row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and pov.products_options_values_id=povp.products_options_values_id and p.products_id = p2c.products_id and p2c.categories_id IN (".implode(',', $man_catsubs_id_data).")",    // WHERE.
 								'',            // GROUP BY...
 								$order_column." ".$order_by,    // ORDER BY...
 								''            // LIMIT ...
-						);
-					} else {
-						$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery(
-							'DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
-							'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p',     // FROM ...
-							"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = " . $row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and pov.products_options_values_id=povp.products_options_values_id",    // WHERE.
-							'',            // GROUP BY...
-							$order_column." ".$order_by,    // ORDER BY...
-							''            // LIMIT ...
-						);
-					}
-					$res_opt_2_values = $GLOBALS['TYPO3_DB']->sql_query($query_opt_2_values);
-					if (!$this->ms['MODULES']['FLAT_DATABASE']) {
-						$prefix='p';
-					} else {
-						$prefix='pf';
-					}
-					if($GLOBALS['TYPO3_DB']->sql_num_rows($res_opt_2_values) > 0) {
-						$counter=0;
-						while($row_opt_2_values = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_opt_2_values)) {
-							// count available records
-							$tmpFilter=$totalCountFilter;
-							$totalCountSubFilterTmp=$totalCountSubFilter;
-							unset($totalCountSubFilterTmp['options'][$option_id]);
-							//error_log(print_r($totalCountSubFilter,1));
-							$from=array();
-							if (is_array($totalCountSubFilterTmp['options']) and count($totalCountSubFilterTmp['options'])) {
-								foreach ($totalCountSubFilterTmp['options'] as $key => $items) {
-									foreach ($items as $item) {
-										$tmpFilter[]=$item;
+							);
+						} else {
+							$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery(
+								'DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
+								'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p',     // FROM ...
+								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = " . $row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and pov.products_options_values_id=povp.products_options_values_id",    // WHERE.
+								'',            // GROUP BY...
+								$order_column." ".$order_by,    // ORDER BY...
+								''            // LIMIT ...
+							);
+						}
+						$res_opt_2_values = $GLOBALS['TYPO3_DB']->sql_query($query_opt_2_values);
+						if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+							$prefix='p';
+						} else {
+							$prefix='pf';
+						}
+						if($GLOBALS['TYPO3_DB']->sql_num_rows($res_opt_2_values) > 0) {
+							$counter=0;
+							while($row_opt_2_values = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_opt_2_values)) {
+								// count available records
+								$tmpFilter=$totalCountFilter;
+								$totalCountSubFilterTmp=$totalCountSubFilter;
+								unset($totalCountSubFilterTmp['options'][$option_id]);
+								//error_log(print_r($totalCountSubFilter,1));
+								$from=array();
+								if (is_array($totalCountSubFilterTmp['options']) and count($totalCountSubFilterTmp['options'])) {
+									foreach ($totalCountSubFilterTmp['options'] as $key => $items) {
+										foreach ($items as $item) {
+											$tmpFilter[]=$item;
+										}
+									}
+									unset($totalCountSubFilterTmp['options']);
+								}
+								if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {
+									foreach ($totalCountSubFilterTmp as $key => $items) {
+										foreach ($items as $item) {
+											$tmpFilter[]=$item;
+										}
 									}
 								}
-								unset($totalCountSubFilterTmp['options']);
-							}
-							if (is_array($totalCountSubFilterTmp) and count($totalCountSubFilterTmp)) {
-								foreach ($totalCountSubFilterTmp as $key => $items) {
-									foreach ($items as $item) {
-										$tmpFilter[]=$item;
-									}
-								}
-							}
-							$tmpFilter[]="(pa_".$option_id.".options_values_id IN (".$row_opt_2_values['products_options_values_id']."))";
-							//error_log(print_r($tmpFilter,1));
-							$totalCountFromTmp=$totalCountFrom;
-							$totalCountWhereTmp=$totalCountWhere;
-							unset($totalCountFromTmp['options'][$option_id]);
-							unset($totalCountWhereTmp['options'][$option_id]);
-							$totalCountFromTmp['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
-							$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
-							$totalCountFromFlat=array();
-							$totalCountWhereFlat=array();
-							$totalCountFromFlat=array_values($totalCountFromTmp['options']);
-							$totalCountWhereFlat=array_values($totalCountWhereTmp['options']);
+								$tmpFilter[]="(pa_".$option_id.".options_values_id IN (".$row_opt_2_values['products_options_values_id']."))";
+								//error_log(print_r($tmpFilter,1));
+								$totalCountFromTmp=$totalCountFrom;
+								$totalCountWhereTmp=$totalCountWhere;
+								unset($totalCountFromTmp['options'][$option_id]);
+								unset($totalCountWhereTmp['options'][$option_id]);
+								$totalCountFromTmp['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
+								$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
+								$totalCountFromFlat=array();
+								$totalCountWhereFlat=array();
+								$totalCountFromFlat=array_values($totalCountFromTmp['options']);
+								$totalCountWhereFlat=array_values($totalCountWhereTmp['options']);
 
-							// PRODUCT COUNT FOR ATTRIBUTE OPTION VALUE
-							//$this->msDebug=1;
-							$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
-							//error_log(print_r($tmpFilter,1).$this->msDebugInfo);
-							//die();
-							// count available records eof
-							if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
-								unset($formFieldItem[$counter]);
-								continue;
-							}
-							switch ($list_type) {
-								case 'list':
-								case 'select':
-								case 'multiselect':
-								case 'list_multiple':
-								case 'select_multiple':
-									//if ($totalCount > 0) {
+								// PRODUCT COUNT FOR ATTRIBUTE OPTION VALUE
+								//$this->msDebug=1;
+								$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
+								//error_log(print_r($tmpFilter,1).$this->msDebugInfo);
+								//die();
+								// count available records eof
+								if (!$totalCount && $this->get['ultrasearch_exclude_negative_filter_values']) {
+									unset($formFieldItem[$counter]);
+									continue;
+								}
+								switch ($list_type) {
+									case 'list':
+									case 'select':
+									case 'multiselect':
+									case 'list_multiple':
+									case 'select_multiple':
+										//if ($totalCount > 0) {
 										if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'],$this->post['tx_multishop_pi1']['options'][$option_id])) {
 											$formFieldItem[$count_attributes]['options'][$row_opt_2_values['products_options_values_id']]['selected'] = 'selected';
 											$formFieldItem[$count_attributes]['options'][$row_opt_2_values['products_options_values_id']]['html'] = $row_opt_2_values['products_options_values_name'] . ' ('.number_format($totalCount,0,'','.').')';
 										} else {
 											$formFieldItem[$count_attributes]['options'][$row_opt_2_values['products_options_values_id']] = $row_opt_2_values['products_options_values_name'] . ' ('.number_format($totalCount,0,'','.').')';
 										}
-									//}
-									//$formFieldItem[$count]['elements']['options'][$counter]['html'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
-									//$formFieldItem[$count]['options'][$counter]['elements']['caption'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
-									break;
-								case 'radio':
-									$formFieldItem[$counter]['type']='div';
-									$formFieldItem[$counter]['class']='ui-dform-radiobuttons-wrapper';
-									if (!$totalCount) {
-										$formFieldItem[$counter]['class'].=' zero_results';
-									}
-									$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
-									if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'],$this->post['tx_multishop_pi1']['options'][$option_id])) {
-										$formFieldItem[$counter]['elements']['checked']="checked";
-									}
-									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
-									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
-									$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
-									$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
-									$formFieldItem[$counter]['elements']['type']='radio';
-									$formFieldItem[$counter]['elements']['class']='ui-dform-radiobutton';
-									break;
-								case 'checkbox':
-								default:
-									$formFieldItem[$counter]['type']='div';
-									$formFieldItem[$counter]['class']='ui-dform-checkboxes-wrapper';
-									if (!$totalCount) {
-										$formFieldItem[$counter]['class'].=' zero_results';
-									}
-									$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
-									if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'],$this->post['tx_multishop_pi1']['options'][$option_id])) {
-										$formFieldItem[$counter]['elements']['checked']="checked";
-									}
-									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
-									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
-									$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
-									$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
-									$formFieldItem[$counter]['elements']['type']='checkbox';
-									$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
-									break;
+										//}
+										//$formFieldItem[$count]['elements']['options'][$counter]['html'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
+										//$formFieldItem[$count]['options'][$counter]['elements']['caption'] = $row['categories_name'] . ' ('.number_format($totalCount,0,'','.').')';
+										break;
+									case 'radio':
+										$formFieldItem[$counter]['type']='div';
+										$formFieldItem[$counter]['class']='ui-dform-radiobuttons-wrapper';
+										if (!$totalCount) {
+											$formFieldItem[$counter]['class'].=' zero_results';
+										}
+										$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
+										if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'],$this->post['tx_multishop_pi1']['options'][$option_id])) {
+											$formFieldItem[$counter]['elements']['checked']="checked";
+										}
+										$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
+										$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
+										$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements']['type']='radio';
+										$formFieldItem[$counter]['elements']['class']='ui-dform-radiobutton';
+										break;
+									case 'checkbox':
+									default:
+										$formFieldItem[$counter]['type']='div';
+										$formFieldItem[$counter]['class']='ui-dform-checkboxes-wrapper';
+										if (!$totalCount) {
+											$formFieldItem[$counter]['class'].=' zero_results';
+										}
+										$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount,0,'','.').')</span>';
+										if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'],$this->post['tx_multishop_pi1']['options'][$option_id])) {
+											$formFieldItem[$counter]['elements']['checked']="checked";
+										}
+										$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
+										$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
+										$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements']['type']='checkbox';
+										$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+										break;
+								}
+								$counter++;
 							}
-							$counter++;
+							if (!count($formFieldItem)) {
+								unset($formField);
+							} else {
+								$formField['elements']=$formFieldItem;
+							}
 						}
-						if (!count($formFieldItem)) {
-							unset($formField);
-						} else {
-							$formField['elements']=$formFieldItem;
+					}
+					if (!count($formField['elements'])) {
+						unset($formField);
+					}
+					//end attributs options
+				} else {
+					// custom hook that can be controlled by third-party plugin
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchTypeHook'])) {
+						$params=array(
+							'key'=>$key,
+							'field'=>$field,
+							'select'=>$select,
+							'totalCountFilter'=>$totalCountFilter,
+							'totalCountSubFilter'=>$totalCountSubFilter,
+							'totalCountFrom'=>$totalCountFrom,
+							'totalCountWhere'=>$totalCountWhere,
+							'formField'=>&$formField,
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchTypeHook'] as $funcRef) {
+							t3lib_div::callUserFunction($funcRef, $params, $this);
 						}
 					}
 				}
-				if (!count($formField['elements'])) {
-					unset($formField);
-				}
-				//end attributs options
 				break;
 		}
 		if (isset($key) && !empty($key) && isset($formField)) {
