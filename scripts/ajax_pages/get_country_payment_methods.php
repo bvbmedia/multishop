@@ -66,6 +66,7 @@ if (!count($payment_methods)) {
 $data=array();
 $k=0;
 foreach ($payment_methods as $payment_name=>$payment_data) {
+	$vars=unserialize($payment_data['vars']);
 	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
 	} else {
@@ -80,6 +81,18 @@ foreach ($payment_methods as $payment_name=>$payment_data) {
 	$data[$payment_data['sort_order']]['payment_description']=$payment_data['description'];
 	$data[$payment_data['sort_order']]['li_class']=$tr_type;
 	$data[$payment_data['sort_order']]['radio_class']='regular-payment';
+	if (!empty($payment_data['handling_costs'])) {
+		$price=$payment_data['handling_costs'];
+		if ($vars['handling_costs_type']!='percentage') {
+			if ($price and $payment_data['tax_rate']>0) {
+				$price=($price*$payment_data['tax_rate'])+$price;
+			}
+			$price=mslib_fe::amount2Cents($price);
+		}
+		$data[$payment_data['sort_order']]['handling_cost']=$price;
+	} else {
+		$data[$payment_data['sort_order']]['handling_cost']='';
+	}
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'])) {
 		$params=array(
 			'data'=>&$data,

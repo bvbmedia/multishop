@@ -59,7 +59,11 @@ if ($this->post) {
 			// save payment method
 			$insertArray=array();
 			$insertArray['code']=$this->post['custom_code'];
-			$insertArray['handling_costs']=$this->post['handling_costs'];
+			if ($this->post['handling_costs_type']=='percentage') {
+				$insertArray['handling_costs']=str_replace('%', '', $this->post['handling_costs']).'%';
+			} else {
+				$insertArray['handling_costs']=$this->post['handling_costs'];
+			}
 			$insertArray['tax_id']=$this->post['tax_id'];
 			$insertArray['sort_order']=$this->post['sort_order'];
 			$insertArray['date']=time();
@@ -99,7 +103,11 @@ if ($this->post) {
 			// now update the baby
 			$updateArray=array();
 			$updateArray['page_uid']=$this->post['related_shop_pid'];
-			$updateArray['handling_costs']=$this->post['handling_costs'];
+			if ($this->post['handling_costs_type']=='percentage') {
+				$updateArray['handling_costs']=str_replace('%', '', $this->post['handling_costs']).'%';
+			} else {
+				$updateArray['handling_costs']=$this->post['handling_costs'];
+			}
 			$updateArray['tax_id']=$this->post['tax_id'];
 			$updateArray['vars']=serialize($this->post);
 			$updateArray['enable_on_default']=$this->post['enable_on_default'];

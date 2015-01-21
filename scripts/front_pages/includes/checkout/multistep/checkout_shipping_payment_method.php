@@ -57,6 +57,7 @@ if ($erno or $show_shipping_payment_method) {
 		$countries_id=$mslib_cart->getCountry();
 		foreach ($payment_methods as $code=>$item) {
 			$payment_method=mslib_fe::getPaymentMethod($code, 'p.code', $countries_id);
+			$vars=unserialize($payment_method['vars']);
 			if (!$tr_type or $tr_type=='even') {
 				$tr_type='odd';
 			} else {
@@ -67,10 +68,10 @@ if ($erno or $show_shipping_payment_method) {
 			$price_wrap='';
 			$price=$item['handling_costs'];
 			if ($price>0) {
-				if ($price and $payment_method['tax_rate']>0) {
-					$price=($price*$payment_method['tax_rate'])+$price;
-				}
-				if (!strstr($price, "%")) {
+				if ($vars['handling_costs_type']!='percentage') {
+					if ($price and $payment_method['tax_rate']>0) {
+						$price=($price*$payment_method['tax_rate'])+$price;
+					}
 					$price=mslib_fe::amount2Cents($price);
 				}
 				$price_wrap='<div class="shipping_price" style="float:right" id="shipping_price_'.$item['id'].'">'.$price.'</div>';
