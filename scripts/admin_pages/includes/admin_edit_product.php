@@ -1385,6 +1385,8 @@ if ($this->post) {
 					}
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				} else {
+					/*
+					// appending (copy) to products name is very annoying to the merchant. Thats why I have disabled it.
 					if (isset($this->post['save_as_new'])) {
 						if (strpos($updateArray['products_name'], '(copy')===false) {
 							$updateArray['products_name'].=' (copy '.$prodid.')';
@@ -1395,7 +1397,9 @@ if ($this->post) {
 								$updateArray['products_name']=str_replace('(copy)', ' (copy '.$prodid.')', $updateArray['products_name']);
 							}
 						}
+
 					}
+					*/
 					$updateArray['products_id']=$prodid;
 					$updateArray['language_id']=$key;
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_description', $updateArray);
@@ -1442,6 +1446,8 @@ if ($this->post) {
 									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid=\''.$page_uid.'\' and layered_categories_id=\''.$customDescData_category_id.'\' and language_id=\''.$customDescData_language_id.'\'', $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								} else {
+									/*
+									// appending (copy) to products name is very annoying to the merchant. Thats why I have disabled it.
 									if (isset($this->post['save_as_new'])) {
 										if (strpos($updateArray['products_name'], '(copy')===false) {
 											$updateArray['products_name'].=' (copy '.$prodid.')';
@@ -1453,6 +1459,7 @@ if ($this->post) {
 											}
 										}
 									}
+									*/
 									$updateArray['products_id']=$prodid;
 									$updateArray['page_uid']=$page_uid;
 									$updateArray['layered_categories_id']=$customDescData_category_id;
