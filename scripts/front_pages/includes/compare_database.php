@@ -515,25 +515,15 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
-
-// add primary
-//ALTER TABLE  `tx_multishop_products_to_categories` ADD  `products_to_categories_id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;
-
-// drop current
-// `ALTER TABLE tx_multishop_products_to_categories DROP PRIMARY KEY`
-
-
-
 	$str="select products_to_categories_id from tx_multishop_products_to_categories limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
 		// drop the current primary
 		$str="ALTER TABLE tx_multishop_products_to_categories DROP PRIMARY KEY";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-
+		// add new primary key col
 		$str="ALTER TABLE  `tx_multishop_products_to_categories` ADD  `products_to_categories_id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-
 		// add the node_id col
 		$str="select node_id from tx_multishop_products_to_categories limit 1";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
