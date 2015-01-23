@@ -16,7 +16,9 @@ if ($id_category==0) {
 		} else {
 			$insertArray=array(
 				'products_id'=>$id_product,
-				'categories_id'=>$id_category
+				'categories_id'=>$id_category,
+				'page_uid'=>$this->showCatalogFromPage,
+				'sort_order'=>time()
 			);
 			//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
 			//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -153,6 +155,7 @@ if ($id_category==0) {
 				$insertArray=array(
 					'products_id'=>$id_product_new,
 					'categories_id'=>$id_category,
+					'page_uid'=>$this->showCatalogFromPage,
 					'sort_order'=>time()
 				);
 				//$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);

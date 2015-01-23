@@ -360,7 +360,7 @@ jQuery(document).ready(function ($) {
         $.ajax({
             type: "POST",
             url: "###AJAX_URL_COPY_PRODUCT###",
-            data: {idcategory: $("select[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "copy"},
+            data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "copy"},
             success: function (data) {
                 $("#has_cd").html(data);
             }
@@ -371,7 +371,7 @@ jQuery(document).ready(function ($) {
         $.ajax({
             type: "POST",
             url: "###AJAX_URL_COPY_PRODUCT###",
-            data: {idcategory: $("select[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "duplicate"},
+            data: {idcategory: $("input[name=cid]").val(), pid: "###AJAX_PID###", type_copy: "duplicate"},
             success: function (data) {
                 $("#has_cd").html(data);
             }
