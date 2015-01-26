@@ -422,9 +422,9 @@ if (is_numeric($this->get['orders_id'])) {
 		} // if (!$order['is_locked']) eol
 		if ($this->post['order_status']) {
 			// first get current status
-			if ($this->post['order_status']==$orders['status']) {
+			if ($this->post['order_status']==$order['status']) {
 				// no new order status has been defined. only mail when the email text box is containing content
-				if ($this->post['comments']) {
+				if (!empty($this->post['comments'])) {
 					$continue_update=1;
 				}
 			} else {
