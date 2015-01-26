@@ -1489,9 +1489,16 @@ class tx_mslib_cart extends tslib_pibase {
 							}
 							// hook oef
 						}
+						// TYPO3 6.2 LTS NULL FIX
+						if (!$insertArray['products_model']) {
+							$insertArray['products_model']='';
+						}
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+						if (!$orders_products_id) {
+							error_log('ERROR:'.$GLOBALS['TYPO3_DB']->sql_error());
+						}
 						// update orders_products sort_order
 						$updateOrderProductsSortOrder=array();
 						$updateOrderProductsSortOrder['sort_order']=$orders_products_id;
