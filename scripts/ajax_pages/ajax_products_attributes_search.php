@@ -41,6 +41,8 @@ if ($this->ADMIN_USER) {
 			while (($rs_option=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_option))!=false) {
 				$option_data[$ctr]['valid']=$rs_option['options_values_id'];
 				$option_data[$ctr]['valname']=$rs_option['products_options_values_name'];
+				$option_data[$ctr]['values_price']=$rs_option['options_values_price'];
+				$option_data[$ctr]['price_prefix']=$rs_option['price_prefix'];
 				$ctr++;
 			}
 		}
