@@ -56,7 +56,7 @@ class tx_mslib_cart extends tslib_pibase {
 		if (is_array($this->cart['products'])) {
 			if ($iso_customer['cn_iso_nr']) {
 				// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
-				if ($this->ms['MODULES']['DISABLE_VAT_RATE_WHEN_CROSS_BORDERS'] and $this->cart['user']['tx_multishop_vat_id']) {
+				if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $this->cart['user']['tx_multishop_vat_id']) {
 					if ($iso_customer['country']!=$this->tta_shop_info['country']) {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
 					}
