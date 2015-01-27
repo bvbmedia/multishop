@@ -616,7 +616,7 @@ class tx_mslib_order extends tslib_pibase {
 			}
 		}
 		if ($customer_id) {
-			if ($this->ms['MODULES']['DISABLE_VAT_RATE_WHEN_CROSS_BORDERS']) {
+			if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID']) {
 				// if store country is different than customer country change VAT rate to zero
 				if ($address['country']) {
 					$iso_customer=mslib_fe::getCountryByName($address['country']);

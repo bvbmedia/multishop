@@ -153,6 +153,16 @@ if (count($cart['products'])<1) {
 				$user['delivery_telephone']=$this->post['delivery_telephone'];
 				$user['delivery_state']=$this->post['delivery_state'];
 			}
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressUserSessionPreHook'])) {
+				$params=array(
+					'user'=>&$user
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressUserSessionPreHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom hook that can be controlled by third-party plugin eof
 			// delivery details eof
 			$cart['user']=$user;
 			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
