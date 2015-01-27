@@ -29,18 +29,20 @@ if ($this->post) {
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_groups', 'uid='.$this->post['customer_group_id'], $insertArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	$users=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
-	foreach ($users as $user) {
-		// check if the user should be member or not
-		if (in_array($user['uid'], $this->post['tx_multishop_pi1']['users'])) {
-			$add_array=array();
-			$remove_array=array();
-			$add_array[]=$this->post['customer_group_id'];
-			$group_string=mslib_fe::updateFeUserGroup($user['uid'], $add_array, $remove_array);
-		} else {
-			$add_array=array();
-			$remove_array=array();
-			$remove_array[]=$this->post['customer_group_id'];
-			$group_string=mslib_fe::updateFeUserGroup($user['uid'], $add_array, $remove_array);
+	if (is_array($users) && count($users)) {
+		foreach ($users as $user) {
+			// check if the user should be member or not
+			if (in_array($user['uid'], $this->post['tx_multishop_pi1']['users'])) {
+				$add_array=array();
+				$remove_array=array();
+				$add_array[]=$this->post['customer_group_id'];
+				$group_string=mslib_fe::updateFeUserGroup($user['uid'], $add_array, $remove_array);
+			} else {
+				$add_array=array();
+				$remove_array=array();
+				$remove_array[]=$this->post['customer_group_id'];
+				$group_string=mslib_fe::updateFeUserGroup($user['uid'], $add_array, $remove_array);
+			}
 		}
 	}
 	// customer shipping/payment method mapping
@@ -102,7 +104,7 @@ if ($this->ms['MODULES']['GROUP_EDIT_METHOD_FILTER']) {
 			$method_mappings=mslib_befe::getMethodsByGroup($this->get['customer_group_id']);
 		}
 		$tr_type='';
-		if (count($payment_methods)) {
+		if (is_array($payment_methods) && count($payment_methods)) {
 			foreach ($payment_methods as $code=>$item) {
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -126,7 +128,7 @@ if ($this->ms['MODULES']['GROUP_EDIT_METHOD_FILTER']) {
 							 		<ul id="multishop_shipping_method">';
 		$count=0;
 		$tr_type='';
-		if (count($shipping_methods)) {
+		if (is_array($shipping_methods) && count($shipping_methods)) {
 			foreach ($shipping_methods as $code=>$item) {
 				$count++;
 				$shipping_payment_method.='<li><span>'.$item['name'].'</span>';
@@ -153,8 +155,10 @@ $subparts['members_option']=$this->cObj->getSubpart($subparts['template'], '###M
 // now lets load the users
 $users=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'name');
 $members_selected=array();
-foreach ($users as $user) {
-	$members_selected[]=$user['uid'];
+if (is_array($users) && count($users)) {
+	foreach ($users as $user) {
+		$members_selected[]=$user['uid'];
+	}
 }
 $subpartArray=array();
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER_GROUP###']=$this->pi_getLL('edit_group');
