@@ -679,7 +679,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 }
 $payment_method_input='';
 $payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
-$payment_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_payment_methods'))).'</option>'."\n";
+$payment_method_input.='<option value="all">'.$this->pi_getLL('all_payment_methods').'</option>'."\n";
 if (is_array($payment_methods) and count($payment_methods)) {
 	foreach ($payment_methods as $payment_method_code=>$payment_method) {
 		$payment_method_input.='<option value="'.$payment_method_code.'"'.($this->post['payment_method']==$payment_method_code ? ' selected="selected"' : '').'>'.$payment_method.'</option>'."\n";
@@ -705,7 +705,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 }
 $shipping_method_input='';
 $shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method" style="width:200px">'."\n";
-$shipping_method_input.='<option value="all">'.$this->pi_getLL('all').' '.ucfirst(strtolower($this->pi_getLL('admin_shipping_methods'))).'</option>'."\n";
+$shipping_method_input.='<option value="all">'.$this->pi_getLL('all_shipping_methods').'</option>'."\n";
 if (is_array($shipping_methods) and count($shipping_methods)) {
 	foreach ($shipping_methods as $shipping_method_code=>$shipping_method) {
 		$shipping_method_input.='<option value="'.$shipping_method_code.'"'.($this->post['shipping_method']==$shipping_method_code ? ' selected="selected"' : '').'>'.$shipping_method.'</option>'."\n";
@@ -720,7 +720,7 @@ foreach ($order_countries as $order_country) {
 	$order_billing_country[$cn_localized_name]='<option value="'.mslib_befe::strtolower($order_country['billing_country']).'" '.((mslib_befe::strtolower($this->post['country'])==strtolower($order_country['billing_country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
 }
 ksort($order_billing_country);
-$billing_countries_selectbox='<select class="order_select2" name="country" id="country"><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $order_billing_country).'</select>';
+$billing_countries_selectbox='<select class="order_select2" name="country" id="country"><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
 $subpartArray=array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
