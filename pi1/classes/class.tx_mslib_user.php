@@ -84,6 +84,9 @@ class tx_mslib_user {
 	 * @param string $email
 	 */
 	public function setEmail($email) {
+		if (strpos($email, '@')===false) {
+			$email='';
+		}
 		$this->email=$email;
 	}
 	/**
@@ -96,6 +99,9 @@ class tx_mslib_user {
 	 * @param string $confirmation_email
 	 */
 	public function setConfirmation_email($confirmation_email) {
+		if (strpos($confirmation_email, '@')===false) {
+			$confirmation_email='';
+		}
 		$this->confirmation_email=$confirmation_email;
 	}
 	/**
@@ -408,6 +414,8 @@ class tx_mslib_user {
 					$erno[]=$this->ref->pi_getLL('specified_email_address_already_in_use');
 				}
 			}
+		} else {
+			$erno[]=$this->ref->pi_getLL('email_is_required');
 		}
 		return $erno;
 	}

@@ -13,6 +13,7 @@ $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['details']=$this->cObj->getSubpart($subparts['template'], '###DETAILS###');
 if ($this->post) {
+	$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
 	$erno=array();
 	if ($this->post['tx_multishop_pi1']['cid']) {
 		$edit_mode=1;

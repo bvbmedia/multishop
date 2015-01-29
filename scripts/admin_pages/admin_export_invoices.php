@@ -461,7 +461,7 @@ if ($this->ms['show_main']) {
 			$content.='</td>
 			<td width="150">
 				<a href="'.$order['plain_text_link'].'" target="_blank" class="admin_menu">Download</a><br/>
-				<a href="'.$order['invoices_export_link_excel'].'" class="admin_menu">Download Order export xls</a>
+				<a href="'.$order['invoices_export_link_excel'].'" class="admin_menu">'.$this->pi_getLL('admin_label_link_download_as_excel').'</a>
 			</td>
 			<td width="50">
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&invoices_export_id='.$order['id'].'&section=edit').'" class="admin_menu_edit">edit</a>
