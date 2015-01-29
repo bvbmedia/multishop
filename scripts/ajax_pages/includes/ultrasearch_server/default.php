@@ -1468,9 +1468,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($product['products_image']) 	{
 					$temp_var_products['products_image']=mslib_befe::getImagePath($product['products_image'],'products','100');
 					$temp_var_products['products_image50']=mslib_befe::getImagePath($product['products_image'],'products','50');
+					$temp_var_products['products_image200']=mslib_befe::getImagePath($product['products_image'],'products','200');
 				}
 				if ($product['products_image1']) {
 					$temp_var_products['products_image1']=mslib_befe::getImagePath($product['products_image1'],'products','100');
+					$temp_var_products['products_image150']=mslib_befe::getImagePath($product['products_image1'],'products','50');
+					$temp_var_products['products_image1200']=mslib_befe::getImagePath($product['products_image1'],'products','200');
 				}
 				$temp_var_products['manufacturers_name'] = $product['manufacturers_name'];
 				$temp_var_products['price_excluding_vat'] = $price_excluding_vat;
