@@ -876,6 +876,14 @@ class tx_mslib_cart extends tslib_pibase {
 		$orders_tax['shipping_total_tax_rate']=(string)$address['shipping_total_tax_rate'];
 		$orders_tax['shipping_country_tax_rate']=(string)$address['shipping_country_tax_rate'];
 		$orders_tax['shipping_region_tax_rate']=(string)$address['shipping_region_tax_rate'];
+		if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+			$orders_tax['shipping_tax']=0;
+			$orders_tax['shipping_country_tax']=0;
+			$orders_tax['shipping_region_tax']=0;
+			$orders_tax['shipping_total_tax_rate']=0;
+			$orders_tax['shipping_country_tax_rate']=0;
+			$orders_tax['shipping_region_tax_rate']=0;
+		}
 		// ----------------------------------------------------------------------------------------
 		$orders_tax['payment_tax']=(string)$address['payment_tax'];
 		$orders_tax['payment_country_tax']=(string)$address['payment_country_tax'];
@@ -883,6 +891,14 @@ class tx_mslib_cart extends tslib_pibase {
 		$orders_tax['payment_total_tax_rate']=(string)$address['payment_total_tax_rate'];
 		$orders_tax['payment_country_tax_rate']=(string)$address['payment_country_tax_rate'];
 		$orders_tax['payment_region_tax_rate']=(string)$address['payment_region_tax_rate'];
+		if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+			$orders_tax['payment_tax']=0;
+			$orders_tax['payment_country_tax']=0;
+			$orders_tax['payment_region_tax']=0;
+			$orders_tax['payment_total_tax_rate']=0;
+			$orders_tax['payment_country_tax_rate']=0;
+			$orders_tax['payment_region_tax_rate']=0;
+		}
 		// ----------------------------------------------------------------------------------------
 		$grand_total=array();
 		$grand_total['shipping_tax']=$orders_tax['shipping_tax'];
@@ -1712,6 +1728,11 @@ class tx_mslib_cart extends tslib_pibase {
 									$attributes_tax['country_tax']=(string)$item['country_tax'];
 									$attributes_tax['region_tax']=(string)$item['region_tax'];
 									$attributes_tax['tax']=(string)$item['tax'];
+									if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+										$attributes_tax['country_tax']=0;
+										$attributes_tax['region_tax']=0;
+										$attributes_tax['tax']=0;
+									}
 									$insertAttributes=array();
 									$insertAttributes['orders_id']=$orders_id;
 									$insertAttributes['orders_products_id']=$orders_products_id;
@@ -1787,6 +1808,9 @@ class tx_mslib_cart extends tslib_pibase {
 				$orders_tax['total_orders_tax']+=$orders_tax['payment_tax'];
 				$orders_tax['total_orders_tax_including_discount']+=$orders_tax['shipping_tax'];
 				$orders_tax['total_orders_tax_including_discount']+=$orders_tax['payment_tax'];
+				if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+					$orders_tax['total_orders_tax']=0;
+				}
 				$orders_tax['grand_total']=(string)array_sum($grand_total);
 				$updateArray['orders_tax_data']=serialize($orders_tax);
 				$updateArray['grand_total']=$orders_tax['grand_total'];
@@ -1794,7 +1818,6 @@ class tx_mslib_cart extends tslib_pibase {
 					$updateArray['coupon_code']=$cart['coupon_code'];
 					$updateArray['coupon_discount_type']=$cart['discount_type'];
 					$updateArray['coupon_discount_value']=$cart['discount'];
-
 				};
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
