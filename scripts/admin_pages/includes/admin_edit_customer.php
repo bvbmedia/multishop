@@ -13,6 +13,7 @@ $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['details']=$this->cObj->getSubpart($subparts['template'], '###DETAILS###');
 if ($this->post) {
+	$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
 	$erno=array();
 	if ($this->post['tx_multishop_pi1']['cid']) {
 		$edit_mode=1;
@@ -657,7 +658,6 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
 		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
 
-
 		$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
 		$subpartArray['###VALUE_CUSTOMER_ID###']=$this->get['tx_multishop_pi1']['cid'];
 		if ($_GET['action']=='edit_customer') {
@@ -799,6 +799,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###DETAILS###']=$customer_details;
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		break;
+	case 'add_customer':
 	default:
 		if ($this->post['gender']=='1') {
 			$mr_checked='';
@@ -855,7 +856,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###LABEL_DISCOUNT###']=ucfirst($this->pi_getLL('discount'));
 		$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
 		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
-		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
+		$subpartArray['###VALUE_PAYMENT_CONDITION###']=14;
 		$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
 		$subpartArray['###VALUE_CUSTOMER_ID###']='';
 		$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('save'));
@@ -864,7 +865,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###DETAILS###']='';
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
-		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
+		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : 14);
 		break;
 }
 // h5validate message

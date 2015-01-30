@@ -38,7 +38,7 @@ class tx_mslib_order extends tslib_pibase {
 	}
 	function repairOrder($orders_id) {
 		if (is_numeric($orders_id)) {
-			$sql="select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country from tx_multishop_orders where orders_id='".$orders_id."' order by orders_id asc";
+			$sql="select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='".$orders_id."' order by orders_id asc";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				$total_tax=0;
@@ -62,11 +62,23 @@ class tx_mslib_order extends tslib_pibase {
 				// get shipping method by code
 				$this->tta_user_info['default']['country']=$row['billing_country'];
 				$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
+				$iso_customer['country']=$iso_customer['cn_short_en'];
+				// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
+				$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
+				if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $row['billing_vat_id']) {
+					if (strtolower($row['billing_country'])!=strtolower($this->tta_shop_info['country'])) {
+						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
+					}
+				}
+
 				// get shipping tax rate
 				$shipping_method=mslib_fe::getShippingMethod($row['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
 				$tax_rate=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
 				if (!$tax_rate['total_tax_rate']) {
 					$tax_rate['total_tax_rate']=$this->ms['MODULES']['INCLUDE_VAT_OVER_METHOD_COSTS'];
+				}
+				if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+					$tax_rate['total_tax_rate']=0;
 				}
 				$shipping_tax_rate=($tax_rate['total_tax_rate']/100);
 				// get payment tax rate
@@ -74,6 +86,9 @@ class tx_mslib_order extends tslib_pibase {
 				$tax_rate=mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
 				if (!$tax_rate['total_tax_rate']) {
 					$tax_rate['total_tax_rate']=$this->ms['MODULES']['INCLUDE_VAT_OVER_METHOD_COSTS'];
+				}
+				if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+					$tax_rate['total_tax_rate']=0;
 				}
 				$payment_tax_rate=($tax_rate['total_tax_rate']/100);
 				if ($shipping_tax_rate>0 or $payment_tax_rate>0) {
@@ -616,7 +631,7 @@ class tx_mslib_order extends tslib_pibase {
 			}
 		}
 		if ($customer_id) {
-			if ($this->ms['MODULES']['DISABLE_VAT_RATE_WHEN_CROSS_BORDERS']) {
+			if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID']) {
 				// if store country is different than customer country change VAT rate to zero
 				if ($address['country']) {
 					$iso_customer=mslib_fe::getCountryByName($address['country']);

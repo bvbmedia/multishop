@@ -98,7 +98,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$cats=array_merge($cats_extra, $cats);
 				}
 			}
-			$totalCountFilter[]="p2c.categories_id IN (".implode(",",$cats).")";
+			$totalCountFilter[]="p2c.is_deepest=1 AND p2c.categories_id IN (".implode(",",$cats).")";
 		}
 	}
 	if (is_numeric($this->post['min']) and is_numeric($this->post['max'])) {
@@ -225,7 +225,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					}
 				}
 			}
-			$totalCountSubFilter['categories'][]="p2c.categories_id IN (".implode(",",$subs_id_data).")";
+			$totalCountSubFilter['categories'][]="p2c.is_deepest=1 AND p2c.categories_id IN (".implode(",",$subs_id_data).")";
 		}
 	}
 	foreach ($this->post['tx_multishop_pi1']['manufacturers'] as $key => $val) {
@@ -410,9 +410,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								//$tmpFilter[]="p2c.categories_id = ".$row['categories_id'];
 								$subcats_id = mslib_fe::get_subcategory_ids($row['categories_id']);
 								if (count($subcats_id)) {
-									$tmpFilter[]="p2c.categories_id IN (".$row['categories_id'].", ".implode(',', $subcats_id).")";
+									$tmpFilter[]="p2c.is_deepest=1 AND p2c.categories_id IN (".$row['categories_id'].", ".implode(',', $subcats_id).")";
 								} else {
-									$tmpFilter[]="p2c.categories_id = ".$row['categories_id'];
+									$tmpFilter[]="p2c.is_deepest=1 AND p2c.categories_id = ".$row['categories_id'];
 								}
 							}
 							$totalCountFromFlat=array();
@@ -532,7 +532,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									$man_catsubs_id_data[] = $man_subcat_id_data;
 								}
 							}
-							$str = "select * from tx_multishop_manufacturers m, tx_multishop_products p, tx_multishop_products_to_categories p2c where p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id IN (".implode(',', $man_catsubs_id_data).") group by m.manufacturers_id";
+							$str = "select * from tx_multishop_manufacturers m, tx_multishop_products p, tx_multishop_products_to_categories p2c where p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.is_deepest=1 AND p2c.categories_id IN (".implode(',', $man_catsubs_id_data).") group by m.manufacturers_id";
 						}
 					}
 				} else {
@@ -874,7 +874,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$query_opt_2_values = $GLOBALS['TYPO3_DB']->SELECTquery(
 								'DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
 								'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p, tx_multishop_products_to_categories p2c',     // FROM ...
-								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = " . $row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and pov.products_options_values_id=povp.products_options_values_id and p.products_id = p2c.products_id and p2c.categories_id IN (".implode(',', $man_catsubs_id_data).")",    // WHERE.
+								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = " . $row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and pov.products_options_values_id=povp.products_options_values_id and p.products_id = p2c.products_id and p2c.is_deepest=1 AND p2c.categories_id IN (".implode(',', $man_catsubs_id_data).")",    // WHERE.
 								'',            // GROUP BY...
 								$order_column." ".$order_by,    // ORDER BY...
 								''            // LIMIT ...
@@ -1166,7 +1166,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$cats=array_merge($cats_extra, $cats);
 				}
 			}
-			$filter[]="p2c.categories_id IN (".implode(",",$cats).")";
+			$filter[]="p2c.is_deepest=1 AND p2c.categories_id IN (".implode(",",$cats).")";
 		}
 	}
 	if (is_numeric($this->post['min']) and is_numeric($this->post['max'])) {
@@ -1303,7 +1303,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							$cats=array_merge($cats_extra, $cats);
 						}
 					}
-					$sub_filter[]="p2c.categories_id IN (".implode(",",$cats).")";
+					$sub_filter[]="p2c.is_deepest=1 AND p2c.categories_id IN (".implode(",",$cats).")";
 				}
 			}
 		}
@@ -1468,9 +1468,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($product['products_image']) 	{
 					$temp_var_products['products_image']=mslib_befe::getImagePath($product['products_image'],'products','100');
 					$temp_var_products['products_image50']=mslib_befe::getImagePath($product['products_image'],'products','50');
+					$temp_var_products['products_image200']=mslib_befe::getImagePath($product['products_image'],'products','200');
 				}
 				if ($product['products_image1']) {
 					$temp_var_products['products_image1']=mslib_befe::getImagePath($product['products_image1'],'products','100');
+					$temp_var_products['products_image150']=mslib_befe::getImagePath($product['products_image1'],'products','50');
+					$temp_var_products['products_image1200']=mslib_befe::getImagePath($product['products_image1'],'products','200');
 				}
 				$temp_var_products['manufacturers_name'] = $product['manufacturers_name'];
 				$temp_var_products['price_excluding_vat'] = $price_excluding_vat;

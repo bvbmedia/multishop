@@ -615,7 +615,8 @@ class tx_mslib_catalog {
 		$count_cats=count($cats);
 		if ($count_cats>1) {
 			// remove the deepest cat id record
-			unset($cats[$count_cats-1]);
+			// disabled by bas
+			//unset($cats[$count_cats-1]);
 			//recount
 			$count_cats=count($cats);
 		}

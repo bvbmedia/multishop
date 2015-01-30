@@ -64,6 +64,7 @@ if (mslib_fe::loggedin()) {
 	} else {
 		$erno=array();
 		if ($this->post) {
+			$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
 			$mslib_user=t3lib_div::makeInstance('tx_mslib_user');
 			$mslib_user->init($this);
 			$mslib_user->setUsername($this->post['email']);

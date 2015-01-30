@@ -154,6 +154,25 @@ if ($this->get['customers_export_hash']) {
 					case 'customer_country':
 						$excelCols[]=$row['country'];
 						break;
+					default:
+						// custom page hook that can be controlled by third-party plugin
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_customers_export.php']['downloadCustomersExportIterateItemFieldProc'])) {
+							$output=$row[$field];
+							$params=array(
+								'field'=>$field,
+								'row'=>&$row,
+								'output'=>&$output
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_customers_export.php']['downloadCustomersExportIterateItemFieldProc'] as $funcRef) {
+								t3lib_div::callUserFunction($funcRef, $params, $this);
+							}
+							$row[$field]=$output;
+						}
+						// custom page hook that can be controlled by third-party plugin eof
+						if (isset($row[$field])) {
+							$excelCols[]=$row[$field];
+						}
+						break;
 				}
 			}
 			// new rows

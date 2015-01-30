@@ -153,6 +153,16 @@ if (count($cart['products'])<1) {
 				$user['delivery_telephone']=$this->post['delivery_telephone'];
 				$user['delivery_state']=$this->post['delivery_state'];
 			}
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressUserSessionPreHook'])) {
+				$params=array(
+					'user'=>&$user
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressUserSessionPreHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom hook that can be controlled by third-party plugin eof
 			// delivery details eof
 			$cart['user']=$user;
 			$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
@@ -353,10 +363,12 @@ if (count($cart['products'])<1) {
 			<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).'*</label>
 			<input type="text" name="telephone" id="telephone" class="telephone" value="'.htmlspecialchars($user['telephone']).'"'.$telephone_validation.'><div id="invalid-telephone" class="error-space" style="display:none"></div>
 		</div>
+		'.($this->ms['MODULES']['SHOW_MOBILE_NUMBER_INPUT_IN_CHECKOUT'] ? '
 		<div class="account-field col-sm-6" id="input-mobile">
 			<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 			<input type="text" name="mobile" id="mobile" class="mobile" value="'.htmlspecialchars($user['mobile']).'">
 		</div>
+		' : '').'
 		</div>';
 		if ($this->ms['MODULES']['DISPLAY_SUBSCRIBE_TO_NEWSLETTER_IN_CHECKOUT']) {
 			$content.='
@@ -612,10 +624,12 @@ if (count($cart['products'])<1) {
 			<label for="delivery_telephone">'.ucfirst($this->pi_getLL('telephone')).'*</label>
 			<input type="text" name="delivery_telephone" id="delivery_telephone" class="delivery_telephone" value="'.htmlspecialchars($user['delivery_telephone']).'"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>
 		</div>
+		'.($this->ms['MODULES']['SHOW_MOBILE_NUMBER_INPUT_IN_CHECKOUT']? '
 		<div class="account-field col-sm-6" id="input-dfmobile">
 			<label for="delivery_mobile" class="account_mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
 			<input type="text" name="delivery_mobile" id="delivery_mobile" class="delivery_mobile" value="'.htmlspecialchars($user['delivery_mobile']).'">
 		</div>
+		' : '').'
 		</div>';
 		$content.='<div id="delivery_address_category"><h2>'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'</div>';
 		$content.='<div id="bottom-navigation">
