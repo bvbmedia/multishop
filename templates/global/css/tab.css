@@ -1013,3 +1013,17 @@ div.popover .msAdminTooltipOrderDetailsAddressWrapper h3 { font:bold 12px Arial,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core div.popover .popover-content { overflow:visible; max-height:initial; font-size:12px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core div.popover .popover-content h1 { font-size:14px; }
 div.popover #adminOrderDetailsFooter { font-size:12px; }
+
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview { margin:0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview:after { clear:both; display:table; content:""; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview label { }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview * { box-sizing:border-box; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview li { display:block; padding:10px; vertical-align:top; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview li { border:1px solid #cdcdcd; margin:0 0 10px; border-radius:4px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li > label { font-weight:bold; font-size:14px; padding:0 0 5px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li > select { }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li li { float:left; margin:0 5px 10px; padding-right:0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li ul:after { clear:both; display:table; content:""; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li ul { margin:10px -5px 0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li li label { font-weight:bold; padding:0 0 5px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li li select { margin-right:10px; }
