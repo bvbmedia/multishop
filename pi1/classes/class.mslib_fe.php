@@ -1512,6 +1512,72 @@ class mslib_fe {
 		}
 		return $output;
 	}
+	public function globalCrumbarTree($c, $languages_id='', $output=array()) {
+		if (is_numeric($c)) {
+			if ($this->ms['MODULES']['CACHE_FRONT_END']) {
+				if (!isset($this->ms['MODULES']['CACHE_TIME_OUT_CRUM'])) {
+					$this->ms['MODULES']['CACHE_TIME_OUT_CRUM']=$this->ms['MODULES']['CACHE_TIME_OUT_SEARCH_PAGES'];
+				}
+				if (!count($output) && $this->ms['MODULES']['CACHE_TIME_OUT_CRUM']) {
+					$CACHE_FRONT_END=1;
+				} else {
+					$CACHE_FRONT_END=0;
+				}
+			} else {
+				$CACHE_FRONT_END=0;
+			}
+			if ($CACHE_FRONT_END) {
+				$this->cacheLifeTime=$this->ms['MODULES']['CACHE_TIME_OUT_CRUM'];
+				$options=array(
+					'caching'=>true,
+					'cacheDir'=>$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/cache/',
+					'lifeTime'=>$this->cacheLifeTime
+				);
+				$Cache_Lite=new Cache_Lite($options);
+				$string=$this->cObj->data['uid'].'_crum_'.$c.'_'.$languages_id.'_'.md5(serialize($output));
+			}
+			if (!$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content=$Cache_Lite->get($string))) {
+				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
+					'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
+					'c.categories_id = \''.$c.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id = cd.categories_id', // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+				);
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+					$data=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+					if ($data['categories_name']) {
+						$output[]=array(
+							'name'=>$data['categories_name'],
+							'url'=>mslib_fe::rewritenamein($data['categories_name'], 'cat', $data['categories_id']),
+							'id'=>$data['categories_id'],
+							'custom_settings'=>$data['custom_settings'],
+							'meta_title'=>$data['meta_title'],
+							'meta_description'=>$data['meta_description'],
+							'status'=>$data['status'],
+							'page_uid'=>$data['page_uid']
+						);
+					}
+					if ($data['parent_id']>0 && $data['parent_id']<>$this->categoriesStartingPoint) {
+						if ($data['categories_id']==$data['parent_id']) {
+							echo 'globalCrumbar is looping.';
+							die();
+						} else {
+							$output=mslib_fe::globalCrumbarTree($data['parent_id'], '', $output);
+						}
+					}
+					$GLOBALS['TYPO3_DB']->sql_free_result($qry);
+				}
+				if ($CACHE_FRONT_END) {
+					$Cache_Lite->save(serialize($output));
+				}
+			} else {
+				$output=unserialize($content);
+			}
+		}
+		return $output;
+	}
 	public function showAttributes($products_id, $add_tax_rate='', $sessionData=array(), $readonly=0, $hide_prices=0, $returnAsArray=0) {
 		if (!is_numeric($products_id)) {
 			return false;

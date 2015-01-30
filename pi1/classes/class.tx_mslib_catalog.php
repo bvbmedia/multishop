@@ -610,7 +610,7 @@ class tx_mslib_catalog {
 			return false;
 		}
 		$level=1;
-		$cats=mslib_fe::Crumbar($deepest_cat_id);
+		$cats=mslib_fe::globalCrumbarTree($deepest_cat_id);
 		$cats=array_reverse($cats);
 		$count_cats=count($cats);
 		if ($count_cats>1) {
