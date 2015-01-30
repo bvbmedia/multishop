@@ -120,10 +120,15 @@ if ($currentMonth) {
 	$endDay=31;
 }
 $dates=array();
-for ($i=0; $i<$endDay; $i++) {
-	$time=strtotime("-".$i." day", strtotime(date($currentDay.'-'.$month.'-'.$select_year)));
-	$dates[strftime("%x", $time)]=$time;
+for ($s=1; $s<13; $s++) {
+	$end_date=date('t', strtotime($select_year.'-'.$s.'-01'));
+	//echo $end_date."<br/>";
+	for ($i=1; $i<=$end_date; $i++) {
+		$time=strtotime(date($i.'-'.$s.'-'.$select_year));
+		$dates[strftime("%x", $time)]=$time;
+	}
 }
+
 $col=0;
 $col_char='A';
 $phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper($this->pi_getLL('day')));
@@ -138,8 +143,18 @@ $phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strt
 $phpexcel->getActiveSheet()->mergeCells('C5:N5');
 $row=6;
 $col=0;
+//echo "<pre>";
+//print_r($dates);
+//die();
 foreach ($dates as $key=>$value) {
 	$total_price=0;
+	$current_date=date('d', $value);
+	if ($current_date=='01') {
+		$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row,date('F', $value));
+		$phpexcel->getActiveSheet()->getStyle('A'.$row)->applyFromArray($header_style);
+		$phpexcel->getActiveSheet()->mergeCells('A'.$row.':N'.$row);
+		$row++;
+	}
 	$system_date=date($selected_year."m-d", $value);
 	$start_time=strtotime($system_date." 00:00:00");
 	$end_time=strtotime($system_date." 23:59:59");
@@ -151,6 +166,8 @@ foreach ($dates as $key=>$value) {
 	}
 	$where[]='(o.deleted=0)';
 	$str="SELECT o.customer_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+	//echo date('d-m-Y H:i:s', $start_time).'---';
+	//echo date('d-m-Y H:i:s', $end_time);
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$uids=array();
 	$users=array();
@@ -169,6 +186,7 @@ foreach ($dates as $key=>$value) {
 	}
 	$row++;
 }
+//die();
 // Let's send the file
 // redirect output to client browser
 header('Content-Type: application/vnd.ms-excel');
