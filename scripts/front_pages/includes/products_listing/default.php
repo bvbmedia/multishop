@@ -378,7 +378,14 @@ if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or (
 				});
 			}
 		});
-		'.($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE'] ? '
+	  });
+	  </script>
+	';
+}
+if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+	$content.='
+	<script type="text/javascript">
+	  jQuery(document).ready(function($) {
 		$(document).on("click", ".show_shipping_cost_table", function(e) {
 			e.preventDefault();
 			var pid=jQuery(this).attr("rel");
@@ -416,7 +423,6 @@ if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or (
 				}
 			});
 		});
-		' : '').'
 	  });
 	  </script>
 	';
