@@ -38,6 +38,14 @@ class tx_mslib_cart extends tslib_pibase {
 	}
 	function getCart() {
 		$this->cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'])) {
+			$params=array();
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		if ($this->cart['user']['country']) {
 			$this->tta_user_info['default']['country']=$this->cart['user']['country'];
 			$this->tta_user_info['default']['region']=$this->cart['user']['state'];
@@ -45,19 +53,29 @@ class tx_mslib_cart extends tslib_pibase {
 		unset($this->cart['summarize']);
 		if ($this->tta_user_info['default']['country']) {
 			$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);
+			$iso_customer['country']=$iso_customer['cn_short_en'];
 		} else {
 			$iso_customer=$this->tta_shop_info;
 		}
 		if (!$iso_customer['cn_iso_nr']) {
 			// fall back (had issue with admin notification)
 			$iso_customer=mslib_fe::getCountryByName($this->tta_shop_info['country']);
+			$iso_customer['country']=$iso_customer['cn_short_en'];
+		}
+		$vat_id=$this->cart['user']['tx_multishop_vat_id'];
+		// accomodate the submission through onestep checkout for realtime cart preview
+		if (isset($this->post['b_cc']) && !empty($this->post['b_cc']) && $this->post['tx_multishop_vat_id']) {
+			$iso_customer=mslib_fe::getCountryByName($this->post['b_cc']);
+			$iso_customer['country']=$iso_customer['cn_short_en'];
+			$vat_id=$this->post['tx_multishop_vat_id'];
 		}
 		$this->cart['user']['countries_id']=$iso_customer['cn_iso_nr'];
 		if (is_array($this->cart['products'])) {
 			if ($iso_customer['cn_iso_nr']) {
 				// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
-				if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $this->cart['user']['tx_multishop_vat_id']) {
-					if ($iso_customer['country']!=$this->tta_shop_info['country']) {
+				$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
+				if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $vat_id) {
+					if (strtolower($iso_customer['country'])!=strtolower($this->tta_shop_info['country'])) {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
 					}
 				}
@@ -840,6 +858,13 @@ class tx_mslib_cart extends tslib_pibase {
 				$address[$key]='';
 			}
 		}
+		// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
+		$this->ms['MODULES']['DISABLE_VAT_RATE']=0;
+		if ($this->ms['MODULES']['DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID'] and $address['tx_multishop_vat_id']) {
+			if (strtolower($address['country'])!=strtolower($this->tta_shop_info['country'])) {
+				$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
+			}
+		}
 		/*
 		 * always use *_tax and *_total_tax_rate, unless need different calc for country/region
 		 * WARNING: *_country_* and *_region_* not always have value, depends on the tax ruleset
@@ -851,6 +876,14 @@ class tx_mslib_cart extends tslib_pibase {
 		$orders_tax['shipping_total_tax_rate']=(string)$address['shipping_total_tax_rate'];
 		$orders_tax['shipping_country_tax_rate']=(string)$address['shipping_country_tax_rate'];
 		$orders_tax['shipping_region_tax_rate']=(string)$address['shipping_region_tax_rate'];
+		if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+			$orders_tax['shipping_tax']=0;
+			$orders_tax['shipping_country_tax']=0;
+			$orders_tax['shipping_region_tax']=0;
+			$orders_tax['shipping_total_tax_rate']=0;
+			$orders_tax['shipping_country_tax_rate']=0;
+			$orders_tax['shipping_region_tax_rate']=0;
+		}
 		// ----------------------------------------------------------------------------------------
 		$orders_tax['payment_tax']=(string)$address['payment_tax'];
 		$orders_tax['payment_country_tax']=(string)$address['payment_country_tax'];
@@ -858,10 +891,22 @@ class tx_mslib_cart extends tslib_pibase {
 		$orders_tax['payment_total_tax_rate']=(string)$address['payment_total_tax_rate'];
 		$orders_tax['payment_country_tax_rate']=(string)$address['payment_country_tax_rate'];
 		$orders_tax['payment_region_tax_rate']=(string)$address['payment_region_tax_rate'];
+		if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+			$orders_tax['payment_tax']=0;
+			$orders_tax['payment_country_tax']=0;
+			$orders_tax['payment_region_tax']=0;
+			$orders_tax['payment_total_tax_rate']=0;
+			$orders_tax['payment_country_tax_rate']=0;
+			$orders_tax['payment_region_tax_rate']=0;
+		}
 		// ----------------------------------------------------------------------------------------
 		$grand_total=array();
 		$grand_total['shipping_tax']=$orders_tax['shipping_tax'];
 		$grand_total['payment_tax']=$orders_tax['payment_tax'];
+		if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+			$grand_total['shipping_tax']=0;
+			$grand_total['payment_tax']=0;
+		}
 		// add shipping & payment costs
 		if ($address['shipping_method_costs']) {
 			$grand_total['shipping_cost']=$address['shipping_method_costs'];
@@ -1393,6 +1438,9 @@ class tx_mslib_cart extends tslib_pibase {
 				}
 				foreach ($cart['products'] as $shopping_cart_item=>$value) {
 					if (is_numeric($value['products_id'])) {
+						if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+							$value['tax_rate']=0;
+						}
 						$insertArray=array();
 						$insertArray['orders_id']=$orders_id;
 						$insertArray['products_id']=$value['products_id'];
@@ -1469,6 +1517,15 @@ class tx_mslib_cart extends tslib_pibase {
 						$product_tax['total_tax']=(string)$value['tax'];
 						$product_tax['total_attributes_tax']=(string)$value['total_attributes_tax'];
 						// -----------------------------------------------------------------------------------------
+						if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+							$product_tax['country_tax_rate']=0;
+							$product_tax['region_tax_rate']=0;
+							$product_tax['total_tax_rate']=0;
+							$product_tax['country_tax']=0;
+							$product_tax['region_tax']=0;
+							$product_tax['total_tax']=0;
+							$product_tax['total_attributes_tax']=0;
+						}
 						// bugfixes bas
 						$sub_total_excluding_vat['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
 						$sub_total['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
@@ -1671,6 +1728,11 @@ class tx_mslib_cart extends tslib_pibase {
 									$attributes_tax['country_tax']=(string)$item['country_tax'];
 									$attributes_tax['region_tax']=(string)$item['region_tax'];
 									$attributes_tax['tax']=(string)$item['tax'];
+									if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+										$attributes_tax['country_tax']=0;
+										$attributes_tax['region_tax']=0;
+										$attributes_tax['tax']=0;
+									}
 									$insertAttributes=array();
 									$insertAttributes['orders_id']=$orders_id;
 									$insertAttributes['orders_products_id']=$orders_products_id;
@@ -1746,6 +1808,9 @@ class tx_mslib_cart extends tslib_pibase {
 				$orders_tax['total_orders_tax']+=$orders_tax['payment_tax'];
 				$orders_tax['total_orders_tax_including_discount']+=$orders_tax['shipping_tax'];
 				$orders_tax['total_orders_tax_including_discount']+=$orders_tax['payment_tax'];
+				if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+					$orders_tax['total_orders_tax']=0;
+				}
 				$orders_tax['grand_total']=(string)array_sum($grand_total);
 				$updateArray['orders_tax_data']=serialize($orders_tax);
 				$updateArray['grand_total']=$orders_tax['grand_total'];
@@ -1753,7 +1818,6 @@ class tx_mslib_cart extends tslib_pibase {
 					$updateArray['coupon_code']=$cart['coupon_code'];
 					$updateArray['coupon_discount_type']=$cart['discount_type'];
 					$updateArray['coupon_discount_value']=$cart['discount'];
-
 				};
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
