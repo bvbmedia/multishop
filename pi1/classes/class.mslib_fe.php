@@ -1547,6 +1547,8 @@ class mslib_fe {
 		$query_array['from'][]='tx_multishop_products_attributes patrib';
 		$query_array['where'][]='patrib.products_id=\''.(int)$products_id.'\'';
 		$query_array['where'][]='popt.language_id = \''.$this->sys_language_uid.'\'';
+		//todo: hide_in_cart line should be enabled, but im not sure if it will cause bugs in other plugins so temporary disabled it
+		//$query_array['where'][]='(popt.hide_in_cart=0 or popt.hide_in_cart is null)';
 		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$query_array['group_by'][]='popt.products_options_id';
 		$query_array['order_by'][]='patrib.sort_order_option_name asc, patrib.sort_order_option_value asc';
@@ -1825,7 +1827,7 @@ class mslib_fe {
 							$output_html[$options['products_options_id']].='</div></div>'."\n";
 						}
 						if ($readonly) {
-							$output_html[$options['products_options_id']].='</ul>';
+							$output_html[$options['products_options_id']].='</li></ul>';
 						}
 						// hook to let other plugins further manipulate the option values display
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesLoadDefaultOutputHTML'])) {

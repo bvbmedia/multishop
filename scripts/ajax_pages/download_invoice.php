@@ -250,6 +250,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 
 		// MARKERS EOL
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
+		// debug html output
 		//echo $tmpcontent;
 		//die();
 		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.inc.php');

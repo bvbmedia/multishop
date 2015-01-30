@@ -1482,12 +1482,14 @@ class tx_mslib_cart extends tslib_pibase {
 						$insertArray['products_name']=$value['products_name'];
 						$insertArray['products_model']=$value['products_model'];
 						$insertArray['products_description']=$value['products_shortdescription'];
+						/*
 						if (is_array($value['attributes'])) {
 							// loading the attributes
 							//$insertArray['products_description'].="\n".strip_tags(mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1));
 							$insertArray['products_description'].="\n".mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1);
 							// loading the attributes eof
 						}
+						*/
 						$insertArray['products_price']=$value['products_price'];
 						$insertArray['final_price']=$value['final_price'];
 						$insertArray['type']='P'; // P for Product, S for Subscription (returning-costs)
@@ -2382,117 +2384,6 @@ class tx_mslib_cart extends tslib_pibase {
 			//TAX_COSTS_WRAPPER EOF
 			// finally convert global markers and return output
 			$content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
-			/*
-			// old
-						$orderDetails.='<tr class="'.$tr_type.'">
-						<td class="checkout_listing_image_td"><div class="checkout_listing_image">'.$image.'</div></td>
-						<td class="checkout_listing_qty">'.$item['qty'].'</td>
-						<td class="checkout_listing_name"><span class="bold">'.$item['products_name'].($item['products_model']?' <span class="checkout_listing_products_model">('.$item['products_model'].')</span>':'').'</span>';
-						if (is_array($item['attributes'])) {
-							foreach ($item['attributes'] as $attributeKey => $attributeItem) {
-								$orderDetails.='<br />'.$attributeItem['products_options_name'].': '.$attributeItem['products_options_values_name'];
-								if ($attributeItem['options_values_price'] >0) {
-									if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-										$subPrices.=mslib_fe::amount2Cents($attributeItem['options_values_price_including_vat']);
-									} else {
-										$subPrices.=mslib_fe::amount2Cents($attributeItem['options_values_price']);
-									}
-								}
-								$subPrices.='<br />';
-							}
-						}
-						if ($subPrices) {
-							$subPrices='<div class="attribute_prices">'.$subPrices.'</div>';
-						}
-						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-							$totalPrice=$item['total_price_including_vat'];
-						} else {
-							$totalPrice=$item['total_price'];
-						}
-						$orderDetails.='</td>
-							<td class="checkout_listing_vat">' . (($item['tax_rate']) ? ($item['tax_rate']*100).'%' : '&nbsp;') . '</td>
-							<td class="checkout_listing_price">' . mslib_fe::amount2Cents($totalPrice) . '</td>
-						</tr>';
-
-					$orderDetails='';
-					$orderDetails.='<table width="100%" border="0" align="center" class="border" id="shoppingcart_listing">';
-					$orderDetails.='<tr><th class="checkout_products_image">&nbsp;</th><th class="checkout_products_qty">'.$this->pi_getLL('qty').'</th><th class="checkout_products_name">'.$this->pi_getLL('products_name').'</th><th class="checkout_products_vat">'.$this->pi_getLL('vat').'</th>';
-					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])
-					{
-						$orderDetails.='<th nowrap class="checkout_products_price_vat">'.$this->pi_getLL('price_including_vat').'</th>';
-					}
-					else
-					{
-						$orderDetails.='<th nowrap class="checkout_products_price_vat">'.$this->pi_getLL('price_excluding_vat').'</th>';
-					}
-					$orderDetails.='</tr>';
-					foreach ($this->cart['products'] as $shopping_cart_item => $item) {
-						$subPrices='';
-						if (!$item['products_image']) 	$image	='<div class="no_image_50"></div>';
-						else
-						{
-							$image	='<img src="'.$item['products_image'].'">';
-						}
-						if (!$tr_type or $tr_type=='even') 	$tr_type='odd';
-						else								$tr_type='even';
-						$orderDetails.='<tr class="'.$tr_type.'">
-						<td class="checkout_listing_image_td"><div class="checkout_listing_image">'.$image.'</div></td>
-						<td class="checkout_listing_qty">'.$item['qty'].'</td>
-						<td class="checkout_listing_name"><span class="bold">'.$item['products_name'].($item['products_model']?' <span class="checkout_listing_products_model">('.$item['products_model'].')</span>':'').'</span>';
-						if (is_array($item['attributes'])) {
-							foreach ($item['attributes'] as $attributeKey => $attributeItem) {
-								$orderDetails.='<br />'.$attributeItem['products_options_name'].': '.$attributeItem['products_options_values_name'];
-								if ($attributeItem['options_values_price'] >0) {
-									if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-										$subPrices.=mslib_fe::amount2Cents($attributeItem['options_values_price_including_vat']);
-									} else {
-										$subPrices.=mslib_fe::amount2Cents($attributeItem['options_values_price']);
-									}
-								}
-								$subPrices.='<br />';
-							}
-						}
-						if ($subPrices) {
-							$subPrices='<div class="attribute_prices">'.$subPrices.'</div>';
-						}
-						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-							$totalPrice=$item['total_price_including_vat'];
-						} else {
-							$totalPrice=$item['total_price'];
-						}
-						$orderDetails.='</td>
-							<td class="checkout_listing_vat">' . (($item['tax_rate']) ? ($item['tax_rate']*100).'%' : '&nbsp;') . '</td>
-							<td class="checkout_listing_price">' . mslib_fe::amount2Cents($totalPrice) . '</td>
-						</tr>';
-					}
-					$orderDetails.='
-					</table>
-					<table cellpadding="0" cellspacing="0" border="0" align="right" id="msFrontCartContentsSubtotalWrapper">';
-					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$subtotal=$this->cart['summarize']['sub_total_including_vat'];
-					} else {
-						$subtotal=$this->cart['summarize']['sub_total'];
-					}
-					$orderDetails.='<tr class="msCartSummarySubtotal"><td class="label"><strong>'.$this->pi_getLL('subtotal').'</strong></td><td class="values" align="right">'.mslib_fe::amount2Cents($subtotal).'</td></tr>';
-					if ($this->cart['discount_amount']) {
-						$orderDetails.='<tr class="msCartSummaryDiscount"><td class="label">'.$this->pi_getLL('discount').'</td><td class="values" align="right">'.mslib_fe::amount2Cents($this->cart['discount_amount']).'</td></tr>';
-					}
-					if ($this->cart['user']['payment_method_costs_including_vat'] > 0) {
-						$orderDetails.='<tr class="msCartSummaryPaymentCosts"><td class="label">'.$this->pi_getLL('payment_costs').' ('.$this->cart['user']['payment_method_label'].')</td><td class="values" align="right">'.mslib_fe::amount2Cents($this->cart['user']['payment_method_costs_including_vat']).'</td></tr>';
-					}
-					if ($this->cart['user']['shipping_method_costs_including_vat'] > 0) {
-						$orderDetails.='<tr class="msCartSummaryShippingCosts"><td class="label">'.$this->pi_getLL('shipping_costs').' ('.$this->cart['user']['shipping_method_label'].')</td><td class="values" align="right">'.mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs_including_vat']).'</td></tr>';
-					}
-					$orderDetails.='<tr><td colspan="2" class="values"><hr class="hr"></hr></td></tr>';
-					$orderDetails.='<tr class="msCartSummaryTotal"><td class="label"><h4>'.$this->pi_getLL('total').'</h4></td><td align="right" class="values"><strong>'.mslib_fe::amount2Cents($this->cart['summarize']['grand_total']).'</strong></td></tr>';
-					if ($this->cart['summarize']['grand_total_vat']) {
-						$orderDetails.='<tr class="msCartSummaryIncludedVat"><td class="label">'.$this->pi_getLL('included_vat').'</td><td class="values" align="right">'.mslib_fe::amount2Cents($this->cart['summarize']['grand_total_vat']).'</td></tr>';
-					}
-					$orderDetails.='</table>';
-					$orderDetails.='
-					</table>';
-			return $orderDetails;
-			*/
 		}
 		return $content;
 	}
