@@ -565,6 +565,9 @@ if (!$skipMultishopUpdates) {
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if ($row['Field']=='id') {
 			if ($row['Extra']!='auto_increment') {
+				$str="DELETE FROM `tx_multishop_cms` WHERE `id`=0";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
 				$str="ALTER TABLE  `tx_multishop_cms` CHANGE  `id`  `id` INT( 11 ) null auto_increment;";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
