@@ -560,6 +560,17 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	$str="describe tx_multishop_cms";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='id') {
+			if ($row['Extra']!='auto_increment') {
+				$str="ALTER TABLE  `tx_multishop_cms` CHANGE  `id`  `id` INT( 11 ) null auto_increment;";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+			}
+		}
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
