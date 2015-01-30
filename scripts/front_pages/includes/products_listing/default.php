@@ -180,8 +180,13 @@ foreach ($products as $current_product) {
 			</form>
 		</div>
 	';
-	// custom hook that can be controlled by third-party plugin
+
 	$plugins_item_extra_content=array();
+	// shipping cost popup
+	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+		$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" rel="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
+	}
+	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'])) {
 		$params=array(
 			'markerArray'=>&$markerArray,
@@ -373,6 +378,45 @@ if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or (
 				});
 			}
 		});
+		'.($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE'] ? '
+		$(document).on("click", ".show_shipping_cost_table", function(e) {
+			e.preventDefault();
+			var pid=jQuery(this).attr("rel");
+			jQuery.ajax({
+				url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
+				data: \'tx_multishop_pi1[pid]=\' + pid + \'&tx_multishop_pi1[qty]=1\',
+				type: \'post\',
+				dataType: \'json\',
+				success: function (j) {
+					if (j) {
+						var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
+						shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
+						shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
+						shipping_cost_popup+=\'<table id="product_shippingcost_popup_table">\';
+						shipping_cost_popup+=\'<tr>\';
+						shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
+						shipping_cost_popup+=\'</tr>\';
+						shipping_cost_popup+=\'<tr>\';
+						shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'</td>\';
+						shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
+						shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
+						shipping_cost_popup+=\'</tr>\';
+						$.each(j.shipping_costs_display, function(country_iso_nr, shipping_cost) {
+							shipping_cost_popup+=\'<tr>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[country_iso_nr] + \'</td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[country_iso_nr] + \'</td>\';
+							shipping_cost_popup+=\'</tr>\';
+						});
+						shipping_cost_popup+=\'</table>\';
+						shipping_cost_popup+=\'</div>\';
+						shipping_cost_popup+=\'</div>\';
+						msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
+					}
+				}
+			});
+		});
+		' : '').'
 	  });
 	  </script>
 	';

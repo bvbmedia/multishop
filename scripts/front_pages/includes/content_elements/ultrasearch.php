@@ -12,7 +12,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	if ($this->ultrasearch_fields) {
 		$this->ms['MODULES']['ULTRASEARCH_FIELDS']=$this->ultrasearch_fields;
 	}
-} 
+}
 if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	$this->no_database_results=1;
 } else {
@@ -69,7 +69,17 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$headers.='ultrasearch_exclude_negative_filter_values=\'1\';';
 	}
 	$headers.='// location of the ultrasearch server
-	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&manufacturers_id='.$this->get['manufacturers_id'].'&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam.'\';';
+	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&manufacturers_id='.$this->get['manufacturers_id'].'&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam.'\';'."\n";
+	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+		$headers.='
+		var ultrasearch_shipping_costs_review_url=\''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\';
+		var labels_shipping_costs = \''.$this->pi_getLL('shipping_costs').'\';
+		var labels_product_shipping_and_handling_cost_overview = \''.$this->pi_getLL('product_shipping_and_handling_cost_overview').'\';
+		var labels_deliver_to = \''.$this->pi_getLL('deliver_to').'\';
+		var labels_shipping_and_handling_cost_overview = \''.$this->pi_getLL('shipping_and_handling_cost_overview').'\';
+		var labels_deliver_by = \''.$this->pi_getLL('deliver_by').'\';
+		'."\n";
+	}
 	if ($this->hideHeader) {
 		$headers.='var ultrasearcch_resultset_header=\'\';';
 	} else {
@@ -126,10 +136,10 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 			}
 		  })
 		  // $(window).hashchange();
-		});	
-	</script>	
-	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.form.js"></script> 	
-	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.dform-1.1.0.min.js"></script> 		
+		});
+	</script>
+	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.form.js"></script>
+	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.dform-1.1.0.min.js"></script>
 	<script type="text/javascript" src="'.$this->ultrasearch_javascript_client_file.'"></script>';
 	$GLOBALS['TSFE']->additionalHeaderData[] =$headers;
 	$content = '<form method="get" action="" id="msFrontUltrasearchForm">

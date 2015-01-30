@@ -1480,6 +1480,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$temp_var_products['old_price'] = $old_price;
 				$temp_var_products['special_price'] = $specials_price;
 				$temp_var_products['price'] = $price;
+				$temp_var_products['shipping_costs_popup'] = 0;
+				if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+					$temp_var_products['shipping_costs_popup'] = 1;
+				}
 				foreach ($product as $key => $val) {
 					if (strstr($key,"a_")) {
 						$temp_var_products[$key] = $val;
@@ -1545,6 +1549,13 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		}
 	}
 	$results['products'] = $results_products;
+	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+		$results['labels']['shipping_costs'] = $this->pi_getLL('shipping_costs');
+		$results['labels']['product_shipping_and_handling_cost_overview'] = $this->pi_getLL('product_shipping_and_handling_cost_overview');
+		$results['labels']['deliver_to'] = $this->pi_getLL('deliver_to');
+		$results['labels']['shipping_and_handling_cost_overview'] = $this->pi_getLL('shipping_and_handling_cost_overview');
+		$results['labels']['deliver_by'] = $this->pi_getLL('deliver_by');
+	}
 	$results['total_rows'] = $pageset['total_rows'];
 	$results['pagination']['offset'] = $offset;
 	$results['pagination']['limit'] = $limit;
