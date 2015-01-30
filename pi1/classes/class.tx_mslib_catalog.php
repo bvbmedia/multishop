@@ -616,14 +616,14 @@ class tx_mslib_catalog {
 		if ($count_cats>1) {
 			// remove the deepest cat id record
 			// disabled by bas
-			//unset($cats[$count_cats-1]);
+			unset($cats[$count_cats-1]);
 			//recount
 			$count_cats=count($cats);
 		}
 		if ($count_cats>0) {
 			foreach ($cats as $item) {
 				if ($item['id']) {
-					if (!tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id'])) {
+					if (!tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id']) && $item['id']!=$deepest_cat_id) {
 						$insertArray=array();
 						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
 							$insertArray['categories_id']=$deepest_cat_id;
@@ -644,8 +644,8 @@ class tx_mslib_catalog {
 						}
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						$level++;
 					}
+					$level++;
 				}
 			}
 			return true;
@@ -661,6 +661,12 @@ class tx_mslib_catalog {
 	}
 	function compareDatabaseAlterProductToCategoryLinking() {
 		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), '', '', '');
+		foreach ($p2c_records as $p2c_record) {
+			tx_mslib_catalog::linkCategoriesTreeToProduct($p2c_record['products_id'], $p2c_record['categories_id']);
+		}
+	}
+	function compareDatabaseFixProductToCategoryLinking() {
+		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), 'products_id', '', '');
 		foreach ($p2c_records as $p2c_record) {
 			tx_mslib_catalog::linkCategoriesTreeToProduct($p2c_record['products_id'], $p2c_record['categories_id']);
 		}
