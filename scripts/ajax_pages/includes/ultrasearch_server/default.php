@@ -216,7 +216,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($i>0) {
 					$string.=" or ";
 				}
-				$string.="pf.categories_id_".$i." IN (".implode(",",$this->post['tx_multishop_pi1']['categories']).")";
+				$string.="pf.categories_id_".$i." IN (".addslashes(implode(",",$this->post['tx_multishop_pi1']['categories'])).")";
 			}
 			$string.=')';
 			if ($string) {
@@ -252,7 +252,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		} else {
 			$prefix='pf';
 		}
-		$totalCountSubFilter['manufacturers'][]=$prefix . ".manufacturers_id IN (".implode(",",$this->post['tx_multishop_pi1']['manufacturers']).")";
+		$totalCountSubFilter['manufacturers'][]=$prefix . ".manufacturers_id IN (".addslashes(implode(",",$this->post['tx_multishop_pi1']['manufacturers'])).")";
 	}
 	if (is_array($this->post['tx_multishop_pi1']['options'])) {
 		// attributes
@@ -268,7 +268,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 			}
 			if (is_array($option_values_id) and count($option_values_id)) {
-				$totalCountSubFilter['options'][$option_id][]="pa_".$option_id.".options_values_id IN (".implode(",",$option_values_id).")";
+				$totalCountSubFilter['options'][$option_id][]="pa_".$option_id.".options_values_id IN (".addslashes(implode(",",$option_values_id)).")";
 				$totalCountFrom['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
 				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
 			}
@@ -535,7 +535,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 								$ids[]=$row['manufacturers_id'];
 							}
-							$str="SELECT * from tx_multishop_manufacturers m where manufacturers_id IN (".implode(",",$ids).") order by sort_order,manufacturers_name ";
+							$str="SELECT * from tx_multishop_manufacturers m where manufacturers_id IN (".addslashes(implode(",",$ids)).") order by sort_order,manufacturers_name ";
 						} else {
 							$default_query = 1;
 						}
@@ -637,6 +637,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						$prefix='p';
 					} else {
 						$prefix='pf';
+					}
+					if ($this->filterCategoriesFormByCategoriesIdGetParam && $parent_id > 0 && !$this->post['tx_multishop_pi1']['categories']) {
+						$tmpFilter[]="p2c.node_id=".addslashes($parent_id);
 					}
 					$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
 					// count available records eof
@@ -963,6 +966,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								$totalCountFromFlat=array_values($totalCountFromTmp['options']);
 								$totalCountWhereFlat=array_values($totalCountWhereTmp['options']);
 
+								if ($this->filterCategoriesFormByCategoriesIdGetParam && $parent_id > 0 && !$this->post['tx_multishop_pi1']['categories']) {
+									$tmpFilter[]="p2c.node_id=".addslashes($parent_id);
+								}
 								// PRODUCT COUNT FOR ATTRIBUTE OPTION VALUE
 								//$this->msDebug=1;
 								$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
@@ -1280,7 +1286,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$options_name = str_replace(array('(', ')', '[', ']', "'", '"', ':', ';', '/', "\\"), '', $options_name);
 				$options_name = str_replace('__', '_', $options_name);
 				$from[]= 'tx_multishop_products_attributes '.$options_name;
-				$filter[]= "(".$prefix."products_id = $options_name.products_id and $options_name.options_id = ".addslashes($option_id)." and $options_name.options_values_id IN (".implode(",",$option_values_id)."))";
+				$filter[]= "(".$prefix."products_id = $options_name.products_id and $options_name.options_id = ".addslashes($option_id)." and $options_name.options_values_id IN (".addslashes(implode(",",$option_values_id))."))";
 			}
 		}
 	}
@@ -1308,7 +1314,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			foreach ($this->post['tx_multishop_pi1']['manufacturers'] as $key => $value) {
 				$this->post['tx_multishop_pi1']['manufacturers'][$key]=addslashes($value);
 			}
-			$filter[]=$prefix."manufacturers_id IN (".implode(",",$this->post['tx_multishop_pi1']['manufacturers']).")";
+			$filter[]=$prefix."manufacturers_id IN (".addslashes(implode(",",$this->post['tx_multishop_pi1']['manufacturers'])).")";
 		} else {
 			if (strpos($this->post['tx_multishop_pi1']['manufacturers'], ',') === FALSE) {
 				$filter[]=$prefix.'manufacturers_id='.addslashes($this->post['tx_multishop_pi1']['manufacturers']);
