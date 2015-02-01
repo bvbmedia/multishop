@@ -638,7 +638,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					} else {
 						$prefix='pf';
 					}
-					if ($this->filterCategoriesFormByCategoriesIdGetParam && $parent_id > 0 && !$this->post['tx_multishop_pi1']['categories']) {
+					if (!$this->ms['MODULES']['FLAT_DATABASE'] && $this->filterCategoriesFormByCategoriesIdGetParam && $parent_id > 0 && !$this->post['tx_multishop_pi1']['categories']) {
 						$tmpFilter[]="p2c.node_id=".addslashes($parent_id);
 					}
 					$totalCount=mslib_fe::getProductsPageSet($tmpFilter,0,0,array(),array(),$select,$totalCountWhereFlat,0,$totalCountFromFlat,array(),'counter','count(DISTINCT('.$prefix.'.products_id)) as total',1);
@@ -966,7 +966,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								$totalCountFromFlat=array_values($totalCountFromTmp['options']);
 								$totalCountWhereFlat=array_values($totalCountWhereTmp['options']);
 
-								if ($this->filterCategoriesFormByCategoriesIdGetParam && $parent_id > 0 && !$this->post['tx_multishop_pi1']['categories']) {
+								if (!$this->ms['MODULES']['FLAT_DATABASE'] && $this->filterCategoriesFormByCategoriesIdGetParam && $parent_id > 0 && !$this->post['tx_multishop_pi1']['categories']) {
 									$tmpFilter[]="p2c.node_id=".addslashes($parent_id);
 								}
 								// PRODUCT COUNT FOR ATTRIBUTE OPTION VALUE
