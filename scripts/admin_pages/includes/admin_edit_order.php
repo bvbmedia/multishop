@@ -49,6 +49,33 @@ if (is_numeric($this->get['orders_id'])) {
 					$this->post['manual_product_tax']=$tr['rate'];
 				}
 				if (!empty($this->post['product_name']) || !empty($this->post['manual_product_name'])) {
+					$updateArray=array();
+					$keys=array();
+					$keys[]='company';
+					$keys[]='name';
+					$keys[]='street_name';
+					$keys[]='address_number';
+					$keys[]='address_ext';
+					$keys[]='building';
+					$keys[]='zip';
+					$keys[]='city';
+					$keys[]='country';
+					$keys[]='email';
+					$keys[]='telephone';
+					$keys[]='mobile';
+					$keys[]='fax';
+					foreach ($keys as $key) {
+						$string='billing_'.$key;
+						$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+						$string='delivery_'.$key;
+						$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+					}
+					$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
+					$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
+					if (count($updateArray)) {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
 					if (is_numeric($this->post['orders_products_id'])>0) {
 						if ($this->post['product_name']) {
 							$this->post['product_qty']=str_replace(',', '.', $this->post['product_qty']);
