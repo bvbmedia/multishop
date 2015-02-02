@@ -788,6 +788,15 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$sortby_options['new_asc'] = $this->pi_getLL('sortby_options_label_new_asc', 'New (asc)');
 					$sortby_options['new_desc'] = $this->pi_getLL('sortby_options_label_new_desc', 'New (desc)');
 				}
+				// custom hook that can be controlled by third-party plugin
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchSortByFilterTypes'])) {
+					$params=array(
+						'sortby_options'=>&$sortby_options,
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchSortByFilterTypes'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				if (count($sortby_options)) {
 					foreach ($sortby_options as $sortby_key => $sortby_label) {
 						if (isset($this->cookie['sortbysb']) && $sortby_key == $this->cookie['sortbysb']) {
@@ -1433,6 +1442,22 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				break;
 			case 'manufacturers_desc':
 				$orderby[]=$tbl_m."manufacturers_name desc";
+				break;
+			default:
+				// custom hook that can be controlled by third-party plugin
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchOrderByFilter'])) {
+					$params=array(
+						'from'=>&$from,
+						'where'=>&$where,
+						'filter'=>&$filter,
+						'orderby'=>&$orderby,
+						'select'=>&$select,
+						'extra_join'=>&$extra_join
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchOrderByFilter'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				break;
 		}
 	}
