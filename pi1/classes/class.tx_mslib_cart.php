@@ -119,10 +119,12 @@ class tx_mslib_cart extends tslib_pibase {
 								}
 								switch ($row['listtype']) {
 									case 'checkbox':
-										foreach ($attribute_values as $attribute_item) {
-											$total_attributes_price+=($attribute_item['options_values_price']);
-											$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
-											$total_attributes_tax+=$attribute_item['price_prefix'].$attribute_item['tax'];
+										if (is_array($attribute_values) && count($attribute_values)) {
+											foreach ($attribute_values as $attribute_item) {
+												$total_attributes_price+=($attribute_item['options_values_price']);
+												$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
+												$total_attributes_tax+=$attribute_item['price_prefix'].$attribute_item['tax'];
+											}
 										}
 										break;
 									case 'input':
@@ -782,27 +784,29 @@ class tx_mslib_cart extends tslib_pibase {
 		$order=array();
 		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$address=$cart['user'];
-		foreach ($cart['products'] as $shopping_cart_item=>$value) {
-			if ($country_id>0) {
-				$tax_rate=mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
-				$value['tax_rate']=($tax_rate['total_tax_rate']/100);
-			}
-			if (is_numeric($value['products_id'])) {
-				$product_amount=$value['final_price'];
-				if (is_array($value['attributes'])) {
-					foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
-						if ($attribute_values['price_prefix']=='+') {
-							$product_amount=($product_amount+$attribute_values['options_values_price']);
-						} else {
-							$product_amount=($product_amount-$attribute_values['options_values_price']);
+		if (is_array($cart['products']) && count($cart['products'])) {
+			foreach ($cart['products'] as $shopping_cart_item=>$value) {
+				if ($country_id>0) {
+					$tax_rate=mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
+					$value['tax_rate']=($tax_rate['total_tax_rate']/100);
+				}
+				if (is_numeric($value['products_id'])) {
+					$product_amount=$value['final_price'];
+					if (is_array($value['attributes'])) {
+						foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
+							if ($attribute_values['price_prefix']=='+') {
+								$product_amount=($product_amount+$attribute_values['options_values_price']);
+							} else {
+								$product_amount=($product_amount-$attribute_values['options_values_price']);
+							}
 						}
 					}
+					$subtotal_price=($value['qty']*$product_amount);
+					if ($value['tax_rate'] and $include_vat) {
+						$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
+					}
+					$total_price=$total_price+$subtotal_price;
 				}
-				$subtotal_price=($value['qty']*$product_amount);
-				if ($value['tax_rate'] and $include_vat) {
-					$subtotal_price=($subtotal_price*($value['tax_rate']))+$subtotal_price;
-				}
-				$total_price=$total_price+$subtotal_price;
 			}
 		}
 		if ($subtract_discount and $cart['discount']) {
@@ -823,25 +827,27 @@ class tx_mslib_cart extends tslib_pibase {
 		$products_tax=array();
 		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$address=$cart['user'];
-		foreach ($cart['products'] as $shopping_cart_item=>$value) {
-			if ($country_id>0) {
-				$tax_rate=mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
-				$value['tax_rate']=($tax_rate['total_tax_rate']/100);
-			}
-			if (is_numeric($value['products_id'])) {
-				$product_amount=$value['final_price'];
-				$subtotal_price=($value['qty']*$product_amount);
-				if ($value['tax_rate']) {
-					$total_product_tax+=($subtotal_price*($value['tax_rate']));
+		if (is_array($cart['products']) && count($cart['products'])) {
+			foreach ($cart['products'] as $shopping_cart_item=>$value) {
+				if ($country_id>0) {
+					$tax_rate=mslib_fe::taxRuleSet($value['tax_id'], 0, $country_id, 0);
+					$value['tax_rate']=($tax_rate['total_tax_rate']/100);
 				}
-				// attributes
-				if (is_array($value['attributes'])) {
-					foreach ($value['attributes'] as $attribute_key=>$attribute_value) {
-						$total_product_tax+=($attribute_value['options_values_price']*$value['qty'])*$value['tax_rate'];
+				if (is_numeric($value['products_id'])) {
+					$product_amount=$value['final_price'];
+					$subtotal_price=($value['qty']*$product_amount);
+					if ($value['tax_rate']) {
+						$total_product_tax+=($subtotal_price*($value['tax_rate']));
 					}
+					// attributes
+					if (is_array($value['attributes'])) {
+						foreach ($value['attributes'] as $attribute_key=>$attribute_value) {
+							$total_product_tax+=($attribute_value['options_values_price']*$value['qty'])*$value['tax_rate'];
+						}
+					}
+					// attributes eof
+					$products_tax['products_tax']['products_tax_rate_'.$value['products_id']]=$value['tax_rate'];
 				}
-				// attributes eof
-				$products_tax['products_tax']['products_tax_rate_'.$value['products_id']]=$value['tax_rate'];
 			}
 		}
 		$products_tax['total_tax']=$total_product_tax;
@@ -853,9 +859,11 @@ class tx_mslib_cart extends tslib_pibase {
 		$order=array();
 		$address=$cart['user'];
 		// check for NULL, convert to empty string - typo3 v6.x related bug
-		foreach ($address as $key=>$val) {
-			if ($val==null || $val==NULL) {
-				$address[$key]='';
+		if (is_array($address) && count($address)) {
+			foreach ($address as $key=>$val) {
+				if ($val==null || $val==NULL) {
+					$address[$key]='';
+				}
 			}
 		}
 		// if store country is different from customer country and user provided valid VAT id, change VAT rate to zero
@@ -1436,335 +1444,337 @@ class tx_mslib_cart extends tslib_pibase {
 				} elseif ($cart['user']['shipping_method']) {
 					$this->ms['shipping_method']=$cart['user']['shipping_method'];
 				}
-				foreach ($cart['products'] as $shopping_cart_item=>$value) {
-					if (is_numeric($value['products_id'])) {
-						if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
-							$value['tax_rate']=0;
-						}
-						$insertArray=array();
-						$insertArray['orders_id']=$orders_id;
-						$insertArray['products_id']=$value['products_id'];
-						$insertArray['categories_id']=$value['categories_id'];
-						// get all cats
-						$cats=mslib_fe::Crumbar($value['categories_id']);
-						$cats=array_reverse($cats);
-						if (count($cats)>0) {
-							$i=0;
-							foreach ($cats as $cat) {
-								$insertArray['categories_id_'.$i]=$cat['id'];
-								$insertArray['categories_name_'.$i]=$cat['name'];
-								$i++;
+				if (is_array($cart['products']) && count($cart['products'])) {
+					foreach ($cart['products'] as $shopping_cart_item=>$value) {
+						if (is_numeric($value['products_id'])) {
+							if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+								$value['tax_rate']=0;
 							}
-						}
-						// get all cats eof
-						if (isset($value['manufacturers_id']) && !empty($value['manufacturers_id'])) {
-							$insertArray['manufacturers_id']=$value['manufacturers_id'];
-						} else {
-							$insertArray['manufacturers_id']='';
-						}
-						if (isset($value['order_unit_id']) && !empty($value['order_unit_id'])) {
-							$insertArray['order_unit_id']=$value['order_unit_id'];
-						} else {
-							$insertArray['order_unit_id']='';
-						}
-						if (isset($value['order_unit_name']) && !empty($value['order_unit_name'])) {
-							$insertArray['order_unit_name']=$value['order_unit_name'];
-						} else {
-							$insertArray['order_unit_name']='';
-						}
-						if (isset($value['order_unit_code']) && !empty($value['order_unit_code'])) {
-							$insertArray['order_unit_code']=$value['order_unit_code'];
-						} else {
-							$insertArray['order_unit_code']='';
-						}
-						$insertArray['qty']=$value['qty'];
-						$insertArray['products_tax']=($value['tax_rate']*100);
-						$insertArray['products_name']=$value['products_name'];
-						$insertArray['products_model']=$value['products_model'];
-						/*
-						$insertArray['products_description']=$value['products_shortdescription'];
-						if (is_array($value['attributes'])) {
-							// loading the attributes
-							//$insertArray['products_description'].="\n".strip_tags(mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1));
-							$insertArray['products_description'].="\n".mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1);
-							// loading the attributes eof
-						}
-						*/
-						$insertArray['products_price']=$value['products_price'];
-						$insertArray['final_price']=$value['final_price'];
-						$insertArray['type']='P'; // P for Product, S for Subscription (returning-costs)
-						$insertArray['ean_code']=$value['ean_code'];
-						$insertArray['sku_code']=$value['sku_code'];
-						$insertArray['vendor_code']=$value['vendor_code'];
-						// micro download
-						if ($value['file_location'] || $value['file_remote_location']) {
-							$insertArray['file_label']=$value['file_label'];
-							$insertArray['file_location']=$value['file_location'];
-							$insertArray['file_remote_location']=$value['file_remote_location'];
-							$insertArray['file_number_of_downloads']=$value['file_number_of_downloads'];
-							$insertArray['file_download_code']=md5(uniqid(rand()).uniqid(rand()));
-						}
-						// micro download eof
-						/*
-						 * always use total_tax and total_tax_rate, unless need different calc for country/region
-						 * WARNING: country_* and region_* not always have value, depends on the tax ruleset
-						 * -----------------------------------------------------------------------------------------
-						 */
-						$product_tax['country_tax_rate']=(string)$value['country_tax_rate'];
-						$product_tax['region_tax_rate']=(string)$value['region_tax_rate'];
-						$product_tax['total_tax_rate']=(string)$value['tax_rate'];
-						// -----------------------------------------------------------------------------------------
-						$product_tax['country_tax']=(string)$value['country_tax'];
-						$product_tax['region_tax']=(string)$value['region_tax'];
-						$product_tax['total_tax']=(string)$value['tax'];
-						$product_tax['total_attributes_tax']=(string)$value['total_attributes_tax'];
-						// -----------------------------------------------------------------------------------------
-						if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
-							$product_tax['country_tax_rate']=0;
-							$product_tax['region_tax_rate']=0;
-							$product_tax['total_tax_rate']=0;
-							$product_tax['country_tax']=0;
-							$product_tax['region_tax']=0;
-							$product_tax['total_tax']=0;
-							$product_tax['total_attributes_tax']=0;
-						}
-						// bugfixes bas
-						$sub_total_excluding_vat['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
-						$sub_total['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
-						$sub_total['total_tax']=$sub_total['total_tax']+($product_tax['total_tax']*$value['qty']);
-						$sub_total['attributes_tax']=$sub_total['attributes_tax']+($product_tax['total_attributes_tax']*$value['qty']);
-						$total_order_tax['total_tax']=$total_order_tax['total_tax']+($product_tax['total_tax']*$value['qty']);
-						$total_order_tax['total_attributes_tax']=$total_order_tax['total_attributes_tax']+($product_tax['total_attributes_tax']*$value['qty']);
-						$insertArray['products_tax_data']=serialize($product_tax);
-						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductPreProc'])) {
-							// hook
-							$params=array(
-								'ms'=>$this->ms,
-								'value'=>$value,
-								'insertArray'=>&$insertArray
-							);
-							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductPreProc'] as $funcRef) {
-								t3lib_div::callUserFunction($funcRef, $params, $this);
-							}
-							// hook oef
-						}
-						// TYPO3 6.2 LTS NULL FIX
-						if (!$insertArray['products_model']) {
-							$insertArray['products_model']='';
-						}
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-						if (!$orders_products_id) {
-							error_log('ERROR:'.$GLOBALS['TYPO3_DB']->sql_error());
-						}
-						// update orders_products sort_order
-						$updateOrderProductsSortOrder=array();
-						$updateOrderProductsSortOrder['sort_order']=$orders_products_id;
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\''.$orders_products_id.'\'', $updateOrderProductsSortOrder);
-						if ($this->ms['MODULES']['SUBTRACT_STOCK']) {
-							if ($this->ms['MODULES']['PRODUCT_ATTRIBUTES_STOCK']) {
-								$sql_as_data=array();
-								$attributes_count=count($value['attributes']);
-								foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
-									$sql_as_data[]='(pas.options_id = '.$attribute_values['options_id'].' and pas.options_values_id = '.$attribute_values['options_values_id'].')';
+							$insertArray=array();
+							$insertArray['orders_id']=$orders_id;
+							$insertArray['products_id']=$value['products_id'];
+							$insertArray['categories_id']=$value['categories_id'];
+							// get all cats
+							$cats=mslib_fe::Crumbar($value['categories_id']);
+							$cats=array_reverse($cats);
+							if (count($cats)>0) {
+								$i=0;
+								foreach ($cats as $cat) {
+									$insertArray['categories_id_'.$i]=$cat['id'];
+									$insertArray['categories_name_'.$i]=$cat['name'];
+									$i++;
 								}
-								$sql_as="select pasg.group_id, pasg.attributes_stock from tx_multishop_products_attributes_stock_group pasg, tx_multishop_products_attributes_stock pas where pasg.products_id = ".$value['products_id']." and (".implode(' or ', $sql_as_data).") and pasg.group_id = pas.group_id";
-								$res=$GLOBALS['TYPO3_DB']->sql_query($sql_as);
-								$total_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
-								$used_group=0;
-								if ($total_rows>1) {
-									$group_counter=array();
-									while ($rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-										$group_counter[$rs_as['group_id']]+=1;
+							}
+							// get all cats eof
+							if (isset($value['manufacturers_id']) && !empty($value['manufacturers_id'])) {
+								$insertArray['manufacturers_id']=$value['manufacturers_id'];
+							} else {
+								$insertArray['manufacturers_id']='';
+							}
+							if (isset($value['order_unit_id']) && !empty($value['order_unit_id'])) {
+								$insertArray['order_unit_id']=$value['order_unit_id'];
+							} else {
+								$insertArray['order_unit_id']='';
+							}
+							if (isset($value['order_unit_name']) && !empty($value['order_unit_name'])) {
+								$insertArray['order_unit_name']=$value['order_unit_name'];
+							} else {
+								$insertArray['order_unit_name']='';
+							}
+							if (isset($value['order_unit_code']) && !empty($value['order_unit_code'])) {
+								$insertArray['order_unit_code']=$value['order_unit_code'];
+							} else {
+								$insertArray['order_unit_code']='';
+							}
+							$insertArray['qty']=$value['qty'];
+							$insertArray['products_tax']=($value['tax_rate']*100);
+							$insertArray['products_name']=$value['products_name'];
+							$insertArray['products_model']=$value['products_model'];
+							/*
+							$insertArray['products_description']=$value['products_shortdescription'];
+							if (is_array($value['attributes'])) {
+								// loading the attributes
+								//$insertArray['products_description'].="\n".strip_tags(mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1));
+								$insertArray['products_description'].="\n".mslib_fe::showAttributes($value['products_id'], '', $sessionData, 1);
+								// loading the attributes eof
+							}
+							*/
+							$insertArray['products_price']=$value['products_price'];
+							$insertArray['final_price']=$value['final_price'];
+							$insertArray['type']='P'; // P for Product, S for Subscription (returning-costs)
+							$insertArray['ean_code']=$value['ean_code'];
+							$insertArray['sku_code']=$value['sku_code'];
+							$insertArray['vendor_code']=$value['vendor_code'];
+							// micro download
+							if ($value['file_location'] || $value['file_remote_location']) {
+								$insertArray['file_label']=$value['file_label'];
+								$insertArray['file_location']=$value['file_location'];
+								$insertArray['file_remote_location']=$value['file_remote_location'];
+								$insertArray['file_number_of_downloads']=$value['file_number_of_downloads'];
+								$insertArray['file_download_code']=md5(uniqid(rand()).uniqid(rand()));
+							}
+							// micro download eof
+							/*
+							 * always use total_tax and total_tax_rate, unless need different calc for country/region
+							 * WARNING: country_* and region_* not always have value, depends on the tax ruleset
+							 * -----------------------------------------------------------------------------------------
+							 */
+							$product_tax['country_tax_rate']=(string)$value['country_tax_rate'];
+							$product_tax['region_tax_rate']=(string)$value['region_tax_rate'];
+							$product_tax['total_tax_rate']=(string)$value['tax_rate'];
+							// -----------------------------------------------------------------------------------------
+							$product_tax['country_tax']=(string)$value['country_tax'];
+							$product_tax['region_tax']=(string)$value['region_tax'];
+							$product_tax['total_tax']=(string)$value['tax'];
+							$product_tax['total_attributes_tax']=(string)$value['total_attributes_tax'];
+							// -----------------------------------------------------------------------------------------
+							if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+								$product_tax['country_tax_rate']=0;
+								$product_tax['region_tax_rate']=0;
+								$product_tax['total_tax_rate']=0;
+								$product_tax['country_tax']=0;
+								$product_tax['region_tax']=0;
+								$product_tax['total_tax']=0;
+								$product_tax['total_attributes_tax']=0;
+							}
+							// bugfixes bas
+							$sub_total_excluding_vat['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
+							$sub_total['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
+							$sub_total['total_tax']=$sub_total['total_tax']+($product_tax['total_tax']*$value['qty']);
+							$sub_total['attributes_tax']=$sub_total['attributes_tax']+($product_tax['total_attributes_tax']*$value['qty']);
+							$total_order_tax['total_tax']=$total_order_tax['total_tax']+($product_tax['total_tax']*$value['qty']);
+							$total_order_tax['total_attributes_tax']=$total_order_tax['total_attributes_tax']+($product_tax['total_attributes_tax']*$value['qty']);
+							$insertArray['products_tax_data']=serialize($product_tax);
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductPreProc'])) {
+								// hook
+								$params=array(
+									'ms'=>$this->ms,
+									'value'=>$value,
+									'insertArray'=>&$insertArray
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductPreProc'] as $funcRef) {
+									t3lib_div::callUserFunction($funcRef, $params, $this);
+								}
+								// hook oef
+							}
+							// TYPO3 6.2 LTS NULL FIX
+							if (!$insertArray['products_model']) {
+								$insertArray['products_model']='';
+							}
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+							if (!$orders_products_id) {
+								error_log('ERROR:'.$GLOBALS['TYPO3_DB']->sql_error());
+							}
+							// update orders_products sort_order
+							$updateOrderProductsSortOrder=array();
+							$updateOrderProductsSortOrder['sort_order']=$orders_products_id;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders_products', 'orders_products_id=\''.$orders_products_id.'\'', $updateOrderProductsSortOrder);
+							if ($this->ms['MODULES']['SUBTRACT_STOCK']) {
+								if ($this->ms['MODULES']['PRODUCT_ATTRIBUTES_STOCK']) {
+									$sql_as_data=array();
+									$attributes_count=count($value['attributes']);
+									foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
+										$sql_as_data[]='(pas.options_id = '.$attribute_values['options_id'].' and pas.options_values_id = '.$attribute_values['options_values_id'].')';
 									}
-									foreach ($group_counter as $ref_group_id=>$group_ctr_result) {
-										if ($group_ctr_result==$attributes_count) {
-											$used_group=$ref_group_id;
-											break;
+									$sql_as="select pasg.group_id, pasg.attributes_stock from tx_multishop_products_attributes_stock_group pasg, tx_multishop_products_attributes_stock pas where pasg.products_id = ".$value['products_id']." and (".implode(' or ', $sql_as_data).") and pasg.group_id = pas.group_id";
+									$res=$GLOBALS['TYPO3_DB']->sql_query($sql_as);
+									$total_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
+									$used_group=0;
+									if ($total_rows>1) {
+										$group_counter=array();
+										while ($rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+											$group_counter[$rs_as['group_id']]+=1;
 										}
+										foreach ($group_counter as $ref_group_id=>$group_ctr_result) {
+											if ($group_ctr_result==$attributes_count) {
+												$used_group=$ref_group_id;
+												break;
+											}
+										}
+									} else {
+										$rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+										$used_group=$rs_as['group_id'];
+									}
+									if ($used_group>0) {
+										$str="update tx_multishop_products_attributes_stock_group set attributes_stock=(attributes_stock-".$value['qty'].") where group_id='".$used_group."'";
+										$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+									}
+									$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
+									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
+									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+									if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
+										$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
+										if ($page[0]['content']) {
+											// loading the email confirmation letter eof
+											// replacing the variables with dynamic values
+											$array1=array();
+											$array2=array();
+											$array1[]='###ORDERED_QTY###';
+											$array2[]=$value['qty'];
+											$array1[]='###CURRENT_PRODUCT_QUANTITY###';
+											$array2[]=$row['products_quantity'];
+											$array1[]='###PRODUCT_NAME###';
+											$array2[]=$value['products_name'];
+											$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
+											$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
+											$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
+											// now mail a copy to the merchant
+											$merchant=array();
+											$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
+											$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
+											$mailTo=array();
+											$mailTo[]=$merchant;
+											//hook to let other plugins further manipulate the replacers
+											if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
+												$params=array(
+													'array1'=>&$array1,
+													'array2'=>&$array2,
+													'page'=>&$page,
+													'mailTo'=>&$mailTo
+												);
+												foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
+													t3lib_div::callUserFunction($funcRef, $params, $this);
+												}
+											}
+											//end of hook to let other plugins further manipulate the replacers
+											if ($page[0]['content']) {
+												$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
+											}
+											if ($page[0]['name']) {
+												$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
+											}
+											foreach ($mailTo as $mailuser) {
+												mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+											}
+										}
+									}
+									if ($row['products_quantity']<1) {
+										// stock is negative or zero. lets turn of the product
+										$str="update tx_multishop_products set products_status=0 where products_id='".$value['products_id']."'";
+										$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 									}
 								} else {
-									$rs_as=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-									$used_group=$rs_as['group_id'];
-								}
-								if ($used_group>0) {
-									$str="update tx_multishop_products_attributes_stock_group set attributes_stock=(attributes_stock-".$value['qty'].") where group_id='".$used_group."'";
+									// now decrease the stocklevel
+									$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
 									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								}
-								$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
-								$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
-								$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-								if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
-									$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
-									if ($page[0]['content']) {
-										// loading the email confirmation letter eof
-										// replacing the variables with dynamic values
-										$array1=array();
-										$array2=array();
-										$array1[]='###ORDERED_QTY###';
-										$array2[]=$value['qty'];
-										$array1[]='###CURRENT_PRODUCT_QUANTITY###';
-										$array2[]=$row['products_quantity'];
-										$array1[]='###PRODUCT_NAME###';
-										$array2[]=$value['products_name'];
-										$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
-										$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
-										$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
-										// now mail a copy to the merchant
-										$merchant=array();
-										$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
-										$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-										$mailTo=array();
-										$mailTo[]=$merchant;
-										//hook to let other plugins further manipulate the replacers
-										if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
-											$params=array(
-												'array1'=>&$array1,
-												'array2'=>&$array2,
-												'page'=>&$page,
-												'mailTo'=>&$mailTo
-											);
-											foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
-												t3lib_div::callUserFunction($funcRef, $params, $this);
+									$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
+									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+									if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
+										$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
+										if ($page[0]['content']) {
+											// loading the email confirmation letter eof
+											// replacing the variables with dynamic values
+											$array1=array();
+											$array2=array();
+											$array1[]='###ORDERED_QTY###';
+											$array2[]=$value['qty'];
+											$array1[]='###CURRENT_PRODUCT_QUANTITY###';
+											$array2[]=$row['products_quantity'];
+											$array1[]='###PRODUCT_NAME###';
+											$array2[]=$value['products_name'];
+											$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
+											$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
+											$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
+											// now mail a copy to the merchant
+											$merchant=array();
+											$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
+											$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
+											$mailTo=array();
+											$mailTo[]=$merchant;
+											//hook to let other plugins further manipulate the replacers
+											if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
+												$params=array(
+													'array1'=>&$array1,
+													'array2'=>&$array2,
+													'page'=>&$page,
+													'mailTo'=>&$mailTo
+												);
+												foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
+													t3lib_div::callUserFunction($funcRef, $params, $this);
+												}
+											}
+											//end of hook to let other plugins further manipulate the replacers
+											if ($page[0]['content']) {
+												$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
+											}
+											if ($page[0]['name']) {
+												$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
+											}
+											foreach ($mailTo as $mailuser) {
+												mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
 											}
 										}
-										//end of hook to let other plugins further manipulate the replacers
-										if ($page[0]['content']) {
-											$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-										}
-										if ($page[0]['name']) {
-											$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-										}
-										foreach ($mailTo as $mailuser) {
-											mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
-										}
 									}
-								}
-								if ($row['products_quantity']<1) {
-									// stock is negative or zero. lets turn of the product
-									$str="update tx_multishop_products set products_status=0 where products_id='".$value['products_id']."'";
-									$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								}
-							} else {
-								// now decrease the stocklevel
-								$str="update tx_multishop_products set products_quantity=(products_quantity-".$value['qty'].") where products_id='".$value['products_id']."'";
-								$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								$str="select products_quantity, alert_quantity_threshold from tx_multishop_products where products_id='".$value['products_id']."'";
-								$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-								$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-								if ($row['products_quantity']<=$row['alert_quantity_threshold']) {
-									$page=mslib_fe::getCMScontent('email_alert_quantity_threshold_letter', $GLOBALS['TSFE']->sys_language_uid);
-									if ($page[0]['content']) {
-										// loading the email confirmation letter eof
-										// replacing the variables with dynamic values
-										$array1=array();
-										$array2=array();
-										$array1[]='###ORDERED_QTY###';
-										$array2[]=$value['qty'];
-										$array1[]='###CURRENT_PRODUCT_QUANTITY###';
-										$array2[]=$row['products_quantity'];
-										$array1[]='###PRODUCT_NAME###';
-										$array2[]=$value['products_name'];
-										$link_edit_prod=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$value['products_id'].'&cid='.$value['categories_id'].'&action=edit_product');
-										$array1[]='###DIRECT_EDIT_PRODUCT_LINK###';
-										$array2[]='<a href="'.$link_edit_prod.'" target="_blank">edit product stock</a>';
-										// now mail a copy to the merchant
-										$merchant=array();
-										$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
-										$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-										$mailTo=array();
-										$mailTo[]=$merchant;
-										//hook to let other plugins further manipulate the replacers
-										if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'])) {
-											$params=array(
-												'array1'=>&$array1,
-												'array2'=>&$array2,
-												'page'=>&$page,
-												'mailTo'=>&$mailTo
-											);
-											foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
-												t3lib_div::callUserFunction($funcRef, $params, $this);
+									if ($row['products_quantity']<1) {
+										if ($this->ms['MODULES']['DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK']) {
+											if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
+												// stock is negative or zero. lets turn off the product
+												mslib_befe::disableProduct($value['products_id']);
 											}
 										}
-										//end of hook to let other plugins further manipulate the replacers
-										if ($page[0]['content']) {
-											$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
-										}
-										if ($page[0]['name']) {
-											$page[0]['name']=str_replace($array1, $array2, $page[0]['name']);
-										}
-										foreach ($mailTo as $mailuser) {
-											mslib_fe::mailUser($mailuser, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
-										}
 									}
+									// now decrease the stocklevel eof
 								}
-								if ($row['products_quantity']<1) {
-									if ($this->ms['MODULES']['DISABLE_PRODUCT_WHEN_NEGATIVE_STOCK']) {
-										if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-											// stock is negative or zero. lets turn off the product
-											mslib_befe::disableProduct($value['products_id']);
-										}
-									}
-								}
-								// now decrease the stocklevel eof
 							}
-						}
-						if ($orders_products_id and is_array($value['attributes'])) {
-							foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
-								$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
-								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-								$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+							if ($orders_products_id and is_array($value['attributes'])) {
+								foreach ($value['attributes'] as $attribute_key=>$attribute_values) {
+									$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
+									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+									$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 //								print_r($row['listtype']);
-								switch ($row['listtype']) {
-									case 'checkbox':
-										$items=$attribute_values;
-										break;
-									default:
-										$items=array($attribute_values);
-										break;
-								}
-								foreach ($items as $item) {
-									$attributes_tax['country_tax']=(string)$item['country_tax'];
-									$attributes_tax['region_tax']=(string)$item['region_tax'];
-									$attributes_tax['tax']=(string)$item['tax'];
-									if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
-										$attributes_tax['country_tax']=0;
-										$attributes_tax['region_tax']=0;
-										$attributes_tax['tax']=0;
+									switch ($row['listtype']) {
+										case 'checkbox':
+											$items=$attribute_values;
+											break;
+										default:
+											$items=array($attribute_values);
+											break;
 									}
-									$insertAttributes=array();
-									$insertAttributes['orders_id']=$orders_id;
-									$insertAttributes['orders_products_id']=$orders_products_id;
-									$insertAttributes['products_options']=$item['products_options_name'];
-									$insertAttributes['products_options_values']=$item['products_options_values_name'];
-									$insertAttributes['options_values_price']=$item['options_values_price'];
-									$insertAttributes['price_prefix']=$item['price_prefix'];
-									$insertAttributes['products_options_id']=$item['options_id'];
-									$insertAttributes['products_options_values_id']=$item['options_values_id'];
-									$sub_total_excluding_vat['attributes_price']+=$item['price_prefix'].$item['options_values_price']*$value['qty'];
-									$sub_total['attributes_price']+=$item['price_prefix'].$item['options_values_price']*$value['qty'];
-									$insertAttributes['attributes_tax_data']=serialize($attributes_tax);
-									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertAttributes);
-									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									foreach ($items as $item) {
+										$attributes_tax['country_tax']=(string)$item['country_tax'];
+										$attributes_tax['region_tax']=(string)$item['region_tax'];
+										$attributes_tax['tax']=(string)$item['tax'];
+										if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+											$attributes_tax['country_tax']=0;
+											$attributes_tax['region_tax']=0;
+											$attributes_tax['tax']=0;
+										}
+										$insertAttributes=array();
+										$insertAttributes['orders_id']=$orders_id;
+										$insertAttributes['orders_products_id']=$orders_products_id;
+										$insertAttributes['products_options']=$item['products_options_name'];
+										$insertAttributes['products_options_values']=$item['products_options_values_name'];
+										$insertAttributes['options_values_price']=$item['options_values_price'];
+										$insertAttributes['price_prefix']=$item['price_prefix'];
+										$insertAttributes['products_options_id']=$item['options_id'];
+										$insertAttributes['products_options_values_id']=$item['options_values_id'];
+										$sub_total_excluding_vat['attributes_price']+=$item['price_prefix'].$item['options_values_price']*$value['qty'];
+										$sub_total['attributes_price']+=$item['price_prefix'].$item['options_values_price']*$value['qty'];
+										$insertAttributes['attributes_tax_data']=serialize($attributes_tax);
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertAttributes);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									}
 								}
 							}
-						}
-						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductsPostProc'])) {
-							// hook
-							$params=array(
-								'ms'=>$this->ms,
-								'orders_products_id'=>$orders_products_id,
-								'insertArray'=>$insertArray,
-								'insertAttributes'=>$insertAttributes,
-								'cart'=>$cart
-							);
-							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductsPostProc'] as $funcRef) {
-								t3lib_div::callUserFunction($funcRef, $params, $this);
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductsPostProc'])) {
+								// hook
+								$params=array(
+									'ms'=>$this->ms,
+									'orders_products_id'=>$orders_products_id,
+									'insertArray'=>$insertArray,
+									'insertAttributes'=>$insertAttributes,
+									'cart'=>$cart
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductsPostProc'] as $funcRef) {
+									t3lib_div::callUserFunction($funcRef, $params, $this);
+								}
+								// hook eof
 							}
-							// hook eof
 						}
 					}
 				}
@@ -2067,146 +2077,148 @@ class tx_mslib_cart extends tslib_pibase {
 		} else {
 			$itemsWrapper=array();
 			$c=true;
-			foreach ($this->cart['products'] as $shopping_cart_item=>$product) {
-				$subPrices='';
-				if (!$product['products_image']) {
-					$image='<div class="no_image_50"></div>';
-				} else {
-					$image='<img src="'.$product['products_image'].'">';
-				}
-				$item=array();
-				// ITEM CLASS
-				$item['ITEM_CLASS']=(($c=!$c) ? 'odd' : 'even');
-				// ITEM IMAGE
-				if (!$product['products_image']) {
-					$item['ITEM_IMAGE']='<div class="no_image_50"></div>';
-				} else {
-					if (!strstr(mslib_befe::strtolower($product['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product['products_image']), 'https://')) {
-						$item['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
+			if (is_array($this->cart['products']) && count($this->cart['products'])) {
+				foreach ($this->cart['products'] as $shopping_cart_item=>$product) {
+					$subPrices='';
+					if (!$product['products_image']) {
+						$image='<div class="no_image_50"></div>';
+					} else {
+						$image='<img src="'.$product['products_image'].'">';
 					}
-					$item['ITEM_IMAGE']='<img src="'.$product['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
-				}
-				// ITEM_NAME
-				$item['ITEM_NAME']=$product['products_name'];
-				if ($product['products_model']) {
-					$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
-				}
-				/*
-				if (!empty($product['ean_code'])) {
-					$item['ITEM_NAME'] .= '<br/>EAN: '.$product['ean_code'];
-				}
-				if (!empty($product['sku_code'])) {
-					$item['ITEM_NAME'] .= '<br/>SKU: '.$product['sku_code'];
-				}
-				if (!empty($product['vendor_code'])) {
-					$item['ITEM_NAME'] .= '<br/>Vendor: '.$product['vendor_code'];
-				}*/
-				//print_r($product['attributes']);
-				if (is_array($product['attributes'])) {
-					// loading the attributes
-					foreach ($product['attributes'] as $attribute_key=>$attribute_values) {
-						$continue=0;
-						if (is_numeric($attribute_key)) {
-							$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
-							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-							$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+					$item=array();
+					// ITEM CLASS
+					$item['ITEM_CLASS']=(($c=!$c) ? 'odd' : 'even');
+					// ITEM IMAGE
+					if (!$product['products_image']) {
+						$item['ITEM_IMAGE']='<div class="no_image_50"></div>';
+					} else {
+						if (!strstr(mslib_befe::strtolower($product['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product['products_image']), 'https://')) {
+							$item['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
 						}
-						switch ($row['listtype']) {
-							case 'checkbox':
-								$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
-								$continue=0;
-								$total=count($attribute_values);
-								$counter=0;
-								foreach ($attribute_values as $attribute_item) {
-									$counter++;
+						$item['ITEM_IMAGE']='<img src="'.$product['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
+					}
+					// ITEM_NAME
+					$item['ITEM_NAME']=$product['products_name'];
+					if ($product['products_model']) {
+						$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
+					}
+					/*
+					if (!empty($product['ean_code'])) {
+						$item['ITEM_NAME'] .= '<br/>EAN: '.$product['ean_code'];
+					}
+					if (!empty($product['sku_code'])) {
+						$item['ITEM_NAME'] .= '<br/>SKU: '.$product['sku_code'];
+					}
+					if (!empty($product['vendor_code'])) {
+						$item['ITEM_NAME'] .= '<br/>Vendor: '.$product['vendor_code'];
+					}*/
+					//print_r($product['attributes']);
+					if (is_array($product['attributes'])) {
+						// loading the attributes
+						foreach ($product['attributes'] as $attribute_key=>$attribute_values) {
+							$continue=0;
+							if (is_numeric($attribute_key)) {
+								$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
+								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+								$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+							}
+							switch ($row['listtype']) {
+								case 'checkbox':
+									$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
+									$continue=0;
+									$total=count($attribute_values);
+									$counter=0;
+									foreach ($attribute_values as $attribute_item) {
+										$counter++;
+										if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+											$attribute_item['options_values_price']=round($attribute_item['options_values_price']*(1+$product['tax_rate']), 2);
+										} else {
+											$attribute_item['options_values_price']=round($attribute_item['options_values_price'], 2);
+										}
+										$item['ITEM_NAME'].=trim($attribute_item['products_options_values_name']);
+										$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
+										if ($attribute_item['options_values_price']>0) {
+											$subPrices.=mslib_fe::amount2Cents(($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price'])));
+										}
+										$subPrices.='<br />';
+										if (isset($attribute_values[$counter])) {
+											$item['ITEM_NAME'].=', ';
+										}
+									}
+									break;
+								case 'input':
+									$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
+									$multiple=0;
+									$continue=0;
+									break;
+								default:
+									$multiple=0;
+									$continue=1;
+									break;
+							}
+							if ($continue) {
+								$array=array($attribute_values);
+								foreach ($array as $attribute_item) {
 									if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-										$attribute_item['options_values_price']=round($attribute_item['options_values_price']*(1+$product['tax_rate']), 2);
+										if ($product['country_tax_rate'] && $product['region_tax_rate']) {
+											$country_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['country_tax_rate']));
+											$region_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['region_tax_rate']));
+											$item_tax_rate=$country_tax_rate+$region_tax_rate;
+										} else {
+											$item_tax_rate=mslib_fe::taxDecimalCrop($item['options_values_price']*($product['tax_rate']));
+										}
+										$attribute_item['options_values_price']=$attribute_item['options_values_price']+($item_tax_rate);
 									} else {
 										$attribute_item['options_values_price']=round($attribute_item['options_values_price'], 2);
 									}
-									$item['ITEM_NAME'].=trim($attribute_item['products_options_values_name']);
-									$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
 									if ($attribute_item['options_values_price']>0) {
 										$subPrices.=mslib_fe::amount2Cents(($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price'])));
 									}
 									$subPrices.='<br />';
-									if (isset($attribute_values[$counter])) {
-										$item['ITEM_NAME'].=', ';
-									}
+									$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
+									$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
 								}
-								break;
-							case 'input':
-								$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
-								$multiple=0;
-								$continue=0;
-								break;
-							default:
-								$multiple=0;
-								$continue=1;
-								break;
-						}
-						if ($continue) {
-							$array=array($attribute_values);
-							foreach ($array as $attribute_item) {
-								if ($product['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-									if ($product['country_tax_rate'] && $product['region_tax_rate']) {
-										$country_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['country_tax_rate']));
-										$region_tax_rate=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*($product['region_tax_rate']));
-										$item_tax_rate=$country_tax_rate+$region_tax_rate;
-									} else {
-										$item_tax_rate=mslib_fe::taxDecimalCrop($item['options_values_price']*($product['tax_rate']));
-									}
-									$attribute_item['options_values_price']=$attribute_item['options_values_price']+($item_tax_rate);
-								} else {
-									$attribute_item['options_values_price']=round($attribute_item['options_values_price'], 2);
-								}
-								if ($attribute_item['options_values_price']>0) {
-									$subPrices.=mslib_fe::amount2Cents(($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price'])));
-								}
-								$subPrices.='<br />';
-								$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
-								$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
 							}
 						}
+						// loading the attributes eof
 					}
-					// loading the attributes eof
-				}
-				if ($subPrices) {
-					$subPrices='<div class="attribute_prices">'.$subPrices.'</div>';
-				}
-				// ITEM NAME EOF
-				// ITEM_MODEL
-				$item['ITEM_MODEL']=$product['products_model'];
-				// ITEM_QUANTITY
-				$item['SHOPPING_CART_KEY']=$shopping_cart_item;
-				$item['ITEM_LINK']=$product['link'];
-				$item['ITEM_ORDER_UNIT_CODE']=$product['order_unit_code'];
-				$item['ITEM_ORDER_UNIT_NAME']=$product['order_unit_name'];
-				$item['ITEM_MANUFACTURERS_NAME']=$product['manufacturers_name'];
-				$item['ITEM_QUANTITY']=round($product['qty'], 14);
-				// ITEM_SKU
-				$item['ITEM_SKU']=$product['sku_code'];
-				// ITEM_TOTAL
-				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$totalPrice=$product['total_price_including_vat'];
-				} else {
-					$totalPrice=$product['total_price'];
-				}
-				$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice); //.$subPrices;
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'])) {
-					$params=array(
-						'item'=>&$item,
-						'product'=>&$product,
-						'cart'=>&$this->cart,
-						'c'=>&$c,
-						'subPrices'=>&$subPrices,
-						'sectionTemplateType'=>&$sectionTemplateType
-					);
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+					if ($subPrices) {
+						$subPrices='<div class="attribute_prices">'.$subPrices.'</div>';
 					}
+					// ITEM NAME EOF
+					// ITEM_MODEL
+					$item['ITEM_MODEL']=$product['products_model'];
+					// ITEM_QUANTITY
+					$item['SHOPPING_CART_KEY']=$shopping_cart_item;
+					$item['ITEM_LINK']=$product['link'];
+					$item['ITEM_ORDER_UNIT_CODE']=$product['order_unit_code'];
+					$item['ITEM_ORDER_UNIT_NAME']=$product['order_unit_name'];
+					$item['ITEM_MANUFACTURERS_NAME']=$product['manufacturers_name'];
+					$item['ITEM_QUANTITY']=round($product['qty'], 14);
+					// ITEM_SKU
+					$item['ITEM_SKU']=$product['sku_code'];
+					// ITEM_TOTAL
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$totalPrice=$product['total_price_including_vat'];
+					} else {
+						$totalPrice=$product['total_price'];
+					}
+					$item['ITEM_TOTAL']=mslib_fe::amount2Cents($totalPrice); //.$subPrices;
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'])) {
+						$params=array(
+							'item'=>&$item,
+							'product'=>&$product,
+							'cart'=>&$this->cart,
+							'c'=>&$c,
+							'subPrices'=>&$subPrices,
+							'sectionTemplateType'=>&$sectionTemplateType
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'] as $funcRef) {
+							t3lib_div::callUserFunction($funcRef, $params, $this);
+						}
+					}
+					$itemsWrapper[]=$item;
 				}
-				$itemsWrapper[]=$item;
 			}
 			// MERGE TO TEMPLATE
 			// Extract the subparts from the template
@@ -2255,18 +2267,20 @@ class tx_mslib_cart extends tslib_pibase {
 			$keys[]='ITEM_ORDER_UNIT_NAME';
 			$keys[]='ITEM_SKU';
 			$keys[]='ITEM_TOTAL';
-			foreach ($itemsWrapper as $item) {
-				$markerArray=array();
-				foreach ($keys as $key) {
-					$markerArray[$key]=$item[$key];
-				}
-				foreach ($item as $key=>$val) {
-					// hooked plugins wants to add more types. lets find them and add them
-					if (!in_array($key, $keys)) {
+			if (is_array($itemsWrapper) && count($itemsWrapper)) {
+				foreach ($itemsWrapper as $item) {
+					$markerArray=array();
+					foreach ($keys as $key) {
 						$markerArray[$key]=$item[$key];
 					}
+					foreach ($item as $key=>$val) {
+						// hooked plugins wants to add more types. lets find them and add them
+						if (!in_array($key, $keys)) {
+							$markerArray[$key]=$item[$key];
+						}
+					}
+					$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEMS_WRAPPER'], $markerArray, '###|###');
 				}
-				$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEMS_WRAPPER'], $markerArray, '###|###');
 			}
 			$subpartArray['###ITEMS_WRAPPER###']=$contentItem;
 			//ITEMS_WRAPPER EOF
