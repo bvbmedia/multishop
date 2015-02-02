@@ -13,6 +13,7 @@ $tmp='
 	</th>
 ';
 $headercol.='
+<th width="50" align="right"></th>
 <th width="50" align="right">'.$this->pi_getLL('invoice_number').'</th>
 <th width="50" align="right" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
 ';
@@ -32,8 +33,9 @@ $headercol.='
 </tr>';
 $cb_ctr=0;
 $tmp.=$headercol;
-
+$totalAmount=0;
 foreach ($invoices as $invoice) {
+	$cb_ctr++;
 	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
 	} else {
@@ -44,6 +46,7 @@ foreach ($invoices as $invoice) {
 	<label for="checkbox_'.$invoice['id'].'"></label>
 	<input type="checkbox" name="selected_invoices[]" class="PrettyInput" id="checkbox_'.$invoice['id'].'" value="'.$invoice['id'].'">
 	</th>
+	<td align="right">'.$cb_ctr.'</td>
 	';
 	$user=mslib_fe::getUser($invoice['customer_id']);
 	$link_name=$invoice['ordered_by'];
@@ -60,6 +63,11 @@ foreach ($invoices as $invoice) {
 	$tmp.='<td align="center" nowrap>'.$invoice['payment_method_label'].'</td>';
 	$tmp.='<td align="center" nowrap>'.$invoice['payment_condition'].'</td>';
 	$tmp.='<td align="right" nowrap>'.mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['amount'], 0).'</td>';
+	if ($invoice['reversal_invoice']) {
+		$totalAmount-=$invoice['amount'];
+	} else {
+		$totalAmount+=$invoice['amount'];
+	}
 	$tmp.='<td align="right" nowrap>'.($invoice['date_mail_last_sent'] >0 ? strftime("%x", $invoice['date_mail_last_sent']):'').'</td>';
 	$tmp.='<td align="center" nowrap>';
 	if (!$invoice['paid']) {
@@ -72,12 +80,32 @@ foreach ($invoices as $invoice) {
 	$tmp.='</td>';
 	$tmp.='</tr>';
 }
+$footercol.='
+<th width="50" align="right"></th>
+<th width="50" align="right">'.$this->pi_getLL('invoice_number').'</th>
+<th width="50" align="right" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
+';
+if ($this->masterShop) {
+	$footercol.='<th width="75">'.$this->pi_getLL('store').'</th>';
+}
+$footercol.='
+<th>'.$this->pi_getLL('customers').'</th>
+<th width="50" align="right">'.$this->pi_getLL('order_date').'</th>
+<th width="50">'.$this->pi_getLL('payment_method').'</th>
+<th width="50">'.$this->pi_getLL('payment_condition').'</th>
+<th width="50" align="right">'.mslib_fe::amount2Cents($totalAmount, 0).'</th>
+<th width="200" align="right">'.$this->pi_getLL('date_last_sent').'</th>
+<th width="50">'.$this->pi_getLL('admin_paid').'</th>
+';
+$footercol.='
+</tr>';
+
 $tmp.='
 <tr>
 	<th>
 		&nbsp;
 	</th>
-'.$headercol;
+'.$footercol;
 $tmp.='
 </table>
 ';
