@@ -713,6 +713,18 @@ switch ($_REQUEST['action']) {
 		$markerArray['BILLING_TELEPHONE']=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
 		$markerArray['BILLING_EMAIL']=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
 		$markerArray['CUSTOMER_ID']='<strong>'.$this->pi_getLL('admin_customer_id').': '.$user['uid'].'</strong><br/>';
+		if ($user['crdate']>0) {
+			$user['crdate']=strftime("%x %X", $user['crdate']);
+		} else {
+			$user['crdate']='';
+		}
+		$markerArray['REGISTERED_DATE']='<strong>'.$this->pi_getLL('created').': '.$user['crdate'].'</strong><br/>';
+		if ($user['lastlogin']) {
+			$user['lastlogin']=strftime("%x %X", $user['lastlogin']);
+		} else {
+			$user['lastlogin']='';
+		}
+		$markerArray['LAST_LOGIN']='<strong>'.$this->pi_getLL('latest_login').': '.$user['lastlogin'].'</strong><br/>';
 		$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
 		$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
 		$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
