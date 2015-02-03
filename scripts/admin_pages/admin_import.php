@@ -2693,6 +2693,7 @@ if ($this->post['action']=='category-insert') {
 										foreach ($this->languages as $langKey => $langTitle) {
 											if ($langKey>0) {
 												$insertArray=array();
+												$insertArray['products_options_values_id']=$option_value_id;
 												$insertArray['language_id']=$language_id;
 												$insertArray['products_options_values_name']=$option_value;
 												$insertArray['language_id']=$langKey;
