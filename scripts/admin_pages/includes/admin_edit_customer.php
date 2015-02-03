@@ -590,7 +590,7 @@ switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
 		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
-			$subpartArray['###USERNAME_READONLY###']=(($this->get['action']=='edit_customer' && $this->get['cid']>0) ? 'readonly="readonly"' : '');
+			$subpartArray['###USERNAME_READONLY###']=(($this->get['action']=='edit_customer' && $this->get['tx_multishop_pi1']['cid']>0) ? 'readonly="readonly"' : '');
 		} else {
 			$subpartArray['###USERNAME_READONLY###']='';
 		}
