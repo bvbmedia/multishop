@@ -1478,32 +1478,43 @@ if ($this->post['action']=='category-insert') {
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$this->ms['sqls'][]=$query;
-								// LANGUAGE OVERLAYS
-								foreach ($this->languages as $langKey => $langTitle) {
-									if ($langKey>0) {
-										$suffix='_'.$langKey;
-										$updateArray2=$updateArray;
-										foreach ($updateArray2 as $key => $val) {
-											if (isset($item[$key.$suffix]) && $item[$key.$suffix] != '') {
-												$updateArray2[$key]=$item[$key.$suffix];
-											}
-										}
-										$updateArray2['language_id']=$langKey;
-										// get existing record
-										$record=mslib_befe::getRecord($this->ms['target-cid'],'tx_multishop_categories_description','categories_id',array(0=>'language_id='.$langKey));
-										if ($record['categories_id']) {
-											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id='.$this->ms['target-cid'].' and language_id='.$langKey, $updateArray2);
-											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-										} else {
-											// add new record
-											$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray2);
-											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-										}
-									}
-								}
-								// LANGUAGE OVERLAYS EOL
 								$stats['categories_added']++;
 							}
+							// LANGUAGE OVERLAYS for categories description
+							foreach ($this->languages as $langKey => $langTitle) {
+								if ($langKey>0) {
+									$suffix='_'.$langKey;
+									$updateArray2=array();
+									if (isset($item['categories_content'.$x.$suffix]) && !empty($item['categories_content'.$x.$suffix])) {
+										$updateArray2['content']=$item['categories_content'.$x.$suffix];
+									} else {
+										$updateArray2['content']=$item['categories_content'.$x];
+									}
+									if (isset($item['categories_content_bottom'.$x.$suffix]) && !empty($item['categories_content_bottom'.$x.$suffix])) {
+										$updateArray2['content_footer']=$item['categories_content_bottom'.$x.$suffix];
+									} else {
+										$updateArray2['content_footer']=$item['categories_content_bottom'.$x];
+									}
+									if (isset($item['categories_name'.$x.$suffix]) && !empty($item['categories_name'.$x.$suffix])) {
+										$updateArray2['categories_name']=$item['categories_name'.$x.$suffix];
+									} else {
+										$updateArray2['categories_name']=$item['categories_name'.$x];
+									}
+									$updateArray2['categories_id']=$this->ms['target-cid'];
+									$updateArray2['language_id']=$langKey;
+									// get existing record
+									$record=mslib_befe::getRecord($this->ms['target-cid'],'tx_multishop_categories_description','categories_id',array(0=>'language_id='.$langKey));
+									if ($record['categories_id']) {
+										$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id='.$this->ms['target-cid'].' and language_id='.$langKey, $updateArray2);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									} else {
+										// add new record
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray2);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									}
+								}
+							}
+							// LANGUAGE OVERLAYS for categories description EOL
 							if ($this->ms['target-cid']) {
 								$updateArray=array();
 								if (isset($item['categories_content'.$x])) {
