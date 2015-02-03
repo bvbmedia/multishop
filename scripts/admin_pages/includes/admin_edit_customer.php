@@ -354,7 +354,7 @@ $head='';
 $head.='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
-		jQuery(\'#edit_customer\').h5Validate();
+		var validate=jQuery(\'#edit_customer\').h5Validate();
 		$("#birthday_visitor").datepicker({
 			dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'm/d/Y').'",
 			altField: "#birthday",
@@ -590,7 +590,7 @@ switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
 		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
-			$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
+			$subpartArray['###USERNAME_READONLY###']=(($this->get['action']=='edit_customer' && $this->get['cid']>0) ? 'readonly="readonly"' : '');
 		} else {
 			$subpartArray['###USERNAME_READONLY###']='';
 		}
@@ -722,7 +722,7 @@ switch ($_REQUEST['action']) {
 		if ($user['lastlogin']) {
 			$user['lastlogin']=strftime("%x %X", $user['lastlogin']);
 		} else {
-			$user['lastlogin']='';
+			$user['lastlogin']='-';
 		}
 		$markerArray['LAST_LOGIN']='<strong>'.$this->pi_getLL('latest_login').': '.$user['lastlogin'].'</strong><br/>';
 		$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));

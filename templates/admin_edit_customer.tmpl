@@ -85,7 +85,7 @@ jQuery(document).ready(function ($) {
         <!-- ###DETAILS### end -->
         <div style="display: block;" id="edit_customer" class="tab_content">
             <div id="live-validation">
-                <form action="###CUSTOMER_EDIT_FORM_URL###" class="blockSubmitForm" method="post" name="edit_customer" class="edit_customer" id="edit_customer">
+                <form action="###CUSTOMER_EDIT_FORM_URL###" method="post" name="edit_customer" class="edit_customer" id="edit_customer">
                     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
 
                     <div class="account-field">
@@ -109,14 +109,14 @@ jQuery(document).ready(function ($) {
                     </div>
                     <div class="account-field">
                         <label class="account-firstname" for="first_name">###LABEL_FIRSTNAME###*</label>
-                        <input type="text" name="first_name" class="first-name" id="first_name" value="###VALUE_FIRSTNAME###" title="###INVALID_FIRSTNAME_MESSAGE###">
-
+                        <input type="text" name="first_name" class="first-name" id="first_name" value="###VALUE_FIRSTNAME###" required="required" data-h5-errorid="invalid-first_name" title="###INVALID_FIRSTNAME_MESSAGE###">
                         <div id="invalid-first_name" class="error-space" style="display:none"></div>
+
                         <label class="account-middlename" for="middle_name">###LABEL_MIDDLENAME###</label>
                         <input type="text" name="middle_name" id="middle_name" class="middle_name" value="###VALUE_MIDDLENAME###">
-                        <label class="account-lastname" for="last_name">###LABEL_LASTNAME###*</label>
-                        <input type="text" name="last_name" id="last_name" class="last-name" value="###VALUE_LASTNAME###" title="###INVALID_LASTNAME_MESSAGE###">
 
+                        <label class="account-lastname" for="last_name">###LABEL_LASTNAME###*</label>
+                        <input type="text" name="last_name" id="last_name" class="last-name" value="###VALUE_LASTNAME###" required="required" data-h5-errorid="invalid-last_name" title="###INVALID_LASTNAME_MESSAGE###">
                         <div id="invalid-last_name" class="error-space" style="display:none"></div>
                     </div>
                     <div class="account-field">
@@ -128,10 +128,12 @@ jQuery(document).ready(function ($) {
                     <div class="account-field">
                         <label class="account-address" for="address">###LABEL_STREET_ADDRESS###*</label>
                         <input type="text" name="street_name" id="address" class="address" value="###VALUE_STREET_ADDRESS###" required="required" data-h5-errorid="invalid-address" title="###INVALID_ADDRESS_MESSAGE###">
-
                         <div id="invalid-address" class="error-space" style="display:none"></div>
+
                         <label class="account-addressnumber" for="address_number">###LABEL_STREET_ADDRESS_NUMBER###*</label>
-                        <input type="text" name="address_number" id="address_number" class="address-number" value="###VALUE_STREET_ADDRESS_NUMBER###">
+                        <input type="text" name="address_number" id="address_number" class="address-number" value="###VALUE_STREET_ADDRESS_NUMBER###" required="required" data-h5-errorid="invalid-address-number" title="###INVALID_ADDRESSNUMBER_MESSAGE###">
+                        <div id="invalid-address-number" class="error-space" style="display:none"></div>
+
                         <label class="account-address_ext" for="address_ext">###LABEL_ADDRESS_EXTENTION###</label>
                         <input type="text" name="address_ext" id="address_ext" class="address_ext" value="###VALUE_ADDRESS_EXTENTION###">
                     </div>
