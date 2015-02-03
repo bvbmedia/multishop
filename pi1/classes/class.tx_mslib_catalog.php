@@ -623,7 +623,7 @@ class tx_mslib_catalog {
 		if ($count_cats>0) {
 			foreach ($cats as $item) {
 				if ($item['id']) {
-					if (!tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id']) && $item['id']!=$deepest_cat_id) {
+					if (!tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id'])) {
 						$insertArray=array();
 						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
 							$insertArray['categories_id']=$deepest_cat_id;
