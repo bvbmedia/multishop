@@ -2484,8 +2484,6 @@ if (is_numeric($this->get['orders_id'])) {
 			select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
 			' : '').'
 			var add_new_attributes = function(optid_value, optvalid_value, price_data) {
-				console.log(price_data);
-
 				var d = new Date();
 				var n = d.getTime();
 				var row_class=$(\'#last_edit_product_row\').prev("tr").attr("class");
@@ -2753,15 +2751,19 @@ if (is_numeric($this->get['orders_id'])) {
 	$content.='
 	<script type="text/javascript">
 	function decimalCrop(float) {
-		var numbers = float.toString().split(".");
-		var prime = numbers[0];
-		if (numbers[1] > 0 && numbers[1] != "undefined") {
-			var decimal = new String(numbers[1]);
+		if (float!=undefined) {
+			var numbers = float.toString().split(".");
+			var prime = numbers[0];
+			if (numbers[1] > 0 && numbers[1] != "undefined") {
+				var decimal = new String(numbers[1]);
+			} else {
+				var decimal = "00";
+			}
+			var number = prime + "." + decimal.substr(0, 2);
+			return number;
 		} else {
-			var decimal = "00";
+			return "0.00";
 		}
-		var number = prime + "." + decimal.substr(0, 2);
-		return number;
 	}
 	function productPrice(to_include_vat, o, tax_element_id) {
 		var original_val = o.val();
