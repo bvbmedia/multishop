@@ -737,6 +737,7 @@ if (is_numeric($this->get['orders_id'])) {
 			<input name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
 			</div>
 			<a href="#" id="close_edit_delivery_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
+			<a href="#" id="copy_from_billing_details" class="float_right msadmin_button">'.$this->pi_getLL('copy_from_billing_details').'</a>
 			</div>';
 		}
 		if ($hide_delivery_vcard) {
@@ -846,6 +847,22 @@ if (is_numeric($this->get['orders_id'])) {
 			e.preventDefault();
 			$("#billing_details_container").hide();
 			$("#edit_billing_details_container").show();
+		});
+		$("#copy_from_billing_details").click(function(e) {
+			e.preventDefault();
+			$("#edit_delivery_company").val($("#edit_billing_company").val());
+			$("#edit_delivery_name").val($("#edit_billing_name").val());
+			$("#edit_delivery_street_name").val($("#edit_billing_street_name").val());
+			$("#edit_delivery_address_number").val($("#edit_billing_address_number").val());
+			$("#edit_delivery_address_ext").val($("#edit_billing_address_ext").val());
+			$("#edit_delivery_building").val($("#edit_billing_building").val());
+			$("#edit_delivery_zip").val($("#edit_billing_zip").val());
+			$("#edit_delivery_city").val($("#edit_billing_city").val());
+			$("#edit_delivery_country").val($("#edit_billing_country").val());
+			$("#edit_delivery_email").val($("#edit_billing_email").val());
+			$("#edit_delivery_telephone").val($("#edit_billing_telephone").val());
+			$("#edit_delivery_mobile").val($("#edit_billing_mobile").val());
+			$("#edit_delivery_fax").val($("#edit_billing_fax").val());
 		});
 		$("#close_edit_billing_info").click(function(e) {
 			e.preventDefault();

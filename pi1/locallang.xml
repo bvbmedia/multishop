@@ -1171,6 +1171,7 @@
             <label index="all_payment_methods">All payment methods</label>
             <label index="all_shipping_methods">All shipping methods</label>
             <label index="all_countries">All countries</label>
+            <label index="copy_from_billing_details">Copy from billing details</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
