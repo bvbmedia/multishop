@@ -1480,6 +1480,21 @@ if ($this->post['action']=='category-insert') {
 								$this->ms['sqls'][]=$query;
 								$stats['categories_added']++;
 							}
+							if ($this->ms['target-cid']) {
+								$updateArray=array();
+								if (isset($item['categories_content'.$x])) {
+									$updateArray['content']=$item['categories_content'.$x];
+								}
+								if (isset($item['categories_content_bottom'.$x])) {
+									$updateArray['content_footer']=$item['categories_content_bottom'.$x];
+								}
+								//$updateArray['categories_name']=trim($item['categories_name'.$x]);
+								if (count($updateArray)) {
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', "language_id=".$language_id." and categories_id=".$this->ms['target-cid'], $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									$this->ms['sqls'][]=$query;
+								}
+							}
 							// LANGUAGE OVERLAYS for categories description
 							foreach ($this->languages as $langKey => $langTitle) {
 								if ($langKey>0) {
@@ -1515,21 +1530,6 @@ if ($this->post['action']=='category-insert') {
 								}
 							}
 							// LANGUAGE OVERLAYS for categories description EOL
-							if ($this->ms['target-cid']) {
-								$updateArray=array();
-								if (isset($item['categories_content'.$x])) {
-									$updateArray['content']=$item['categories_content'.$x];
-								}
-								if (isset($item['categories_content_bottom'.$x])) {
-									$updateArray['content_footer']=$item['categories_content_bottom'.$x];
-								}
-								//$updateArray['categories_name']=trim($item['categories_name'.$x]);
-								if (count($updateArray)) {
-									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', "language_id=".$language_id." and categories_id=".$this->ms['target-cid'], $updateArray);
-									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-									$this->ms['sqls'][]=$query;
-								}
-							}
 						}
 						if ($item['categories_image'.$x]) {
 							$categories_name=$item['categories_name'.$x];
@@ -2616,7 +2616,7 @@ if ($this->post['action']=='category-insert') {
 								$option_value=$option_row[1];
 								if ($option_name and $option_value) {
 									// first chk if the option already exists and if not add it
-									$sql_chk="select products_options_id from tx_multishop_products_options where products_options_name='".addslashes($option_name)."'";
+									$sql_chk="select products_options_id from tx_multishop_products_options where products_options_name='".addslashes($option_name)."' and language_id='".$language_id."'";
 									$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
 									$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
 									if ($rs_chk['products_options_id']) {
@@ -2638,6 +2638,34 @@ if ($this->post['action']=='category-insert') {
 										$GLOBALS['TYPO3_DB']->sql_query($query);
 										$products_options_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									}
+									// LANGUAGE OVERLAYS for products options
+									foreach ($this->languages as $langKey => $langTitle) {
+										if ($langKey>0) {
+											$insertArray=array();
+											$insertArray['products_options_name']=$option_name;
+											$insertArray['attributes_values']='0';
+											if ($sortOrderArray['tx_multishop_products_options']['sort_order']) {
+												$sortOrderArray['tx_multishop_products_options']['sort_order']++;
+											} else {
+												$sortOrderArray['tx_multishop_products_options']['sort_order']=time();
+											}
+											$insertArray['sort_order']=$sortOrderArray['tx_multishop_products_options']['sort_order'];
+											$insertArray['products_options_id']=$products_options_id;
+											$insertArray['language_id']=$langKey;
+											// get existing record
+											$record=mslib_befe::getRecord($products_options_id,'tx_multishop_products_options','products_options_id',array(0=>'language_id='.$langKey));
+											if ($record['products_options_id']) {
+												$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id='.$products_options_id.' and language_id='.$langKey, $insertArray);
+												$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+											} else {
+												$insertArray['listtype']='pulldownmenu';
+												// add new record
+												$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
+												$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+											}
+										}
+									}
+									// LANGUAGE OVERLAYS for products options EOL
 									if ($products_options_id and $option_value) {
 										$str2="SELECT pov.products_options_values_id from tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_options_values pov where povp.products_options_id='".addslashes($products_options_id)."' and pov.products_options_values_name='".addslashes($option_value)."' and povp.products_options_values_id=pov.products_options_values_id";
 										$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
@@ -2661,6 +2689,26 @@ if ($this->post['action']=='category-insert') {
 												$option_value_id=$row2['products_options_values_id'];
 											}
 										}
+										// LANGUAGE OVERLAYS for products options
+										foreach ($this->languages as $langKey => $langTitle) {
+											if ($langKey>0) {
+												$insertArray=array();
+												$insertArray['language_id']=$language_id;
+												$insertArray['products_options_values_name']=$option_value;
+												$insertArray['language_id']=$langKey;
+												// get existing record
+												$record=mslib_befe::getRecord($option_value_id,'tx_multishop_products_options_values','products_options_values_id',array(0=>'language_id='.$langKey));
+												if ($record['products_options_values_id']) {
+													$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values', 'products_options_values_id='.$option_value_id.' and language_id='.$langKey, $insertArray);
+													$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+												} else {
+													// add new record
+													$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
+													$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+												}
+											}
+										}
+										// LANGUAGE OVERLAYS for products options values EOL
 										if ($products_options_id and $option_value_id) {
 											if ($this->post['incremental_update'] and $products_id) {
 												$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\'');
