@@ -1666,6 +1666,7 @@ class mslib_fe {
 			$output='';
 			$output_html=array();
 			$next_index=0;
+			$index_key=0;
 			while ($options=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 				if (!$options['hide']) {
 					$load_default=0;
@@ -1904,7 +1905,8 @@ class mslib_fe {
 								'readonly'=>$readonly,
 								'options_values'=>&$options_values,
 								'output'=>&$output,
-								'output_html'=>&$output_html
+								'output_html'=>&$output_html,
+								'index_key'=>$index_key
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['ShowAttributesLoadDefaultOutputHTML'] as $funcRef) {
 								t3lib_div::callUserFunction($funcRef, $params, $this);
@@ -1920,7 +1922,8 @@ class mslib_fe {
 								'options'=>&$options,
 								'readonly'=>$readonly,
 								'output'=>&$output,
-								'output_html'=>&$output_html
+								'output_html'=>&$output_html,
+								'index_key'=>$index_key
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionValuesHook'] as $funcRef) {
 								t3lib_div::callUserFunction($funcRef, $params, $this);
@@ -1928,10 +1931,22 @@ class mslib_fe {
 						}
 						// hook
 					}
+					$index_key++;
 				} else {
 					$output_html[$options['products_options_id']]='<input type="hidden" id="attributes'.$options['products_options_id'].'" name="attributes['.$options['products_options_id'].']" value="0">';
 				}
 			}
+			// hook to let other plugins further manipulate the option values display
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOutputHTMLPostHook'])) {
+				$params=array(
+					'products_id'=>$products_id,
+					'output_html'=>&$output_html
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOutputHTMLPostHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// hook
 			$output.='<div class="products_attributesWrapper">';
 			$title=$this->pi_getLL('product_options');
 			if ($title) {
