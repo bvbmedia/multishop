@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$GLOBALS['TSFE']->additionalHeaderData[]='<meta name="robots" content="noindex">'."\n";
 if (!mslib_fe::loggedin() and $this->ms['MODULES']['DISABLE_CHECKOUT_FOR_GUESTS']) {
 	// redirect to login page
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['login_pid']));

@@ -7,6 +7,7 @@ $mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $disable_checkout=false;
 $output=array();
+$GLOBALS['TSFE']->additionalHeaderData[]='<meta name="robots" content="noindex">'."\n";
 // now parse all the objects in the tmpl file
 if ($this->conf['shopping_cart_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['shopping_cart_tmpl_path']);
