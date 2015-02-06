@@ -36,7 +36,7 @@ if ($payment_method['handling_costs']) {
 } else {
 	$payment_method_costs=0;
 }
-if ($payment_method_costs and $payment_method['tax_rate']) {
+if ($payment_method_costs && $payment_method['tax_rate'] && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 	$payment_method_costs=($payment_method_costs*$payment_method['tax_rate'])+$payment_method_costs;
 }
 $payment_method_code=$payment_method['code'];

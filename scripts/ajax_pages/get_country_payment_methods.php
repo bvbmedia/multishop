@@ -67,6 +67,13 @@ $data=array();
 $k=0;
 foreach ($payment_methods as $payment_name=>$payment_data) {
 	$vars=unserialize($payment_data['vars']);
+	if ($countries_id>0) {
+		$tax_ruleset=mslib_fe::taxRuleSet($payment_data['tax_id'], 0, $countries_id, 0);
+	} else {
+		$tax_ruleset=mslib_fe::getTaxRuleSet($payment_data['tax_id'], 0);
+	}
+	$payment_data['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+	//print_r($payment_data);
 	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
 	} else {
@@ -84,7 +91,7 @@ foreach ($payment_methods as $payment_name=>$payment_data) {
 	if (!empty($payment_data['handling_costs'])) {
 		$price=$payment_data['handling_costs'];
 		if ($vars['handling_costs_type']!='percentage') {
-			if ($price and $payment_data['tax_rate']>0) {
+			if ($price && $payment_data['tax_rate']>0 && $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$price=($price*$payment_data['tax_rate'])+$price;
 			}
 			$price=mslib_fe::amount2Cents($price);
