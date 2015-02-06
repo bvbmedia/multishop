@@ -515,6 +515,23 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	$required_indexes=array();
+	$required_indexes[]='products_id';
+	$required_indexes[]='sort_order';
+	$indexes=array();
+	$table_name='tx_multishop_products_to_categories';
+	$str="show indexes from `".$table_name."` ";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		$indexes[]=$rs['Key_name'];
+	}
+	foreach ($required_indexes as $required_index) {
+		if (!in_array($required_index, $indexes)) {
+			$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+	}
 	$str="select products_to_categories_id from tx_multishop_products_to_categories limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -559,9 +576,10 @@ if (!$skipMultishopUpdates) {
 				}
 			}
 		}
+	} else {
+		// method to fix the broken linking of product to categories
+		tx_mslib_catalog::compareDatabaseFixProductToCategoryLinking();
 	}
-	// method to fix the broken linking of product to categories
-	tx_mslib_catalog::compareDatabaseFixProductToCategoryLinking();
 	$str="describe tx_multishop_cms";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {

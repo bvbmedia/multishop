@@ -4069,6 +4069,7 @@ if ($rows) {
 		$str="ALTER TABLE  `tx_multishop_categories_description` ADD KEY  `combined_three` (  `language_id`,`categories_id`,`categories_name`)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
+	/*
 	$indexes=array();
 	$table_name='tx_multishop_products';
 	$str="show indexes from `".$table_name."` ";
@@ -4173,6 +4174,7 @@ if ($rows) {
 		$str="ALTER TABLE `tx_multishop_products_description` ADD FULLTEXT  `combined_four` (`products_name` ,`products_description`)";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	}
+	*/
 	// end combined indexes
 	// delete duplicates
 	$str="ALTER IGNORE TABLE tx_multishop_configuration ADD UNIQUE INDEX dupidx (configuration_key);";

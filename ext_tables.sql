@@ -1064,6 +1064,8 @@ CREATE TABLE `tx_multishop_products_to_categories` (
   `related_to` INT(11) DEFAULT '0',
   PRIMARY KEY (`products_id`,`categories_id`),
   KEY `page_uid` (`page_uid`),
+  KEY `products_id` (`products_id`),
+  KEY `sort_order` (`sort_order`),
   KEY `categories_id` (`categories_id`),
   KEY `related_to` (`related_to`)
 );
