@@ -20,7 +20,18 @@ if (!$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']) {
 	}
 }
 if ($this->runUpdate) {
-	mslib_befe::RunMultishopUpdate();
+	$runAutoUpdate=1;
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/meta_tags.php']['runAutoUpdatePreProc'])) {
+		$params = array (
+			'runAutoUpdate' => &$runAutoUpdate
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/meta_tags.php']['runAutoUpdatePreProc'] as $funcRef) {
+			t3lib_div::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	if ($runAutoUpdate) {
+		mslib_befe::RunMultishopUpdate();
+	}
 }
 //mslib_befe::RunMultishopUpdate();
 // temporary we compare the database for reach request, so the developer doesnt need to press manual button Compare database within the admin panel.
