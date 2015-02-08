@@ -1190,7 +1190,7 @@ class mslib_fe {
 		$pattern='#(^|[^\"=]{1})(http://|ftp://|mailto:|news:)([^\s<>]+)([\s\n<>]|$)#sm';
 		return preg_replace($pattern, "\\1<a href=\"\\2\\3\" target=\"_blank\"><u>\\2\\3</u></a>\\4", $str);
 	}
-	public function typolink($page_id='', $vars='', $manual_link=0) {
+	public function typolink($page_id='', $vars='', $manual_link=0,$forceAbsoluteUrl=0) {
 		if ($vars and preg_match("/^&/", $vars)) {
 			$vars=substr($vars, 1, strlen($vars));
 		}
@@ -1222,6 +1222,9 @@ class mslib_fe {
 				$url='index.php?id='.$page_id.$conf['additionalParams'];
 			}
 		} else {
+			if ($forceAbsoluteUrl) {
+				$conf['forceAbsoluteUrl']=1;
+			}
 			$url=$GLOBALS["TSFE"]->cObj->typolink(null, $conf);
 		}
 		return $url;
