@@ -280,9 +280,9 @@ page {
 }
 # load manually cause the TYPO3 js compressor is not aware of the additional loadCSS and loadJS lines
 page.headerData.2482824=TEXT
-page.headerData.2482824.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/extras/modernizr-custom.js"></script>
+page.headerData.2482824.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/extras/modernizr-custom.js" data-ignore="1"></script>
 page.headerData.2482825=TEXT
-page.headerData.2482825.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/polyfiller.js	"></script>
+page.headerData.2482825.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/polyfiller.js" data-ignore="1"></script>
 
 multishop_admin_page {
   includeJS {
