@@ -137,6 +137,12 @@ if ($this->post) {
 		$user['delivery_zip']=$this->post['delivery_zip'];
 		$user['delivery_city']=$this->post['delivery_city'];
 		$user['delivery_country']=$this->post['delivery_country'];
+		if (isset($this->post['tx_multishop_vat_id'])) {
+			$user['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
+		}
+		if (isset($this->post['tx_multishop_coc_id'])) {
+			$user['tx_multishop_coc_id']=$this->post['tx_multishop_coc_id'];
+		}
 	}
 	if ($this->post) {
 //		$GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 1;
@@ -163,6 +169,8 @@ if ($this->post) {
 		$insertArray['gender']=$address['gender'];
 		$insertArray['date_of_birth']=$timestamp=strtotime($date_of_birth[2].'-'.$date_of_birth[1].'-'.$date_of_birth[0]);
 		$insertArray['tx_multishop_newsletter']=$address['tx_multishop_newsletter'];
+		$insertArray['tx_multishop_vat_id']=$address['tx_multishop_vat_id'];
+		$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'])) {
 			$params=array(
@@ -384,6 +392,18 @@ if ($this->post) {
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul class="ul-display-error">';
 	$content.='<li class="item-error" style="display:none"></li>';
 	$content.='</ul></div>';
+	$vat_input_block='';
+	if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
+		$vat_input_block=' <div class="account-field col-sm-12" id="input-tx_multishop_vat_id">
+				<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
+				<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($user['tx_multishop_vat_id']).'"/></div>';
+	}
+	$coc_input_block='';
+	if ($this->ms['MODULES']['CHECKOUT_DISPLAY_COC_ID_INPUT']) {
+		$coc_input_block=' <div class="account-field col-sm-12" id="input-tx_multishop_coc_id">
+				<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
+				<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($user['tx_multishop_coc_id']).'"/></div>';
+	}
 	$content.='
 	<div id="live-validation" class="editAccount">
 	<form action="" method="post" name="checkout" class="AdvancedForm" id="checkout">
@@ -411,6 +431,7 @@ if ($this->post) {
 		<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
 		<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>
 	</div>
+	'.$vat_input_block.$coc_input_block.'.
 	<div id="input-firstname" class="account-field col-sm-4">
 		<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>
 		<input type="text" name="first_name" class="first-name" id="first_name" value="'.htmlspecialchars($user['first_name']).'" required="required" data-h5-errorid="invalid-first_name" title="'.$this->pi_getLL('first_name_required').'"><div id="invalid-first_name" class="error-space" style="display:none"></div>

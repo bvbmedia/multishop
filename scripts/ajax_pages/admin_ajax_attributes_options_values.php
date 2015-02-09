@@ -694,6 +694,96 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 			}
 		}
 		break;
+	case 'delete_product_attribute_value_images':
+		$updateArray=array();
+		$updateArray['products_options_values_image']='';
+		//$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_values_to_products_options_id='.$this->post['pov2po'], $updateArray);
+		//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$return_data=array();
+		$return_data['target_delete']='.values_image'.$this->post['pov2po'];
+		$json_data=mslib_befe::array2json($return_data);
+		echo $json_data;
+		exit();
+		break;
+	case 'admin_upload_product_attribute_value_images':
+		$tmp_filename=$this->get['file_type'];
+		if (!$this->ms['MODULES']['ADMIN_AUTORENAME_UPLOADED_IMAGES']) {
+			if (isset($this->get['qqfile']) && !empty($this->get['qqfile'])) {
+				$tmp_arr=explode('.', $this->get['qqfile']);
+				$tmp_arr_count=count($tmp_arr);
+				unset($tmp_arr[$tmp_arr_count-1]);
+				$tmp_filename=implode('.', $tmp_arr);
+			}
+		}
+		// hidden filename that is retrieved from the ajax upload
+		$i=$this->get['attribute_value_image'];
+		$field='attribute_value_image'.$i;
+		if ($this->get['file_type']==$field) {
+			$temp_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.uniqid();
+			if (isset($_FILES['qqfile'])) {
+				move_uploaded_file($_FILES['qqfile']['tmp_name'], $temp_file);
+			} else {
+				$input=fopen("php://input", "r");
+				$temp=tmpfile();
+				$realSize=stream_copy_to_stream($input, $temp);
+				fclose($input);
+				$target=fopen($temp_file, "w");
+				fseek($temp, 0, SEEK_SET);
+				stream_copy_to_stream($temp, $target);
+				fclose($target);
+			}
+			$size=getimagesize($temp_file);
+			if ($size[0]>5 and $size[1]>5) {
+				$imgtype=mslib_befe::exif_imagetype($temp_file);
+				if ($imgtype) {
+					// valid image
+					$ext=image_type_to_extension($imgtype, false);
+					if ($ext) {
+						$i=0;
+						$filename=mslib_fe::rewritenamein($tmp_filename).'.'.$ext;
+						$folder=mslib_befe::getImagePrefixFolder($filename);
+						$array=explode(".", $filename);
+						if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder)) {
+							t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
+						}
+						$folder.='/';
+						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.$filename;
+						if (file_exists($target)) {
+							do {
+								$filename=mslib_fe::rewritenamein($tmp_filename).($i>0 ? '-'.$i : '').'.'.$ext;
+								$folder_name=mslib_befe::getImagePrefixFolder($filename);
+								$array=explode(".", $filename);
+								$folder=$folder_name;
+								if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder)) {
+									t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
+								}
+								$folder.='/';
+								$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.$filename;
+								$i++;
+							} while (file_exists($target));
+						}
+						if (copy($temp_file, $target)) {
+							$result=array();
+							$result['success']=true;
+							$result['error']=false;
+							$result['filename']=$filename;
+							$result['fileLocation']=mslib_befe::getImagePath($filename, 'attribute_values', 'original');
+							$result['target_after']='#ajax_attribute_value_image'.$this->get['attribute_value_image'];
+							$result['target_delete']='.product_values_image'.$this->get['attribute_value_image'];
+							$result['image_display']='<img class="values_image'.$this->get['attribute_value_image'].'" src="'.mslib_befe::getImagePath($filename, 'attribute_values', 'original').'" width="50px">
+							<a class="values_image'.$this->get['attribute_value_image'].'" id="delete_attribute_values_image" href="#" rel="'.$this->get['attribute_value_image'].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+							/*$updateArray=array();
+							$updateArray['attribute_image']=$filename;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id='.$this->get['attribute_value_image'], $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
+							echo json_encode($result);
+							exit();
+						}
+					}
+				}
+			}
+		}
+		break;
 	case 'update_attributes_sortable':
 		switch ($this->get['tx_multishop_pi1']['type']) {
 			case 'options':
