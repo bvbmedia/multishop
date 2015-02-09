@@ -3006,6 +3006,7 @@ class mslib_befe {
 		$insertArray['crdate']=time();
 		$insertArray['session_id']=$GLOBALS['TSFE']->fe_user->id;
 		$insertArray['ip_address']=$this->REMOTE_ADDR;
+		$insertArray['page_uid']=$this->shop_pid;
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cart_contents', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}

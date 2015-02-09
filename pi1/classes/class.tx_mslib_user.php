@@ -501,6 +501,7 @@ class tx_mslib_user {
 				if ($customer_id) {
 					$updateArray=array();
 					$updateArray['customer_id']=$customer_id;
+					$updateArray['page_uid']=$this->ref->shop_pid;
 					$str=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cart_contents', 'session_id=\''.$customer_id.'\'', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				}
@@ -593,6 +594,7 @@ class tx_mslib_user {
 				if ($customer_id && $GLOBALS['TSFE']->fe_user->id) {
 					$updateArray=array();
 					$updateArray['customer_id']=$customer_id;
+					$updateArray['page_uid']=$this->ref->shop_pid;
 					$str=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cart_contents', 'session_id=\''.$GLOBALS['TSFE']->fe_user->id.'\'', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				}

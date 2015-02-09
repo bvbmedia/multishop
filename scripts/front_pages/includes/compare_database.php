@@ -594,6 +594,30 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	$str="select page_uid from tx_multishop_cart_contents limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_cart_contents` ADD page_uid int(11) default '0',ADD KEY `page_uid` (`page_uid`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+		// update page_uid based on customer_id
+		$str='select id, customer_id from tx_multishop_cart_contents';
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$customer_page_uid=array();
+		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+			if ($rs['customer_id']) {
+				$str2='select page_uid from fe_users where uid=\''.$rs['customer_id'].'\'';
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$rs2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
+				$customer_page_uid[$rs['customer_id']]=$rs2['page_uid'];
+				if ($rs2['page_uid']>0) {
+					$str_update='update tx_multishop_cart_contents set page_uid=\''.$rs2['page_uid'].'\' where id=\''.$rs['id'].'\'';
+					$GLOBALS['TYPO3_DB']->sql_query($str_update);
+					$messages[]=$str_update;
+				}
+			}
+		}
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

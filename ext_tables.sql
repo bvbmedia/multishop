@@ -73,11 +73,13 @@ CREATE TABLE `tx_multishop_cart_contents` (
   `crdate` int(11) default '0',
   `session_id` varchar(150) default '',
   `ip_address` varchar(150) default '',
+  `page_uid` int(11) default '0',
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`),
   KEY `crdate` (`crdate`),
   KEY `ip_address` (`ip_address`),
-  KEY `is_checkout` (`is_checkout`)
+  KEY `is_checkout` (`is_checkout`),
+  KEY `page_uid` (`page_uid`)
 );
 
 CREATE TABLE `tx_multishop_categories` (

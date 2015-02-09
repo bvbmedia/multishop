@@ -22,10 +22,10 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 	jQuery(document).ready(function($) {
 		$("#checkbox_no_checkout_cart_entries_only").click(function(e) {
 			$("#orders_stats_form").submit();
-		 });							
-		$(".is_not_checkout").css("opacity", "0.5");		 
+		 });
+		$(".is_not_checkout").css("opacity", "0.5");
 	});
-</script>	
+</script>
 ';
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('month')).'</h2>';
@@ -51,7 +51,7 @@ foreach ($dates as $key=>$value) {
 	} else {
 		$where[]='(c.is_checkout=0 or c.is_checkout=1)';
 	}
-	$str="SELECT c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") group by c.session_id ";
+	$str="SELECT c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$content.='<td align="right">'.$rows.'</td>';
@@ -77,7 +77,7 @@ $content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class=
 <tr>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('number_of_shopping_carts')).'</th>
-	<th>'.htmlspecialchars($this->pi_getLL('content')).'</th>	
+	<th>'.htmlspecialchars($this->pi_getLL('content')).'</th>
 </tr>
 ';
 foreach ($dates as $key=>$value) {
@@ -98,13 +98,13 @@ foreach ($dates as $key=>$value) {
 	} else {
 		$where[]='(c.is_checkout=0 or c.is_checkout=1)';
 	}
-	$str="SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") group by c.session_id ";
+	$str="SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$content.='<td align="right">'.number_format($rows).'</td>';
 	$content.='<td>';
 	// GET THE PRODUCTS THAT ARE INSIDE THE CART
-	$str="SELECT * FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") order by c.id desc";
+	$str="SELECT * FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' order by c.id desc";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$session_ids=array();
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))) {
@@ -125,7 +125,7 @@ foreach ($dates as $key=>$value) {
 					}
 					if ($row['is_checkout']) {
 						// lets find out how long the user did to finish the checkout
-						$str2="SELECT crdate FROM tx_multishop_cart_contents c where c.session_id='".$row['session_id']."' and c.id < '".$row['id']."' order by c.id asc limit 1";
+						$str2="SELECT crdate FROM tx_multishop_cart_contents c where c.session_id='".$row['session_id']."' and c.id < '".$row['id']."'  and page_uid='".$this->shop_pid."' order by c.id asc limit 1";
 						$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 						$row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
 						$time=($row['crdate']-$row2['crdate']);
