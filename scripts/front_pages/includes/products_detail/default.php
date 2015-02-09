@@ -343,7 +343,6 @@ if (!$product['products_id']) {
 			$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
 				//event.preventDefault();
 				var modalBox = $(this);
-
 				if (modalBox.find(\'.modal-body\').html()==\'\') {
 					jQuery.ajax({
 						url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
@@ -382,9 +381,6 @@ if (!$product['products_id']) {
 					});
 				}
 			});
-			//$(document).on("click", "#show_shipping_cost_table", function(e) {
-
-			//});
 		';
 	}
 	$plugins_extra_content=array();
