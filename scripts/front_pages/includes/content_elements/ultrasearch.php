@@ -69,7 +69,8 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$headers.='ultrasearch_exclude_negative_filter_values=\'1\';';
 	}
 	$headers.='// location of the ultrasearch server
-	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&manufacturers_id='.$this->get['manufacturers_id'].'&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam.'\';'."\n";
+	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&manufacturers_id='.$this->get['manufacturers_id'].'&categories_id='.$this->get['categories_id']).'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam.'\';
+	var shipping_costs_overview=false;'."\n";
 	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 		$headers.='
 		var ultrasearch_shipping_costs_review_url=\''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\';
@@ -78,6 +79,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		var labels_deliver_to = \''.$this->pi_getLL('deliver_to').'\';
 		var labels_shipping_and_handling_cost_overview = \''.$this->pi_getLL('shipping_and_handling_cost_overview').'\';
 		var labels_deliver_by = \''.$this->pi_getLL('deliver_by').'\';
+		var shipping_costs_overview=true;
 		'."\n";
 	}
 	if ($this->hideHeader) {

@@ -97,7 +97,7 @@ jQuery(document).ready(function ($) {
                 }
                 listing_products += '</div>';
                 if (item.shipping_costs_popup==1) {
-                    listing_products += '<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" rel="' + item.products_id + '"><span>' + data.resultSet.labels.shipping_costs + '</span></a></div>';
+                    listing_products += '<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#shippingCostsModal" data-productid="' + item.products_id + '"><span>' + data.resultSet.labels.shipping_costs + '</span></a></div>';
                 }
                 listing_products+='</div></div>';
             });
@@ -148,7 +148,72 @@ jQuery(document).ready(function ($) {
             if (data.resultSet.categories_description.footer != "") {
                 content += '<div class="category_footer_content ">' + data.resultSet.categories_description.footer + '</div>';
             }
+            if (shipping_costs_overview) {
+                content += '<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">';
+                content += '<div class="modal-dialog">';
+                content += '<div class="modal-content">';
+                content += '<div class="modal-header">';
+                content += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+                content += '<h4 class="modal-title" id="shippingCostModalTitle">' + data.resultSet.labels.shipping_costs + '</h4>';
+                content += '</div>';
+                content += '<div class="modal-body"></div>';
+                content += '<div class="modal-footer">';
+                content += '<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>';
+                content += '</div>';
+                content += '</div>';
+                content += '</div>';
+                content += '</div>';
+            }
             $(content_middle).append(ultrasearcch_resultset_header + content);
+            if (shipping_costs_overview) {
+                $('#shippingCostsModal').modal({
+                    show:false,
+                    backdrop:false
+                });
+                $('#shippingCostsModal').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget) // Button that triggered the modal
+                    var product_id = button.data('productid') // Extract info from data-* attributes
+                    var modalBox = $(this);
+                    modalBox.find('.modal-body').empty();
+                    if (modalBox.find('.modal-body').html()=='') {
+                        jQuery.ajax({
+                            url: ultrasearch_shipping_costs_review_url,
+                            data: 'tx_multishop_pi1[pid]=' + product_id + '&tx_multishop_pi1[qty]=1',
+                            type: 'post',
+                            dataType: 'json',
+                            success: function (j) {
+                                if (j) {
+                                    var shipping_cost_popup='<div class="product_shippingcost_popup_wrapper">';
+                                    shipping_cost_popup+='<div class="product_shippingcost_popup_header">' + labels_product_shipping_and_handling_cost_overview + '</div>';
+                                    shipping_cost_popup+='<div class="product_shippingcost_popup_table_wrapper">';
+                                    shipping_cost_popup+='<table id="product_shippingcost_popup_table" class="table table-striped">';
+                                    shipping_cost_popup+='<tr>';
+                                    shipping_cost_popup+='<td colspan="3" class="product_shippingcost_popup_table_product_name">' + j.products_name + '</td>';
+                                    shipping_cost_popup+='</tr>';
+                                    shipping_cost_popup+='<tr>';
+                                    shipping_cost_popup+='<td class="product_shippingcost_popup_table_left_col">' + labels_deliver_to + '</td>';
+                                    shipping_cost_popup+='<td class="product_shippingcost_popup_table_center_col">' + labels_shipping_and_handling_cost_overview + '</td>';
+                                    shipping_cost_popup+='<td class="product_shippingcost_popup_table_right_col">' + labels_deliver_by + '</td>';
+                                    shipping_cost_popup+='</tr>';
+                                    $.each(j.shipping_costs_display, function(country_iso_nr, shipping_cost) {
+                                        shipping_cost_popup+='<tr>';
+                                        shipping_cost_popup+='<td class="product_shippingcost_popup_table_left_col">' + j.deliver_to[country_iso_nr] + '</td>';
+                                        shipping_cost_popup+='<td class="product_shippingcost_popup_table_center_col">' + shipping_cost + '</td>';
+                                        shipping_cost_popup+='<td class="product_shippingcost_popup_table_right_col">' + j.deliver_by[country_iso_nr] + '</td>';
+                                        shipping_cost_popup+='</tr>';
+                                    });
+                                    shipping_cost_popup+='</table>';
+                                    shipping_cost_popup+='</div>';
+                                    shipping_cost_popup+='</div>';
+                                    //modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
+                                    modalBox.find('.modal-body').html(shipping_cost_popup);
+                                    //msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
             if (typeof Cufon != "undefined") {
                 //object exists
                 Cufon.refresh();
@@ -156,7 +221,8 @@ jQuery(document).ready(function ($) {
         }
 //		$("body,html,document").scrollTop(0);
     }
-    $(document).on("click", ".show_shipping_cost_table", function(e) {
+
+    /*$(document).on("click", ".show_shipping_cost_table", function(e) {
         e.preventDefault();
         var pid=jQuery(this).attr("rel");
         jQuery.ajax({
@@ -192,7 +258,7 @@ jQuery(document).ready(function ($) {
                 }
             }
         });
-    });
+    });*/
     $(document).on('change', '#msFrontUltrasearchForm', function () {
         $('#msFrontUltrasearchForm #pageNum').val('0');
         $('#msFrontUltrasearchForm').submit();
