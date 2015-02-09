@@ -339,7 +339,7 @@ if (!$product['products_id']) {
 			$(\'#shippingCostsModal\').modal({
 				show:false,
 				backdrop:false
-			})
+			});
 			$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
 				//event.preventDefault();
 				var modalBox = $(this);
