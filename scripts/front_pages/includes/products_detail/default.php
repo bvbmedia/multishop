@@ -355,7 +355,7 @@ if (!$product['products_id']) {
 								var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
 								shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
 								shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
-								shipping_cost_popup+=\'<table id="product_shippingcost_popup_table">\';
+								shipping_cost_popup+=\'<table id="product_shippingcost_popup_table" class="table table-striped">\';
 								shipping_cost_popup+=\'<tr>\';
 								shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
 								shipping_cost_popup+=\'</tr>\';
