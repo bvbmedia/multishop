@@ -1710,6 +1710,10 @@ if ($this->post) {
 					}
 				}
 				$pa_id=$this->post['tx_multishop_pi1']['pa_id'][$opt_sort];
+				$pa_image='';
+				if (isset($this->post['ajax_attribute_value_image'][$opt_sort])) {
+					$pa_image=$this->post['ajax_attribute_value_image'][$opt_sort];
+				}
 				// sort the option
 				if (!isset($option_sort_order[$pa_option])) {
 					$option_sort_order[$pa_option]=$counter;
@@ -1721,6 +1725,7 @@ if ($this->post) {
 						$attributesArray['products_id']=$prodid;
 						$attributesArray['options_id']=$pa_option;
 						$attributesArray['options_values_id']=$pa_value;
+						$attributesArray['attribute_image']=$pa_image;
 						$attributesArray['price_prefix']=$pa_prefix;
 						$attributesArray['options_values_price']=$pa_price;
 						$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
@@ -1732,6 +1737,7 @@ if ($this->post) {
 						$attributesArray['products_id']=$prodid;
 						$attributesArray['options_id']=$pa_option;
 						$attributesArray['options_values_id']=$pa_value;
+						$attributesArray['attribute_image']=$pa_image;
 						$attributesArray['price_prefix']=$pa_prefix;
 						$attributesArray['options_values_price']=$pa_price;
 						$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
@@ -2424,6 +2430,11 @@ if ($this->post) {
 		$attributes_tab_block='';
 		// product Attribute
 		if (!$this->ms['MODULES']['DISABLE_PRODUCT_ATTRIBUTES_TAB_IN_EDITOR']) {
+			// hook params
+			$extra_js_after_add_new_attributes_row=array();
+			$extra_js_before_clone_new_attributes_row=array();
+			$extra_js_after_clone_new_attributes_row=array();
+			// new attributes
 			$new_product_attributes_block_columns_js=array();
 			$new_product_attributes_block_columns_js['attribute_option_col']='new_attributes_html+=\'<td class="product_attribute_option">\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" style="width:200px" />\';
@@ -2436,6 +2447,21 @@ if ($this->post) {
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" value="0" />\';
 			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
 			new_attributes_html+=\'</td>\';';
+			if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
+				$element_id=time();
+				$new_product_attributes_block_columns_js['attribute_value_image_col']='new_attributes_html+=\'<td class="product_attribute_value_image">\';
+				new_attributes_html+=\'<div class="account-field" class="msEditAttributeValueImage">\';
+				new_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
+				new_attributes_html+=\'<div id="attribute_value_image'.$element_id.'">\';
+				new_attributes_html+=\'<noscript>\';
+				new_attributes_html+=\'<input name="attribute_value_image[]" type="file" />\';
+				new_attributes_html+=\'</noscript>\';
+				new_attributes_html+=\'</div>\';
+				new_attributes_html+=\'<input name="ajax_attribute_value_image[]" id="ajax_attribute_value_image'.$element_id.'" type="hidden" value="'.$attribute_data['attribute_image'].'" />\';
+				new_attributes_html+=\'<div id="attribute_value_image_action'.$element_id.'" class="attribute_value_image"></div>\';
+				new_attributes_html+=\'</div>\';
+				new_attributes_html+=\'</td>\';';
+			}
 			$new_product_attributes_block_columns_js['attribute_price_prefix_col']='new_attributes_html+=\'<td class="product_attribute_prefix">\';
 			new_attributes_html+=\'<select name="tx_multishop_pi1[prefix][]">\';
 			new_attributes_html+=\'<option value="">&nbsp;</option>\';
@@ -2460,9 +2486,6 @@ if ($this->post) {
 			new_attributes_html+=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="msadmin_button save_new_attributes">&nbsp;<input type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="msadmin_button delete_tmp_product_attributes">\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
-			$extra_js_after_add_new_attributes_row=array();
-			$extra_js_before_clone_new_attributes_row=array();
-			$extra_js_after_clone_new_attributes_row=array();
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
 				$params=array(
 					'new_product_attributes_block_columns_js'=>&$new_product_attributes_block_columns_js,
@@ -2497,6 +2520,35 @@ if ($this->post) {
 					// init select2
 					select2_sb("#tmp_options_sb", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb("#tmp_attributes_sb", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
+					var products_attribute_value_image=\''.$element_id.'\';
+					var uploader_attribute_value_image = new qq.FileUploader({
+						element: document.getElementById(\'attribute_value_image'.$element_id.'\'),
+						action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
+						params: {
+							attribute_value_image: products_attribute_value_image,
+							file_type: \'attribute_value_image'.$element_id.'\'
+						},
+						template: \'<div class="qq-uploader">\' +
+								  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
+								  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+								  \'<ul class="qq-upload-list" id="qq-upload-list-ul'.$element_id.'"></ul>\' +
+								  \'</div>\',
+						onComplete: function(id, fileName, responseJSON){
+							var filenameServer = responseJSON[\'filename\'];
+							var filenameLocationServer = responseJSON[\'fileLocation\'];
+							$("#ajax_attribute_value_image'.$element_id.'").val(filenameServer);
+							// display instantly uploaded image
+							$("#attribute_value_image_action'.$element_id.'").empty();
+							var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image'.$element_id.'" />\';
+							new_image+=\'<div class="image_tools">\';
+							new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="'.$element_id.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+							new_image+=\'</div>\';
+							$("#attribute_value_image_action'.$element_id.'").html(new_image);
+						},
+						debug: false
+					});
+					' : '').'
 					'.implode("\n", $extra_js_after_add_new_attributes_row).'
 					event.preventDefault();
 				});
@@ -2545,6 +2597,23 @@ if ($this->post) {
 						$(this).next().removeAttr("id");
 						$(this).next().val("");
 					});
+					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
+					$(element_cloned).find("td[class^=\'product_attribute_value_image\']").attr("class", function(i, c){
+						$(this).empty();
+						var attribute_value_image_block=\'<div class="account-field" class="msEditAttributeValueImage">\';
+						attribute_value_image_block+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
+						attribute_value_image_block+=\'<div id="attribute_value_image\' + n + \'">\';
+						attribute_value_image_block+=\'<noscript>\';
+						attribute_value_image_block+=\'<input name="attribute_value_image[]" type="file" />\';
+						attribute_value_image_block+=\'</noscript>\';
+						attribute_value_image_block+=\'</div>\';
+						attribute_value_image_block+=\'<input name="ajax_attribute_value_image[]" id="ajax_attribute_value_image\' + n + \'" type="hidden" value="" />\';
+						attribute_value_image_block+=\'<div id="attribute_value_image_action\' + n + \'" class="attribute_value_image"></div>\';
+						attribute_value_image_block+=\'</div>\';
+						$(this).append(attribute_value_image_block);
+
+					});
+					' : '').'
 					$(element_cloned).find("div.product_attribute_prefix>select").val("+");
 					$(element_cloned).find("div.msAttributesField>input").val("0.00");
 					'.implode("\n", $extra_js_before_clone_new_attributes_row).'
@@ -2553,9 +2622,58 @@ if ($this->post) {
 					// init select2
 					select2_sb(".product_attribute_options" + n, "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb(".product_attribute_values" + n, "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
+					var products_attribute_value_image=n;
+					var uploader_attribute_value_image = new qq.FileUploader({
+						element: document.getElementById(\'attribute_value_image\' + n + \'\'),
+						action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
+						params: {
+							attribute_value_image: products_attribute_value_image,
+							file_type: \'attribute_value_image\' + n
+						},
+						template: \'<div class="qq-uploader">\' +
+								  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
+								  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+								  \'<ul class="qq-upload-list" id="qq-upload-list-ul\' + n + \'"></ul>\' +
+								  \'</div>\',
+						onComplete: function(id, fileName, responseJSON){
+							var filenameServer = responseJSON[\'filename\'];
+							var filenameLocationServer = responseJSON[\'fileLocation\'];
+							$("#ajax_attribute_value_image" + n).val(filenameServer);
+							// display instantly uploaded image
+							$("#attribute_value_image_action" + n).empty();
+							var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image\' + n + \'" />\';
+							new_image+=\'<div class="image_tools">\';
+							new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="\' + n + \':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+							new_image+=\'</div>\';
+							$("#attribute_value_image_action" + n).html(new_image);
+						},
+						debug: false
+					});
+					' : '').'
 					'.implode("\n", $extra_js_after_clone_new_attributes_row).'
 					event.preventDefault();
 				});
+				'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
+				$(document).on("click", ".delete_product_attribute_value_images", function(e) {
+					e.preventDefault();
+					href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_product_attribute_value_images').'";
+					var image_data=$(this).attr("rel");
+					if (confirm(\''.$this->pi_getLL('are_you_sure').'?\')) {
+						$.ajax({
+							type:   "POST",
+							url:    href,
+							data:   \'image=\' + image_data,
+							dataType: "json",
+							success: function(r) {
+								if (r.target_delete!=\'\') {
+									$(r.target_delete).remove();
+								}
+							}
+						});
+					}
+				});
+				' : '').'
 				jQuery(document).on("click", ".save_new_attributes", function(){
 					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
 					var pa_option_sb=$("#tmp_options_sb").select2("data");
@@ -3084,6 +3202,63 @@ if ($this->post) {
 								<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" id="manual_attributes_'.$attribute_data['products_attributes_id'].'" value="0" />
 								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 								</td>';
+								if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
+									$element_id=$product['products_id'].'_'.$option_id.'_'.$attribute_data['options_values_id'];
+									$existing_product_attributes_block_columns['attribute_value_image_col']='<td class="product_attribute_value_image">
+									<div class="account-field" class="msEditAttributeValueImage">
+										<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>
+										<div id="attribute_value_image'.$element_id.'">
+											<noscript>
+												<input name="attribute_value_image[]" type="file" />
+											</noscript>
+										</div>
+										<input name="ajax_attribute_value_image[]" id="ajax_attribute_value_image'.$element_id.'" type="hidden" value="'.$attribute_data['attribute_image'].'" />';
+									$existing_product_attributes_block_columns['attribute_value_image_col'].='<div id="attribute_value_image_action'.$element_id.'" class="attribute_value_image">';
+									if ($_REQUEST['action']=='edit_product' && $attribute_data['attribute_image']) {
+										$existing_product_attributes_block_columns['attribute_value_image_col'].='<img src="'.mslib_befe::getImagePath($attribute_data['attribute_image'], 'attribute_values', 'original').'" width="75" id="product_attribute_value_image'.$element_id.'" />';
+										$existing_product_attributes_block_columns['attribute_value_image_col'].='<div class="image_tools">';
+										$existing_product_attributes_block_columns['attribute_value_image_col'].=' <a href="#" class="delete_product_attribute_value_images" rel="'.$element_id.':'.$attribute_data['attribute_image'].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+										$existing_product_attributes_block_columns['attribute_value_image_col'].='</div>';
+									}
+									$existing_product_attributes_block_columns['attribute_value_image_col'].='</div>';
+									$existing_product_attributes_block_columns['attribute_value_image_col'].='</div>';
+
+									$existing_product_attributes_block_columns['attribute_value_image_col'].='<script>
+									jQuery(document).ready(function($) {';
+									$existing_product_attributes_block_columns['attribute_value_image_col'].='
+										var products_attribute_value_image=\''. $element_id .'\';
+										var uploader_attribute_value_image'.$element_id.' = new qq.FileUploader({
+											element: document.getElementById(\'attribute_value_image'.$element_id.'\'),
+											action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
+											params: {
+												attribute_value_image: products_attribute_value_image,
+												file_type: \'attribute_value_image'.$element_id.'\'
+											},
+											template: \'<div class="qq-uploader">\' +
+													  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
+													  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+													  \'<ul class="qq-upload-list" id="qq-upload-list-ul'.$element_id.'"></ul>\' +
+													  \'</div>\',
+											onComplete: function(id, fileName, responseJSON){
+												var filenameServer = responseJSON[\'filename\'];
+												var filenameLocationServer = responseJSON[\'fileLocation\'];
+												$("#ajax_attribute_value_image'.$element_id.'").val(filenameServer);
+												// display instantly uploaded image
+												$("#attribute_value_image_action'.$element_id.'").empty();
+												var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image'.$element_id.'" />\';
+												new_image+=\'<div class="image_tools">\';
+												new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="'.$element_id.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+												new_image+=\'</div>\';
+												$("#attribute_value_image_action'.$element_id.'").html(new_image);
+											},
+											debug: false
+										});
+									});';
+									$existing_product_attributes_block_columns['attribute_value_image_col'].='
+									</script>';
+									$existing_product_attributes_block_columns['attribute_value_image_col'].='</td>';
+								}
+
 								$existing_product_attributes_block_columns['attribute_price_prefix_col']='<td class="product_attribute_prefix">
 								<select name="tx_multishop_pi1[prefix][]">
 								<option value="">&nbsp;</option>
