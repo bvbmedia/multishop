@@ -666,6 +666,6 @@ if (!$skipMultishopUpdates) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
-// custom hook that can be controlled by third-party plugin eof
+	// custom hook that can be controlled by third-party plugin eof
 }
 ?>
