@@ -612,6 +612,12 @@ class tx_mslib_catalog {
 		$level=1;
 		$cats=mslib_fe::globalCrumbarTree($deepest_cat_id);
 		$cats=array_reverse($cats);
+		$crumbar_ident_string='';
+		$crumbar_ident_array=array();
+		foreach ($cats as $item) {
+			$crumbar_ident_array[]=$item['id'];
+		}
+		$crumbar_ident_string=implode(',', $crumbar_ident_array);
 		$count_cats=count($cats);
 		if ($count_cats>1) {
 			// remove the deepest cat id record
@@ -623,7 +629,8 @@ class tx_mslib_catalog {
 		if ($count_cats>0) {
 			foreach ($cats as $item) {
 				if ($item['id']) {
-					if (!tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id'])) {
+					$rec=tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id']);
+					if (!$rec) {
 						$insertArray=array();
 						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
 							$insertArray['categories_id']=$deepest_cat_id;
@@ -637,12 +644,23 @@ class tx_mslib_catalog {
 							}
 						}
 						$insertArray['node_id']=$item['id'];
-						if ($level==$count_cats) {
+						if ($item['id']==$deepest_cat_id) {
 							$insertArray['is_deepest']=1;
 						} else {
 							$insertArray['is_deepest']=0;
 						}
+						$insertArray['crumbar_identifier']=$crumbar_ident_string;
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					} else {
+						$updateArray=array();
+						if ($item['id']==$deepest_cat_id) {
+							$updateArray['is_deepest']=1;
+						} else {
+							$updateArray['is_deepest']=0;
+						}
+						$updateArray['crumbar_identifier']=$crumbar_ident_string;
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$rec['products_to_categories_id'].'\'', $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 					$level++;
@@ -654,7 +672,7 @@ class tx_mslib_catalog {
 	function isProductToCategoryLinkingExist($pid, $catid, $node_id) {
 		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('categories_id=\''.$catid.'\' and node_id=\''.$node_id.'\' and page_uid=\''. $this->showCatalogFromPage.'\''));
 		if (is_array($rec) && isset($rec['products_id']) && $rec['products_id']>0) {
-			return true;
+			return $rec;
 		} else {
 			return false;
 		}
@@ -666,7 +684,7 @@ class tx_mslib_catalog {
 		}
 	}
 	function compareDatabaseFixProductToCategoryLinking() {
-		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), 'products_id', '', '');
+		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), '', '', '');
 		foreach ($p2c_records as $p2c_record) {
 			tx_mslib_catalog::linkCategoriesTreeToProduct($p2c_record['products_id'], $p2c_record['categories_id']);
 		}

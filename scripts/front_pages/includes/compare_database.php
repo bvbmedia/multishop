@@ -532,6 +532,13 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$str;
 		}
 	}
+	$str="select crumbar_identifier from tx_multishop_products_to_categories limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_products_to_categories` ADD crumbar_identifier varchar(250) default '',ADD KEY `crumbar_identifier` (`crumbar_identifier`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	$str="select products_to_categories_id from tx_multishop_products_to_categories limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
