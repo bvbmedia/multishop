@@ -22,6 +22,14 @@ if (intval($this->conf['maxDEPTH'])) {
 } else {
 	$this->maxDEPTH=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'maxDEPTH', 's_listing');
 }
+if (intval($this->conf['maxDEPTHifSubs'])) {
+	$this->maxDEPTHifSubs=$this->conf['maxDEPTHifSubs'];
+} else {
+	$this->maxDEPTHifSubs=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'maxDEPTHifSubs', 's_listing');
+}
+if (!intval($this->maxDEPTHifSubs)) {
+	$this->maxDEPTHifSubs=$this->maxDEPTH;
+}
 if (intval($this->conf['hideHeader'])) {
 	$this->hideHeader=$this->conf['hideHeader'];
 } else {
@@ -130,7 +138,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						}
 						$content.=' class="'.implode(' ', $this->class).'"><a href="'.$link.'" class="ajax_link" title="'.htmlspecialchars($meta_description).'"'.$target.'><span>'.$categories_name.'</span></a>';
 						// level 0 eof
-						if ($this->maxDEPTH>$nested_level or ($actifsub or $act)) {
+						if (($this->maxDEPTH>$nested_level) or (($actifsub or $act) && $this->maxDEPTHifSubs>($nested_level))) {
 							$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
 							if (count($catlist2)>0) {
 								// level 1

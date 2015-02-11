@@ -1473,7 +1473,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	if ($pageset['total_rows'] > 0) {
 		$products=$pageset['products'];
 		if (count($products)) {
-			if ($this->post['skeyword']) mslib_befe::storeProductsKeywordSearch($this->post['skeyword']);
+			if ($this->post['tx_multishop_pi1']['q']) {
+				mslib_befe::storeProductsKeywordSearch($this->post['tx_multishop_pi1']['q']);
+			}
 			$totpage = ceil($pageset['total_rows'] / $limit);
 			foreach($products as $index => $product) {
 				if ($product['categories_id']) {
@@ -1575,8 +1577,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 		} else {
 			// no results
-			if ($this->post['skeyword']) {
-				mslib_befe::storeProductsKeywordSearch($this->post['skeyword'],'1');
+			if ($this->post['tx_multishop_pi1']['q']) {
+				mslib_befe::storeProductsKeywordSearch($this->post['tx_multishop_pi1']['q'],'1');
 			}
 		}
 	}
