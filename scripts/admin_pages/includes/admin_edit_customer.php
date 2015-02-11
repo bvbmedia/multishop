@@ -115,7 +115,11 @@ if ($this->post) {
 					$old_usergroups=explode(",", $user['usergroup']);
 					foreach ($this->excluded_userGroups as $usergroup) {
 						if (in_array($usergroup, $old_usergroups)) {
-							$updateArray['usergroup'].=','.$usergroup;
+							if (!empty($updateArray['usergroup'])) {
+								$updateArray['usergroup'].=','.$usergroup;
+							} else {
+								$updateArray['usergroup'].=$usergroup;
+							}
 						}
 					}
 				}
@@ -125,7 +129,11 @@ if ($this->post) {
 					$old_usergroups=explode(",", $user['usergroup']);
 					foreach ($this->excluded_userGroups as $usergroup) {
 						if (in_array($usergroup, $old_usergroups)) {
-							$updateArray['usergroup'].=','.$usergroup;
+							if (!empty($updateArray['usergroup'])) {
+								$updateArray['usergroup'].=','.$usergroup;
+							} else {
+								$updateArray['usergroup'].=$usergroup;
+							}
 						}
 					}
 				}
@@ -151,6 +159,52 @@ if ($this->post) {
 			if ($continue) {
 				// custom hook that can be controlled by third-party plugin eof
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$this->post['tx_multishop_pi1']['cid'], $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				//update the tt_address billing
+				$updateTTAddressArray=array();
+				$updateTTAddressArray['tstamp']=time();
+				$updateTTAddressArray['company']=$updateArray['company'];
+				$updateTTAddressArray['name']=$updateArray['first_name'].' '.$updateArray['middle_name'].' '.$updateArray['last_name'];
+				$updateTTAddressArray['name']=preg_replace('/\s+/', ' ', $insertArray['name']);
+				$updateTTAddressArray['first_name']=$updateArray['first_name'];
+				$updateTTAddressArray['middle_name']=$updateArray['middle_name'];
+				$updateTTAddressArray['last_name']=$updateArray['last_name'];
+				$updateTTAddressArray['email']=$updateArray['email'];
+				if (!$updateArray['street_name']) {
+					// fallback for old custom checkouts
+					$updateTTAddressArray['street_name']=$updateArray['address'];
+					$updateTTAddressArray['address_number']=$updateArray['address_number'];
+					$updateTTAddressArray['address_ext']=$updateArray['address_ext'];
+					$updateTTAddressArray['address']=$updateTTAddressArray['street_name'].' '.$updateTTAddressArray['address_number'].($insertArray['address_ext'] ? '-'.$updateTTAddressArray['address_ext'] : '');
+					$updateTTAddressArray['address']=preg_replace('/\s+/', ' ', $updateTTAddressArray['address']);
+				} else {
+					$updateTTAddressArray['street_name']=$updateArray['street_name'];
+					$updateTTAddressArray['address_number']=$updateArray['address_number'];
+					$updateTTAddressArray['address_ext']=$updateArray['address_ext'];
+					$updateTTAddressArray['address']=$updateArray['address'];
+				}
+				$updateTTAddressArray['zip']=$updateArray['zip'];
+				$updateTTAddressArray['phone']=$updateArray['telephone'];
+				$updateTTAddressArray['mobile']=$updateArray['mobile'];
+				$updateTTAddressArray['city']=$updateArray['city'];
+				$updateTTAddressArray['country']=$updateArray['country'];
+				$updateTTAddressArray['gender']=$updateArray['gender'];
+				$updateTTAddressArray['birthday']=strtotime($updateArray['birthday']);
+				if ($updateArray['gender']=='m') {
+					$updateTTAddressArray['title']='Mr.';
+				} else {
+					if ($updateArray['gender']=='f') {
+						$updateTTAddressArray['title']='Mrs.';
+					}
+				}
+				$updateTTAddressArray['region']=$updateArray['state'];
+				$updateTTAddressArray['pid']=$this->conf['fe_customer_pid'];
+				$updateTTAddressArray['page_uid']=$this->shop_pid;
+				$updateTTAddressArray['tstamp']=time();
+				$updateTTAddressArray['tx_multishop_address_type']='billing';
+				$updateTTAddressArray['tx_multishop_default']=1;
+				$updateTTAddressArray['tx_multishop_customer_id']=$customer_id;
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id='.$customer_id.' and tx_multishop_address_type=\'billing\'', $updateTTAddressArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				// custom hook that can be controlled by third-party plugin
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPostProc'])) {
