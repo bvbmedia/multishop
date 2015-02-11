@@ -30,6 +30,7 @@ class mslib_fe {
 		$this->HTTP_HOST=$ref->HTTP_HOST;
 		$this->FULL_HTTP_URL=$ref->FULL_HTTP_URL;
 		$this->DOCUMENT_ROOT_MULTISHOP=$ref->DOCUMENT_ROOT_MULTISHOP;
+		$this->DOCUMENT_ROOT_MS=$ref->DOCUMENT_ROOT_MS;
 		$this->FULL_HTTP_URL_MS=$ref->FULL_HTTP_URL_MS;
 		$this->FULL_HTTP_URL_MULTISHOP=$ref->FULL_HTTP_URL_MS;
 		$this->get= &$ref->get;
