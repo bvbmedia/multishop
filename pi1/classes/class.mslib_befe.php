@@ -2211,7 +2211,7 @@ class mslib_befe {
 		if ($settings['update_database']) {
 			set_time_limit(86400);
 			ignore_user_abort(true);
-			require($this->DOCUMENT_ROOT_MS.'scripts/front_pages/includes/compare_database.php');
+			require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database.php');
 		} // check database eof
 		// delete duplicates eof
 		// load default vars for upgrade purposes eof
