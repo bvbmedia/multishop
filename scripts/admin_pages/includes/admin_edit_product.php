@@ -2504,10 +2504,9 @@ if ($this->post) {
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
 				jQuery(document).on("click", "#addAttributes", function(event) {
+					var d = new Date();
+					var n = d.getTime();
 					$(this).parent().parent().hide();
-					if ($(\'#add_attributes_holder>td\').html() !=\'\' && $(\'#add_attributes_holder>td\').html() !=\'&nbsp;\') {
-						return false;
-					}
 					var new_attributes_html=\'\';
 					new_attributes_html+=\'<span class="new_product_attributes">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</span><div class="wrap-attributes-item" rel="new">\';
 					new_attributes_html+=\'<table>\';
@@ -2516,35 +2515,51 @@ if ($this->post) {
 					new_attributes_html+=\'</tr>\';
 					new_attributes_html+=\'</table>\';
 					new_attributes_html+=\'</div>\';
+					$(\'#add_attributes_holder>td\').empty();
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
+					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
+					var cols_image_attributes_html=\'<div class="account-field" class="msEditAttributeValueImage">\';
+					cols_image_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
+					cols_image_attributes_html+=\'<div id="attribute_value_image\' + n + \'">\';
+					cols_image_attributes_html+=\'<noscript>\';
+					cols_image_attributes_html+=\'<input name="attribute_value_image[]" type="file" />\';
+					cols_image_attributes_html+=\'</noscript>\';
+					cols_image_attributes_html+=\'</div>\';
+					cols_image_attributes_html+=\'<input name="ajax_attribute_value_image[]" id="ajax_attribute_value_image\' + n + \'" type="hidden" value="" />\';
+					cols_image_attributes_html+=\'<div id="attribute_value_image_action\' + n + \'" class="attribute_value_image"></div>\';
+					cols_image_attributes_html+=\'</div>\';
+					var image_col=$(\'#add_attributes_holder>td\').find(\'.product_attribute_value_image\');
+					$(image_col).empty();
+					$(image_col).append(cols_image_attributes_html);
+					' : '') .'
 					// init select2
 					select2_sb("#tmp_options_sb", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb("#tmp_attributes_sb", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
-					var products_attribute_value_image=\''.$element_id.'\';
+					var products_attribute_value_image=n;
 					var uploader_attribute_value_image = new qq.FileUploader({
-						element: document.getElementById(\'attribute_value_image'.$element_id.'\'),
+						element: document.getElementById(\'attribute_value_image\' + n + \'\'),
 						action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
 						params: {
-							attribute_value_image: products_attribute_value_image,
-							file_type: \'attribute_value_image'.$element_id.'\'
+							attribute_value_image: n,
+							file_type: \'attribute_value_image\' + n
 						},
 						template: \'<div class="qq-uploader">\' +
 								  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
 								  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
-								  \'<ul class="qq-upload-list" id="qq-upload-list-ul'.$element_id.'"></ul>\' +
+								  \'<ul class="qq-upload-list" id="qq-upload-list-ul\' + n + \'"></ul>\' +
 								  \'</div>\',
 						onComplete: function(id, fileName, responseJSON){
 							var filenameServer = responseJSON[\'filename\'];
 							var filenameLocationServer = responseJSON[\'fileLocation\'];
-							$("#ajax_attribute_value_image'.$element_id.'").val(filenameServer);
+							$("#ajax_attribute_value_image" + n).val(filenameServer);
 							// display instantly uploaded image
-							$("#attribute_value_image_action'.$element_id.'").empty();
-							var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image'.$element_id.'" />\';
+							$("#attribute_value_image_action" + n).empty();
+							var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image\' + n + \'" />\';
 							new_image+=\'<div class="image_tools">\';
-							new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="'.$element_id.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+							new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="\' + n + \':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
 							new_image+=\'</div>\';
-							$("#attribute_value_image_action'.$element_id.'").html(new_image);
+							$("#attribute_value_image_action" + n).html(new_image);
 						},
 						debug: false
 					});
@@ -2611,7 +2626,6 @@ if ($this->post) {
 						attribute_value_image_block+=\'<div id="attribute_value_image_action\' + n + \'" class="attribute_value_image"></div>\';
 						attribute_value_image_block+=\'</div>\';
 						$(this).append(attribute_value_image_block);
-
 					});
 					' : '').'
 					$(element_cloned).find("div.product_attribute_prefix>select").val("+");
@@ -2675,6 +2689,8 @@ if ($this->post) {
 				});
 				' : '').'
 				jQuery(document).on("click", ".save_new_attributes", function(){
+					var d = new Date();
+					var n = d.getTime();
 					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
 					var pa_option_sb=$("#tmp_options_sb").select2("data");
 					var pa_attributes_sb=$("#tmp_attributes_sb").select2("data");
@@ -2716,6 +2732,7 @@ if ($this->post) {
 								$(target_liwrapper_id).prev().children().removeClass("items_wrapper_folded").addClass("items_wrapper_unfolded").html("fold");
 								$(target_liwrapper_id).show();
 							}
+							$(target_liwrapper_id).parent().find(".add_new_attributes").show();
 						} else {
 							var li_class="odd_group_row";
 							if ($(".products_attributes_items").children().last().hasClass("odd_group_row")) {
@@ -2739,8 +2756,6 @@ if ($this->post) {
 						}
 						// appended to select2 class name for newly created select2 instantiation
 						// so it wont refresh others select2 elements
-						var d = new Date();
-						var n = d.getTime();
 						$("#tmp_options_sb").addClass("product_attribute_options" + n);
 						$("#tmp_attributes_sb").addClass("product_attribute_values" + n);
 						// remove id for reuse later
