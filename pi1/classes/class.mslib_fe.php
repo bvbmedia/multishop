@@ -1216,6 +1216,9 @@ class mslib_fe {
 		$conf['returnLast']='url'; // get it as URL
 		if ($manual_link) {
 			// dont use cObj typolink method (which makes realurl/cooluri version of the link), but instead make manual link
+			if(is_numeric($this->get['l'])) {
+				$conf['additionalParams'].='&l='.$this->get['l'];
+			}
 			if (strstr($page_id, ',')) {
 				$array=explode(',', $page_id);
 				$url='index.php?id='.$array[0].'&type='.$array[1].$conf['additionalParams'];
