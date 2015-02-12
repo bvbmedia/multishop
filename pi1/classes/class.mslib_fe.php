@@ -2411,6 +2411,10 @@ class mslib_fe {
 			$required_cols[]='m.manufacturers_name';
 			$required_cols[]='p.foreign_products_id';
 			$required_cols[]='p.foreign_source_name';
+			$required_cols[]='p.minimum_quantity';
+			$required_cols[]='p.maximum_quantity';
+			$required_cols[]='p.products_multiplication';
+
 			if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
 				$required_cols[]='pd.products_description';
 			}

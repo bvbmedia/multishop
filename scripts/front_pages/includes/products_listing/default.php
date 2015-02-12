@@ -13,6 +13,10 @@ if ($this->conf['products_listing_tmpl_path']) {
 }
 // Extract the subparts from the template
 $subparts=array();
+$subparts['header_data']=$this->cObj->getSubpart($template, '###HEADER_DATA###');
+if ($subparts['header_data']) {
+	$output_array['meta']['products_listing_header_data']=$subparts['header_data'];
+}
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['ITEM']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
 $subparts['ITEM_1']=$this->cObj->getSubpart($subparts['template'], '###ITEM_1###');
@@ -171,15 +175,79 @@ foreach ($products as $current_product) {
 		$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$current_product['products_id']);
 		$button_submit='<input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/>';
 	}
+	$qty=1;
+	if ($current_product['minimum_quantity']>0) {
+		$qty=round($current_product['minimum_quantity'], 2);
+	}
+	if ($current_product['products_multiplication']>0) {
+		$qty=round($current_product['products_multiplication'], 2);
+	}
 	$markerArray['PRODUCTS_ADD_TO_CART_BUTTON']='
 		<div class="msFrontAddToCartButton">
 			<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart&products_id='.$current_product['products_id']).'" method="post">
-				<input type="hidden" name="quantity" value="1" />
+				<input type="hidden" name="quantity" value="'.$qty.'" />
 				<input type="hidden" name="products_id" value="'.$current_product['products_id'].'" />
 				'.$button_submit.'
 			</form>
 		</div>
 	';
+	// ADD TO CART BUTTON WITH QUANTITY FIELD
+	$quantity_html='';
+	//if ($current_product['maximum_quantity']>0 || (is_numeric($current_product['products_multiplication']) && $current_product['products_multiplication']>0)) {
+	if ($current_product['maximum_quantity']>0) {
+		if ($current_product['maximum_quantity']>0) {
+			$ending_number=$current_product['maximum_quantity'];
+		}
+		if ($current_product['minimum_quantity']>0) {
+			$start_number=$current_product['minimum_quantity'];
+		} else {
+			if ($current_product['products_multiplication']) {
+				$start_number=$current_product['products_multiplication'];
+			}
+		}
+		if (!$start_number) {
+			$start_number=1;
+		}
+		$quantity_html.='<select name="quantity" id="quantity">';
+		$count=0;
+		$steps=10;
+		if ($current_product['maximum_quantity'] && $current_product['products_multiplication']) {
+			$steps=floor($current_product['maximum_quantity']/$current_product['products_multiplication']);
+		} else {
+			if ($current_product['maximum_quantity'] && !$current_product['products_multiplication']) {
+				$steps=($ending_number-$start_number)+1;
+			}
+		}
+		$count=$start_number;
+		for ($i=0; $i<$steps; $i++) {
+			if ($current_product['products_multiplication']) {
+				$item=$current_product['products_multiplication'];
+			} else {
+				if ($i) {
+					$item=1;
+				}
+			}
+			$quantity_html.='<option value="'.$count.'"'.($qty==$count ? ' selected' : '').'>'.$count.'</option>';
+			$count=($count+$item);
+		}
+		$quantity_html.='</select>';
+	} else {
+		$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" rel="'.$current_product['products_id'].'" data-step-size="'.($current_product['products_multiplication']!='0.00'?$current_product['products_multiplication']:'1').'" class="qtyInput" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
+	}
+	// show selectbox by products multiplication or show default input eof
+	$markerArray['PRODUCTS_QUANTITY_INPUT_AND_ADD_TO_CART_BUTTON']='
+		<div class="msFrontAddToCartButton">
+			<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart&products_id='.$current_product['products_id']).'" method="post">
+				<div class="quantity">
+					<label>'.$this->pi_getLL('quantity').'</label>
+					'.$quantity_html.'
+				</div>
+				<input type="hidden" name="products_id" value="'.$current_product['products_id'].'" />
+				'.$button_submit.'
+			</form>
+		</div>
+	';
+	// ADD TO CART BUTTON WITH QUANTITY FIELD EOL
 
 	$plugins_item_extra_content=array();
 	// shipping cost popup

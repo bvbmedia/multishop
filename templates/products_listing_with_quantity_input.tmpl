@@ -1,0 +1,56 @@
+<!-- ###TEMPLATE### begin -->
+###CURRENT_CATEGORIES_NAME###
+###CURRENT_CATEGORIES_TOP_DESCRIPTION###
+<div class="products_listing_wrapper">
+    <!-- ###LISTING_SORTING### begin -->
+    <div class="sorting_form">
+        <form name="sorting_products_listing" id="sorting_products_listing" method="get" action="###PRODUCTS_LISTING_FILTER_FORM_URL###">
+            ###PRODUCTS_LISTING_FORM_CONTENT###
+        </form>
+    </div>
+    <!-- ###LISTING_SORTING### end -->
+    <div class="product_listing row">
+        <!-- ###ITEM### begin -->
+        <div class="col-sm-4 ###ITEM_CLASS###" id="productlisting_###PRODUCTS_ID###">
+            <div class="listing_item">
+                <div class="productlisting_item">
+                    <strong><a href="###PRODUCTS_DETAIL_PAGE_LINK###" class="ajax_link">###PRODUCTS_NAME###</a>###ADMIN_ICONS###</strong>
+                    <div class="image">
+                        <a href="###PRODUCTS_DETAIL_PAGE_LINK###" title="###PRODUCTS_NAME###" class="ajax_link">###PRODUCTS_IMAGE###</a>
+                    </div>
+                    <div class="category">
+                        <a href="###CATEGORIES_NAME_PAGE_LINK###" class="ajax_link">###CATEGORIES_NAME###</a>
+                    </div>
+                    <div class="products_price">
+                        ###PRODUCTS_PRICE###
+                    </div>
+                    ###PRODUCTS_QUANTITY_INPUT_AND_ADD_TO_CART_BUTTON###
+                    ###PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT###
+                </div>
+            </div>
+        </div>
+        <!-- ###ITEM### end -->
+    </div>
+</div>
+###CURRENT_CATEGORIES_BOTTOM_DESCRIPTION###
+<!-- ###TEMPLATE### end -->
+<!-- ###HEADER_DATA### begin -->
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $('.products_listing_wrapper .qty_minus').click(function() {
+            var qty = parseFloat($(this).next().val());
+            var stepSize=parseFloat($(this).next().attr('data-step-size'));
+            if (qty > stepSize) {
+                var new_val = parseFloat(qty - stepSize).toFixed(2).replace('.00', '');
+                $(this).next().val(new_val);
+            }
+        });
+        $('.products_listing_wrapper .qty_plus').click(function() {
+            var qty = parseFloat($(this).prev().val());
+            var stepSize=parseFloat($(this).prev().attr('data-step-size'));
+            var new_val = parseFloat(qty + stepSize).toFixed(2).replace('.00', '');
+            $(this).prev().val(new_val);
+        });
+    });
+</script>
+<!-- ###HEADER_DATA### end -->
