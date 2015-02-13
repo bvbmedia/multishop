@@ -3215,6 +3215,24 @@ class mslib_fe {
 		$rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query);
 		return $rs['related_to'];
 	}
+	public function getProductToCategoriesArray($product_id, $page_uid='') {
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id, p2c.crumbar_identifier', // SELECT ...
+			'tx_multishop_products_to_categories p2c', // FROM ...
+			'p2c.products_id = \''.$product_id.'\' and p2c.page_uid=\''.$page_uid.'\' and p2c.is_deepest=1', // WHERE...
+			'', // GROUP BY...
+			'products_to_categories_id asc', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		$res=array();
+		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
+			$res[]=$rs['categories_id'];
+		}
+		return $res;
+	}
 	public function getProductToCategories($product_id, $current_category_id='',$page_uid='') {
 		if (!is_numeric($page_uid)) {
 			$page_uid=$this->showCatalogFromPage;

@@ -2680,8 +2680,14 @@ if ($this->post) {
 							data:   \'image=\' + image_data,
 							dataType: "json",
 							success: function(r) {
-								if (r.target_delete!=\'\') {
-									$(r.target_delete).remove();
+								if (r.target_delete_id!=\'\') {
+									var div_img_element_id=\'#attribute_value_image_action\' + r.target_delete_id;
+									var input_value_element_id=\'#ajax_attribute_value_image\' + r.target_delete_id;
+									var upload_list_element_id=\'#qq-upload-list-ul\' + r.target_delete_id;
+									$(div_img_element_id).empty();
+									$(input_value_element_id).val(\'\');
+									$(upload_list_element_id).empty();
+
 								}
 							}
 						});
@@ -2923,7 +2929,7 @@ if ($this->post) {
 						},
 						minimumInputLength: 0,
 						query: function(query) {
-							if (attributesSearchValues[query.term] !== undefined) {
+							if (attributesSearchValues[query.term] !== undefined && query.term!=\'\') {
 								query.callback({results: attributesSearchValues[query.term]});
 							} else {
 								$.ajax(ajax_url, {

@@ -695,12 +695,22 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 		}
 		break;
 	case 'delete_product_attribute_value_images':
-		$updateArray=array();
-		$updateArray['products_options_values_image']='';
-		//$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_values_to_products_options_id='.$this->post['pov2po'], $updateArray);
-		//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		list($image_id, $image_fn)=explode(':', $this->post['image']);
+		$product_id=0;
+		$option_id=0;
+		$value_id=0;
+		if (strpos($image_id, '_')!==false) {
+			list($product_id, $option_id, $value_id)=explode('_', $image_id);
+		}
+		if ($product_id>0 && $option_id>0 && $value_id>0) {
+			$updateArray=array();
+			$updateArray['attribute_image']='';
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_id='.$product_id.' and options_id='.$option_id.' and options_values_id='.$value_id.' and attribute_image=\''.$image_fn.'\'', $updateArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		}
+		mslib_befe::deleteAttributeValuesImage($image_fn);
 		$return_data=array();
-		$return_data['target_delete']='.values_image'.$this->post['pov2po'];
+		$return_data['target_delete_id']=$image_id;
 		$json_data=mslib_befe::array2json($return_data);
 		echo $json_data;
 		exit();
