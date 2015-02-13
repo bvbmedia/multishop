@@ -1905,7 +1905,7 @@ class mslib_befe {
 		  FULLTEXT KEY `products_name` (`products_name`),
 		  FULLTEXT KEY `products_model_2` (`products_model`),
 		  FULLTEXT KEY `products_model_3` (`products_model`,`products_name`)
-		);
+		) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 		";
 		//ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
 		//hook to let other plugins further manipulate the create table query

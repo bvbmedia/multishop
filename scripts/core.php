@@ -6,7 +6,11 @@ if ($this->ADMIN_USER) {
 	// if the user is logged in and has admin rights lets check if the shop is fully configured
 	$content.=mslib_fe::giveSiteConfigurationNotice();
 }
-$this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
+if ($this->conf['page_section']) {
+	$this->ms['page']=$this->conf['page_section'];
+} else {
+	$this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
+}
 switch ($this->ms['page']) {
 	case 'payment_page':
 		if ($this->get['tx_multishop_pi1']['hash']) {
