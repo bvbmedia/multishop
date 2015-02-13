@@ -1593,6 +1593,12 @@ class mslib_befe {
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
+					// TYPO3 6.2 BUGFIX NULL VALUES
+					foreach ($flat_product as $key => $val) {
+						if (is_null($flat_product[$key])) {
+							$flat_product[$key]='';
+						}
+					}
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery($table_name, $flat_product);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					if (!$res) {
@@ -1899,9 +1905,9 @@ class mslib_befe {
 		  FULLTEXT KEY `products_name` (`products_name`),
 		  FULLTEXT KEY `products_model_2` (`products_model`),
 		  FULLTEXT KEY `products_model_3` (`products_model`,`products_name`)
-
-		) ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+		);
 		";
+		//ENGINE=MyISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci
 		//hook to let other plugins further manipulate the create table query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePreHook'])) {
 			$params=array(
