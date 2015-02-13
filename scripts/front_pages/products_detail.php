@@ -11,6 +11,27 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 }
 // custom hook that can be controlled by third-party plugin eof
 if (is_numeric($this->get['products_id'])) {
+	// canonical link tag
+	$relation_cat=mslib_fe::getProductToCategoriesArray($this->get['products_id']);
+	if (count($relation_cat)>1) {
+		$primary_cat=$relation_cat[0];
+		// get all cats to generate multilevel fake url
+		$level=0;
+		$cats=mslib_fe::Crumbar($primary_cat);
+		$cats=array_reverse($cats);
+		$where='';
+		if (count($cats)>0) {
+			foreach ($cats as $cat) {
+				$where.="categories_id[".$level."]=".$cat['id']."&";
+				$level++;
+			}
+			$where=substr($where, 0, (strlen($where)-1));
+			$where.='&';
+		}
+		// get all cats to generate multilevel fake url eof
+		$canonical_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$this->get['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+		$output_array['meta']['canonical_link']='<link rel="canonical" href="'.$canonical_link.'" />';
+	}
 	//last visited
 	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 	$cart['last_visited'][$this->get['products_id']]=$this->get['products_id'];
