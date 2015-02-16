@@ -157,7 +157,7 @@ if (!$product['products_id']) {
 	}
 	$quantity_html='';
 	//if ($product['maximum_quantity']>0 || (is_numeric($product['products_multiplication']) && $product['products_multiplication']>0)) {
-	if ($product['maximum_quantity']>0) {
+	/*if ($product['maximum_quantity']>0) {
 		if ($product['maximum_quantity']>0) {
 			$ending_number=$product['maximum_quantity'];
 		}
@@ -174,7 +174,7 @@ if (!$product['products_id']) {
 		$quantity_html.='<select name="quantity" id="quantity">';
 		$count=0;
 		$steps=10;
-		if ($product['maximum_quantity'] && $product['products_multiplication']) {
+		if ($product['maximum_quantity'] && $product['products_multiplication']>0) {
 			$steps=floor($product['maximum_quantity']/$product['products_multiplication']);
 		} else {
 			if ($product['maximum_quantity'] && !$product['products_multiplication']) {
@@ -196,7 +196,8 @@ if (!$product['products_id']) {
 		$quantity_html.='</select>';
 	} else {
 		$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" id="quantity" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
-	}
+	}*/
+	$quantity_html='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" id="quantity" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
 	// show selectbox by products multiplication or show default input eof
 	$output['quantity']='
 	<div class="quantity">
@@ -300,20 +301,38 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
 	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
 	$js_detail_page_triggers[]='
-		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00'?$product['products_multiplication']:'1').'\');
+		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00'?$product['products_multiplication']:($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1')).'\');
+		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'\');
+		var maxQty=parseFloat(\''.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'\');
 		if ($("#quantity").val() == "") {
 			$("#quantity").val(stepSize);
 		}
 		$(".qty_minus").click(function() {
 			var qty = parseFloat($("#quantity").val());
-			if (qty > stepSize) {
-				var new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
-				$("#quantity").val(new_val);
+			var new_val = 0;
+			if (qty > minQty) {
+				new_val = parseFloat(qty - stepSize).toFixed(2).replace(\'.00\', \'\');
+
 			}
+			if (new_val==0) {
+				new_val=minQty;
+			}
+			$("#quantity").val(new_val);
 		});
 		$(".qty_plus").click(function() {
 			var qty = parseFloat($("#quantity").val());
-			var new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
+			var new_val = 0;
+			if (maxQty>0) {
+				new_val=qty;
+				if (qty < maxQty) {
+					new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
+				}
+				if (new_val>maxQty) {
+					new_val=maxQty;
+				}
+			} else {
+				new_val = parseFloat(qty + stepSize).toFixed(2).replace(\'.00\', \'\');
+			}
 			$("#quantity").val(new_val);
 		});
 	';
