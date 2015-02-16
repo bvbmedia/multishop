@@ -174,12 +174,12 @@ $subpartArray['###ITEM###']=$contentItem;
 // completed the template expansion by replacing the "item" marker in the template
 if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 	$content.='
-	<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
+	<div class="modal" id="shippingCostsModalRelatives" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitleRelatives" aria-hidden="true">
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('shipping_costs').'</h4>
+			<h4 class="modal-title" id="shippingCostModalTitleRelatives">'.$this->pi_getLL('shipping_costs').'</h4>
 		  </div>
 		  <div class="modal-body"></div>
 		  <div class="modal-footer">
@@ -190,11 +190,11 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 	</div>
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
-	  	$(\'#shippingCostsModal\').modal({
+	  	$(\'#shippingCostsModalRelatives\').modal({
 			show:false,
 			backdrop:false
 		});
-		$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
+		$(\'#shippingCostsModalRelatives\').on(\'show.bs.modal\', function (event) {
 			var button = $(event.relatedTarget) // Button that triggered the modal
   			var product_id = button.data(\'productid\') // Extract info from data-* attributes
 			var modalBox = $(this);
