@@ -8,6 +8,7 @@ if (!$this->imageWidth) {
 }
 $subpartArray=array();
 // now parse all the objects in the tmpl file
+
 if ($this->conf['products_relatives_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['products_relatives_tmpl_path']);
 } else {
@@ -33,10 +34,19 @@ $subpartArray['###TITLE###']=$this->cObj->substituteMarkerArray($subparts['title
 // TABLE HEADER FIRST
 $markerArray=array();
 $markerArray['HEADER_NAME']=htmlspecialchars(ucfirst($this->pi_getLL('products_name')));
+$markerArray['HEADER_SHIPPING_COSTS_OVERVIEW_RELATIVE']='';
+if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+	$markerArray['HEADER_SHIPPING_COSTS_OVERVIEW_RELATIVE']='<th class="relatives_products_products_shipping_costs_overview">&nbsp;</th>';
+}
 $markerArray['HEADER_PRICE']=htmlspecialchars(ucfirst($this->pi_getLL('price')));
 $markerArray['HEADER_QUANTITY']=htmlspecialchars(ucfirst($this->pi_getLL('qty')));
 $markerArray['HEADER_BUY_NOW']=htmlspecialchars(ucfirst($this->pi_getLL('buy_now')));
 $markerArray['HEADER_STOCK']=htmlspecialchars(ucfirst($this->pi_getLL('stock')));
+if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+	$subpartHeaderArray=array();
+	$subpartHeaderArray['###HEADER_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
+	$subparts['header']=$this->cObj->substituteMarkerArrayCached($subparts['header'], array(), $subpartHeaderArray);
+}
 $subpartArray['###HEADER###']=$this->cObj->substituteMarkerArray($subparts['header'], $markerArray, '###|###');
 // NOW THE PRODUCT ITEMS
 $contentItem='';
@@ -125,6 +135,11 @@ foreach ($rel_products as $rel_rs) {
 	$markerArray['ITEM_BUY_NOW']='<label for="relative_'.$i.'"></label>
 		<input type="checkbox" class="PrettyInput" name="winkelwagen['.$i.']" id="relative_'.$i.'" value="1">'.$rel_rs['hidden_fields'];
 	$markerArray['ITEM_PRODUCTS_STOCK']=$rel_rs['products_quantity'];
+	$markerArray['ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE']='';
+	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+		$markerArray['ITEM_PRODUCTS_ID']=$rel_rs['products_id'];
+		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
+	}
 	$markerArray['ITEM_PRODUCTS_SKU']=$rel_rs['sku_code'];
 	$markerArray['ITEM_PRODUCTS_EAN']=$rel_rs['ean_code'];
 	$i++;
@@ -140,12 +155,92 @@ foreach ($rel_products as $rel_rs) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
+	if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+		$subpartHeaderArray=array();
+		$subpartHeaderArray['###ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
+		$subparts['item']=$this->cObj->substituteMarkerArrayCached($subparts['item'], array(), $subpartHeaderArray);
+	}
 	// custom hook that can be controlled by third-party plugin eof
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 }
 // fill the row marker with the expanded rows
 $subpartArray['###ITEM###']=$contentItem;
 // completed the template expansion by replacing the "item" marker in the template
+if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+	$content.='
+	<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('shipping_costs').'</h4>
+		  </div>
+		  <div class="modal-body"></div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+	  	$(\'#shippingCostsModal\').modal({
+			show:false,
+			backdrop:false
+		});
+		$(\'#shippingCostsModal\').on(\'show.bs.modal\', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+  			var product_id = button.data(\'productid\') // Extract info from data-* attributes
+			var modalBox = $(this);
+			modalBox.find(\'.modal-body\').empty();
+			if (modalBox.find(\'.modal-body\').html()==\'\') {
+				jQuery.ajax({
+					url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
+					data: \'tx_multishop_pi1[pid]=\' + product_id + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
+					type: \'post\',
+					dataType: \'json\',
+					success: function (j) {
+						if (j) {
+							var shipping_cost_popup=\'<div class="product_shippingcost_popup_wrapper">\';
+							shipping_cost_popup+=\'<div class="product_shippingcost_popup_header">'.$this->pi_getLL('product_shipping_and_handling_cost_overview').'</div>\';
+							shipping_cost_popup+=\'<div class="product_shippingcost_popup_table_wrapper">\';
+							shipping_cost_popup+=\'<table id="product_shippingcost_popup_table" class="table table-striped">\';
+							shipping_cost_popup+=\'<tr>\';
+							shipping_cost_popup+=\'<td colspan="3" class="product_shippingcost_popup_table_product_name">\' + j.products_name + \'</td>\';
+							shipping_cost_popup+=\'</tr>\';
+							shipping_cost_popup+=\'<tr>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">'.$this->pi_getLL('deliver_to').'</td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">'.$this->pi_getLL('shipping_and_handling_cost_overview').'</td>\';
+							shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">'.$this->pi_getLL('deliver_by').'</td>\';
+							shipping_cost_popup+=\'</tr>\';
+							$.each(j.shipping_costs_display, function(country_iso_nr, shipping_cost) {
+								shipping_cost_popup+=\'<tr>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col">\' + j.deliver_to[country_iso_nr] + \'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_center_col">\' + shipping_cost + \'</td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[country_iso_nr] + \'</td>\';
+								shipping_cost_popup+=\'</tr>\';
+							});
+							if (j.delivery_time!=\'e\') {
+								shipping_cost_popup+=\'<tr>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col"><strong>'.$this->pi_getLL('admin_delivery_time').'</strong></td>\';
+								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col" colspan="2">\' + j.delivery_time + \'</td>\';
+								shipping_cost_popup+=\'</tr>\';
+							}
+							shipping_cost_popup+=\'</table>\';
+							shipping_cost_popup+=\'</div>\';
+							shipping_cost_popup+=\'</div>\';
+							//modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
+							modalBox.find(\'.modal-body\').html(shipping_cost_popup);
+							//msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
+						}
+					}
+				});
+			}
+		});
+	});
+	</script>
+	';
+}
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingPagePostHook'])) {
 	$params=array(
