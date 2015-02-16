@@ -504,7 +504,7 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_right_col">\' + j.deliver_by[country_iso_nr] + \'</td>\';
 								shipping_cost_popup+=\'</tr>\';
 							});
-							if (j.delivery_time!=null) {
+							if (j.delivery_time!=\'e\') {
 								shipping_cost_popup+=\'<tr>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col"><strong>'.$this->pi_getLL('admin_delivery_time').'</strong></td>\';
 								shipping_cost_popup+=\'<td class="product_shippingcost_popup_table_left_col" colspan="2">\' + j.delivery_time + \'</td>\';
