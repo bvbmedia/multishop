@@ -142,6 +142,12 @@ foreach ($rel_products as $rel_rs) {
 	}
 	$markerArray['ITEM_PRODUCTS_SKU']=$rel_rs['sku_code'];
 	$markerArray['ITEM_PRODUCTS_EAN']=$rel_rs['ean_code'];
+	$markerArray['ITEM_HEADER_NAME']=htmlspecialchars(ucfirst($this->pi_getLL('products_name')));
+	$markerArray['ITEM_HEADER_PRICE']=htmlspecialchars(ucfirst($this->pi_getLL('price')));
+	$markerArray['ITEM_HEADER_QUANTITY']=htmlspecialchars(ucfirst($this->pi_getLL('qty')));
+	$markerArray['ITEM_HEADER_BUY_NOW']=htmlspecialchars(ucfirst($this->pi_getLL('buy_now')));
+	$markerArray['ITEM_HEADER_STOCK']=htmlspecialchars(ucfirst($this->pi_getLL('stock')));
+
 	$i++;
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'])) {
