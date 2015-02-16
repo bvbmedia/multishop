@@ -78,6 +78,8 @@ switch ($this->ms['page']) {
 		break;
 	case 'get_product_shippingcost_overview':
 		$return_data=array();
+		$product_data=mslib_fe::getProduct($this->post['tx_multishop_pi1']['pid']);
+		$return_data['delivery_time']=$product_data['delivery_time'];
 		$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 		$enabled_countries=array();
