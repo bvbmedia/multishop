@@ -79,6 +79,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		var labels_deliver_to = \''.$this->pi_getLL('deliver_to').'\';
 		var labels_shipping_and_handling_cost_overview = \''.$this->pi_getLL('shipping_and_handling_cost_overview').'\';
 		var labels_deliver_by = \''.$this->pi_getLL('deliver_by').'\';
+		var labels_delivery_time=\''.$this->pi_getLL('admin_delivery_time').'\';
 		var shipping_costs_overview=true;
 		'."\n";
 	}

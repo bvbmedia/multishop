@@ -202,6 +202,12 @@ jQuery(document).ready(function ($) {
                                         shipping_cost_popup+='<td class="product_shippingcost_popup_table_right_col">' + j.deliver_by[country_iso_nr] + '</td>';
                                         shipping_cost_popup+='</tr>';
                                     });
+                                    if (j.delivery_time!=null) {
+                                        shipping_cost_popup+='<tr>';
+                                        shipping_cost_popup+='<td class="product_shippingcost_popup_table_left_col"><strong>' + labels_delivery_time + '</strong></td>';
+                                        shipping_cost_popup+='<td class="product_shippingcost_popup_table_left_col" colspan="2">\' + j.delivery_time + \'</td>';
+                                        shipping_cost_popup+='</tr>';
+                                    }
                                     shipping_cost_popup+='</table>';
                                     shipping_cost_popup+='</div>';
                                     shipping_cost_popup+='</div>';
