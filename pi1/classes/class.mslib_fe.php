@@ -6026,10 +6026,15 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_online_users']['label']=$this->pi_getLL('admin_online_users').': '.$total_members.'/'.$guests_online;
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['label']=$this->pi_getLL('admin_members').': '.$total_members;
 			if ($total_members) {
+				$counter=0;
 				foreach ($members as $member) {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['label']=$member['username'];
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['description']='Logged in at '.strftime("%x %X", $member['lastlogin']);
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$member['uid'].'&action=edit_customer', 1);
+					$counter++;
+					if ($counter==15) {
+						break;
+					}
 				}
 			}
 			if ($guests_online-$total_members) {
@@ -6044,10 +6049,15 @@ class mslib_fe {
 				$guestsNumber=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
 				if ($guestsNumber>0) {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.$guestsNumber;
+					$counter=0;
 					while ($record=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['label']=htmlspecialchars($record['ip_address']);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['description']=htmlspecialchars($record['http_user_agent']);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['link']=$record['url'];
+						$counter++;
+						if ($counter==15) {
+							break;
+						}
 					}
 				}
 			}
