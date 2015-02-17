@@ -1,9 +1,9 @@
 
-.blockUI.blockMsg { font:12px Arial,Helvetica,sans-serif; color:#e6e6e6; border-radius:6px; }
+.blockUI.blockMsg { font:12px Arial,Helvetica,sans-serif; color:#e6e6e6; border-radius:6px; z-index:1043 !important; }
 .blockUI.blockMsg h1 { font:bold 16px Arial,Helvetica,sans-serif; color:#c50000; text-align:left; margin:0 0 10px; padding:0 0 0 74px; }
 .blockUI.blockMsg a { color:#999; text-decoration:underline; }
 .blockUI.blockMsg a:hover { color:#cdcdcd; }
-.blockUI.blockMsg .growl_message { min-height:100px; background:url(../images/admin_alert.png) 5px top no-repeat; text-align:left; padding-left:74px; z-index:1043; }
+.blockUI.blockMsg .growl_message { min-height:100px; background:url(../images/admin_alert.png) 5px top no-repeat; text-align:left; padding-left:74px; }
 
 #tx_multishop_pi1_core table.msadmin_border { width:100%; border-collapse:collapse; border:1px solid #cdcdcd; margin:0 0 10px; }
 #tx_multishop_pi1_core table.msadmin_border th { background:#888; font:bold 12px Arial, Helvetica, sans-serif; color:#fff; }
