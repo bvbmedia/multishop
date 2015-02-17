@@ -1,8 +1,8 @@
 page.includeLibs.msMenuFunc = EXT:multishop/class.user_msMenuFunc.php
-lib.multishop_itemArrayProcFunc = user_msMenuFunc->itemArrayProcFunc 
+lib.multishop_itemArrayProcFunc = user_msMenuFunc->itemArrayProcFunc
 lib.multishop_itemArrayProcFunc {
 	attachMultishopCategoriesOnPid={$plugin.multishop.attachMultishopCategoriesOnPid}
-		  
+
 	#COPY ALL THE MULTISHOP SETTINGS, SO THEY ARE ALSO ACCESSIBLE IN THE msMenuFunc CLASS
 	product_detail_tmpl={$plugin.multishop.product_detail_tmpl}
 	product_detail_tmpl_path={$plugin.multishop.product_detail_tmpl_path}
@@ -14,7 +14,7 @@ lib.multishop_itemArrayProcFunc {
 	fe_rootadmin_usergroup={$plugin.multishop.fe_rootadmin_usergroup}
 	show_powered_by_multishop={$plugin.multishop.show_powered_by_multishop}
 	exampleCSS={$plugin.multishop.exampleCSS}
-	ajax_pagetype_id_server={$plugin.multishop.ajax_pagetype_id_server}  
+	ajax_pagetype_id_server={$plugin.multishop.ajax_pagetype_id_server}
 	ajax_pagetype_id_left_column={$plugin.multishop.ajax_pagetype_id_left_column}
 	ajax_pagetype_id_normal_column={$plugin.multishop.ajax_pagetype_id_normal_column}
 	fe_customer_pid={$plugin.multishop.fe_customer_pid}
@@ -39,15 +39,15 @@ lib.multishop_itemArrayProcFunc {
 	enableAdminPanelSortCatalog={$plugin.multishop.enableAdminPanelSortCatalog}
 	enableAdminPanelRebuildFlatDatabase={$plugin.multishop.enableAdminPanelRebuildFlatDatabase}
 	customSettings={$plugin.multishop.customSettings}
-	email_tmpl_path={$plugin.multishop.email_tmpl_path}  
+	email_tmpl_path={$plugin.multishop.email_tmpl_path}
 	jQueryPopup_rel={$plugin.multishop.jQueryPopup_rel}
 	fe_statisticsadmin_usergroup={$plugin.multishop.fe_statisticsadmin_usergroup}
 	fe_catalogadmin_usergroup={$plugin.multishop.fe_catalogadmin_usergroup}
 	fe_ordersadmin_usergroup={$plugin.multishop.fe_ordersadmin_usergroup}
-	enableAdminPanelSystem={$plugin.multishop.enableAdminPanelSystem}  
-	fe_cmsadmin_usergroup={$plugin.multishop.fe_cmsadmin_usergroup}  
-	fe_customersadmin_usergroup={$plugin.multishop.fe_customersadmin_usergroup}  
-	fe_storesadmin_usergroup={$plugin.multishop.fe_storesadmin_usergroup}  
+	enableAdminPanelSystem={$plugin.multishop.enableAdminPanelSystem}
+	fe_cmsadmin_usergroup={$plugin.multishop.fe_cmsadmin_usergroup}
+	fe_customersadmin_usergroup={$plugin.multishop.fe_customersadmin_usergroup}
+	fe_storesadmin_usergroup={$plugin.multishop.fe_storesadmin_usergroup}
 	fe_searchadmin_usergroup={$plugin.multishop.fe_searchadmin_usergroup}
 	fe_systemadmin_usergroup={$plugin.multishop.fe_systemadmin_usergroup}
 	disableMetatags={$plugin.multishop.disableMetatags}
@@ -64,6 +64,7 @@ lib.multishop_itemArrayProcFunc {
 	products_listing_page_pid={$plugin.multishop.products_listing_page_pid}
 	order_details_table_site_tmpl_path={$plugin.multishop.order_details_table_site_tmpl_path}
 	order_details_table_email_tmpl_path={$plugin.multishop.order_details_table_email_tmpl_path}
+	order_details_table_invoice_pdf_tmpl_path={$plugin.multishop.order_details_table_invoice_pdf_tmpl_path}
 	maxDEPTH={$plugin.multishop.maxDEPTH}
 	showIfsub={$plugin.multishop.showIfsub}
 	parentID={$plugin.multishop.parentID}

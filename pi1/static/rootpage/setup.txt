@@ -77,6 +77,7 @@ plugin.tx_multishop_pi1 {
 	products_listing_page_pid={$plugin.multishop.products_listing_page_pid}
 	order_details_table_site_tmpl_path={$plugin.multishop.order_details_table_site_tmpl_path}
 	order_details_table_email_tmpl_path={$plugin.multishop.order_details_table_email_tmpl_path}
+	order_details_table_invoice_pdf_tmpl_path={$plugin.multishop.order_details_table_invoice_pdf_tmpl_path}
 	maxDEPTH={$plugin.multishop.maxDEPTH}
 	showIfsub={$plugin.multishop.showIfsub}
 	parentID={$plugin.multishop.parentID}

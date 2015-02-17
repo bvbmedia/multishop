@@ -78,7 +78,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###INVOICE_PAYMENT_METHOD###']=$order['payment_method_label'];
 		}
 		$markerArray['###INVOICE_ORDER_DETAILS###']=mslib_befe::printInvoiceOrderDetailsTable($order, $invoice['invoice_id'], $prefix);
-
 		$markerArray['###LABEL_YOUR_VAT_ID###']='';
 		$markerArray['###YOUR_VAT_ID###']='';
 		if ($order['billing_vat_id']) {
@@ -123,7 +122,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 				break;
 			}
 		}
-
 		// MARKERS
 		$array1=array();
 		$array2=array();

@@ -158,6 +158,9 @@ plugin.multishop {
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (e-mail) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_email.tmpl.
 	order_details_table_email_tmpl_path=
 
+	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (PDF invoice) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_pdf_invoice.tmpl.
+	order_details_table_invoice_pdf_tmpl_path=
+
 	# cat=plugin.multishop - templates/file; type=string; label= Products Relatives Table File Path: Optionally specify the location of the template file that is being used for building up the products relatives table. Example: fileadmin/templates/multishop/products_relatives.tmpl.
 	products_relatives_tmpl_path = EXT:multishop/templates/products_relatives.tmpl
 

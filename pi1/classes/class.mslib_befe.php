@@ -3599,73 +3599,137 @@ class mslib_befe {
 		return $selectbox_str;
 	}
 	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='') {
-		$orders_tax_data=$order['orders_tax_data'];
-		$tmpcontent='<table class="msadmin_border" width="100%" border="0" cellspacing="0" id="orderDetailsPDFInvoice">';
-		//$tmpcontent.='<tr>';
-		//$tmpcontent.='<td colspan="5" style="padding-bottom:10px"><strong>'.$this->pi_getLL('invoice_number').': '.$invoice_number.'</strong></td>';
-		//$tmpcontent.='</tr>';
-		$tmpcontent.='<tr class="invoiceTableHeading">
-					  <td align="right" class="cell_qty">'.ucfirst($this->pi_getLL('qty')).'</td>
-					  <td align="left" class="cell_products_name">'.$this->pi_getLL('products_name').'</td>';
-		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$tmpcontent.='<td align="right" class="cell_products_vat">'.$this->pi_getLL('vat').'</td>
-						  <td align="right" class="cell_products_normal_price">'.$this->pi_getLL('normal_price').'</td>
-						  <td align="right" class="cell_products_final_price">'.$this->pi_getLL('final_price_inc_vat').'</td>';
+		if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
+			$template=$this->cObj->fileResource($this->conf['order_details_table_invoice_pdf_tmpl_path']);
 		} else {
-			$tmpcontent.='<td align="right" class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</td>
-						  <td align="right" class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</td>
-						  <td align="right" class="cell_products_final_price align_right">'.$this->pi_getLL('final_price_ex_vat').'</td>';
+			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_invoice_pdf.tmpl');
 		}
-		$tmpcontent.='</tr>';
+		// Extract the subparts from the template
+		$subparts=array();
+		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
+		$subparts['HEADER_NORMAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###HEADER_NORMAL_WRAPPER###');
+		$subparts['HEADER_INCLUDE_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###HEADER_INCLUDE_VAT_WRAPPER###');
+		$subparts['HEADER_EXCLUDE_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###HEADER_EXCLUDE_VAT_WRAPPER###');
+		// items wrapper
+		$subparts['ITEMS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###ITEMS_WRAPPER###');
+		$subparts['ITEM_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_WRAPPER###');
+		$subparts['ITEM_ATTRIBUTES_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEM_ATTRIBUTES_WRAPPER###');
+		//bottom row
+		$subparts['SUBTOTAL_INCLUDE_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_INCLUDE_VAT_WRAPPER###');
+		$subparts['SUBTOTAL_EXCLUDE_VAT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_EXCLUDE_VAT_WRAPPER###');
+		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
+		$subparts['TOTAL_VAT_ROW_INCLUDE_VAT']=$this->cObj->getSubpart($subparts['template'], '###TOTAL_VAT_ROW_INCLUDE_VAT###');
+		// parsing
+		$subpartArray=array();
+		//ITEMS_HEADER_WRAPPER
+		$markerArray=array();
+		$markerArray['LABEL_HEADER_QTY']=ucfirst($this->pi_getLL('qty'));
+		$markerArray['LABEL_HEADER_PRODUCT_NAME']=$this->pi_getLL('products_name');
+		$subpartArray['###HEADER_NORMAL_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['HEADER_NORMAL_WRAPPER'], $markerArray, '###|###');
+		$markerArray=array();
+		$markerArray['LABEL_HEADER_VAT']=$this->pi_getLL('vat');
+		$markerArray['LABEL_HEADER_ITEM_NORMAL_PRICE']=$this->pi_getLL('normal_price');
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$markerArray['LABEL_HEADER_ITEM_FINAL_PRICE']=$this->pi_getLL('final_price_inc_vat');
+			$subpartArray['###HEADER_INCLUDE_VAT_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['HEADER_INCLUDE_VAT_WRAPPER'], $markerArray, '###|###');
+		} else {
+			$markerArray['LABEL_HEADER_ITEM_FINAL_PRICE']=$this->pi_getLL('final_price_ex_vat');
+			$subpartArray['###HEADER_EXCLUDE_VAT_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['HEADER_EXCLUDE_VAT_WRAPPER'], $markerArray, '###|###');
+		}
+		// template wrapper
+		// removal start
+		$subpartsTemplateWrapperRemove=array();
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$subpartsTemplateWrapperRemove['###HEADER_EXCLUDE_VAT_WRAPPER###']='';
+			$subpartsTemplateWrapperRemove['###SUBTOTAL_EXCLUDE_VAT_WRAPPER###']='';
+		} else {
+			$subpartsTemplateWrapperRemove['###HEADER_INCLUDE_VAT_WRAPPER###']='';
+			$subpartsTemplateWrapperRemove['###SUBTOTAL_INCLUDE_VAT_WRAPPER###']='';
+			$subpartsTemplateWrapperRemove['###TOTAL_VAT_ROW_INCLUDE_VAT###']='';
+			if ($order['orders_tax_data']['shipping_tax'] || $order['orders_tax_data']['payment_tax']) {
+				$subpartsTemplateWrapperRemove['###TOTAL_VAT_ROW_EXCLUDE_VAT_NO_SHIPPING_PAYMENT_TAX###']='';
+			} else {
+				$subpartsTemplateWrapperRemove['###TOTAL_VAT_ROW_EXCLUDE_VAT_HAVE_SHIPPING_PAYMENT_TAX###']='';
+			}
+		}
+		if ($order['discount']<0 || $order['discount']==0) {
+			$subpartsTemplateWrapperRemove['###DISCOUNT_WRAPPER###']='';
+		}
+		$subparts['template']=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartsTemplateWrapperRemove);
+		// items wrapper
+		$subpartsItemsWrapperRemove=array();
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$subpartsItemsWrapperRemove['###ITEM_EXCLUDE_VAT_WRAPPER###']='';
+		} else {
+			$subpartsItemsWrapperRemove['###ITEM_INCLUDE_VAT_WRAPPER###']='';
+		}
+		$subparts['ITEM_WRAPPER']=$this->cObj->substituteMarkerArrayCached($subparts['ITEM_WRAPPER'], array(), $subpartsItemsWrapperRemove);
+		// item attributes wrapper
+		$subpartsItemAttributesWrapperRemove=array();
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			$subpartsItemAttributesWrapperRemove['###ITEM_ATTRIBUTE_EXCLUDE_VAT_WRAPPER###']='';
+		} else {
+			$subpartsItemAttributesWrapperRemove['###ITEM_ATTRIBUTE_INCLUDE_VAT_WRAPPER###']='';
+		}
+		$subparts['ITEM_ATTRIBUTES_WRAPPER']=$this->cObj->substituteMarkerArrayCached($subparts['ITEM_ATTRIBUTES_WRAPPER'], array(), $subpartsItemAttributesWrapperRemove);
+		// removal eol
 		$total_tax=0;
 		$tr_type='even';
 		$od_rows_count=0;
+		$product_counter=1;
 		if (is_array($order['products']) && count($order['products'])) {
+			$contentItem='';
 			foreach ($order['products'] as $product) {
+				$markerArray=array();
+				$markerArray['###PRODUCT_COUNTER###']=$product_counter;
 				$od_rows_count++;
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
 				} else {
 					$tr_type='even';
 				}
-				$tmpcontent.='<tr class="'.$tr_type.'">';
-				$tmpcontent.='<td align="right" class="cell_products_qty valign_top">'.round($product['qty'],2).'</td>';
+				$markerArray['ITEM_ROW_TYPE']=$tr_type;
+				$markerArray['ITEM_PRODUCT_QTY']=round($product['qty'],2);
 				$product_tmp=mslib_fe::getProduct($product['products_id']);
-				$tmpcontent.='<td align="left" class="cell_products_name valign_top">'.$product['products_name'];
+				$product_name=$product['products_name'];
 				if ($product['products_article_number']) {
-					$tmpcontent.=' ('.$product['products_article_number'].')';
+					$product_name.=' ('.$product['products_article_number'].')';
 				}
 				if ($product['products_model']) {
-					$tmpcontent.='<br/>Model: '.$product['products_model'];
+					$product_name.='<br/>Model: '.$product['products_model'];
 				}
 				if ($product['products_description']) {
-					$tmpcontent.='<br/>'.nl2br($product['products_description']);
+					$product_name.='<br/>'.nl2br($product['products_description']);
 				}
 				if (!empty($product['ean_code'])) {
-					$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
+					$product_name.='<br/>'.$this->pi_getLL('admin_label_ean').': '.$product['ean_code'];
 				}
 				if (!empty($product['sku_code'])) {
-					$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
+					$product_name.='<br/>'.$this->pi_getLL('admin_label_sku').': '.$product['sku_code'];
 				}
 				if (!empty($product['vendor_code'])) {
-					$tmpcontent.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
+					$product_name.='<br/>'.$this->pi_getLL('admin_label_vendor_code').': '.$product['vendor_code'];
 				}
-				$tmpcontent.='</td>';
+				$markerArray['ITEM_PRODUCT_NAME']=$product_name;
+				$markerArray['ITEM_VAT']=str_replace('.00', '', number_format($product['products_tax'], 2)).'%';
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.mslib_fe::amount2Cents($prefix.$product['final_price']+$product['products_tax_data']['total_tax'], 0,1,0).'</td>';
-					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.mslib_fe::amount2Cents($prefix.($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0,1,0).'</td>';
+					$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.$product['final_price']+$product['products_tax_data']['total_tax'], 0,1,0);
+					$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0,1,0);
 				} else {
-					$tmpcontent.='<td align="right" class="cell_products_normal_price valign_top">'.mslib_fe::amount2Cents($prefix.$product['final_price'], 0,1,0).'</td>';
-					$tmpcontent.='<td align="right" class="cell_products_vat valign_top">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-					$tmpcontent.='<td align="right" class="cell_products_final_price valign_top">'.mslib_fe::amount2Cents($prefix.($product['qty']*$product['final_price']), 0,1,0).'</td>';
+					$markerArray['ITEM_NORMAL_PRICE']=mslib_fe::amount2Cents($prefix.$product['final_price'], 0,1,0);
+					$markerArray['ITEM_FINAL_PRICE']=mslib_fe::amount2Cents($prefix.($product['qty']*$product['final_price']), 0,1,0);
 				}
-				$tmpcontent.='</tr>';
+				$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
 				if (is_array($product['attributes']) && count($product['attributes'])) {
+					$attributeContent='';
 					foreach ($product['attributes'] as $tmpkey=>$options) {
 						if ($options['products_options_values']) {
+							$attributeMarkerArray=array();
+							$attributeMarkerArray['ITEM_ATTRIBUTE_ROW_TYPE']=$tr_type;
+							$attributeMarkerArray['ITEM_ATTRIBUTE']=$options['products_options'].': '.$options['products_options_values'];
+							$attributeMarkerArray['ITEM_ATTRIBUTE_VAT']='';
+							// calculating
 							$od_rows_count++;
-							$tmpcontent.='<tr class="'.$tr_type.'"><td>&nbsp;</td><td align="left">'.$options['products_options'].': '.$options['products_options_values'].'</td>';
 							$cell_products_normal_price='';
 							$cell_products_vat='';
 							$cell_products_final_price='';
@@ -3680,105 +3744,51 @@ class mslib_befe {
 									$cell_products_final_price=mslib_fe::amount2Cents($prefix.($options['price_prefix'].$options['options_values_price'])*$product['qty'], 0,1,0);
 								}
 							}
-							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
-							} else {
-								$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
-							}
-							$tmpcontent.='</tr>';
+							$attributeMarkerArray['ITEM_ATTRIBUTE_NORMAL_PRICE']=$cell_products_normal_price;
+							$attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE']=$cell_products_final_price;
+							$attributeContent.=$this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
 						}
 					}
+					$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###'].=$attributeContent;
+				} else {
+					$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###']='';
 				}
 				// count the vat
 				if ($order['final_price'] and $order['products_tax']) {
 					$item_tax=$order['qty']*($order['final_price']*$order['products_tax']/100);
 					$total_tax=$total_tax+$item_tax;
 				}
+				$product_counter++;
 			}
 		}
+		$subpartArray['###ITEM_WRAPPER###']=$contentItem;
+		// bottom row
 		$colspan=5;
-		$tmpcontent.='<tr class="hrWrapper">';
-		$tmpcontent.='<td align="right" colspan="2">&nbsp;</td>';
-		$tmpcontent.='<td align="right" colspan="3"><hr/></td>';
-		$tmpcontent.='</tr>';
-		$tmpcontent.='<tr><td class="order_total_wrapper" align="right" colspan="'.$colspan.'">';
-		$tmpcontent.='<table class="order_total" width="100%">';
+		$subpartArray['###INVOICE_TOTAL_COLSPAN###']=$colspan;
+		$subpartArray['###LABEL_SUBTOTAL###']=$this->pi_getLL('sub_total');
+		$subpartArray['###LABEL_VAT###']=$this->pi_getLL('vat');
+		$subpartArray['###LABEL_SHIPPING_COSTS###']=$this->pi_getLL('shipping_costs');
+		$subpartArray['###LABEL_PAYMENT_COSTS###']=$this->pi_getLL('payment_costs');
+		$subpartArray['###LABEL_PAYMENT_COSTS###']=$this->pi_getLL('payment_costs');
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$tmpcontent.='<tr>
-						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('sub_total').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['orders_tax_data']['sub_total'], 0,1,0).'</span></td>
-					</tr>';
-			$content_vat='<tr>
-						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('included_vat_amount').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$orders_tax_data['total_orders_tax'], 0,1,0).'</span></td>
-					</tr>';
-			if ($order['shipping_method_costs']>0) {
-				$content_shipping_costs='<tr>
-							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('shipping_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0,1,0).'</span></td>
-						</tr>';
-			}
-			if ($order['payment_method_costs']>0) {
-				$content_payment_costs='<tr>
-							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('payment_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0,1,0).'</span></td>
-						</tr>';
-			}
+			$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.$order['orders_tax_data']['sub_total'], 0,1,0);
+			$subpartArray['###TOTAL_VAT###']=mslib_fe::amount2Cents($prefix.$order['orders_tax_data']['total_orders_tax'], 0,1,0);
+			$subpartArray['###TOTAL_SHIPPING_COSTS###']=mslib_fe::amount2Cents($prefix.$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0,1,0);
+			$subpartArray['###TOTAL_PAYMENT_COSTS###']=mslib_fe::amount2Cents($prefix.$order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0,1,0);
 		} else {
-			$tmpcontent.='<tr>
-						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('sub_total').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['subtotal_amount'],0,1,0).'</span></td>
-					</tr>';
-			$content_vat='<tr>
-						<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('vat').'</label></td>
-						<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$orders_tax_data['total_orders_tax'], 0,1,0).'</span></td>
-					</tr>';
-			if ($order['shipping_method_costs']>0) {
-				$content_shipping_costs='<tr>
-							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('shipping_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['shipping_method_costs'], 0,1,0).'</span></td>
-						</tr>';
-			}
-			if ($order['payment_method_costs']>0) {
-				$content_payment_costs='<tr>
-							<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('payment_costs').'</label></td>
-							<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['payment_method_costs'], 0,1,0).'</span></td>
-						</tr>';
-			}
-		}
-		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$tmpcontent.=$content_shipping_costs;
-			$tmpcontent.=$content_payment_costs;
-		} else {
-			if ($order['orders_tax_data']['shipping_tax'] || $order['orders_tax_data']['payment_tax']) {
-				$tmpcontent.=$content_shipping_costs;
-				$tmpcontent.=$content_payment_costs;
-				$tmpcontent.=$content_vat;
-			} else {
-				$tmpcontent.=$content_vat;
-				$tmpcontent.=$content_shipping_costs;
-				$tmpcontent.=$content_payment_costs;
-			}
+			$subpartArray['###SUBTOTAL###']=mslib_fe::amount2Cents($prefix.$order['subtotal_amount'],0,1,0);
+			$subpartArray['###TOTAL_VAT###']=mslib_fe::amount2Cents($prefix.$order['orders_tax_data']['total_orders_tax'], 0,1,0);
+			$subpartArray['###TOTAL_SHIPPING_COSTS###']=mslib_fe::amount2Cents($prefix.$order['shipping_method_costs'], 0,1,0);
+			$subpartArray['###TOTAL_PAYMENT_COSTS###']=mslib_fe::amount2Cents($prefix.$order['payment_method_costs'], 0,1,0);
 		}
 		if ($order['discount']>0) {
-			$tmpcontent.='<tr>
-					<td align="right" class="grandTotalLabel"><label>'.$this->pi_getLL('discount').'</label></td>
-					<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$order['discount'], 0,1,0).'</span></td>
-				</tr>';
+			$subpartArray['###LABEL_DISCOUNT###']=$this->pi_getLL('discount');
+			$subpartArray['###TOTAL_DISCOUNT###']=mslib_fe::amount2Cents($prefix.$order['discount'], 0,1,0);
 		}
-		$tmpcontent.='<tr>
-				<td align="right" class="grandTotalLabel"><label><strong>'.$this->pi_getLL('total').'</strong></label></td>
-				<td align="right" class="grandTotalValue"><span class="order_total_value">'.mslib_fe::amount2Cents($prefix.$orders_tax_data['grand_total'], 0,1,0).'</span></td>
-			</tr>';
-		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$tmpcontent.=$content_vat;
-		}
-		$tmpcontent.='</table>';
-		$tmpcontent.='</td></tr></table>';
+		$subpartArray['###LABEL_INCLUDED_VAT_AMOUNT###']=$this->pi_getLL('included_vat_amount');
+		$subpartArray['###LABEL_GRAND_TOTAL###']=$this->pi_getLL('total');
+		$subpartArray['###GRAND_TOTAL###']=mslib_fe::amount2Cents($prefix.$order['orders_tax_data']['grand_total'], 0,1,0);
+		$tmpcontent=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
 		return $tmpcontent;
 	}
 	function strstr_array($string,$needleArray) {
