@@ -37,21 +37,29 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$categories=$Cache_Lite->get($s
 	}
 }
 $content.='
-<form action="index.php" method="get"  enctype="application/x-www-form-urlencoded">
+<form action="index.php" method="get"  enctype="application/x-www-form-urlencoded" role="search">
 <input name="id" type="hidden" value="'.$this->shop_pid.'" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="products_search" />
-<input name="page" id="page" type="hidden" value="0" />	
-<div id="form_1" class="form_mailform">
-  <input type="text" id="skeyword" name="skeyword" value="'.htmlspecialchars($this->get['skeyword']).'" /> 
-	</div>
-		<div id="form_2" class="form_mailform">
-		  <select name="categories_id">
-			<option value="">Categorie</option>
-			'.$categories.'
-		  </select>
+<input name="page" id="page" type="hidden" value="0" />
+<div class="row">
+	<div class="col-md-4">
+		<div class="form-group">
+			<select name="categories_id" class="form-control">
+				<option value="">'.htmlspecialchars($this->pi_getLL('admin_category')).'</option>
+				'.$categories.'
+			</select>
 		</div>
-	<div id="form_3" class="form_mailform">
-  <input type="submit" id="submit_zoeken" value="'.htmlspecialchars($this->pi_getLL('search')).'" />
+	</div>
+	<div class="col-md-8">
+		<div class="input-group">
+			<input type="text" class="form-control" placeholder="'.htmlspecialchars($this->pi_getLL('keyword')).'" name="skeyword" id="skeyword" value="'.htmlspecialchars($this->get['skeyword']).'">
+			<span class="input-group-btn">
+			   <button type="submit" class="btn btn-success">
+				<span class="glyphicon glyphicon-search"></span>
+			   </button>
+			</span>
+		</div>
+	</div>
 </div>
 </form>
 ';
