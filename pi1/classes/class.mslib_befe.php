@@ -3721,7 +3721,6 @@ class mslib_befe {
 				}
 				$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_WRAPPER'], $markerArray, '###|###');
 				if (is_array($product['attributes']) && count($product['attributes'])) {
-					$attributeContent='';
 					foreach ($product['attributes'] as $tmpkey=>$options) {
 						if ($options['products_options_values']) {
 							$attributeMarkerArray=array();
@@ -3746,10 +3745,9 @@ class mslib_befe {
 							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_NORMAL_PRICE']=$cell_products_normal_price;
 							$attributeMarkerArray['ITEM_ATTRIBUTE_FINAL_PRICE']=$cell_products_final_price;
-							$attributeContent.=$this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
+							$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
 						}
 					}
-					$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###'].=$attributeContent;
 				} else {
 					$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###']='';
 				}
