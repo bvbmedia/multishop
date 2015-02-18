@@ -252,6 +252,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		//echo $tmpcontent;
 		//die();
 		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
+		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.custom.php');
 		$content=$tmpcontent;
 		$dompdf = new DOMPDF();
 		$dompdf->set_paper('A4');
