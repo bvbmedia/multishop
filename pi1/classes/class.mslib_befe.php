@@ -3748,9 +3748,8 @@ class mslib_befe {
 							$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEM_ATTRIBUTES_WRAPPER'], $attributeMarkerArray, '###|###');
 						}
 					}
-				} else {
-					$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###']='';
 				}
+				$subpartArray['###ITEM_ATTRIBUTES_WRAPPER###']='';
 				// count the vat
 				if ($order['final_price'] and $order['products_tax']) {
 					$item_tax=$order['qty']*($order['final_price']*$order['products_tax']/100);
