@@ -3767,6 +3767,19 @@ class mslib_befe {
 		}
 		$subpartArray['###ITEM_WRAPPER###']=$contentItem;
 		if (!empty($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'])) {
+			/*
+			 * special subparts
+			 <!-- ###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER### begin -->
+				<tr class="###ITEM_SHIPPING_PAYMENT_COSTS_ROW_TYPE###">
+					<td align="right" class="cell_products_counter valign_top">###ITEM_SHIPPING_PAYMENT_COSTS_COUNTER###</td>
+					<td align="left" class="cell_products_name valign_top">shipping and packing</td>
+					<td align="right" class="cell_products_normal_price valign_top">###ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE###</td>
+					<td align="right" class="cell_products_vat valign_top">###ITEM_SHIPPING_PAYMENT_COSTS_VAT###</td>
+					<td align="right" class="cell_products_final_price valign_top">###ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE###</td>
+				</tr>
+				<!-- ###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER### end -->
+			 */
+
 			$markerArray=array();
 			if (!$tr_type or $tr_type=='even') {
 				$tr_type='odd';
@@ -3794,7 +3807,6 @@ class mslib_befe {
 				$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($shipping_costs+$payment_costs, 0,$display_currency_symbol,0);
 			}
 			$subpartArray['###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'], $markerArray, '###|###');
-
 		}
 		// bottom row
 		$colspan=5;
