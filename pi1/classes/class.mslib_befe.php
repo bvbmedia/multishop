@@ -3779,7 +3779,6 @@ class mslib_befe {
 				</tr>
 				<!-- ###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER### end -->
 			 */
-
 			$markerArray=array();
 			if (!$tr_type or $tr_type=='even') {
 				$tr_type='odd';
