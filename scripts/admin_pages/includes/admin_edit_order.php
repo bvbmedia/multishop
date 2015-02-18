@@ -90,7 +90,7 @@ if (is_numeric($this->get['orders_id'])) {
 							} else {
 								$updateArray['products_name']=$this->post['product_name'];
 							}
-							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['order_products_description'])) {
+							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
 								$updateArray['products_description']=$this->post['order_products_description'];
 							}
 							$updateArray['products_price']=$this->post['product_price'];
@@ -176,7 +176,7 @@ if (is_numeric($this->get['orders_id'])) {
 							} else {
 								$insertArray['products_name']=$this->post['manual_product_name'];
 							}
-							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($this->post['manual_order_products_description'])) {
+							if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
 								$insertArray['products_description']=$this->post['manual_order_products_description'];
 							}
 							$insertArray['products_price']=$this->post['manual_product_price'];
