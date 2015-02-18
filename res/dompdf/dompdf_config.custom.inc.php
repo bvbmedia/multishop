@@ -1,12 +1,20 @@
 <?php
-if (!defined('TYPO3_MODE')) {
-	die('Access denied.');
+if (!is_object($this)) {
+	if ($_SERVER['DOCUMENT_ROOT']) {
+		$document_root=$_SERVER['DOCUMENT_ROOT'].'/';
+	}
+} else {
+	$document_root=$this->DOCUMENT_ROOT;
 }
-if ($this->DOCUMENT_ROOT && !is_dir($this->DOCUMENT_ROOT.'uploads/tx_multishop/fonts')) {
-	t3lib_div::mkdir($this->DOCUMENT_ROOT.'uploads/tx_multishop/fonts');
+if ($document_root && !is_dir($document_root.'uploads/tx_multishop/fonts')) {
+	mkdir($document_root.'uploads/tx_multishop/fonts',0766);
 }
-define("DOMPDF_FONT_DIR", $this->DOCUMENT_ROOT.'uploads/tx_multishop/fonts');
-define("DOMPDF_FONT_CACHE", $this->DOCUMENT_ROOT.'uploads/tx_multishop/fonts');
+if ($document_root) {
+	define("DOMPDF_FONT_DIR", $document_root.'uploads/tx_multishop/fonts/');
+	define("DOMPDF_FONT_CACHE", $document_root.'uploads/tx_multishop/fonts/');
+} else {
+	die('noway');
+}
 define("DOMPDF_UNICODE_ENABLED", true);
 //define("DOMPDF_DPI", 300);
 //define("DOMPDF_ENABLE_PHP", true);
@@ -18,7 +26,7 @@ define("DOMPDF_ENABLE_HTML5PARSER", true);
 define("DOMPDF_ENABLE_FONTSUBSETTING", true);
 
 // DEBUG
-//define("DOMPDF_LOG_OUTPUT_FILE", $this->DOCUMENT_ROOT.'uploads/tx_multishop/dompdf_log.txt');
+//define("DOMPDF_LOG_OUTPUT_FILE", $document_root.'uploads/tx_multishop/dompdf_log.txt');
 //define("DEBUG_LAYOUT", true);
 //define("DEBUGCSS", true);
 //define("DOMPDF_TEMP_DIR", "/tmp");
