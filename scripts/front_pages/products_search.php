@@ -33,8 +33,8 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$extrameta='';
 	}
 	if (!$this->conf['disableMetatags']) {
-		$GLOBALS['TSFE']->additionalHeaderData['title']='<title>'.ucfirst($this->pi_getLL('search_for')).' '.htmlspecialchars($this->get['skeyword']).$this->ms['MODULES']['PAGE_TITLE_DELIMETER'].$this->ms['MODULES']['STORE_NAME'].'</title>';
-		$GLOBALS['TSFE']->additionalHeaderData['description']='<meta name="description" content="'.ucfirst($this->pi_getLL('search_for')).' '.htmlspecialchars($this->get['skeyword']).'." />';
+		$output_array['meta']['title']='<title>'.ucfirst($this->pi_getLL('search_for')).' '.htmlspecialchars($this->get['skeyword']).$this->ms['MODULES']['PAGE_TITLE_DELIMETER'].$this->ms['MODULES']['STORE_NAME'].'</title>';
+		$output_array['meta']['description']='<meta name="description" content="'.ucfirst($this->pi_getLL('search_for')).' '.htmlspecialchars($this->get['skeyword']).'." />';
 	}
 	$default_limit_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
 	if ($this->get['tx_multishop_pi1']['limitsb']) {
