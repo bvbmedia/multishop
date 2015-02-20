@@ -26,7 +26,7 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	//$string=md5($this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING']);
 	$string=md5(serialize($this->conf)).$this->cObj->data['uid'].'_'.$this->HTTP_HOST.'_'.$this->server['REQUEST_URI'].$this->server['QUERY_STRING'];
 }
-if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
+if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$output_array=$Cache_Lite->get($string))) {
 	if ($p>0) {
 		$extrameta=' (page '.$p.')';
 	} else {
@@ -467,13 +467,31 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if ($this->get['skeyword']) {
 				mslib_befe::storeProductsKeywordSearch($this->get['skeyword'], 1);
 			}
-			header('HTTP/1.0 404 Not Found');
+			$output_array['http_header']='HTTP/1.0 404 Not Found';
 			$content.='<div class="main-heading"><h2>'.$this->pi_getLL('no_products_found_heading').'</h2></div>'."\n";
 			$content.='<p>'.$this->pi_getLL('no_products_found_description').'</p>'."\n";
 		}
+
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
-		$Cache_Lite->save($content);
+		$output_array['content']=$content;
+		$Cache_Lite->save(serialize($output_array));
 	}
+} elseif ($output_array) {
+	$output_array=unserialize($output_array);
+	if ($output_array['http_header']) {
+		if (!is_array($output_array['http_header'])) {
+			header($output_array['http_header']);
+		} else {
+			foreach ($output_array['http_header'] as $http_header) {
+				header($http_header);
+			}
+		}
+	}
+	$content.=$output_array['content'];
 }
+if (is_array($output_array['meta']) && count($output_array['meta'])) {
+	$GLOBALS['TSFE']->additionalHeaderData=array_merge($GLOBALS['TSFE']->additionalHeaderData, $output_array['meta']);
+}
+unset($output_array);
 ?>
