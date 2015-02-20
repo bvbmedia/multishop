@@ -136,6 +136,8 @@ foreach ($rel_products as $rel_rs) {
 		<input type="checkbox" class="PrettyInput" name="winkelwagen['.$i.']" id="relative_'.$i.'" value="1">'.$rel_rs['hidden_fields'];
 	$markerArray['ITEM_PRODUCTS_STOCK']=$rel_rs['products_quantity'];
 	$markerArray['ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE']='';
+	$markerArray['ITEM_PRODUCTS_ID']='';
+	$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']='';
 	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 		$markerArray['ITEM_PRODUCTS_ID']=$rel_rs['products_id'];
 		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
