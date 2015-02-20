@@ -42,7 +42,7 @@ $content.='
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="products_search" />
 <input name="page" id="page" type="hidden" value="0" />
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-sm-4">
 		<div class="form-group">
 			<select name="categories_id" class="form-control">
 				<option value="">'.htmlspecialchars($this->pi_getLL('admin_category')).'</option>
@@ -50,7 +50,7 @@ $content.='
 			</select>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-sm-8">
 		<div class="input-group">
 			<input type="text" class="form-control" placeholder="'.htmlspecialchars($this->pi_getLL('keyword')).'" name="skeyword" id="skeyword" value="'.htmlspecialchars($this->get['skeyword']).'">
 			<span class="input-group-btn">
