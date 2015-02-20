@@ -47,6 +47,14 @@ if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 	$subpartHeaderArray['###HEADER_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
 	$subparts['header']=$this->cObj->substituteMarkerArrayCached($subparts['header'], array(), $subpartHeaderArray);
 }
+
+if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+	$subpartHeaderArray=array();
+	$subpartHeaderArray['###ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
+	$subparts['item']=$this->cObj->substituteMarkerArrayCached($subparts['item'], array(), $subpartHeaderArray);
+}
+
+
 $subpartArray['###HEADER###']=$this->cObj->substituteMarkerArray($subparts['header'], $markerArray, '###|###');
 // NOW THE PRODUCT ITEMS
 $contentItem='';
@@ -136,6 +144,8 @@ foreach ($rel_products as $rel_rs) {
 		<input type="checkbox" class="PrettyInput" name="winkelwagen['.$i.']" id="relative_'.$i.'" value="1">'.$rel_rs['hidden_fields'];
 	$markerArray['ITEM_PRODUCTS_STOCK']=$rel_rs['products_quantity'];
 	$markerArray['ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE']='';
+	$markerArray['ITEM_PRODUCTS_ID']='';
+	$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']='';
 	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 		$markerArray['ITEM_PRODUCTS_ID']=$rel_rs['products_id'];
 		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
@@ -160,11 +170,6 @@ foreach ($rel_products as $rel_rs) {
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'] as $funcRef) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
-	}
-	if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
-		$subpartHeaderArray=array();
-		$subpartHeaderArray['###ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
-		$subparts['item']=$this->cObj->substituteMarkerArrayCached($subparts['item'], array(), $subpartHeaderArray);
 	}
 	// custom hook that can be controlled by third-party plugin eof
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');

@@ -76,6 +76,8 @@ foreach ($products as $product) {
 	$markerArray['ITEM_PRODUCTS_NAME']=$output['products_name'];
 	$markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];
 	$markerArray['ITEM_PRODUCTS_PRICE']=$output['special_section_price'];
+	$markerArray['ITEM_PRODUCTS_ID']='';
+	$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']='';
 	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 		$markerArray['ITEM_PRODUCTS_ID']=$product['products_id'];
 		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');

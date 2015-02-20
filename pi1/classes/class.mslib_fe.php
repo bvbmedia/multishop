@@ -4774,6 +4774,9 @@ class mslib_fe {
 				}
 			}
 */
+			if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$shipping_cost=round($shipping_cost, 2);
+			}
 			if ($shipping_cost) {
 				if ($shipping_method['tax_id'] && $shipping_cost) {
 					$shipping_total_tax_rate=$shipping_method['tax_rate'];
@@ -4802,6 +4805,9 @@ class mslib_fe {
 			$handling_tax=0;
 			if (!empty($row3['handling_costs'])) {
 				$handling_cost=$row3['handling_costs'];
+				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					$handling_cost=round($row3['handling_costs'], 2);
+				}
 				$percentage_handling_cost=false;
 				if (strpos($handling_cost, '%')!==false) {
 					$handling_cost=str_replace('%', '', $handling_cost);
