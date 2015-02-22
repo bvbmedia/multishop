@@ -1538,7 +1538,11 @@ class mslib_befe {
 					if ($flat_product['categories_id']) {
 						// get all cats to generate multilevel fake url
 						$level=0;
-						$cats=mslib_fe::Crumbar($flat_product['categories_id']);
+						if ($row['page_uid']) {
+							$cats=mslib_fe::Crumbar($flat_product['categories_id'],'',array(),$row['page_uid']);
+						} else {
+							$cats=mslib_fe::Crumbar($flat_product['categories_id']);
+						}
 						if (is_array($cats) && count($cats)) {
 							$cats=array_reverse($cats);
 							$where='';
