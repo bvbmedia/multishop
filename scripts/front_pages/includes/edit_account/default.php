@@ -431,7 +431,7 @@ if ($this->post) {
 		<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
 		<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>
 	</div>
-	'.$vat_input_block.$coc_input_block.'.
+	'.$vat_input_block.$coc_input_block.'
 	<div id="input-firstname" class="account-field col-sm-4">
 		<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>
 		<input type="text" name="first_name" class="first-name" id="first_name" value="'.htmlspecialchars($user['first_name']).'" required="required" data-h5-errorid="invalid-first_name" title="'.$this->pi_getLL('first_name_required').'"><div id="invalid-first_name" class="error-space" style="display:none"></div>
