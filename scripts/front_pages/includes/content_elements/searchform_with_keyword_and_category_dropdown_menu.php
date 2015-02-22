@@ -52,7 +52,7 @@ $content.='
 	</div>
 	<div class="col-sm-8">
 		<div class="input-group">
-			<input type="text" class="form-control" placeholder="'.htmlspecialchars($this->pi_getLL('keyword')).'" name="skeyword" id="skeyword" value="'.htmlspecialchars($this->get['skeyword']).'">
+			<input type="text" class="form-control" placeholder="'.htmlspecialchars(ucfirst($this->pi_getLL('keyword'))).'" name="skeyword" id="skeyword" value="'.htmlspecialchars($this->get['skeyword']).'">
 			<span class="input-group-btn">
 			   <button type="submit" class="btn btn-success">
 				<span class="glyphicon glyphicon-search"></span>
