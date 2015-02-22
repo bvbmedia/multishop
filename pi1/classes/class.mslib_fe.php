@@ -5522,24 +5522,26 @@ class mslib_fe {
 			return $row['products_options_id'];
 		}
 	}
-	public function countProducts($categories=array()) {
-		if (count($categories)>0) {
-			$str='select count(1) as total from tx_multishop_products_to_categories where ';
-			$filters[]='categories_id IN ('.implode(',', $categories).')';
-			$tel=0;
-			foreach ($filters as $filter) {
-				if ($tel>0) {
-					$str.=' and ';
-				}
-				$str.=$filter;
-				$tel++;
-			}
-			$res=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			return $row['total'];
-		} else {
+	public function countProducts($categories_id,$page_uid='') {
+		if (!is_numeric($page_uid)) {
+			$page_uid=$this->showCatalogFromPage;
+		}
+		if (!is_numeric($categories_id)) {
 			return 0;
 		}
+		$filter=array();
+		$filter[]='node_id='.$categories_id;
+		$filter[]='(page_uid=0 or page_uid='.$page_uid.')';
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
+			'tx_multishop_products_to_categories', // FROM ...
+			implode(' AND ', $filter), // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+		return $row['total'];
 	}
 	// if the user is logged in and has admin rights lets check if the shop is fully configured
 	public function giveSiteConfigurationNotice() {
