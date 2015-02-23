@@ -169,13 +169,32 @@ if ($contentType=='specials_listing_page') {
 	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($string)) {
 		if ($this->section_code) {
 			if ($contentType=='specials_section') {
-				$str="SELECT p.products_id FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by ss.sort_order limit ".$limit;
+				$str="SELECT p.products_id, s.start_date as special_start_date, s.expires_date as special_expired_date FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by ss.sort_order";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 					$this->no_database_results=1;
 				} else {
+					$limit_counter=0;
+					$current_tstamp=time();
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-						$product_ids[]=$row['products_id'];
+						$include_specials=true;
+						if ($row['special_start_date']>0) {
+							if ($row['special_start_date']>$current_tstamp) {
+								$include_specials=false;
+							}
+						}
+						if ($row['special_expired_date']>0) {
+							if ($row['special_expired_date']<$current_tstamp) {
+								$include_specials=false;
+							}
+						}
+						if ($include_specials) {
+							$product_ids[]=$row['products_id'];
+							if ($limit_counter==$limit) {
+								break;
+							}
+							$limit_counter++;
+						}
 					}
 					if ($this->ms['MODULES']['FLAT_DATABASE']) {
 						$tbl='pf.';
@@ -192,11 +211,30 @@ if ($contentType=='specials_listing_page') {
 					}
 				}
 			} else {
-				$str="SELECT p.products_id FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by rand() limit ".$limit;
+				$str="SELECT p.products_id, s.start_date as special_start_date, s.expires_date as special_expired_date FROM tx_multishop_products p, tx_multishop_specials_sections ss, tx_multishop_specials s where p.products_status=1 and ss.name ='".addslashes($this->section_code)."' and ss.specials_id=s.specials_id and p.products_id=s.products_id order by rand()";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$product_ids=array();
+				$limit_counter=0;
+				$current_tstamp=time();
 				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-					$product_ids[]=$row['products_id'];
+					$include_specials=true;
+					if ($row['special_start_date']>0) {
+						if ($row['special_start_date']>$current_tstamp) {
+							$include_specials=false;
+						}
+					}
+					if ($row['special_expired_date']>0) {
+						if ($row['special_expired_date']<$current_tstamp) {
+							$include_specials=false;
+						}
+					}
+					if ($include_specials) {
+						$product_ids[]=$row['products_id'];
+						if ($limit_counter==$limit) {
+							break;
+						}
+						$limit_counter++;
+					}
 				}
 				if ($this->ms['MODULES']['FLAT_DATABASE']) {
 					$tbl='';
