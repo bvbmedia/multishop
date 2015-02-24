@@ -1172,6 +1172,7 @@
             <label index="all_shipping_methods">All shipping methods</label>
             <label index="all_countries">All countries</label>
             <label index="copy_from_billing_details">Copy from billing details</label>
+            <label index="vat_nn_from_subtotal_nn">VAT %s from %s</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
@@ -2619,6 +2620,7 @@
 			<label index="your_vat_id">Ihre Umsatzsteuer-ID</label>
 			<label index="zip">PLZ</label>
 			<label index="zip_is_required">PLZ ist ein Pflichtfeld.</label>
+            <label index="vat_nn_from_subtotal_nn">+ MwSt %s von %s</label>
 		</languageKey>
 		<languageKey index="el"></languageKey>
 		<languageKey index="eo"></languageKey>

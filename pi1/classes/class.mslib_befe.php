@@ -3821,29 +3821,42 @@ class mslib_befe {
 			$subpartArray['###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'], $markerArray, '###|###');
 		}
 		// bottom row
+		// taxes row renderer
 		$vat_wrapper_keys=array();
 		$vat_wrapper_keys[]='TOTAL_VAT_ROW_INCLUDE_VAT';
 		$vat_wrapper_keys[]='TOTAL_VAT_ROW_EXCLUDE_VAT_NO_SHIPPING_PAYMENT_TAX';
 		$vat_wrapper_keys[]='TOTAL_VAT_ROW_EXCLUDE_VAT_HAVE_SHIPPING_PAYMENT_TAX';
-
 		foreach($vat_wrapper_keys as $vat_wrapper_key) {
 			if (!empty($subparts[$vat_wrapper_key])) {
 				$vatItem='';
-				foreach ($order['orders_tax_data']['tax_separation'] as $tax_sep_rate => $tax_sep_data) {
+				if (isset($order['orders_tax_data']['tax_separation']) && count($order['orders_tax_data']['tax_separation'])) {
+					foreach ($order['orders_tax_data']['tax_separation'] as $tax_sep_rate => $tax_sep_data) {
+						$markerArray=array();
+						if ($tax_sep_rate>0) {
+							if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
+
+								$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount') . ' ' . $tax_sep_rate . '%';
+							} else {
+								$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate . '%', 'EUR ' . mslib_fe::amount2Cents($prefix.$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']+$tax_sep_data['products_sub_total_excluding_vat'], 0,$display_currency_symbol,0));
+							}
+							$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($prefix.$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']+$tax_sep_data['products_total_tax'], 0,$display_currency_symbol,0);
+							$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
+						}
+					}
+				} else {
 					$markerArray=array();
 					if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
-						$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount') . ' ' . $tax_sep_rate . '%';
+						$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount');
 					} else {
-						$markerArray['LABEL_VAT']=$this->pi_getLL('vat') . ' ' . $tax_sep_rate . '%';
+						$markerArray['LABEL_VAT']=$this->pi_getLL('vat');
 					}
-					$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($prefix.$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']+$tax_sep_data['products_total_tax']);
+					$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($prefix.$order['orders_tax_data']['total_orders_tax'], 0,$display_currency_symbol,0);
 					$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 				}
 				$subpartArray['###'.$vat_wrapper_key.'###']=$vatItem;
 				break;
 			}
 		}
-
 		$colspan=5;
 		$subpartArray['###INVOICE_TOTAL_COLSPAN###']=$colspan;
 		$subpartArray['###LABEL_SUBTOTAL###']=$this->pi_getLL('sub_total');
