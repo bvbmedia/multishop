@@ -83,7 +83,26 @@ foreach ($products as $current_product) {
 			$output[$key]='<div class="no_image"></div>';
 		}
 	}
-	$current_product['products_price_including_vat']=$current_product['products_price'];
+	$final_price=mslib_fe::final_products_price($current_product);
+	if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+		$old_price=$current_product['products_price']*(1+$current_product['tax_rate']);
+	} else {
+		$old_price=$current_product['products_price'];
+	}
+	if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+		$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
+	}
+	if ($current_product['products_price']<>$current_product['final_price']) {
+		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+			$old_price=$current_product['products_price']*(1+$current_product['tax_rate']);
+		} else {
+			$old_price=$current_product['products_price'];
+		}
+		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+	} else {
+		$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
+	}
+	/*$current_product['products_price_including_vat']=$current_product['products_price'];
 	$current_product['final_price_including_vat']=$current_product['final_price'];
 	if ($current_product['tax_rate']) {
 		if ($current_product['products_price']) {
@@ -112,7 +131,7 @@ foreach ($products as $current_product) {
 		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($current_product['old_price']).'</div><div class="specials_price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
 	} else {
 		$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
-	}
+	}*/
 	if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 		$output['admin_icons']='<div class="admin_menu">
 		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=edit_product',1).'" class="admin_menu_edit"></a>
