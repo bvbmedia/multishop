@@ -854,7 +854,14 @@ class tx_mslib_cart extends tslib_pibase {
 		return $products_tax;
 	}
 	function convertCartToOrder($cart) {
+
+
+		//print_r($cart);
+		//die();
+
+
 		// var for total amount
+		$tax_separation=array();
 		$total_price=0;
 		$order=array();
 		$address=$cart['user'];
@@ -911,18 +918,24 @@ class tx_mslib_cart extends tslib_pibase {
 		$grand_total=array();
 		$grand_total['shipping_tax']=$orders_tax['shipping_tax'];
 		$grand_total['payment_tax']=$orders_tax['payment_tax'];
+		$tax_separation[($orders_tax['shipping_total_tax_rate']*100)]['shipping_tax']+=$orders_tax['shipping_tax'];
+		$tax_separation[($orders_tax['payment_total_tax_rate']*100)]['payment_tax']+=$orders_tax['payment_tax'];
 		if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
 			$grand_total['shipping_tax']=0;
 			$grand_total['payment_tax']=0;
+			$tax_separation[($orders_tax['shipping_total_tax_rate']*100)]['shipping_tax']=0;
+			$tax_separation[($orders_tax['payment_total_tax_rate']*100)]['payment_tax']=0;
 		}
 		// add shipping & payment costs
 		if ($address['shipping_method_costs']) {
 			$grand_total['shipping_cost']=$address['shipping_method_costs'];
 			$total_price=$total_price+$address['shipping_method_costs'];
+			$tax_separation[($orders_tax['shipping_total_tax_rate']*100)]['shipping_costs']=$address['shipping_method_costs'];
 		}
 		if ($address['payment_method_costs']) {
 			$grand_total['payment_cost']=$address['payment_method_costs'];
 			$total_price=$total_price+$address['payment_method_costs'];
+			$tax_separation[($orders_tax['payment_total_tax_rate']*100)]['payment_costs']=$address['payment_method_costs'];
 		}
 		// first the account
 		if ($GLOBALS['TSFE']->fe_user->user['uid']) {
@@ -1537,6 +1550,10 @@ class tx_mslib_cart extends tslib_pibase {
 								$product_tax['total_tax']=0;
 								$product_tax['total_attributes_tax']=0;
 							}
+							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$product_tax['total_tax']=mslib_fe::taxDecimalCrop($product_tax['total_tax'], 2, false);
+								$product_tax['total_attributes_tax']=mslib_fe::taxDecimalCrop($product_tax['total_attributes_tax'], 2, false);
+							}
 							// bugfixes bas
 							$sub_total_excluding_vat['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
 							$sub_total['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
@@ -1545,6 +1562,10 @@ class tx_mslib_cart extends tslib_pibase {
 							$total_order_tax['total_tax']=$total_order_tax['total_tax']+($product_tax['total_tax']*$value['qty']);
 							$total_order_tax['total_attributes_tax']=$total_order_tax['total_attributes_tax']+($product_tax['total_attributes_tax']*$value['qty']);
 							$insertArray['products_tax_data']=serialize($product_tax);
+							// separation of tax
+							$tax_separation[($value['tax_rate']*100)]['products_total_tax']+=($product_tax['total_tax']*$value['qty']) + ($product_tax['total_attributes_tax']*$value['qty']);
+							$tax_separation[($value['tax_rate']*100)]['products_sub_total_excluding_vat']+=($value['final_price']*$value['qty']);
+							$tax_separation[($value['tax_rate']*100)]['products_sub_total']+=(($value['final_price']+$product_tax['total_tax']+$product_tax['total_attributes_tax'])*$value['qty']);
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductPreProc'])) {
 								// hook
 								$params=array(
@@ -1820,6 +1841,7 @@ class tx_mslib_cart extends tslib_pibase {
 				$orders_tax['total_orders_tax']+=$orders_tax['payment_tax'];
 				$orders_tax['total_orders_tax_including_discount']+=$orders_tax['shipping_tax'];
 				$orders_tax['total_orders_tax_including_discount']+=$orders_tax['payment_tax'];
+				$orders_tax['tax_separation']=$tax_separation;
 				if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
 					$orders_tax['total_orders_tax']=0;
 				}
