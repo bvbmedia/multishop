@@ -927,7 +927,7 @@
 			<label index="order_by">Order by</label>
 			<label index="order_date">Order Date</label>
 			<label index="order_details">Order Details</label>
-			<label index="order_memo">Order Memo</label>
+			<label index="order_memo">Internal message</label>
 			<label index="order_number">Order number</label>
 			<label index="order_payment_status">Payment status</label>
 			<label index="order_product_status">Status</label>
@@ -2111,7 +2111,7 @@
 			<label index="email_create_account_confirmation">E-Mail Kontoerstellungsbestätigung</label>
 			<label index="email_is_not_the_same_as_repeated_email">E-Mail Adressen stimmen nicht überein</label>
 			<label index="email_is_required">E-Mail ist ein Pflichtfeld. Das Format der E-Mail Adresse ist ungültig</label>
-			<label index="email_message">E-Mail Nachricht</label>
+			<label index="email_message">Nachricht an Kunden</label>
 			<label index="email_order_confirmation_letter">E-Mail Text für Bestellbestätigung</label>
 			<label index="email_order_paid_letter">E-Mail Text für bezahlte Bestellung</label>
 			<label index="email_order_proposal_letter">E-Mail Text für Angebotszustellung</label>
@@ -2381,7 +2381,7 @@
 			<label index="order_by">bestellen mit</label>
 			<label index="order_date">Bestelldatum</label>
 			<label index="order_details">Bestelldetails</label>
-			<label index="order_memo">Bestellnachricht</label>
+			<label index="order_memo">Internes Memo</label>
 			<label index="order_number">Bestellnummer</label>
 			<label index="order_payment_status">Zahlungsstatus</label>
 			<label index="order_product_status">Status</label>
