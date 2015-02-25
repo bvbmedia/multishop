@@ -414,7 +414,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul { padding:10px 10px 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li { padding:0 0 10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li label { display:inline-block; width:18%; margin:0 5px 5px 0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li .col-sm-10 { display:inline-block; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li .col-sm-10 { display:inline-block;}
 
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-item.odd_item_row,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li.odd,
