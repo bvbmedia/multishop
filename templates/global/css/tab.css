@@ -241,7 +241,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content h1 { border:none; background:#fff; font:bold 16px Arial, Helvetica, sans-serif; color:#c50000; margin:0; padding:7px 0; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field { overflow:hidden; width:100%; border-bottom:1px dotted #e0e0e0; background:#fff; font:12px Arial, Helvetica, sans-serif; color:#333; text-transform:uppercase; padding:7px 0; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field .redactor_box { text-transform:none; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field .redactor-box { text-transform:none; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field .account-field { border:none; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field#msEditProductInputName input,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field#msEditProductInputExternalUrl input,
@@ -312,7 +312,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 /* #tx_multishop_pi1_core #tab-container .tab_container .tab_content input[type="text"].text { width:610px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content textarea { width:610px; } */
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content textarea.mceEditor { width:300px; border:none; padding:0; overflow:hidden; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor_box textarea.mceEditor { overflow:auto; width:100%; border:none; background:none; font-size:13px; font-family:Menlo, Monaco, monospace, sans-serif; color:#333; padding:0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-box textarea.mceEditor { overflow:auto; width:100%; border:none; background:none; font-size:13px; font-family:Menlo, Monaco, monospace, sans-serif; color:#333; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content input.small_input { width:100px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content select { border:1px solid #999; background:#fff5f5; font:12px Arial, Helvetica, sans-serif; padding:2px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content option { padding:0 10px 0 0; }
@@ -454,7 +454,7 @@ background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,
 background-image   :-webkit-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Chrome+, Safari+ */
 background-image   :-o-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* Opera+ */
 background-image   :-ms-linear-gradient(top, rgba(255, 255, 255, .3), rgba(255,255,255, 0)); /* IE10 */
-text-shadow: rgba(0, 0, 0, 0.4) 1px 1px 0px !important;
+text-shadow: rgba(0, 0, 0, 0.4) 1px 1px 0 !important;
 }
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table ul li.products_attributes_item .add_new_attributes input:hover {
 background-image   :-moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2)) !important; /* Firefox+ */
@@ -904,19 +904,19 @@ span.viewfront a:hover { background:#e2e2e2; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_shippingcost.tab_content fieldset fieldset { margin-top:10px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_shippingcost.tab_content fieldset fieldset table { margin-top:10px; }
 
-.redactor_box { float:left; width:639px; }
+.redactor-box { float:left; width:639px; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul { list-style:none; margin:10px 0; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul li { background:none; margin:0; padding:0 0 5px; }
 
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor_mceEditor.redactor_editor ul { margin:0; }
-#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor_mceEditor.redactor_editor ul li { list-style-type:disc; padding:0; line-height: 1.6em; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-mceEditor.redactor-editor ul { margin:0; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-mceEditor.redactor-editor ul li { list-style-type:disc; padding:0; line-height: 1.6em; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul { margin:10px 0 0; list-style:none; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul li { background:none; margin:0; padding:0; line-height:20px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul li input[type="checkbox"] { display:inline-block; margin:0 5px 0 0; }
 
-.mceEditorFullWidth .redactor_box { float:none; width:100%; }
+.mceEditorFullWidth .redactor-box { float:none; width:100%; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core .inputWideWrapper input[type="text"] { width:100%; box-sizing:border-box; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .select2-container-multi ul.select2-choices li.select2-search-choice {
