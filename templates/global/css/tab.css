@@ -404,11 +404,16 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 { display:block; background:#444; font-weight:bold; font-size:16px; color:#fff; text-align:left; padding:5px 10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 { margin-bottom:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span,
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 .option_id { color:#fff; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 .option_id { width:100%; color:#fff; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span { float:none; display:inline-block; vertical-align:middle; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span a { vertical-align:middle !important; margin:0 3px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span a.items_wrapper_unfolded { margin-top:4px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 .option_id { padding-top:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span input[type="checkbox"] { display:inline-block; margin:0; vertical-align:middle; }
+
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul { padding:0 10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li label { display:block; margin:0 0 5px; }
+
 #tx_multishop_pi1_core #tab-container .tab_container #product_attributes.tab_content #product_attributes_table .wrap-attributes-item.odd_item_row,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox > ul > li li.odd,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox .option_settings { background:#dedede; padding-left:10px; }
