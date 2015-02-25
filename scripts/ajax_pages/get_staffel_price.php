@@ -51,6 +51,10 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 // hook eof
 $price=mslib_fe::final_products_price($product, $qty, 0)*$qty;
 $original_price=$product['products_price']*$qty;
+if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+	//$price=round($price*(1+$product['tax_rate']), 2);
+	$original_price=round($original_price*(1+$product['tax_rate']), 2);
+}
 $attr=array();
 $original_attr=array();
 if (is_array($this->get['attributes'])) {
