@@ -21,6 +21,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
 <link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
 <script type="text/javascript">
 $(function() {
 	$(\'.mceEditor\').redactor({
@@ -29,7 +30,8 @@ $(function() {
 		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
 		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
 		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
-		minHeight:\'400\'
+		minHeight:\'400\',
+		plugins: [\'fontcolor\']
 	});
 });
 </script>
