@@ -255,7 +255,7 @@ if (!$product['products_id']) {
 	if (($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) && !$product['products_status'] && !$this->ms['MODULES']['FLAT_DATABASE']) {
 		$order_now_button.='<input id="multishop_add_to_cart" name="Submit" type="button" value="'.htmlspecialchars($this->pi_getLL('disabled_product', 'disabled product')).'" />';
 	} else {
-		if ($product_qty<1) {
+		if ($product['products_quantity']<1) {
 			if ($this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
 				$order_now_button.='<input id="multishop_add_to_cart" name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('add_to_basket')).'" />';
 			} else {
