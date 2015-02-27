@@ -33,9 +33,6 @@ if ($this->post) {
 	if (!$this->post['group_name']) {
 		$erno[]=$this->pi_getLL('admin_label_group_name_is_not_defined');
 	}
-	if (!is_numeric($this->post['discount'])) {
-		$this->post['discount']=0;
-	}
 	if (!count($erno)) {
 		$insertArray=array();
 		$insertArray['title']=$this->post['group_name'];
@@ -51,7 +48,7 @@ if ($this->post) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
-		// custom page hook that can be controlled by third-party plugin eof	
+		// custom page hook that can be controlled by third-party plugin eof
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_groups', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
@@ -86,14 +83,14 @@ $content='
 	<div class="account-field">
 		<label>Enable usage of budget</label>
 		<input name="tx_multishop_pi1[budget_enabled]" type="radio" value="1" '.(($this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /> '.$this->pi_getLL('admin_yes').' <input name="tx_multishop_pi1[budget_enabled]" type="radio" value="0" '.((!$this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /> '.$this->pi_getLL('admin_no').'
-	</div>		
+	</div>
 	<div class="account-field">
 		<label>Budget usage</label>
 		<input type="text" name="tx_multishop_pi1[remaining_budget]" size="8" id="remaining_budget" value="'.htmlspecialchars($this->post['tx_multishop_pi1']['remaining_budget']).'" />
-	</div>		
+	</div>
 	<div class="account-field">
 		<label>'.$this->pi_getLL('discount').'</label>
-		<input type="text" name="discount" size="2" id="discount" value="'.htmlspecialchars($this->post['discount']).'" />%
+		<input type="text" name="discount" size="2" maxlength="2" id="discount" value="'.htmlspecialchars($this->post['discount']).'" />%
 	</div>
 	<div class="account-field">
 		<label>&nbsp;</label>
@@ -167,7 +164,7 @@ if ($pageset['total_rows']>0) {
 		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$content.=$tmp;
 	}
-	// pagination eof	
+	// pagination eof
 }
 $content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';

@@ -17,7 +17,7 @@ if ($GLOBALS["TSFE"]->fe_user->user['uid']) {
 	}
 }
 //if(!$discount_percentage)
-if ($_POST['code']) {
+if (!empty($_POST['code'])) {
 	$code=mslib_fe::RemoveXSS(mslib_befe::strtolower($_POST['code']));
 	$time=time();
 	$str="SELECT * from tx_multishop_coupons where code = '".addslashes($code)."' and status = 1 and (startdate <= '".$time."' and enddate >= '".$time."')";

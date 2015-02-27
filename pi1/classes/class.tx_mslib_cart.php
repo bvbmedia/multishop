@@ -726,6 +726,7 @@ class tx_mslib_cart extends tslib_pibase {
 				$discount=mslib_fe::getUserGroupDiscount($GLOBALS['TSFE']->fe_user->user['uid']);
 				if ($discount) {
 					$cart['coupon_discount']=$discount;
+					$cart['discount_type']='percentage';
 					$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 					$GLOBALS['TSFE']->storeSessionData();
 				}
@@ -2049,6 +2050,9 @@ class tx_mslib_cart extends tslib_pibase {
 		return $this->cart['user']['countries_id'];
 	}
 	function getHtmlCartContents($sectionTemplateType='') {
+		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+			$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
+		}
 		$disable_product_status_col=false;
 		$content='';
 		switch ($sectionTemplateType) {
