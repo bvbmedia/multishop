@@ -1607,7 +1607,7 @@
 			<label index="admin_label_are_you_sure_want_to_run_consistency_checker">Sind Sie sicher, dassn Sie die Konsistenzprüfung starten wollen</label>
 			<label index="admin_label_are_you_sure_want_to_start_all_over_again">Mit diesem Schritt wird den gesamten Katalog unwiderruflich gelöscht.&lt;br /&gt;Sind Sie sicher, dass Sie noch einmal von vorne beginnen wollen.</label>
 			<label index="admin_label_are_you_sure_want_to_start_this">Sind Sie sicher, dass Sie diesen Schritt starten wollen</label>
-			<label index="admin_label_are_you_sure_you_want_to_run_the_multishop_update_script">Sind Sie sicher, dass das Multishop Update jetzt ausgeführt wird.</label>
+			<label index="admin_label_are_you_sure_you_want_to_run_the_multishop_update_script">Sind Sie sicher, dass das Multishop Update jetzt ausgeführt wird</label>
 			<label index="admin_label_billing_address">Rechnungsadresse</label>
 			<label index="admin_label_btn_delete_selected_categories">Ausgesuchte Kategorie löschen</label>
 			<label index="admin_label_btn_move">verschieben</label>
@@ -4762,6 +4762,13 @@
 			<label index="your_vat_id">Uw BTW-nummer</label>
 			<label index="zip">postcode</label>
 			<label index="zip_is_required">Postcode is verplicht</label>
+			<label index="up_to_and_including">tot en met</label>
+			<label index="feed_exporter_fields_label_products_multiplication">Vermeningvuldiging</label>
+			<label index="all_payment_methods">Alle betaalmethodes</label>
+			<label index="all_shipping_methods">Alle bezorgmethodes</label>
+			<label index="all_countries">Alle landen</label>
+			<label index="copy_from_billing_details">Kopie van factuurgegevens</label>
+			<label index="vat_nn_from_subtotal_nn">BTW %s van %s</label>
 		</languageKey>
 		<languageKey index="no"></languageKey>
 		<languageKey index="pl"></languageKey>
