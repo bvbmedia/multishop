@@ -28,6 +28,7 @@ if ($this->post['proceed_order']) {
 		$insertArray['name']=$this->post['first_name'].' '.$this->post['middle_name'].' '.$this->post['last_name'];
 		$insertArray['name']=preg_replace('/\s+/', ' ', $insertArray['name']);
 		$insertArray['first_name']=$this->post['first_name'];
+		$insertArray['middle_name']=$this->post['middle_name'];
 		$insertArray['last_name']=$this->post['last_name'];
 		$insertArray['username']=$unique_id;
 		$insertArray['email']=$this->post['email'];
