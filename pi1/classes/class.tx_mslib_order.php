@@ -381,7 +381,7 @@ class tx_mslib_order extends tslib_pibase {
 			$array1[]='###ORDER_DATE_LONG###'; // ie woensdag 23 juni, 2010
 			$array2[]=$long_date;
 			$array1[]='###ORDER_DATE###'; // 21-12-2010 in localized format
-			$array2[]=strftime("%x %X", $time);
+			$array2[]=strftime("%x", $time);
 
 			// backwards compatibility
 			$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
