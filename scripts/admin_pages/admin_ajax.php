@@ -118,18 +118,20 @@ switch ($_REQUEST['action']) {
 	case 'mail_order':
 		if ($this->post['orders_id'] and $this->post['tx_multishop_pi1']['email']) {
 			mslib_fe::mailOrder($this->post['orders_id'], 1, $this->post['tx_multishop_pi1']['email']);
+			/*
 			$content.='
 			<script type="text/javascript">
 			parent.window.location.reload();
 			</script>
 		';
+			*/
 		} else {
 			if ($this->get['orders_id']) {
 				$order=mslib_fe::getOrder($this->get['orders_id']);
 				if ($order['orders_id']) {
 					$content.='
 			<div id="mini-form-field">
-				<form method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order').'">
+				<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order').'">
 					<div class="mini-account-field">
 						<label>E-mail address</label>
 						<input name="tx_multishop_pi1[email]" type="text" value="'.htmlspecialchars($order['billing_email']).'" />

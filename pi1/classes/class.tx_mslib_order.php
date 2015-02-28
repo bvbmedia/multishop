@@ -325,6 +325,9 @@ class tx_mslib_order extends tslib_pibase {
 			$array2[]=$full_customer_name;
 			$array1[]='###BILLING_NAME###';
 			$array2[]=$order['billing_name'];
+			$array1[]='###BILLING_COMPANY###';
+			$array2[]=$order['billing_company'];
+
 			$array1[]='###BILLING_FIRST_NAME###';
 			$array2[]=$order['billing_first_name'];
 			$array1[]='###BILLING_LAST_NAME###';
@@ -340,6 +343,8 @@ class tx_mslib_order extends tslib_pibase {
 			$array2[]=$order['delivery_name'];
 			$array1[]='###DELIVERY_FULL_NAME###';
 			$array2[]=$delivery_full_customer_name;
+			$array1[]='###DELIVERY_COMPANY###';
+			$array2[]=$order['delivery_company'];
 			$array1[]='###DELIVERY_FIRST_NAME###';
 			$array2[]=$order['delivery_first_name'];
 			$array1[]='###DELIVERY_LAST_NAME###';
@@ -352,10 +357,32 @@ class tx_mslib_order extends tslib_pibase {
 			$array2[]=$order['delivery_mobile'];
 			$array1[]='###CUSTOMER_EMAIL###';
 			$array2[]=$order['billing_email'];
+
+			if ($order['cruser_id'] && is_numeric($order['cruser_id'])) {
+				$crUser=mslib_fe::getUser($order['cruser_id']);
+				$array1[]='###CREATED_BY_FIRST_NAME###';
+				$array2[]=preg_replace('/\s+/', ' ',$crUser['first_name']);
+				$array1[]='###CREATED_BY_LAST_NAME###';
+				$array2[]=preg_replace('/\s+/', ' ',$crUser['middle_name'].' '.$crUser['last_name']);
+				$array1[]='###CREATED_BY_FULL_NAME###';
+				$array2[]=preg_replace('/\s+/', ' ',$crUser['first_name'].' '.$crUser['middle_name'].' '.$crUser['last_name']);
+			} else {
+				$array1[]='###CREATED_BY_FIRST_NAME###';
+				$array2[]='';
+				$array1[]='###CREATED_BY_LAST_NAME###';
+				$array2[]='';
+				$array1[]='###CREATED_BY_FULL_NAME###';
+				$array2[]='';
+			}
+
+
 			$time=$order['crdate'];
 			$long_date=strftime($this->pi_getLL('full_date_format'), $time);
 			$array1[]='###ORDER_DATE_LONG###'; // ie woensdag 23 juni, 2010
 			$array2[]=$long_date;
+			$array1[]='###ORDER_DATE###'; // 21-12-2010 in localized format
+			$array2[]=strftime("%x %X", $time);
+
 			// backwards compatibility
 			$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
 			$array2[]=$long_date;
