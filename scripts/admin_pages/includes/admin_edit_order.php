@@ -242,199 +242,198 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 					}
 					$redirect_after_delete=true;
-				} else {
-					$delivery_country=mslib_fe::getCountryByName($this->post['delivery_country']);
-					$updateArray=array();
-					if ($this->post['shipping_method']) {
-						$shipping_method=mslib_fe::getShippingMethod($this->post['shipping_method']);
-						if (empty($order['orders_tax_data'])) {
-							// temporary call, replacing the inner tax_ruleset inside the getShippingMethod
-							$tax_ruleset=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
-							$shipping_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-							$shipping_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-							$shipping_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-						}
-						if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
-							$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
-						} else {
-							$price=mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
-						}
-						if ($price>0) {
-							if (strstr($price, "%")) {
-								// calculate total shipping costs based by %
-								$subtotal=0;
-								foreach ($order['products'] as $products_id=>$value) {
-									if (is_numeric($products_id)) {
-										$subtotal=$subtotal+($value['qty']*$value['final_price']);
-									}
-								}
-								if ($subtotal) {
-									$percentage=str_replace("%", '', $price);
-									if ($percentage) {
-										$price=($subtotal/100*$percentage);
-									}
-								}
-							} else {
-								if (!strstr($price, "%")) {
-									if (strstr($price, ",")) {
-										$steps=explode(",", $price);
-										// calculate total costs
-										$subtotal=mslib_fe::getOrderTotalPrice($this->get['orders_id'], 1);
-										$count=0;
-										foreach ($steps as $step) {
-											// the   value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
-											$split=explode(":", $step);
-											if (is_numeric($split[0])) {
-												if ($count==0) {
-													$price=$split[1];
-												}
-												if ($subtotal>$split[0]) {
-													$price=$split[1];
-													next();
-												}
-											}
-											$count++;
-										}
-									}
-								}
-							}
-						}
-						if ($price) {
-							$updateArray['shipping_method_costs']=$price;
-						} else {
-							$updateArray['shipping_method_costs']=0;
-						}
-						if ($shipping_method['tax_id'] && $updateArray['shipping_method_costs']) {
-							$shipping_tax['shipping_total_tax_rate']=$shipping_method['tax_rate'];
-							if ($shipping_method['country_tax_rate']) {
-								$shipping_tax['shipping_country_tax_rate']=$shipping_method['country_tax_rate'];
-								$shipping_tax['shipping_country_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['country_tax_rate']));
-							} else {
-								$shipping_tax['shipping_country_tax_rate']=0;
-								$shipping_tax['shipping_country_tax']=0;
-							}
-							if ($shipping_method['region_tax_rate']) {
-								$shipping_tax['shipping_region_tax_rate']=$shipping_method['region_tax_rate'];
-								$shipping_tax['shipping_region_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['region_tax_rate']));
-							} else {
-								$shipping_tax['shipping_region_tax_rate']=0;
-								$shipping_tax['shipping_region_tax']=0;
-							}
-							if ($shipping_tax['shipping_region_tax'] && $shipping_tax['shipping_country_tax']) {
-								$shipping_tax['shipping_tax']=$shipping_tax['shipping_country_tax']+$shipping_tax['shipping_region_tax'];
-							} else {
-								$shipping_tax['shipping_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['tax_rate']));
-							}
-						} else {
-							$shipping_tax['shipping_tax']=0;
-							$shipping_tax['shipping_country_tax']=0;
-							$shipping_tax['shipping_region_tax']=0;
-							$shipping_tax['shipping_total_tax_rate']=0;
-							$shipping_tax['shipping_country_tax_rate']=0;
-							$shipping_tax['shipping_region_tax_rate']=0;
-						}
-						$updateArray['shipping_method']=$shipping_method['code'];
-						$updateArray['shipping_method_label']=$shipping_method['name'];
-					}
-					if ($this->post['payment_method']) {
-						$payment_method=mslib_fe::getPaymentMethod($this->post['payment_method']);
-						if (empty($order['orders_tax_data'])) {
-							// temporary call, replacing the inner tax_ruleset inside the getPaymentMethod
-							$tax_ruleset=mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
-							$payment_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
-							$payment_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
-							$payment_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
-						}
-						if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
-							$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
-						} else {
-							$price=$payment_method['handling_costs'];
-						}
-						$updateArray['payment_method_costs']=$price;
-						if ($payment_method['tax_id'] && $updateArray['payment_method_costs']) {
-							$payment_tax['payment_total_tax_rate']=$payment_method['tax_rate'];
-							if ($payment_method['country_tax_rate']) {
-								$payment_tax['payment_country_tax_rate']=$payment_method['country_tax_rate'];
-								$payment_tax['payment_country_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['country_tax_rate']));
-							} else {
-								$payment_tax['payment_country_tax_rate']=0;
-								$payment_tax['payment_country_tax']=0;
-							}
-							if ($payment_method['region_tax_rate']) {
-								$payment_tax['payment_region_tax_rate']=$payment_method['region_tax_rate'];
-								$payment_tax['payment_region_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['region_tax_rate']));
-							} else {
-								$payment_tax['payment_region_tax_rate']=0;
-								$payment_tax['payment_region_tax']=0;
-							}
-							if ($payment_tax['payment_region_tax'] && $payment_tax['payment_country_tax']) {
-								$payment_tax['payment_tax']=$payment_tax['payment_country_tax']+$payment_tax['payment_region_tax'];
-							} else {
-								$payment_tax['payment_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['tax_rate']));
-							}
-						} else {
-							$payment_tax['payment_tax']=0;
-							$payment_tax['payment_country_tax']=0;
-							$payment_tax['payment_region_tax']=0;
-							$payment_tax['payment_total_tax_rate']=0;
-							$payment_tax['payment_country_tax_rate']=0;
-							$payment_tax['payment_region_tax_rate']=0;
-						}
-						$updateArray['payment_method']=$payment_method['code'];
-						$updateArray['payment_method_label']=$payment_method['name'];
-					}
-					if (isset($this->post['edit_discount_value'])) {
-						$updateArray['discount']=$this->post['edit_discount_value'];
-					}
-					if (isset($this->post['order_payment_condition'])) {
-						$updateArray['payment_condition']=$this->post['order_payment_condition'];
-					}
-					$keys=array();
-					$keys[]='company';
-					$keys[]='name';
-					$keys[]='street_name';
-					$keys[]='address_number';
-					$keys[]='address_ext';
-					$keys[]='building';
-					$keys[]='zip';
-					$keys[]='city';
-					$keys[]='country';
-					$keys[]='email';
-					$keys[]='telephone';
-					$keys[]='mobile';
-					$keys[]='fax';
-					foreach ($keys as $key) {
-						$string='billing_'.$key;
-						$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
-						$string='delivery_'.$key;
-						$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
-					}
-					$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
-					$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
-					if (count($updateArray)) {
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					}
-					$updateArray=array();
-					if ($this->post['expected_delivery_date']) {
-						$updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
-					}
-					if ($this->post['track_and_trace_code']) {
-						$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
-					}
-					if ($this->post['order_memo']) {
-						$updateArray['order_memo']=$this->post['order_memo'];
-					}
-					if (count($updateArray)) {
-						$close_window=1;
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$_REQUEST['orders_id'].'\'', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-						$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
-						$orders['track_and_trace_code']=$this->post['track_and_trace_code'];
-						$orders['order_memo']=$this->post['order_memo'];
-					}
-					$close_window=1;
 				}
+				$delivery_country=mslib_fe::getCountryByName($this->post['delivery_country']);
+				$updateArray=array();
+				if ($this->post['shipping_method']) {
+					$shipping_method=mslib_fe::getShippingMethod($this->post['shipping_method']);
+					if (empty($order['orders_tax_data'])) {
+						// temporary call, replacing the inner tax_ruleset inside the getShippingMethod
+						$tax_ruleset=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
+						$shipping_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+						$shipping_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+						$shipping_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+					}
+					if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
+						$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
+					} else {
+						$price=mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
+					}
+					if ($price>0) {
+						if (strstr($price, "%")) {
+							// calculate total shipping costs based by %
+							$subtotal=0;
+							foreach ($order['products'] as $products_id=>$value) {
+								if (is_numeric($products_id)) {
+									$subtotal=$subtotal+($value['qty']*$value['final_price']);
+								}
+							}
+							if ($subtotal) {
+								$percentage=str_replace("%", '', $price);
+								if ($percentage) {
+									$price=($subtotal/100*$percentage);
+								}
+							}
+						} else {
+							if (!strstr($price, "%")) {
+								if (strstr($price, ",")) {
+									$steps=explode(",", $price);
+									// calculate total costs
+									$subtotal=mslib_fe::getOrderTotalPrice($this->get['orders_id'], 1);
+									$count=0;
+									foreach ($steps as $step) {
+										// the   value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+										$split=explode(":", $step);
+										if (is_numeric($split[0])) {
+											if ($count==0) {
+												$price=$split[1];
+											}
+											if ($subtotal>$split[0]) {
+												$price=$split[1];
+												next();
+											}
+										}
+										$count++;
+									}
+								}
+							}
+						}
+					}
+					if ($price) {
+						$updateArray['shipping_method_costs']=$price;
+					} else {
+						$updateArray['shipping_method_costs']=0;
+					}
+					if ($shipping_method['tax_id'] && $updateArray['shipping_method_costs']) {
+						$shipping_tax['shipping_total_tax_rate']=$shipping_method['tax_rate'];
+						if ($shipping_method['country_tax_rate']) {
+							$shipping_tax['shipping_country_tax_rate']=$shipping_method['country_tax_rate'];
+							$shipping_tax['shipping_country_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['country_tax_rate']));
+						} else {
+							$shipping_tax['shipping_country_tax_rate']=0;
+							$shipping_tax['shipping_country_tax']=0;
+						}
+						if ($shipping_method['region_tax_rate']) {
+							$shipping_tax['shipping_region_tax_rate']=$shipping_method['region_tax_rate'];
+							$shipping_tax['shipping_region_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['region_tax_rate']));
+						} else {
+							$shipping_tax['shipping_region_tax_rate']=0;
+							$shipping_tax['shipping_region_tax']=0;
+						}
+						if ($shipping_tax['shipping_region_tax'] && $shipping_tax['shipping_country_tax']) {
+							$shipping_tax['shipping_tax']=$shipping_tax['shipping_country_tax']+$shipping_tax['shipping_region_tax'];
+						} else {
+							$shipping_tax['shipping_tax']=mslib_fe::taxDecimalCrop($updateArray['shipping_method_costs']*($shipping_method['tax_rate']));
+						}
+					} else {
+						$shipping_tax['shipping_tax']=0;
+						$shipping_tax['shipping_country_tax']=0;
+						$shipping_tax['shipping_region_tax']=0;
+						$shipping_tax['shipping_total_tax_rate']=0;
+						$shipping_tax['shipping_country_tax_rate']=0;
+						$shipping_tax['shipping_region_tax_rate']=0;
+					}
+					$updateArray['shipping_method']=$shipping_method['code'];
+					$updateArray['shipping_method_label']=$shipping_method['name'];
+				}
+				if ($this->post['payment_method']) {
+					$payment_method=mslib_fe::getPaymentMethod($this->post['payment_method']);
+					if (empty($order['orders_tax_data'])) {
+						// temporary call, replacing the inner tax_ruleset inside the getPaymentMethod
+						$tax_ruleset=mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $country['cn_iso_nr'], $zone['zn_country_iso_nr']);
+						$payment_method['tax_rate']=($tax_ruleset['total_tax_rate']/100);
+						$payment_method['country_tax_rate']=($tax_ruleset['country_tax_rate']/100);
+						$payment_method['region_tax_rate']=($tax_ruleset['state_tax_rate']/100);
+					}
+					if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
+						$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
+					} else {
+						$price=$payment_method['handling_costs'];
+					}
+					$updateArray['payment_method_costs']=$price;
+					if ($payment_method['tax_id'] && $updateArray['payment_method_costs']) {
+						$payment_tax['payment_total_tax_rate']=$payment_method['tax_rate'];
+						if ($payment_method['country_tax_rate']) {
+							$payment_tax['payment_country_tax_rate']=$payment_method['country_tax_rate'];
+							$payment_tax['payment_country_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['country_tax_rate']));
+						} else {
+							$payment_tax['payment_country_tax_rate']=0;
+							$payment_tax['payment_country_tax']=0;
+						}
+						if ($payment_method['region_tax_rate']) {
+							$payment_tax['payment_region_tax_rate']=$payment_method['region_tax_rate'];
+							$payment_tax['payment_region_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['region_tax_rate']));
+						} else {
+							$payment_tax['payment_region_tax_rate']=0;
+							$payment_tax['payment_region_tax']=0;
+						}
+						if ($payment_tax['payment_region_tax'] && $payment_tax['payment_country_tax']) {
+							$payment_tax['payment_tax']=$payment_tax['payment_country_tax']+$payment_tax['payment_region_tax'];
+						} else {
+							$payment_tax['payment_tax']=mslib_fe::taxDecimalCrop($updateArray['payment_method_costs']*($payment_method['tax_rate']));
+						}
+					} else {
+						$payment_tax['payment_tax']=0;
+						$payment_tax['payment_country_tax']=0;
+						$payment_tax['payment_region_tax']=0;
+						$payment_tax['payment_total_tax_rate']=0;
+						$payment_tax['payment_country_tax_rate']=0;
+						$payment_tax['payment_region_tax_rate']=0;
+					}
+					$updateArray['payment_method']=$payment_method['code'];
+					$updateArray['payment_method_label']=$payment_method['name'];
+				}
+				if (isset($this->post['edit_discount_value'])) {
+					$updateArray['discount']=$this->post['edit_discount_value'];
+				}
+				if (isset($this->post['order_payment_condition'])) {
+					$updateArray['payment_condition']=$this->post['order_payment_condition'];
+				}
+				$keys=array();
+				$keys[]='company';
+				$keys[]='name';
+				$keys[]='street_name';
+				$keys[]='address_number';
+				$keys[]='address_ext';
+				$keys[]='building';
+				$keys[]='zip';
+				$keys[]='city';
+				$keys[]='country';
+				$keys[]='email';
+				$keys[]='telephone';
+				$keys[]='mobile';
+				$keys[]='fax';
+				foreach ($keys as $key) {
+					$string='billing_'.$key;
+					$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+					$string='delivery_'.$key;
+					$updateArray[$string]=$this->post['tx_multishop_pi1'][$string];
+				}
+				$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
+				$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
+				if (count($updateArray)) {
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
+				$updateArray=array();
+				if ($this->post['expected_delivery_date']) {
+					$updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
+				}
+				if ($this->post['track_and_trace_code']) {
+					$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
+				}
+				if ($this->post['order_memo']) {
+					$updateArray['order_memo']=$this->post['order_memo'];
+				}
+				if (count($updateArray)) {
+					$close_window=1;
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$_REQUEST['orders_id'].'\'', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
+					$orders['track_and_trace_code']=$this->post['track_and_trace_code'];
+					$orders['order_memo']=$this->post['order_memo'];
+				}
+				$close_window=1;
 			} // if ($this->post) eol
 			// repair tax stuff
 			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
