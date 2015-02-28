@@ -2861,6 +2861,8 @@ class mslib_befe {
 		$array2[]='';
 		$array1[]='###CUSTOMER_ID###';
 		$array2[]=$order['customer_id'];
+		$array1[]='###CUSTOMER_COMMENTS###';
+		$array2[]=$order['customer_comments'];
 		$array1[]='###MESSAGE###';
 		$array2[]=$this->post['comments'];
 		$array1[]='###OLD_ORDER_STATUS###';
