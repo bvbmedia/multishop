@@ -4765,7 +4765,7 @@
 			<label index="up_to_and_including">tot en met</label>
 			<label index="feed_exporter_fields_label_products_multiplication">Vermeningvuldiging</label>
 			<label index="all_payment_methods">Alle betaalmethodes</label>
-			<label index="all_shipping_methods">Alle bezorgmethodes</label>
+			<label index="all_shipping_methods">Alle verzendmethodes</label>
 			<label index="all_countries">Alle landen</label>
 			<label index="copy_from_billing_details">Kopie van factuurgegevens</label>
 			<label index="vat_nn_from_subtotal_nn">BTW %s van %s</label>
