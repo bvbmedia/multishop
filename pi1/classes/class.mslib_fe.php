@@ -8095,7 +8095,15 @@ class mslib_fe {
 					if (!$this->tta_user_info) {
 						$row_shop_address=$this->tta_shop_info;
 					} else {
-						$row_shop_address=$this->tta_user_info['default'];
+						if (!isset($this->tta_user_info['default'])) {
+							if (isset($this->tta_user_info['billing'][0])) {
+								$row_shop_address=$this->tta_user_info['billing'][0];
+							} else if (isset($this->tta_user_info['delivery'][0])) {
+								$row_shop_address=$this->tta_user_info['delivery'][0];
+							}
+						} else {
+							$row_shop_address=$this->tta_user_info['default'];
+						}
 					}
 				} else {
 					$row_shop_address=$this->tta_shop_info;
