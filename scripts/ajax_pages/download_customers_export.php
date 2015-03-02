@@ -118,9 +118,16 @@ if ($this->get['customers_export_hash']) {
 						$excelCols[]=$row['fax'];
 						break;
 					case 'customer_gender':
-						$gender='m';
-						if ($row['gender']===1) {
-							$gender='f';
+						switch($row['gender']) {
+							case '0':
+								$gender='m';
+								break;
+							case '1':
+								$gender='f';
+								break;
+							default:
+								$gender='';
+								break;
 						}
 						$excelCols[]=$gender;
 						break;
