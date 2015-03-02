@@ -3,27 +3,33 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
-        @page {margin:0; margin-top:150px; margin-bottom:60px;}
-        li, p, th, td { line-height:24px; }
-        .valign_top { vertical-align:text-top; }
-        hr {border: 0; height: 1px; background: #333;}
-        #invoice_header { position: fixed; top:-150px; height: 150px}
-        #invoice_footer { position: fixed; bottom:-60px; height: 60px;}
-        #invoice_content { font-family:arial, helvetica, sans-serif; font-size: 13px; margin:0px 60px 0px 125px; z-index:0; }
-        #customerDetailsHeader {padding-bottom:50px;}
+      @page {margin:0; margin-top:170px; margin-bottom:100px;}
+      body { font-size:13px; line-height:13px; font-family:arial, helvetica, sans-serif; }
+        li, p, th, td { font-size:13px; font-family:arial, helvetica, sans-serif; }
+      td { padding:2px 5px; }
+        .valign_top { vertical-align:top; }
+        hr {border:0; height:1px; background:#333; }
+        #invoice_header { position: fixed; top:-170px; height: 150px}
+        #invoice_footer { position: fixed; bottom:-100px; height: 60px;}
+      #invoice_content { margin:0 60px; }
+       #customerDetailsHeader { padding-bottom:50px; }
         .invoiceTableHeading {background-color:#000; color:#fff; white-space:nowrap;}
         .cell_qty, .cell_products_vat, .cell_products_normal_price, .cell_products_final_price { white-space:nowrap; }
         #orderDetailsPDFInvoice { border-collapse: collapse;}
-        #orderDetailsPDFInvoice th, #orderDetailsPDFInvoice td { border: 0px solid black; }
-        #orderDetailsPDFInvoice { vertical-align:text-top;}
-        #orderDetailsPDFInvoice tr td { padding: 5px;}
-        #orderDetailsPDFInvoice tr td table tr td { border: 0px; padding: 0px;}
-        .order_total_wrapper { padding: 0px;}
+        #orderDetailsPDFInvoice th, #orderDetailsPDFInvoice td { border:none; }
+        #orderDetailsPDFInvoice { vertical-align:top;}
+      #orderDetailsPDFInvoice td { padding:7px 5px; }
+      #orderDetailsPDFInvoice td.order_total_wrapper { padding:0; }
+      #orderDetailsPDFInvoice td.order_total_wrapper table td,
+     #orderDetailsPDFInvoice tr.hrWrapper td { border-bottom:none; }
+      #orderDetailsPDFInvoice tr td td { padding:0; }
+        #orderDetailsPDFInvoice td.order_total_wrapper { padding: 0px;}
+      #orderDetailsPDFInvoice td.order_total_wrapper table td { padding:2px 5px; }
         .grandTotalLabel { }
         .grandTotalValue { width:70px;}
         ul { margin:0 0 10px; padding:0; }
         .products_attributes ul { margin:0 0 0 18px; }
-        .products_attributes br { display:none; }
+      .products_attributes br { display:none; }
     </style>
 </head>
 <body>
