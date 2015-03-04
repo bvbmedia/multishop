@@ -3810,7 +3810,7 @@ class mslib_befe {
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$order['shipping_method_label'];
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_ROW_TYPE']=$tr_type;
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$shipping_tax_rate;
-			$shipping_costs='-';
+			$shipping_costs='0';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				if ($order['shipping_method_costs']>0) {
 					$shipping_costs=$prefix.$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'];
@@ -3840,7 +3840,7 @@ class mslib_befe {
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$order['payment_method_label'];
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_ROW_TYPE']=$tr_type;
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$payment_tax_rate;
-			$payment_costs='-';
+			$payment_costs='0';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				if ($order['payment_method_costs']>0) {
 					$payment_costs=$prefix.$order['payment_method_costs']+$order['orders_tax_data']['payment_tax'];

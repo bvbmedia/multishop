@@ -78,7 +78,7 @@ if (count($products)<0) {
 		$regex="/^[^\\\W][a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\@[a-zA-Z0-9\\\_\\\-\\\.]+([a-zA-Z0-9\\\_\\\-\\\.]+)*\\\.[a-zA-Z]{2,4}$/";
 		$regex_for_character="/[^0-9]$/";
 		$birthday_validation='';
-		if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
+		//if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
 			$birthday_validation='
 			$("#birthday_visitor").datepicker({
 				dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
@@ -98,7 +98,7 @@ if (count($products)<0) {
 				showOtherMonths: true,
 				yearRange: "-100:+0"
 			});';
-		}
+		//}
 		$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$(\'#ms_checkout\').h5Validate();
