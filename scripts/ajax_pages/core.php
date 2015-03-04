@@ -49,6 +49,9 @@ switch ($this->ms['page']) {
 		exit();
 		break;
 	case 'get_shoppingcart_shippingcost_overview':
+		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+			$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
+		}
 		$return_data=array();
 		if ($this->tta_user_info['default']['country']) {
 			$iso_customer=mslib_fe::getCountryByName($this->tta_user_info['default']['country']);

@@ -2,6 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+	$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
+}
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
