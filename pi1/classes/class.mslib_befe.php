@@ -3816,7 +3816,6 @@ class mslib_befe {
 					$shipping_costs=$prefix.$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'];
 				}
 			} else {
-				$shipping_costs='-';
 				if ($order['shipping_method_costs']>0) {
 					$shipping_costs=$prefix.$order['shipping_method_costs'];
 				}
