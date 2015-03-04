@@ -3795,6 +3795,35 @@ class mslib_befe {
 				<!-- ###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER### end -->
 			 */
 			$shipping_payment_costs_line='';
+			// payment costs
+			if (!$tr_type or $tr_type=='even') {
+				$tr_type='odd';
+			} else {
+				$tr_type='even';
+			}
+			$payment_tax_rate='-';
+			if (!empty($order['orders_tax_data']['payment_total_tax_rate'])) {
+				$payment_tax_rate=($order['orders_tax_data']['payment_total_tax_rate']*100).'%';
+			}
+			$markerArray=array();
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_COUNTER']=$product_counter;
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$order['payment_method_label'];
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_ROW_TYPE']=$tr_type;
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$payment_tax_rate;
+			$payment_costs='0';
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				if ($order['payment_method_costs']>0) {
+					$payment_costs=$prefix.$order['payment_method_costs']+$order['orders_tax_data']['payment_tax'];
+				}
+			} else {
+				if ($order['payment_method_costs']>0) {
+					$payment_costs=$prefix.$order['payment_method_costs'];
+				}
+			}
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0,$display_currency_symbol,0);
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0,$display_currency_symbol,0);
+			$shipping_payment_costs_line.=$this->cObj->substituteMarkerArray($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'], $markerArray, '###|###');
+			$product_counter++;
 			// shipping costs
 			if (!$tr_type or $tr_type=='even') {
 				$tr_type='odd';
@@ -3824,34 +3853,6 @@ class mslib_befe {
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($shipping_costs, 0,$display_currency_symbol,0);
 			$shipping_payment_costs_line.=$this->cObj->substituteMarkerArray($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'], $markerArray, '###|###');
 			$product_counter++;
-			// payment costs
-			if (!$tr_type or $tr_type=='even') {
-				$tr_type='odd';
-			} else {
-				$tr_type='even';
-			}
-			$payment_tax_rate='-';
-			if (!empty($order['orders_tax_data']['payment_total_tax_rate'])) {
-				$payment_tax_rate=($order['orders_tax_data']['payment_total_tax_rate']*100).'%';
-			}
-			$markerArray=array();
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_COUNTER']=$product_counter;
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$order['payment_method_label'];
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_ROW_TYPE']=$tr_type;
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$payment_tax_rate;
-			$payment_costs='0';
-			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				if ($order['payment_method_costs']>0) {
-					$payment_costs=$prefix.$order['payment_method_costs']+$order['orders_tax_data']['payment_tax'];
-				}
-			} else {
-				if ($order['payment_method_costs']>0) {
-					$payment_costs=$prefix.$order['payment_method_costs'];
-				}
-			}
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0,$display_currency_symbol,0);
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0,$display_currency_symbol,0);
-			$shipping_payment_costs_line.=$this->cObj->substituteMarkerArray($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'], $markerArray, '###|###');
 			$subpartArray['###SINGLE_SHIPPING_PACKING_COSTS_WRAPPER###']=$shipping_payment_costs_line;
 		}
 		// bottom row
