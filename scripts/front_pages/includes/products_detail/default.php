@@ -292,6 +292,7 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_EAN###']=$product['ean_code'];
 	$markerArray['###PRODUCTS_SPECIAL_PRICE###']=$output['special_price'];
 	$markerArray['###OTHER_CUSTOMERS_BOUGHT###']=$output['customers_also_bought'];
+	$markerArray['###HIDDEN_PRODUCT_ID###']='<input name="products_id" id="products_id" type="hidden" value="'.$product['products_id'].'" />';
 	// new
 	$markerArray['###QUANTITY###']=$output['quantity'];
 	$markerArray['###BACK_BUTTON###']=$output['back_button'];
