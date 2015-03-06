@@ -41,20 +41,27 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 $markerArray['HEADER_PRICE']=htmlspecialchars(ucfirst($this->pi_getLL('price')));
 $markerArray['HEADER_QUANTITY']=htmlspecialchars(ucfirst($this->pi_getLL('qty')));
 $markerArray['HEADER_BUY_NOW']=htmlspecialchars(ucfirst($this->pi_getLL('buy_now')));
-$markerArray['HEADER_STOCK']=htmlspecialchars(ucfirst($this->pi_getLL('stock')));
 if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 	$subpartHeaderArray=array();
 	$subpartHeaderArray['###HEADER_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
 	$subparts['header']=$this->cObj->substituteMarkerArrayCached($subparts['header'], array(), $subpartHeaderArray);
 }
-
 if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 	$subpartHeaderArray=array();
 	$subpartHeaderArray['###ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
 	$subparts['item']=$this->cObj->substituteMarkerArrayCached($subparts['item'], array(), $subpartHeaderArray);
 }
+if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']=='no') {
+	$subpartHeaderArray=array();
+	$subpartHeaderArray['###HEADER_STOCK_RELATIVE_WRAPPER###']='';
+	$subparts['header']=$this->cObj->substituteMarkerArrayCached($subparts['header'], array(), $subpartHeaderArray);
 
-
+	$subpartHeaderArray=array();
+	$subpartHeaderArray['###ITEM_STOCK_RELATIVE_WRAPPER###']='';
+	$subparts['item']=$this->cObj->substituteMarkerArrayCached($subparts['item'], array(), $subpartHeaderArray);
+} else {
+	$markerArray['HEADER_STOCK']=htmlspecialchars(ucfirst($this->pi_getLL('stock')));
+}
 $subpartArray['###HEADER###']=$this->cObj->substituteMarkerArray($subparts['header'], $markerArray, '###|###');
 // NOW THE PRODUCT ITEMS
 $contentItem='';
