@@ -170,7 +170,7 @@ if (count($cart['products'])>0) {
 			}
 			// show selectbox by products multiplication or show default input
 			$quantity_html='';
-			if ($product['maximum_quantity']>0 || (is_numeric($product['products_multiplication']) && $product['products_multiplication']>0)) {
+			/*if ($product['maximum_quantity']>0 || (is_numeric($product['products_multiplication']) && $product['products_multiplication']>0)) {
 				$start_number='';
 				$ending_number='';
 				$item='';
@@ -215,7 +215,11 @@ if (count($cart['products'])>0) {
 				$quantity_html.='</select>';
 			} else {
 				$quantity_html.='<div class="quantity buttons_added"><input type="button" value="-" class="qty_minus" rel="qty_'.$shopping_cart_item.'"><input class="qty_input" name="qty['.$shopping_cart_item.']" type="text" id="qty_'.$shopping_cart_item.'" value="'.$value['qty'].'" size="4" maxlength="4" /><input type="button" value="+" class="qty_plus" rel="qty_'.$shopping_cart_item.'"></div>';
-			}
+			}*/
+			$quantity_html.='<div class="quantity buttons_added">';
+			$quantity_html.='<input type="button" value="-" data-stepSize="'.($product['products_multiplication']!='0.00'?$product['products_multiplication']:'1').'" data-minQty="'.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'" data-maxQty="'.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'" class="qty_minus" rel="qty_'.$shopping_cart_item.'">';
+			$quantity_html.='<input class="qty_input" name="qty['.$shopping_cart_item.']" type="text" id="qty_'.$shopping_cart_item.'" value="'.$value['qty'].'" size="4" maxlength="4" />';
+			$quantity_html.='<input type="button" value="+" data-stepSize="'.($product['products_multiplication']!='0.00'?$product['products_multiplication']:'1').'" data-minQty="'.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'" data-maxQty="'.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'" class="qty_plus" rel="qty_'.$shopping_cart_item.'"></div>';
 			// show selectbox by products multiplication or show default input eof
 			if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
 				if ($value['qty']>$product_info['products_quantity']) {
