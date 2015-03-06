@@ -2,9 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$tax_group_id=$_REQUEST['tax_group_id'];
-$current_price=$_REQUEST['current_price'];
-$to_tax_include=$_REQUEST['to_tax_include'];
+$tax_group_id=$this->get['tax_group_id'];
+$current_price=$this->get['current_price'];
+$to_tax_include=$this->get['to_tax_include'];
 if (strpos($current_price, ':')!==false) {
 	$price_list_format=explode(',', $current_price);
 	$price_list_incl_tax=array();
