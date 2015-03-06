@@ -222,7 +222,7 @@ if (count($cart['products'])>0) {
 			$quantity_html.='<input type="button" value="+" data-stepSize="'.($product['products_multiplication']!='0.00'?$product['products_multiplication']:'1').'" data-minQty="'.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'" data-maxQty="'.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'" class="qty_plus" rel="qty_'.$shopping_cart_item.'"></div>';
 			// show selectbox by products multiplication or show default input eof
 			if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
-				if ($value['qty']>$product_info['products_quantity']) {
+				if ($value['qty']>$value['products_quantity']) {
 					$disable_checkout=true;
 				}
 			}
@@ -238,9 +238,9 @@ if (count($cart['products'])>0) {
 		}
 		if ($disable_checkout) {
 			if (!$this->ms['MODULES']['DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE']) {
-				if ($product_info['products_quantity']>0) {
-					if ($ordered_qty>$product_info['products_quantity']) {
-						$output['product_attributes'].='<br/><span class="out-of-stock-warning"><strong>'.sprintf($this->pi_getLL('ordered_product_qty_exceed_maximum_stock', 'the quantity you request for this product are exceeding the stock we have, at this moment the maximum quantity you may order for this product is: %s<br/>please update the order quantity for this product, and continue the checkout'), $product_info['products_quantity']).'</strong></span>';
+				if ($value['products_quantity']>0) {
+					if ($ordered_qty>$value['products_quantity']) {
+						$output['product_attributes'].='<br/><span class="out-of-stock-warning"><strong>'.sprintf($this->pi_getLL('ordered_product_qty_exceed_maximum_stock', 'the quantity you request for this product are exceeding the stock we have, at this moment the maximum quantity you may order for this product is: %s<br/>please update the order quantity for this product, and continue the checkout'), $value['products_quantity']).'</strong></span>';
 					}
 				} else {
 					$output['product_attributes'].='<br/><span class="out-of-stock-warning"><strong>'.$this->pi_getLL('ordered_product_not_instock', 'this product is currently not available').'</strong></span>';
@@ -248,7 +248,7 @@ if (count($cart['products'])>0) {
 			}
 		} else {
 			if (!$this->ms['MODULES']['DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE']) {
-				if ($product_info['products_quantity']<0 || ($value['qty']>$product_info['products_quantity'])) {
+				if ($value['products_quantity']<0 || ($value['qty']>$value['products_quantity'])) {
 					$output['product_attributes'].='<br/><span class="out-of-stock-warning"><strong>'.$this->pi_getLL('ordered_product_stock_not_available_waiting_for_restock', 'due to the quantity you order for this product are exceeding the stock we have, we will process the order for this product after the re-stock. you can continue the checkout.').'</strong></span>';
 				}
 			}
