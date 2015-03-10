@@ -103,7 +103,8 @@ class tx_mslib_cart extends tslib_pibase {
 								$tax_rate['total_tax_rate']=0;
 							}
 							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$product['tax']=mslib_fe::taxDecimalCrop($product['final_price']*($tax_rate['total_tax_rate']/100), 2, false);
+								//$product['tax']=mslib_fe::taxDecimalCrop($product['final_price']*($tax_rate['total_tax_rate']/100), 2, false);
+								$product['tax']=round($product['final_price']*($tax_rate['total_tax_rate']/100), 2);
 							} else {
 								$product['tax']=mslib_fe::taxDecimalCrop($product['final_price']/100*$tax_rate['total_tax_rate']);
 							}
@@ -127,7 +128,8 @@ class tx_mslib_cart extends tslib_pibase {
 											foreach ($attribute_values as $attribute_item) {
 												$total_attributes_price+=($attribute_item['options_values_price']);
 												if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-													$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
+													//$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
+													$attributes['tax']=round($attribute_item['options_values_price']*$product['tax_rate'], 2);
 												} else {
 													$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
 												}
@@ -149,7 +151,8 @@ class tx_mslib_cart extends tslib_pibase {
 									foreach ($array as $attribute_item) {
 										$total_attributes_price+=($attribute_item['options_values_price']);
 										if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-											$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
+											//$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
+											$attributes['tax']=round($attribute_item['options_values_price']*$product['tax_rate'], 2);
 										} else {
 											$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
 										}
@@ -183,6 +186,11 @@ class tx_mslib_cart extends tslib_pibase {
 						}
 					}
 				}
+				// rounding was needed to fix 1 cents grand total difference
+				// adjusted 25/11/2014 14:02 CET
+				// shipping cost bugfix because of the fractions, changed from 2 decimal to 14
+				$this->cart['user']['shipping_method_costs']=round($this->cart['user']['shipping_method_costs'], 14);
+				$this->cart['user']['payment_method_costs']=round($this->cart['user']['payment_method_costs'], 2);
 				// get shipping tax rate
 				$shipping_method=mslib_fe::getShippingMethod($this->cart['user']['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
 				$tax_rate=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
@@ -211,11 +219,6 @@ class tx_mslib_cart extends tslib_pibase {
 						$payment_tax=$this->cart['user']['payment_method_costs']*$payment_tax_rate;
 					}
 				}
-				// rounding was needed to fix 1 cents grand total difference
-				// adjusted 25/11/2014 14:02 CET
-				// shipping cost bugfix because of the fractions, changed from 2 decimal to 14
-				$this->cart['user']['shipping_method_costs']=round($this->cart['user']['shipping_method_costs'], 14);
-				$this->cart['user']['payment_method_costs']=round($this->cart['user']['payment_method_costs'], 2);
 				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$this->cart['user']['shipping_method_costs_including_vat']=$this->cart['user']['shipping_method_costs']+$shipping_tax;
 					$this->cart['user']['payment_method_costs_including_vat']=$this->cart['user']['payment_method_costs']+$payment_tax;
@@ -435,13 +438,16 @@ class tx_mslib_cart extends tslib_pibase {
 					// add product to the cart (through form on products_detail page)
 					$product['description']='';
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$product['country_tax']=mslib_fe::taxDecimalCrop(($product['final_price']*$product['country_tax_rate']), 2, false);
-						$product['region_tax']=mslib_fe::taxDecimalCrop(($product['final_price']*$product['region_tax_rate']), 2, false);
+						//$product['country_tax']=mslib_fe::taxDecimalCrop(($product['final_price']*$product['country_tax_rate']), 2, false);
+						//$product['region_tax']=mslib_fe::taxDecimalCrop(($product['final_price']*$product['region_tax_rate']), 2, false);
+						$product['country_tax']=round(($product['final_price']*$product['country_tax_rate']), 2);
+						$product['region_tax']=round(($product['final_price']*$product['region_tax_rate']), 2);
 						if ($product['country_tax']>0 && $product['region_tax']>0) {
 							$product['tax']=$product['country_tax']+$product['region_tax'];
 						} else {
 							$product_tax=($product['final_price']*$product['tax_rate']);
-							$product['tax']=mslib_fe::taxDecimalCrop($product_tax, 2, false);
+							//$product['tax']=mslib_fe::taxDecimalCrop($product_tax, 2, false);
+							$product['tax']=round($product_tax, 2);
 						}
 					} else {
 						$product['country_tax']=mslib_fe::taxDecimalCrop($product['final_price']*$product['country_tax_rate']);
@@ -533,12 +539,15 @@ class tx_mslib_cart extends tslib_pibase {
 												}
 												// hook
 												if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-													$row['country_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['country_tax_rate'], 2, false);
-													$row['region_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['region_tax_rate'], 2, false);
+													//$row['country_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['country_tax_rate'], 2, false);
+													//$row['region_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['region_tax_rate'], 2, false);
+													$row['country_tax']=round(($row['price_prefix'].$row['options_values_price'])*$product['country_tax_rate'], 2);
+													$row['region_tax']=round(($row['price_prefix'].$row['options_values_price'])*$product['region_tax_rate'], 2);
 													if ($row['country_tax'] && $row['region_tax']) {
 														$row['tax']=$row['country_tax']+$row['region_tax'];
 													} else {
-														$row['tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']), 2, false);
+														//$row['tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']), 2, false);
+														$row['tax']=round(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']), 2);
 													}
 												} else {
 													$row['country_tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*$product['country_tax_rate']);
@@ -1600,6 +1609,12 @@ class tx_mslib_cart extends tslib_pibase {
 							$product_tax['total_tax']=(string)$value['tax'];
 							$product_tax['total_attributes_tax']=(string)$value['total_attributes_tax'];
 							// -----------------------------------------------------------------------------------------
+							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								//$product_tax['total_tax']=mslib_fe::taxDecimalCrop($product_tax['total_tax'], 2, false);
+								//$product_tax['total_attributes_tax']=mslib_fe::taxDecimalCrop($product_tax['total_attributes_tax'], 2, false);
+								$product_tax['total_tax']=round($product_tax['total_tax'], 2);
+								$product_tax['total_attributes_tax']=round($product_tax['total_attributes_tax'], 2);
+							}
 							if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
 								$product_tax['country_tax_rate']=0;
 								$product_tax['region_tax_rate']=0;
@@ -1608,10 +1623,6 @@ class tx_mslib_cart extends tslib_pibase {
 								$product_tax['region_tax']=0;
 								$product_tax['total_tax']=0;
 								$product_tax['total_attributes_tax']=0;
-							}
-							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$product_tax['total_tax']=mslib_fe::taxDecimalCrop($product_tax['total_tax'], 2, false);
-								$product_tax['total_attributes_tax']=mslib_fe::taxDecimalCrop($product_tax['total_attributes_tax'], 2, false);
 							}
 							// bugfixes bas
 							$sub_total_excluding_vat['final_price']=$sub_total['final_price']+($value['final_price']*$value['qty']);
