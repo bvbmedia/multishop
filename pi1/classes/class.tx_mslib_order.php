@@ -92,8 +92,13 @@ class tx_mslib_order extends tslib_pibase {
 				}
 				$payment_tax_rate=($tax_rate['total_tax_rate']/100);
 				if ($shipping_tax_rate>0 or $payment_tax_rate>0) {
-					$shipping_tax=$row['shipping_method_costs']*$shipping_tax_rate;
-					$payment_tax=$row['payment_method_costs']*$payment_tax_rate;
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$shipping_tax=round($row['shipping_method_costs']*$shipping_tax_rate, 2);
+						$payment_tax=round($row['payment_method_costs']*$payment_tax_rate, 2);
+					} else {
+						$shipping_tax=$row['shipping_method_costs']*$shipping_tax_rate;
+						$payment_tax=$row['payment_method_costs']*$payment_tax_rate;
+					}
 					$order_tax_data['shipping_total_tax_rate']=(string)number_format($shipping_tax_rate, 2, '.', ',');
 					$order_tax_data['payment_total_tax_rate']=(string)number_format($payment_tax_rate, 2, '.', ',');
 					$order_tax_data['shipping_tax']=(string)$shipping_tax;
@@ -120,18 +125,32 @@ class tx_mslib_order extends tslib_pibase {
 					$qry_attr=$GLOBALS['TYPO3_DB']->sql_query($sql_attr);
 					$attributes_tax=0;
 					while ($row_attr=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attr)) {
-						$attributes_tax+=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
+						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							$attributes_tax+=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate), 2);
+						} else {
+							$attributes_tax+=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
+						}
 						$sub_total+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						$sub_total_excluding_vat+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						$grand_total+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						// set the attributes tax data
 						$attributes_tax_data=array();
-						$attributes_tax_data['country_tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['country_tax_rate']);
-						$attributes_tax_data['region_tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['region_tax_rate']);
-						if ($attributes_tax_data['country_tax'] && $attributes_tax_data['region_tax']) {
-							$attributes_tax_data['tax']=$attributes_tax_data['country_tax']+$attributes_tax_data['region_tax'];
+						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+							$attributes_tax_data['country_tax']=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['country_tax_rate'], 2);
+							$attributes_tax_data['region_tax']=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['region_tax_rate'], 2);
+							if ($attributes_tax_data['country_tax'] && $attributes_tax_data['region_tax']) {
+								$attributes_tax_data['tax']=$attributes_tax_data['country_tax']+$attributes_tax_data['region_tax'];
+							} else {
+								$attributes_tax_data['tax']=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate), 2);
+							}
 						} else {
-							$attributes_tax_data['tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
+							$attributes_tax_data['country_tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['country_tax_rate']);
+							$attributes_tax_data['region_tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['region_tax_rate']);
+							if ($attributes_tax_data['country_tax'] && $attributes_tax_data['region_tax']) {
+								$attributes_tax_data['tax']=$attributes_tax_data['country_tax']+$attributes_tax_data['region_tax'];
+							} else {
+								$attributes_tax_data['tax']=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
+							}
 						}
 						$serial_product_attributes_tax=serialize($attributes_tax_data);
 						$sql_update="update tx_multishop_orders_products_attributes set attributes_tax_data = '".$serial_product_attributes_tax."' where orders_products_attributes_id='".$row_attr['orders_products_attributes_id']."' and orders_products_id = ".$row_attr['orders_products_id']." and orders_id = ".$row_attr['orders_id'];
@@ -147,7 +166,11 @@ class tx_mslib_order extends tslib_pibase {
 					// I have fixed the b2b issue by updating all the products prices in the database to have max 2 decimals
 					// therefore I disabled below bugfix, cause thats a ducktape solution that can break b2c sites
 					//$final_price=round($final_price,2);
-					$tax=$final_price*$tax_rate;
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$tax=round($final_price*$tax_rate, 2);
+					} else {
+						$tax=$final_price*$tax_rate;
+					}
 					$product_tax_data['total_tax']=(string)$tax;
 					$total_tax+=$tax*$row_prod['qty'];
 					$sub_total+=($final_price+$tax)*$row_prod['qty'];
