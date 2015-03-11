@@ -695,6 +695,7 @@ ul#ui-menu-manual-option li.ui-menu-item span#more-results:hover { background:#0
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#address_details td#delivery_details .address_details_container .msadmin_button { position:absolute; bottom:5px; margin-top:0; margin-left:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#address_details .account-field { width:455px; white-space:nowrap; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content table#address_details .account-field input[type="text"] { width:264px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content table#address_details .account-field .error-space { display:none; }
 
 #tx_multishop_pi1_core #tab-container .tab_container #Order_Status fieldset { margin-top:10px; }
 
