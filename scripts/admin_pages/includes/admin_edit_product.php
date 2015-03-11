@@ -1985,7 +1985,7 @@ if ($this->post) {
 						<input type="text" class="text" name="products_description_tab_title_'.$i.'['.$language['uid'].']" id="products_description_tab_title_'.$i.'['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_title_'.$i.'']).'">
 					</div>
 					<div class="account-field" id="msEditProductInputTabContent_'.$i.'">
-						<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('title_descriptions').' (tab: '.$i.')</label>
+						<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
 						<textarea name="products_description_tab_content_'.$i.'['.$language['uid'].']" id="products_description_tab_content_'.$i.'['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
 					</div>';
 				}
@@ -3504,7 +3504,7 @@ if ($this->post) {
 															<input type="text" class="text" name="customProductsDescription_products_description_tab_title_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_title_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_title_'.$i.'']).'">
 														</div>
 														<div class="account-field" id="msEditProductInputTabContent_'.$i.'">
-															<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('title_descriptions').' (tab: '.$i.')</label>
+															<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
 															<textarea name="customProductsDescription_products_description_tab_content_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_content_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
 														</div>';
 												}
@@ -3742,7 +3742,7 @@ if ($this->post) {
 								details_tab_content+=\'<input type="text" class="text" name="customProductsDescription_products_description_tab_title_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_title_\'+ i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 								details_tab_content+=\'</div>\';
 								details_tab_content+=\'<div class="account-field" id="msEditProductInputTabContent_\'+ i + \'">\';
-								details_tab_content+=\'<label for="products_description_tab_content_\'+ i + \'">'.$this->pi_getLL('title_descriptions').' tab: \'+i+\') \' + i + \'</label>\';
+								details_tab_content+=\'<label for="products_description_tab_content_\'+ i + \'">'.$this->pi_getLL('description').' tab: \'+i+\') \' + i + \'</label>\';
 								details_tab_content+=\'<textarea name="customProductsDescription_products_description_tab_content_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_content_\' + i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="mceEditor" rows="4"></textarea>\';
 								details_tab_content+=\'</div>\';
 							}
