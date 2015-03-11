@@ -41,6 +41,7 @@ class tx_mslib_order extends tslib_pibase {
 			$sql="select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='".$orders_id."' order by orders_id asc";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+				$tax_separation=array();
 				$total_tax=0;
 				$sub_total=0;
 				$sub_total_excluding_vat=0;
@@ -108,6 +109,11 @@ class tx_mslib_order extends tslib_pibase {
 				} else {
 					$grand_total+=($row['shipping_method_costs']+$row['payment_method_costs']);
 				}
+				$tax_separation[($shipping_tax_rate*100)]['shipping_tax']+=$shipping_tax;
+				$tax_separation[($payment_tax_rate*100)]['payment_tax']+=$payment_tax;
+				$tax_separation[($shipping_tax_rate*100)]['shipping_costs']=$row['shipping_method_costs'];
+				$tax_separation[($payment_tax_rate*100)]['payment_costs']=$row['payment_method_costs'];
+				//
 				$product_tax_data['country_tax_rate']='0';
 				$product_tax_data['region_tax_rate']='0';
 				$product_tax_data['total_tax_rate']='0';
@@ -179,12 +185,17 @@ class tx_mslib_order extends tslib_pibase {
 					$serial_prod=serialize($product_tax_data);
 					$sql_update="update tx_multishop_orders_products set products_tax_data = '".$serial_prod."' where orders_products_id = ".$row_prod['orders_products_id']." and orders_id = ".$row['orders_id'];
 					$GLOBALS['TYPO3_DB']->sql_query($sql_update);
+					// separation of tax
+					$tax_separation[$row_prod['products_tax']]['products_total_tax']+=$total_tax;
+					$tax_separation[$row_prod['products_tax']]['products_sub_total_excluding_vat']+=($final_price)*$row_prod['qty'];
+					$tax_separation[$row_prod['products_tax']]['products_sub_total']+=($final_price+$tax)*$row_prod['qty'];
 				}
 				$order_tax_data['total_orders_tax']=(string)$total_tax;
 				$order_tax_data['total_orders_tax_including_discount']=$order_tax_data['total_orders_tax'];
 				$order_tax_data['sub_total']=(string)$sub_total;
 				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;
 				$order_tax_data['grand_total']=(string)$grand_total;
+				$order_tax_data['tax_separation']=$tax_separation;
 				if ($row['discount']>0 and $order_tax_data['sub_total']>0) {
 					$row['discount']=round($row['discount'], 2);
 					$discount_percentage=($row['discount']/$order_tax_data['sub_total']*100);
