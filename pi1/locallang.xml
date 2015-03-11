@@ -4696,7 +4696,7 @@
 			<label index="time_needed_to_finish_checkout">Benodigde tijd om afrekenen te voltooien</label>
 			<label index="times_used">Aantal keer gebruikt</label>
 			<label index="title">Titel</label>
-			<label index="title_descriptions">Descriptions</label>
+			<label index="title_descriptions">Beschrijving</label>
 			<label index="title_is_required">Titel is verplicht</label>
 			<label index="to">Tot</label>
 			<label index="today_there_are_s_orders_created">VANDAAG ZIJN ER %s BESTELLINGEN GEPLAATST</label>
