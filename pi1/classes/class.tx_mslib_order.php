@@ -38,10 +38,10 @@ class tx_mslib_order extends tslib_pibase {
 	}
 	function repairOrder($orders_id) {
 		if (is_numeric($orders_id)) {
+			$tax_separation=array();
 			$sql="select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='".$orders_id."' order by orders_id asc";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$tax_separation=array();
 				$total_tax=0;
 				$sub_total=0;
 				$sub_total_excluding_vat=0;
@@ -71,7 +71,6 @@ class tx_mslib_order extends tslib_pibase {
 						$this->ms['MODULES']['DISABLE_VAT_RATE']=1;
 					}
 				}
-
 				// get shipping tax rate
 				$shipping_method=mslib_fe::getShippingMethod($row['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
 				$tax_rate=mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
@@ -186,9 +185,9 @@ class tx_mslib_order extends tslib_pibase {
 					$sql_update="update tx_multishop_orders_products set products_tax_data = '".$serial_prod."' where orders_products_id = ".$row_prod['orders_products_id']." and orders_id = ".$row['orders_id'];
 					$GLOBALS['TYPO3_DB']->sql_query($sql_update);
 					// separation of tax
-					$tax_separation[$row_prod['products_tax']]['products_total_tax']+=$total_tax;
-					$tax_separation[$row_prod['products_tax']]['products_sub_total_excluding_vat']+=($final_price)*$row_prod['qty'];
-					$tax_separation[$row_prod['products_tax']]['products_sub_total']+=($final_price+$tax)*$row_prod['qty'];
+					$tax_separation[($row_prod['products_tax']/100)*100]['products_total_tax']+=$tax*$row_prod['qty'];
+					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total_excluding_vat']+=($final_price)*$row_prod['qty'];
+					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total']+=($final_price+$tax)*$row_prod['qty'];
 				}
 				$order_tax_data['total_orders_tax']=(string)$total_tax;
 				$order_tax_data['total_orders_tax_including_discount']=$order_tax_data['total_orders_tax'];
