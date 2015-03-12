@@ -160,6 +160,7 @@ foreach ($products as $current_product) {
 	$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
 	$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
 	$markerArray['PRODUCTS_URL']=$current_product['products_url'];
+	$markerArray['ORDER_UNIT_NAME']=$current_product['order_unit_name'];
 	$markerArray['OLD_PRICE']=mslib_fe::amount2Cents($current_product['old_price']);
 	$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
 	$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'],2,',','.');
