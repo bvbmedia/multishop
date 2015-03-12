@@ -35,174 +35,175 @@ if (!$this->ms['MODULES']['PRODUCTS_LISTING_DISPLAY_PAGINATION_FORM'] && !$this-
 }
 $contentItem='';
 $itemCounter=0;
-foreach ($products as $current_product) {
-	$itemCounter++;
-	$markerKey='ITEM';
-	if ($oddEvenMarker) {
-		if ($subparts['ITEM_'.$itemCounter]) {
-			$markerKey='ITEM_'.$itemCounter;
-		} else {
-			$markerKey='ITEM_1';
-			$itemCounter=1;
+if (is_array($products) && count($products)) {
+	foreach ($products as $current_product) {
+		$itemCounter++;
+		$markerKey='ITEM';
+		if ($oddEvenMarker) {
+			if ($subparts['ITEM_'.$itemCounter]) {
+				$markerKey='ITEM_'.$itemCounter;
+			} else {
+				$markerKey='ITEM_1';
+				$itemCounter=1;
+			}
 		}
-	}
-	$output=array();
-	$where='';
-	if ($current_product['categories_id']) {
-		// get all cats to generate multilevel fake url
-		$level=0;
-		$cats=mslib_fe::Crumbar($current_product['categories_id']);
-		$cats=array_reverse($cats);
+		$output=array();
 		$where='';
-		if (count($cats)>0) {
-			foreach ($cats as $cat) {
-				$where.="categories_id[".$level."]=".$cat['id']."&";
-				$level++;
+		if ($current_product['categories_id']) {
+			// get all cats to generate multilevel fake url
+			$level=0;
+			$cats=mslib_fe::Crumbar($current_product['categories_id']);
+			$cats=array_reverse($cats);
+			$where='';
+			if (count($cats)>0) {
+				foreach ($cats as $cat) {
+					$where.="categories_id[".$level."]=".$cat['id']."&";
+					$level++;
+				}
+				$where=substr($where, 0, (strlen($where)-1));
+				$where.='&';
 			}
-			$where=substr($where, 0, (strlen($where)-1));
-			$where.='&';
+			// get all cats to generate multilevel fake url eof
 		}
-		// get all cats to generate multilevel fake url eof
-	}
-	$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-	$output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
+		$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+		$output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 
-	$formats=array();
-	$formats[]='100';
-	$formats[]='200';
-	$formats[]='300';
-	foreach ($formats as $format) {
-		if ($current_product['products_image']) {
-			$key='image_'.$format;
-			if ($this->imageWidth==$format) {
-				$key='image';
+		$formats=array();
+		$formats[]='100';
+		$formats[]='200';
+		$formats[]='300';
+		foreach ($formats as $format) {
+			if ($current_product['products_image']) {
+				$key='image_'.$format;
+				if ($this->imageWidth==$format) {
+					$key='image';
+				}
+				$imagePath=mslib_befe::getImagePath($current_product['products_image'], 'products', $format);
+				$output[$key]='<img src="'.$imagePath.'" alt="'.htmlspecialchars($current_product['products_name']).'" />';
+			} else {
+				$output[$key]='<div class="no_image"></div>';
 			}
-			$imagePath=mslib_befe::getImagePath($current_product['products_image'], 'products', $format);
-			$output[$key]='<img src="'.$imagePath.'" alt="'.htmlspecialchars($current_product['products_name']).'" />';
-		} else {
-			$output[$key]='<div class="no_image"></div>';
 		}
-	}
-	$final_price=mslib_fe::final_products_price($current_product);
-	if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
-		$old_price=$current_product['products_price']*(1+$current_product['tax_rate']);
-	} else {
-		$old_price=$current_product['products_price'];
-	}
-	if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
-		$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
-	}
-	if ($current_product['products_price']<>$current_product['final_price']) {
+		$final_price=mslib_fe::final_products_price($current_product);
 		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
 			$old_price=$current_product['products_price']*(1+$current_product['tax_rate']);
 		} else {
 			$old_price=$current_product['products_price'];
 		}
-		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
-	} else {
-		$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
-	}
-	/*$current_product['products_price_including_vat']=$current_product['products_price'];
-	$current_product['final_price_including_vat']=$current_product['final_price'];
-	if ($current_product['tax_rate']) {
-		if ($current_product['products_price']) {
-			$current_product['products_price_including_vat']=mslib_fe::final_products_price($current_product,1,1,0,'products_price');
-		}
-		if ($current_product['final_price']) {
-			$current_product['final_price_including_vat']=mslib_fe::final_products_price($current_product,1,1,0,'final_price');
-		}
-	}
-	if ($this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
-		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+		if ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
 			$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
-		} else {
-			$output['products_price'].='<div class="price_including_vat">'.$this->pi_getLL('including_vat').' '.mslib_fe::amount2Cents($current_product['final_price_including_vat']).'</div>';
 		}
-	}
-	if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-		// OVERWRITE INCLUDING VAT PRICES SO THEY ARE PRINTED CORRECTLY
-		$current_product['products_price']=$current_product['products_price_including_vat'];
-		$current_product['final_price']=$current_product['final_price_including_vat'];
-	}
-	if (round($current_product['products_price'],2)<>round($current_product['final_price'],2)) {
-		$current_product['old_price']=$current_product['products_price'];
-	}
-	if (round($current_product['old_price'],2) > 0 && round($current_product['old_price'],2)<>round($current_product['final_price'],2)) {
-		$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($current_product['old_price']).'</div><div class="specials_price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
-	} else {
-		$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
-	}*/
-	if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
-		$output['admin_icons']='<div class="admin_menu">
+		if ($current_product['products_price']<>$current_product['final_price']) {
+			if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($current_product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {
+				$old_price=$current_product['products_price']*(1+$current_product['tax_rate']);
+			} else {
+				$old_price=$current_product['products_price'];
+			}
+			$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		} else {
+			$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		}
+		/*$current_product['products_price_including_vat']=$current_product['products_price'];
+		$current_product['final_price_including_vat']=$current_product['final_price'];
+		if ($current_product['tax_rate']) {
+			if ($current_product['products_price']) {
+				$current_product['products_price_including_vat']=mslib_fe::final_products_price($current_product,1,1,0,'products_price');
+			}
+			if ($current_product['final_price']) {
+				$current_product['final_price_including_vat']=mslib_fe::final_products_price($current_product,1,1,0,'final_price');
+			}
+		}
+		if ($this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$output['products_price'].='<div class="price_excluding_vat">'.$this->pi_getLL('excluding_vat').' '.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
+			} else {
+				$output['products_price'].='<div class="price_including_vat">'.$this->pi_getLL('including_vat').' '.mslib_fe::amount2Cents($current_product['final_price_including_vat']).'</div>';
+			}
+		}
+		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			// OVERWRITE INCLUDING VAT PRICES SO THEY ARE PRINTED CORRECTLY
+			$current_product['products_price']=$current_product['products_price_including_vat'];
+			$current_product['final_price']=$current_product['final_price_including_vat'];
+		}
+		if (round($current_product['products_price'],2)<>round($current_product['final_price'],2)) {
+			$current_product['old_price']=$current_product['products_price'];
+		}
+		if (round($current_product['old_price'],2) > 0 && round($current_product['old_price'],2)<>round($current_product['final_price'],2)) {
+			$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($current_product['old_price']).'</div><div class="specials_price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
+		} else {
+			$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($current_product['final_price']).'</div>';
+		}*/
+		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
+			$output['admin_icons']='<div class="admin_menu">
 		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=edit_product',1).'" class="admin_menu_edit"></a>
 		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=delete_product',1).'" class="admin_menu_remove" title="Remove"></a>
 		</div>';
-	}
-	$markerArray=array();
-	$markerArray['ADMIN_ICONS']=$output['admin_icons'];
-	$markerArray['PRODUCTS_ID']=$current_product['products_id'];
-	$markerArray['ITEM_CLASS']='';
-
-	if (($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) and !$current_product['products_status'] and !$this->ms['MODULES']['FLAT_DATABASE']) {
-		$markerArray['ITEM_CLASS']='disabled_product';
-	}
-	$markerArray['PRODUCTS_NAME']=$current_product['products_name'];
-	$markerArray['PRODUCTS_MODEL']=$current_product['products_model'];
-	$markerArray['PRODUCTS_DESCRIPTION']=$current_product['products_description'];
-	$markerArray['PRODUCTS_SHORTDESCRIPTION']=$current_product['products_shortdescription'];
-	$markerArray['PRODUCTS_DETAIL_PAGE_LINK']=$output['link'];
-	$markerArray['CATEGORIES_NAME']=$current_product['categories_name'];
-	$markerArray['CATEGORIES_NAME_PAGE_LINK']=$output['catlink'];
-	$markerArray['PRODUCTS_IMAGE']=$output['image'];
-	$markerArray['PRODUCTS_IMAGE_200']=$output['image_200'];
-	$markerArray['PRODUCTS_IMAGE_300']=$output['image_300'];
-	$markerArray['PRODUCTS_PRICE']=$output['products_price'];
-	$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
-	$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
-	$markerArray['PRODUCTS_URL']=$current_product['products_url'];
-	$markerArray['ORDER_UNIT_NAME']=$current_product['order_unit_name'];
-	$markerArray['OLD_PRICE']=mslib_fe::amount2Cents($current_product['old_price']);
-	$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
-	$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'],2,',','.');
-	$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'],2,',','.');
-	// STOCK INDICATOR
-	$product_qty=$current_product['products_quantity'];
-	if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
-		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
-			case 'yes_with_image':
-				if ($product_qty) {
-					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
-				} else {
-					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
-				}
-				break;
-			case 'yes_without_image':
-				if ($product_qty) {
-					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_yes').'</span></div>';
-				} else {
-					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_no').'</span></div>';
-				}
-				break;
 		}
-	}
-	$markerArray['PRODUCTS_STOCK']=$product_qty;
-	// STOCK INDICATOR EOF
+		$markerArray=array();
+		$markerArray['ADMIN_ICONS']=$output['admin_icons'];
+		$markerArray['PRODUCTS_ID']=$current_product['products_id'];
+		$markerArray['ITEM_CLASS']='';
 
-	if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
-		$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=$output['link'];
-		$button_submit='<a href="'.$link.'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
-	} else {
-		$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$current_product['products_id']);
-		$button_submit='<input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/>';
-	}
-	$qty=1;
-	if ($current_product['minimum_quantity']>0) {
-		$qty=round($current_product['minimum_quantity'], 2);
-	}
-	if ($current_product['products_multiplication']>0) {
-		$qty=round($current_product['products_multiplication'], 2);
-	}
-	$markerArray['PRODUCTS_ADD_TO_CART_BUTTON']='
+		if (($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) and !$current_product['products_status'] and !$this->ms['MODULES']['FLAT_DATABASE']) {
+			$markerArray['ITEM_CLASS']='disabled_product';
+		}
+		$markerArray['PRODUCTS_NAME']=$current_product['products_name'];
+		$markerArray['PRODUCTS_MODEL']=$current_product['products_model'];
+		$markerArray['PRODUCTS_DESCRIPTION']=$current_product['products_description'];
+		$markerArray['PRODUCTS_SHORTDESCRIPTION']=$current_product['products_shortdescription'];
+		$markerArray['PRODUCTS_DETAIL_PAGE_LINK']=$output['link'];
+		$markerArray['CATEGORIES_NAME']=$current_product['categories_name'];
+		$markerArray['CATEGORIES_NAME_PAGE_LINK']=$output['catlink'];
+		$markerArray['PRODUCTS_IMAGE']=$output['image'];
+		$markerArray['PRODUCTS_IMAGE_200']=$output['image_200'];
+		$markerArray['PRODUCTS_IMAGE_300']=$output['image_300'];
+		$markerArray['PRODUCTS_PRICE']=$output['products_price'];
+		$markerArray['PRODUCTS_SKU']=$current_product['sku_code'];
+		$markerArray['PRODUCTS_EAN']=$current_product['ean_code'];
+		$markerArray['PRODUCTS_URL']=$current_product['products_url'];
+		$markerArray['ORDER_UNIT_NAME']=$current_product['order_unit_name'];
+		$markerArray['OLD_PRICE']=mslib_fe::amount2Cents($current_product['old_price']);
+		$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
+		$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'],2,',','.');
+		$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'],2,',','.');
+		// STOCK INDICATOR
+		$product_qty=$current_product['products_quantity'];
+		if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
+			switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
+				case 'yes_with_image':
+					if ($product_qty) {
+						$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
+					} else {
+						$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
+					}
+					break;
+				case 'yes_without_image':
+					if ($product_qty) {
+						$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_yes').'</span></div>';
+					} else {
+						$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><span class="stock_value">'.$this->pi_getLL('admin_no').'</span></div>';
+					}
+					break;
+			}
+		}
+		$markerArray['PRODUCTS_STOCK']=$product_qty;
+		// STOCK INDICATOR EOF
+
+		if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
+			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=$output['link'];
+			$button_submit='<a href="'.$link.'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
+		} else {
+			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$current_product['products_id']);
+			$button_submit='<input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/>';
+		}
+		$qty=1;
+		if ($current_product['minimum_quantity']>0) {
+			$qty=round($current_product['minimum_quantity'], 2);
+		}
+		if ($current_product['products_multiplication']>0) {
+			$qty=round($current_product['products_multiplication'], 2);
+		}
+		$markerArray['PRODUCTS_ADD_TO_CART_BUTTON']='
 		<div class="msFrontAddToCartButton">
 			<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart&products_id='.$current_product['products_id']).'" method="post">
 				<input type="hidden" name="quantity" value="'.$qty.'" />
@@ -211,51 +212,51 @@ foreach ($products as $current_product) {
 			</form>
 		</div>
 	';
-	// ADD TO CART BUTTON WITH QUANTITY FIELD
-	$quantity_html='';
-	//if ($current_product['maximum_quantity']>0 || (is_numeric($current_product['products_multiplication']) && $current_product['products_multiplication']>0)) {
-	if ($current_product['maximum_quantity']>0) {
+		// ADD TO CART BUTTON WITH QUANTITY FIELD
+		$quantity_html='';
+		//if ($current_product['maximum_quantity']>0 || (is_numeric($current_product['products_multiplication']) && $current_product['products_multiplication']>0)) {
 		if ($current_product['maximum_quantity']>0) {
-			$ending_number=$current_product['maximum_quantity'];
-		}
-		if ($current_product['minimum_quantity']>0) {
-			$start_number=$current_product['minimum_quantity'];
-		} else {
-			if ($current_product['products_multiplication']) {
-				$start_number=$current_product['products_multiplication'];
+			if ($current_product['maximum_quantity']>0) {
+				$ending_number=$current_product['maximum_quantity'];
 			}
-		}
-		if (!$start_number) {
-			$start_number=1;
-		}
-		$quantity_html.='<select name="quantity" id="quantity">';
-		$count=0;
-		$steps=10;
-		if ($current_product['maximum_quantity'] && $current_product['products_multiplication']) {
-			$steps=floor($current_product['maximum_quantity']/$current_product['products_multiplication']);
-		} else {
-			if ($current_product['maximum_quantity'] && !$current_product['products_multiplication']) {
-				$steps=($ending_number-$start_number)+1;
-			}
-		}
-		$count=$start_number;
-		for ($i=0; $i<$steps; $i++) {
-			if ($current_product['products_multiplication']) {
-				$item=$current_product['products_multiplication'];
+			if ($current_product['minimum_quantity']>0) {
+				$start_number=$current_product['minimum_quantity'];
 			} else {
-				if ($i) {
-					$item=1;
+				if ($current_product['products_multiplication']) {
+					$start_number=$current_product['products_multiplication'];
 				}
 			}
-			$quantity_html.='<option value="'.$count.'"'.($qty==$count ? ' selected' : '').'>'.$count.'</option>';
-			$count=($count+$item);
+			if (!$start_number) {
+				$start_number=1;
+			}
+			$quantity_html.='<select name="quantity" id="quantity">';
+			$count=0;
+			$steps=10;
+			if ($current_product['maximum_quantity'] && $current_product['products_multiplication']) {
+				$steps=floor($current_product['maximum_quantity']/$current_product['products_multiplication']);
+			} else {
+				if ($current_product['maximum_quantity'] && !$current_product['products_multiplication']) {
+					$steps=($ending_number-$start_number)+1;
+				}
+			}
+			$count=$start_number;
+			for ($i=0; $i<$steps; $i++) {
+				if ($current_product['products_multiplication']) {
+					$item=$current_product['products_multiplication'];
+				} else {
+					if ($i) {
+						$item=1;
+					}
+				}
+				$quantity_html.='<option value="'.$count.'"'.($qty==$count ? ' selected' : '').'>'.$count.'</option>';
+				$count=($count+$item);
+			}
+			$quantity_html.='</select>';
+		} else {
+			$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" rel="'.$current_product['products_id'].'" data-step-size="'.($current_product['products_multiplication']!='0.00'?$current_product['products_multiplication']:'1').'" class="qtyInput" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
 		}
-		$quantity_html.='</select>';
-	} else {
-		$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" rel="'.$current_product['products_id'].'" data-step-size="'.($current_product['products_multiplication']!='0.00'?$current_product['products_multiplication']:'1').'" class="qtyInput" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
-	}
-	// show selectbox by products multiplication or show default input eof
-	$markerArray['PRODUCTS_QUANTITY_INPUT_AND_ADD_TO_CART_BUTTON']='
+		// show selectbox by products multiplication or show default input eof
+		$markerArray['PRODUCTS_QUANTITY_INPUT_AND_ADD_TO_CART_BUTTON']='
 		<div class="msFrontAddToCartButton">
 			<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart&products_id='.$current_product['products_id']).'" method="post">
 				<div class="quantity">
@@ -267,32 +268,33 @@ foreach ($products as $current_product) {
 			</form>
 		</div>
 	';
-	// ADD TO CART BUTTON WITH QUANTITY FIELD EOL
+		// ADD TO CART BUTTON WITH QUANTITY FIELD EOL
 
-	$plugins_item_extra_content=array();
-	// shipping cost popup
-	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
-		$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#shippingCostsModal" data-productid="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
-	}
-	// custom hook that can be controlled by third-party plugin
-	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'])) {
-		$params=array(
-			'markerArray'=>&$markerArray,
-			'product'=>&$current_product,
-			'output'=>&$output,
-			'products_compare'=>&$products_compare,
-			'plugins_item_extra_content'=>&$plugins_item_extra_content
-		);
-		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+		$plugins_item_extra_content=array();
+		// shipping cost popup
+		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
+			$plugins_item_extra_content[]='<div class="shipping_cost_popup_link_wrapper"><a href="#" class="show_shipping_cost_table" class="btn btn-primary" data-toggle="modal" data-target="#shippingCostsModal" data-productid="'.$current_product['products_id'].'"><span>'.$this->pi_getLL('shipping_costs').'</span></a></div>';
 		}
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'])) {
+			$params=array(
+				'markerArray'=>&$markerArray,
+				'product'=>&$current_product,
+				'output'=>&$output,
+				'products_compare'=>&$products_compare,
+				'plugins_item_extra_content'=>&$plugins_item_extra_content
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']='';
+		if (count($plugins_item_extra_content)) {
+			$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']=implode("\n", $plugins_item_extra_content);
+		}
+		// custom hook that can be controlled by third-party plugin eof
+		$contentItem.=$this->cObj->substituteMarkerArray($subparts[$markerKey], $markerArray, '###|###');
 	}
-	$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']='';
-	if (count($plugins_item_extra_content)) {
-		$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']=implode("\n", $plugins_item_extra_content);
-	}
-	// custom hook that can be controlled by third-party plugin eof
-	$contentItem.=$this->cObj->substituteMarkerArray($subparts[$markerKey], $markerArray, '###|###');
 }
 // fill the row marker with the expanded rows
 $subpartArray['###CURRENT_CATEGORIES_TOP_DESCRIPTION###']='';
