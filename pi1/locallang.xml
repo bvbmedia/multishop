@@ -2523,9 +2523,9 @@
 			<label index="stock">Lager</label>
 			<label index="store">Shop</label>
 			<label index="street">Straße</label>
-			<label index="street_address">Adresse</label>
+			<label index="street_address">Straße</label>
 			<label index="street_address_is_required">Adresse ist ein Pflichtfeld.</label>
-			<label index="street_address_number">Nummer</label>
+			<label index="street_address_number">Hausnummer</label>
 			<label index="street_number_is_required">Nummer ist ein Pflichtfeld.</label>
 			<label index="sub_total">Zwischensumme</label>
 			<label index="submit">bestätigen</label>
