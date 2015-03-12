@@ -831,7 +831,27 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						}
 					}
 					// custom hook that can be controlled by third-party plugin
-					// eof
+					// snippet to repair already existing data, for repairing partially
+					/*
+						$updateArray=array();
+						switch($item['gender']) {
+							case 'm':
+								$updateArray['gender']=0;
+								break;
+							case 'f':
+								$updateArray['gender']=1;
+								break;
+						}
+						$updateArray['first_name']=$item['first_name'];
+						$updateArray['middle_name']=$item['middle_name'];
+						$updateArray['last_name']=$item['last_name'];
+						$updateArray['name']=preg_replace('/\s+/', ' ', $updateArray['first_name'].' '.$updateArray['middle_name'].' '.$updateArray['last_name']);
+
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$item['uid'], $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						echo $query.'<br/>';
+						continue;
+					*/
 					if (!$item['email']) {
 						$item['email']=uniqid().'@UNKNOWN';
 					}
