@@ -92,7 +92,7 @@ class tx_mslib_order extends tslib_pibase {
 				}
 				$payment_tax_rate=($tax_rate['total_tax_rate']/100);
 				if ($shipping_tax_rate>0 or $payment_tax_rate>0) {
-					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$shipping_tax=round($row['shipping_method_costs']*$shipping_tax_rate, 2);
 						$payment_tax=round($row['payment_method_costs']*$payment_tax_rate, 2);
 					} else {
@@ -130,7 +130,7 @@ class tx_mslib_order extends tslib_pibase {
 					$qry_attr=$GLOBALS['TYPO3_DB']->sql_query($sql_attr);
 					$attributes_tax=0;
 					while ($row_attr=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attr)) {
-						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 							$attributes_tax+=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate), 2);
 						} else {
 							$attributes_tax+=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
@@ -140,7 +140,7 @@ class tx_mslib_order extends tslib_pibase {
 						$grand_total+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						// set the attributes tax data
 						$attributes_tax_data=array();
-						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 							$attributes_tax_data['country_tax']=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['country_tax_rate'], 2);
 							$attributes_tax_data['region_tax']=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*$product_tax['region_tax_rate'], 2);
 							if ($attributes_tax_data['country_tax'] && $attributes_tax_data['region_tax']) {
@@ -171,7 +171,7 @@ class tx_mslib_order extends tslib_pibase {
 					// I have fixed the b2b issue by updating all the products prices in the database to have max 2 decimals
 					// therefore I disabled below bugfix, cause thats a ducktape solution that can break b2c sites
 					//$final_price=round($final_price,2);
-					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$tax=round($final_price*$tax_rate, 2);
 					} else {
 						$tax=$final_price*$tax_rate;
@@ -884,7 +884,10 @@ class tx_mslib_order extends tslib_pibase {
 			if (count($product['attributes'])) {
 				foreach ($product['attributes'] as $tmpkey=>$options) {
 					$subprices.='<BR>';
-					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+					if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+						$tmp_tax=round(($options['options_values_price']*($product['products_tax']/100)), 2);
+						$attribute_price=+$options['options_values_price']+$tmp_tax;
+					} else if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						$attribute_price=round(($options['options_values_price']*($product['products_tax']/100)), 4)+$options['options_values_price'];
 					} else {
 						$attribute_price=$options['options_values_price'];
@@ -905,7 +908,10 @@ class tx_mslib_order extends tslib_pibase {
 			// ITEM_SKU
 			$item['ITEM_SKU']=$product_db['sku_code'];
 			// ITEM_TOTAL
-			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+			if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+				$tmp_tax=round(($product['final_price']*($product['products_tax']/100)), 2);
+				$final_price=($product['qty']*($product['final_price']+$tmp_tax));
+			} else if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$final_price=($product['qty']*$product['final_price']);
 				$final_price=round(($final_price*($product['products_tax']/100)), 4)+$final_price;
 			} else {
@@ -1041,7 +1047,7 @@ class tx_mslib_order extends tslib_pibase {
 		$markerArray=array();
 		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total')).':';
 //		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
-		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total']);
+		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total'], 0);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 		//GRAND_TOTAL_WRAPPER EOF
 		//DISCOUNT_WRAPPER

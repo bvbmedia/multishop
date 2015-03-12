@@ -398,9 +398,9 @@ class tx_multishop_pi1 extends tslib_pibase {
 						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 					break;
 					case 'checkout':
-						/*if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 							$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
-						}*/
+						}
 						$this->ms['page']='checkout';
 						if (strstr($this->ms['MODULES']['CHECKOUT_TYPE'],"..")) {
 							die('error in CHECKOUT_TYPE value');
