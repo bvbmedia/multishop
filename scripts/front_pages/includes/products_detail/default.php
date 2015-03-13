@@ -301,6 +301,8 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_KEYWORDS###']=$product['products_meta_keywords'];
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
 	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
+	$markerArray['###ORDER_UNIT_NAME###']=$product['order_unit_name'];
+
 	$js_detail_page_triggers[]='
 		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00'?$product['products_multiplication']:($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1')).'\');
 		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'\');
