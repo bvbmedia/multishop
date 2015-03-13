@@ -1600,6 +1600,7 @@ class mslib_fe {
 				'products_id'=>&$products_id,
 				'readonly'=>&$readonly,
 				'hide_prices'=>&$hide_prices,
+				'sessionData'=>&$sessionData,
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNamesPreProc'] as $funcRef) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
