@@ -245,16 +245,26 @@ class tx_mslib_cart extends tslib_pibase {
 					switch ($this->cart['discount_type']) {
 						case 'percentage':
 							$discount_percentage=$this->cart['discount'];
-							$discount_price=round((($this->cart['summarize']['sub_total_including_vat'])/100*$discount_percentage), 2);
-							$subtotal=(($this->cart['summarize']['sub_total_including_vat'])/100*(100-$discount_percentage));
+							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+								$discount_price=round((($this->cart['summarize']['sub_total'])/100*$discount_percentage), 2);
+								$subtotal=(($this->cart['summarize']['sub_total'])/100*(100-$discount_percentage));
+							} else {
+								$discount_price=round((($this->cart['summarize']['sub_total_including_vat'])/100*$discount_percentage), 2);
+								$subtotal=(($this->cart['summarize']['sub_total_including_vat'])/100*(100-$discount_percentage));
+							}
 							$subtotal_tax=(($this->cart['summarize']['sub_total_including_vat']-$this->cart['summarize']['sub_total'])/100*(100-$discount_percentage));
 							$this->cart['discount_amount']=$discount_price;
 							$this->cart['discount_percentage']=$discount_percentage;
 							break;
 						case 'price':
 							$discount_price=$this->cart['discount'];
-							$discount_percentage=($this->cart['discount']/($this->cart['summarize']['sub_total_including_vat'])*100);
-							$subtotal=(($this->cart['summarize']['sub_total_including_vat'])/100*(100-$discount_percentage));
+							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+								$discount_percentage=($this->cart['discount']/($this->cart['summarize']['sub_total'])*100);
+								$subtotal=(($this->cart['summarize']['sub_total'])/100*(100-$discount_percentage));
+							} else {
+								$discount_percentage=($this->cart['discount']/($this->cart['summarize']['sub_total_including_vat'])*100);
+								$subtotal=(($this->cart['summarize']['sub_total_including_vat'])/100*(100-$discount_percentage));
+							}
 							$subtotal_tax=(($this->cart['summarize']['sub_total_including_vat']-$this->cart['summarize']['sub_total'])/100*(100-$discount_percentage));
 							$this->cart['discount_amount']=$discount_price;
 							$this->cart['discount_percentage']=$discount_percentage;
@@ -271,19 +281,21 @@ class tx_mslib_cart extends tslib_pibase {
 					}
 				}
 				//echo "<pre>";
+				//echo $subtotal."<br/>".$subtotal_tax;
 				//print_r($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPostCalc']);
 				//print_r($product);
 				//die();
 				// custom hook that can be controlled by third-party plugin eof
 				// calculate totals
-				$this->cart['summarize']['grand_total_excluding_vat']=($this->cart['summarize']['sub_total']+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs']-$this->cart['discount_amount']);
-				$this->cart['summarize']['grand_total']=($this->cart['summarize']['sub_total_including_vat']+$this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']-$this->cart['discount_amount']);
-//				$this->cart['summarize']['grand_total_vat']=($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_excluding_vat']);
-				$this->cart['summarize']['grand_total_vat']=($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_excluding_vat']);
+				$this->cart['summarize']['grand_total_excluding_vat']=$subtotal+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs'];
+				$this->cart['summarize']['grand_total']=($subtotal+$subtotal_tax)+($this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']);
+				//$this->cart['summarize']['grand_total_vat']=($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_excluding_vat']);
+				$this->cart['summarize']['grand_total_vat']=$subtotal_tax+$payment_tax+$shipping_tax;
 				// b2b mode 1 cent bugfix: 2013-05-09 cbc
 				// I have fixed the b2b issue by updating all the products prices in the database to have max 2 decimals
 				// therefore I disabled below bugfix, cause thats a ducktape solution that can break b2c sites
 				//$this->cart['summarize']['grand_total']=round($this->cart['summarize']['grand_total_excluding_vat'],2) + round($this->cart['summarize']['grand_total_vat'],2);
+				//print_r($this->cart);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin
@@ -1911,17 +1923,30 @@ class tx_mslib_cart extends tslib_pibase {
 				if ($cart['discount_type']) {
 					switch ($cart['discount_type']) {
 						case 'percentage':
-							$discount_amount=($orders_tax['sub_total']/100*$cart['discount']);
+							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+								$discount_amount=($orders_tax['sub_total_excluding_vat']/100*$cart['discount']);
+							} else {
+								$discount_amount=($orders_tax['sub_total']/100*$cart['discount']);
+							}
 							$discount_percentage=$cart['discount'];
 							break;
 						case 'price':
 							$discount_amount=$cart['discount'];
-							$discount_percentage=($discount_amount/$orders_tax['sub_total']*100);
+							if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+								$discount_percentage=($discount_amount/$orders_tax['sub_total_excluding_vat']*100);
+							} else {
+								$discount_percentage=($discount_amount/$orders_tax['sub_total']*100);
+							}
 							break;
 					}
 					if ($discount_amount) {
-						$grand_total['sub_total']=($grand_total['sub_total']-$discount_amount);
-						$orders_tax['total_orders_tax_including_discount']=($orders_tax['total_orders_tax_including_discount']/100*(100-$discount_percentage));
+						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+							$grand_total['sub_total_excluding_vat']=($grand_total['sub_total_excluding_vat']-$discount_amount);
+							$orders_tax['total_orders_tax_including_discount']=($orders_tax['total_orders_tax_including_discount']/100*(100-$discount_percentage));
+						} else {
+							$grand_total['sub_total']=($grand_total['sub_total']-$discount_amount);
+							$orders_tax['total_orders_tax_including_discount']=($orders_tax['total_orders_tax_including_discount']/100*(100-$discount_percentage));
+						}
 					}
 					$updateArray['discount']=$discount_amount;
 				}
