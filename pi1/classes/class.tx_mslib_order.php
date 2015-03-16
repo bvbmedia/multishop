@@ -42,9 +42,11 @@ class tx_mslib_order extends tslib_pibase {
 			$sql="select orders_id, orders_tax_data, payment_method_costs, shipping_method_costs, discount, shipping_method, payment_method, billing_region, billing_country, billing_vat_id from tx_multishop_orders where orders_id='".$orders_id."' order by orders_id asc";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				$total_tax=0;
+				$sub_total_tax=0;
 				$sub_total=0;
 				$sub_total_excluding_vat=0;
+				$shipping_tax=0;
+				$payment_tax=0;
 				$grand_total=0;
 				$order_tax_data['shipping_tax']='0';
 				$order_tax_data['shipping_country_tax']='0';
@@ -103,10 +105,10 @@ class tx_mslib_order extends tslib_pibase {
 					$order_tax_data['payment_total_tax_rate']=(string)number_format($payment_tax_rate, 2, '.', ',');
 					$order_tax_data['shipping_tax']=(string)$shipping_tax;
 					$order_tax_data['payment_tax']=(string)$payment_tax;
-					$total_tax+=$shipping_tax+$payment_tax;
-					$grand_total+=(($row['shipping_method_costs']+$row['payment_method_costs'])+($shipping_tax+$payment_tax));
+					//$total_tax+=$shipping_tax+$payment_tax;
+					//$grand_total+=(($row['shipping_method_costs']+$row['payment_method_costs'])+($shipping_tax+$payment_tax));
 				} else {
-					$grand_total+=($row['shipping_method_costs']+$row['payment_method_costs']);
+					//$grand_total+=($row['shipping_method_costs']+$row['payment_method_costs']);
 				}
 				$tax_separation[($shipping_tax_rate*100)]['shipping_tax']+=$shipping_tax;
 				$tax_separation[($payment_tax_rate*100)]['payment_tax']+=$payment_tax;
@@ -129,13 +131,17 @@ class tx_mslib_order extends tslib_pibase {
 					$sql_attr="select * from tx_multishop_orders_products_attributes where orders_products_id = ".$row_prod['orders_products_id']." and orders_id = ".$row_prod['orders_id'];
 					$qry_attr=$GLOBALS['TYPO3_DB']->sql_query($sql_attr);
 					$attributes_tax=0;
+					$tmp_attributes_price=0;
+					$tmp_attributes_tax=0;
 					while ($row_attr=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attr)) {
 						if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-							$attributes_tax+=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate), 2);
+							$tmp_attributes_tax=round(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate), 2);
 						} else {
-							$attributes_tax+=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
+							$tmp_attributes_tax=mslib_fe::taxDecimalCrop(($row_attr['price_prefix'].$row_attr['options_values_price'])*($tax_rate));
 						}
-						$sub_total+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
+						$attributes_tax+=$tmp_attributes_tax;
+						$tmp_attributes_price+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
+						$sub_total+=($row_attr['price_prefix'].$row_attr['options_values_price'])*$row_prod['qty'];
 						$sub_total_excluding_vat+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						$grand_total+=$row_attr['price_prefix'].$row_attr['options_values_price']*$row_prod['qty'];
 						// set the attributes tax data
@@ -161,12 +167,13 @@ class tx_mslib_order extends tslib_pibase {
 						$sql_update="update tx_multishop_orders_products_attributes set attributes_tax_data = '".$serial_product_attributes_tax."' where orders_products_attributes_id='".$row_attr['orders_products_attributes_id']."' and orders_products_id = ".$row_attr['orders_products_id']." and orders_id = ".$row_attr['orders_id'];
 						$GLOBALS['TYPO3_DB']->sql_query($sql_update);
 					}
-					$total_tax+=$attributes_tax*$row_prod['qty'];
+					$sub_total_tax+=$attributes_tax*$row_prod['qty'];
 					$sub_total+=$attributes_tax*$row_prod['qty']; // subtotal including vat
 					$grand_total+=$attributes_tax*$row_prod['qty'];
 					$product_tax_data['total_attributes_tax']=(string)$attributes_tax;
 					$product_tax_data['total_tax_rate']=(string)number_format($tax_rate, 2, '.', ',');
 					$final_price=$row_prod['final_price'];
+					//print_r($row_prod);
 					// b2b mode 1 cent bugfix: 2013-05-09 cbc in grand total. this came from the products final price that must be round first
 					// I have fixed the b2b issue by updating all the products prices in the database to have max 2 decimals
 					// therefore I disabled below bugfix, cause thats a ducktape solution that can break b2c sites
@@ -176,8 +183,8 @@ class tx_mslib_order extends tslib_pibase {
 					} else {
 						$tax=$final_price*$tax_rate;
 					}
-					$product_tax_data['total_tax']=(string)$tax;
-					$total_tax+=$tax*$row_prod['qty'];
+					$product_tax_data['total_tax']=(string)$tax+$attributes_tax;
+					$sub_total_tax+=$tax*$row_prod['qty'];
 					$sub_total+=($final_price+$tax)*$row_prod['qty'];
 					$sub_total_excluding_vat+=($final_price)*$row_prod['qty'];
 					$grand_total+=($final_price+$tax)*$row_prod['qty'];
@@ -185,26 +192,46 @@ class tx_mslib_order extends tslib_pibase {
 					$sql_update="update tx_multishop_orders_products set products_tax_data = '".$serial_prod."' where orders_products_id = ".$row_prod['orders_products_id']." and orders_id = ".$row['orders_id'];
 					$GLOBALS['TYPO3_DB']->sql_query($sql_update);
 					// separation of tax
-					$tax_separation[($row_prod['products_tax']/100)*100]['products_total_tax']+=$tax*$row_prod['qty'];
-					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total_excluding_vat']+=($final_price)*$row_prod['qty'];
-					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total']+=($final_price+$tax)*$row_prod['qty'];
+					$tax_separation[($row_prod['products_tax']/100)*100]['products_total_tax']+=($tax+$attributes_tax)*$row_prod['qty'];
+					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total_excluding_vat']+=($final_price+$tmp_attributes_price)*$row_prod['qty'];
+					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total']+=($final_price+$tmp_attributes_price)+($tax+$attributes_tax)*$row_prod['qty'];
 				}
-				$order_tax_data['total_orders_tax']=(string)$total_tax;
+				if ($row['discount']>0) {
+					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+						$discount_price=round($row['discount'], 2);
+						//$sub_total_excluding_vat-=$discount_price;
+						$discount_percentage=($discount_price/($sub_total_excluding_vat)*100);
+						//$sub_total_excluding_vat=(($sub_total_excluding_vat)/100*(100-$discount_percentage));
+					} else {
+						$discount_price=$row['discount'];
+						//$sub_total-=$discount_price;
+						$discount_percentage=($discount_price/($sub_total)*100);
+						//$sub_total=(($sub_total)/100*(100-$discount_percentage));
+					}
+					$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
+					if (count($tax_separation)>1) {
+						$tax_separation=array();
+					}
+				}
+				$order_tax_data['total_orders_tax']=(string)$sub_total_tax+$shipping_tax+$payment_tax;
 				$order_tax_data['total_orders_tax_including_discount']=$order_tax_data['total_orders_tax'];
 				$order_tax_data['sub_total']=(string)$sub_total;
 				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;
-				$order_tax_data['grand_total']=(string)$grand_total;
+				$order_tax_data['grand_total']=(string)(($sub_total_excluding_vat-$discount_price)+$sub_total_tax)+($row['shipping_method_costs']+$shipping_tax)+($row['payment_method_costs']+$payment_tax);
 				$order_tax_data['tax_separation']=$tax_separation;
-				if ($row['discount']>0 and $order_tax_data['sub_total']>0) {
-					$row['discount']=round($row['discount'], 2);
-					$discount_percentage=($row['discount']/$order_tax_data['sub_total']*100);
-//					$order_tax_data['sub_total']=($order_tax_data['sub_total']-$row['discount']);
-					$order_tax_data['total_orders_tax_including_discount']=($order_tax_data['total_orders_tax_including_discount']/100*(100-$discount_percentage));
-					$order_tax_data['grand_total']=($order_tax_data['grand_total']-$row['discount']);
-				}
+				//print_r($order_tax_data);
 				$serial_orders=serialize($order_tax_data);
-				$sql_update="update tx_multishop_orders set grand_total='".round($order_tax_data['grand_total'], 2)."', orders_tax_data = '".$serial_orders."' where orders_id = ".$row['orders_id'];
-				$GLOBALS['TYPO3_DB']->sql_query($sql_update);
+				// update orders
+				$updateArray=array();
+				$updateArray['grand_total']=round($order_tax_data['grand_total'], 2);
+				$updateArray['orders_tax_data']=$serial_orders;
+				if ($row['discount']>0) {
+					$updateArray['discount']=$discount_price;
+				}
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$row['orders_id'].'\'', $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				//$sql_update="update tx_multishop_orders set grand_total='".round($order_tax_data['grand_total'], 2)."', orders_tax_data = '".$serial_orders."' where orders_id = ".$row['orders_id'];
+				//$GLOBALS['TYPO3_DB']->sql_query($sql_update);
 			}
 		}
 	}
