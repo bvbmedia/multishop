@@ -133,17 +133,22 @@ foreach ($rel_products as $rel_rs) {
 	}
 	$markerArray['PRODUCTS_STOCK']=$product_qty;
 	// STOCK INDICATOR EOF
-	if ($rel_rs['products_image']) {
-		$image='<img src="'.mslib_befe::getImagePath($rel_rs['products_image'], 'products', '50').'" alt="'.htmlspecialchars($rel_rs['products_name']).'" />';
-	} else {
-		$image='<div class="no_image_50"></div>';
-	}
 	$final_price=mslib_fe::final_products_price($rel_rs);
 	$rel_rs['hidden_fields'].='<input type="hidden" name="relation_products_id['.$i.']" value="'.$rel_rs['products_id'].'" />';
 	$markerArray=array();
 	$markerArray['ITEM_CLASS']=$tr_type;
 	$markerArray['PRODUCTS_LINK']=$link;
-	$markerArray['ITEM_PRODUCTS_IMAGE']=$image;
+	if ($rel_rs['products_image']) {
+		$markerArray['ITEM_PRODUCTS_IMAGE']='<img src="'.mslib_befe::getImagePath($rel_rs['products_image'], 'products', '50').'" alt="'.htmlspecialchars($rel_rs['products_name']).'" />';
+		$markerArray['ITEM_PRODUCTS_IMAGE_100']='<img src="'.mslib_befe::getImagePath($rel_rs['products_image'], 'products', '100').'" alt="'.htmlspecialchars($rel_rs['products_name']).'" />';
+		$markerArray['ITEM_PRODUCTS_IMAGE_200']='<img src="'.mslib_befe::getImagePath($rel_rs['products_image'], 'products', '200').'" alt="'.htmlspecialchars($rel_rs['products_name']).'" />';
+		$markerArray['ITEM_PRODUCTS_IMAGE_300']='<img src="'.mslib_befe::getImagePath($rel_rs['products_image'], 'products', '300').'" alt="'.htmlspecialchars($rel_rs['products_name']).'" />';
+	} else {
+		$markerArray['ITEM_PRODUCTS_IMAGE']='<div class="no_image_50"></div>';
+		$markerArray['ITEM_PRODUCTS_IMAGE_100']='<div class="no_image_50"></div>';
+		$markerArray['ITEM_PRODUCTS_IMAGE_200']='<div class="no_image_50"></div>';
+		$markerArray['ITEM_PRODUCTS_IMAGE_300']='<div class="no_image_50"></div>';
+	}
 	$markerArray['ITEM_PRODUCTS_NAME']=$rel_rs['products_name'].($rel_rs['products_model'] ? ' <br />'.$rel_rs['products_model'] : '');
 	$markerArray['ITEM_PRODUCTS_PRICE']=mslib_fe::amount2Cents($final_price);
 	$markerArray['ITEM_PRODUCTS_QUANTITY']='<input type="text" name="relation_cart_quantity['.$i.']" value="1" maxlength="4" size="2" />';

@@ -385,6 +385,12 @@ class tx_multishop_pi1 extends tslib_pibase {
 				}
 				switch ($this->contentMisc) {
 					case 'shopping_cart':
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['shopping_cartPreProc'])) {
+							$params = array ();
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['shopping_cartPreProc'] as $funcRef) {
+								t3lib_div::callUserFunction($funcRef, $params, $this);
+							}
+						}
 						if (strstr($this->ms['MODULES']['SHOPPING_CART_TYPE'],"..")) {
 							die('error in SHOPPING_CART_TYPE value');
 						} else {
@@ -398,6 +404,12 @@ class tx_multishop_pi1 extends tslib_pibase {
 						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 					break;
 					case 'checkout':
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'])) {
+							$params = array ();
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'] as $funcRef) {
+								t3lib_div::callUserFunction($funcRef, $params, $this);
+							}
+						}
 						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 							$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 						}
@@ -425,6 +437,12 @@ class tx_multishop_pi1 extends tslib_pibase {
 					break;
 					case 'order_history':
 						if (mslib_fe::loggedin()) {
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['order_historyPreProc'])) {
+								$params = array ();
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['order_historyPreProc'] as $funcRef) {
+									t3lib_div::callUserFunction($funcRef, $params, $this);
+								}
+							}
 							if (strstr($this->ms['MODULES']['ORDER_HISTORY_TYPE'],"..")) {
 								die('error in ORDER_HISTORY_TYPE value');
 							} else {

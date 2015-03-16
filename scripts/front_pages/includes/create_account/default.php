@@ -145,9 +145,9 @@ if (mslib_fe::loggedin()) {
 							$array2[]=$customer_id;
 							$link=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=confirm_create_account&tx_multishop_pi1[hash]='.$newCustomer['tx_multishop_code']);
 							$array1[]='###LINK###';
-							$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
+							$array2[]='<a href="'.$link.'" rel="noreferrer">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
 							$array1[]='###CONFIRMATION_LINK###';
-							$array2[]='<a href="'.$link.'">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
+							$array2[]='<a href="'.$link.'" rel="noreferrer">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
 							if ($page[0]['content']) {
 								$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
 							}

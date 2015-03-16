@@ -61,6 +61,16 @@ switch ($this->ms['page']) {
 		require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/ultrasearch.php');
 		break;
 	case 'checkout':
+		// more items could be added through hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'])) {
+			$params = array ();
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+			$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
+		}
 		if (strstr($this->ms['MODULES']['CHECKOUT_TYPE'], "..")) {
 			die('error in CHECKOUT_TYPE value');
 		} else {
