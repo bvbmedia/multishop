@@ -4533,7 +4533,7 @@
 			<label index="ordered_by">Besteld door</label>
 			<label index="ordered_product_not_instock">Dit product is momenteel niet beschikbaar</label>
 			<label index="ordered_product_qty_exceed_maximum_stock">Let op. Het bestelde aantal van dit product is niet voorradig. Het maximale aantal dat u kunt bestellen is: %d.</label>
-			<label index="ordered_product_stock_not_available_waiting_for_restock">Let op. Het aantal producten in winkelwagen is niet voorradig. U kunt deze wel reserveren.</label>
+			<label index="ordered_product_stock_not_available_waiting_for_restock">Let op. Het aantal producten in winkelwagen is niet voorradig. U kunt deze wel bestellen.</label>
 			<label index="orders">Bestellingen</label>
 			<label index="orders_by_date">Bestellingen op Datum</label>
 			<label index="orders_id">Bestelnr</label>
