@@ -5928,6 +5928,7 @@ class mslib_fe {
 			// orders export wizard
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['label']=$this->pi_getLL('admin_export_orders');
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_orders');
+			/*
 			if ($this->ms['MODULES']['ADMIN_ORDER_PROPOSAL_MODULE']) {
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['label']=$this->pi_getLL('admin_proposals');
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['description']=$this->pi_getLL('admin_proposals_description').'.';
@@ -5939,6 +5940,7 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_overview']['description']=$this->pi_getLL('admin_proposals_overview_description');
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_overview']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[is_proposal]=1');
 			}
+			*/
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['label']=$this->pi_getLL('admin_orders_status');
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
