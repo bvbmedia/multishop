@@ -1589,7 +1589,7 @@ class mslib_fe {
 		}
 		return $output;
 	}
-	public function showAttributes($products_id, $add_tax_rate='', $sessionData=array(), $readonly=0, $hide_prices=0, $returnAsArray=0) {
+	public function showAttributes($products_id, $add_tax_rate='', $sessionData=array(), $readonly=0, $hide_prices=0, $returnAsArray=0, $skipHideFromCartItems=0) {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
@@ -1630,6 +1630,10 @@ class mslib_fe {
 		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$query_array['group_by'][]='popt.products_options_id';
 		$query_array['order_by'][]='patrib.sort_order_option_name asc, patrib.sort_order_option_value asc';
+		if ($skipHideFromCartItems) {
+			$query_array['where'][]='popt.hide_in_cart=0';
+		}
+
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNamesQuery'])) {
 			$params=array(
