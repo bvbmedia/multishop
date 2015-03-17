@@ -2705,6 +2705,15 @@ class mslib_fe {
 			$tax_ruleset=array();
 			$current_tstamp=time();
 			while ($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+				//hook to let other plugins further manipulate the query
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArray'])) {
+					$params=array(
+						'product'=>&$product,
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArray'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 				} else {
 					// check every cat status
