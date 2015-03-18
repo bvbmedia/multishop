@@ -1627,7 +1627,6 @@ class mslib_fe {
 		$query_array['where'][]='popt.language_id = \''.$this->sys_language_uid.'\'';
 		//todo: hide_in_cart line should be enabled, but im not sure if it will cause bugs in other plugins so temporary disabled it
 		//$query_array['where'][]='(popt.hide_in_cart=0 or popt.hide_in_cart is null)';
-		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$query_array['group_by'][]='popt.products_options_id';
 		$query_array['order_by'][]='patrib.sort_order_option_name asc, patrib.sort_order_option_value asc';
 		if ($skipHiddenInCartAttributes) {
@@ -1645,6 +1644,7 @@ class mslib_fe {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
 			(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
 			(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
