@@ -90,7 +90,7 @@ if (count($cart['last_visited'])) {
 	}
 	if ($pageset['total_rows']>0) {
 		$link=mslib_fe::typolink('', 'clear_list=1&'.mslib_fe::tep_get_all_get_params(array('clear_list')));
-		$content.='<a href="'.$link.'" class="btnClearList">'.$this->pi_getLL('clear_list').'</a>';
+		$content.='<a href="'.$link.'" class="btn btn-default btnClearList"><span class="glyphicon glyphicon-remove"></span> '.$this->pi_getLL('clear_list').'</a>';
 	}
 }
 ?>
