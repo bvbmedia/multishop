@@ -415,6 +415,7 @@ if (!$product['products_id']) {
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'])) {
 		$params=array(
+			'template'=>$template,
 			'markerArray'=>&$markerArray,
 			'product'=>&$product,
 			'output'=>&$output,
