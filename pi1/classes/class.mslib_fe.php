@@ -8183,7 +8183,11 @@ class mslib_fe {
 				$tax_rate=$tax_data['local']['tax_rate'];
 				$total_tax_rate=$tax_rate;
 				if ($to_tax_include=='true') {
-					$tax=mslib_fe::taxDecimalCrop(($current_price*$total_tax_rate)/100, 2, false);
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$tax=mslib_fe::taxDecimalCrop(($current_price*$total_tax_rate)/100);
+					} else {
+						$tax=mslib_fe::taxDecimalCrop(($current_price*$total_tax_rate)/100, 2, false);
+					}
 					//$tmp_total_tax_rate 			= (($state_tax) / $current_price) * 100;
 					//$total_tax_rate 				= $tmp_total_tax_rate;
 					$data['price_including_tax']=$current_price+($tax);
@@ -8194,8 +8198,13 @@ class mslib_fe {
 					//reverse convert
 					// number_format is needed otherwise PHP limits the decimals to 12, but we need 14 to bypass cents problems
 					$price_excluding_tax=number_format(($current_price/(100+$total_tax_rate))*100, 14);
-					$tax=mslib_fe::taxDecimalCrop(($current_price-$price_excluding_tax), 2, false);
-					$data['price_excluding_tax']=$current_price-$tax;
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$tax=mslib_fe::taxDecimalCrop(($current_price-$price_excluding_tax));
+						$data['price_excluding_tax']=$price_excluding_tax;
+					} else {
+						$tax=mslib_fe::taxDecimalCrop(($current_price-$price_excluding_tax), 2, false);
+						$data['price_excluding_tax']=$current_price-$tax;
+					}
 					$data['tax']=$tax;
 					$data['tax_rate']=$tax_rate;
 					$data['total_tax_rate']=$total_tax_rate;
