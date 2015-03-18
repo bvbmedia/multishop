@@ -19,11 +19,26 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
 foreach ($products as $product) {
 	if ($product['products_price']<>$product['final_price']) {
+		$markerArray=array();
 		$output=array();
 		if ($product['products_image']) {
 			$output['image']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
+			$markerArray['ITEM_PRODUCTS_IMAGE']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
+			$markerArray['ITEM_PRODUCTS_IMAGE_100']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '100').'">';
+			$markerArray['ITEM_PRODUCTS_IMAGE_200']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '200').'">';
+			$markerArray['ITEM_PRODUCTS_IMAGE_300']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '300').'">';
+			$markerArray['PRODUCTS_IMAGE']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'">';
+			$markerArray['PRODUCTS_IMAGE_100']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '100').'">';
+			$markerArray['PRODUCTS_IMAGE_200']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '200').'">';
+			$markerArray['PRODUCTS_IMAGE_300']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '300').'">';
 		} else {
 			$output['image']='<div class="no_image"></div>';
+			$markerArray['ITEM_PRODUCTS_IMAGE_100']=$output['image'];
+			$markerArray['ITEM_PRODUCTS_IMAGE_200']=$output['image'];
+			$markerArray['ITEM_PRODUCTS_IMAGE_300']=$output['image'];
+			$markerArray['PRODUCTS_IMAGE_100']=$output['image'];
+			$markerArray['PRODUCTS_IMAGE_200']=$output['image'];
+			$markerArray['PRODUCTS_IMAGE_300']=$output['image'];
 		}
 		if ($product['categories_id']) {
 			// get all cats to generate multilevel fake url
@@ -72,21 +87,24 @@ foreach ($products as $product) {
 		}
 		*/
 		$output['products_name']=htmlspecialchars($product['products_name']);
-		$markerArray=array();
+		$markerArray['ITEM_PRODUCTS_ID']=$product['products_id'];
 		$markerArray['ITEM_DETAILS_PAGE_LINK']=$output['link'];
 		$markerArray['ITEM_PRODUCTS_NAME']=$output['products_name'];
-		$markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];
 		$markerArray['ITEM_PRODUCTS_PRICE']=$output['special_section_price'];
-		$markerArray['ITEM_PRODUCTS_ID']='';
 		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']='';
 		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 			$markerArray['ITEM_PRODUCTS_ID']=$product['products_id'];
 			$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
+			$markerArray['PRODUCTS_ID']=$product['products_id'];
+			$markerArray['LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
 		}
 		$markerArray['PRODUCTS_SHORTDESCRIPTION']=$product['products_shortdescription'];
 		$markerArray['PRODUCTS_DESCRIPTION']=$product['products_description'];
-		$markerArray['PRODUCTS_ID']=$product['products_id'];
 		$markerArray['PRODUCTS_DETAIL_PAGE_LINK']=$output['link'];
+		$markerArray['DETAILS_PAGE_LINK']=$output['link'];
+		$markerArray['PRODUCTS_NAME']=$output['products_name'];
+		$markerArray['PRODUCTS_PRICE']=$output['special_section_price'];
+
 		if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
 			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=$output['link'];
 			$button_submit='<a href="'.$output['link'].'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
@@ -122,10 +140,15 @@ foreach ($products as $product) {
 				'markerArray'=>&$markerArray,
 				'product'=>&$product,
 				'output'=>&$output,
+				'plugins_item_extra_content'=>&$plugins_item_extra_content
 			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsProductsListingHook'] as $funcRef) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'] as $funcRef) {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
+		}
+		$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']='';
+		if (count($plugins_item_extra_content)) {
+			$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']=implode("\n", $plugins_item_extra_content);
 		}
 		// custom hook that can be controlled by third-party plugin eof
 		if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
