@@ -93,11 +93,11 @@ foreach ($products as $product) {
 		$markerArray['ITEM_PRODUCTS_PRICE']=$output['special_section_price'];
 		$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']='';
 		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
-			$markerArray['ITEM_PRODUCTS_ID']=$product['products_id'];
 			$markerArray['ITEM_LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
-			$markerArray['PRODUCTS_ID']=$product['products_id'];
+			$markerArray['LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
 			$markerArray['LABEL_SHIPPING_COSTS_OVERVIEW']=$this->pi_getLL('shipping_costs');
 		}
+		$markerArray['PRODUCTS_ID']=$product['products_id'];
 		$markerArray['PRODUCTS_SHORTDESCRIPTION']=$product['products_shortdescription'];
 		$markerArray['PRODUCTS_DESCRIPTION']=$product['products_description'];
 		$markerArray['PRODUCTS_DETAIL_PAGE_LINK']=$output['link'];
