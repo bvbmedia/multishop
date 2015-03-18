@@ -4015,6 +4015,25 @@ class mslib_befe {
 		return count($array);
 
 	}
+	function getSysLanguageUidByIsoString($twoChars) {
+		switch(strtolower($twoChars)) {
+			case 'en':
+				$static_lang_isocode=30;
+				break;
+			case 'nl':
+				$static_lang_isocode=29;
+				break;
+			case 'de':
+				$static_lang_isocode=43;
+				break;
+		}
+		if ($static_lang_isocode) {
+			$record=mslib_befe::getRecord($static_lang_isocode,'sys_language','static_lang_isocode');
+			if (is_array($record) && $record['uid']) {
+				return $record['uid'];
+			}
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);

@@ -131,6 +131,11 @@ class tx_multishop_pi1 extends tslib_pibase {
 		if (strlen($this->get['language'])==2) {
 			$this->LLkey=$this->get['language'];
 			$this->config['config']['language']=$this->get['language'];
+			$sys_language_uid=mslib_befe::getSysLanguageUidByIsoString($this->get['language']);
+			if ($sys_language_uid) {
+				$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
+				$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
+			}
 		}
 		if (!$GLOBALS['TSFE']->config['config']['locale_all']) {
 			$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');
