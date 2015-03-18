@@ -121,21 +121,29 @@ class tx_multishop_pi1 extends tslib_pibase {
 		}
 		$this->cookie = $GLOBALS['TSFE']->fe_user->getKey('ses', 'tx_multishop_cookie');
 		if (strlen($this->cookie['multishop_admin_language'])==2) {
-			$this->LLkey=$this->cookie['multishop_admin_language'];
-			$this->config['config']['language']=$this->cookie['multishop_admin_language'];
-		}
-		if(!$this->LLkey) {
-			$this->LLkey='default';
+			$this->customLang=$this->cookie['multishop_admin_language'];
 		}
 		// able to change language by get parameters
 		if (strlen($this->get['language'])==2) {
-			$this->LLkey=$this->get['language'];
-			$this->config['config']['language']=$this->get['language'];
-			$sys_language_uid=mslib_befe::getSysLanguageUidByIsoString($this->get['language']);
+			$this->customLang=$this->get['language'];
+		}
+		if ($this->customLang) {
+			$this->LLkey=$this->customLang;
+			$this->config['config']['language']=$this->customLang;
+			$sys_language_uid=mslib_befe::getSysLanguageUidByIsoString($this->customLang);
+			if (!$sys_language_uid) {
+				// try by flag
+				$sys_language_uid=mslib_befe::getSysLanguageUidByFlagString($this->customLang);
+				//echo $sys_language_uid;
+				//die();
+			}
 			if ($sys_language_uid) {
 				$GLOBALS['TSFE']->config['config']['sys_language_uid']=$sys_language_uid;
 				$GLOBALS['TSFE']->sys_language_uid=$sys_language_uid;
 			}
+		}
+		if(!$this->LLkey) {
+			$this->LLkey='default';
 		}
 		if (!$GLOBALS['TSFE']->config['config']['locale_all']) {
 			$GLOBALS['TSFE']->config['config']['locale_all']=$this->pi_getLL('locale_all');

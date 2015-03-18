@@ -4034,6 +4034,14 @@ class mslib_befe {
 			}
 		}
 	}
+	function getSysLanguageUidByFlagString($flag) {
+		if ($flag) {
+			$record=mslib_befe::getRecord($flag,'sys_language','flag');
+			if (is_array($record) && $record['uid']) {
+				return $record['uid'];
+			}
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
