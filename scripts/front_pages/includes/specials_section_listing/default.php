@@ -135,6 +135,7 @@ foreach ($products as $product) {
 		$markerArray['SPECIALS_SECTIONS_ID']=$res['specials_id'];
 		$markerArray['SPECIALS_SECTIONS_CODE']=$this->section_code;
 		// custom hook that can be controlled by third-party plugin
+		$plugins_item_extra_content=array();
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'])) {
 			$params=array(
 				'markerArray'=>&$markerArray,
