@@ -3859,7 +3859,7 @@ class mslib_fe {
 								}
 								break;
 							case 'order_status':
-								$all_orders_status=mslib_fe::getAllOrderStatus();
+								$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 								if (is_array($all_orders_status) and count($all_orders_status)) {
 									$content.='<select name="'.$field_key.'" id="'.$field_key.'">';
 									$content.='<option value="0">-- order status --</option>'."\n";
@@ -5826,7 +5826,7 @@ class mslib_fe {
 		if (is_array($ms_menu)) {
 			return $ms_menu;
 		}
-		$order_status_array=mslib_fe::getAllOrderStatus();
+		$order_status_array=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		$ms_menu=array();
 		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';
 //		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_home').'" title="Home dashboard" alt="Home dashboard"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';

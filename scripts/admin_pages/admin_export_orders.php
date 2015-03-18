@@ -190,7 +190,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
 			</div>';
 		// order status selectbox
-		$all_orders_status=mslib_fe::getAllOrderStatus();
+		$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		$order_status_sb='<select name="order_status">
 		<option value="all"'.($post_data['order_status']=='all' ? ' selected="selected"' : '').'>'.$this->pi_getLL('all').'</option>';
 		if (is_array($all_orders_status) and count($all_orders_status)) {

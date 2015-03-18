@@ -45,7 +45,7 @@ if ($this->cookie['stats_year_sb']>0) {
 	$selected_year=$this->cookie['stats_year_sb']."-";
 }
 $order_status_sb='<h2>'.$this->pi_getLL('order_status').'</h2>';
-$all_orders_status=mslib_fe::getAllOrderStatus();
+$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if (is_array($all_orders_status) and count($all_orders_status)) {
 	if (is_array($all_orders_status) and count($all_orders_status)) {
 		$order_status_sb.='<ul class="horizontal_list order_status_checkbox" id="admin_sales_stats_order_status">';

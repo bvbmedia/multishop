@@ -799,7 +799,7 @@ switch ($_REQUEST['action']) {
 		$orders_pageset=mslib_fe::getOrdersPageSet($filter, 0, 10000, array('orders_id desc'), $having, $select, $where, $from);
 		$order_listing=$this->pi_getLL('no_orders_found');
 		if ($orders_pageset['total_rows']>0) {
-			$all_orders_status=mslib_fe::getAllOrderStatus();
+			$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 			$order_listing='<div class="msHorizontalOverflowWrapper">
 				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
 					<tr>
