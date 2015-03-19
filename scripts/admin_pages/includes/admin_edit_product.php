@@ -1409,7 +1409,7 @@ if ($this->post) {
 			}
 		}
 		// external SHOP product custom description
-		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && is_array($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name'])) {
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && (is_array($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name']) || is_array($this->post['products_name']) && count($this->post['products_name']))) {
 			foreach ($this->post['customProductsDescription_products_name'] as $page_uid=>$customDescData) {
 				foreach ($customDescData as $customDescData_category_id=>$descData) {
 					if (isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$customDescData_category_id])) {
@@ -1418,7 +1418,7 @@ if ($this->post) {
 								$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$page_uid."' and layered_categories_id='".$customDescData_category_id."' and language_id='".$customDescData_language_id."'";
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								$updateArray=array();
-								$updateArray['products_name']=$this->post['customProductsDescription_products_name'][$page_uid][$customDescData_category_id][$customDescData_language_id];
+								$updateArray['products_name']=(!empty($this->post['customProductsDescription_products_name'][$page_uid][$customDescData_category_id][$customDescData_language_id]) ? $this->post['customProductsDescription_products_name'][$page_uid][$customDescData_category_id][$customDescData_language_id] : $this->post['products_name'][$customDescData_language_id]);
 								$updateArray['delivery_time']=$this->post['customProductsDescription_delivery_time'][$page_uid][$customDescData_category_id][$customDescData_language_id];
 								$updateArray['products_shortdescription']=$this->post['customProductsDescription_products_shortdescription'][$page_uid][$customDescData_category_id][$customDescData_language_id];
 								$updateArray['products_description']=$this->post['customProductsDescription_products_description'][$page_uid][$customDescData_category_id][$customDescData_language_id];
@@ -3849,6 +3849,7 @@ if ($this->post) {
 						}
 					});
 					$(document).on("click", ".enableMultipleShopsCheckbox", function(){
+						data_catTree=[];
 						var page_uid=$(this).attr("rel");
 						var checkbox_id="enableMultipleShops_" + page_uid;
 						var block_id="#msEditProductInputMultipleShopCategory" + page_uid;
