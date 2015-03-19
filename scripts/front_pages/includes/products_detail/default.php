@@ -419,6 +419,7 @@ if (!$product['products_id']) {
 			'markerArray'=>&$markerArray,
 			'product'=>&$product,
 			'output'=>&$output,
+			'output_array'=>&$output_array,
 			'plugins_extra_content'=>&$plugins_extra_content
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {
