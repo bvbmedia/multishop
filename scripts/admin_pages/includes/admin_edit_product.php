@@ -1720,20 +1720,8 @@ if ($this->post) {
 					$option_sort_order[$pa_option]=$counter;
 					$counter++;
 				}
-				if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
-					if ($pa_id>0) {
-						$attributesArray=array();
-						$attributesArray['products_id']=$prodid;
-						$attributesArray['options_id']=$pa_option;
-						$attributesArray['options_values_id']=$pa_value;
-						$attributesArray['attribute_image']=$pa_image;
-						$attributesArray['price_prefix']=$pa_prefix;
-						$attributesArray['options_values_price']=$pa_price;
-						$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
-						$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$pa_value];
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					} else {
+				if (isset($this->post['save_as_new'])) {
+					if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
 						$attributesArray=array();
 						$attributesArray['products_id']=$prodid;
 						$attributesArray['options_id']=$pa_option;
@@ -1746,6 +1734,35 @@ if ($this->post) {
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
+					}
+				} else {
+					if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
+						if ($pa_id>0) {
+							$attributesArray=array();
+							$attributesArray['products_id']=$prodid;
+							$attributesArray['options_id']=$pa_option;
+							$attributesArray['options_values_id']=$pa_value;
+							$attributesArray['attribute_image']=$pa_image;
+							$attributesArray['price_prefix']=$pa_prefix;
+							$attributesArray['options_values_price']=$pa_price;
+							$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
+							$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$pa_value];
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						} else {
+							$attributesArray=array();
+							$attributesArray['products_id']=$prodid;
+							$attributesArray['options_id']=$pa_option;
+							$attributesArray['options_values_id']=$pa_value;
+							$attributesArray['attribute_image']=$pa_image;
+							$attributesArray['price_prefix']=$pa_prefix;
+							$attributesArray['options_values_price']=$pa_price;
+							$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
+							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
+						}
 					}
 				}
 			}
