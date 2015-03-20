@@ -2473,11 +2473,15 @@ class mslib_fe {
 				$where_clause=' p.products_status=1 ';
 			}
 			if (!$this->masterShop) {
+				$p2c_is_deepest='AND p2c.is_deepest=1';
+				if (strpos($search_section, 'ajax_products_search')!==false) {
+					$p2c_is_deepest='';
+				}
 				//$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
 				if (!$this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1';
+					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')' . $p2c_is_deepest;
 				} else {
-					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
+					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')'.$p2c_is_deepest.' AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
 				}
 			}
 			$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
