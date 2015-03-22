@@ -1932,6 +1932,17 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Disable realtime starttime/endtime check on products',
+	'configuration_key'=>'DISABLE_REALTIME_CHECK_PRODUCTS_STARTTIME_ENDTIME',
+	'configuration_value'=>'0',
+	'description'=>'Disable realtime check for starttime/endtime field in products table.',
+	'group_id'=>'14',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

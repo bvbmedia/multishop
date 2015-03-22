@@ -1977,6 +1977,21 @@ class mslib_fe {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
+		$str=$GLOBALS['TYPO3_DB']->SELECTquery('products_attributes_id', // SELECT ...
+			'tx_multishop_products_attributes', // FROM ...
+			'products_id=\''.(int)$products_id.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'1' // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+			return true;
+		} else {
+			return false;
+		}
+		/*
+		 * note: this query is not optimal
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('popt.products_options_id', // SELECT ...
 			'tx_multishop_products_options popt, tx_multishop_products_attributes patrib', // FROM ...
 			'patrib.products_id=\''.(int)$products_id.'\' and (popt.hide_in_cart=0 or popt.hide_in_cart is null) and patrib.options_id = popt.products_options_id', // WHERE...
@@ -1990,6 +2005,7 @@ class mslib_fe {
 		} else {
 			return false;
 		}
+		*/
 	}
 	public function categoryHasSubs($categories_id) {
 		if (is_numeric($categories_id)) {
@@ -5826,7 +5842,7 @@ class mslib_fe {
 		return $html;
 	}
 	public function getActiveShop() {
-		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
+		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,pid,title', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
 		return $multishop_content_objects;
 	}
 	public function jQueryAdminMenu() {
