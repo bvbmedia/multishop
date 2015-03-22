@@ -299,7 +299,7 @@ if ($GLOBALS['TYPO3_CONF_VARS']['tx_multishop_data']['user_crumbar']) {
 		}
 	}
 }
-if (!$this->ms['DISABLE_REALTIME_CHECK_PRODUCTS_STARTTIME_ENDTIME']) {
+if (!$this->ms['MODULES']['DISABLE_REALTIME_CHECK_PRODUCTS_STARTTIME_ENDTIME']) {
 	if (is_numeric($this->get['categories_id']) && $this->get['categories_id']>0) {
 		$sql='select p.products_id, p.starttime, p.endtime from tx_multishop_products p, tx_multishop_products_to_categories p2c where p.products_id=p2c.products_id and p2c.categories_id=\''.$this->get['categories_id'].'\' and p2c.is_deepest=1 and (p.starttime>0 or p.endtime>0)';
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
