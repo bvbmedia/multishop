@@ -503,7 +503,7 @@ if (!$skipMultishopUpdates) {
 	}
 	foreach ($required_indexes as $required_index) {
 		if (!in_array($required_index, $indexes)) {
-			$str="ALTER TABLE  `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
+			$str="ALTER TABLE `".$table_name."` ADD KEY `".$required_index."` (`".$required_index."`)";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$messages[]=$str;
 		}
