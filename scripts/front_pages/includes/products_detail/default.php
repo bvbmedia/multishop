@@ -197,7 +197,7 @@ if (!$product['products_id']) {
 	} else {
 		$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" id="quantity" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
 	}*/
-	$quantity_html='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" id="quantity" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
+	$quantity_html='<div class="quantity buttons_added"><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" id="quantity" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
 	// show selectbox by products multiplication or show default input eof
 	$output['quantity']='
 	<div class="quantity">
@@ -415,9 +415,11 @@ if (!$product['products_id']) {
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'])) {
 		$params=array(
+			'template'=>$template,
 			'markerArray'=>&$markerArray,
 			'product'=>&$product,
 			'output'=>&$output,
+			'output_array'=>&$output_array,
 			'plugins_extra_content'=>&$plugins_extra_content
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {

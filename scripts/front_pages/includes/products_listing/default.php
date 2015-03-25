@@ -147,6 +147,8 @@ if (is_array($products) && count($products)) {
 		if (($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) and !$current_product['products_status'] and !$this->ms['MODULES']['FLAT_DATABASE']) {
 			$markerArray['ITEM_CLASS']='disabled_product';
 		}
+
+		$markerArray['ITEM_COUNTER']=$itemCounter;
 		$markerArray['PRODUCTS_NAME']=$current_product['products_name'];
 		$markerArray['PRODUCTS_MODEL']=$current_product['products_model'];
 		$markerArray['PRODUCTS_DESCRIPTION']=$current_product['products_description'];

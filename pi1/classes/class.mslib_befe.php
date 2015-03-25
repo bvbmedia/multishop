@@ -1075,7 +1075,7 @@ class mslib_befe {
 			return false;
 		}
 		if (is_numeric($categories_id)) {
-			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery('categories_id,categories_image,parent_id', // SELECT ...
 				'tx_multishop_categories', // FROM ...
 				"categories_id='".$categories_id."'", // WHERE...
 				'', // GROUP BY...
@@ -1675,7 +1675,7 @@ class mslib_befe {
 				$html.='--';
 			}
 			$html.=$parent_categories['categories_name'].'</option>';
-			$strchk=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			$strchk=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
 				'tx_multishop_categories', // FROM ...
 				'c.parent_id=\''.$parent_categories['categories_id'].'\'', // WHERE...
 				'', // GROUP BY...
@@ -1683,7 +1683,8 @@ class mslib_befe {
 				'' // LIMIT ...
 			);
 			$qrychk=$GLOBALS['TYPO3_DB']->sql_query($strchk);
-			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qrychk)) {
+			$rowTotal=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qrychk);
+			if ($rowTotal['total']) {
 				$html.=mslib_befe::tep_get_categories_select($parent_categories['categories_id'], $aid, ($level+1), $selectedid);
 			}
 		}
@@ -4014,6 +4015,33 @@ class mslib_befe {
 		$array = array_reverse($array, true);
 		return count($array);
 
+	}
+	function getSysLanguageUidByIsoString($twoChars) {
+		switch(strtolower($twoChars)) {
+			case 'en':
+				$static_lang_isocode=30;
+				break;
+			case 'nl':
+				$static_lang_isocode=29;
+				break;
+			case 'de':
+				$static_lang_isocode=43;
+				break;
+		}
+		if ($static_lang_isocode) {
+			$record=mslib_befe::getRecord($static_lang_isocode,'sys_language','static_lang_isocode');
+			if (is_array($record) && $record['uid']) {
+				return $record['uid'];
+			}
+		}
+	}
+	function getSysLanguageUidByFlagString($flag) {
+		if ($flag) {
+			$record=mslib_befe::getRecord($flag,'sys_language','flag');
+			if (is_array($record) && $record['uid']) {
+				return $record['uid'];
+			}
+		}
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {

@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$all_orders_status=mslib_fe::getAllOrderStatus();
+$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if ($this->post['tx_multishop_pi1']['edit_order']==1 and is_numeric($this->post['tx_multishop_pi1']['orders_id'])) {
 	$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->post['tx_multishop_pi1']['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal']);
 	header('Location: '.$url);

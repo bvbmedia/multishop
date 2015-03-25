@@ -224,8 +224,14 @@ if ($rows) {
 			body: "",
 			resizable: true,
 			open: function () {
+				$("#attributesEditDialog").keypress(function (e) {
+					//console.log(e);
+					if (e.keyCode == 13) {
+						$(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').click();
+					}
+				});
 				// right button (OK button) must be the default button when user presses enter key
-				//$(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').focus();
+				$(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').focus();
 			},
 			buttons: {
 				"cancel": {
@@ -249,6 +255,7 @@ if ($rows) {
 						}
 						$(this).dialog("close");
 						$(this).hide();
+						$(this).remove();
 					}
 				}
 			}

@@ -1409,7 +1409,7 @@ if ($this->post) {
 			}
 		}
 		// external SHOP product custom description
-		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && is_array($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name'])) {
+		if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION'] && isset($this->post['customProductsDescription_products_name']) && (is_array($this->post['customProductsDescription_products_name']) && count($this->post['customProductsDescription_products_name']) || is_array($this->post['products_name']) && count($this->post['products_name']))) {
 			foreach ($this->post['customProductsDescription_products_name'] as $page_uid=>$customDescData) {
 				foreach ($customDescData as $customDescData_category_id=>$descData) {
 					if (isset($this->post['tx_multishop_pi1']['enableMultipleShopsCustomProductInfo'][$page_uid][$customDescData_category_id])) {
@@ -1418,7 +1418,7 @@ if ($this->post) {
 								$str="select 1 from tx_multishop_products_description where products_id='".$prodid."' and page_uid='".$page_uid."' and layered_categories_id='".$customDescData_category_id."' and language_id='".$customDescData_language_id."'";
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								$updateArray=array();
-								$updateArray['products_name']=$this->post['customProductsDescription_products_name'][$page_uid][$customDescData_category_id][$customDescData_language_id];
+								$updateArray['products_name']=(!empty($this->post['customProductsDescription_products_name'][$page_uid][$customDescData_category_id][$customDescData_language_id]) ? $this->post['customProductsDescription_products_name'][$page_uid][$customDescData_category_id][$customDescData_language_id] : $this->post['products_name'][$customDescData_language_id]);
 								$updateArray['delivery_time']=$this->post['customProductsDescription_delivery_time'][$page_uid][$customDescData_category_id][$customDescData_language_id];
 								$updateArray['products_shortdescription']=$this->post['customProductsDescription_products_shortdescription'][$page_uid][$customDescData_category_id][$customDescData_language_id];
 								$updateArray['products_description']=$this->post['customProductsDescription_products_description'][$page_uid][$customDescData_category_id][$customDescData_language_id];
@@ -1720,20 +1720,8 @@ if ($this->post) {
 					$option_sort_order[$pa_option]=$counter;
 					$counter++;
 				}
-				if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
-					if ($pa_id>0) {
-						$attributesArray=array();
-						$attributesArray['products_id']=$prodid;
-						$attributesArray['options_id']=$pa_option;
-						$attributesArray['options_values_id']=$pa_value;
-						$attributesArray['attribute_image']=$pa_image;
-						$attributesArray['price_prefix']=$pa_prefix;
-						$attributesArray['options_values_price']=$pa_price;
-						$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
-						$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$pa_value];
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-					} else {
+				if (isset($this->post['save_as_new'])) {
+					if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
 						$attributesArray=array();
 						$attributesArray['products_id']=$prodid;
 						$attributesArray['options_id']=$pa_option;
@@ -1746,6 +1734,35 @@ if ($this->post) {
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
+					}
+				} else {
+					if (!empty($prodid) && $prodid>0 && !empty($pa_option) && $pa_option>0 && !empty($pa_value) && $pa_value>0) {
+						if ($pa_id>0) {
+							$attributesArray=array();
+							$attributesArray['products_id']=$prodid;
+							$attributesArray['options_id']=$pa_option;
+							$attributesArray['options_values_id']=$pa_value;
+							$attributesArray['attribute_image']=$pa_image;
+							$attributesArray['price_prefix']=$pa_prefix;
+							$attributesArray['options_values_price']=$pa_price;
+							$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
+							$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$pa_value];
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						} else {
+							$attributesArray=array();
+							$attributesArray['products_id']=$prodid;
+							$attributesArray['options_id']=$pa_option;
+							$attributesArray['options_values_id']=$pa_value;
+							$attributesArray['attribute_image']=$pa_image;
+							$attributesArray['price_prefix']=$pa_prefix;
+							$attributesArray['options_values_price']=$pa_price;
+							$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
+							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
+						}
 					}
 				}
 			}
@@ -2057,6 +2074,17 @@ if ($this->post) {
 				$product['specials_expired_date']=$specials_price['expires_date'];
 			}
 		}
+		// custom page hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductPrice'])) {
+			$params=array(
+				'product'=>&$product,
+				'product_tax_rate'=>&$product_tax_rate
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductPrice'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom page hook that can be controlled by third-party plugin eof
 		$price_tax=mslib_fe::taxDecimalCrop(($product['products_price']*$product_tax_rate)/100);
 		$special_price_tax=mslib_fe::taxDecimalCrop(($product['specials_new_products_price']*$product_tax_rate)/100);
 		$capital_price_tax=mslib_fe::taxDecimalCrop(($product['product_capital_price']*$product_tax_rate)/100);
@@ -3838,6 +3866,7 @@ if ($this->post) {
 						}
 					});
 					$(document).on("click", ".enableMultipleShopsCheckbox", function(){
+						data_catTree=[];
 						var page_uid=$(this).attr("rel");
 						var checkbox_id="enableMultipleShops_" + page_uid;
 						var block_id="#msEditProductInputMultipleShopCategory" + page_uid;

@@ -145,7 +145,7 @@ if ($p>0) {
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
-$all_orders_status=mslib_fe::getAllOrderStatus();
+$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 $orders_status_list='<select name="orders_status_search" class="invoice_select2" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;

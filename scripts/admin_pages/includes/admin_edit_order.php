@@ -1152,7 +1152,7 @@ if (is_numeric($this->get['orders_id'])) {
 		$tr_type='even';
 		$tmpcontent.='<table class="msZebraTable msadmin_border orders_products_listing" width="100%">';
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
-			$all_orders_status=mslib_fe::getAllOrderStatus();
+			$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		}
 		// order products header definition
 		// products id header col
@@ -2636,7 +2636,7 @@ if (is_numeric($this->get['orders_id'])) {
 	<div class="account-field">
 		<label for="order_status">'.$this->pi_getLL('order_status').'</label>
 		';
-	$all_orders_status=mslib_fe::getAllOrderStatus();
+	$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 	if (is_array($all_orders_status) and count($all_orders_status)) {
 		$tmpcontent.='<select name="order_status">
 		<option value="">'.$this->pi_getLL('choose').'</option>

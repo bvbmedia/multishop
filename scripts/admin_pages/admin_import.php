@@ -2277,8 +2277,8 @@ if ($this->post['action']=='category-insert') {
 									if (isset($item['products_sort_order'])) {
 										$updateArray['sort_order']=$item['products_sort_order'];
 									} else {
-										if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
-											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
+										if (is_numeric($sortOrderArray['tx_multishop_products_to_categories']['sort_order'])) {
+											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']+=1;
 										} else {
 											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
 										}
@@ -2514,8 +2514,8 @@ if ($this->post['action']=='category-insert') {
 									if (isset($item['products_sort_order'])) {
 										$updateArray['sort_order']=$item['products_sort_order'];
 									} else {
-										if ($sortOrderArray['tx_multishop_products_to_categories']['sort_order']) {
-											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=+1;
+										if (is_numeric($sortOrderArray['tx_multishop_products_to_categories']['sort_order'])) {
+											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']+=1;
 										} else {
 											$sortOrderArray['tx_multishop_products_to_categories']['sort_order']=time();
 										}

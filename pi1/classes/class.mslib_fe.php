@@ -1589,7 +1589,7 @@ class mslib_fe {
 		}
 		return $output;
 	}
-	public function showAttributes($products_id, $add_tax_rate='', $sessionData=array(), $readonly=0, $hide_prices=0, $returnAsArray=0) {
+	public function showAttributes($products_id, $add_tax_rate='', $sessionData=array(), $readonly=0, $hide_prices=0, $returnAsArray=0, $skipHiddenInCartAttributes=0) {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
@@ -1627,9 +1627,12 @@ class mslib_fe {
 		$query_array['where'][]='popt.language_id = \''.$this->sys_language_uid.'\'';
 		//todo: hide_in_cart line should be enabled, but im not sure if it will cause bugs in other plugins so temporary disabled it
 		//$query_array['where'][]='(popt.hide_in_cart=0 or popt.hide_in_cart is null)';
-		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$query_array['group_by'][]='popt.products_options_id';
 		$query_array['order_by'][]='patrib.sort_order_option_name asc, patrib.sort_order_option_value asc';
+		if ($skipHiddenInCartAttributes) {
+			$query_array['where'][]='popt.hide_in_cart=0';
+		}
+
 		//hook to let other plugins further manipulate the query
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNamesQuery'])) {
 			$params=array(
@@ -1641,6 +1644,7 @@ class mslib_fe {
 				t3lib_div::callUserFunction($funcRef, $params, $this);
 			}
 		}
+		$query_array['where'][]='patrib.options_id = popt.products_options_id';
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
 			(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
 			(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
@@ -1973,6 +1977,21 @@ class mslib_fe {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
+		$str=$GLOBALS['TYPO3_DB']->SELECTquery('products_attributes_id', // SELECT ...
+			'tx_multishop_products_attributes', // FROM ...
+			'products_id=\''.(int)$products_id.'\'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'1' // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+			return true;
+		} else {
+			return false;
+		}
+		/*
+		 * note: this query is not optimal
 		$str=$GLOBALS['TYPO3_DB']->SELECTquery('popt.products_options_id', // SELECT ...
 			'tx_multishop_products_options popt, tx_multishop_products_attributes patrib', // FROM ...
 			'patrib.products_id=\''.(int)$products_id.'\' and (popt.hide_in_cart=0 or popt.hide_in_cart is null) and patrib.options_id = popt.products_options_id', // WHERE...
@@ -1986,6 +2005,7 @@ class mslib_fe {
 		} else {
 			return false;
 		}
+		*/
 	}
 	public function categoryHasSubs($categories_id) {
 		if (is_numeric($categories_id)) {
@@ -2422,6 +2442,7 @@ class mslib_fe {
 			$required_cols[]='p.minimum_quantity';
 			$required_cols[]='p.maximum_quantity';
 			$required_cols[]='p.products_multiplication';
+			$required_cols[]='oud.name as order_unit_name';
 
 			if ($this->ms['MODULES']['INCLUDE_PRODUCTS_DESCRIPTION_DB_FIELD_IN_PRODUCTS_LISTING']) {
 				$required_cols[]='pd.products_description';
@@ -2451,7 +2472,7 @@ class mslib_fe {
 					t3lib_div::callUserFunction($funcRef, $params, $this);
 				}
 			}
-			$from_clause='tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id = m.manufacturers_id';
+			$from_clause='tx_multishop_products p left join tx_multishop_specials s on p.products_id = s.products_id left join tx_multishop_manufacturers m on p.manufacturers_id = m.manufacturers_id left join tx_multishop_order_units_description oud on p.order_unit_id=oud.order_unit_id and oud.language_id='.$this->sys_language_uid;
 			if (count($extra_join)) {
 				$from_clause.=" ";
 				$from_clause.=implode(" ", $extra_join);
@@ -2468,8 +2489,16 @@ class mslib_fe {
 				$where_clause=' p.products_status=1 ';
 			}
 			if (!$this->masterShop) {
+				$p2c_is_deepest='AND p2c.is_deepest=1';
+				if (strpos($search_section, 'ajax_products_search')!==false) {
+					$p2c_is_deepest='';
+				}
 				//$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
-				$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
+				if (!$this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
+					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')' . $p2c_is_deepest;
+				} else {
+					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')'.$p2c_is_deepest.' AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
+				}
 			}
 			$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
 			if (is_array($where) and count($where)>0) {
@@ -2700,6 +2729,15 @@ class mslib_fe {
 			$tax_ruleset=array();
 			$current_tstamp=time();
 			while ($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+				//hook to let other plugins further manipulate the query
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArray'])) {
+					$params=array(
+						'product'=>&$product,
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArray'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 				} else {
 					// check every cat status
@@ -3845,7 +3883,7 @@ class mslib_fe {
 								}
 								break;
 							case 'order_status':
-								$all_orders_status=mslib_fe::getAllOrderStatus();
+								$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 								if (is_array($all_orders_status) and count($all_orders_status)) {
 									$content.='<select name="'.$field_key.'" id="'.$field_key.'">';
 									$content.='<option value="0">-- order status --</option>'."\n";
@@ -5804,7 +5842,7 @@ class mslib_fe {
 		return $html;
 	}
 	public function getActiveShop() {
-		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
+		$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,pid,title', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
 		return $multishop_content_objects;
 	}
 	public function jQueryAdminMenu() {
@@ -5812,7 +5850,7 @@ class mslib_fe {
 		if (is_array($ms_menu)) {
 			return $ms_menu;
 		}
-		$order_status_array=mslib_fe::getAllOrderStatus();
+		$order_status_array=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		$ms_menu=array();
 		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';
 //		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_home').'" title="Home dashboard" alt="Home dashboard"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';
@@ -8169,7 +8207,11 @@ class mslib_fe {
 				$tax_rate=$tax_data['local']['tax_rate'];
 				$total_tax_rate=$tax_rate;
 				if ($to_tax_include=='true') {
-					$tax=mslib_fe::taxDecimalCrop(($current_price*$total_tax_rate)/100, 2, false);
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$tax=mslib_fe::taxDecimalCrop(($current_price*$total_tax_rate)/100);
+					} else {
+						$tax=mslib_fe::taxDecimalCrop(($current_price*$total_tax_rate)/100, 2, false);
+					}
 					//$tmp_total_tax_rate 			= (($state_tax) / $current_price) * 100;
 					//$total_tax_rate 				= $tmp_total_tax_rate;
 					$data['price_including_tax']=$current_price+($tax);
@@ -8180,8 +8222,13 @@ class mslib_fe {
 					//reverse convert
 					// number_format is needed otherwise PHP limits the decimals to 12, but we need 14 to bypass cents problems
 					$price_excluding_tax=number_format(($current_price/(100+$total_tax_rate))*100, 14);
-					$tax=mslib_fe::taxDecimalCrop(($current_price-$price_excluding_tax), 2, false);
-					$data['price_excluding_tax']=$current_price-$tax;
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$tax=mslib_fe::taxDecimalCrop(($current_price-$price_excluding_tax));
+						$data['price_excluding_tax']=$price_excluding_tax;
+					} else {
+						$tax=mslib_fe::taxDecimalCrop(($current_price-$price_excluding_tax), 2, false);
+						$data['price_excluding_tax']=$current_price-$tax;
+					}
 					$data['tax']=$tax;
 					$data['tax_rate']=$tax_rate;
 					$data['total_tax_rate']=$total_tax_rate;
