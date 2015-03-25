@@ -736,7 +736,7 @@ class mslib_befe {
 		if (!is_numeric($page_uid)) {
 			return false;
 		}
-		$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total', 'tx_multishop_products', 'page_uid=\''.$page_uid.'\'', '');
+		$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total', 'tx_multishop_products_to_categories', 'page_uid=\''.$page_uid.'\' and is_deepest=1', '');
 		$row=$data[0];
 		if (!isset($row['total'])) {
 			$row['total']=0;
@@ -981,7 +981,7 @@ class mslib_befe {
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 	}
-	public function deleteProduct($products_id, $categories_id='') {
+	public function deleteProduct($products_id, $categories_id='', $use_page_uid=false) {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
@@ -1052,7 +1052,13 @@ class mslib_befe {
 					$tables[]='tx_multishop_products_faq';
 					$tables[]='tx_multishop_products_to_extra_options';
 					foreach ($tables as $table) {
-						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'products_id='.$products_id);
+						if ($use_page_uid) {
+							if ($table=='tx_multishop_products' || $table=='tx_multishop_products_description' || $table=='tx_multishop_products_to_categories') {
+								$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'products_id='.$products_id.' and page_uid=\''.$this->shop_pid.'\'');
+							}
+						} else {
+							$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'products_id='.$products_id);
+						}
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 					$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_to_relative_products', 'products_id='.$products_id.' or relative_product_id='.$products_id);
@@ -1106,7 +1112,7 @@ class mslib_befe {
 				);
 				$products_query=$GLOBALS['TYPO3_DB']->sql_query($str);
 				while (($product=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_query))!=false) {
-					mslib_befe::deleteProduct($product['products_id'], $categories_id);
+					mslib_befe::deleteProduct($product['products_id'], $categories_id, true);
 				}
 				// finally delete the category
 				$filename=$row['categories_image'];
@@ -1115,9 +1121,24 @@ class mslib_befe {
 				$tables[]='tx_multishop_categories';
 				$tables[]='tx_multishop_categories_description';
 				$tables[]='tx_multishop_products_to_categories';
+				if ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
+					$tables[]='tx_multishop_categories_to_categories';
+				}
 				foreach ($tables as $table) {
-					$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id='.$categories_id);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					if ($table=='tx_multishop_categories_description') {
+						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id='.$categories_id);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					} else if ($table=='tx_multishop_categories_to_categories') {
+						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id='.$categories_id.' and page_uid=\''.$this->shop_pid.'\'');
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						// foreign
+						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'foreign_categories_id='.$categories_id.' and foreign_page_uid=\''.$this->shop_pid.'\'');
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					} else {
+						$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'categories_id='.$categories_id.' and page_uid=\''.$this->shop_pid.'\'');
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+
 				}
 			}
 			//hook to let other plugins further manipulate the create table query

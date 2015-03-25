@@ -2651,6 +2651,9 @@ class mslib_fe {
 		$limit_clause=$offset.','.$limit;
 		$array=array();
 		if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+			if (!count($groupby) && $search_section=='admin_products_search') {
+				$groupby[]='p.products_id';
+			}
 			if (count($having)) {
 				// since this query is using HAVING we need to calculate the total records on a different way
 				if (!$select_total_count) {
@@ -3345,10 +3348,31 @@ class mslib_fe {
 		}
 		return $return_categories_id;
 	}
+	public function getForeignCategoriesData($current_category_id, $page_uid) {
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c2c.*', // SELECT ...
+			'tx_multishop_categories_to_categories c2c', // FROM ...
+			'((c2c.categories_id = \''.$current_category_id.'\' and c2c.page_uid = \''.$page_uid.'\') or (c2c.foreign_categories_id = \''.$current_category_id.'\' and c2c.foreign_page_uid = \''.$page_uid.'\'))', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		$res=array();
+		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
+			if ($rs['categories_id']==$current_category_id) {
+				$res['categories_id']=$rs['foreign_categories_id'];
+				$res['page_uid']=$rs['foreign_page_uid'];
+			} else {
+				$res['categories_id']=$rs['categories_id'];
+				$res['page_uid']=$rs['page_uid'];
+			}
+		}
+		return $res;
+	}
 	public function checkCategories($category_id, $page_uid) {
 		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c2c.categories_id, c2c.foreign_categories_id', // SELECT ...
 			'tx_multishop_categories_description cd', // FROM ...
-			'((c2c.categories_id = \''.$current_category_id.'\' and c2c.foreign_page_uid = \''.$page_uid.'\') or (c2c.foreign_categories_id = \''.$current_category_id.'\' and c2c.page_uid = \''.$page_uid.'\'))', // WHERE...
+			'((c2c.categories_id = \''.$category_id.'\' and c2c.foreign_page_uid = \''.$page_uid.'\') or (c2c.foreign_categories_id = \''.$category_id.'\' and c2c.page_uid = \''.$page_uid.'\'))', // WHERE...
 			'', // GROUP BY...
 			'', // ORDER BY...
 			'' // LIMIT ...
@@ -3357,7 +3381,7 @@ class mslib_fe {
 		$res=array();
 		$return_categories_id='';
 		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
-			if ($rs['categories_id']==$current_category_id) {
+			if ($rs['categories_id']==$category_id) {
 				$res[]=$rs['foreign_categories_id'];
 			} else {
 				$res[]=$rs['categories_id'];
@@ -6473,6 +6497,7 @@ class mslib_fe {
 			return false;
 		}
 		if (is_numeric($categories_id) && is_numeric($external_page_uid)) {
+			// check if it's have a parent
 			$cats=mslib_fe::Crumbar($categories_id, '', array(), $this->showCatalogFromPage);
 			$cats=array_reverse($cats);
 			$prev_catid=0;
@@ -6514,6 +6539,16 @@ class mslib_fe {
 				$endpoint_catid=$cats[$catidx]['id'];
 			}
 			return $endpoint_catid;
+		}
+	}
+	public function extractDeepestCat(&$tmp_categories_id, $subcategories_array, $catid) {
+		foreach ($subcategories_array[$catid] as $subcat_data) {
+			$subcatid=$subcat_data['id'];
+			if (isset($subcategories_array[$subcatid])) {
+				mslib_fe::extractDeepestCat($tmp_categories_id, $subcategories_array, $subcatid);
+			} else {
+				$tmp_categories_id[]=$subcatid;
+			}
 		}
 	}
 	public function tep_get_categories_edit($categories_id='', $aid='') {
