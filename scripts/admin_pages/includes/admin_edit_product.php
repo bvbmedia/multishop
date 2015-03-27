@@ -1565,13 +1565,13 @@ if ($this->post) {
 			$specials_expired_date=0;
 			$current_tstamp=time();
 			$special_status='1';
-			if ($this->post['specials_price_start']>0) {
+			if (!empty($this->post['specials_price_start_visitor']) && $this->post['specials_price_start']>0) {
 				$specials_start_date=strtotime($this->post['specials_price_start']);
 				if ($specials_start_date>$current_tstamp) {
 					$special_status='0';
 				}
 			}
-			if ($this->post['specials_price_expired']>0) {
+			if (!empty($this->post['specials_price_expired_visitor']) && $this->post['specials_price_expired']>0) {
 				$specials_expired_date=strtotime($this->post['specials_price_expired']);
 				if ($specials_expired_date<=$current_tstamp) {
 					$special_status='0';
