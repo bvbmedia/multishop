@@ -130,6 +130,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 		if ($this->customLang) {
 			$this->LLkey=$this->customLang;
 			$this->config['config']['language']=$this->customLang;
+			$GLOBALS['TSFE']->config['config']['language']=$this->customLang;
 			$sys_language_uid=mslib_befe::getSysLanguageUidByIsoString($this->customLang);
 			if (!$sys_language_uid) {
 				// try by flag
