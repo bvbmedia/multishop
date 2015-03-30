@@ -2143,7 +2143,7 @@ if ($rows) {
 			$str="select ".$field." from tx_multishop_products limit 1";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			if (!$qry) {
-				$str="ALTER TABLE  `tx_multishop_products` ADD `products_image".$i."` varchar(50) NULL";
+				$str="ALTER TABLE  `tx_multishop_products` ADD `products_image".$i."` varchar(250) NULL";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
 			}
