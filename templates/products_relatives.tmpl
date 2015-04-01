@@ -37,4 +37,44 @@
 <!-- ###ITEM### end -->
 </table>
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $(".rel_qty_minus").click(function () {
+            var stepSize=parseFloat($(this).attr("data-stepSize"));
+            var minQty=parseFloat($(this).attr("data-minQty"));
+            var maxQty=parseFloat($(this).attr("data-maxQty"));
+            var new_val = 0;
+            var qty_id = "#" + $(this).attr("rel");
+            var qty = parseFloat($(qty_id).val());
+            if (qty > minQty) {
+                new_val = parseFloat(qty - stepSize).toFixed(2).replace('.00', '');
+            }
+            if (new_val==0) {
+                new_val=minQty;
+            }
+            $(qty_id).val(new_val);
+        });
+        $(".rel_qty_plus").click(function () {
+            var stepSize=parseFloat($(this).attr("data-stepSize"));
+            var minQty=parseFloat($(this).attr("data-minQty"));
+            var maxQty=parseFloat($(this).attr("data-maxQty"));
+            var qty_id = "#" + $(this).attr("rel");
+            var qty = parseFloat($(qty_id).val());
+            //var new_val = parseFloat(qty + stepSize).toFixed(2).replace('.00', '');
+            var new_val = 0;
+            if (maxQty>0) {
+                new_val=qty;
+                if (qty < maxQty) {
+                    new_val = parseFloat(qty + stepSize).toFixed(2).replace('.00', '');
+                }
+                if (new_val>maxQty) {
+                    new_val=maxQty;
+                }
+            } else {
+                new_val = parseFloat(qty + stepSize).toFixed(2).replace('.00', '');
+            }
+            $(qty_id).val(new_val);
+        });
+    });
+</script>
 <!-- ###TEMPLATE### end -->

@@ -151,7 +151,13 @@ foreach ($rel_products as $rel_rs) {
 	}
 	$markerArray['ITEM_PRODUCTS_NAME']=$rel_rs['products_name'].($rel_rs['products_model'] ? ' <br />'.$rel_rs['products_model'] : '');
 	$markerArray['ITEM_PRODUCTS_PRICE']=mslib_fe::amount2Cents($final_price);
-	$markerArray['ITEM_PRODUCTS_QUANTITY']='<input type="text" name="relation_cart_quantity['.$i.']" value="1" maxlength="4" size="2" />';
+
+	$quantity_html='<div class="quantity buttons_added">';
+	$quantity_html.='<input type="button" value="-" data-stepSize="'.($rel_rs['products_multiplication']!='0.00'?$rel_rs['products_multiplication']:'1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00'?$rel_rs['minimum_quantity']:'1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00'?$rel_rs['maximum_quantity']:'0').'" class="rel_qty_minus" rel="relation_cart_quantity_'.$i.'">';
+	$quantity_html.='<input class="qty_input" name="relation_cart_quantity['.$i.']" type="text" id="relation_cart_quantity_'.$i.'" value="1" size="4" maxlength="4" />';
+	$quantity_html.='<input type="button" value="+" data-stepSize="'.($rel_rs['products_multiplication']!='0.00'?$rel_rs['products_multiplication']:'1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00'?$rel_rs['minimum_quantity']:'1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00'?$rel_rs['maximum_quantity']:'0').'" class="rel_qty_plus" rel="relation_cart_quantity_'.$i.'"></div>';
+	$markerArray['ITEM_PRODUCTS_QUANTITY']=$quantity_html;//'<input type="text" name="relation_cart_quantity['.$i.']" value="1" maxlength="4" size="2" />';
+
 	$markerArray['ITEM_BUY_NOW']='<label for="relative_'.$i.'"></label>
 		<input type="checkbox" class="PrettyInput" name="winkelwagen['.$i.']" id="relative_'.$i.'" value="1">'.$rel_rs['hidden_fields'];
 	$markerArray['ITEM_PRODUCTS_STOCK']=$rel_rs['products_quantity'];
