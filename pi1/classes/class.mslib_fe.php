@@ -5606,6 +5606,26 @@ class mslib_fe {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		return $row['total'];
 	}
+	function createStoreTTAddress() {
+		$default_iso_nr=276; // germany
+		if (!empty($this->ms['MODULES']['COUNTRY_ISO_NR']) && $this->ms['MODULES']['COUNTRY_ISO_NR']>0) {
+			$default_iso_nr=$this->ms['MODULES']['COUNTRY_ISO_NR'];
+		}
+		$default_country=mslib_fe::getCountryByIso($default_iso_nr);
+		$array=array();
+		$array['pid']=$this->conf['fe_customer_pid'];
+		$array['name']='Store';
+		$array['country']=$default_country['cn_short_en'];
+		$array['tx_multishop_customer_id']=0;
+		$array['tx_multishop_default']=0;
+		$array['tx_multishop_address_type']='store';
+		$array['page_uid']=$this->showCatalogFromPage;
+		$array['tstamp']=time();
+		$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $array);
+		$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+		$store_tt_address_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+		return $store_tt_address_id;
+	}
 	// if the user is logged in and has admin rights lets check if the shop is fully configured
 	public function giveSiteConfigurationNotice() {
 		if (!$this->ms['MODULES']['DISABLE_MULTISHOP_CONFIGURATION_VALIDATION']) {
@@ -5669,13 +5689,17 @@ class mslib_fe {
 				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
-					$messages[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
+					$store_tt_address_id=mslib_fe::createStoreTTAddress();
+					$messages[]=sprintf($this->pi_getLL('admin_label_store_tt_address_id_found'), $store_tt_address_id);
+					//$messages[]=$this->pi_getLL('admin_label_store_tt_address_id_not_exist');
 				}
 			} else {
 				$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-					$messages[]=$this->pi_getLL('admin_label_store_tt_address_not_found');
+					$store_tt_address_id=mslib_fe::createStoreTTAddress();
+					$messages[]=sprintf($this->pi_getLL('admin_label_store_tt_address_id_found'), $store_tt_address_id);
+					//$messages[]=$this->pi_getLL('admin_label_store_tt_address_not_found');
 				} else {
 					$res=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 					$messages[]=sprintf($this->pi_getLL('admin_label_store_tt_address_id_found'), $res['uid']);
