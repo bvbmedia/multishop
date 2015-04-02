@@ -5607,23 +5607,32 @@ class mslib_fe {
 		return $row['total'];
 	}
 	function createStoreTTAddress() {
-		$default_iso_nr=276; // germany
-		if (!empty($this->ms['MODULES']['COUNTRY_ISO_NR']) && $this->ms['MODULES']['COUNTRY_ISO_NR']>0) {
-			$default_iso_nr=$this->ms['MODULES']['COUNTRY_ISO_NR'];
+		$str="select uid from tt_address where tx_multishop_address_type='store' and page_uid=0";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+			$default_iso_nr=276; // germany
+			if (!empty($this->ms['MODULES']['COUNTRY_ISO_NR']) && $this->ms['MODULES']['COUNTRY_ISO_NR']>0) {
+				$default_iso_nr=$this->ms['MODULES']['COUNTRY_ISO_NR'];
+			}
+			$default_country=mslib_fe::getCountryByIso($default_iso_nr);
+			$array=array();
+			$array['pid']=$this->conf['fe_customer_pid'];
+			$array['name']='Store';
+			$array['country']=$default_country['cn_short_en'];
+			$array['tx_multishop_customer_id']=0;
+			$array['tx_multishop_default']=0;
+			$array['tx_multishop_address_type']='store';
+			$array['page_uid']=$this->showCatalogFromPage;
+			$array['tstamp']=time();
+			$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $array);
+			$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
+			$store_tt_address_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+		} else {
+			$tt_rec=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+			$str="UPDATE `tt_address` SET page_uid='".$this->showCatalogFromPage."' where uid='".$tt_rec['uid']."'";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$store_tt_address_id=$tt_rec['uid'];
 		}
-		$default_country=mslib_fe::getCountryByIso($default_iso_nr);
-		$array=array();
-		$array['pid']=$this->conf['fe_customer_pid'];
-		$array['name']='Store';
-		$array['country']=$default_country['cn_short_en'];
-		$array['tx_multishop_customer_id']=0;
-		$array['tx_multishop_default']=0;
-		$array['tx_multishop_address_type']='store';
-		$array['page_uid']=$this->showCatalogFromPage;
-		$array['tstamp']=time();
-		$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $array);
-		$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
-		$store_tt_address_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 		return $store_tt_address_id;
 	}
 	// if the user is logged in and has admin rights lets check if the shop is fully configured
