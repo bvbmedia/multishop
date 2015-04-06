@@ -59,6 +59,7 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 		break;
 	case 'get_attributes_values':
 		$where=array();
+		$orderby=array();
 		$where[]="optval.language_id = '".$this->sys_language_uid."'";
 		$skip_db=false;
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
@@ -78,6 +79,7 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 					} else {
 						$where[]="optval.products_options_values_name like '%".addslashes($search_term)."%'";
 					}
+					$orderby[]="INSTR('optval.products_options_values_name', '".$search_term."')";
 				} else {
 					if (isset($tmp_optid) && !empty($tmp_optid)) {
 						list(, $optid)=explode('=', $tmp_optid);
@@ -88,22 +90,26 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 				}
 			} else {
 				$where[]="optval.products_options_values_name like '%".addslashes($this->get['q'])."%'";
+				$orderby[]="INSTR('optval.products_options_values_name', '".$this->get['q']."')";
 			}
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			if (is_numeric($this->get['preselected_id'])) {
 				$where[]="optval2opt.products_options_values_id = '".$this->get['preselected_id']."'";
 			} else {
 				$where[]="optval.products_options_values_name like '%".addslashes($this->get['preselected_id'])."%'";
+				$orderby[]="INSTR('optval.products_options_values_name', '".$this->get['preselected_id']."')";
 			}
 		}
+		$orderby[]="optval.products_options_values_name asc";
 		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('optval.*', // SELECT ...
 			'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id', // FROM ...
-			implode(' and ', $where), // WHERE.
+			implode(' and ', $where), // WHERE
 			'optval.products_options_values_id', // GROUP BY...
-			'optval2opt.sort_order', // ORDER BY...
+			implode(', ', $orderby), // ORDER BY...
 			'' // LIMIT ...
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		var_dump($str);
 		$data=array();
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
