@@ -1673,7 +1673,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$results['pagination']['page_number'][$x]['number'] = $x;
 		}
 	}
-	$results['pagination']['curent_p'] = $p;
+	$results['pagination']['current_p'] = $p;
 	if ($totpage == $p) {
 		$results['pagination']['next']=false;
 		$results['pagination']['last']=false;
