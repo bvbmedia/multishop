@@ -31,8 +31,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$staffel_price['price']=($product['final_price']);
 	}
 	//if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-		$staffel_price['price_include_vat']=mslib_fe::taxDecimalCrop($staffel_price['price']+($staffel_price['price']*$product['tax_rate']), 2, false);
+		$staffel_price['price_include_vat']=$staffel_price['price']+($staffel_price['price']*$product['tax_rate']);
 	//}
+
+	$staffel_price['display_price']=mslib_fe::taxDecimalCrop($staffel_price['price'], 2, false);
+	$staffel_price['display_price_include_vat']=mslib_fe::taxDecimalCrop($staffel_price['price_include_vat'], 2, false);
+
 	$staffel_price['tax_id']=$product['tax_id'];
 	$content=$staffel_price;
 	$content=json_encode($content, ENT_NOQUOTES);

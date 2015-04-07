@@ -35,13 +35,26 @@ if ($this->ADMIN_USER) {
 				$ctr++;
 			}
 		} else {
-			$sql_option="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".$this->get['pid']."' and pa.options_id = '".$this->get['optid']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='".$this->get['optid']."' and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
+			if (isset($this->get['valid'])) {
+				$sql_option="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".$this->get['pid']."' and pa.options_id = '".$this->get['optid']."' and pa.options_values_id='".$this->get['valid']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
+			} else {
+				$sql_option="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".$this->get['pid']."' and pa.options_id = '".$this->get['optid']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='".$this->get['optid']."' and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
+			}
+			//var_dump($sql_option);
 			$qry_option=$GLOBALS['TYPO3_DB']->sql_query($sql_option);
 			$ctr=0;
 			while (($rs_option=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_option))!=false) {
+				$product=mslib_fe::getProduct($this->get['pid'], '', '', 1, 1);
+				$data=mslib_fe::getTaxRuleSet($product['tax_id'], $product['products_price']);
+				$product_tax_rate=$data['total_tax_rate'];
+				$attributes_tax=mslib_fe::taxDecimalCrop(($rs_option['options_values_price']*$product_tax_rate)/100);
+				$attribute_price_display_incl=mslib_fe::taxDecimalCrop($rs_option['options_values_price']+$attributes_tax, 2, false);
+
 				$option_data[$ctr]['valid']=$rs_option['options_values_id'];
 				$option_data[$ctr]['valname']=$rs_option['products_options_values_name'];
 				$option_data[$ctr]['values_price']=$rs_option['options_values_price'];
+				$option_data[$ctr]['display_values_price']=mslib_fe::taxDecimalCrop($rs_option['options_values_price'], 2, false);
+				$option_data[$ctr]['display_values_price_including_vat']=$attribute_price_display_incl;
 				$option_data[$ctr]['price_prefix']=$rs_option['price_prefix'];
 				$ctr++;
 			}

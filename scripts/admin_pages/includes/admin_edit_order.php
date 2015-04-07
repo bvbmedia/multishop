@@ -2332,22 +2332,22 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 							if (d.price_include_vat) {
 								if ($("#product_tax").length>0) {
-									$("#display_name_including_vat").val(d.price_include_vat);
+									$("#display_name_including_vat").val(d.display_price_include_vat);
 								} else {
-									$("#display_manual_name_including_vat").val(d.price_include_vat);
+									$("#display_manual_name_including_vat").val(d.display_price_include_vat);
 								}
 							} else {
 								if ($("#product_tax").length>0) {
-									$("#display_name_including_vat").val(d.price);
+									$("#display_name_including_vat").val(d.display_price);
 								} else {
-									$("#display_manual_name_including_vat").val(d.price);
+									$("#display_manual_name_including_vat").val(d.display_price);
 								}
 							}
 							if ($("#product_tax").length>0) {
-								$("#display_name_excluding_vat").val(d.price);
+								$("#display_name_excluding_vat").val(d.display_price);
 								$("#product_price").val(d.price);
 							} else {
-								$("#display_manual_name_excluding_vat").val(d.price);
+								$("#display_manual_name_excluding_vat").val(d.display_price);
 								$("#manual_product_price").val(d.price);
 							}
 						});
@@ -2355,12 +2355,12 @@ if (is_numeric($this->get['orders_id'])) {
 						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: 0}, function(j){
 							$(".manual_new_attributes").remove();
 							jQuery.each(j, function(key, val) {
-								jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: val.optid}, function(k){
+								jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: val.optid}, function(k) {
 									var valid=0;
 									var price_data={};
 									jQuery.each(k, function(idx, optvalid) {
 										valid=optvalid.valid;
-										price_data={values_price: optvalid.values_price, price_prefix: optvalid.price_prefix};
+										price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
 									});
 									add_new_attributes(val.optid, valid, price_data);
 								});
@@ -2511,12 +2511,43 @@ if (is_numeric($this->get['orders_id'])) {
 				}).on("select2-selecting", function(e) {
 					if (e.object.id == e.object.text) {
 						$(this).next().val("1");
+						$.each($(this).parent().parent().parent().next().next().children().children(), function(i, v){
+							$(v).val("0.00");
+						});
 					} else {
+						var option_id=$(this).parent().prev().prev().find("input[type=hidden]").val();
+						var option_value_id=e.object.id;
+						var price_input_obj=$(this).parent().parent().parent().next().next().children();
+						var tr_parent=$(this).parent().parent().parent().parent();
+						var tbody_parent=$(tr_parent).parent();
+						//
+						if (typeof $(tbody_parent).attr("id")=="undefined") {
+							// add new product
+							var product_id=$(tbody_parent).children("tr:nth-child(2)").children().find("input.product_name").val();
+						} else {
+							// edit existing product
+							var product_id=$(tbody_parent).children().first("tr").children().find("input.product_name_input").val();
+						}
 						$(this).next().val("0");
+						//
+						jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: product_id, optid: option_id, valid: option_value_id}, function(k){
+							jQuery.each(k, function(idx, optvalid) {
+								valid=optvalid.valid;
+								price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
+								jQuery.each(jQuery(price_input_obj).children(), function(i, v) {
+									if ($(v).attr("id")=="display_manual_name_excluding_vat") {
+										$(v).val(price_data.display_values_price);
+									}
+									if ($(v).attr("id")=="display_manual_name_including_vat") {
+										$(v).val(price_data.display_values_price_including_vat);
+									}
+									if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
+										$(v).val(price_data.values_price);
+									}
+								});
+							});
+						});
 					}
-					$.each($(this).parent().parent().parent().next().next().children(), function(i, v){
-						$(v).val("");
-					});
 				});
 			}
 			// eof autocomplete for option
@@ -2550,8 +2581,8 @@ if (is_numeric($this->get['orders_id'])) {
 				manual_attributes_selectbox += \'</div>\';';
 
 				$tmpcontent.='
-				var manual_attributes_price = \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="msManualOrderProductPriceExcludingVat" value="\' + decimalCrop(price_data.values_price) + \'"><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
-				manual_attributes_price += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_manual_name_including_vat" class="msManualOrderProductPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
+				var manual_attributes_price = \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="msManualOrderProductPriceExcludingVat" value="\' + decimalCrop(price_data.display_values_price) + \'"><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
+				manual_attributes_price += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_manual_name_including_vat" class="msManualOrderProductPriceIncludingVat" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'"><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
 				manual_attributes_price += \'<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + (price_data.price_prefix!=\'+\' ? price_data.price_prefix : \'\') + price_data.values_price + \'" /></div>\';';
 
 				$tmpcontent.='
