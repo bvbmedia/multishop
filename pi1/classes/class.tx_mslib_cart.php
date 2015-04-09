@@ -275,6 +275,8 @@ class tx_mslib_cart extends tslib_pibase {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPostCalc'])) {
 					$params=array(
 						'cart'=>&$this->cart,
+						'subtotal'=>&$subtotal,
+						'subtotal_tax'=>&$subtotal_tax,
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPostCalc'] as $funcRef) {
 						t3lib_div::callUserFunction($funcRef, $params, $this);
