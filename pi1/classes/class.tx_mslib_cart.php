@@ -241,6 +241,8 @@ class tx_mslib_cart extends tslib_pibase {
 						}
 					}
 				}
+				$subtotal=$this->cart['summarize']['sub_total'];
+				$subtotal_tax=$this->cart['summarize']['sub_total_including_vat']-$this->cart['summarize']['sub_total'];
 				if ($this->cart['discount']) {
 					switch ($this->cart['discount_type']) {
 						case 'percentage':
