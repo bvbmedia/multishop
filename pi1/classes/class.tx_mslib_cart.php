@@ -241,7 +241,11 @@ class tx_mslib_cart extends tslib_pibase {
 						}
 					}
 				}
-				$subtotal=$this->cart['summarize']['sub_total'];
+				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+					$subtotal=$this->cart['summarize']['sub_total'];
+				} else {
+					$subtotal=$this->cart['summarize']['sub_total_including_vat'];
+				}
 				$subtotal_tax=$this->cart['summarize']['sub_total_including_vat']-$this->cart['summarize']['sub_total'];
 				if ($this->cart['discount']) {
 					switch ($this->cart['discount_type']) {
@@ -291,8 +295,22 @@ class tx_mslib_cart extends tslib_pibase {
 				//die();
 				// custom hook that can be controlled by third-party plugin eof
 				// calculate totals
-				$this->cart['summarize']['grand_total_excluding_vat']=$subtotal+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs'];
-				$this->cart['summarize']['grand_total']=($subtotal+$subtotal_tax)+($this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']);
+				/*echo $subtotal."<br/>";
+				echo $subtotal_tax."<br/>";
+				echo $this->cart['user']['shipping_method_costs_including_vat']."<br/>";
+				echo $this->cart['user']['payment_method_costs_including_vat']."<br/><br/>";
+				echo $subtotal_tax."<br/>";
+				echo $payment_tax."<br/>";
+				echo $shipping_tax;
+
+				die();*/
+				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+					$this->cart['summarize']['grand_total_excluding_vat']=$subtotal+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs'];
+					$this->cart['summarize']['grand_total']=($subtotal+$subtotal_tax)+($this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']);
+				} else {
+					$this->cart['summarize']['grand_total_excluding_vat']=($subtotal-$subtotal_tax)+$this->cart['user']['shipping_method_costs']+$this->cart['user']['payment_method_costs'];
+					$this->cart['summarize']['grand_total']=($subtotal)+($this->cart['user']['shipping_method_costs_including_vat']+$this->cart['user']['payment_method_costs_including_vat']);
+				}
 				//$this->cart['summarize']['grand_total_vat']=($this->cart['summarize']['grand_total']-$this->cart['summarize']['grand_total_excluding_vat']);
 				$this->cart['summarize']['grand_total_vat']=$subtotal_tax+$payment_tax+$shipping_tax;
 				// b2b mode 1 cent bugfix: 2013-05-09 cbc
