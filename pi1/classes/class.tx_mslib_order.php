@@ -196,16 +196,26 @@ class tx_mslib_order extends tslib_pibase {
 					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total_excluding_vat']+=($final_price+$tmp_attributes_price)*$row_prod['qty'];
 					$tax_separation[($row_prod['products_tax']/100)*100]['products_sub_total']+=($final_price+$tmp_attributes_price)+($tax+$attributes_tax)*$row_prod['qty'];
 				}
+				//
+				$order_tax_data['total_orders_tax_including_discount']=$order_tax_data['total_orders_tax'];
+				$order_tax_data['sub_total']=(string)$sub_total;
+				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;
+				// discount
+				//echo "<pre>";
+				//echo $sub_total."<br/>";
+				//echo $sub_total_excluding_vat."<br/>";
+
+
 				if ($row['discount']>0) {
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$discount_price=round($row['discount'], 2);
 						//$sub_total_excluding_vat-=$discount_price;
-						$discount_percentage=($discount_price/($sub_total_excluding_vat)*100);
+						$discount_percentage=round(($discount_price/($sub_total_excluding_vat)*100), 2);
 						//$sub_total_excluding_vat=(($sub_total_excluding_vat)/100*(100-$discount_percentage));
 					} else {
 						$discount_price=$row['discount'];
 						//$sub_total-=$discount_price;
-						$discount_percentage=($discount_price/($sub_total)*100);
+						$discount_percentage=round(($discount_price/($sub_total)*100), 2);
 						//$sub_total=(($sub_total)/100*(100-$discount_percentage));
 					}
 					$sub_total_tax=(($sub_total-$sub_total_excluding_vat)/100*(100-$discount_percentage));
@@ -213,11 +223,18 @@ class tx_mslib_order extends tslib_pibase {
 						$tax_separation=array();
 					}
 				}
+
+				//echo $discount_percentage."<br/>";
+				//echo $discount_price."<br/>";
+				//echo $sub_total_tax."<br/>";
+				//die();
+
 				$order_tax_data['total_orders_tax']=(string)$sub_total_tax+$shipping_tax+$payment_tax;
-				$order_tax_data['total_orders_tax_including_discount']=$order_tax_data['total_orders_tax'];
-				$order_tax_data['sub_total']=(string)$sub_total;
-				$order_tax_data['sub_total_excluding_vat']=(string)$sub_total_excluding_vat;
-				$order_tax_data['grand_total']=(string)(($sub_total_excluding_vat-$discount_price)+$sub_total_tax)+($row['shipping_method_costs']+$shipping_tax)+($row['payment_method_costs']+$payment_tax);
+				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+					$order_tax_data['grand_total']=(string)(($sub_total_excluding_vat-$discount_price)+$sub_total_tax)+($row['shipping_method_costs']+$shipping_tax)+($row['payment_method_costs']+$payment_tax);
+				} else {
+					$order_tax_data['grand_total']=(string)(($sub_total-$discount_price))+($row['shipping_method_costs']+$shipping_tax)+($row['payment_method_costs']+$payment_tax);
+				}
 				$order_tax_data['tax_separation']=$tax_separation;
 				//print_r($order_tax_data);
 				$serial_orders=serialize($order_tax_data);
