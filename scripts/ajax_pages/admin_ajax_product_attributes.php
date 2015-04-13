@@ -109,7 +109,6 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 			'' // LIMIT ...
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-		var_dump($str);
 		$data=array();
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
