@@ -276,6 +276,7 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field label.endtime { clear:none; float:none; display:inline-block; width:auto; padding-left:40px; padding-right:20px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field .msAttributesWrapper { display:block; padding-left:200px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field strong { display:block; padding-top:3px; }
+#tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field .redactor-editor strong { display:inline; padding-top:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field td#order_memo_container div,
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field td#order_email_container div  { overflow:hidden; width:100%; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .account-field td#order_email_container label { width:auto; }
