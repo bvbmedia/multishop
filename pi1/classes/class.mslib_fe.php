@@ -5539,7 +5539,7 @@ class mslib_fe {
 			return false;
 		}
 		if (is_numeric($id)) {
-			$where='products_options_values_id = '.$id.' and language_id = '.$GLOBALS['TSFE']->sys_language_uid;
+			$where='products_options_values_id = '.$id.' and language_id = '.$this->sys_language_uid;
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 				'tx_multishop_products_options_values', // FROM ...
 				$where, // WHERE.
@@ -5557,7 +5557,7 @@ class mslib_fe {
 			return false;
 		}
 		if (is_numeric($id)) {
-			$where='products_options_id = '.$id.' and language_id = '.$GLOBALS['TSFE']->sys_language_uid;
+			$where='products_options_id = '.$id.' and language_id = '.$this->sys_language_uid;
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 				'tx_multishop_products_options', // FROM ...
 				$where, // WHERE.
