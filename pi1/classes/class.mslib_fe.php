@@ -6331,6 +6331,10 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['label']=$this->pi_getLL('admin_sitemap_generator');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_sitemap_generator');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
+			// repair missing multilanguages attributes
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['label']=$this->pi_getLL('repair_missing_attribute_language_values');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_repair_missing_multilanguages_attributes');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
 			// footer eof
 		} // end if enableAdminPanelSystem
 		// hook
