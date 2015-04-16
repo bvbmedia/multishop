@@ -101,6 +101,7 @@ if (is_array($this->get['attributes'])) {
 						// hook to let other plugins further manipulate the option values display
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'])) {
 							$params=array(
+								'product_id'=>$products_id,
 								'options_id'=>&$key,
 								'row'=>&$row
 							);

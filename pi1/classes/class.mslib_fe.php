@@ -2492,7 +2492,7 @@ class mslib_fe {
 				$where_clause=' p.products_status=1 ';
 			}
 			if (!$this->masterShop) {
-				$p2c_is_deepest='AND p2c.is_deepest=1';
+				$p2c_is_deepest=' AND p2c.is_deepest=1';
 				if (strpos($search_section, 'ajax_products_search')!==false) {
 					$p2c_is_deepest='';
 				}
@@ -2721,6 +2721,8 @@ class mslib_fe {
 			$orderby_clause, // ORDER BY...
 			$limit_clause // LIMIT ...
 		);
+		//var_dump($str);
+		//die();
 		if ($this->conf['debugEnabled']=='1') {
 			$logString='getProductsPageSet query 2: '.$str.'.';
 			t3lib_div::devLog($logString, 'multishop', 0);

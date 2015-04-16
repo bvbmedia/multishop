@@ -566,6 +566,7 @@ class tx_mslib_cart extends tslib_pibase {
 												// hook to let other plugins further manipulate the option values display
 												if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['cartAttributesArray'])) {
 													$params=array(
+														'product_id'=>$getAtributesFromProductsId,
 														'options_id'=>&$key,
 														'row'=>&$row
 													);

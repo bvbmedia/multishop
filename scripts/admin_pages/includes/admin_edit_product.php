@@ -3369,6 +3369,16 @@ if ($this->post) {
 							<div class="items_wrapper">
 							';
 							foreach ($attributes_data[$option_id] as $attribute_data) {
+								// custom hook that can be controlled by third-party plugin
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductAttributesData'])) {
+									$params=array(
+										'attribute_data'=>&$attribute_data
+									);
+									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductAttributesData'] as $funcRef) {
+										t3lib_div::callUserFunction($funcRef, $params, $this);
+									}
+								}
+								// custom hook that can be controlled by third-party plugin eof
 								if (!isset($item_row_type) || $item_row_type=='even_item_row') {
 									$item_row_type='odd_item_row';
 								} else {
