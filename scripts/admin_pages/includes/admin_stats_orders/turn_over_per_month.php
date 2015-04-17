@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 if ($this->post['Search'] and ($this->get['payment_status']!=$this->cookie['payment_status'])) {
 	$this->cookie['payment_status']=$this->get['payment_status'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
@@ -105,7 +106,7 @@ if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
 	foreach ($all_orders_status as $row) {
 		$orders_status_list.='<option value="'.$row['id'].'" '.(($this->get['orders_status_search']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
-		if ($this->post['orders_status_search']==$row['id']) {
+		if ($this->get['orders_status_search']==$row['id']) {
 			$order_status_search_selected=true;
 		}
 	}
