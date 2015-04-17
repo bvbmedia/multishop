@@ -13,7 +13,7 @@ $subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
 // load optional cms content and show the current category name
 if (is_array($current) && $current['content']) {
 	//$output['categories_header_description']=mslib_fe::htmlBox($current['categories_name'], $current['content'], 1);
-	$output['categories_header_description']=mslib_fe::htmlBox('', $current['content'], 1);
+	$output['categories_header_description']='<div class="msCategoriesHeaderDescription">'.mslib_fe::htmlBox('', $current['content'], 1).'</div>';
 }
 $output['categories_header']='';
 if (is_array($current) && $current['categories_name']) {
@@ -22,7 +22,7 @@ if (is_array($current) && $current['categories_name']) {
 if ($current['categories_id']==$this->conf['categoriesStartingPoint'] and $this->hideHeader) {
 	$output['categories_header']='';
 }
-// load optional cms content and show the current category name eof	
+// load optional cms content and show the current category name eof
 $counter=0;
 $contentItem='';
 foreach ($categories as $category) {
@@ -90,7 +90,7 @@ foreach ($categories as $category) {
 			t3lib_div::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	// custom hook that can be controlled by third-party plugin eof		
+	// custom hook that can be controlled by third-party plugin eof
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 }
 if ($current['content_footer']) {
