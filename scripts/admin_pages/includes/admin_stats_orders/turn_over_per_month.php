@@ -548,6 +548,7 @@ jQuery(document).ready(function ($) {
         showSecond: true,
         timeFormat: \'HH:mm:ss\'
 	});
+	$(".order_select2").select2();
 });
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
