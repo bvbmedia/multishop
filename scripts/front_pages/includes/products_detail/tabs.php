@@ -13,7 +13,7 @@ $product=mslib_fe::getProduct($this->get['products_id'], $this->get['categories_
 if (!$product['products_id']) {
 	header('HTTP/1.0 404 Not Found');
 	$output_array['http_header']='HTTP/1.0 404 Not Found';
-	$content='<div class="main-title"><h1>The product is not existing</h1></div>';
+	$content='<div class="main-title"><h1>'.$this->pi_getLL('the_requested_product_does_not_exist').'</h1></div>';
 } else {
 	if ($this->conf['imageWidth']) {
 		$this->imageWidth=$this->conf['imageWidth'];

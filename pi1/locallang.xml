@@ -1174,6 +1174,7 @@
             <label index="copy_from_billing_details">Copy from billing details</label>
             <label index="repair_missing_attribute_language_values">Repair missing attribute language values</label>
             <label index="admin_label_missing_attribute_languages_values_fixed">Missing attribute languages values fixed.</label>
+            <label index="the_requested_product_does_not_exist">The requested product does not exist</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
@@ -4770,6 +4771,10 @@
 			<label index="all_countries">Alle landen</label>
 			<label index="copy_from_billing_details">Kopie van factuurgegevens</label>
 			<label index="vat_nn_from_subtotal_nn">BTW %s van %s</label>
+
+            <label index="repair_missing_attribute_language_values">Repareer ontbrekende attribuutwaardes (voor de overige talen)</label>
+            <label index="admin_label_missing_attribute_languages_values_fixed">Ontbrekende attribuutwaardes zijn gerepareerd.</label>
+            <label index="the_requested_product_does_not_exist">Helaas is het opgevraagde product niet gevonden</label>
 		</languageKey>
 		<languageKey index="no"></languageKey>
 		<languageKey index="pl"></languageKey>

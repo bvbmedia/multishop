@@ -286,7 +286,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 					}
 				}
 				if (!$hide_no_products_message) {
-					$content.=$this->pi_getLL('no_products_available');
+					$content.='<div class="emptyContent">'.$this->pi_getLL('no_products_available').'</div>';
 				}
 				if ($current['content_footer'] and !$p) {
 					$hide_no_products_message=1;
