@@ -1172,6 +1172,7 @@
             <label index="all_shipping_methods">All shipping methods</label>
             <label index="all_countries">All countries</label>
             <label index="copy_from_billing_details">Copy from billing details</label>
+            <label index="vat_nn_from_subtotal_nn">VAT %s from %s</label>
             <label index="repair_missing_attribute_language_values">Repair missing attribute language values</label>
             <label index="admin_label_missing_attribute_languages_values_fixed">Missing attribute languages values fixed.</label>
             <label index="the_requested_product_does_not_exist">The requested product does not exist</label>
