@@ -815,7 +815,7 @@ class mslib_befe {
 					$path=PATH_site.$value.'/'.$folder_name.'/'.$file_name;
 					if (file_exists($path)) {
 						if (unlink($path)) {
-							@unlink($path);
+							//@unlink($path);
 						}
 					}
 				}
