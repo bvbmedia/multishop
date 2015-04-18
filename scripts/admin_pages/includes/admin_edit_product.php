@@ -2515,7 +2515,8 @@ if ($this->post) {
 				action: \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images').'\',
 				params: {
 					products_name: products_name,
-					file_type: \'products_image'.$i.'\'
+					file_type: \'products_image'.$i.'\',
+					old_image: $("#ajax_products_image'.$i.'").val()
 				},
 				template: \'<div class="qq-uploader">\' +
 						  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
@@ -2526,6 +2527,11 @@ if ($this->post) {
 					var filenameServer = responseJSON[\'filename\'];
 					var filenameLocationServer = responseJSON[\'fileLocation\'];
 					$("#ajax_products_image'.$i.'").val(filenameServer);
+					uploader'.$i.'.setParams({
+					   products_name: products_name,
+					   file_type: \'products_image\',
+					   old_image: $("#ajax_products_image'.$i.'").val()
+					});
 					'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 					// hide the qq-upload status
 					$("#qq-upload-list-ul'.$i.'").hide();

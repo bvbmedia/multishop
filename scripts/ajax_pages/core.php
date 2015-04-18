@@ -1300,6 +1300,9 @@ switch ($this->ms['page']) {
 											$filename=mslib_fe::rewritenamein($tmp_filename).'.'.$ext;
 											$folder=mslib_befe::getImagePrefixFolder($filename);
 											$array=explode(".", $filename);
+											if (isset($this->get['old_image']) && !empty($this->get['old_image'])) {
+												mslib_befe::deleteProductImage($this->get['old_image']);
+											}
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
 												t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 											}
@@ -1326,7 +1329,7 @@ switch ($this->ms['page']) {
 												$result['success']=true;
 												$result['error']=false;
 												$result['filename']=$filename;
-												$result['fileLocation']=$fileLocation;
+												$result['fileLocation']=$fileLocation.'?'.time();
 												echo htmlspecialchars(json_encode($result), ENT_NOQUOTES);
 												exit();
 											}
