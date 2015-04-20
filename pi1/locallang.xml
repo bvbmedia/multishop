@@ -1176,12 +1176,12 @@
             <label index="repair_missing_attribute_language_values">Repair missing attribute language values</label>
             <label index="admin_label_missing_attribute_languages_values_fixed">Missing attribute languages values fixed.</label>
             <label index="the_requested_product_does_not_exist">The requested product does not exist</label>
-            <label index="order_status_success">Payment success status</label>
-            <label index="order_status_cancelled">Payment cancelled status</label>
-            <label index="order_status_pending">Payment pending status</label>
-            <label index="order_status_denied">Payment denied status</label>
-            <label index="order_status_exception">Payment exception status</label>
-            <label index="order_status_declined">Payment declined</label>
+            <label index="order_payment_status_success">Order payment success status</label>
+            <label index="order_payment_status_cancelled">Order payment cancelled status</label>
+            <label index="order_payment_status_pending">Order payment pending status</label>
+            <label index="order_payment_status_denied">Order payment denied status</label>
+            <label index="order_payment_status_exception">Order payment exception status</label>
+            <label index="order_payment_status_declined">Order payment declined status</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
