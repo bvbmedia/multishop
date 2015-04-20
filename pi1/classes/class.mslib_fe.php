@@ -3869,22 +3869,28 @@ class mslib_fe {
 						$lang_key='';
 						switch ($field_key) {
 							case 'success_status':
-								$lang_key='payment_accepted_page';
+								//$lang_key='payment_accepted_page';
+								$lang_key='order_payment_status_success';
 								break;
 							case 'cancelled_status':
-								$lang_key='payment_cancelled_page';
+								//$lang_key='payment_cancelled_page';
+								$lang_key='order_payment_status_cancelled';
 								break;
 							case 'pending_status':
-								$lang_key='payment_pending_page';
+								//$lang_key='payment_pending_page';
+								$lang_key='order_payment_status_pending';
 								break;
 							case 'denied_status':
-								$lang_key='payment_denied_page';
+								//$lang_key='payment_denied_page';
+								$lang_key='order_payment_status_denied';
 								break;
 							case 'exception_status':
-								$lang_key='payment_exception_page';
+								//$lang_key='payment_exception_page';
+								$lang_key='order_payment_status_exception';
 								break;
 							case 'declined_status':
-								$lang_key='payment_declined_page';
+								//$lang_key='payment_declined_page';
+								$lang_key='order_payment_status_declined';
 								break;
 							case 'order_confirmation':
 								$lang_key='email_order_confirmation_letter';
