@@ -400,6 +400,16 @@ if (count($cart['products'])>0) {
 		</div>
 		';
 	}
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['shoppingCartPagePostHook'])) {
+		$params=array(
+			'template'=>$template,
+			'subpartArray'=>&$subpartArray,
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['shoppingCartPagePostHook'] as $funcRef) {
+			t3lib_div::callUserFunction($funcRef, $params, $this);
+		}
+	}
 	// completed the template expansion by replacing the "item" marker in the template
 	$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 } else {
