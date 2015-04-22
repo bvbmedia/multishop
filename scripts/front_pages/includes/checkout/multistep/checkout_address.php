@@ -94,6 +94,17 @@ if (count($cart['products'])<1) {
 		if (!$this->post['tx_multishop_pi1']['email_confirm'] || $this->post['tx_multishop_pi1']['email']!=$this->post['tx_multishop_pi1']['email_confirm']) {
 			$erno[]=$this->pi_getLL('verification_email_not_match');
 		}
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressValidationPreHook'])) {
+			$params=array(
+				'user'=>$user,
+				'erno'=>&$erno
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressValidationPreHook'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		if (!$erno) {
 			// billing details
 			$user['email']=$this->post['tx_multishop_pi1']['email'];
@@ -633,11 +644,21 @@ if (count($cart['products'])<1) {
 		</div>';
 		$content.='<div id="delivery_address_category"><h2>'.$this->pi_getLL('delivery_address').'</h2>'.$tmpcontent.'</div>';
 		$content.='<div id="bottom-navigation">
-					<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart').'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
-					<span class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" id="submit" value="'.$this->pi_getLL('next').'" /></span>
-				</div>
-				</form>
-				</div>';
+			<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=shopping_cart').'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
+			<span class="msFrontButton continueState arrowRight arrowPosLeft"><input type="submit" id="submit" value="'.$this->pi_getLL('next').'" /></span>
+		</div>
+		</form>
+		</div>';
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressPostHook'])) {
+			$params=array(
+				'content'=>&$content
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressPostHook'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 	}
 }
 

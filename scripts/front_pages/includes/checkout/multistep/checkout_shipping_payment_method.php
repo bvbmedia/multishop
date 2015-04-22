@@ -32,6 +32,16 @@ if ($posted_page==current($stepCodes)) {
 	$show_shipping_payment_method=1;
 }
 if ($erno or $show_shipping_payment_method) {
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepShippingPaymentPreHook'])) {
+		$params=array(
+			'content'=>&$content,
+			'stepCodes'=>&$stepCodes,
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepShippingPaymentPreHook'] as $funcRef) {
+			t3lib_div::callUserFunction($funcRef, $params, $this);
+		}
+	}
 	$content.=CheckoutStepping($stepCodes, current($stepCodes), $this);
 	$back_button_link=mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[previous_checkout_section]='.prev($stepCodes));
 	next($stepCodes);
@@ -101,6 +111,16 @@ if ($erno or $show_shipping_payment_method) {
 		$count=0;
 		foreach ($shipping_methods as $code=>$item) {
 			$shipping_method=mslib_fe::getShippingMethod($item['id'], 's.id', $cart['user']['countries_id']);
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepShippingMethodSelectionHook'])) {
+				$params=array(
+					'shipping_method'=>&$shipping_method,
+					'item'=>&$item,
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepShippingMethodSelectionHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$count++;
 			// costs
 			$price_wrap='';
