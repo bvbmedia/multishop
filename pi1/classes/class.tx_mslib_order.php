@@ -1111,7 +1111,7 @@ class tx_mslib_order extends tslib_pibase {
 			$markerArray=array();
 			$markerArray['TAX_RATE_LABEL']=$this->pi_getLL('vat');
 			$markerArray['INCLUDED_TAX_RATE_LABEL']=$this->pi_getLL('included_vat_amount');
-			$markerArray['TAX_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['total_orders_tax_including_discount']);
+			$markerArray['TAX_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['total_orders_tax']);
 			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 		} else {
 			$subpartArray['###'.$key.'###']='';
