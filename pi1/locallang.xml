@@ -4295,7 +4295,7 @@
 			<label index="feed_exporter_fields_label_categories_meta_title_level_x">Categorie META title (niveau: %d)</label>
 			<label index="feed_exporter_fields_label_categories_meta_title_product_category_level">Categorie META title (product categorie niveau)</label>
 			<label index="feed_exporter_fields_label_categories_name_level_x">Categorie naam (niveau: %d)</label>
-			<label index="feed_exporter_fields_label_categories_name_product_category_level">Categorie naam (product categorie niveau: %d)</label>
+			<label index="feed_exporter_fields_label_categories_name_product_category_level">Categorie naam (product categorie niveau)</label>
 			<label index="feed_exporter_fields_label_category_crum_path">Categorie kruimelpad</label>
 			<label index="feed_exporter_fields_label_category_link">Categorie link</label>
 			<label index="feed_exporter_fields_label_custom_field_with_values">Ander veld met waarde</label>
