@@ -4,8 +4,8 @@ if (!defined('TYPO3_MODE')) {
 }
 $content='';
 $log_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/sitemap_tmp.txt';
-$sitemap_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/sitemap.txt';
-$sitemap_file_web_path='uploads/tx_multishop/sitemap.txt';
+$sitemap_file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/sitemap_'.mslib_fe::rewritenamein($this->HTTP_HOST).'.txt';
+$sitemap_file_web_path='uploads/tx_multishop/sitemap_'.mslib_fe::rewritenamein($this->HTTP_HOST).'.txt';
 $max_pages=2;
 $prefix_domain=$this->FULL_HTTP_URL;
 @unlink($log_file);
