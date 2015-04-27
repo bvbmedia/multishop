@@ -1182,6 +1182,10 @@
             <label index="order_payment_status_denied">Order payment denied status</label>
             <label index="order_payment_status_exception">Order payment exception status</label>
             <label index="order_payment_status_declined">Order payment declined status</label>
+            <label index="merge_attribute_options">Merge attribute options</label>
+            <label index="merge">Merge</label>
+            <label index="merge_to">To</label>
+            <label index="merge_selected">Merge selected</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
