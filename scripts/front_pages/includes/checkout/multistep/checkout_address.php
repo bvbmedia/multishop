@@ -591,8 +591,9 @@ if (count($cart['products'])<1) {
 				<input type="text" name="delivery_last_name" id="delivery_last_name" class="delivery_last-name left-this" value="'.htmlspecialchars($user['delivery_last_name']).'" ><div id="invalid-delivery_last_name" class="error-space" style="display:none"></div>
 		    </div>
 			<div class="account-field col-sm-12" id="input-dfcompany">
-				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).':</label>
-				<input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="'.htmlspecialchars($user['delivery_company']).'">
+				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').':</label>
+				<input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="'.htmlspecialchars($user['delivery_company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-delivery_company" title="'.$this->pi_getLL('company_is_required').'"' : '').'>
+				'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-delivery_company" class="error-space" style="display:none"></div>' : '').'
 			</div>
 			<div class="account-field col-sm-6" id="input-dfaddress">
 				<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
