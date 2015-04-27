@@ -779,14 +779,34 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 
 form.merge_attribute_options_form ul li { background:none; margin:0; padding:0 0 10px; }
 form.merge_attribute_options_form ul li .merge_attribute_options_wrapper > * { vertical-align:middle; }
-form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_source { width:30%; }
 form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_source .label_merge_source { padding-right:20px; }
 form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_source input[type="checkbox"] { vertical-align:top; margin-right:5px; }
 form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_source label { margin:0; vertical-align:middle; }
 form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_target * { vertical-align:middle; }
 form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_target label { margin:0; padding-right:10px; }
 @media (min-width:992px) {
-    form.merge_attribute_options_form ul li { display:table; width:100%; }
-    form.merge_attribute_options_form ul li .merge_attribute_options_wrapper { display:table-row;  }
-    form.merge_attribute_options_form ul li .merge_attribute_options_wrapper > * { display:table-cell; }
+    form.merge_attribute_options_form ul li {
+        display:-webkit-box;
+        display:-moz-box;
+        display:-ms-flexbox;
+        display:-webkit-flex;
+        display:flex;
+        width:100%;
+    }
+    form.merge_attribute_options_form ul li .merge_attribute_options_wrapper {
+        display:-webkit-box;
+        display:-moz-box;
+        display:-ms-flexbox;
+        display:-webkit-flex;
+        display:flex;
+        width:100%;
+    }
+    form.merge_attribute_options_form ul li .merge_attribute_options_wrapper > * {
+        display:-webkit-box;
+        display:-moz-box;
+        display:-ms-flexbox;
+        display:-webkit-flex;
+        display:flex;
+    }
+    form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_source { width:40%; }
 }
