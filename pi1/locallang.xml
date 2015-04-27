@@ -1186,6 +1186,7 @@
             <label index="merge">Merge</label>
             <label index="merge_to">To</label>
             <label index="merge_selected">Merge selected</label>
+            <label index="company_is_required">Company is required</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>

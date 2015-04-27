@@ -683,8 +683,16 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_MIDDLENAME###']=htmlspecialchars($this->post['middle_name']);
 		$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name'));
 		$subpartArray['###VALUE_LASTNAME###']=htmlspecialchars($this->post['last_name']);
+		//
+		$company_validation='';
 		$subpartArray['###LABEL_COMPANY###']=ucfirst($this->pi_getLL('company'));
+		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY']) {
+			$subpartArray['###LABEL_COMPANY###'].='*';
+			$company_validation=' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"';
+		}
+		$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
 		$subpartArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
+		//
 		$subpartArray['###LABEL_STREET_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
 		$subpartArray['###VALUE_STREET_ADDRESS###']=htmlspecialchars($this->post['street_name']);
 		$subpartArray['###LABEL_STREET_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
@@ -894,8 +902,16 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_MIDDLENAME###']=htmlspecialchars($this->post['middle_name']);
 		$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name'));
 		$subpartArray['###VALUE_LASTNAME###']=htmlspecialchars($this->post['last_name']);
+		//
+		$company_validation='';
 		$subpartArray['###LABEL_COMPANY###']=ucfirst($this->pi_getLL('company'));
+		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY']) {
+			$subpartArray['###LABEL_COMPANY###'].='*';
+			$company_validation=' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"';
+		}
+		$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
 		$subpartArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
+		//
 		$subpartArray['###LABEL_STREET_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
 		$subpartArray['###VALUE_STREET_ADDRESS###']=htmlspecialchars($this->post['street_name']);
 		$subpartArray['###LABEL_STREET_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));

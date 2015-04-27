@@ -121,7 +121,8 @@ jQuery(document).ready(function ($) {
                     </div>
                     <div class="account-field">
                         <label for="company" id="account-company">###LABEL_COMPANY###</label>
-                        <input type="text" name="company" class="company" id="company" value="###VALUE_COMPANY###" />
+                        <input type="text" name="company" class="company" id="company" value="###VALUE_COMPANY###"###COMPANY_VALIDATION### />
+                        <div id="invalid-company" class="error-space" style="display:none"></div>
                         ###INPUT_VAT_ID###
                         ###INPUT_COC_ID###
                     </div>

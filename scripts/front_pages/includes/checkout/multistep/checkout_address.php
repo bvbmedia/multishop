@@ -91,6 +91,9 @@ if (count($cart['products'])<1) {
 		if (!$this->post['city']) {
 			$erno[]=$this->pi_getLL('no_city_has_been_specified');
 		}
+		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->post['company']) {
+			$erno[]=$this->pi_getLL('company_is_required');
+		}
 		if (!$this->post['tx_multishop_pi1']['email_confirm'] || $this->post['tx_multishop_pi1']['email']!=$this->post['tx_multishop_pi1']['email_confirm']) {
 			$erno[]=$this->pi_getLL('verification_email_not_match');
 		}
@@ -287,8 +290,9 @@ if (count($cart['products'])<1) {
 			<input type="text" name="tx_multishop_pi1[email_confirm]" id="email" class="email" value="'.htmlspecialchars($user['email_confirm']).'" required="required" data-h5-errorid="invalid-email_confirm" title="'.$this->pi_getLL('email_is_required').'"><div id="invalid-email_confirm" class="error-space" style="display:none"></div>
 		</div>
 		<div class="account-field col-sm-12" id="input-company">
-			<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
-			<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>
+			<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').'</label>
+			<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"' : '').'/>
+			'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '').'
 		</div>';
 		if ($this->ms['MODULES']['CHECKOUT_DISPLAY_VAT_ID_INPUT']) {
 			$content.='<div class="account-field col-sm-6" id="input-tx_multishop_vat_id">
