@@ -2022,22 +2022,23 @@ class tx_mslib_cart extends tslib_pibase {
 				echo $ORDER_DETAILS;
 				die();
 				*/
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostHook'])) {
+					// hook
+					$params=array(
+						'cart'=>&$cart,
+						'orders_id'=>&$orders_id
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostHook'] as $funcRef) {
+						t3lib_div::callUserFunction($funcRef, $params, $this);
+					}
+					// hook oef
+				}
 				unset($cart['products']);
 				unset($cart['user']);
 				unset($cart['discount_type']);
 				unset($cart['discount_amount']);
 				$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 				$GLOBALS['TSFE']->storeSessionData();
-				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostProc'])) {
-					// hook
-					$params=array(
-						'orders_id'=>&$orders_id
-					);
-					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
-					}
-					// hook oef
-				}
 				if ($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT']) {
 					if (strstr($this->ms['MODULES']['ORDERS_CUSTOM_EXPORT_SCRIPT'], "..")) {
 						die('error in ORDERS_CUSTOM_EXPORT_SCRIPT value');
@@ -2109,6 +2110,15 @@ class tx_mslib_cart extends tslib_pibase {
 		}
 		$this->cart['user']['shipping_method']=$shipping_method['code'];
 		$this->cart['user']['shipping_method_label']=$shipping_method['name'];
+		// hook to rewrite the whole methods
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['setShippingMethodPreSaveHook'])) {
+			$params=array(
+				'cart_user'=>&$this->cart['user']
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['setShippingMethodPreSaveHook'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		self::storeCart();
 	}
 	function setPaymentMethod($payment_method) {

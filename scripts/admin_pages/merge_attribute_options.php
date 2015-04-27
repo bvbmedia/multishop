@@ -34,7 +34,7 @@ foreach ($options_data as $option_val) {
 	$content.='</div>';
 	$content.='<div class="merge_attribute_options_target">';
 	$content.='<label for="merge_target_'.$target_option_val['products_options_id'].'"><span>'.$this->pi_getLL('merge_to').'</span></label>';
-	$content.='<select id="merge_target_'.$target_option_val['products_options_id'].'" name="tx_multishop_pi1[merge_attribute_options_target]['.$option_val['products_options_id'].']">';
+	$content.='<select id="merge_target_'.$target_option_val['products_options_id'].'" name="tx_multishop_pi1[merge_attribute_options_target]['.$option_val['products_options_id'].']" class="merge_attribute_target_selectbox" style="width:400px">';
 	$content.='<option value="0">'.$this->pi_getLL('choose').'...</option>';
 	foreach ($target_merge_sb as $target_option_val) {
 		if ($target_option_val['products_options_id']!=$option_val['products_options_id']) {
@@ -54,6 +54,9 @@ $content.='
 			<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('merge_selected').'" />
 	</div>
 </form>
+<script type="text/javascript">
+jQuery(".merge_attribute_target_selectbox").select2();
+</script>
 ';
 if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_src']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_src'])) &&
    (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_target']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_target']))) {
