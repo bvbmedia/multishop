@@ -156,7 +156,7 @@ switch ($this->ms['page']) {
 		break;
 	case 'merge_attribute_options':
 		if ($this->ADMIN_USER) {
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/merge_attribute_options.php');
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options.php');
 		}
 		break;
 	case 'admin_system_clear_database':

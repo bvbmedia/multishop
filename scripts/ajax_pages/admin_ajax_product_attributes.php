@@ -37,10 +37,19 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				$data[]=array(
-					'id'=>$row['products_options_id'],
-					'text'=>$row['products_options_name']
-				);
+				if (isset($this->get['exclude_id']) && $this->get['exclude_id']>0) {
+					if ($row['products_options_id']!=$this->get['exclude_id']) {
+						$data[]=array(
+							'id'=>$row['products_options_id'],
+							'text'=>$row['products_options_name']
+						);
+					}
+				} else {
+					$data[]=array(
+						'id'=>$row['products_options_id'],
+						'text'=>$row['products_options_name']
+					);
+				}
 			}
 		} else {
 			if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
