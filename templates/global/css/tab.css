@@ -412,8 +412,9 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 .option_id { padding-top:0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul li h2 span input[type="checkbox"] { display:inline-block; margin:0; vertical-align:middle; }
 
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul { padding:10px 10px 0; }
-#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li { padding:0 0 10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul { padding:0 10px 0; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li { padding:10px 0 10px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li .values_id { display:inline-block; padding-right:10px; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li label { display:inline-block; width:18%; margin:0 5px 5px 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox  ul.attribute_options_sortable ul li .col-sm-10 { display:inline-block;}
 
@@ -434,6 +435,8 @@ form#admin_categories_edit_ .account-field option { padding:0 10px 0 0; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a.msadmin_button.fetch_attributes_values,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values .msadmin_button.msadmin_button_save,
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values #save_new_attribute_options { margin-top:10px !important; margin-bottom:10px !important; margin-left:10px !important; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values .add_attributes_values { margin-left:10px !important; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values .attribute_option_values_sortable .add_attributes_values { margin-left:0 !important; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a { vertical-align:middle; }
 #msadmin_section #msadmin_content #tx_multishop_pi1_core form.msadminFromFancybox ul .option_values a.edit_options_values.admin_menu_edit { margin-left:10px; }
 
