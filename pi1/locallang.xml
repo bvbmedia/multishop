@@ -4254,7 +4254,7 @@
 			<label index="download">download</label>
 			<label index="download_export_record">Download export record</label>
 			<label index="download_feed_record">Exporteer backup feed record</label>
-			<label index="download_import_task">Download taak</label>
+			<label index="download_import_task">Download task</label>
 			<label index="download_record">Download record</label>
 			<label index="download_selected_cms">Download geselecteerde CMS pagina's</label>
 			<label index="duplicate_selected_products_to">Dupliceer geselecteerde producten naar</label>
