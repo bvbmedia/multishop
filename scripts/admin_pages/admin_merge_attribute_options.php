@@ -25,25 +25,25 @@ $content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_attribute_opti
 			<ul>
 			';
 foreach ($options_data as $option_val) {
-	$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_id', // SELECT ...
-		'tx_multishop_products_attributes', // FROM ...
-		'options_id=\''.$option_val['products_options_id'].'\'', // WHERE...
-		'products_id', // GROUP BY...
+	$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_id', // SELECT ...
+		'tx_multishop_products_options_values_to_products_options', // FROM ...
+		'products_options_id=\''.$option_val['products_options_id'].'\'', // WHERE...
+		'', // GROUP BY...
 		'', // ORDER BY...
 		'' // LIMIT ...
 	);
 	$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-	$products_count=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk);
-	if ($products_count<=1) {
-		$products_count=' ('.$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk).' '.$this->pi_getLL('product').')';
+	$item_count=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk);
+	if ($item_count<=1) {
+		$item_count=' ('.$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk).' '.$this->pi_getLL('item').')';
 	} else {
-		$products_count=' ('.$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk).' '.$this->pi_getLL('products').')';
+		$item_count=' ('.$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk).' '.$this->pi_getLL('items').')';
 	}
 	$content.='<li>';
 	$content.='<div class="merge_attribute_options_wrapper">';
 	$content.='<div class="merge_attribute_options_source">';
 	$content.='<input name="tx_multishop_pi1[merge_attribute_options_src]['.$option_val['products_options_id'].']" id="merge_src_'.$option_val['products_options_id'].'" type="checkbox" value="'.$option_val['products_options_id'].'" class="merge_source" rel="merge_target_'.$option_val['products_options_id'].'" />';
-	$content.='<label for="merge_src_'.$option_val['products_options_id'].'" class="merge_source_label"><span>'.$option_val['products_options_name'].$products_count.'</span></label>';
+	$content.='<label for="merge_src_'.$option_val['products_options_id'].'" class="merge_source_label"><span>'.$option_val['products_options_name'].$item_count.'</span></label>';
 	$content.='</div>';
 	$content.='<div class="merge_attribute_options_target" id="merge_target_'.$option_val['products_options_id'].'_wrapper" style="display:none">';
 	$content.='<label for="merge_target_'.$option_val['products_options_id'].'"><span>'.$this->pi_getLL('merge_to').'</span></label>';
