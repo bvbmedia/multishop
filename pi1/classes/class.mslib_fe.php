@@ -4048,7 +4048,9 @@ class mslib_fe {
 		}
 		$amount=number_format($amount, 2, '.', '');
 		$array=explode('.', $amount);
-		$array[0]=number_format($array[0], 0, '', $cu_thousands_point);
+		if ($array[0]>0) {
+			$array[0]=number_format($array[0], 0, '', $cu_thousands_point);
+		}
 		$output='<span class="amount">';
 		if ($include_currency_symbol) {
 			if ($customer_currency) {
