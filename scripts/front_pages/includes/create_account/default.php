@@ -241,7 +241,7 @@ if (mslib_fe::loggedin()) {
 							<span class="error-space"></span>
 						</div>
 			  			<div class="account-field col-sm-12" id="input-company">
-							<label for="company" id="account-company">'.$this->pi_getLL('company').'</label>
+							<label for="company" id="account-company">'.$this->pi_getLL('company').($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').'</label>
 							<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($this->post['company']).'" />
 							<span class="error-space"></span>
 						</div>
