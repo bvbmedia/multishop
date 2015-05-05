@@ -1189,6 +1189,8 @@
             <label index="company_is_required">Company is required</label>
             <label index="item">Item</label>
             <label index="items">Items</label>
+            <label index="merge_attributes">Merge attributes</label>
+            <label index="merge_attribute_values">Merge attribute values</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>

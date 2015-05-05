@@ -110,7 +110,7 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 			}
 		}
 		$orderby[]="optval.products_options_values_name asc";
-		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('optval.*', // SELECT ...
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('optval.*, optval2opt.products_options_id', // SELECT ...
 			'tx_multishop_products_options_values as optval left join tx_multishop_products_options_values_to_products_options as optval2opt on optval2opt.products_options_values_id = optval.products_options_values_id', // FROM ...
 			implode(' and ', $where), // WHERE
 			'optval.products_options_values_id', // GROUP BY...
@@ -122,10 +122,20 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				$data[]=array(
-					'id'=>$row['products_options_values_id'],
-					'text'=>$row['products_options_values_name']
-				);
+				if (isset($this->get['option_id'])) {
+					if ($this->get['option_id']==$row['products_options_id']) {
+						$data[]=array(
+							'id'=>$row['products_options_values_id'],
+							'text'=>$row['products_options_values_name']
+						);
+					}
+				} else {
+					$data[]=array(
+						'id'=>$row['products_options_values_id'],
+						'text'=>$row['products_options_values_name']
+					);
+				}
+
 			}
 		} else {
 			if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {

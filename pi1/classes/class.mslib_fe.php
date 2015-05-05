@@ -5598,6 +5598,48 @@ class mslib_fe {
 			return $row['products_options_id'];
 		}
 	}
+	public function getAttributeValuesByOptionId($option_id) {
+		if (!is_numeric($option_id)) {
+			return false;
+		}
+		if (is_numeric($option_id)) {
+			$where='pov.products_options_values_id=pov2po.products_options_values_id and pov.language_id=0 and pov2po.products_options_id = '.$option_id;
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('pov.*', // SELECT ...
+				'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options pov2po', // FROM ...
+				$where, // WHERE.
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			$option_values=array();
+			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$option_values[$row['products_options_values_id']]=$row['products_options_values_name'];
+			}
+			return $option_values;
+		}
+	}
+	public function getAttributeValueIdByValueName($value_name, $option_id=0) {
+		if ($value_name) {
+			if ($option_id>0) {
+				$where='pov.products_options_values_id=pov2po.products_options_values_id and pov.language_id=0 and pov.products_options_values_name=\''. addslashes($value_name) .'\' and pov2po.products_options_id = '.$option_id;
+				$from='tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options pov2po';
+			} else {
+				$where='pov.language_id=0 and pov.products_options_values_name=\''. addslashes($value_name) .'\'';
+				$from='tx_multishop_products_options_values pov';
+			}
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id', // SELECT ...
+				$from, // FROM ...
+				$where, // WHERE.
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			return $row['products_options_values_id'];
+		}
+	}
 	public function countProducts($categories_id,$page_uid='') {
 		if (!is_numeric($page_uid)) {
 			$page_uid=$this->showCatalogFromPage;
@@ -6346,8 +6388,11 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_repair_missing_multilanguages_attributes');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
 			// merge attributes options
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute_options']['label']=$this->pi_getLL('merge_attribute_options');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute_options']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['label']=$this->pi_getLL('merge_attributes');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_options']['label']=$this->pi_getLL('merge_attribute_options');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_options']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_values']['label']=$this->pi_getLL('merge_attribute_values');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_values']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values');
 			// footer eof
 		} // end if enableAdminPanelSystem
 		// hook
