@@ -144,6 +144,10 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			$types['pdf_invoice_footer_message_'.$key]=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Invoice footer message after order details table').' ('.$key.')';
 		}
 	}
+	// create account disclaimer page
+	if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER']) {
+		$types['create_account_disclaimer']=$this->pi_getLL('create_account_disclaimer');
+	}
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
 		$params=array('types'=>&$types);

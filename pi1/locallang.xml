@@ -1191,6 +1191,10 @@
             <label index="items">Items</label>
             <label index="merge_attributes">Merge attributes</label>
             <label index="merge_attribute_values">Merge attribute values</label>
+            <label index="create_account_disclaimer">Create account disclaimer</label>
+            <label index="click_here_if_you_agree_the_create_account_disclaimer">Click here if you agree the create account disclaimer</label>
+            <label index="view_create_account_disclaimer">view create account disclaimer</label>
+            <label index="you_havent_accepted_the_create_account_disclaimer">You haven't accepted the create account disclaimer</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
