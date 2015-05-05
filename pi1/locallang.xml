@@ -1195,6 +1195,10 @@
             <label index="click_here_if_you_agree_the_create_account_disclaimer">Click here if you agree the create account disclaimer</label>
             <label index="view_create_account_disclaimer">view create account disclaimer</label>
             <label index="you_havent_accepted_the_create_account_disclaimer">You haven't accepted the create account disclaimer</label>
+            <label index="right_of_withdrawal">Right of withdrawal</label>
+            <label index="click_here_if_you_agree_the_right_of_withdrawal">Click here if you agree the right of withdrawal</label>
+            <label index="you_havent_accepted_the_right_of_withdrawal">You haven't accepted the right of withdrawal</label>
+            <label index="view_right_of_withdrawal">view right of withdrawal</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
