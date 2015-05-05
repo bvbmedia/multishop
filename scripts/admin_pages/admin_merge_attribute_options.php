@@ -232,8 +232,8 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
 					if ($target_value_id) {
 						// delete the source value
 						if ($src_value_id!=$target_value_id) {
- 							$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values', 'products_options_values_id='.$src_value_id);
-							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+ 							/*$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values', 'products_options_values_id='.$src_value_id);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
 							//
 							$updateArray=array();
 							$updateArray['products_options_values_id']=$target_value_id;
