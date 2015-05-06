@@ -99,7 +99,7 @@ if (is_array($products) && count($products)) {
 			} else {
 				$old_price=$current_product['products_price'];
 			}
-			$output['products_price'].='<div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+			$output['products_price'].='<div class="old_price_wrapper"><div class="old_price">'.mslib_fe::amount2Cents($old_price).'</div></div><div class="specials_price_wrapper"><div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div></div>';
 		} else {
 			$output['products_price'].='<div class="price">'.mslib_fe::amount2Cents($final_price).'</div>';
 		}
