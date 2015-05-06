@@ -1954,6 +1954,61 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Create account disclaimer',
+	'configuration_key'=>'CREATE_ACCOUNT_DISCLAIMER',
+	'configuration_value'=>'0',
+	'description'=>'Create account disclaimer',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Right of withdrawal checkbox in checkout',
+	'configuration_key'=>'RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT',
+	'configuration_value'=>'0',
+	'description'=>'Right of withdrawal checkbox in checkout',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Download Packing slip Type',
+	'configuration_key'=>'DOWNLOAD_PACKINGSLIP_TYPE',
+	'configuration_value'=>'',
+	'description'=>'Optional field (leave empty to use the default). Use this for customizing the PDF packing slip. Example value: fileadmin/scripts/download_packingslip',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Packing slip PDF header image',
+	'configuration_key'=>'PACKINGSLIP_PDF_HEADER_IMAGE',
+	'configuration_value'=>'',
+	'description'=>'Full URL to header image of the PDF packing slip.',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Packing slip PDF footer image',
+	'configuration_key'=>'PACKINGSLIP_PDF_FOOTER_IMAGE',
+	'configuration_value'=>'',
+	'description'=>'Full URL to footer image of the PDF packing slip.',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

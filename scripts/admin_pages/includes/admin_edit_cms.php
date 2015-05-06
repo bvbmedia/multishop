@@ -144,6 +144,27 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			$types['pdf_invoice_footer_message_'.$key]=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Invoice footer message after order details table').' ('.$key.')';
 		}
 	}
+	// packing slip pdf
+	$types['pdf_packingslip_header_message']=$this->pi_getLL('pdf_packingslip_header_message', 'PDF Packing slip header message before order details table').' ('.$this->pi_getLL('default').')';
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
+			$types['pdf_packingslip_header_message_'.$key]=$this->pi_getLL('pdf_packingslip_header_message', 'PDF Packing slip header message before order details table').' ('.$key.')';
+		}
+	}
+	$types['pdf_packingslip_footer_message']=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Packing slip footer message after order details table').' ('.$this->pi_getLL('default').')';
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
+			$types['pdf_packingslip_footer_message_'.$key]=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Packing slip footer message after order details table').' ('.$key.')';
+		}
+	}
+	// create account disclaimer cms type
+	if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER']) {
+		$types['create_account_disclaimer']=$this->pi_getLL('create_account_disclaimer');
+	}
+	// right of withdrawal checkbox in checkout cms type
+	if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT']) {
+		$types['right_of_withdrawal']=$this->pi_getLL('right_of_withdrawal');
+	}
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
 		$params=array('types'=>&$types);

@@ -25,11 +25,25 @@ $content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_attribute_opti
 			<ul>
 			';
 foreach ($options_data as $option_val) {
+	$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_id', // SELECT ...
+		'tx_multishop_products_options_values_to_products_options', // FROM ...
+		'products_options_id=\''.$option_val['products_options_id'].'\'', // WHERE...
+		'', // GROUP BY...
+		'', // ORDER BY...
+		'' // LIMIT ...
+	);
+	$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+	$item_count=$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk);
+	if ($item_count<=1) {
+		$item_count=' ('.$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk).' '.$this->pi_getLL('item').')';
+	} else {
+		$item_count=' ('.$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk).' '.$this->pi_getLL('items').')';
+	}
 	$content.='<li>';
 	$content.='<div class="merge_attribute_options_wrapper">';
 	$content.='<div class="merge_attribute_options_source">';
 	$content.='<input name="tx_multishop_pi1[merge_attribute_options_src]['.$option_val['products_options_id'].']" id="merge_src_'.$option_val['products_options_id'].'" type="checkbox" value="'.$option_val['products_options_id'].'" class="merge_source" rel="merge_target_'.$option_val['products_options_id'].'" />';
-	$content.='<label for="merge_src_'.$option_val['products_options_id'].'" class="merge_source_label"><span>'.$option_val['products_options_name'].'</span></label>';
+	$content.='<label for="merge_src_'.$option_val['products_options_id'].'" class="merge_source_label"><span>'.$option_val['products_options_name'].$item_count.'</span></label>';
 	$content.='</div>';
 	$content.='<div class="merge_attribute_options_target" id="merge_target_'.$option_val['products_options_id'].'_wrapper" style="display:none">';
 	$content.='<label for="merge_target_'.$option_val['products_options_id'].'"><span>'.$this->pi_getLL('merge_to').'</span></label>';
@@ -131,87 +145,131 @@ jQuery(document).ready(function(){
 ';
 if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_src']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_src'])) &&
    (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_target']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_target']))) {
+	$new_attribute_option_id=array();
 	foreach ($this->post['tx_multishop_pi1']['merge_attribute_options_src'] as $src_option_id => $item) {
+		$new_option=false;
 		$target_option_id=$this->post['tx_multishop_pi1']['merge_attribute_options_target'][$src_option_id];
-		if (!is_int($target_option_id)) {
+		// make sure the manual input is not option id
+		$is_target_option_id_exist=mslib_befe::getRecord($target_option_id, 'tx_multishop_products_options', 'products_options_id', array('language_id=\'0\''));
+		if (!is_array($is_target_option_id_exist) || (isset($new_attribute_option_id[$target_option_id]) && $new_attribute_option_id[$pa_option_name]>0)) {
+			$new_option=true;
+		}
+		if ($new_option) {
 			$pa_option_name=$target_option_id;
-			$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_id', // SELECT ...
-				'tx_multishop_products_options', // FROM ...
-				'', // WHERE...
-				'', // GROUP BY...
-				'products_options_id desc', // ORDER BY...
-				'1' // LIMIT ...
-			);
-			$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-			$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
-			$max_optid=$rs_chk['products_options_id']+1;
-			// use microtime as the default sorting
-			$tmp_mtime=explode(" ", microtime());
-			$mtime=array_sum($tmp_mtime);
-			// prep for insertion
-			$insertArray=array();
-			$insertArray['products_options_id']=$max_optid;
-			$insertArray['language_id']='0';
-			$insertArray['products_options_name']=$target_option_id;
-			$insertArray['listtype']='pulldownmenu';
-			$insertArray['attributes_values']='0';
-			$insertArray['sort_order']=$mtime;
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			$target_option_id=$max_optid;
-			// check for multilanguages
-			foreach ($this->languages as $key=>$language) {
-				if ($language['uid']>0) {
-					$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_name', // SELECT ...
-						'tx_multishop_products_options', // FROM ...
-						"products_options_id = '".$target_option_id."' and language_id = '".$language['uid']."'", // WHERE...
-						'', // GROUP BY...
-						'', // ORDER BY...
-						'' // LIMIT ...
-					);
-					$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
-						// prep for update
-						$option_name=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
-						if (empty($option_name['products_options_name']) || !$option_name['products_options_name']) {
-							$updateArray=array();
-							$updateArray['products_options_name']=$pa_option_name;
-							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\''.$target_option_id.'\' and language_id=\''.$language['uid'].'\'', $updateArray);
+			if (isset($new_attribute_option_id[$pa_option_name]) && $new_attribute_option_id[$pa_option_name]>0) {
+				$target_option_id=$new_attribute_option_id[$pa_option_name];
+			} else {
+				$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_id', // SELECT ...
+					'tx_multishop_products_options', // FROM ...
+					'', // WHERE...
+					'', // GROUP BY...
+					'products_options_id desc', // ORDER BY...
+					'1' // LIMIT ...
+				);
+				$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+				$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
+				$max_optid=$rs_chk['products_options_id']+1;
+				// use microtime as the default sorting
+				$tmp_mtime=explode(" ", microtime());
+				$mtime=array_sum($tmp_mtime);
+				// prep for insertion
+				$insertArray=array();
+				$insertArray['products_options_id']=$max_optid;
+				$insertArray['language_id']='0';
+				$insertArray['products_options_name']=$target_option_id;
+				$insertArray['listtype']='pulldownmenu';
+				$insertArray['attributes_values']='0';
+				$insertArray['sort_order']=$mtime;
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				$target_option_id=$max_optid;
+				$new_attribute_option_id[$pa_option_name]=$target_option_id;
+				// check for multilanguages
+				foreach ($this->languages as $key=>$language) {
+					if ($language['uid']>0) {
+						$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_name', // SELECT ...
+							'tx_multishop_products_options', // FROM ...
+							"products_options_id = '".$target_option_id."' and language_id = '".$language['uid']."'", // WHERE...
+							'', // GROUP BY...
+							'', // ORDER BY...
+							'' // LIMIT ...
+						);
+						$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+						if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
+							// prep for update
+							$option_name=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
+							if (empty($option_name['products_options_name']) || !$option_name['products_options_name']) {
+								$updateArray=array();
+								$updateArray['products_options_name']=$pa_option_name;
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\''.$target_option_id.'\' and language_id=\''.$language['uid'].'\'', $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							}
+						} else {
+							$tmp_mtime=explode(" ", microtime());
+							$mtime=array_sum($tmp_mtime);
+							// prep for insertion
+							$insertArray=array();
+							$insertArray['products_options_id']=$target_option_id;
+							$insertArray['language_id']=$language['uid'];
+							$insertArray['products_options_name']=$pa_option_name;
+							$insertArray['listtype']='pulldownmenu';
+							$insertArray['attributes_values']='0';
+							$insertArray['sort_order']=$mtime;
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
-					} else {
-						$tmp_mtime=explode(" ", microtime());
-						$mtime=array_sum($tmp_mtime);
-						// prep for insertion
-						$insertArray=array();
-						$insertArray['products_options_id']=$target_option_id;
-						$insertArray['language_id']=$language['uid'];
-						$insertArray['products_options_name']=$pa_option_name;
-						$insertArray['listtype']='pulldownmenu';
-						$insertArray['attributes_values']='0';
-						$insertArray['sort_order']=$mtime;
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
 			}
 		}
 		if ($src_option_id>0 && $target_option_id>0) {
+			// check if the values of source have counterpart or not in target (for existing target)
+			if (!$new_option) {
+				$src_values_id=mslib_fe::getAttributeValuesByOptionId($src_option_id);
+				$target_values_id=array();
+				foreach ($src_values_id as $src_value_id=>$src_value_name) {
+					$target_value_id=mslib_fe::getAttributeValueIdByValueName($src_value_name, $target_option_id);
+					if ($target_value_id) {
+						// delete the source value
+						if ($src_value_id!=$target_value_id) {
+ 							/*$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values', 'products_options_values_id='.$src_value_id);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
+							//
+							$updateArray=array();
+							$updateArray['products_options_values_id']=$target_value_id;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id=\''.$src_option_id.'\' and products_options_values_id=\''.$src_value_id.'\'', $updateArray);
+							$GLOBALS['TYPO3_DB']->sql_query($query);
+							//
+							$updateArray=array();
+							$updateArray['options_values_id']=$target_value_id;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\''.$src_option_id.'\' and options_values_id=\''.$src_value_id.'\'', $updateArray);
+							$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+					}
+				}
+			}
+			// delete the source option
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options', 'products_options_id='.$src_option_id);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			// update the deleted src option_id to target option id
 			$updateArray=array();
 			$updateArray['products_options_id']=$target_option_id;
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery(' tx_multishop_products_options_values_to_products_options', 'products_options_id=\''.$src_option_id.'\'', $updateArray);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id=\''.$src_option_id.'\'', $updateArray);
 			$GLOBALS['TYPO3_DB']->sql_query($query);
 			//
 			$updateArray=array();
 			$updateArray['options_id']=$target_option_id;
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery(' tx_multishop_products_attributes', 'options_id=\''.$src_option_id.'\'', $updateArray);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\''.$src_option_id.'\'', $updateArray);
 			$GLOBALS['TYPO3_DB']->sql_query($query);
-			//
-			header('Location: ' . mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
+			// cleanup double record in tx_multishop_products_options_values_to_products_options
+			$query='DELETE pov2po1 FROM tx_multishop_products_options_values_to_products_options pov2po1, tx_multishop_products_options_values_to_products_options pov2po2 WHERE pov2po1.products_options_values_to_products_options_id > pov2po2.products_options_values_to_products_options_id AND pov2po1.products_options_id = pov2po2.products_options_id AND pov2po1.products_options_values_id = pov2po2.products_options_values_id';
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			// cleanup double record in tx_multishop_products_attributes
+			$query='DELETE pa1 FROM tx_multishop_products_attributes pa1, tx_multishop_products_attributes pa2 WHERE pa1.products_attributes_id > pa2.products_attributes_id AND pa1.products_id=pa2.products_id AND pa1.options_id = pa2.options_id AND pa1.options_values_id = pa2.options_values_id';
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 	}
+	//
+	header('Location: ' . mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
 }
 ?>

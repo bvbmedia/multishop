@@ -3625,11 +3625,22 @@ class mslib_befe {
 		$selectbox_str=implode("\n", $selectbox_options);
 		return $selectbox_str;
 	}
-	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='', $display_currency_symbol=1) {
-		if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
-			$template=$this->cObj->fileResource($this->conf['order_details_table_invoice_pdf_tmpl_path']);
-		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_invoice_pdf.tmpl');
+	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='', $display_currency_symbol=1, $table_type='invoice') {
+		switch ($table_type) {
+			case 'invoice':
+				if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['order_details_table_invoice_pdf_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_invoice_pdf.tmpl');
+				}
+				break;
+			case 'packingslip':
+				if ($this->conf['order_details_table_packingslip_pdf_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['order_details_table_packingslip_pdf_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_packingslip_pdf.tmpl');
+				}
+				break;
 		}
 		// Extract the subparts from the template
 		$subparts=array();
@@ -3892,9 +3903,16 @@ class mslib_befe {
 							if ($vat_wrapper_key=='TOTAL_VAT_ROW_INCLUDE_VAT') {
 								$markerArray['LABEL_INCLUDED_VAT_AMOUNT']=$this->pi_getLL('included_vat_amount') . ' ' . $tax_sep_rate . '%';
 							} else {
-								$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate . '%', ($display_currency_symbol ? '' : 'EUR ') . mslib_fe::amount2Cents($prefix.$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs']+$tax_sep_data['products_sub_total_excluding_vat'], 0,$display_currency_symbol,0));
+								$markerArray['LABEL_VAT']=sprintf($this->pi_getLL('vat_nn_from_subtotal_nn'), $tax_sep_rate . '%', ($display_currency_symbol ? '' : 'EUR ') . mslib_fe::amount2Cents($prefix.$tax_sep_data['products_sub_total_excluding_vat']+$tax_sep_data['shipping_costs']+$tax_sep_data['payment_costs'], 0,$display_currency_symbol,0));
 							}
-							$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($prefix.$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax']+$tax_sep_data['products_total_tax'], 0,$display_currency_symbol,0);
+							if (empty($tax_sep_data['shipping_tax'])) {
+								$tax_sep_data['shipping_tax']=0;
+							}
+							if (empty($tax_sep_data['payment_tax'])) {
+								$tax_sep_data['payment_tax']=0;
+							}
+							$tax_sep_total=$prefix.$tax_sep_data['products_total_tax']+$tax_sep_data['shipping_tax']+$tax_sep_data['payment_tax'];
+							$markerArray['TOTAL_VAT']=mslib_fe::amount2Cents($tax_sep_total, 0,$display_currency_symbol,0);
 							$vatItem.=$this->cObj->substituteMarkerArray($subparts[$vat_wrapper_key], $markerArray, '###|###');
 						}
 					}

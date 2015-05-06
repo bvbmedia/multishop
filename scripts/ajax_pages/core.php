@@ -918,6 +918,21 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'download_packingslip':
+		if ($this->get['tx_multishop_pi1']['order_id']) {
+			if (strstr($this->ms['MODULES']['DOWNLOAD_PACKINGSLIP_TYPE'], "..")) {
+				die('error in DOWNLOAD_INVOICE_TYPE value');
+			} else {
+				if (strstr($this->ms['MODULES']['DOWNLOAD_PACKINGSLIP_TYPE'], "/")) {
+					// relative mode
+					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['DOWNLOAD_PACKINGSLIP_TYPE'].'.php');
+				} else {
+					require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/download_packingslip.php');
+				}
+			}
+		}
+		exit();
+		break;
 	case 'download_product_feed':
 		require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/download_product_feed.php');
 		exit();

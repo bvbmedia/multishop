@@ -387,6 +387,9 @@ class tx_mslib_user {
 		if ($this->getPassword()!=$this->getConfirmation_password()) {
 			$erno[]=$this->ref->pi_getLL('password_is_not_the_same_as_repeated_password');
 		}
+		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] && !$this->getCompany()) {
+			$erno[]=$this->ref->pi_getLL('company_is_required');
+		}
 		/*
 				$count = count($erno);
 				if ($count == 1) {

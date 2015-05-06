@@ -428,8 +428,8 @@ if ($this->post) {
 	}
 	$content.='</div>
 	<div id="input-company" class="account-field col-sm-12">
-		<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).'</label>
-		<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"/>
+		<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').'</label>
+		<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"' : '').'/>'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '').'
 	</div>
 	'.$vat_input_block.$coc_input_block.'
 	<div id="input-firstname" class="account-field col-sm-4">
@@ -530,8 +530,8 @@ if ($this->post) {
 		<div id="invalid-delivery_gender" class="error-space" style="display:none"></div>
 	</div>
 	<div id="input-dcompany" class="account-field col-sm-12">
-		<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).'</label>
-		<input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="'.htmlspecialchars($user['delivery_company']).'">
+		<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').'</label>
+		<input type="text" name="delivery_company" id="delivery_company" class="delivery_company" value="'.htmlspecialchars($user['delivery_company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-delivery_company" title="'.$this->pi_getLL('company_is_required').'"' : '').'/>'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-delivery_company" class="error-space" style="display:none"></div>' : '').'
 	</div>
 	<div id="input-dfirstname" class="account-field col-sm-4">
 		<label class="account-firstname" for="delivery_first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>

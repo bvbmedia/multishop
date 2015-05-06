@@ -10,6 +10,9 @@ if (count($cart['products'])<1) {
 	$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 } else {
 	if ($posted_page==current($stepCodes)) {
+		if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT'] && !$this->post['tx_multishop_pi1']['right_of_withdrawal']) {
+			$erno[]=$this->pi_getLL('you_havent_accepted_the_right_of_withdrawal').'.';
+		}
 		if (!$this->post['accept_general_conditions']) {
 			$erno[]=$this->pi_getLL('you_havent_accepted_the_general_conditions').'.';
 		}
@@ -48,16 +51,28 @@ if (count($cart['products'])<1) {
 			<tr id="bottomColumnRight">
 				<td colspan="'.$colspan.'">'.$orderDetails.'</td>
 			</tr>
-			<tr id="bottomColumnComments"> 
-				<td colspan="'.$colspan.'"> 
-					<div class="shoppingcart_description"> 
-						<div class="shoppingcart_label"><strong>'.$this->pi_getLL('comments').'</strong></div> 
-						<textarea name="customer_comments" id="customer_comments"></textarea> 
-					</div> 
-				</td> 
-			</tr> 			
+			<tr id="bottomColumnComments">
+				<td colspan="'.$colspan.'">
+					<div class="shoppingcart_description">
+						<div class="shoppingcart_label"><strong>'.$this->pi_getLL('comments').'</strong></div>
+						<textarea name="customer_comments" id="customer_comments"></textarea>
+					</div>
+				</td>
+			</tr>
 			';
 			$content.='</table>';
+			if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT']) {
+				$content.='
+					<hr>
+					<div class="checkboxAgreement accept_general_conditions_container">
+						<input name="tx_multishop_pi1[right_of_withdrawal]" id="right_of_withdrawal_checkbox_in_checkout" type="checkbox" value="1" />
+						<label for="right_of_withdrawal_checkbox_in_checkout">'.$this->pi_getLL('click_here_if_you_agree_the_right_of_withdrawal');
+				$page=mslib_fe::getCMScontent('right_of_withdrawal', $GLOBALS['TSFE']->sys_language_uid);
+				if ($page[0]['content']) {
+					$content.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_right_of_withdrawal').'</a>)';
+				}
+				$content.='</div>';
+			}
 			$content.='
 				<hr>
 				<div class="checkboxAgreement accept_general_conditions_container">
@@ -67,13 +82,13 @@ if (count($cart['products'])<1) {
 			if ($page[0]['content']) {
 				$content.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_general_conditions').'</a>)';
 			}
-			$content.='
-				</div>
-				<div id="bottom-navigation">
+			$content.='</div>';
+
+			$content.='<div id="bottom-navigation">
 					<a href="'.$back_button_link.'" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
 					<span class="msFrontButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" class="float_right confirm_order_en" value="'.$this->pi_getLL('confirm_order').'" /></span>
 				</div>
-			</form>	
+			</form>
 			</div>
 			<script>
 			jQuery("#checkout").submit(function(){

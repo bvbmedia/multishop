@@ -92,6 +92,9 @@ if (mslib_fe::loggedin()) {
 			$mslib_user->setCustomField('tx_multishop_vat_id', $this->post['tx_multishop_vat_id']);
 			$mslib_user->setCustomField('tx_multishop_coc_id', $this->post['tx_multishop_coc_id']);
 			$erno=$mslib_user->checkUserData();
+			if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER'] && !isset($this->post['tx_multishop_pi1']['create_account_disclaimer'])) {
+				$erno[]=$this->pi_getLL('you_havent_accepted_the_create_account_disclaimer');
+			}
 			if (!count($erno)) {
 				$customer_id=$mslib_user->saveUserData();
 				if ($customer_id) {
@@ -241,7 +244,7 @@ if (mslib_fe::loggedin()) {
 							<span class="error-space"></span>
 						</div>
 			  			<div class="account-field col-sm-12" id="input-company">
-							<label for="company" id="account-company">'.$this->pi_getLL('company').'</label>
+							<label for="company" id="account-company">'.$this->pi_getLL('company').($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').'</label>
 							<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($this->post['company']).'" />
 							<span class="error-space"></span>
 						</div>
@@ -360,12 +363,25 @@ if (mslib_fe::loggedin()) {
 							<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
 						</div>';
 						}
+						if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER']) {
+							$content.='<hr>
+								<div class="checkboxAgreement accept_general_conditions_container">
+									<input name="tx_multishop_pi1[create_account_disclaimer]" id="create_account_disclaimer" type="checkbox" value="1" />
+									<label for="create_account_disclaimer">'.$this->pi_getLL('click_here_if_you_agree_the_create_account_disclaimer');
+							$page=mslib_fe::getCMScontent('create_account_disclaimer', $GLOBALS['TSFE']->sys_language_uid);
+							if ($page[0]['content']) {
+								$content.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_disclaimer">'.$this->pi_getLL('view_create_account_disclaimer').'</a>)';
+							}
+							$content.='	</div>';
+						}
+
 						$content.='<div class="account-field security">
 				  			<img src="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=captcha').'">
 					  		<input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" placeholder="'.$this->pi_getLL('captcha_code_placeholder').'" />
 						</div>
 					</div>
 				</div>
+
 				<div id="bottom-navigation">
 					<a href="" onClick="history.back();return false;" class="msFrontButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('back').'</span></a>
 					<span class="msFrontButton continueState arrowRight arrowPosLeft" id="submit"><input type="submit" value="'.$this->pi_getLL('register').'" /></span>
