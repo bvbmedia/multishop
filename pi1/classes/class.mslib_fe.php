@@ -5750,7 +5750,7 @@ class mslib_fe {
 			}
 			// check tt_address
 			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
-				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."'";
+				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$store_tt_address_id=mslib_fe::createStoreTTAddress();
