@@ -161,6 +161,9 @@ plugin.multishop {
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (PDF invoice) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_pdf_invoice.tmpl.
 	order_details_table_invoice_pdf_tmpl_path=
 
+	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (PDF packing slip) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_pdf_packingslip.tmpl.
+	order_details_table_packingslip_pdf_tmpl_path=
+
 	# cat=plugin.multishop - templates/file; type=string; label= Products Relatives Table File Path: Optionally specify the location of the template file that is being used for building up the products relatives table. Example: fileadmin/templates/multishop/products_relatives.tmpl.
 	products_relatives_tmpl_path = EXT:multishop/templates/products_relatives.tmpl
 
@@ -229,6 +232,9 @@ plugin.multishop {
 
 	# cat=plugin.multishop - templates/file; type=string; label= Admin invoice PDF File Path: Optionally specify the location of the template file that is being used for generating invoice PDF. Example: fileadmin/templates/multishop/admin_invoice_pdf.tmpl.
 	admin_invoice_pdf_tmpl_path=
+
+	# cat=plugin.multishop - templates/file; type=string; label= Admin packing slip PDF File Path: Optionally specify the location of the template file that is being used for generating packing slip PDF. Example: fileadmin/templates/multishop/admin_packingslip_pdf.tmpl.
+	admin_packingslip_pdf_tmpl_path=
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Hide Facebook like box in admin interface
 	hideFacebookInAdminInterface=0

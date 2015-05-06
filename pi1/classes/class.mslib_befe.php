@@ -3625,11 +3625,22 @@ class mslib_befe {
 		$selectbox_str=implode("\n", $selectbox_options);
 		return $selectbox_str;
 	}
-	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='', $display_currency_symbol=1) {
-		if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
-			$template=$this->cObj->fileResource($this->conf['order_details_table_invoice_pdf_tmpl_path']);
-		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_invoice_pdf.tmpl');
+	function printInvoiceOrderDetailsTable($order, $invoice_number, $prefix='', $display_currency_symbol=1, $table_type='invoice') {
+		switch ($table_type) {
+			case 'invoice':
+				if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['order_details_table_invoice_pdf_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_invoice_pdf.tmpl');
+				}
+				break;
+			case 'packingslip':
+				if ($this->conf['order_details_table_packingslip_pdf_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['order_details_table_packingslip_pdf_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_packingslip_pdf.tmpl');
+				}
+				break;
 		}
 		// Extract the subparts from the template
 		$subparts=array();

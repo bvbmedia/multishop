@@ -144,6 +144,19 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			$types['pdf_invoice_footer_message_'.$key]=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Invoice footer message after order details table').' ('.$key.')';
 		}
 	}
+	// packing slip pdf
+	$types['pdf_packingslip_header_message']=$this->pi_getLL('pdf_packingslip_header_message', 'PDF Packing slip header message before order details table').' ('.$this->pi_getLL('default').')';
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
+			$types['pdf_packingslip_header_message_'.$key]=$this->pi_getLL('pdf_packingslip_header_message', 'PDF Packing slip header message before order details table').' ('.$key.')';
+		}
+	}
+	$types['pdf_packingslip_footer_message']=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Packing slip footer message after order details table').' ('.$this->pi_getLL('default').')';
+	if (is_array($payment_methods)) {
+		foreach ($payment_methods as $key=>$value) {
+			$types['pdf_packingslip_footer_message_'.$key]=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Packing slip footer message after order details table').' ('.$key.')';
+		}
+	}
 	// create account disclaimer cms type
 	if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER']) {
 		$types['create_account_disclaimer']=$this->pi_getLL('create_account_disclaimer');

@@ -40,6 +40,11 @@ if (is_numeric($this->get['orders_id'])) {
 					<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank" class="multishop_pdf_icon"><span>PDF</span></a>
 				</li>';
 		}
+		if ($this->get['print']=='packing') {
+			$tmpcontent.='<li>
+					<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$this->get['orders_id']).'" target="_blank" class="multishop_pdf_icon"><span>PDF</span></a>
+				</li>';
+		}
 		$tmpcontent.='
 			</ul>
 		</div>

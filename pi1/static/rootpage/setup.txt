@@ -78,6 +78,7 @@ plugin.tx_multishop_pi1 {
 	order_details_table_site_tmpl_path={$plugin.multishop.order_details_table_site_tmpl_path}
 	order_details_table_email_tmpl_path={$plugin.multishop.order_details_table_email_tmpl_path}
 	order_details_table_invoice_pdf_tmpl_path={$plugin.multishop.order_details_table_invoice_pdf_tmpl_path}
+	order_details_table_packingslip_pdf_tmpl_path={$plugin.multishop.order_details_table_packingslip_pdf_tmpl_path}
 	maxDEPTH={$plugin.multishop.maxDEPTH}
 	showIfsub={$plugin.multishop.showIfsub}
 	parentID={$plugin.multishop.parentID}
@@ -107,6 +108,7 @@ plugin.tx_multishop_pi1 {
 	admin_useragents_tmpl_path={$plugin.multishop.admin_useragents_tmpl_path}
 	admin_home_tmpl_path={$plugin.multishop.admin_home_tmpl_path}
 	admin_invoice_pdf_tmpl_path={$plugin.multishop.admin_invoice_pdf_tmpl_path}
+	admin_packingslip_pdf_tmpl_path={$plugin.multishop.admin_packingslip_pdf_tmpl_path}
 	tt_address_record_id_store={$plugin.multishop.tt_address_record_id_store}
 	disableFeFromCalculatingVatPrices={$plugin.multishop.disableFeFromCalculatingVatPrices}
 	cart_uid={$plugin.multishop.cart_uid}
