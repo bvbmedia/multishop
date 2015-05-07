@@ -227,7 +227,7 @@ if ($this->post) {
 						}
 					}
 				}
-				if ($src_value_id>0 && $target_value_id>0) {
+				if ($src_value_id>0 && $target_value_id>0 && $src_value_id!=$target_value_id) {
 					//
 					$clean_up_db=true;
 					$clean_up_unused_value[]=$src_value_id;
