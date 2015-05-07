@@ -4075,7 +4075,7 @@
 			<label index="admin_sort_alphabet_natural_asc">sorteer op basis van alfabet natuurlijk (oplopend)</label>
 			<label index="admin_sort_alphabet_natural_desc">sorteer op basis van alfabet natuurlijk (aflopend)</label>
 			<label index="admin_sort_by_alphabet">Sorteer op alfabet</label>
-			<label index="admin_sort_by_date_ascending">Sorteer op datum opvolgend</label>
+			<label index="admin_sort_by_date_ascending">Sorteer op datum oplopend</label>
 			<label index="admin_sort_by_date_descending">Sorteer op datum aflopend</label>
 			<label index="admin_sort_catalog">Sorteer catalogus</label>
 			<label index="admin_sort_catalog_description">Hersorteer producten en categorieën met 1 muisklik</label>
@@ -4664,13 +4664,13 @@
 			<label index="sort_direction">Sorteervolgorde</label>
 			<label index="sort_direction_asc">Oplopend</label>
 			<label index="sort_direction_desc">Aflopend</label>
-			<label index="sortby_options_label_bestselling_asc">Meest verkocht (opvolgend)</label>
+			<label index="sortby_options_label_bestselling_asc">Meest verkocht (oplopend)</label>
 			<label index="sortby_options_label_bestselling_desc">Meest verkocht (aflopend)</label>
 			<label index="sortby_options_label_manufacturers_asc">Fabrikant (oplopend)</label>
 			<label index="sortby_options_label_manufacturers_desc">Fabrikant (aflopend)</label>
-			<label index="sortby_options_label_new_asc">Nieuw (opvolgend)</label>
+			<label index="sortby_options_label_new_asc">Nieuw (oplopend)</label>
 			<label index="sortby_options_label_new_desc">Nieuw (aflopend)</label>
-			<label index="sortby_options_label_price_asc">Prijs (opvolgend)</label>
+			<label index="sortby_options_label_price_asc">Prijs (oplopend)</label>
 			<label index="sortby_options_label_price_desc">Prijs (aflopend)</label>
 			<label index="source">Bron</label>
 			<label index="source_column">Bron kolom</label>

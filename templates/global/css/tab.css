@@ -919,6 +919,14 @@ span.viewfront a:hover { background:#e2e2e2; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-mceEditor.redactor-editor ul { margin:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-mceEditor.redactor-editor ul li { list-style-type:disc; padding:0; line-height: 1.6em; }
 
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor-editor h1 { font-size:36px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor-editor h2 { font-size:24px; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor-editor h1,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor-editor h2,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor-editor h3,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor-editor h4,
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .redactor-editor h5 { line-height:1.3; color:#000; margin-bottom:10px; }
+
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul { margin:10px 0 0; list-style:none; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul li { background:none; margin:0; padding:0; line-height:20px; }
 #tx_multishop_pi1_core #tab-container .tab_container #product_relatives_2 ul li input[type="checkbox"] { display:inline-block; margin:0 5px 0 0; }
