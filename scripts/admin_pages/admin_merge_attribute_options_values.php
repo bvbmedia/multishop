@@ -157,6 +157,8 @@ jQuery(document).ready(function(){
 ';
 if ($this->post) {
 	$new_attribute_value_id=array();
+	$clean_up_db=false;
+	$clean_up_unused_value=array();
 	foreach ($this->post['tx_multishop_pi1']['merge_attribute_values_src'] as $src_option_id => $src_values) {
 		if ((is_array($src_values) && count($src_values)) && (is_array($this->post['tx_multishop_pi1']['merge_attribute_values_target']) && $this->post['tx_multishop_pi1']['merge_attribute_values_target'][$src_option_id])) {
 			foreach ($src_values as $src_value_id) {
@@ -226,7 +228,20 @@ if ($this->post) {
 					}
 				}
 				if ($src_value_id>0 && $target_value_id>0) {
-					if ($new_value) {
+					//
+					$clean_up_db=true;
+					$clean_up_unused_value[]=$src_value_id;
+					//
+					$updateArray=array();
+					$updateArray['products_options_values_id']=$target_value_id;
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id=\''.$src_option_id.'\' and products_options_values_id=\''.$src_value_id.'\'', $updateArray);
+					$GLOBALS['TYPO3_DB']->sql_query($query);
+					//
+					$updateArray=array();
+					$updateArray['options_values_id']=$target_value_id;
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'options_id=\''.$src_option_id.'\' and options_values_id=\''.$src_value_id.'\'', $updateArray);
+					$GLOBALS['TYPO3_DB']->sql_query($query);
+					/*if ($new_value) {
 						// delete the source option
 						//$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values', 'products_options_values_id='.$src_value_id);
 						//$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -246,10 +261,55 @@ if ($this->post) {
 						//
 						$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'options_id=\''.$src_option_id.'\' and options_values_id=\''.$src_value_id.'\'');
 						$GLOBALS['TYPO3_DB']->sql_query($query);
-					}
+					}*/
 				}
 			}
 		}
+	}
+	// cleaning up
+	if ($clean_up_db) {
+		// clean up unused values
+		if (count($clean_up_unused_value)) {
+			$unused_values=array_unique($clean_up_unused_value);
+		}
+		foreach ($unused_values as $unused_value_id) {
+			$have_povp_record=false;
+			$have_pa_record=false;
+			//
+			$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_id', // SELECT ...
+				'tx_multishop_products_options_values_to_products_options', // FROM ...
+				"products_options_values_id = '".$unused_value_id."'", // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
+				$have_povp_record=true;
+			}
+			//
+			$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('options_values_id', // SELECT ...
+				'tx_multishop_products_attributes', // FROM ...
+				"options_values_id = '".$unused_value_id."'", // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
+				$have_pa_record=true;
+			}
+			if (!$have_povp_record && !$have_pa_record) {
+				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values', 'products_options_values_id='.$unused_value_id);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+		}
+		// delete double record
+		$delete_qry="DELETE povp1 FROM tx_multishop_products_options_values_to_products_options povp1, tx_multishop_products_options_values_to_products_options povp2 WHERE povp1.products_options_values_to_products_options_id > povp2.products_options_values_to_products_options_id AND povp1.products_options_id = povp2.products_options_id AND povp1.products_options_values_id = povp2.products_options_values_id";
+		$GLOBALS['TYPO3_DB']->sql_query($delete_qry);
+		//
+		$delete_qry="DELETE pa1 FROM tx_multishop_products_attributes pa1, tx_multishop_products_attributes pa2 WHERE pa1.products_attributes_id > pa2.products_attributes_id AND pa1.products_id = pa2.products_id AND pa1.options_id = pa2.options_id AND pa1.options_values_id = pa2.options_values_id";
+		$GLOBALS['TYPO3_DB']->sql_query($delete_qry);
 	}
 	//
 	header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
