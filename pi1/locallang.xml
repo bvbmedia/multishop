@@ -1631,7 +1631,7 @@
 			<label index="admin_label_are_you_sure_want_to_delete_x_attributes">Sind Sie sicher, dass Sie die %s Eigenschaft(en) löschen wollen?</label>
 			<label index="admin_label_are_you_sure_want_to_rebuild_flat_database">Sind Sie sicher, dass Sie die spezielle FLAT Datenbank wieder aufbauen wollen</label>
 			<label index="admin_label_are_you_sure_want_to_run_consistency_checker">Sind Sie sicher, dassn Sie die Konsistenzprüfung starten wollen</label>
-			<label index="admin_label_are_you_sure_want_to_start_all_over_again">Mit diesem Schritt wird den gesamten Katalog unwiderruflich gelöscht.&lt;br /&gt;Sind Sie sicher, dass Sie noch einmal von vorne beginnen wollen.</label>
+			<label index="admin_label_are_you_sure_want_to_start_all_over_again">Mit diesem Schritt wird den gesamten Katalog unwiderruflich gelöscht. Sind Sie sicher, dass Sie noch einmal von vorne beginnen wollen.</label>
 			<label index="admin_label_are_you_sure_want_to_start_this">Sind Sie sicher, dass Sie diesen Schritt starten wollen</label>
 			<label index="admin_label_are_you_sure_you_want_to_run_the_multishop_update_script">Sind Sie sicher, dass das Multishop Update jetzt ausgeführt wird</label>
 			<label index="admin_label_billing_address">Rechnungsadresse</label>
@@ -2557,7 +2557,7 @@
 			<label index="submit">bestätigen</label>
 			<label index="submit_button_label">Eingaben absenden</label>
 			<label index="subscribe_to_our_newsletter">Newsletter abonnieren</label>
-			<label index="subscribe_to_our_newsletter_description">Bleiben Sie mit unseren Newslettern auf dem neuesten Stand unserer Angebote. Sie erhalten die News an Ihre angegebene E-Mail Adresse. Sie können sich jederzeit vom Newsletter abmelden&lt;br/&gt;</label>
+			<label index="subscribe_to_our_newsletter_description">Bleiben Sie mit unseren Newslettern auf dem neuesten Stand unserer Angebote. Sie erhalten die News an Ihre angegebene E-Mail Adresse. Sie können sich jederzeit vom Newsletter abmelden</label>
 			<label index="subtotal">Zwischensumme</label>
 			<label index="succesfully_created_user">Benutzer wurde erfolgreich erstellt</label>
 			<label index="succesfully_updated_user">Benutzer wurde erfolgreich aktualisiert</label>
