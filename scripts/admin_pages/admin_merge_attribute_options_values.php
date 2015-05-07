@@ -165,7 +165,7 @@ if ($this->post) {
 				$new_value=false;
 				$target_value_id=$this->post['tx_multishop_pi1']['merge_attribute_values_target'][$src_option_id];
 				// make sure the manual input is not option id
-				$is_target_value_id_exist=mslib_befe::getRecord($target_value_id, 'tx_multishop_products_options_values', 'products_options_values_id', array('language_id=\'0\''));
+				$is_target_value_id_exist=mslib_befe::getRecord($target_value_id, 'tx_multishop_products_options_values', 'products_options_values_name', array('language_id=\'0\''));
 				if (!is_array($is_target_value_id_exist) || (isset($new_attribute_value_id[$target_value_id_name]) && $new_attribute_value_id[$target_value_id_name]>0)) {
 					$new_value=true;
 				}
