@@ -6015,6 +6015,12 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['description']=$this->pi_getLL('admin_maintain_attributes_options_groups').'.';
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_attributes_options_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_attributes_options_groups');
 			}
+			// merge attributes options
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_options']['label']=$this->pi_getLL('merge_attribute_options');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_options']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_values']['label']=$this->pi_getLL('merge_attribute_values');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_values']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values');
+			//
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['label']=$this->pi_getLL('admin_update_prices');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['description']=$this->pi_getLL('admin_update_product_prices_by_percentage').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_mass_product_updater');
@@ -6387,12 +6393,6 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['label']=$this->pi_getLL('repair_missing_attribute_language_values');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_repair_missing_multilanguages_attributes');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
-			// merge attributes options
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['label']=$this->pi_getLL('merge_attributes');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_options']['label']=$this->pi_getLL('merge_attribute_options');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_options']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_values']['label']=$this->pi_getLL('merge_attribute_values');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_merge_attribute']['subs']['admin_merge_attribute_values']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values');
 			// footer eof
 		} // end if enableAdminPanelSystem
 		// hook

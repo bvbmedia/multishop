@@ -270,6 +270,6 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
 		}
 	}
 	//
-	header('Location: ' . mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
+	header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
 }
 ?>
