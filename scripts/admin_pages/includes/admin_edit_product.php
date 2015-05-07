@@ -3083,74 +3083,6 @@ if ($this->post) {
 						}
 					});
 				}
-				var select2_values_sb = function(selector_str, placeholder, dropdowncss, ajax_url) {
-					$(selector_str).select2({
-						placeholder: placeholder,
-						createSearchChoice:function(term, data) {
-							if ($(data).filter(function() {
-								return this.text.localeCompare(term)===0;
-							}).length===0) {
-								if (attributesValues[term] === undefined) {
-									attributesValues[term]={id: term, text: term};
-								}
-								return {id:term, text:term};
-							}
-						},
-						minimumInputLength: 0,
-						query: function(query) {
-							if (attributesSearchValues[query.term] !== undefined && query.term!=\'\') {
-								query.callback({results: attributesSearchValues[query.term]});
-							} else {
-								$.ajax(ajax_url, {
-									data: {
-										q: query.term + "||optid=" +  $(selector_str).parent().prev().children("input").val()
-									},
-									dataType: "json"
-								}).done(function(data) {
-									attributesSearchValues[query.term]=data;
-									query.callback({results: data});
-								});
-							}
-						},
-						initSelection: function(element, callback) {
-							var id=$(element).val();
-							if (id!=="") {
-								if (attributesValues[id] !== undefined) {
-									callback(attributesValues[id]);
-								} else {
-									$.ajax(ajax_url, {
-										data: {
-											preselected_id: id,
-										},
-										dataType: "json"
-									}).done(function(data) {
-										attributesValues[data.id]={id: data.id, text: data.text};
-										callback(data);
-									});
-								}
-							}
-						},
-						formatResult: function(data){
-							var tmp_data=data.text.split("||");
-							return tmp_data[0];
-						},
-						formatSelection: function(data){
-							if (data.text === undefined) {
-								return data[0].text;
-							} else {
-								return data.text;
-							}
-						},
-						dropdownCssClass: dropdowncss,
-						escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
-					}).on("select2-selecting", function(e) {
-						if (e.object.id == e.object.text) {
-							$(this).next().val("1");
-						} else {
-							$(this).next().val("0");
-						}
-					});
-				}
 				var sort_li = function () {
 					jQuery("#products_attributes_items").sortable({
 						'.($product['products_id'] ? '
@@ -3198,7 +3130,6 @@ if ($this->post) {
 				$(".items_wrapper").hide();
 				$(".add_new_attributes").hide();
 				select2_sb(".product_attribute_options", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
-				select2_values_sb(".product_attribute_values", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 			});
 			</script>
 			<h1>'.$this->pi_getLL('admin_product_attributes').'</h1>
@@ -3353,6 +3284,7 @@ if ($this->post) {
 					$ctr=1;
 					$options_data=array();
 					$attributes_data=array();
+					$attribute_values_class_id=array();
 					while (($row=$GLOBALS ['TYPO3_DB']->sql_fetch_assoc($qry_pa))!=false) {
 						$row['options_values_name']=mslib_fe::getNameOptions($row['options_values_id']);
 						$options_data[$row['products_options_id']]=$row['products_options_name'];
@@ -3398,10 +3330,11 @@ if ($this->post) {
 								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 								</td>';
 								$existing_product_attributes_block_columns['attribute_value_col']='<td class="product_attribute_value">
-								<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values" value="'.$attribute_data['options_values_id'].'" style="width:200px" />
+								<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values_'.$option_id.'" value="'.$attribute_data['options_values_id'].'" style="width:200px" />
 								<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" id="manual_attributes_'.$attribute_data['products_attributes_id'].'" value="0" />
 								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 								</td>';
+								$attribute_values_class_id[]='.product_attribute_values_'.$option_id;
 								if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
 									$element_id=$product['products_id'].'_'.$option_id.'_'.$attribute_data['options_values_id'];
 									$existing_product_attributes_block_columns['attribute_value_image_col']='<td class="product_attribute_value_image">
@@ -3522,16 +3455,93 @@ if ($this->post) {
 			$attributes_tab_block.='<tr id="add_attributes_holder">
 					<td colspan="5">&nbsp;</td>
 			</tr>';
+			$attribute_values_sb_trigger='';
+			if (count($attribute_values_class_id)) {
+				foreach ($attribute_values_class_id as $value_sb_class_id) {
+					$attribute_values_sb_trigger.='select2_values_sb("'.$value_sb_class_id.'", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");'."\n";
+				}
+			}
 			$attributes_tab_block.='<tr id="add_attributes_button">
 					<td colspan="5" align="right"><input id="addAttributes" type="button" class="msadmin_button" value="'.$this->pi_getLL('admin_add_new_attribute').' [+]"></td>
 			</tr>
 			</table>
-			<script>
-			$(document).on("keyup", ".msAttributesPriceExcludingVat", function() {
-				productPrice(true, $(this));
-			});
-			$(document).on("keyup", ".msAttributesPriceIncludingVat", function() {
-				productPrice(false, $(this));
+			<script type="text/javascript">
+			var select2_values_sb = function(selector_str, placeholder, dropdowncss, ajax_url) {
+				$(selector_str).select2({
+					placeholder: placeholder,
+					createSearchChoice:function(term, data) {
+						if ($(data).filter(function() {
+							return this.text.localeCompare(term)===0;
+						}).length===0) {
+							if (attributesValues[term] === undefined) {
+								attributesValues[term]={id: term, text: term};
+							}
+							return {id:term, text:term};
+						}
+					},
+					minimumInputLength: 0,
+					query: function(query) {
+						//if (attributesSearchValues[query.term] !== undefined && query.term!=\'\') {
+						//	query.callback({results: attributesSearchValues[query.term]});
+						//} else {
+							$.ajax(ajax_url, {
+								data: {
+									q: query.term + "||optid=" +  $(selector_str).parent().prev().children("input").val()
+								},
+								dataType: "json"
+							}).done(function(data) {
+								attributesSearchValues[query.term]=data;
+								query.callback({results: data});
+							});
+						//}
+					},
+					initSelection: function(element, callback) {
+						var id=$(element).val();
+						if (id!=="") {
+							//if (attributesValues[id] !== undefined) {
+							//	callback(attributesValues[id]);
+							//} else {
+								$.ajax(ajax_url, {
+									data: {
+										preselected_id: id,
+									},
+									dataType: "json"
+								}).done(function(data) {
+									attributesValues[data.id]={id: data.id, text: data.text};
+									callback(data);
+								});
+							//}
+						}
+					},
+					formatResult: function(data){
+						var tmp_data=data.text.split("||");
+						return tmp_data[0];
+					},
+					formatSelection: function(data){
+						if (data.text === undefined) {
+							return data[0].text;
+						} else {
+							return data.text;
+						}
+					},
+					dropdownCssClass: dropdowncss,
+					escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+				}).on("select2-selecting", function(e) {
+					if (e.object.id == e.object.text) {
+						$(this).next().val("1");
+					} else {
+						$(this).next().val("0");
+					}
+				});
+			}
+			jQuery(document).ready(function(){
+				'.$attribute_values_sb_trigger.'
+				$(document).on("keyup", ".msAttributesPriceExcludingVat", function() {
+					productPrice(true, $(this));
+				});
+				$(document).on("keyup", ".msAttributesPriceIncludingVat", function() {
+					productPrice(false, $(this));
+				});
 			});
 			</script>
 			';
