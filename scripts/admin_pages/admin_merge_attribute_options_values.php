@@ -168,6 +168,8 @@ if ($this->post) {
 				$is_target_value_id_exist=mslib_befe::getRecord($target_value_id, 'tx_multishop_products_options_values', 'products_options_values_name', array('language_id=\'0\''));
 				if (!is_array($is_target_value_id_exist) || (isset($new_attribute_value_id[$target_value_id_name]) && $new_attribute_value_id[$target_value_id_name]>0)) {
 					$new_value=true;
+				} else {
+					$target_value_id=$is_target_value_id_exist['products_options_values_id'];
 				}
 				if ($new_value) {
 					$target_value_id_name=$target_value_id;
