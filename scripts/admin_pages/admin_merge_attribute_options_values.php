@@ -179,6 +179,9 @@ if ($this->post) {
 						$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
 						if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
 							$new_value=true;
+						} else {
+							$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
+							$target_value_id=$row['products_options_values_id'];
 						}
 					}
 				}
