@@ -185,6 +185,7 @@ if ($this->post) {
 						if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
 							$rs_chk=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
 							$target_value_id=$rs_chk['products_options_values_id'];
+							$new_attribute_value_id[$target_value_id_name]=$target_value_id;
 						} else {
 							$insertArray=array();
 							$insertArray['products_options_values_id']='';
@@ -194,34 +195,34 @@ if ($this->post) {
 							$GLOBALS['TYPO3_DB']->sql_query($query);
 							$target_value_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 							$new_attribute_value_id[$target_value_id_name]=$target_value_id;
-						}
-						// check for multilanguages
-						foreach ($this->languages as $key=>$language) {
-							if ($language['uid']>0) {
-								$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_name', // SELECT ...
-									'tx_multishop_products_options_values', // FROM ...
-									"products_options_values_id = '".$target_value_id."' and language_id = '".$language['uid']."'", // WHERE...
-									'', // GROUP BY...
-									'', // ORDER BY...
-									'' // LIMIT ...
-								);
-								$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
-								if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
-									// prep for update
-									$option_value_name=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
-									if (empty($option_value_name['products_options_values_name']) || !$option_value_name['products_options_values_name']) {
-										$updateArray=array();
-										$updateArray['products_options_values_name']=$target_value_id_name;
-										$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values', 'products_options_values_id=\''.$target_value_id.'\' and language_id=\''.$language['uid'].'\'', $updateArray);
-										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// add for multilang slug
+							foreach ($this->languages as $key=>$language) {
+								if ($language['uid']>0) {
+									$sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_values_name', // SELECT ...
+										'tx_multishop_products_options_values', // FROM ...
+										"products_options_values_id = '".$target_value_id."' and language_id = '".$language['uid']."'", // WHERE...
+										'', // GROUP BY...
+										'', // ORDER BY...
+										'' // LIMIT ...
+									);
+									$qry_chk=$GLOBALS['TYPO3_DB']->sql_query($sql_chk);
+									if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_chk)>0) {
+										// prep for update
+										$option_value_name=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_chk);
+										if (empty($option_value_name['products_options_values_name']) || !$option_value_name['products_options_values_name']) {
+											$updateArray=array();
+											$updateArray['products_options_values_name']=$target_value_id_name;
+											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values', 'products_options_values_id=\''.$target_value_id.'\' and language_id=\''.$language['uid'].'\'', $updateArray);
+											$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										}
+									} else {
+										$insertArray=array();
+										$insertArray['products_options_values_id']=$target_value_id;
+										$insertArray['language_id']=$language['uid'];
+										$insertArray['products_options_values_name']=$target_value_id_name;
+										$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
+										$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
-								} else {
-									$insertArray=array();
-									$insertArray['products_options_values_id']=$target_value_id;
-									$insertArray['language_id']=$language['uid'];
-									$insertArray['products_options_values_name']=$target_value_id_name;
-									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
-									$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 							}
 						}
