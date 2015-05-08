@@ -328,6 +328,17 @@ if (mslib_fe::loggedin()) {
 			$markerArray['###LABEL_BACK###']=$this->pi_getLL('back');
 			$markerArray['###LABEL_REGISTER###']=$this->pi_getLL('register');
 			//
+			// custom hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountPostHook'])) {
+				$params=array(
+					'markerArray'=>&$markerArray
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountPostHook'] as $funcRef) {
+					t3lib_div::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom hook that can be controlled by third-party plugin eof
+			//
 			$content.=$this->cObj->substituteMarkerArray($template, $markerArray);
 		}
 	}

@@ -609,6 +609,17 @@ if ($this->post) {
 	$markerArray['###LABEL_PASSWORD_CONFIRM###']=ucfirst($this->pi_getLL('repassword'));
 	$markerArray['###LABEL_UPDATE_OR_REGISTER###']=($this->contentMisc=='edit_account' ? ucfirst($this->pi_getLL('update_account')) : ucfirst($this->pi_getLL('register')));
 	//
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'])) {
+		$params=array(
+			'markerArray'=>&$markerArray
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'] as $funcRef) {
+			t3lib_div::callUserFunction($funcRef, $params, $this);
+		}
+	}
+	// custom hook that can be controlled by third-party plugin eof
+	//
 	$content.=$this->cObj->substituteMarkerArray($template, $markerArray);
 }
 $content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
