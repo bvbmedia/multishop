@@ -865,7 +865,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 					$product=mslib_fe::getProduct($rs['products_id'], '', '', 1);
 					if (!empty($product['products_name'])) {
 						$return_data['products'][$ctr]['name']=$product['products_name'];
-						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
+						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
 						$ctr++;
 					} else {
 						$have_entries_in_pa_table=true;
@@ -898,7 +898,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 					$product=mslib_fe::getProduct($rs['products_id'], '', '', 1);
 					if (!empty($product['products_name'])) {
 						$return_data['products'][$ctr]['name']=$product['products_name'];
-						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
+						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
 						$ctr++;
 					} else {
 						$have_entries_in_pa_table=true;
@@ -950,7 +950,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 					$product=mslib_fe::getProduct($rs['products_id'], '', '', 1);
 					if (!empty($product['products_name'])) {
 						$return_data['products'][$ctr]['name']=$product['products_name'];
-						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
+						$return_data['products'][$ctr]['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$rs['products_id'].'&cid='.$product['categories_id'].'&action=edit_product');
 						$ctr++;
 					} else {
 						$have_entries_in_pa_table=true;
