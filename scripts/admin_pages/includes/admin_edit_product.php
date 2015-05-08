@@ -3457,7 +3457,8 @@ if ($this->post) {
 			</tr>';
 			$attribute_values_sb_trigger='';
 			if (count($attribute_values_class_id)) {
-				foreach ($attribute_values_class_id as $value_sb_class_id) {
+				$tmp_attribute_values_class_id=array_unique($attribute_values_class_id);
+				foreach ($tmp_attribute_values_class_id as $value_sb_class_id) {
 					$attribute_values_sb_trigger.='select2_values_sb("'.$value_sb_class_id.'", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");'."\n";
 				}
 			}
