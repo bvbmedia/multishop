@@ -21,6 +21,8 @@ multishop_pi1.value =
 plugin.tx_multishop_pi1 {
 	product_detail_tmpl={$plugin.multishop.product_detail_tmpl}
 	product_detail_tmpl_path={$plugin.multishop.product_detail_tmpl_path}
+	create_account_tmpl_path={$plugin.multishop.create_account_tmpl_path}
+	edit_account_tmpl_path={$plugin.multishop.edit_account_tmpl_path}
 	includeJS={$plugin.multishop.includeJS}
 	includeCSS={$plugin.multishop.includeCSS}
 	shop_pid={$plugin.multishop.shop_pid}
