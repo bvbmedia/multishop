@@ -5968,6 +5968,7 @@ class mslib_fe {
 //		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_home').'" title="Home dashboard" alt="Home dashboard"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';
 		if ($this->ROOTADMIN_USER or $this->CATALOGADMIN_USER) {
 			$ms_menu['header']['ms_admin_catalog']['label']=$this->pi_getLL('admin_catalog');
+			$ms_menu['header']['ms_admin_catalog']['link']=mslib_fe::typolink($this->shop_pid);
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['label']=$this->pi_getLL('admin_categories');
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['description']=$this->pi_getLL('admin_add_and_modify_categories_here').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_categories&cid='.$this->get['categories_id']);
