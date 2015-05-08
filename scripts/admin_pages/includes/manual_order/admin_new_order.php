@@ -141,8 +141,12 @@ if (count($products)<0) {
 			<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').'</label>
 			<input type="text" name="company" class="company" id="company" value="'.htmlspecialchars($user['company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"' : '').'/>
 			'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '').'
+		</div>
+		<div class="account-field">
 			<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
 			<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($user['tx_multishop_vat_id']).'" />
+			<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
+			<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($user['tx_multishop_coc_id']).'" />
 		</div>
 		<div class="account-field">
 			<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>

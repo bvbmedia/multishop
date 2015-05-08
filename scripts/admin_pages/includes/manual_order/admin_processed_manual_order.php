@@ -47,6 +47,7 @@ if ($this->post['proceed_order']) {
 		$insertArray['pid']=$this->conf['fe_customer_pid'];
 		$insertArray['password']=mslib_befe::getHashedPassword(rand(1000000, 9000000));
 		$insertArray['tx_multishop_vat_id']=$this->post['tx_multishop_vat_id'];
+		$insertArray['tx_multishop_coc_id']=$this->post['tx_multishop_coc_id'];
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($res) {
@@ -81,6 +82,7 @@ if ($this->post['proceed_order']) {
 		$insertArray['billing_mobile']=$this->post['mobile'];
 		$insertArray['billing_fax']='';
 		$insertArray['billing_vat_id']=$this->post['tx_multishop_vat_id'];
+		$insertArray['billing_coc_id']=$this->post['tx_multishop_coc_id'];
 		$insertArray['delivery_company']=$this->post['delivery_company'];
 		$insertArray['delivery_first_name']=$this->post['delivery_first_name'];
 		$insertArray['delivery_middle_name']=$this->post['delivery_middle_name'];
