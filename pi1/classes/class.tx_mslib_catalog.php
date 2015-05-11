@@ -612,6 +612,7 @@ class tx_mslib_catalog {
 		$level=1;
 		$cats=mslib_fe::globalCrumbarTree($deepest_cat_id);
 		$cats=array_reverse($cats);
+		//
 		$crumbar_ident_string='';
 		$crumbar_ident_array=array();
 		foreach ($cats as $item) {
@@ -624,16 +625,16 @@ class tx_mslib_catalog {
 			// disabled by bas
 			//unset($cats[$count_cats-1]);
 			//recount
-			$count_cats=count($cats);
+			//$count_cats=count($cats);
 		}
 		if ($count_cats>0) {
 			foreach ($cats as $item) {
 				if ($item['id']) {
-					$rec=tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $deepest_cat_id, $item['id']);
+					$rec=tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $item['id'], $crumbar_ident_string);
 					if (!$rec) {
 						$insertArray=array();
-						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
-							$insertArray['categories_id']=$deepest_cat_id;
+						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray)) || $item['id']!=$deepest_cat_id) {
+							$insertArray['categories_id']=$item['id'];
 							$insertArray['products_id']=$pid;
 							$insertArray['page_uid']=$item['page_uid'];
 							$insertArray['sort_order']=time();
@@ -669,8 +670,8 @@ class tx_mslib_catalog {
 			return true;
 		}
 	}
-	function isProductToCategoryLinkingExist($pid, $catid, $node_id) {
-		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('categories_id=\''.$catid.'\' and node_id=\''.$node_id.'\' and page_uid=\''. $this->showCatalogFromPage.'\''));
+	function isProductToCategoryLinkingExist($pid, $node_id, $crumbar_string) {
+		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('categories_id=\''.$node_id.'\' and crumbar_identifier=\''.$crumbar_string.'\' and page_uid=\''. $this->showCatalogFromPage.'\''));
 		if (is_array($rec) && isset($rec['products_id']) && $rec['products_id']>0) {
 			return $rec;
 		} else {

@@ -502,7 +502,7 @@ if (count($cart['products'])<1) {
 			}
 			if ($tmpcontent_con) {
 				$country_block.='
-				<div class="account-field col-sm-8" id="input-country">
+				<div class="account-field col-sm-'.($this->conf['multistep_checkout_address_tmpl_path'] ? '12' : '8').'" id="input-country">
 					<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 					<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 						<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
@@ -605,7 +605,7 @@ if (count($cart['products'])<1) {
 		//
 		if ($tmpcontent_con) {
 			$delivery_country_block='
-			<div class="account-field col-sm-7" id="input-dfcountry">
+			<div class="account-field col-sm-'.($this->conf['multistep_checkout_address_tmpl_path'] ? '12' : '7').'" id="input-dfcountry">
 				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 				<select name="delivery_country" id="delivery_country" class="delivery_country">
 					<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>

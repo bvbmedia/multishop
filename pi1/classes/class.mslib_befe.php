@@ -736,11 +736,18 @@ class mslib_befe {
 		if (!is_numeric($page_uid)) {
 			return false;
 		}
-		$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total', 'tx_multishop_products_to_categories', 'page_uid=\''.$page_uid.'\' and is_deepest=1', '');
-		$row=$data[0];
-		if (!isset($row['total'])) {
-			$row['total']=0;
+		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('products_id', // SELECT ...
+			'tx_multishop_products_to_categories', // FROM ...
+			'page_uid=\''.$page_uid.'\' and is_deepest=1', // WHERE...
+			'products_id', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		if (!$qry) {
+			return false;
 		}
+		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+		$row['total']=$GLOBALS['TYPO3_DB']->sql_num_rows($categories_query);
 		return $row['total'];
 	}
 	public function countOrders($page_uid) {

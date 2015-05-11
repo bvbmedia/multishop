@@ -1139,7 +1139,18 @@ if ($this->post) {
 									list($tmpcatId,)=explode('::rel_', $catId);
 									$catId=$tmpcatId;
 								}
-								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and categories_id=\''.$catId.'\' and page_uid='.$page_uid);
+								//
+								$cats=mslib_fe::globalCrumbarTree($catId);
+								$cats=array_reverse($cats);
+								//
+								$crumbar_ident_string='';
+								$crumbar_ident_array=array();
+								foreach ($cats as $item) {
+									$crumbar_ident_array[]=$item['id'];
+								}
+								$crumbar_ident_string=implode(',', $crumbar_ident_array);
+								//
+								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and crumbar_identifier=\''.$crumbar_ident_string.'\' and page_uid='.$page_uid);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								// remove the custom page desc if the cat id is not related anymore in p2c
 								$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and layered_categories_id=\''.$catId.'\' and page_uid='.$page_uid);
@@ -1205,10 +1216,12 @@ if ($this->post) {
 									tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $updateArray);
 								}
 								// update the counterpart relation
-								$updateArray=array();
-								$updateArray['related_to']=$catId;
-								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\''.$relCatId.'\' and products_id=\''.$prodid.'\'', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								if ($relCatId>0) {
+									$updateArray=array();
+									$updateArray['related_to']=$catId;
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'categories_id=\''.$relCatId.'\' and products_id=\''.$prodid.'\'', $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								}
 								if ($this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 									// link to others
 									$foreign_categories=mslib_fe::getForeignCategoriesData($catId, $page_uid);
