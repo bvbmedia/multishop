@@ -87,11 +87,21 @@ $array['products_shortdescription']=$this->pi_getLL('feed_exporter_fields_label_
 $array['products_description']=$this->pi_getLL('feed_exporter_fields_label_products_description');
 $array['products_description_encoded']=$this->pi_getLL('feed_exporter_fields_label_products_description_html_encoded');
 $array['products_description_strip_tags']=$this->pi_getLL('feed_exporter_fields_label_products_description_plain_stripped_tags');
-$array['products_image_50']=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_50');
-$array['products_image_100']=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_100');
-$array['products_image_200']=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_200');
-$array['products_image_normal']=$this->pi_getLL('feed_exporter_fields_label_products_image_enlarged');
-$array['products_image_original']=$this->pi_getLL('feed_exporter_fields_label_products_image_original');
+
+for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+	if (!$x) {
+		$s='';
+	} else {
+		$s='_'.($x+1);
+	}
+	$suffix=' ('.($x+1).')';
+
+	$array['products_image_50'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_50').$suffix;
+	$array['products_image_100'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_100').$suffix;
+	$array['products_image_200'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_200').$suffix;
+	$array['products_image_normal'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_enlarged').$suffix;
+	$array['products_image_original'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_original').$suffix;
+}
 $array['products_ean']=$this->pi_getLL('feed_exporter_fields_label_products_ean_code');
 $array['products_sku']=$this->pi_getLL('feed_exporter_fields_label_products_sku_code');
 $array['foreign_products_id']=$this->pi_getLL('feed_exporter_fields_label_foreign_products_id');
@@ -139,7 +149,8 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		t3lib_div::callUserFunction($funcRef, $params, $this);
 	}
 }
-asort($array);
+uksort($array, "strnatcmp");
+//asort($array);
 if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	if ($this->post) {
 		$erno=array();

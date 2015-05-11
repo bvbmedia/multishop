@@ -92,12 +92,6 @@ if ($this->get['feed_hash']) {
 						case 'products_external_url':
 							$tmpcontent.='external_url';
 							break;
-						case 'products_image_50':
-						case 'products_image_100':
-						case 'products_image_200':
-						case 'products_image_normal':
-							$tmpcontent.='image_link';
-							break;
 						case 'manufacturers_name':
 							$tmpcontent.='brand';
 							break;
@@ -120,11 +114,30 @@ if ($this->get['feed_hash']) {
 							$tmpcontent.='manufacturers advice price';
 							break;
 						default:
-							// if key name is attribute option, print the option name. else print key name
-							if ($attributes[$field]) {
-								$tmpcontent.=$attributes[$field];
-							} else {
+							// COMPARE FIELD WITH PRODUCT_IMAGES OR ATTRIBUTES
+							$imageKeys=array();
+							for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+								if (!$x) {
+									$s='';
+								} else {
+									$s='_'.($x+1);
+								}
+								$imageKeys[]='products_image_50'.$s;
+								$imageKeys[]='products_image_100'.$s;
+								$imageKeys[]='products_image_200'.$s;
+								$imageKeys[]='products_image_normal'.$s;
+								$imageKeys[]='products_image_original'.$s;
+							}
+							if (count($imageKeys) && in_array($field,$imageKeys)) {
+								// we need to print the products image url
 								$tmpcontent.=$field;
+							} else {
+								// if key name is attribute option, print the option name. else print key name
+								if ($attributes[$field]) {
+									$tmpcontent.=$attributes[$field];
+								} else {
+									$tmpcontent.=$field;
+								}
 							}
 							break;
 					}
@@ -881,17 +894,57 @@ if ($this->get['feed_hash']) {
 						break;
 					default:
 						if ($field) {
-							if ($attributes[$field]) {
-								// print it from flat table
-								if (!$this->ms['MODULES']['FLAT_DATABASE']) {
-									$field_name=$field;
+							// COMPARE FIELD WITH PRODUCT_IMAGES OR ATTRIBUTES
+							$imageKeys=array();
+							for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+								if (!$x) {
+									$s='';
 								} else {
-									$field_name="a_".str_replace("-", "_", mslib_fe::rewritenamein($attributes[$field]));
-									if (!$row[$field_name]) {
-										$field_name=$field;
+									$s='_'.($x+1);
+								}
+								$imageKeys[]='products_image_50'.$s;
+								$imageKeys[]='products_image_100'.$s;
+								$imageKeys[]='products_image_200'.$s;
+								$imageKeys[]='products_image_normal'.$s;
+								$imageKeys[]='products_image_original'.$s;
+							}
+							if (count($imageKeys) && in_array($field,$imageKeys)) {
+								// we need to print the products image url
+								for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
+									if (!$x) {
+										$s='';
+										$y='';
+									} else {
+										$s='_'.($x+1);
+										$y=$x;
+									}
+									if ($row['products_image'.$y]) {
+										if ($field=='products_image_50'.$s) {
+											$tmpcontent.=$this->FULL_HTTP_URL.mslib_befe::getImagePath($row['products_image'.$y], 'products', '50');
+										} elseif ($field=='products_image_100'.$s) {
+											$tmpcontent.=$this->FULL_HTTP_URL.mslib_befe::getImagePath($row['products_image'.$y], 'products', '100');
+										} elseif ($field=='products_image_200'.$s) {
+											$tmpcontent.=$this->FULL_HTTP_URL.mslib_befe::getImagePath($row['products_image'.$y], 'products', '200');
+										} elseif ($field=='products_image_normal'.$s) {
+											$tmpcontent.=$this->FULL_HTTP_URL.mslib_befe::getImagePath($row['products_image'.$y], 'products', 'normal');
+										} elseif ($field=='products_image_original'.$s) {
+											$tmpcontent.=$this->FULL_HTTP_URL.mslib_befe::getImagePath($row['products_image'.$y], 'products', 'original');
+										}
 									}
 								}
-								$tmpcontent.=$row[$field_name];
+							} else {
+								if ($attributes[$field]) {
+									// print it from flat table
+									if (!$this->ms['MODULES']['FLAT_DATABASE']) {
+										$field_name=$field;
+									} else {
+										$field_name="a_".str_replace("-", "_", mslib_fe::rewritenamein($attributes[$field]));
+										if (!$row[$field_name]) {
+											$field_name=$field;
+										}
+									}
+									$tmpcontent.=$row[$field_name];
+								}
 							}
 						}
 						break;
