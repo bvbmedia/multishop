@@ -1,0 +1,126 @@
+<!-- ###TEMPLATE### begin -->
+<div id="live-validation" class="create-account">
+    <form action="###CREATE_ACCOUNT_FORM_URL###" method="post" name="create_account" class="AdvancedForm" id="create-account">
+        <div class="row">
+            <div id="live-validation_l" class="col-md-6">
+                <div class="account-boxes">
+                    <div class="account-heading">
+                        <h2>###LABEL_PERSONAL_DETAILS###</h2>
+                    </div>
+                    <div class="account-boxes">###LABEL_PERSONAL_DETAILS_DESCRIPTION###.</div>
+                </div>
+                <div class="row">
+                    <div class="account-field col-sm-12" id="input-gender">
+			  				<span id="ValidRadio" class="InputGroup">
+								<label for="gender_mr" id="account-gender">###LABEL_TITLE###*</label>
+								<input type="radio" class="InputGroup" name="gender" value="m" id="gender_mr"###GENDER_MR_CHECKED### />
+								<label class="account-male" for="gender_mr">###LABEL_GENDER_MR###</label>
+								<input type="radio" name="gender" value="f" class="InputGroup" id="gender_mrs"###GENDER_MRS_CHECKED### />
+								<label class="account-female" for="gender_mrs">###LABEL_GENDER_MRS###</label>
+							</span>
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-4" id="input-firstname">
+                        <label class="account-firstname" for="first_name">###LABEL_FIRST_NAME###*</label>
+                        <input type="text" name="first_name" class="first-name" id="first_name" value="###VALUE_FIRST_NAME###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-4" id="input-middlename">
+                        <label class="account-middlename" for="middle_name">###LABEL_MIDDLE_NAME###</label>
+                        <input type="text" name="middle_name" id="middle_name" class="middle_name" value="###VALUE_MIDDLE_NAME###">
+                        <span class="account-desc"></span> <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-4" id="input-lastname">
+                        <label class="account-lastname" for="last_name">###LABEL_LAST_NAME###*</label>
+                        <input type="text" name="last_name" id="last_name" class="last-name" value="###VALUE_LAST_NAME###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-12" id="input-company">
+                        <label for="company" id="account-company">###LABEL_COMPANY###</label>
+                        <input type="text" name="company" class="company" id="company" value="###VALUE_COMPANY###" />
+                        <span class="error-space"></span>
+                    </div>
+                    ###INPUT_VAT_BLOCK###
+                    ###INPUT_COC_BLOCK###
+                    ###INPUT_COUNTRY_BLOCK###
+                    <div class="account-field col-sm-4" id="input-zip">
+                        <label class="account-zip" for="zip">###LABEL_ZIP###*</label>
+                        <input type="text" name="zip" class="zip" id="zip" value="###VALUE_ZIP###">
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-3" id="input-address">
+                        <label class="account-address" for="address">###LABEL_ADDRESS###*</label>
+                        <input type="text" name="address" id="address" class="address" value="###VALUE_ADDRESS###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-3" id="input-housenumber">
+                        <label class="account-address-number" for="address_number">###LABEL_ADDRESS_NUMBER###*</label>
+                        <input type="text" name="address_number" id="address_number" class="address-number" value="###VALUE_ADDRESS_NUMBER###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-3" id="input-extension">
+                        <label class="account-address-ext" for="address_ext">###LABEL_ADDRESS_EXT###</label>
+                        <input type="text" name="address_ext" id="address_ext" class="address-ext" value="###VALUE_ADDRESS_EXT###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-3" id="input-city">
+                        <label class="account-city" for="city">###LABEL_CITY###*</label>
+                        <input id="city" name="city" type="text" value="###VALUE_CITY###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-6" id="input-phone">
+                        <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###*</label>
+                        <input type="text" name="telephone" id="telephone" class="telephone" value="###VALUE_TELEPHONE###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-6" id="input-mobile">
+                        <label for="mobile" id="account-mobile">###LABEL_MOBILE###</label>
+                        <input type="text" name="mobile" id="mobile" class="mobile" value="###VALUE_MOBILE###" />
+                        <span class="error-space"></span>
+                    </div>
+                </div>
+            </div>
+            <div id="live-validation_r" class="col-md-6">
+                <div class="account-boxes">
+                    <div class="account-heading">
+                        <h2>###LABEL_LOGIN_DETAILS###</h2>
+                    </div>
+                    <div class="account-boxes">###LABEL_LOGIN_DETAILS_DESCRIPTION###.</div>
+                </div>
+                <div class="row">
+                    <div class="account-field col-sm-6" id="user-email">
+                        <label class="account-email" for="email">###LABEL_EMAIL###</label>
+                        <input type="text" name="email" class="email" id="email" value="###VALUE_EMAIL###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-6" id="user-confirmemail">
+                        <label class="account-email-confirm" for="email_confirm">###LABEL_EMAIL_CONFIRM###</label>
+                        <input type="text" name="email_confirm" class="email-confirm" id="email_confirm" value="###VALUE_EMAIL_CONFIRM###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-6" id="user-password">
+                        <label class="account-password" for="password">###LABEL_PASSWORD###</label>
+                        <input type="password" name="password" class="password" id="password" value="###VALUE_PASSWORD###" />
+                        <span class="error-space"></span>
+                    </div>
+                    <div class="account-field col-sm-6" id="user-confirmpassword">
+                        <label class="account-password-confirm" for="password_confirm">###LABEL_PASSWORD_CONFIRM###</label>
+                        <input type="password" name="password_confirm" class="password-confirm" id="password_confirm" value="###VALUE_PASSWORD_CONFIRM###" />
+                        <span class="error-space"></span>
+                    </div>
+                </div>
+                ###CREATE_ACCOUNT_NEWSLETTER_SUBSCRIBE###
+                ###CREATE_ACCOUNT_DISCLAIMER###
+                <div class="account-field security">
+                    <img src="###CREATE_ACCOUNT_CAPTCHA_URL###">
+                    <input type="text" name="tx_multishop_pi1[captcha_code]" id="tx_multishop_captcha_code" value="" placeholder="###LABEL_CAPTCHA_PLACEHOLDER###" />
+                </div>
+            </div>
+        </div>
+        <div id="bottom-navigation">
+            <a href="" onClick="history.back();return false;" class="msFrontButton backState arrowLeft arrowPosLeft"><span>###LABEL_BACK###</span></a>
+            <span class="msFrontButton continueState arrowRight arrowPosLeft" id="submit"><input type="submit" value="###LABEL_REGISTER###" /></span>
+        </div>
+    </form>
+</div>
+<!-- ###TEMPLATE### end -->

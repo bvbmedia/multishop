@@ -133,7 +133,14 @@ plugin.multishop {
 	# cat=plugin.multishop - templates/file; type=string; label= E-mail Template File Path: Optionally specify the location of the e-mail template file. Example: fileadmin/templates/multishop/email_template.tmpl.
 	email_tmpl_path=
 
+	# cat=plugin.multishop - templates/file; type=string; label= Create Account Page Template File Path: Location of the HTML-template file of the create account page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/create_account.tmpl.
+	create_account_tmpl_path =
 
+	# cat=plugin.multishop - templates/file; type=string; label= Edit Account Page Template File Path: Location of the HTML-template file of the edit account page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/edit_account.tmpl.
+	edit_account_tmpl_path =
+
+	# cat=plugin.multishop - templates/file; type=string; label= Multistep checkout form Page Template File Path: Location of the HTML-template file of the multistep checkout form page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/multistep_checkout_address.tmpl.
+	multistep_checkout_address_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= HTML Box Template File Path: Location of the HTML-template file of the HTML box element. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/html_box.tmpl.
 	html_box_tmpl_path = EXT:multishop/templates/html_box.tmpl
