@@ -578,7 +578,7 @@ if (!$skipMultishopUpdates) {
 				$str="ALTER TABLE `tx_multishop_products_to_categories` ADD is_deepest tinyint(1) default '0',ADD KEY `is_deepest` (`is_deepest`)";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$messages[]=$str;
-				// market for old p2c relation for removing at the end
+				// marker for old p2c relation for removing at the end
 				$str="select current_relation from tx_multishop_products_to_categories limit 1";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				if (!$qry) {
@@ -601,7 +601,7 @@ if (!$skipMultishopUpdates) {
 		}
 	} else {
 		// method to fix the broken linking of product to categories
-		tx_mslib_catalog::compareDatabaseFixProductToCategoryLinking();
+		$messages[]=tx_mslib_catalog::compareDatabaseFixProductToCategoryLinking();
 	}
 	$str="describe tx_multishop_cms";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);

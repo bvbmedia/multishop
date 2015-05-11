@@ -620,20 +620,20 @@ class tx_mslib_catalog {
 		}
 		$crumbar_ident_string=implode(',', $crumbar_ident_array);
 		$count_cats=count($cats);
-		if ($count_cats>1) {
+		/*if ($count_cats>1) {
 			// remove the deepest cat id record
 			// disabled by bas
 			//unset($cats[$count_cats-1]);
 			//recount
 			//$count_cats=count($cats);
-		}
+		}*/
 		if ($count_cats>0) {
 			foreach ($cats as $item) {
 				if ($item['id']) {
 					$rec=tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $item['id'], $crumbar_ident_string);
 					if (!$rec) {
 						$insertArray=array();
-						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray)) || $item['id']!=$deepest_cat_id) {
+						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
 							$insertArray['categories_id']=$item['id'];
 							$insertArray['products_id']=$pid;
 							$insertArray['page_uid']=$item['page_uid'];
@@ -671,7 +671,7 @@ class tx_mslib_catalog {
 		}
 	}
 	function isProductToCategoryLinkingExist($pid, $node_id, $crumbar_string) {
-		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('categories_id=\''.$node_id.'\' and crumbar_identifier=\''.$crumbar_string.'\' and page_uid=\''. $this->showCatalogFromPage.'\''));
+		$rec=mslib_befe::getRecord($pid, 'tx_multishop_products_to_categories p2c', 'products_id', array('categories_id=\''.$node_id.'\' and page_uid=\''. $this->showCatalogFromPage.'\''));
 		if (is_array($rec) && isset($rec['products_id']) && $rec['products_id']>0) {
 			return $rec;
 		} else {
@@ -684,11 +684,125 @@ class tx_mslib_catalog {
 			tx_mslib_catalog::linkCategoriesTreeToProduct($p2c_record['products_id'], $p2c_record['categories_id']);
 		}
 	}
+	function compareDatabaseRebuildProductsToCategoryTree($pid, $deepest_cat_id, $dataArray=array()) {
+		if (!is_numeric($pid)) {
+			return false;
+		}
+		if (!is_numeric($deepest_cat_id)) {
+			return false;
+		}
+		$level=1;
+		$cats=mslib_fe::globalCrumbarTree($deepest_cat_id);
+		$cats=array_reverse($cats);
+		//
+		$crumbar_ident_string='';
+		$crumbar_ident_array=array();
+		foreach ($cats as $item) {
+			$crumbar_ident_array[]=$item['id'];
+		}
+		$crumbar_ident_string=implode(',', $crumbar_ident_array);
+		$count_cats=count($cats);
+		/*if ($count_cats>1) {
+			// remove the deepest cat id record
+			// disabled by bas
+			//unset($cats[$count_cats-1]);
+			//recount
+			//$count_cats=count($cats);
+		}*/
+		if ($count_cats>0) {
+			foreach ($cats as $item) {
+				if ($item['id']) {
+					$rec=tx_mslib_catalog::isProductToCategoryLinkingExist($pid, $item['id'], $crumbar_ident_string);
+					if (!$rec) {
+						$insertArray=array();
+						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
+							$insertArray['categories_id']=$item['id'];
+							$insertArray['products_id']=$pid;
+							$insertArray['page_uid']=$item['page_uid'];
+							$insertArray['sort_order']=time();
+							$insertArray['related_to']=0;
+						} else {
+							foreach ($dataArray as $idx=>$val) {
+								$insertArray[$idx]=$val;
+							}
+						}
+						$insertArray['node_id']=$item['id'];
+						if ($item['id']==$deepest_cat_id) {
+							$insertArray['is_deepest']=1;
+						} else {
+							$insertArray['is_deepest']=0;
+						}
+						$insertArray['crumbar_identifier']=$crumbar_ident_string;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $insertArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					} else {
+						$updateArray=array();
+						if (!empty($rec['crumbar_identifier'])) {
+							$tmp_cid=explode(',', $rec['crumbar_identifier']);
+							$last_index=count($tmp_cid)-1;
+							if ($tmp_cid[$last_index]==$deepest_cat_id) {
+								if ($item['id']==$deepest_cat_id) {
+									$updateArray['is_deepest']=1;
+								} else {
+									$updateArray['is_deepest']=0;
+								}
+								$updateArray['crumbar_identifier']=$crumbar_ident_string;
+							}
+						} else {
+							if ($item['id']==$deepest_cat_id) {
+								$updateArray['is_deepest']=1;
+							} else {
+								$updateArray['is_deepest']=0;
+							}
+							$updateArray['crumbar_identifier']=$crumbar_ident_string;
+						}
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$rec['products_to_categories_id'].'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+					$level++;
+				}
+			}
+			return true;
+		}
+	}
 	function compareDatabaseFixProductToCategoryLinking() {
 		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), '', '', '');
 		foreach ($p2c_records as $p2c_record) {
-			tx_mslib_catalog::linkCategoriesTreeToProduct($p2c_record['products_id'], $p2c_record['categories_id']);
+			//if (!strlen($p2c_record['crumbar_identifier'])) {
+				tx_mslib_catalog::compareDatabaseRebuildProductsToCategoryTree($p2c_record['products_id'], $p2c_record['categories_id']);
+			//}
 		}
+		// p2c fixer routine code for redundant records
+		$query_p2c=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			'tx_multishop_products_to_categories', // FROM ...
+			'page_uid=\''.$this->showCatalogFromPage.'\'', // WHERE.
+			'products_id,categories_id', // GROUP BY...
+			'products_to_categories_id asc', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res_p2c=$GLOBALS['TYPO3_DB']->sql_query($query_p2c);
+		$delete_counter=0;
+		while ($row_p2c=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p2c)) {
+			$query_p2c_del=$GLOBALS['TYPO3_DB']->SELECTquery('products_to_categories_id', // SELECT ...
+				'tx_multishop_products_to_categories', // FROM ...
+				'products_id = \''.$row_p2c['products_id'].'\' and categories_id=\''.$row_p2c['categories_id'].'\' and page_uid=\''.$this->showCatalogFromPage.'\' and node_id=\''.$row_p2c['node_id'].'\' and crumbar_identifier=\''.$row_p2c['crumbar_identifier'].'\' and products_to_categories_id<>\''.$row_p2c['products_to_categories_id'].'\'', // WHERE.
+				'', // GROUP BY...
+				'products_to_categories_id asc', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$res_p2c_del=$GLOBALS['TYPO3_DB']->sql_query($query_p2c_del);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_p2c_del)) {
+				while ($row_del=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p2c_del)) {
+					$del_p2c_query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$row_del['products_to_categories_id'].'\' and page_uid='.$this->showCatalogFromPage);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($del_p2c_query);
+					$delete_counter++;
+				}
+			}
+		}
+		if ($delete_counter) {
+			return 'Delete ' . $delete_counter.' redundant record(s) from tx_multishop_products_to_categories';
+		}
+		// p2c fixer routine code for redundant records eol
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_catalog.php"]) {
