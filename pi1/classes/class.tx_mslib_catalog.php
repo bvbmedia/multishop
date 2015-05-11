@@ -634,7 +634,7 @@ class tx_mslib_catalog {
 					if (!$rec) {
 						$insertArray=array();
 						if (!is_array($dataArray) || (is_array($dataArray) && !count($dataArray))) {
-							$insertArray['categories_id']=$item['id'];
+							$insertArray['categories_id']=$deepest_cat_id;
 							$insertArray['products_id']=$pid;
 							$insertArray['page_uid']=$item['page_uid'];
 							$insertArray['sort_order']=time();
