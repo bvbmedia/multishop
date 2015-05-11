@@ -747,6 +747,8 @@ class tx_mslib_catalog {
 									$updateArray['is_deepest']=0;
 								}
 								$updateArray['crumbar_identifier']=$crumbar_ident_string;
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$rec['products_to_categories_id'].'\'', $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
 						} else {
 							if ($item['id']==$deepest_cat_id) {
@@ -755,9 +757,9 @@ class tx_mslib_catalog {
 								$updateArray['is_deepest']=0;
 							}
 							$updateArray['crumbar_identifier']=$crumbar_ident_string;
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$rec['products_to_categories_id'].'\'', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$rec['products_to_categories_id'].'\'', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 					$level++;
 				}
