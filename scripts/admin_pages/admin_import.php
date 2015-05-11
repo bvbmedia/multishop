@@ -1253,6 +1253,10 @@ if ($this->post['action']=='category-insert') {
 										$internal_count=0;
 										foreach ($option_values as $option_value) {
 											if ($subdelimiter) {
+												// when working with Multishop productfeed that contains attribute values with prices use AUX:
+												// Example data: Yes::1.00||No::0.00
+												// Use AUX to import: ||::
+
 												// extreme setup: FORMAAT|#|;|$value|$price
 												// example value: 15ml;0,00#350ml;17,45#1000ml;34,65
 												$option_value2=explode($subdelimiter, $option_value);
