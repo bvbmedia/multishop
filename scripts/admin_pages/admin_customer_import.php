@@ -1154,6 +1154,21 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							}
 							$content.=implode(" / ", $name).' has been updated.<br />';
 							$uid=$user_check['uid'];
+							// custom hook that can be controlled by third-party
+							// plugin
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'])) {
+								$params=array(
+									'user'=>&$user,
+									'item'=>&$item,
+									'user_check'=>&$user_check,
+									'prefix_source_name'=>$this->post['prefix_source_name']
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'] as $funcRef) {
+									t3lib_div::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							// custom hook that can be controlled by third-party
+							// plugin eof
 						} else {
 							if (!$user['password'] or $user['password']=='NULL') {
 								// generate our own random password
@@ -1204,6 +1219,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$uid=$GLOBALS['TYPO3_DB']->sql_insert_id();
 							if ($uid) {
+								$user_check=mslib_fe::getUser($uid);
 								$name=array();
 								if ($user['company']!='') {
 									$name[]=$user['company'];
@@ -1215,6 +1231,21 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 									$name[]='email: '.$user['email'];
 								}
 								$content.=implode(" / ", $name).' has been added.<br />';
+								// custom hook that can be controlled by third-party
+								// plugin
+								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'])) {
+									$params=array(
+										'user'=>&$user,
+										'item'=>&$item,
+										'user_check'=>&$user_check,
+										'prefix_source_name'=>$this->post['prefix_source_name']
+									);
+									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'] as $funcRef) {
+										t3lib_div::callUserFunction($funcRef, $params, $this);
+									}
+								}
+								// custom hook that can be controlled by third-party
+								// plugin eof
 							} else {
 								$content.=implode(" / ", $name).' has been FAILED. Query:<br />'.$query.'<br/>';
 							}
