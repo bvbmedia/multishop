@@ -1484,7 +1484,7 @@ class mslib_fe {
 				$Cache_Lite=new Cache_Lite($options);
 				$string=$this->cObj->data['uid'].'_crum_'.$c.'_'.$languages_id.'_'.md5(serialize($output));
 			}
-			if (!$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content=$Cache_Lite->get($string))) {
+			if ($this->ROOTADMIN_USER || !$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content=$Cache_Lite->get($string))) {
 				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
 					'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
 					'c.page_uid=\''.$page_uid.'\' and c.categories_id = \''.$c.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id = cd.categories_id', // WHERE...
@@ -6625,11 +6625,11 @@ class mslib_fe {
 					$insertArray['categories_id']=$new_catid;
 					$insertArray['language_id']=$this->sys_language_uid;
 					$insertArray['categories_name']=$local_catname;
-					$insertArray['meta_title']=$cat_info['meta_title'];
-					$insertArray['meta_keywords']=$cat_info['meta_keywords'];
-					$insertArray['meta_description']=$cat_info['meta_description'];
-					$insertArray['content']=$cat_info['content'];
-					$insertArray['content_footer']=$cat_info['content_footer'];
+					$insertArray['meta_title']=(!$cat_info['meta_title'] ? '' : $cat_info['meta_title']);
+					$insertArray['meta_keywords']=(!$cat_info['meta_keywords'] ? '' : $cat_info['meta_keywords']);
+					$insertArray['meta_description']=(!$cat_info['meta_description'] ? '' : $cat_info['meta_description']);
+					$insertArray['content']=(!$cat_info['content'] ? '' : $cat_info['content']);
+					$insertArray['content_footer']=(!$cat_info['content_footer'] ? '' : $cat_info['content_footer']);
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				} else {
