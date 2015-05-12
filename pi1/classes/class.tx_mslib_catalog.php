@@ -768,6 +768,7 @@ class tx_mslib_catalog {
 		}
 	}
 	function compareDatabaseFixProductToCategoryLinking() {
+		$messages=array();
 		$str="show indexes from `tx_multishop_products_to_categories` ";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$unique_indexes=array();
@@ -778,6 +779,7 @@ class tx_mslib_catalog {
 			// add unique p2c key
 			$unique_key='ALTER IGNORE TABLE `tx_multishop_products_to_categories` ADD UNIQUE `p2c_unique_key` (`products_id`, `categories_id`, `page_uid`, `node_id`, `is_deepest`, `crumbar_identifier`)';
 			$res=$GLOBALS['TYPO3_DB']->sql_query($unique_key);
+			$messages[]=$unique_key;
 		}
 		//
 		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), '', '', '');
@@ -816,11 +818,14 @@ class tx_mslib_catalog {
 			}
 		}
 		if ($delete_counter) {
-			return 'Delete ' . $delete_counter.' redundant record(s) from tx_multishop_products_to_categories';
-		} else {
-			return '';
+			$messages[]='Delete ' . $delete_counter.' redundant record(s) from tx_multishop_products_to_categories';
 		}
 		// p2c fixer routine code for redundant records eol
+		$message=implode("\n\n", $messages);
+		if (count($messages)) {
+			return $message;
+		}
+		return '';
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_catalog.php"]) {
