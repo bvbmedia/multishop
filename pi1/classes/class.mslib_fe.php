@@ -5319,7 +5319,7 @@ class mslib_fe {
 		//remove really unwanted tags
 		do {
 			$oldstring=$string;
-			$string=preg_replace('#</*(applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $string);
+			$string=preg_replace('#</*(marquee|applet|meta|xml|blink|link|style|script|embed|object|iframe|frame|frameset|ilayer|layer|bgsound|title|base)[^>]*>#i', "", $string);
 		} while ($oldstring!=$string);
 		return $string;
 	}
