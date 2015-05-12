@@ -776,7 +776,7 @@ class tx_mslib_catalog {
 		}
 		if (!in_array('p2c_unique_key', $unique_indexes)) {
 			// add unique p2c key
-			$unique_key='ALTER TABLE `tx_multishop_products_to_categories` ADD UNIQUE `p2c_unique_key` (`products_id`, `categories_id`, `page_uid`, `node_id`, `is_deepest`, `crumbar_identifier`)';
+			$unique_key='ALTER IGNORE TABLE `tx_multishop_products_to_categories` ADD UNIQUE `p2c_unique_key` (`products_id`, `categories_id`, `page_uid`, `node_id`, `is_deepest`, `crumbar_identifier`)';
 			$res=$GLOBALS['TYPO3_DB']->sql_query($unique_key);
 		}
 		//
