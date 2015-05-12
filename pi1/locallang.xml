@@ -2677,6 +2677,10 @@
             <label index="click_here_if_you_agree_the_right_of_withdrawal">Klicken Sie hier, dass Sie das Widerrufsrecht akzeptieren</label>
             <label index="you_havent_accepted_the_right_of_withdrawal">Sie haben das Widerrufsrecht nicht akzeptiert</label>
             <label index="view_right_of_withdrawal">Widerrufsrecht ansehen</label>
+            <label index="pdf_packingslip_footer_message">PDF Packzettel Footernachricht unter den Bestelldetails</label>
+            <label index="pdf_packingslip_header_message">PDF Lieferscheinnachricht als Überschrift vor der Tabelle zu den Bestelldetails</label>
+            <label index="privacy_statement">Datenschutzerklärung</label>
+            <label index="view_privacy_statement">Lesen Sie die Datenschutzerklärung</label>
 		</languageKey>
 		<languageKey index="el"></languageKey>
 		<languageKey index="eo"></languageKey>
