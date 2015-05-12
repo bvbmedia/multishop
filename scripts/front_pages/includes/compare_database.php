@@ -601,7 +601,10 @@ if (!$skipMultishopUpdates) {
 		}
 	} else {
 		// method to fix the broken linking of product to categories
-		$messages[]=tx_mslib_catalog::compareDatabaseFixProductToCategoryLinking();
+		$p2c_fix_msg=tx_mslib_catalog::compareDatabaseFixProductToCategoryLinking();
+		if (!empty($p2c_fix_msg)) {
+			$messages[]=$p2c_fix_msg;
+		}
 	}
 	$str="describe tx_multishop_cms";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
