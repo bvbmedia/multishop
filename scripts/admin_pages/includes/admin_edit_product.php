@@ -3674,12 +3674,7 @@ if ($this->post) {
 					if ($pageinfo['uid']) {
 						$old_products_to_shop_categories=mslib_fe::getProductToCategories($this->get['pid'], '', $pageinfo['uid']);
 						if ($pageinfo['uid']==$this->shop_pid) {
-							$old_products_to_shop_categories=str_replace(array(
-								','.$local_primary_product_categories.',',
-								','.$local_primary_product_categories,
-								$local_primary_product_categories.',',
-								$local_primary_product_categories
-							), '', $old_products_to_shop_categories);
+							$old_products_to_shop_categories=str_replace(array(','.$local_primary_product_categories.',', ','.$local_primary_product_categories, $local_primary_product_categories.',', $local_primary_product_categories), '', $old_products_to_shop_categories);
 						}
 						$main_shop_checkbox='';
 						$main_select2_block_visibility=' style="display:none"';
