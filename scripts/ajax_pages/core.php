@@ -919,7 +919,7 @@ switch ($this->ms['page']) {
 		exit();
 		break;
 	case 'download_packingslip':
-		if ($this->get['tx_multishop_pi1']['order_id']) {
+		if ($this->ADMIN_USER && $this->get['tx_multishop_pi1']['order_id']) {
 			if (strstr($this->ms['MODULES']['DOWNLOAD_PACKINGSLIP_TYPE'], "..")) {
 				die('error in DOWNLOAD_INVOICE_TYPE value');
 			} else {
