@@ -323,6 +323,15 @@ if (mslib_fe::loggedin()) {
 			//
 			$markerArray['###CREATE_ACCOUNT_DISCLAIMER###']=$account_disclaimer;
 			//
+			$privacy_statement_link='';
+			if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CREATE_ACCOUNT_PAGE']) {
+				$page=mslib_fe::getCMScontent('privacy_statement', $GLOBALS['TSFE']->sys_language_uid);
+				if ($page[0]['content']) {
+					$privacy_statement_link.='<div class="privacy_statement_link"><a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_privacy_statement"><span>'.$this->pi_getLL('view_privacy_statement').'</pan></a></div>';
+				}
+			}
+			$markerArray['###PRIVACY_STATEMENT_LINK###']=$privacy_statement_link;
+			//
 			$markerArray['###CREATE_ACCOUNT_CAPTCHA_URL###']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=captcha');
 			$markerArray['###LABEL_CAPTCHA_PLACEHOLDER###']=$this->pi_getLL('captcha_code_placeholder');
 			$markerArray['###LABEL_BACK###']=$this->pi_getLL('back');

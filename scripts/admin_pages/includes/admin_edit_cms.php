@@ -148,13 +148,13 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$types['pdf_packingslip_header_message']=$this->pi_getLL('pdf_packingslip_header_message', 'PDF Packing slip header message before order details table').' ('.$this->pi_getLL('default').')';
 	if (is_array($payment_methods)) {
 		foreach ($payment_methods as $key=>$value) {
-			$types['pdf_packingslip_header_message_'.$key]=$this->pi_getLL('pdf_packingslip_header_message', 'PDF Packing slip header message before order details table').' ('.$key.')';
+			$types['pdf_packingslip_header_message_'.$key]=$this->pi_getLL('pdf_packingslip_header_message_x', 'PDF Packing slip header message before order details table').' ('.$key.')';
 		}
 	}
-	$types['pdf_packingslip_footer_message']=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Packing slip footer message after order details table').' ('.$this->pi_getLL('default').')';
+	$types['pdf_packingslip_footer_message']=$this->pi_getLL('pdf_packingslip_footer_message', 'PDF Packing slip footer message after order details table').' ('.$this->pi_getLL('default').')';
 	if (is_array($payment_methods)) {
 		foreach ($payment_methods as $key=>$value) {
-			$types['pdf_packingslip_footer_message_'.$key]=$this->pi_getLL('pdf_invoice_footer_message', 'PDF Packing slip footer message after order details table').' ('.$key.')';
+			$types['pdf_packingslip_footer_message_'.$key]=$this->pi_getLL('pdf_packingslip_footer_message', 'PDF Packing slip footer message after order details table').' ('.$key.')';
 		}
 	}
 	// create account disclaimer cms type
@@ -164,6 +164,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	// right of withdrawal checkbox in checkout cms type
 	if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT']) {
 		$types['right_of_withdrawal']=$this->pi_getLL('right_of_withdrawal');
+	}
+	if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CREATE_ACCOUNT_PAGE'] || $this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CHECKOUT_PAGE']) {
+		$types['privacy_statement']=$this->pi_getLL('privacy_statement');
 	}
 	// extra cms type
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
