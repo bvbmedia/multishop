@@ -72,7 +72,7 @@ foreach ($dates as $key=>$value) {
 			$content.='<span class="positive_icon">+</span>';
 		}
 		$content.='</td>
-		<td><a href="'.mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=products_search&skeyword='.$row['keyword']).'" target="_blank">'.$row['keyword'].'</a></td>
+		<td><a href="'.mslib_fe::typolink($this->conf['search_page_pid'], '&tx_multishop_pi1[page_section]=products_search&skeyword='.urlencode($row['keyword'])).'" target="_blank">'.htmlspecialchars($row['keyword']).'</a></td>
 		</tr>';
 	}
 	if ($search_amount>0) {
