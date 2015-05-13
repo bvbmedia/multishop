@@ -973,6 +973,16 @@ if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 $subpartArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 // plugin marker place holder
+if (!$this->ms['MODULES']['FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_PAGE']) {
+	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name')).'*';
+	$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name')).'*';
+	$subpartArray['###FIRSTNAME_VALIDATION###']=' required="required" data-h5-errorid="invalid-first_name" title="'.$this->pi_getLL('first_name_required').'"';
+	$subpartArray['###LASTNAME_VALIDATION###']=' required="required" data-h5-errorid="invalid-last_name" title="'.$this->pi_getLL('last_name_required').'"';
+} else {
+	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name'));
+	$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name'));
+}
+
 $plugins_extra_tab=array();
 $js_extra=array();
 $plugins_extra_tab['tabs_header']=array();
