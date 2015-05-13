@@ -1517,7 +1517,7 @@ class mslib_fe {
 					}
 					$GLOBALS['TYPO3_DB']->sql_free_result($qry);
 				}
-				if ($CACHE_FRONT_END) {
+				if (!$this->ROOTADMIN_USER && $CACHE_FRONT_END) {
 					$Cache_Lite->save(serialize($output));
 				}
 			} else {
