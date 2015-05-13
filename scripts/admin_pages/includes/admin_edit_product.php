@@ -846,6 +846,7 @@ if ($this->post) {
 	$updateArray['products_price']=$this->post['products_price'];
 	$updateArray['products_weight']=$this->post['products_weight'];
 	$updateArray['products_status']=$this->post['products_status'];
+	$updateArray['search_engines_allow_indexing']=$this->post['search_engines_allow_indexing'];
 	$updateArray['order_unit_id']=$this->post['order_unit_id'];
 	$updateArray['tax_id']=$this->post['tax_id'];
 	$updateArray['file_number_of_downloads']=$this->post['file_number_of_downloads'];
@@ -3649,6 +3650,14 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADMIN_YES###']=$this->pi_getLL('admin_yes');
 		$subpartArray['###LABEL_PRODUCT_STATUS_OFF_CHECKED###']=((!$product['products_status'] and $_REQUEST['action']=='edit_product') ? 'checked="checked"' : '');
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
+
+
+		$subpartArray['###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###']=$this->pi_getLL('search_engine_indexing');
+		$subpartArray['###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED###']=(($product['search_engines_allow_indexing'] or $_REQUEST['action']=='add_product') ? 'checked="checked"' : '');
+		$subpartArray['###LABEL_ADMIN_YES_INDEXING###']=$this->pi_getLL('admin_yes');
+		$subpartArray['###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED###']=((!$product['search_engines_allow_indexing'] and $_REQUEST['action']=='edit_product') ? 'checked="checked"' : '');
+		$subpartArray['###LABEL_ADMIN_NO_INDEXING###']=$this->pi_getLL('admin_no');
+
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		//categories path
 		$old_current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);

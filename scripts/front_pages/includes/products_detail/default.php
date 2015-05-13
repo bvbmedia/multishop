@@ -61,6 +61,9 @@ if (!$product['products_id']) {
 		}
 		// meta tags eof
 	}
+	if (!$product['search_engines_allow_indexing']) {
+		$output_array['meta']['noindex']='<meta name="robots" content="noindex, nofollow" />';
+	}
 	// facebook image and open graph
 	$where='';
 	if ($product['categories_id']) {

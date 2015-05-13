@@ -644,6 +644,13 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	$str="select search_engines_allow_indexing from tx_multishop_products limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_products` ADD search_engines_allow_indexing tinyint(1) NOT NULL default '1', ADD KEY `search_engines_allow_indexing` (`search_engines_allow_indexing`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

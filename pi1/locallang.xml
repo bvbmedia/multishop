@@ -1203,6 +1203,7 @@
             <label index="pdf_packingslip_header_message">PDF Packing slip header message before order details table</label>
             <label index="privacy_statement">Privacy statement</label>
             <label index="view_privacy_statement">Read privacy statement</label>
+            <label index="search_engine_indexing">Search engine indexing</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>
