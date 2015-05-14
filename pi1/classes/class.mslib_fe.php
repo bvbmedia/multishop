@@ -1740,24 +1740,24 @@ class mslib_fe {
 							break;
 						default:
 							$load_default=1;
-							//hook to let other plugins further manipulate the listypes
-							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'])) {
-								$params=array(
-									'load_default'=>&$load_default,
-									'products_id'=>$products_id,
-									'options'=>&$options,
-									'class'=>&$class,
-									'output_html'=>&$output_html
-								);
-								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
-								}
-							}
-							if ($load_default) {
-								$load_default=1;
-								$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio';
-							}
 							break;
+					}
+					//hook to let other plugins further manipulate the listypes
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'])) {
+						$params=array(
+							'load_default'=>&$load_default,
+							'products_id'=>$products_id,
+							'options'=>&$options,
+							'class'=>&$class,
+							'output_html'=>&$output_html
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['showAttributesOptionNameItemHook'] as $funcRef) {
+							t3lib_div::callUserFunction($funcRef, $params, $this);
+						}
+					}
+					if ($load_default) {
+						$load_default=1;
+						$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio';
 					}
 					if ($load_default) {
 						if ($readonly) {
