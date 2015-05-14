@@ -8582,8 +8582,26 @@ class mslib_fe {
 		$insertArray['url']=(isset($_SERVER['HTTPS']) ? "https://" : "http://").$this->HTTP_HOST.t3lib_div::getIndpEnv('REQUEST_URI');
 		$insertArray['segment_type']='';
 		$insertArray['segment_id']='';
+		//hook to let other plugins further manipulate the query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewPreProc'])) {
+			$params=array(
+				'insertArray'=>&$insertArray
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewPreProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_sessions', $insertArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		//hook to let other plugins further manipulate the query
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewPostProc'])) {
+			$params=array(
+				'insertArray'=>&$insertArray
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['logPageViewPostProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
 	}
 	public function genderSalutation($gender) {
 		switch ($gender) {
