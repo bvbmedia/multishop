@@ -2,7 +2,15 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>';
+$GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
+<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
+';
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
 $selects=array();
 $selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
@@ -218,8 +226,13 @@ if ($rows) {
 		});
 		dialog.append(textBody);
 		dialog.dialog({
+			'.($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
+			width: 1000,
+			height:720,
+			' : '
 			width: 450,
 			height:500,
+			').'
 			modal: true,
 			body: "",
 			resizable: true,
@@ -278,12 +291,19 @@ if ($rows) {
 					dialog_body+=\'<div class="edit_dialog_input">\';
 					dialog_body+=\'<input type="text" class="edit_option_inputs" name="option_names[\' + optid + \'][\' + i + \']" value="\' + v.options_name + \'"/>\';
 					dialog_body+=\'<span class="option_description_label">'.addslashes($this->pi_getLL('description')).'</span>\';
-					dialog_body+=\'<textarea class="edit_option_inputs" name="option_desc[\' + optid + \'][\' + i + \']">\' + v.options_desc + \'</textarea>\';
+					dialog_body+=\'<textarea class="redactor_options edit_option_inputs" name="option_desc[\' + optid + \'][\' + i + \']">\' + v.options_desc + \'</textarea>\';
 					dialog_body+=\'</div>\';
 					dialog_body+=\'</div>\';
 				});
 				dialog_body+=\'</div>\';
 				attributesEditDialog(dialog_title, dialog_body, "edit_options");
+				'.($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
+				jQuery(\'.redactor_options\').redactor({
+					focus: false,
+					minHeight:\'100\',
+					plugins: [\'table\',\'fontcolor\',\'fontsize\']
+				});
+				' : '').'
 			}
 		});
 	}
@@ -304,12 +324,19 @@ if ($rows) {
 					dialog_body+=\'<div class="edit_dialog_input">\';
 					dialog_body+=\'<input type="text" class="edit_option_values_inputs" name="option_values[\' + s.options_values_id + \'][\' + i + \']" value="\' + v.lang_values + \'"/>\';
 					dialog_body+=\'<span class="option_description_label">'.addslashes($this->pi_getLL('description')).'</span>\';
-					dialog_body+=\'<textarea class="edit_option_values_inputs" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']">\' + v.lang_description + \'</textarea>\';
+					dialog_body+=\'<textarea class="redactor_values edit_option_values_inputs" name="ov_desc[\' + v.lang_description_pov2po_id + \'][\' + i + \']">\' + v.lang_description + \'</textarea>\';
 					dialog_body+=\'</div>\';
 					dialog_body+=\'</div>\';
 				});
 				dialog_body+=\'</div>\';
 				attributesEditDialog(dialog_title, dialog_body, "edit_options_values");
+				'.($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
+				jQuery(\'.redactor_values\').redactor({
+					focus: false,
+					minHeight:\'100\',
+					plugins: [\'table\',\'fontcolor\',\'fontsize\']
+				});
+				' : '').'
 			}
 		});
 	}
