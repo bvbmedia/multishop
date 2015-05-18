@@ -3728,6 +3728,9 @@ class mslib_fe {
 			$select[]='c2z.id as c2z_id';
 			$select[]='s.*';
 			$select[]='d.*';
+			if ($zone_sorting) {
+				$select[]='p2z.sort_order as zone_sort_order';
+			}
 			$from[]='tx_multishop_payment_methods s';
 			$from[]='tx_multishop_payment_methods_description d';
 			$from[]='tx_multishop_countries_to_zones c2z';
@@ -3769,6 +3772,9 @@ class mslib_fe {
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			$array=array();
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+				if ($zone_sorting) {
+					$row['sort_order']=$row['zone_sort_order'];
+				}
 				if ($filter) {
 					if ($row['enable_on_default']>0) {
 						$array[$row['code']]=$row;

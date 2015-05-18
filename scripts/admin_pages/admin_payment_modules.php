@@ -13,7 +13,7 @@ if ($this->post) {
 				// delete mapping
 				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id=\''.$zone_id.'\' and payment_method_id=\''.$payment_method['id'].'\'');
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-
+				//
 				if ($this->post['payment_zone'][$zone_id][$payment_method['id']]) {
 					// add mapping
 					$insertArray=array();
@@ -25,6 +25,10 @@ if ($this->post) {
 				}
 			}
 		}
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
+	} else {
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id>0');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
 	}
 	if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
