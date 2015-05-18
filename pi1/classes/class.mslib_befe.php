@@ -3530,11 +3530,18 @@ class mslib_befe {
 		return false;
 	}
 	// utf-8 support
+	public function ucfirst($value) {
+		$csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
+		$charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
+		return $csConvObj->convCaseFirst($charset, $value, 'toUpper');
+	}
+	// utf-8 support
 	public function strtoupper($value) {
 		$csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
 		$charset = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->charSet : $GLOBALS['TSFE']->metaCharset);
 		return $csConvObj->conv_case($charset, $value, 'toUpper');
 	}
+
 	// utf-8 support
 	public function strtolower($value) {
 		$csConvObj = (TYPO3_MODE == 'BE' ? $GLOBALS['LANG']->csConvObj : $GLOBALS['TSFE']->csConvObj);
