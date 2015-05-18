@@ -230,8 +230,8 @@ if ($rows) {
 		dialog.append(textBody);
 		dialog.dialog({
 			'.($this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
-			width: 1000,
-			height:720,
+			width: 800,
+			height:400,
 			' : '
 			width: 450,
 			height:500,
@@ -240,12 +240,14 @@ if ($rows) {
 			body: "",
 			resizable: true,
 			open: function () {
+				'.(!$this->ms['MODULES']['USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR'] ? '
 				$("#attributesEditDialog").keypress(function (e) {
 					//console.log(e);
 					if (e.keyCode == 13) {
 						$(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').click();
 					}
 				});
+				' : '').'
 				// right button (OK button) must be the default button when user presses enter key
 				$(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').focus();
 			},
@@ -263,10 +265,10 @@ if ($rows) {
 					class: \'msOkButton msBackendButton continueState arrowRight arrowPosLeft\',
 					click: function () {
 						if (mode=="edit_options") {
-							var options_value=$("[class^=edit_option_inputs]").serialize();
+							var options_value=$(".edit_option_inputs").serialize();
 							saveOptionsData(options_value, "options");
 						} else if (mode=="edit_options_values") {
-							var options_values=$("[class^=edit_option_values_inputs]").serialize();
+							var options_values=$(".edit_option_values_inputs").serialize();
 							saveOptionsData(options_values, "options_values");
 						}
 						$(this).dialog("close");
