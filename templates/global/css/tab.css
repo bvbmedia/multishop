@@ -913,6 +913,10 @@ span.viewfront a:hover { background:#e2e2e2; }
 
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul { list-style:none; margin:10px 0; padding:0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul li { background:none; margin:0; padding:0 0 5px; }
+.redactor-editor ul { margin:0 0 15px; padding:0 0 0 2em; }
+.redactor-editor ul li { padding:0; list-style:disc; }
+.redactor-editor ol { margin:0 0 15px; padding:0 0 0 2em; }
+.redactor-editor ol li { padding:0; list-style:decimal; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-editor ul { margin:0 0 15px; padding:0 0 0 2em; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-editor ul li { padding:0; list-style:disc; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content .redactor-editor ol { margin:0 0 15px; padding:0 0 0 2em; }
