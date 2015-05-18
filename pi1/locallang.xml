@@ -881,7 +881,7 @@
 			<label index="middle_name_may_only_contain_alpha_characters">Middle name only character allowed.</label>
 			<label index="min">Min</label>
 			<label index="minimize">minimize</label>
-			<label index="minimum_carty_amount_must_at_least_x">In order to continue checkout the minimum order subtotal amount must at least %s</label>
+			<label index="minimum_cart_amount_must_at_least_x">In order to continue checkout the minimum order subtotal amount must at least %s</label>
 			<label index="mobile">Mobile</label>
 			<label index="mobile_must_be_x_digits_long">Must be 10 digits long.</label>
 			<label index="modified">Modified</label>

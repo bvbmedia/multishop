@@ -322,7 +322,7 @@ if (count($cart['products'])>0) {
 	if (!empty($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']>0) {
 		if ($cart_total_amount<$this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) {
 			$disable_checkout=true;
-			$minmax_warning=sprintf($this->pi_getLL('minimum_carty_amount_must_at_least_x'), mslib_fe::amount2Cents($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']));
+			$minmax_warning=sprintf($this->pi_getLL('minimum_cart_amount_must_at_least_x'), mslib_fe::amount2Cents($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']));
 		}
 	}
 	// MAXIMUM ORDER AMOUNT
