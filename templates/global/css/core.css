@@ -419,10 +419,10 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box textarea { overflow:auto; width: 100%; border: 1px solid #eee; background:none; font-size:13px; font-family:Menlo, Monaco, monospace, sans-serif; color:#333; box-sizing: border-box; padding: 20px; }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box span,
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-selection-marker { display:inline; float:none; width:auto; padding:0; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ul { margin:0 0 15px; padding:0 0 0 2em; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ul li { padding:0; list-style:disc; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ol { margin:0 0 15px; padding:0 0 0 2em; }
-.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ol li { padding:0; list-style:decimal; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ul { display:block; margin:0 0 15px; padding:0 0 0 2em; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ul li { display:list-item; padding:0; list-style:disc; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ol { display:block; margin:0 0 15px; padding:0 0 0 2em; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor ol li { display:list-item; padding:0; list-style:decimal; }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box .redactor-editor span { display:inline; float:none; width:auto; padding:0; }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input span { padding:5px 0;  }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-toolbar li { display:inline-block; }
