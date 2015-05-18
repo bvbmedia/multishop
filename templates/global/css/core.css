@@ -416,6 +416,9 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input * { display:block; }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input input[type="text"],
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input textarea { width:300px; border:1px solid #cdcdcd; font:12px Arial, Helvetica, sans-serif; padding:2px 4px; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box textarea { overflow:auto; width: 100%; border: 1px solid #eee; background:none; font-size:13px; font-family:Menlo, Monaco, monospace, sans-serif; color:#333; box-sizing: border-box; padding: 20px; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-box span,
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-selection-marker { display:inline-block; padding:0; }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input span { padding:5px 0;  }
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-toolbar li { display:inline-block; }
 
