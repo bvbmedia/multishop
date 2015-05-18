@@ -9,6 +9,9 @@ $GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.t3lib_extMgm::siteRelPa
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
 ';
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
@@ -301,7 +304,7 @@ if ($rows) {
 				jQuery(\'.redactor_options\').redactor({
 					focus: false,
 					minHeight:\'100\',
-					plugins: [\'table\',\'fontcolor\',\'fontsize\']
+					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\']
 				});
 				' : '').'
 			}
@@ -334,7 +337,7 @@ if ($rows) {
 				jQuery(\'.redactor_values\').redactor({
 					focus: false,
 					minHeight:\'100\',
-					plugins: [\'table\',\'fontcolor\',\'fontsize\']
+					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\']
 				});
 				' : '').'
 			}
