@@ -263,6 +263,15 @@ if (count($cart['products'])>0) {
 		$markerArray['PRODUCT_LINK_DELETE']=$output['product_link_delete'];
 		$markerArray['LABEL_REMOVE_PRODUCT']=$output['label_remove_product'];
 		$markerArray['PRODUCT_FINAL_PRICE']=$output['product_final_price'];
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPostHook'])) {
+			$params=array(
+				'markerArray'=>&$markerArray
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPostHook'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
 	}
 	if (!$output['product_row_type'] || $output['product_row_type']=='even') {
@@ -350,6 +359,15 @@ if (count($cart['products'])>0) {
 	$markerArray['PRODUCT_ROW_TYPE2']=$output['product_row_type2'];
 	$markerArray['LABEL_UPDATE_SHOPPING_CART']=$output['label_update_shopping_cart'];
 	$markerArray['MINMAX_AMOUNT_WARNING']=$minmax_warning;
+	// custom hook that can be controlled by third-party plugin
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['footerPostHook'])) {
+		$params=array(
+			'markerArray'=>&$markerArray
+		);
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['footerPostHook'] as $funcRef) {
+			t3lib_div::callUserFunction($funcRef, $params, $this);
+		}
+	}
 	$footerItem=$this->cObj->substituteMarkerArray($subparts['footer'], $markerArray, '###|###');
 	// header part
 	$subpartArray=array();
