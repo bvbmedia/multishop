@@ -51,7 +51,7 @@ if (!$this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 	$subpartHeaderArray['###ITEM_SHIPPING_COSTS_OVERVIEW_RELATIVE_WRAPPER###']='';
 	$subparts['item']=$this->cObj->substituteMarkerArrayCached($subparts['item'], array(), $subpartHeaderArray);
 }
-if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']=='no') {
+if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN'] && $this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']=='no') {
 	$subpartHeaderArray=array();
 	$subpartHeaderArray['###HEADER_STOCK_RELATIVE_WRAPPER###']='';
 	$subparts['header']=$this->cObj->substituteMarkerArrayCached($subparts['header'], array(), $subpartHeaderArray);
