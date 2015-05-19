@@ -685,6 +685,8 @@ switch ($_REQUEST['action']) {
 								$database['orders_products'][$key]['products_price']=($database['orders_products'][$key]['products_price']/(100+$database['orders_products'][$key]['products_tax'])*100);
 								$database['orders_products'][$key]['final_price']=($database['orders_products'][$key]['final_price']/(100+$database['orders_products'][$key]['products_tax'])*100);
 								unset($database['orders_products'][$key]['products_quantity']);
+								// tmp bugfix. the final_price in oscommerce also contains the attribute price. since Multishop saves that independent lets overwrite the final_price with the products_price
+								$database['orders_products'][$key]['final_price']=$database['orders_products'][$key]['products_price'];
 							}
 						}
 						if (count($database['orders_products_attributes'])) {
@@ -693,6 +695,19 @@ switch ($_REQUEST['action']) {
 								$database['orders_products_attributes'][$key]['options_values_price']=($database['orders_products_attributes'][$key]['options_values_price']/(100+$ordersProductsTabBufferArray[$record['orders_products_id']])*100);
 							}
 						}
+						/*
+						// substract attribute price from orders_products
+						if (count($database['orders_products'])) {
+							foreach ($database['orders_products'] as $key=>$record) {
+								foreach ($database['orders_products_attributes'] as $key2=>$record2) {
+									if ($database['orders_products'][$key]['orders_products_id']==$record2['orders_products_id']) {
+										$database['orders_products'][$key]['products_price']=$database['orders_products'][$key]['products_price']-$record2['options_values_price'];
+										$database['orders_products'][$key]['final_price']=$database['orders_products'][$key]['final_price']-$record2['options_values_price'];
+									}
+								}
+							}
+						}
+						*/
 						foreach ($database['orders'] as $key=>$record) {
 							$user=array();
 							$customer_id='';
