@@ -1604,7 +1604,7 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								// products price col
 								$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="msManualOrderProductPriceExcludingVat" value="'.number_format($optprice, 2).'"><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>';
-								$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_manual_name_including_vat" class="msManualOrderProductPriceIncludingVat" value="'.($optprice+$attributes_tax_data['tax'])*$attributes_qty.'"><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>';
+								$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_manual_name_including_vat" class="msManualOrderProductPriceIncludingVat" value="'.($optprice+$attributes_tax_data['tax']).'"><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>';
 								$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_manual_price" value="'.$optprice.'" /></div>';
 								if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 									// products vat col

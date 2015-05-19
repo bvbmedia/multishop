@@ -183,7 +183,7 @@ class tx_mslib_order extends tslib_pibase {
 					} else {
 						$tax=$final_price*$tax_rate;
 					}
-					$product_tax_data['total_tax']=(string)$tax+$attributes_tax;
+					$product_tax_data['total_tax']=(string)$tax;
 					$sub_total_tax+=$tax*$row_prod['qty'];
 					$sub_total+=($final_price+$tax)*$row_prod['qty'];
 					$sub_total_excluding_vat+=($final_price)*$row_prod['qty'];
