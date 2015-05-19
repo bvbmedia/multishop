@@ -676,8 +676,10 @@ switch ($_REQUEST['action']) {
 								}
 							}
 						}
+						$ordersProductsTabBufferArray=array();
 						if (count($database['orders_products'])) {
 							foreach ($database['orders_products'] as $key=>$record) {
+								$ordersProductsTabBufferArray[$database['orders_products'][$key]['orders_products_id']]=$database['orders_products'][$key]['products_tax'];
 								$database['orders_products'][$key]['qty']=$database['orders_products'][$key]['products_quantity'];
 								// calculate price excluding vat
 								$database['orders_products'][$key]['products_price']=($database['orders_products'][$key]['products_price']/(100+$database['orders_products'][$key]['products_tax'])*100);
@@ -688,7 +690,7 @@ switch ($_REQUEST['action']) {
 						if (count($database['orders_products_attributes'])) {
 							foreach ($database['orders_products_attributes'] as $key=>$record) {
 								// calculate price excluding vat
-								$database['orders_products_attributes'][$key]['options_values_price']=($database['orders_products_attributes'][$key]['options_values_price']/(100+19)*100);
+								$database['orders_products_attributes'][$key]['options_values_price']=($database['orders_products_attributes'][$key]['options_values_price']/(100+$ordersProductsTabBufferArray[$record['orders_products_id']])*100);
 							}
 						}
 						foreach ($database['orders'] as $key=>$record) {
