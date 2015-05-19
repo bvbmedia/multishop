@@ -4,32 +4,35 @@ if (!defined('TYPO3_MODE')) {
 }
 if ($this->post) {
 	// save the payment to zone mappings
-	if (is_array($this->post['payment_zone']) && count($this->post['payment_zone'])) {
-		$payment_methods=mslib_fe::loadPaymentMethods();
-		$zones=mslib_fe::loadAllCountriesZones();
-		foreach ($zones['zone_id'] as $zone_id) {
-			$s=1;
-			foreach ($payment_methods as $payment_method) {
-				// delete mapping
-				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id=\''.$zone_id.'\' and payment_method_id=\''.$payment_method['id'].'\'');
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				//
-				if ($this->post['payment_zone'][$zone_id][$payment_method['id']]) {
-					// add mapping
-					$insertArray=array();
-					$insertArray['zone_id']=$zone_id;
-					$insertArray['payment_method_id']=$payment_method['id'];
-					$insertArray['sort_order']=$s++;
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_to_zones', $insertArray);
+	if (isset($this->post['payment_to_zone_mappings']) && $this->post['payment_to_zone_mappings']>0) {
+		if (is_array($this->post['payment_zone']) && count($this->post['payment_zone'])) {
+			$payment_methods=mslib_fe::loadPaymentMethods();
+			$zones=mslib_fe::loadAllCountriesZones();
+			foreach ($zones['zone_id'] as $zone_id) {
+				$s=1;
+				foreach ($payment_methods as $payment_method) {
+					// delete mapping
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id=\''.$zone_id.'\' and payment_method_id=\''.$payment_method['id'].'\'');
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					//
+					if ($this->post['payment_zone'][$zone_id][$payment_method['id']]) {
+						// add mapping
+						$insertArray=array();
+						$insertArray['zone_id']=$zone_id;
+						$insertArray['payment_method_id']=$payment_method['id'];
+						$insertArray['sort_order']=$s++;
+						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_payment_methods_to_zones', $insertArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
 				}
 			}
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
+		} else {
+			// delete mapping
+			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id>0');
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
 		}
-		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
-	} else {
-		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id>0');
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
 	}
 	if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
 		$shipping_methods=mslib_fe::loadShippingMethods();
@@ -759,6 +762,7 @@ if ($this->ms['show_main']) {
 		$tr_type='even';
 		if (count($payment_methods)) {
 			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<input type="hidden" name="payment_to_zone_mappings" value="1" />';
 			$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<tr>';
 			// zone header
