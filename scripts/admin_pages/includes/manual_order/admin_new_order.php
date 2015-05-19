@@ -124,8 +124,8 @@ if (count($products)<0) {
 		<div class="step">
 			<div class="account-field">
 				<span id="ValidRadio" class="InputGroup">
-					<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).'*</label>
-					<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio" '.(($user['gender']=='m') ? 'checked' : '').' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'">
+					<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).($this->ms['MODULES']['GENDER_INPUT_REQUIRED'] ? '*' : '').'</label>
+					<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio" '.(($user['gender']=='m') ? 'checked' : '').($this->ms['MODULES']['GENDER_INPUT_REQUIRED'] ? ' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'"' : '').'>
 					<label class="account-male">'.ucfirst($this->pi_getLL('mr')).'</label>
 					<input type="radio" name="gender" value="f" class="InputGroup" id="radio2" '.(($user['gender']=='f') ? 'checked' : '').'>
 					<label class="account-female">'.ucfirst($this->pi_getLL('mrs')).'</label>
