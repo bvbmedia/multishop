@@ -110,7 +110,7 @@ if (count($cart['products'])>0) {
 					}
 					switch ($row['listtype']) {
 						case 'checkbox':
-							$output['product_attributes'].='<br />'.$row['products_options_name'].': ';
+							$output['product_attributes'].='<div class="attributes-items"><span class="attribute-option">'.$row['products_options_name'].':</span> ';
 							$continue=0;
 							$total=count($attribute_values);
 							$counter=0;
@@ -121,7 +121,7 @@ if (count($cart['products'])>0) {
 								} else {
 									$item['options_values_price']=round($item['options_values_price'], 2);
 								}
-								$output['product_attributes'].=trim($item['products_options_values_name']);
+								$output['product_attributes'].='<span class="attribute-value">'.trim($item['products_options_values_name']).'</span>';
 								$price=$price+($value['qty']*($item['price_prefix'].$item['options_values_price']));
 								if ($item['options_values_price']>0) {
 									$subprices.=mslib_fe::amount2Cents(($value['qty']*($item['price_prefix'].$item['options_values_price'])));
@@ -133,7 +133,7 @@ if (count($cart['products'])>0) {
 							}
 							break;
 						case 'input':
-							$output['product_attributes'].='<br />'.$row['products_options_name'].': '.$value['attributes'][$attribute_key]['products_options_values_name'];
+							$output['product_attributes'].='<div class="attributes-items"><span class="attribute-option">'.$row['products_options_name'].':</span><span class="attribute-value">'.$value['attributes'][$attribute_key]['products_options_values_name'].'</span></div>';
 							$multiple=0;
 							$continue=0;
 							break;
@@ -161,12 +161,15 @@ if (count($cart['products'])>0) {
 								$subprices.=mslib_fe::amount2Cents(($value['qty']*($item['price_prefix'].$item['options_values_price'])));
 							}
 							$subprices.='<br />';
-							$output['product_attributes'].='<br />'.$item['products_options_name'].': '.$item['products_options_values_name'].$t;
+							$output['product_attributes'].='<div class="attributes-items"><span class="attribute-option">'.$item['products_options_name'].':</span><span class="attribute-value">'.$item['products_options_values_name'].$t.'</span></div>';
 							$price=$price+($value['qty']*($item['price_prefix'].$item['options_values_price']));
 						}
 					}
 				}
 				// loading the attributes eof
+			}
+			if (!empty($output['product_attributes'])) {
+				$output['product_attributes']='<div class="shoppingcart-attributes-wrapper">'.$output['product_attributes'].'</div>';
 			}
 			// show selectbox by products multiplication or show default input
 			$quantity_html='';
