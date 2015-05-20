@@ -6,6 +6,7 @@ if (is_numeric($this->get['orders_id'])) {
 	$invoice=mslib_fe::getOrderInvoice($this->get['orders_id']);
 	if ($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
 		header('Location: ' . mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']));
+		exit();
 	}
 	$order=mslib_fe::getOrder($this->get['orders_id']);
 	$orders_tax_data=$order['orders_tax_data'];
