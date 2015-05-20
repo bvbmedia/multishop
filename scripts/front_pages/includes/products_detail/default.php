@@ -153,6 +153,36 @@ if (!$product['products_id']) {
 	  	<div class="specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
 	}
 	$output['products_price'].=$sub_content.'</div>';
+	// staffel price table
+	$output['products_staffel_price_table']='';
+	if ($product['staffel_price'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE'] && $this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
+		$staffels=explode(';', $product['staffel_price']);
+		$staffel_table_content='<div class="staffel_price_table_wrapper">';
+		$staffel_table_content.='<table width="100%" cellpadding="2" cellspacing="0">';
+		$staffel_table_content.='<tr>';
+		$staffel_table_content.='<th class="staffel_list_qty_header">'.$this->pi_getLL('qty').'</th>';
+		$staffel_table_content.='<th class="staffel_list_price_header">'.$this->pi_getLL('price').'</th>';
+		$staffel_table_content.='</tr>';
+		foreach ($staffels as $staffel_data) {
+			if (!isset($tr_type) || $tr_type=='even') {
+				$tr_type='odd';
+			} else {
+				$tr_type='even';
+			}
+			list($staffel_qty, $staffel_price)=explode(':', $staffel_data);
+			if (strpos($staffel_qty, '99999')!==false) {
+				list($qty_1, $qty_2)=explode('-', $staffel_qty);
+				$staffel_qty='> ' . $qty_1;
+			}
+			$staffel_table_content.='<tr class="'.$tr_type.'">';
+			$staffel_table_content.='<td class="staffel_list_qty">'.str_replace('-', ' - ', $staffel_qty).'</th>';
+			$staffel_table_content.='<td class="staffel_list_price">'.mslib_fe::amount2Cents($staffel_price).'</th>';
+			$staffel_table_content.='</tr>';
+		}
+		$staffel_table_content.='</table>';
+		$staffel_table_content.='</div>';
+		$output['products_staffel_price_table']=$staffel_table_content;
+	}
 	// show selectbox by products multiplication or show default input
 	if ($this->get['tx_multishop_pi1']['cart_item']) {
 		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
@@ -291,6 +321,7 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_IMAGE###']=$output['products_image'];
 	$markerArray['###PRODUCTS_IMAGE_MORE###']=$output['products_image_more'];
 	$markerArray['###PRODUCTS_PRICE###']=$output['products_price'];
+	$markerArray['###PRODUCTS_STAFFEL_PRICE_TABLE###']=$output['products_staffel_price_table'];
 	$markerArray['###PRODUCTS_SKU###']=$product['sku_code'];
 	$markerArray['###PRODUCTS_EAN###']=$product['ean_code'];
 	$markerArray['###PRODUCTS_SPECIAL_PRICE###']=$output['special_price'];

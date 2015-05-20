@@ -887,7 +887,7 @@ if ($this->post) {
 		if ($this->post['sp'] and is_array($this->post['sp'])) {
 			foreach ($this->post['sp'] as $row_idx=>$col_vals) {
 				if (empty($col_vals[1])) {
-					$col_vals[1]=$col_vals[1]+1;
+					$col_vals[1]=99999;
 				}
 				$col_val=implode('-', $col_vals);
 				$sprice=$this->post['staffel_price'][$row_idx];
