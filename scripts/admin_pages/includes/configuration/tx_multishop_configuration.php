@@ -2064,6 +2064,28 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Invoice PDF direct link from orders listing',
+	'configuration_key'=>'INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING',
+	'configuration_value'=>'0',
+	'description'=>'Invoice PDF direct link from orders listing',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Packingslip PDF direct link from orders listing',
+	'configuration_key'=>'PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING',
+	'configuration_value'=>'0',
+	'description'=>'Packingslip PDF direct link from orders listing',
+	'group_id'=>'9',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

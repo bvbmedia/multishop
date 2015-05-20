@@ -3793,7 +3793,10 @@ class mslib_befe {
 						if ($options['products_options_values']) {
 							$attributeMarkerArray=array();
 							$attributeMarkerArray['ITEM_ATTRIBUTE_ROW_TYPE']=$tr_type;
-							$attributeMarkerArray['ITEM_ATTRIBUTE']=$options['products_options'].': '.$options['products_options_values'];
+							$attributeMarkerArray['ITEM_ATTRIBUTE']='';
+							if ($options['products_options'] && $options['products_options_values']) {
+								$attributeMarkerArray['ITEM_ATTRIBUTE']=$options['products_options'].': '.$options['products_options_values'];
+							}
 							$attributeMarkerArray['ITEM_ATTRIBUTE_VAT']='';
 							// calculating
 							$od_rows_count++;

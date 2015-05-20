@@ -67,6 +67,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###LABEL_PACKINGSLIP_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
 			$markerArray['###PACKINGSLIP_PAYMENT_METHOD###']=$order['payment_method_label'];
 		}
+		$markerArray['###LABEL_PACKINGSLIP_SHIPPING_METHOD###']='';
+		$markerArray['###PACKINGSLIP_SHIPPING_METHOD###']='';
 		if ($order['shipping_method_label']) {
 			$markerArray['###LABEL_PACKINGSLIP_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
 			$markerArray['###PACKINGSLIP_SHIPPING_METHOD###']=$order['shipping_method_label'];
