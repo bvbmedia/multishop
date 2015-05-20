@@ -373,7 +373,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				});
 			});
 			$(document).on("click", ".delete_field", function() {
-				jQuery(this).parent().remove();
+				jQuery(this).parent().parent().remove();
 			});
 			$(\'.msAdminProductsFeedSelectField\').select2({
 					width:\'650px\'
