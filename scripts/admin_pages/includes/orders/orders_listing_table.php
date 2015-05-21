@@ -64,11 +64,11 @@ foreach ($tmporders as $order) {
 		case 'orders':
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 				if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
+					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="msadmin_button"'.($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] ? ' target="_blank"' : '').'>'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
 				}
 				if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
 					if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
-						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
+						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']).'" class="msadmin_button" target="_blank">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 					} else {
 						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 					}
