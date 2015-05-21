@@ -296,7 +296,7 @@ if ($rows) {
 					dialog_body+=\'<div class="edit_dialog_input">\';
 					dialog_body+=\'<input type="text" class="edit_option_inputs" name="option_names[\' + optid + \'][\' + i + \']" value="\' + v.options_name + \'"/>\';
 					dialog_body+=\'<span class="option_description_label">'.addslashes($this->pi_getLL('description')).'</span>\';
-					dialog_body+=\'<textarea class="redactor_options edit_option_inputs" name="option_desc[\' + optid + \'][\' + i + \']">\' + v.options_desc + \'</textarea>\';
+					dialog_body+=\'<textarea class="redactor_options edit_option_inputs" id="option_desc_\' + optid + \'_\' + i + \'" name="option_desc[\' + optid + \'][\' + i + \']">\' + v.options_desc + \'</textarea>\';
 					dialog_body+=\'</div>\';
 					dialog_body+=\'</div>\';
 				});
