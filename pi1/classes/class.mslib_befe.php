@@ -3856,7 +3856,7 @@ class mslib_befe {
 			}
 			$markerArray=array();
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_COUNTER']=$product_counter;
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$order['payment_method_label'];
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$this->pi_getLL('payment_costs') . ' (' . $order['payment_method_label'] .')';
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_ROW_TYPE']=$tr_type;
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$payment_tax_rate;
 			$payment_costs='0';
@@ -3885,7 +3885,7 @@ class mslib_befe {
 			}
 			$markerArray=array();
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_COUNTER']=$product_counter;
-			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$order['shipping_method_label'];
+			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_LABEL']=$this->pi_getLL('shipping_costs') . ' (' . $order['shipping_method_label'] .')';
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_ROW_TYPE']=$tr_type;
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$shipping_tax_rate;
 			$shipping_costs='0';
