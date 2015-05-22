@@ -90,6 +90,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###LABEL_YOUR_VAT_ID###']=$this->pi_getLL('your_vat_id');
 			$markerArray['###YOUR_VAT_ID###']=$order['billing_vat_id'];
 		}
+		$markerArray['###CUSTOMER_COMMENTS###']=$order['customer_comments'];
 		// CMS HEADER
 		$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='';
 		$cmsKeys=array();
