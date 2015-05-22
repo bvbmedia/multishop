@@ -2086,6 +2086,17 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Generate invoice id after order set to paid',
+	'configuration_key'=>'GENERATE_INVOICE_ID_AFTER_ORDER_SET_TO_PAID',
+	'configuration_value'=>'1',
+	'description'=>'Generate invoice id after order set to paid',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

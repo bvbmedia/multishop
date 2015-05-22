@@ -7018,7 +7018,7 @@ class mslib_fe {
 			$updateArray=array('paid'=>1);
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['GENERATE_INVOICE_ID_AFTER_ORDER_SET_TO_PAID']) {
 				// create invoice
 				$invoice=mslib_fe::getOrderInvoice($orders_id);
 				$updateArray=array('paid'=>1);
