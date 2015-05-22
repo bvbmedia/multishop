@@ -136,6 +136,65 @@ class tx_mslib_catalog {
 			return $id;
 		}
 	}
+	function createAttributeOptionName($data) {
+		// ADD PRODUCT ATTRIBUTE OPTION
+		$filter=array();
+		$filter[]='language_id='.$data['language_id'];
+		if (mslib_befe::ifExists($data['products_options_name'],'tx_multishop_products_options','products_options_name',$filter)) {
+			$record=mslib_befe::getRecord($data['products_options_name'],'tx_multishop_products_options','products_options_name',$filter);
+			return $record['products_options_id'];
+		} else {
+			// Insert option name
+			$insertArray=array();
+			$insertArray['language_id']=$data['language_id'];
+			$insertArray['products_options_name']=$data['products_options_name'];
+			$insertArray['listtype']='pulldownmenu';
+			$insertArray['attributes_values']='0';
+			$insertArray['sort_order']=time();
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options', $insertArray);
+			$GLOBALS['TYPO3_DB']->sql_query($query);
+			return $GLOBALS['TYPO3_DB']->sql_insert_id();
+		}
+	}
+	function createAttributeOptionValue($data) {
+		if (!is_numeric($data['products_options_id'])) {
+			return;
+		}
+		// ADD PRODUCT ATTRIBUTE OPTION
+		$filter=array();
+		//$filter[]='language_id='.$data['language_id'];
+		$filter[]='povp.products_options_id='.$data['products_options_id'];
+		//$filter[]='pov.products_options_values_name=\''.addslashes($data['products_options_values_name']).'\'';
+		$filter[]='povp.products_options_values_id=pov.products_options_values_id';
+		$from='tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_options_values pov';
+		//$str2="SELECT pov.products_options_values_id from tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_options_values pov where
+		// povp.products_options_id='".addslashes($products_options_id)."' and
+		// pov.products_options_values_name='".addslashes($option_value)."' and
+		// povp.products_options_values_id=pov.products_options_values_id";
+		if (mslib_befe::ifExists($data['products_options_values_name'],$from,'pov.products_options_values_name',$filter)) {
+			$record=mslib_befe::getRecord($data['products_options_values_name'],$from,'pov.products_options_values_name',$filter);
+			$products_options_values_id=$record['products_options_values_id'];
+		} else {
+			$insertArray=array();
+			$insertArray['language_id']=$data['language_id'];
+			$insertArray['products_options_values_name']=$data['products_options_values_name'];
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values', $insertArray);
+			$GLOBALS['TYPO3_DB']->sql_query($query);
+			$products_options_values_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+		}
+		if ($data['products_options_id'] && $products_options_values_id) {
+			$filter=array();
+			$filter[]='products_options_id='.$data['products_options_id'];
+			if (!mslib_befe::ifExists($products_options_values_id,'tx_multishop_products_options_values_to_products_options','products_options_values_id',$filter)) {
+				$insertArray=array();
+				$insertArray['products_options_id']=$data['products_options_id'];
+				$insertArray['products_options_values_id']=$products_options_values_id;
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_options_values_to_products_options', $insertArray);
+				$GLOBALS['TYPO3_DB']->sql_query($query);
+			}
+			return $products_options_values_id;
+		}
+	}
 	function sortCatalog($sortItem, $sortByField, $orderBy='asc') {
 		set_time_limit(86400);
 		ignore_user_abort(true);
