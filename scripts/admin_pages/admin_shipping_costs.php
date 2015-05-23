@@ -47,12 +47,17 @@ if ($this->post) {
 						}
 						$i++;
 					}
+					$free_shippingcosts_notation='';
+					if (isset($this->post['freeshippingcostsabove_weight'][$shipping_zones[0].$shipping_zones[1]]) && $this->post['freeshippingcostsabove_weight'][$shipping_zones[0].$shipping_zones[1]]>0) {
+						$free_shippingcosts_notation=$this->post['freeshippingcostsabove_weight_value'][$shipping_zones[0].$shipping_zones[1]].':0';
+					}
 					//checking row
 					if ($row_checking['countrow']==0) {
 						$insertArray=array();
 						$insertArray['shipping_method_id']=$shipping_zones[0];
 						$insertArray['zone_id']=$shipping_zones[1];
 						$insertArray['price']=implode(',', $weight_and_price);
+						$insertArray['override_shippingcosts']=$free_shippingcosts_notation;
 						if (!empty($insertArray['price'])) {
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_costs', $insertArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -60,6 +65,7 @@ if ($this->post) {
 					} else {
 						$insertArray=array();
 						$insertArray['price']=implode(',', $weight_and_price);
+						$insertArray['override_shippingcosts']=$free_shippingcosts_notation;
 						if (!empty($insertArray['price'])) {
 							$query_update=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_costs', $where_del, $insertArray);
 							$res_update=$GLOBALS['TYPO3_DB']->sql_query($query_update);
@@ -121,7 +127,7 @@ if ($this->post) {
 		$update_shipping['shipping_costs_type']=$shipping_type;
 		$query_update_shipping=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', "id = ".$shipping_id, $update_shipping);
 		$res_update_ship=$GLOBALS['TYPO3_DB']->sql_query($query_update_shipping);
-		header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs',1));
+		//header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs',1));
 	} // end for POST
 } //end if post
 $str="SELECT * from tx_multishop_zones order by name";
@@ -369,6 +375,26 @@ if (count($shipping_methods)>0) {
 							$row_counter++;
 						}
 					}
+					$freeshippingcosts_above=false;
+					$free_weight=0;
+					if (!empty($row3['override_shippingcosts'])) {
+						$freeshippingcosts_above=true;
+						$free_shippingcosts_tmp=explode(',', $row3['override_shippingcosts']);
+						list($free_weight,)=explode(':', $free_shippingcosts_tmp[0]);
+					}
+					$content.='
+					<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr>
+							<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove_weight['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>'.$this->pi_getLL('free_shippingcosts_for_order_weight_above').'</b></div></td>
+							<td width="100" align="right">
+								<div>
+									<div class="msAttributesField hidden"><input type="text" style="text-align:right" size="3" name="freeshippingcostsabove_weight_value['.$zone_pid.']"  value="'.$free_weight.'"> KG</div>
+								</div>
+							</td>
+						</tr>
+					';
 					$content.='</table>';
 					$content.='<script type="text/javascript">';
 					$content.="</script>";
