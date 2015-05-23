@@ -428,7 +428,9 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									$tmpFilter[]="p2c.is_deepest=1 AND p2c.categories_id = ".$row['categories_id'];
 								}
 								*/
-								$tmpFilter[]="p2c.node_id = ".addslashes($row['categories_id']);
+								$subcats_id=mslib_fe::get_subcategory_ids($row['categories_id']);
+								$subcats_id[]=$row['categories_id'];
+								$tmpFilter[]="p2c.node_id IN (".implode(',', $subcats_id).")";
 							}
 							$totalCountFromFlat=array();
 							$totalCountWhereFlat=array();
