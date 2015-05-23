@@ -239,7 +239,7 @@ if (count($shipping_methods)>0) {
 							<td colspan="2">&nbsp;</td>
 						</tr>
 						<tr>
-							<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>Free shippingcosts for order amount above</b></div></td>
+							<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</b></div></td>
 							<td width="100" align="right">
 								<div>
 									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
