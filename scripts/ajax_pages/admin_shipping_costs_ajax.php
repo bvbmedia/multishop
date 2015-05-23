@@ -40,6 +40,18 @@ if ($this->ADMIN_USER) {
 			$sc_tax=mslib_fe::taxDecimalCrop(($row3['price']*$sc_tax_rate)/100);
 			$sc_price_display=mslib_fe::taxDecimalCrop($row3['price'], 2, false);
 			$sc_price_display_incl=mslib_fe::taxDecimalCrop($row3['price']+$sc_tax, 2, false);
+			$freeshippingcosts_above=false;
+			$free_shippingcosts=0;
+			$fsc_price_display=0;
+			$fsc_price_display_incl=0;
+			if (!empty($row3['override_shippingcosts'])) {
+				$freeshippingcosts_above=true;
+				$free_shippingcosts_tmp=explode(',', $row3['override_shippingcosts']);
+				list($free_shippingcosts,)=explode(':', $free_shippingcosts_tmp[1]);
+				$fsc_tax=mslib_fe::taxDecimalCrop(($free_shippingcosts*$sc_tax_rate)/100);
+				$fsc_price_display=mslib_fe::taxDecimalCrop($free_shippingcosts, 2, false);
+				$fsc_price_display_incl=mslib_fe::taxDecimalCrop($free_shippingcosts+$fsc_tax, 2, false);
+			}
 			$content.='
 				<table>
 					<tr>
@@ -49,6 +61,19 @@ if ($this->ADMIN_USER) {
 								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
 								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
 								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value="'.$row3['price'].'"></div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					<tr>
+						<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>Free shippingcosts for order amount above</b></div></td>
+						<td width="100" align="right">
+							<div>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
 							</div>
 						</td>
 					</tr>
@@ -255,6 +280,19 @@ if ($this->ADMIN_USER) {
 								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
 								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
 								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value=""></div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					<tr>
+						<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>Free shippingcosts for order amount above</b></div></td>
+						<td width="100" align="right">
+							<div>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value=""></div>
 							</div>
 						</td>
 					</tr>

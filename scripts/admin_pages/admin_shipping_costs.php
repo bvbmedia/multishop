@@ -87,17 +87,23 @@ if ($this->post) {
 						if (strstr($weight_and_price, ",") && !strstr($weight_and_price, ":")) {
 							$weight_and_price=str_replace(",", ".", $weight_and_price);
 						}
+						$free_shippingcosts_notation='';
+						if (isset($this->post['freeshippingcostsabove'][$key]) && $this->post['freeshippingcostsabove'][$key]>0) {
+							$free_shippingcosts_notation='0:'.$weight_and_price.','.$this->post['freeshippingcostsabove_value'][$key].':0';
+						}
 						//checking row
 						if ($row_checking['countrow']==0) {
 							$insertArray=array();
 							$insertArray['shipping_method_id']=$shipping_zones[0];
 							$insertArray['zone_id']=$shipping_zones[1];
 							$insertArray['price']=$weight_and_price;
+							$insertArray['override_shippingcosts']=$free_shippingcosts_notation;
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_shipping_methods_costs', $insertArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						} else {
 							$insertArray=array();
 							$insertArray['price']=$weight_and_price;
+							$insertArray['override_shippingcosts']=$free_shippingcosts_notation;
 							$query_update=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods_costs', $where_del, $insertArray);
 							$res_update=$GLOBALS['TYPO3_DB']->sql_query($query_update);
 						}
@@ -204,6 +210,18 @@ if (count($shipping_methods)>0) {
 					$sc_price_display=mslib_fe::taxDecimalCrop($row3['price'], 2, false);
 					$sc_price_display_incl=mslib_fe::taxDecimalCrop($row3['price']+$sc_tax, 2, false);
 				}
+				$freeshippingcosts_above=false;
+				$free_shippingcosts=0;
+				$fsc_price_display=0;
+				$fsc_price_display_incl=0;
+				if (!empty($row3['override_shippingcosts'])) {
+					$freeshippingcosts_above=true;
+					$free_shippingcosts_tmp=explode(',', $row3['override_shippingcosts']);
+					list($free_shippingcosts,)=explode(':', $free_shippingcosts_tmp[1]);
+					$fsc_tax=mslib_fe::taxDecimalCrop(($free_shippingcosts*$sc_tax_rate)/100);
+					$fsc_price_display=mslib_fe::taxDecimalCrop($free_shippingcosts, 2, false);
+					$fsc_price_display_incl=mslib_fe::taxDecimalCrop($free_shippingcosts+$fsc_tax, 2, false);
+				}
 				$zone_pid=$row['id'].":".$zone['id'];
 				$content.='
 					<table>
@@ -214,6 +232,19 @@ if (count($shipping_methods)>0) {
 									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
 									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
 									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value="'.$row3['price'].'"></div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr>
+							<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>Free shippingcosts for order amount above</b></div></td>
+							<td width="100" align="right">
+								<div>
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
 								</div>
 							</td>
 						</tr>

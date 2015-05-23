@@ -4717,7 +4717,7 @@ class mslib_fe {
 		if (!is_numeric($shipping_method_id)) {
 			return false;
 		}
-		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
+		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.override_shippingcosts, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 			'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 			'', // GROUP BY...
@@ -4779,6 +4779,9 @@ class mslib_fe {
 					}
 				} else {
 					$shipping_cost=$row3['price'];
+					if (!empty($row3['override_shippingcosts'])) {
+						$shipping_cost=$row3['override_shippingcosts'];
+					}
 				}
 			}
 			// custom code to change the shipping costs based on cart amount
