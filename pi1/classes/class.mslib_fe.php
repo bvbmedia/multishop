@@ -5653,17 +5653,34 @@ class mslib_fe {
 		if (!is_numeric($categories_id)) {
 			return 0;
 		}
-		$filter=array();
-		$filter[]='node_id='.$categories_id;
-		$filter[]='(page_uid=0 or page_uid='.$page_uid.')';
-		$query=$GLOBALS['TYPO3_DB']->SELECTquery('count(1) as total', // SELECT ...
-			'tx_multishop_products_to_categories', // FROM ...
-			implode(' AND ', $filter), // WHERE...
-			'', // GROUP BY...
-			'', // ORDER BY...
-			'' // LIMIT ...
+		$select=array();
+		$select[]='count(1) as total';
+		$from=array();
+		$from[]='tx_multishop_products_to_categories';
+		$where=array();
+		$where[]='node_id='.$categories_id;
+		$where[]='(page_uid=0 or page_uid='.$page_uid.')';
+
+		$query_elements=array();
+		$query_elements['select']= &$select;
+		$query_elements['from']= &$from;
+		$query_elements['where']= &$where;
+		$params=array(
+			'query_elements'=>&$query_elements
 		);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['countProductsPreProc'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['countProductsPreProc'] as $funcRef) {
+				t3lib_div::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_elements['select']) ? implode(",", $query_elements['select']) : ''), // SELECT ...
+			(is_array($query_elements['from']) ? implode(",", $query_elements['from']) : ''), // FROM ...
+			(is_array($query_elements['where']) ? implode(" and ", $query_elements['where']) : ''), // WHERE...
+			(is_array($query_elements['group_by']) ? implode(",", $query_elements['group_by']) : ''), // GROUP BY...
+			(is_array($query_elements['order_by']) ? implode(",", $query_elements['order_by']) : ''), // ORDER BY...
+			(is_array($query_elements['limit']) ? implode(",", $query_elements['limit']) : '') // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 		return $row['total'];
 	}
