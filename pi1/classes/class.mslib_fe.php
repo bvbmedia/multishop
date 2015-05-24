@@ -4404,7 +4404,7 @@ class mslib_fe {
 			}
 			$shipping_method_id=$shipping_array[0]['id'];
 		}
-		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
+		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.override_shippingcosts, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 			'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$delivery_countries_id.'\'', // WHERE...
 			'', // GROUP BY...
@@ -4430,6 +4430,19 @@ class mslib_fe {
 						break;
 					}
 				}
+				if (!empty($row3['override_shippingcosts'])) {
+					$steps=explode(",", $row3['override_shippingcosts']);
+					foreach ($steps as $step) {
+						$cols=explode(":", $step);
+						if (isset($cols[1])) {
+							$current_price=$cols[1];
+						}
+						if ($total_weight<=$cols[0]) {
+							$current_price=$cols[1];
+							break;
+						}
+					}
+				}
 				$shipping_cost=$current_price;
 			} elseif ($row3['shipping_costs_type']=='quantity') {
 				$total_quantity=mslib_fe::countCartQuantity();
@@ -4448,6 +4461,9 @@ class mslib_fe {
 				$shipping_cost=$current_price;
 			} else {
 				$shipping_cost=$row3['price'];
+				if (!empty($row3['override_shippingcosts'])) {
+					$shipping_cost=$row3['override_shippingcosts'];
+				}
 			}
 			// custom code to change the shipping costs based on cart amount
 			if (strstr($shipping_cost, ",")) {
@@ -4717,7 +4733,7 @@ class mslib_fe {
 		if (!is_numeric($shipping_method_id)) {
 			return false;
 		}
-		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
+		$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.override_shippingcosts, c.zone_id', // SELECT ...
 			'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 			'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 			'', // GROUP BY...
@@ -4751,6 +4767,19 @@ class mslib_fe {
 						break;
 					}
 				}
+				if (!empty($row3['override_shippingcosts'])) {
+					$steps=explode(",", $row3['override_shippingcosts']);
+					foreach ($steps as $step) {
+						$cols=explode(":", $step);
+						if (isset($cols[1])) {
+							$current_price=$cols[1];
+						}
+						if ($total_weight<=$cols[0]) {
+							$current_price=$cols[1];
+							break;
+						}
+					}
+				}
 				$shipping_cost=$current_price;
 			} elseif ($row3['shipping_costs_type']=='quantity') {
 				$total_quantity=mslib_fe::countCartQuantity();
@@ -4779,6 +4808,9 @@ class mslib_fe {
 					}
 				} else {
 					$shipping_cost=$row3['price'];
+					if (!empty($row3['override_shippingcosts'])) {
+						$shipping_cost=$row3['override_shippingcosts'];
+					}
 				}
 			}
 			// custom code to change the shipping costs based on cart amount
@@ -7035,7 +7067,7 @@ class mslib_fe {
 			$updateArray=array('paid'=>1);
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['GENERATE_INVOICE_ID_AFTER_ORDER_SET_TO_PAID']) {
 				// create invoice
 				$invoice=mslib_fe::getOrderInvoice($orders_id);
 				$updateArray=array('paid'=>1);
