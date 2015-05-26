@@ -41,6 +41,7 @@ $content.='
 <input name="id" type="hidden" value="'.$this->shop_pid.'" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="products_search" />
 <input name="page" id="page" type="hidden" value="0" />
+<input name="L" type="hidden" value="'.$this->sys_language_uid.'" />
 <div class="row">
 	<div class="col-sm-4">
 		<div class="form-group">
