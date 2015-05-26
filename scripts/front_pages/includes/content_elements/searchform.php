@@ -15,7 +15,7 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 if ($this->conf['includejAutocomplete']) {
 	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript">
 			  jQuery(document).ready(function($) {
-				var sendData;														  
+				var sendData;
 				jQuery("#skeyword").bind("focus",function(){
 					jQuery("#page").val(0);
 				})
@@ -23,18 +23,18 @@ if ($this->conf['includejAutocomplete']) {
 					// dont process special keys
 					var skipKeys = [ 13,38,40,37,39,27,32,17,18,9,16,20,91,93,8,36,35,45,46,33,34,144,145,19 ];
 					if (jQuery.inArray(e.keyCode, skipKeys) != -1) sendData = false;
-					else sendData = true;																													
-				})							
+					else sendData = true;
+				})
 				jQuery("#skeyword").autocomplete({
 					//console.log(this);
 					minLength: 1,
 					delay: 400,
 					open: function(event, ui){
-						jQuery(".ui-autocomplete").attr("id", "ui-autocomplete-front");																										
+						jQuery(".ui-autocomplete").attr("id", "ui-autocomplete-front");
 						jQuery(".ui-autocomplete li.ui-menu-item:odd a").addClass("ui-menu-item-alternate");
-					},										
+					},
 					source: function( request, response ) {
-							if (sendData){		
+							if (sendData){
 							jQuery.ajax({
 								url: "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_search').'",
 								dataType : "json",
@@ -47,7 +47,7 @@ if ($this->conf['includejAutocomplete']) {
 									 if(data.products != null){
 										response( jQuery.map( data.products, function( item ) {
 											index = index + 1;
-											 
+
 												if (index == 6) {
 													return {
 														label: item.Title,
@@ -67,7 +67,7 @@ if ($this->conf['includejAutocomplete']) {
 														prod: item.Product
 													}
 												}
-											 
+
 											})
 										);
 									 } //end if data
@@ -81,7 +81,7 @@ if ($this->conf['includejAutocomplete']) {
 									 jQuery("#page").val(ui.item.page);
 									//console.log(ui);
 									//alert(ui.toSource());
-									var link = "'.$this->FULL_HTTP_URL.'" + ui.item.link ; 
+									var link = "'.$this->FULL_HTTP_URL.'" + ui.item.link ;
 									//alert(link);
 									if (ui.item.prod == true){
 										open(link,\'_self\',\'resizable,location,menubar,toolbar,scrollbars,status\');
@@ -93,7 +93,7 @@ if ($this->conf['includejAutocomplete']) {
 						jQuery("#skeyword").val(ui.item.skeyword);
 						jQuery("#page").val(0);
 						return false;
-					}	
+					}
 				}).data(\'ui-autocomplete\')._renderItem = function (ul, item) {
 					return jQuery("<li></li>").data("item.autocomplete", item).append(jQuery("<a></a>").html(item.label)).appendTo(ul);
 					};
@@ -104,7 +104,7 @@ if ($this->conf['includejAutocomplete']) {
 $subpartArray['###SEARCH_PAGE_PID###']=$this->conf['search_page_pid'];
 $subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
 $subpartArray['###LABEL_PLACEHOLDER_KEYWORD###']=$this->pi_getLL('keyword');
-
+$subpartArray['###LANGUAGE_UID###']=$this->sys_language_uid;
 $subpartArray['###KEYWORD_VALUE###']=htmlspecialchars(mslib_fe::RemoveXSS($this->get['skeyword']));
 $subpartArray['###LABEL_SUBMIT_BUTTON###']=htmlspecialchars($this->pi_getLL('search'));
 // completed the template expansion by replacing the "item" marker in the template
