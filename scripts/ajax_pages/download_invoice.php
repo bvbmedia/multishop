@@ -47,6 +47,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###INVOICE_FOOTER_BACKGROUND_IMAGE###']='';
 		}
 		$markerArray['###LABEL_INVOICE_HEADER###']=$this->pi_getLL('invoice');
+		// billing address
 		if (!empty($order['billing_company'])) {
 			$markerArray['###BILLING_COMPANY###']='<strong>'.$order['billing_company'].'</strong><br/>';
 		} else {
@@ -60,6 +61,21 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		if (mslib_befe::strtolower($order['billing_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
 			// ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
 			$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
+		}
+		// delivery address
+		if (!empty($order['delivery_company'])) {
+			$markerArray['###DELIVERY_COMPANY###']='<strong>'.$order['delivery_company'].'</strong><br/>';
+		} else {
+			$markerArray['###DELIVERY_COMPANY###']='';
+		}
+		$markerArray['###DELIVERY_NAME###']=$order['delivery_name'];
+		$markerArray['###DELIVERY_ADDRESS###']=$order['delivery_address'];
+		$markerArray['###DELIVERY_ZIP###']=$order['delivery_zip'];
+		$markerArray['###DELIVERY_CITY###']=mslib_befe::strtoupper($order['delivery_city']);
+		$markerArray['###DELIVERY_COUNTRY###']='';
+		if (mslib_befe::strtolower($order['delivery_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
+			// ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
+			$markerArray['###DELIVERY_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
 		}
 		$markerArray['###LABEL_CUSTOMER_ID###']=$this->pi_getLL('admin_customer_id');
 		$markerArray['###CUSTOMER_ID###']=$order['customer_id'];
@@ -88,7 +104,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$markerArray['###YOUR_VAT_ID###']='';
 		if ($order['billing_vat_id']) {
 			$markerArray['###LABEL_YOUR_VAT_ID###']=$this->pi_getLL('your_vat_id');
-			$markerArray['###YOUR_VAT_ID###']=$order['billing_vat_id'];
+			$markerArray['###YOUR_VAT_ID###']=strtoupper($order['billing_vat_id']);
 		}
 		$markerArray['###CUSTOMER_COMMENTS###']=$order['customer_comments'];
 		// CMS HEADER
