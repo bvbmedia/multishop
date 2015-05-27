@@ -2421,7 +2421,9 @@ class mslib_fe {
 			$required_cols[]='pd.products_viewed';
 			$required_cols[]='pd.products_url';
 			$required_cols[]='p.products_image';
-			$required_cols[]='p.products_image1';
+			for ($i=1; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+				$required_cols[]='p.products_image'.$i;
+			}
 			$required_cols[]='p.products_date_added';
 			$required_cols[]='p.products_model';
 			$required_cols[]='p.products_quantity';
@@ -2547,7 +2549,9 @@ class mslib_fe {
 			$required_cols[]='pf.products_url';
 			$required_cols[]='pf.products_id';
 			$required_cols[]='pf.products_image';
-			$required_cols[]='pf.products_image1';
+			for ($i=1; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+				$required_cols[]='pf.products_image'.$i;
+			}
 			$required_cols[]='pf.products_model';
 			$required_cols[]='pf.products_quantity';
 			$required_cols[]='pf.products_price';
