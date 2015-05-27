@@ -28,6 +28,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
 <script type="text/javascript">
 $(function() {
 	$(\'.mceEditor\').redactor({
@@ -37,7 +38,7 @@ $(function() {
 		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
 		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
 		minHeight:\'400\',
-		plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\']
+		plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',[\'fullscreen\']]
 	});
 });
 </script>

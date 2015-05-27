@@ -13,6 +13,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.t3lib_extMgm::siteRelPa
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
 <script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
+<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
 ';
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
 $selects=array();
@@ -306,7 +307,7 @@ if ($rows) {
 				jQuery(\'.redactor_options\').redactor({
 					focus: false,
 					minHeight:\'100\',
-					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\']
+					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 				});
 				' : '').'
 			}
@@ -339,7 +340,7 @@ if ($rows) {
 				jQuery(\'.redactor_values\').redactor({
 					focus: false,
 					minHeight:\'100\',
-					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\']
+					plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 				});
 				' : '').'
 			}
