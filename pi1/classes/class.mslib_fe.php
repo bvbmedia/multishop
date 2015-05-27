@@ -6045,6 +6045,11 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_delete_category']['description']=$this->pi_getLL('admin_delete_category_description').'.';
 				$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_delete_category']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$this->get['categories_id'].'&action=delete_category');
 			}
+			// merge categories
+			// merge attributes options
+			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['label']=$this->pi_getLL('merge_categories');
+			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories');
+			//
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['label']=$this->pi_getLL('admin_products');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['description']=$this->pi_getLL('admin_add_and_modify_products_here').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid='.$this->get['categories_id']);

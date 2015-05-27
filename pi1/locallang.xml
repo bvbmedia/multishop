@@ -1206,6 +1206,7 @@
             <label index="search_engine_indexing">Search engine indexing</label>
             <label index="free_shippingcosts_for_order_amount_above">Free shippingcosts for order amount above</label>
             <label index="free_shippingcosts_for_order_weight_above">Free shippingcosts for order weight above</label>
+            <label index="merge_categories">Merge categories</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>

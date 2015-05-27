@@ -154,6 +154,11 @@ switch ($this->ms['page']) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_repair_missing_multilanguages_attributes.php');
 		}
 		break;
+	case 'merge_categories':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_merge_categories.php');
+		}
+		break;
 	case 'merge_attribute_options':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options.php');
