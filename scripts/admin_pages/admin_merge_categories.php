@@ -115,6 +115,11 @@ if ($this->post) {
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 		//
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories', 'categories_id=\''.$cat_source_id.'\'');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		//
+		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_description', 'categories_id=\''.$cat_source_id.'\'');
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 	header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories'));
 }
