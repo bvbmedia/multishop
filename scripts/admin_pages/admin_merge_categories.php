@@ -39,7 +39,7 @@ foreach ($categories as $category) {
 		$tree_path=str_replace('\\', '>', $tree_path);
 		$content.='<li>';
 		$content.='<input type="checkbox" class="movecats" name="mergecats_source[]" value="'.$tree_id.'" id="tree_cats_'.$tree_id.'">&nbsp;';
-		$content.='<label for="tree_cats_'.$tree_id.'">'.$tree_path.'</label>';
+		$content.='<label for="tree_cats_'.$tree_id.'">'.$tree_path. ' (ID: '.$tree_id.')' .'</label>';
 		$content.='</li>'."\n";
 	}
 
@@ -49,10 +49,16 @@ foreach ($categories as $category) {
 		$cat_selectbox.=mslib_fe::displayAdminCategories($dataArray, true, 1, $category['categories_id']);
 	}
 }
-$cat_selectbox='<select name="mergecats_target">
+$cat_selectbox='<select name="mergecats_target" id="mergecats_target" style="width:400px">
 <option value="0">'.$this->pi_getLL('admin_label_option_main_category').'</option>
 '.$cat_selectbox.'
-</select>';
+</select>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	jQuery("#mergecats_target").select2();
+});
+</script>
+';
 
 $content.='
 			</ul>

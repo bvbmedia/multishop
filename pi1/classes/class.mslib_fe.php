@@ -8046,7 +8046,7 @@ class mslib_fe {
 					}
 					$content.='</li>';
 				} else {
-					$content.='<option value="'.$item['categories_id'].'" id="sl-cat_'.$parent_id.'_'.$item['categories_id'].'">+-'.str_repeat('--', $level).' ['.$item['categories_name'].'</option>';
+					$content.='<option value="'.$item['categories_id'].'" id="sl-cat_'.$parent_id.'_'.$item['categories_id'].'">+-'.str_repeat('--', $level).' ['.$item['categories_name'] . ' (ID: '.$item['categories_id'].')' .'</option>';
 					$sub_content=mslib_fe::displayAdminCategories($item, $selectbox, $level+1, $item['categories_id']);
 					if ($sub_content) {
 						$content.=$sub_content;
