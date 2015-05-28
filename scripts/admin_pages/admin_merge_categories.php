@@ -72,54 +72,56 @@ $content.='
 if ($this->post) {
 	$cat_target_id=$this->post['mergecats_target'];
 	foreach ($this->post['mergecats_source'] as $cat_source_id) {
-		$cat_source=mslib_fe::getCategory($cat_source_id, 1);
-		//
-		$updateArray=array();
-		$where="categories_id = ".$cat_target_id;
-		$updateArray['parent_id']=$cat_source['parent_id'];
-		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		//
-		$updateArray=array();
-		$where="parent_id = ".$cat_source_id;
-		$updateArray['parent_id']=$cat_target_id;
-		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		// check the p2c that have categories_id=$cat_source_id
-		$qry=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.*', // SELECT ...
-			'tx_multishop_products_to_categories p2c', // FROM ...
-			'FIND_IN_SET(\''.$cat_source_id.'\', p2c.crumbar_identifier)', // WHERE...
-			'', // GROUP BY...
-			'', // ORDER BY...
-			'' // LIMIT ...
-		);
-		$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
-		while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
-			$crumbar_identifier=explode(',', $rs['crumbar_identifier']);
-			foreach ($crumbar_identifier as $idx=>$ident) {
-				if ($ident==$cat_source_id) {
-					$crumbar_identifier[$idx]=$cat_target_id;
-				}
-			}
-			$rs['crumbar_identifier']=implode(',', $crumbar_identifier);
+		if ($cat_source_id!=$cat_target_id) {
+			$cat_source=mslib_fe::getCategory($cat_source_id, 1);
 			//
 			$updateArray=array();
-			if ($rs['categories_id']==$cat_source_id) {
-				$updateArray['categories_id']=$cat_target_id;
+			$where="categories_id = ".$cat_target_id;
+			$updateArray['parent_id']=$cat_source['parent_id'];
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			//
+			$updateArray=array();
+			$where="parent_id = ".$cat_source_id;
+			$updateArray['parent_id']=$cat_target_id;
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			// check the p2c that have categories_id=$cat_source_id
+			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.*', // SELECT ...
+				'tx_multishop_products_to_categories p2c', // FROM ...
+				'FIND_IN_SET(\''.$cat_source_id.'\', p2c.crumbar_identifier)', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+			);
+			$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+			while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
+				$crumbar_identifier=explode(',', $rs['crumbar_identifier']);
+				foreach ($crumbar_identifier as $idx=>$ident) {
+					if ($ident==$cat_source_id) {
+						$crumbar_identifier[$idx]=$cat_target_id;
+					}
+				}
+				$rs['crumbar_identifier']=implode(',', $crumbar_identifier);
+				//
+				$updateArray=array();
+				if ($rs['categories_id']==$cat_source_id) {
+					$updateArray['categories_id']=$cat_target_id;
+				}
+				if ($rs['node_id']==$cat_source_id) {
+					$updateArray['node_id']=$cat_target_id;
+				}
+				$updateArray['crumbar_identifier']=$rs['crumbar_identifier'];
+				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', "products_to_categories_id = ".$rs['products_to_categories_id'], $updateArray);
+				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
-			if ($rs['node_id']==$cat_source_id) {
-				$updateArray['node_id']=$cat_target_id;
-			}
-			$updateArray['crumbar_identifier']=$rs['crumbar_identifier'];
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', "products_to_categories_id = ".$rs['products_to_categories_id'], $updateArray);
+			//
+			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories', 'categories_id=\''.$cat_source_id.'\'');
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			//
+			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_description', 'categories_id=\''.$cat_source_id.'\'');
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
-		//
-		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories', 'categories_id=\''.$cat_source_id.'\'');
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-		//
-		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories_description', 'categories_id=\''.$cat_source_id.'\'');
-		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	}
 	header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories'));
 }
