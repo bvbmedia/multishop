@@ -159,6 +159,11 @@ switch ($this->ms['page']) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_merge_categories.php');
 		}
 		break;
+	case 'merge_manufacturers':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_merge_manufacturers.php');
+		}
+		break;
 	case 'merge_attribute_options':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options.php');

@@ -1207,6 +1207,7 @@
             <label index="free_shippingcosts_for_order_amount_above">Free shippingcosts for order amount above</label>
             <label index="free_shippingcosts_for_order_weight_above">Free shippingcosts for order weight above</label>
             <label index="merge_categories">Merge categories</label>
+            <label index="merge_manufacturers">Merge manufacturers</label>
 		</languageKey>
 		<languageKey index="af"></languageKey>
 		<languageKey index="ar"></languageKey>

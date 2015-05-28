@@ -730,6 +730,24 @@ class mslib_fe {
 			return 0;
 		}
 	}
+	public function getManufacturers() {
+		$query=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+			'tx_multishop_manufacturers', // FROM ...
+			'', // WHERE...
+			'', // GROUP BY...
+			'', // ORDER BY...
+			'' // LIMIT ...
+		);
+		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+		$tel=0;
+		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+			$rows=array();
+			while($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$rows[]=$row;
+			}
+			return $rows;
+		}
+	}
 	public function getGroup($value, $type='title') {
 		if ($value==$this->conf['fe_customer_usergroup'] or $value==$this->conf['fe_admin_usergroup'] or $value==$this->conf['fe_rootadmin_usergroup']) {
 			return false;
@@ -6059,7 +6077,6 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_delete_category']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$this->get['categories_id'].'&action=delete_category');
 			}
 			// merge categories
-			// merge attributes options
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['label']=$this->pi_getLL('merge_categories');
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories');
 			//
@@ -6110,6 +6127,9 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['label']=$this->pi_getLL('admin_manufacturers');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['description']=$this->pi_getLL('admin_add_and_modify_manufacturers_here').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers');
+			// merge manufacturers
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['subs']['admin_merge_manufacturers']['label']=$this->pi_getLL('merge_manufacturers');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['subs']['admin_merge_manufacturers']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_manufacturers');
 			if ($this->ms['MODULES']['COUPONS']) {
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_coupon']['label']=$this->pi_getLL('admin_coupon_module');
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_coupon']['description']=$this->pi_getLL('admin_give_customers_discount_by_coupon_code').'.';
