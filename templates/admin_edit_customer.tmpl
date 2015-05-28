@@ -13,16 +13,17 @@ jQuery(document).ready(function ($) {
         $(activeTab).fadeIn(0);
         return false;
     });
+    var lochash=window.location.hash;
     if ($(".error_msg ul.ul-display-error li").length > 0) {
-        var lochash = '#edit_customer';
-        if (lochash != '') {
-            var li_this = $("ul > li").find("a[href='" + lochash + "']").parent();
-            if (li_this.length > 0) {
-                $("ul.tabs li").removeClass("active");
-                $(li_this).addClass("active");
-                $(".tab_content").hide();
-                $(lochash).fadeIn(0);
-            }
+        lochash = '#edit_customer';
+    }
+    if (lochash != '') {
+        var li_this = $("ul > li").find("a[href='" + lochash + "']").parent();
+        if (li_this.length > 0) {
+            $("ul.tabs li").removeClass("active");
+            $(li_this).addClass("active");
+            $(".tab_content").hide();
+            $(lochash).fadeIn(0);
         }
     }
     ###JS_TRIGGERS_EXTRA###
