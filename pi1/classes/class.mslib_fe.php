@@ -4801,14 +4801,36 @@ class mslib_fe {
 					$shipping_cost=$row3['price'];
 				}
 			}
+			//
+			// calculate total costs
+			$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
+			//
 			if (!empty($row3['override_shippingcosts'])) {
+				$old_shipping_costs=$shipping_cost;
 				$shipping_cost=$row3['override_shippingcosts'];
+				// custom code to change the shipping costs based on cart amount
+				if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
+					$steps=explode(",", $shipping_cost);
+					$count=0;
+					foreach ($steps as $step) {
+						// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+						// example setting: 0:6.95,50:0
+						$split=explode(":", $step);
+						if (is_numeric($split[0])) {
+							if ($subtotal>$split[0] and isset($split[1])) {
+								$shipping_cost=$split[1];
+								next();
+							} else {
+								$shipping_cost=$old_shipping_costs;
+							}
+						}
+						$count++;
+					}
+				}
 			}
 			// custom code to change the shipping costs based on cart amount
-			if (strstr($shipping_cost, ",")) {
+			if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
 				$steps=explode(",", $shipping_cost);
-				// calculate total costs
-				$subtotal=mslib_fe::countCartTotalPrice(1, 0, $countries_id);
 				$count=0;
 				foreach ($steps as $step) {
 					// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
