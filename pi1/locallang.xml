@@ -4834,9 +4834,41 @@
 			<label index="copy_from_billing_details">Kopie van factuurgegevens</label>
 			<label index="vat_nn_from_subtotal_nn">BTW %s van %s</label>
 
+
             <label index="repair_missing_attribute_language_values">Repareer ontbrekende attribuutwaardes (voor de overige talen)</label>
-            <label index="admin_label_missing_attribute_languages_values_fixed">Ontbrekende attribuutwaardes zijn gerepareerd.</label>
+            <label index="admin_label_missing_attribute_languages_values_fixed">Ontbrekende attribuutwaardes (voor de overige talen) zijn gerepareerd.</label>
             <label index="the_requested_product_does_not_exist">Helaas is het opgevraagde product niet gevonden</label>
+            <label index="order_payment_status_success">Bestelling betaalstatus succes</label>
+            <label index="order_payment_status_cancelled">Bestelling betaalstatus geannuleerd</label>
+            <label index="order_payment_status_pending">Bestelling betaalstatus in afwachting</label>
+            <label index="order_payment_status_denied">Bestelling betaalstatus geweigerd</label>
+            <label index="order_payment_status_exception">Bestelling betaalstatus uitzondering</label>
+            <label index="order_payment_status_declined">Bestelling betaalstatus afgewezen</label>
+            <label index="merge_attribute_options">Attribuutnamen samenvoegen</label>
+            <label index="merge">Samenvoegen</label>
+            <label index="merge_to">Naar</label>
+            <label index="merge_selected">Geselecteerde samenvoegen</label>
+            <label index="company_is_required">Bedrijfsnaam is verplicht</label>
+            <label index="item">Record</label>
+            <label index="items">Records</label>
+            <label index="merge_attributes">attributen samenvoegen</label>
+            <label index="merge_attribute_values">Attribuutwaardes samenvoegen</label>
+            <label index="create_account_disclaimer">Account aanmaken disclaimer</label>
+            <label index="click_here_if_you_agree_the_create_account_disclaimer">Klik hier om akkoord te gaan met de account aanmaken disclaimer</label>
+            <label index="view_create_account_disclaimer">bekijk account aanmaken disclaimer</label>
+            <label index="you_havent_accepted_the_create_account_disclaimer">Je dient akkoord te gaan met de account aanmaken disclaimer</label>
+            <label index="right_of_withdrawal">Herroepingsrecht</label>
+            <label index="click_here_if_you_agree_the_right_of_withdrawal">Klik hier om akkoord te gaan met het herroepingsrecht</label>
+            <label index="you_havent_accepted_the_right_of_withdrawal">Je dient akkoord te gaan met het herroepingsrecht</label>
+            <label index="view_right_of_withdrawal">bekijk herroepingsrecht</label>
+            <label index="pdf_packingslip_footer_message">PDF pakbon tekst onder de orderregels</label>
+            <label index="pdf_packingslip_header_message">PDF pakbon tekst boven de orderregels</label>
+            <label index="privacy_statement">Privacy statement</label>
+            <label index="view_privacy_statement">Bekijk privacy statement</label>
+            <label index="search_engine_indexing">Zoekmachine product laten indexeren</label>
+            <label index="free_shippingcosts_for_order_amount_above">Gratis verzendkosten voor orderbedrag boven</label>
+            <label index="free_shippingcosts_for_order_weight_above">Free shippingcosts for order weight above</label>
+            <label index="merge_categories">Categorieën samenvoegen</label>
 		</languageKey>
 		<languageKey index="no"></languageKey>
 		<languageKey index="pl"></languageKey>
