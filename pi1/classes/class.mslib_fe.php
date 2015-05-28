@@ -4771,19 +4771,6 @@ class mslib_fe {
 						break;
 					}
 				}
-				if (!empty($row3['override_shippingcosts'])) {
-					$steps=explode(",", $row3['override_shippingcosts']);
-					foreach ($steps as $step) {
-						$cols=explode(":", $step);
-						if (isset($cols[1])) {
-							$current_price=$cols[1];
-						}
-						if ($total_weight<=$cols[0]) {
-							$current_price=$cols[1];
-							break;
-						}
-					}
-				}
 				$shipping_cost=$current_price;
 			} elseif ($row3['shipping_costs_type']=='quantity') {
 				$total_quantity=mslib_fe::countCartQuantity();
@@ -4812,10 +4799,10 @@ class mslib_fe {
 					}
 				} else {
 					$shipping_cost=$row3['price'];
-					if (!empty($row3['override_shippingcosts'])) {
-						$shipping_cost=$row3['override_shippingcosts'];
-					}
 				}
+			}
+			if (!empty($row3['override_shippingcosts'])) {
+				$shipping_cost=$row3['override_shippingcosts'];
 			}
 			// custom code to change the shipping costs based on cart amount
 			if (strstr($shipping_cost, ",")) {
