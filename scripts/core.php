@@ -194,11 +194,6 @@ switch ($this->ms['page']) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_system_clear_cooluri_cache.php');
 		}
 		break;
-	case 'admin_system_rebuild_flat_database':
-		if ($this->ADMIN_USER) {
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_system_rebuild_flat_database.php');
-		}
-		break;
 	case 'admin_system_orphan_files':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_system_orphan_files.php');
