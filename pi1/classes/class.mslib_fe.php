@@ -1781,8 +1781,12 @@ class mslib_fe {
 						if ($readonly) {
 							$output_html[$options['products_options_id']].='<ul>';
 						}
+						$attribute_value_image_select='';
+						if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
+							$attribute_value_image_select=', pa.attribute_image as attribute_local_image, povp.products_options_values_image as attribute_global_image';
+						}
 						// now get the values
-						$str=$GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix', // SELECT ...
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix'.$attribute_value_image_select, // SELECT ...
 							'tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp', // FROM ...
 							'pa.products_id = \''.(int)$products_id.'\' and pa.options_id = \''.$options['products_options_id'].'\' and pov.language_id = \''.$this->sys_language_uid.'\' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id=\''.$options['products_options_id'].'\' and povp.products_options_values_id=pov.products_options_values_id', // WHERE...
 							'', // GROUP BY...
@@ -1807,6 +1811,22 @@ class mslib_fe {
 						$options_values=array();
 						while ($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
 							$options_values[]=$products_options_values;
+							$attribute_value_image='';
+							if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
+								$products_options_values['attribute_image']='';
+								if (!empty($products_options_values['attribute_local_image'])) {
+									$products_options_values['attribute_image']=$products_options_values['attribute_local_image'];
+								} else if (!empty($products_options_values['attribute_global_image'])) {
+									$products_options_values['attribute_image']=$products_options_values['attribute_global_image'];
+								}
+								if (!empty($products_options_values['attribute_image'])) {
+									$image_alt=$options['products_options_name'].': '.$products_options_values['products_options_values_name'];
+									if ($products_options_values['options_values_price']!='0') {
+										$image_alt.=' '.$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
+									}
+									$attribute_value_image='<img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'original').'" alt="'.$image_alt.'" class="attribute_value_images" width="20px" height="20px" />';
+								}
+							}
 							// hook for manipulating the $products_options_values array
 							// hook to let other plugins further manipulate the option values display
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['attributesArray'])) {
@@ -1841,7 +1861,10 @@ class mslib_fe {
 										case 'radio':
 											$items.="\n".'
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'"><span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span></label>
+										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
+											'.$attribute_value_image.'
+											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span>
+										</label>
 										<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
 											if (count($sessionData['attributes'][$options['products_options_id']])) {
 												foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
@@ -1860,7 +1883,10 @@ class mslib_fe {
 										case 'checkbox':
 											$items.="\n".'
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">'.$products_options_values['products_options_values_name'].'</label>
+										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
+										'.$attribute_value_image.'
+										<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span>
+										</label>
 										<input name="attributes['.$options['products_options_id'].'][]" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="checkbox" value="'.$products_options_values['products_options_values_id'].'"';
 											if (count($sessionData['attributes'][$options['products_options_id']])) {
 												foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
