@@ -285,7 +285,7 @@ class mslib_fe {
 			unset($having);
 		}
 		$offset=0;
-		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where);
+		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where,0,array(),array(),'products_relatives');
 		$products=$pageset['products'];
 		if ($pageset['total_rows']>0) {
 			$content='';
