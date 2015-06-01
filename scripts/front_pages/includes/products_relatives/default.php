@@ -150,6 +150,7 @@ foreach ($rel_products as $rel_rs) {
 		$markerArray['ITEM_PRODUCTS_IMAGE_300']='<div class="no_image_50"></div>';
 	}
 	$markerArray['ITEM_PRODUCTS_NAME']=$rel_rs['products_name'].($rel_rs['products_model'] ? ' <br />'.$rel_rs['products_model'] : '');
+	$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION_ENCODED']=htmlspecialchars($rel_rs['products_shortdescription']);
 	$markerArray['ITEM_PRODUCTS_PRICE']=mslib_fe::amount2Cents($final_price);
 
 	$quantity_html='<div class="quantity buttons_added">';

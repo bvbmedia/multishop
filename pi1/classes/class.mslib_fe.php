@@ -285,7 +285,7 @@ class mslib_fe {
 			unset($having);
 		}
 		$offset=0;
-		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where);
+		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where,0,array(),array(),'products_relatives');
 		$products=$pageset['products'];
 		if ($pageset['total_rows']>0) {
 			$content='';
@@ -6503,7 +6503,7 @@ class mslib_fe {
 			}
 			if ($this->ms['MODULES']['FLAT_DATABASE'] and ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelRebuildFlatDatabase'])) {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['label']=$this->pi_getLL('admin_rebuild_flat_database');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_rebuild_flat_database');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_rebuild_flat_database');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_rebuild_flat_database').'?\')"';
 			}
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['label']=$this->pi_getLL('admin_sitemap_generator');
