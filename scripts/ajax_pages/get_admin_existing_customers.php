@@ -39,8 +39,6 @@ if ($this->ADMIN_USER) {
 			}
 		}
 	}
-
-
 	foreach ($customers as $customer_idx=>$customer) {
 		if ($customer['email']) {
 			$itemTitle='';
