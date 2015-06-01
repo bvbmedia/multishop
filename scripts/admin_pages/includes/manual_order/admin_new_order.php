@@ -186,8 +186,8 @@ if (count($products)<0) {
 			$delivery_countries_option=array();
 			foreach ($enabled_countries as $country) {
 				$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']));
-				$billing_countries_option[$cn_localized_name]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
-				$delivery_countries_option[$cn_localized_name]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['delivery_country']==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
+				$billing_countries_option[$cn_localized_name]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['country']==mslib_befe::strtolower($country['cn_short_en']) || mslib_befe::strtolower($country['cn_short_en'])=='netherlands') ? 'selected' : '').'>'.$cn_localized_name.'</option>';
+				$delivery_countries_option[$cn_localized_name]='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.(($user['delivery_country']==mslib_befe::strtolower($country['cn_short_en']) || mslib_befe::strtolower($country['cn_short_en'])=='netherlands') ? 'selected' : '').'>'.$cn_localized_name.'</option>';
 			}
 			ksort($billing_countries_option);
 			ksort($delivery_countries_option);
