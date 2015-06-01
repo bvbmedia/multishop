@@ -1477,7 +1477,7 @@ class mslib_fe {
 		}
 	}
 	public function Crumbar($c, $languages_id='', $output=array(),$page_uid='') {
-		if (!is_numeric($page_uid)) {
+		if (!$this->masterShop && !is_numeric($page_uid)) {
 			$page_uid=$this->showCatalogFromPage;
 		}
 		if (is_numeric($c)) {
@@ -1504,9 +1504,16 @@ class mslib_fe {
 				$string=$this->cObj->data['uid'].'_crum_'.$c.'_'.$languages_id.'_'.md5(serialize($output));
 			}
 			if ($this->ROOTADMIN_USER || !$CACHE_FRONT_END || ($CACHE_FRONT_END && !$content=$Cache_Lite->get($string))) {
+				$filter=array();
+				if ($page_uid) {
+					$filter[]='c.page_uid=\''.$page_uid.'\'';
+				}
+				$filter[]='c.categories_id = \''.$c.'\'';
+				$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
+				$filter[]='c.categories_id = cd.categories_id';
 				$sql=$GLOBALS['TYPO3_DB']->SELECTquery('c.status, c.custom_settings, c.categories_id, c.parent_id, c.page_uid, cd.categories_name, cd.meta_title, cd.meta_description', // SELECT ...
 					'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-					'c.page_uid=\''.$page_uid.'\' and c.categories_id = \''.$c.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id = cd.categories_id', // WHERE...
+					implode(' and ',$filter), // WHERE...
 					'', // GROUP BY...
 					'', // ORDER BY...
 					'' // LIMIT ...
