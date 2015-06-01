@@ -57,6 +57,7 @@ class mslib_fe {
 		$this->REMOTE_ADDR=&$ref->REMOTE_ADDR;
 		$this->cookie=&$ref->cookie;
 		$this->msDebugInfo=&$ref->msDebugInfo;
+		$this->masterShop=&$ref->masterShop;
 		$this->initLanguage($ref->LOCAL_LANG);
 	}
 	/**
