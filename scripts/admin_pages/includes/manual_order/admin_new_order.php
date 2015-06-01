@@ -24,41 +24,7 @@ if (count($products)<0) {
 		}
 		$content.='<div class="account-field">
 			<label>'.$this->pi_getLL('admin_customer').'</label>
-			<select id="manual_order_customer_id" name="customer_id" width="300px"><option value="">'.htmlspecialchars($this->pi_getLL('existing_customer', 'Existing customers')).'</option>';
-		foreach ($customers as $customer) {
-			if ($customer['email']) {
-				$itemTitle='';
-				if ($customer['company']) {
-					$itemTitle=$customer['company'];
-				}
-				if (!$itemTitle && ($customer['name'] && $customer['name'] !=$customer['company'])) {
-					$itemTitle=$customer['name'];
-				}
-				$itemArray=array();
-				if ($customer['name']) {
-					$itemArray[]=array('label'=>$this->pi_getLL('name'),'value'=>$customer['name']);
-				}
-				if ($customer['email']) {
-					$itemArray[]=array('label'=>$this->pi_getLL('email'),'value'=>$customer['email']);
-				}
-				if ($customer['username']) {
-					$itemArray[]=array('label'=>$this->pi_getLL('username'),'value'=>$customer['username']);
-				}
-				if ($customer['address']) {
-					$itemArray[]=array('label'=>$this->pi_getLL('address'),'value'=>$customer['address']);
-				}
-				if ($customer['telephone']) {
-					$itemArray[]=array('label'=>$this->pi_getLL('telephone'),'value'=>$customer['telephone']);
-				}
-				// CUSTOM HTML MARKUP FOR SELECT2
-				$htmlTitle='<h3>'.$itemTitle.'</h3>';
-				foreach ($itemArray as $rowItem) {
-					$htmlTitle.=$rowItem['label'].': <strong>'.$rowItem['value'].'</strong><br/>';
-				}
-				$content.='<option value="'.$customer['uid'].'">'.htmlspecialchars($htmlTitle).'</option>';
-			}
-		}
-		$content.='</select>';
+			<input type="hidden" id="manual_order_customer_id" name="customer_id" width="300px" value="" />';
 		$content.='<input type="hidden" id="proceed_order" value="proceed_order" name="proceed_order"/></div>';
 		$content.='</form>';
 	}
@@ -240,11 +206,50 @@ if (count($products)<0) {
 		$tmpcontent.='<script type="text/javascript">
 			jQuery(document).ready(function($) {
 				$(\'#manual_order_customer_id\').select2({
+					placeholder:\''.htmlspecialchars($this->pi_getLL('existing_customer', 'Existing customers')).'\',
 					width:\'350px\',
-					formatSelection: function(item) {
-						return item.text;
+					minimumInputLength: 0,
+					query: function(query) {
+						$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getExistingCustomers&').'\', {
+							data: {
+								q: query.term
+							},
+							dataType: "json"
+						}).done(function(data) {
+							query.callback({results: data});
+						});
 					},
-					escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+					initSelection: function(element, callback) {
+						var id=$(element).val();
+						if (id!=="") {
+							$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getExistingCustomers&').'\', {
+								data: {
+									preselected_id: id
+								},
+								dataType: "json"
+							}).done(function(data) {
+								callback(data);
+							});
+						}
+					},
+					formatResult: function(data){
+						if (data.text === undefined) {
+							$.each(data, function(i,val){
+								return val.text;
+							});
+						} else {
+							return data.text;
+						}
+					},
+					formatSelection: function(data){
+						if (data.text === undefined) {
+							return data[0].text;
+						} else {
+							return data.text;
+						}
+					},
+					dropdownCssClass: \'existing_customer_dropdown\',
+					escapeMarkup: function (m) { return m; }
 				});
 				$(\'#manual_order_customer_id\').change(function() {
 					if ($(this).val() == \'\') {

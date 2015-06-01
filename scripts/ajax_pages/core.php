@@ -673,6 +673,12 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'getExistingCustomers':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/get_admin_existing_customers.php');
+		}
+		exit();
+		break;
 	case 'retrieveAdminNotificationMessage':
 		if ($this->ADMIN_USER) {
 			$startTime=(time()-(60));
