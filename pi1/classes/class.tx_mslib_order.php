@@ -860,6 +860,46 @@ class tx_mslib_order extends tslib_pibase {
 			}
 		}
 	}
+	function createOrdersProductAttribute($orders_id, $orders_products_id, $attributes) {
+		if ($orders_products_id and is_array($attributes)) {
+			foreach ($attributes as $attribute_key=>$attribute_values) {
+				$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
+//								print_r($row['listtype']);
+				switch ($row['listtype']) {
+					case 'checkbox':
+						$items=$attribute_values;
+						break;
+					default:
+						$items=array($attribute_values);
+						break;
+				}
+				foreach ($items as $item) {
+					$attributes_tax['country_tax']=(string)$item['country_tax'];
+					$attributes_tax['region_tax']=(string)$item['region_tax'];
+					$attributes_tax['tax']=(string)$item['tax'];
+					if ($this->ms['MODULES']['DISABLE_VAT_RATE']) {
+						$attributes_tax['country_tax']=0;
+						$attributes_tax['region_tax']=0;
+						$attributes_tax['tax']=0;
+					}
+					$insertAttributes=array();
+					$insertAttributes['orders_id']=$orders_id;
+					$insertAttributes['orders_products_id']=$orders_products_id;
+					$insertAttributes['products_options']=$item['products_options_name'];
+					$insertAttributes['products_options_values']=$item['products_options_values_name'];
+					$insertAttributes['options_values_price']=$item['options_values_price'];
+					$insertAttributes['price_prefix']=$item['price_prefix'];
+					$insertAttributes['products_options_id']=$item['options_id'];
+					$insertAttributes['products_options_values_id']=$item['options_values_id'];
+					$insertAttributes['attributes_tax_data']=serialize($attributes_tax);
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertAttributes);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
+			}
+		}
+	}
 	function printOrderDetailsTable($order, $template_type='site') {
 		$subtotalIncludingVatArray=array();
 		switch ($template_type) {
