@@ -578,6 +578,7 @@ CREATE TABLE `tx_multishop_orders_products` (
   `sku_code` varchar(50) default '',
   `vendor_code` varchar(50) default '',
   `sort_order` int(11) default '0',
+  `customer_comments` text,
   PRIMARY KEY (`orders_products_id`),
   KEY `orders_id` (`orders_id`),
   KEY `type` (`type`),
