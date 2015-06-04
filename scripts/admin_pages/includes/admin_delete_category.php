@@ -10,7 +10,7 @@ if (is_numeric($_REQUEST['cid'])) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 			exit();
 		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_cms',1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_categories',1));
 			exit();
 		}
 	} else {
@@ -34,7 +34,7 @@ if (is_numeric($_REQUEST['cid'])) {
 		<input name="action" type="hidden" value="delete_category" />
 		<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
 		<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('delete').': '.htmlspecialchars($row['categories_name']).'" /></span>
-	</div>	
+	</div>
 ';
 			$content.='</form>';
 		}
