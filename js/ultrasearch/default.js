@@ -114,16 +114,18 @@ jQuery(document).ready(function ($) {
             } else {
                 pagination_wrapper += '<li class="pagenav_previous"><div class="dyna_button"><span>' + data.resultSet.pagination.prevText + '</span></div></li>';
             }
-            // ITERATE PAGE NUMBERS
-            pagination_wrapper += '<li class="pagenav_number"><ul>';
-            $.each(data.resultSet.pagination.page_number, function (idx, pn) {
-                if (pn.link > 0) {
-                    pagination_wrapper += '<li><div class="dyna_button"><a href="" id="' + pn.number + '" class="ajax_link pagination_button">' + pn.number + '</a></div></li>';
-                } else {
-                    pagination_wrapper += '<li><div class="dyna_button"><span>' + pn.number + '</span></div></li>';
-                }
-            });
-            pagination_wrapper += '</ul></li>';
+            if (data.resultSet.pagination.page_number!=undefined) {
+                // ITERATE PAGE NUMBERS
+                pagination_wrapper += '<li class="pagenav_number"><ul>';
+                $.each(data.resultSet.pagination.page_number, function (idx, pn) {
+                    if (pn.link > 0) {
+                        pagination_wrapper += '<li><div class="dyna_button"><a href="" id="' + pn.number + '" class="ajax_link pagination_button">' + pn.number + '</a></div></li>';
+                    } else {
+                        pagination_wrapper += '<li><div class="dyna_button"><span>' + pn.number + '</span></div></li>';
+                    }
+                });
+                pagination_wrapper += '</ul></li>';
+            }
             // ITERATE PAGE NUMBERS EOF
             if (data.resultSet.pagination.next) {
                 pagination_wrapper += '<li class="pagenav_next"><div class="dyna_button"><a href="" id="' + data.resultSet.pagination.next + '" class="ajax_link pagination_button">' + data.resultSet.pagination.nextText + '</a></div></li>';
@@ -138,15 +140,19 @@ jQuery(document).ready(function ($) {
             pagination_wrapper += "</ul></div>";
             // PAGINATION EOF
             var content = '';
-            if (data.resultSet.current_categories.name!="" && data.resultSet.current_categories.name!=null) {
-                content += '<h1>' + data.resultSet.current_categories.name + '</h1>';
-            }
-            if (data.resultSet.categories_description.header != "") {
-                content += '<div class="category_header_content ">' + data.resultSet.categories_description.header + '</div>';
+            if (data.resultSet.current_categories!=undefined) {
+                if (data.resultSet.current_categories.name!="" && data.resultSet.current_categories.name!=null) {
+                    content += '<h1>' + data.resultSet.current_categories.name + '</h1>';
+                }
+                if (data.resultSet.categories_description.header != "") {
+                    content += '<div class="category_header_content ">' + data.resultSet.categories_description.header + '</div>';
+                }
             }
             content += '<div class="tx-multishop-pi1"><div id="tx_multishop_pi1_core">' + listing_products + '</div></div>' + pagination_wrapper;
-            if (data.resultSet.categories_description.footer != "") {
-                content += '<div class="category_footer_content ">' + data.resultSet.categories_description.footer + '</div>';
+            if (data.resultSet.categories_description!=undefined) {
+                if (data.resultSet.categories_description.footer != "") {
+                    content += '<div class="category_footer_content ">' + data.resultSet.categories_description.footer + '</div>';
+                }
             }
             if (shipping_costs_overview) {
                 content += '<div class="modal" id="shippingCostsModal" tabindex="-1" role="dialog" aria-labelledby="shippingCostModalTitle" aria-hidden="true">';
