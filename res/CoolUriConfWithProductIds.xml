@@ -357,7 +357,19 @@
     </part>	
     <part>
       <parameter>skeyword</parameter>
-    </part>	
+    </part>
+    <!-- TX_NEWS -->
+    <part>
+      <parameter>tx_news_pi1[news]</parameter>
+      <lookindb>
+          <to>SELECT title FROM tx_news_domain_model_news WHERE deleted='0' AND hidden='0' AND (uid=$1 OR l10n_parent=$1) AND sys_language_uid={L=0}</to>
+          <t3conv>1</t3conv>
+      </lookindb>
+    </part>
+    <part>
+      <parameter>tx_news_pi1[@widget_0][currentPage]</parameter>
+    </part>
+    <!-- TX_NEWS EOL -->
   </uriparts>
   <predefinedparts>
     <part>
@@ -381,6 +393,14 @@
 	<part key="tab/([0-9]+)" regexp="1">
       <parameter>tab</parameter>
     </part>
+    <!-- TX_NEWS -->
+    <part>
+      <parameter>tx_news_pi1[controller]</parameter>
+    </part>
+    <part>
+      <parameter>tx_news_pi1[action]</parameter>
+    </part>
+    <!-- TX_NEWS EOL -->
   </predefinedparts>
   <valuemaps>
     <valuemap>
