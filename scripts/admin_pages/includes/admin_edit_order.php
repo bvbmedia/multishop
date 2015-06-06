@@ -73,6 +73,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$updateArray['billing_address']=preg_replace('/ +/', ' ', $updateArray['billing_street_name'].' '.$updateArray['billing_address_number'].' '.$updateArray['billing_address_ext']);
 					$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
 					if (count($updateArray)) {
+						$updateArray['orders_last_modified']=time();
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
@@ -422,6 +423,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				if (count($updateArray)) {
 					$close_window=1;
+					$updateArray['orders_last_modified']=time();
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
@@ -453,6 +455,7 @@ if (is_numeric($this->get['orders_id'])) {
 		}
 		if (count($updateArray)) {
 			$close_window=1;
+			$updateArray['orders_last_modified']=time();
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$orders['expected_delivery_date']=$this->post['expected_delivery_date'];

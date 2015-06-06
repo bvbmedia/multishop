@@ -490,6 +490,7 @@ CREATE TABLE `tx_multishop_orders` (
   `coupon_code`           VARCHAR(255) DEFAULT '',
   `coupon_discount_type`  VARCHAR(25) DEFAULT 'percentage',
   `coupon_discount_value` DECIMAL(24, 14) DEFAULT '0.00000000000000',
+  `orders_last_modified` int(11) default '0',
   PRIMARY KEY (`orders_id`),
   KEY `customer_id` (`customer_id`),
   KEY `bu` (`page_uid`),

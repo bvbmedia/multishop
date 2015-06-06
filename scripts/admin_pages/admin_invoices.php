@@ -61,6 +61,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 								mslib_fe::updateOrderStatusToPaid($order['orders_id']);
 							} else {
 								$updateArray=array('paid'=>0);
+								$updateArray['orders_last_modified']=time();
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$order['orders_id'], $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$updateArray=array('paid'=>0);

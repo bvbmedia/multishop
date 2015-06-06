@@ -983,6 +983,7 @@ class mslib_befe {
 		if (is_numeric($orders_id)) {
 			$updateArray=array();
 			$updateArray['deleted']=1;
+			$updateArray['orders_last_modified']=time();
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
@@ -2933,6 +2934,7 @@ class mslib_befe {
 		$updateArray['status_last_modified']=$status_last_modified;
 		$order['old_status']=$order['status'];
 		$order['status']=$orders_status;
+		$updateArray['orders_last_modified']=time();
 		$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		//send e-mail

@@ -44,6 +44,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 			if ($order['is_proposal']) {
 				$updateArray=array();
 				$updateArray['is_proposal']=0;
+				$updateArray['orders_last_modified']=time();
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$order['orders_id'].'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
@@ -68,6 +69,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 				if (is_numeric($orders_id)) {
 					$updateArray=array();
 					$updateArray['deleted']=1;
+					$updateArray['orders_last_modified']=time();
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}
@@ -117,6 +119,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 							mslib_fe::updateOrderStatusToPaid($orders_id);
 						} elseif ($this->post['tx_multishop_pi1']['action']=='update_selected_orders_to_not_paid') {
 							$updateArray=array('paid'=>0);
+							$updateArray['orders_last_modified']=time();
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
@@ -183,6 +186,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 						$hashcode=md5($orders_id+time());
 						$updateArray=array();
 						$updateArray['hash']=$hashcode;
+						$updateArray['orders_last_modified']=time();
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					} else {

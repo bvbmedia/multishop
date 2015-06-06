@@ -1541,6 +1541,7 @@ switch ($this->ms['page']) {
 						break;
 				}
 				if (count($updateArray)) {
+					$updateArray['orders_last_modified']=time();
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				}

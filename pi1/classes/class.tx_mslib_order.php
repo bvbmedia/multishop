@@ -245,6 +245,7 @@ class tx_mslib_order extends tslib_pibase {
 				if ($row['discount']>0) {
 					$updateArray['discount']=$discount_price;
 				}
+				$updateArray['orders_last_modified']=time();
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$row['orders_id'].'\'', $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				//$sql_update="update tx_multishop_orders set grand_total='".round($order_tax_data['grand_total'], 2)."', orders_tax_data = '".$serial_orders."' where orders_id = ".$row['orders_id'];

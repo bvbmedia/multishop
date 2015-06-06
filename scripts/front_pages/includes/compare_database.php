@@ -665,6 +665,13 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select orders_last_modified from tx_multishop_orders limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_orders` ADD orders_last_modified int(11) NOT NULL default '0'";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
