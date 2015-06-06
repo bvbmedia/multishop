@@ -1089,14 +1089,17 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if ($user['uid']) {
 							$user_check=mslib_fe::getUser($user['uid'], "uid");
 						} else {
-							if ($user['tx_multishop_source_id']) {
+							if (!$user_check && $user['tx_multishop_source_id']) {
 								$user_check=mslib_fe::getUser($user['tx_multishop_source_id'], "tx_multishop_source_id");
 							}
-							if ($user['username']) {
+							if (!$user_check && $user['username']) {
 								$user_check=mslib_fe::getUser($user['username'], "username");
 							}
-							if ($user['email']) {
+							if (!$user_check && $user['email']) {
 								$user_check=mslib_fe::getUser($user['email'], "email");
+							}
+							if (!$user_check && $item['extid']) {
+								$user_check=mslib_fe::getUser($item['extid'], 'extid');
 							}
 						}
 						if ($user_check['uid']) {
