@@ -12,10 +12,10 @@ if ($this->conf['admin_edit_customer_tmpl_path']) {
 $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['details']=$this->cObj->getSubpart($subparts['template'], '###DETAILS###');
-if ($this->post && is_numeric($this->post['tx_multishop_pi1']['cid']) && $this->post['email']) {
+if ($this->post && $this->post['email']) {
 	$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
 	$erno=array();
-	if ($this->post['tx_multishop_pi1']['cid']) {
+	if (is_numeric($this->post['tx_multishop_pi1']['cid'])) {
 		$edit_mode=1;
 		$user=mslib_fe::getUser($this->post['tx_multishop_pi1']['cid']);
 		if ($user['email']<>$this->post['email']) {
