@@ -84,9 +84,9 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 						}
 					}
 					if (!empty($where_str)) {
-						$where[]="(optval.products_options_values_name like '%".addslashes($search_term)."%' or (".$where_str."))";
+						$where[]="(optval.products_options_values_name like '".addslashes($search_term)."%' and ".$where_str.")";
 					} else {
-						$where[]="optval.products_options_values_name like '%".addslashes($search_term)."%'";
+						$where[]="optval.products_options_values_name like '".addslashes($search_term)."%'";
 					}
 					$orderby[]="INSTR('optval.products_options_values_name', '".$search_term."')";
 				} else {
