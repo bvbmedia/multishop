@@ -907,9 +907,7 @@ if ($this->post) {
 	if (isset($this->post['maximum_quantity'])) {
 		$updateArray['maximum_quantity']=$this->post['maximum_quantity'];
 	}
-	if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
-		$updateArray['specials_price_percentage']=$this->post['specials_price_percentage'];
-	}
+	$updateArray['specials_price_percentage']=$this->post['specials_price_percentage'];
 	if ($this->ms['MODULES']['DISPLAY_MANUFACTURERS_ADVICE_PRICE_INPUT']) {
 		if (isset($this->post['manufacturers_advice_price'])) {
 			$updateArray['manufacturers_advice_price']=$this->post['manufacturers_advice_price'];
@@ -1572,7 +1570,7 @@ if ($this->post) {
 		//die();
 		// specials price
 		if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
-			$this->post['specials_new_products_price']=($this->post['products_price']*$this->post['specials_price_percentage'])/100;
+			$this->post['specials_new_products_price']=$this->post['products_price'] - (($this->post['products_price']*$this->post['specials_price_percentage'])/100);
 		}
 		if ($this->post['specials_new_products_price']) {
 			$specials_start_date=0;
@@ -4374,7 +4372,7 @@ if ($this->post) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
 			}
 		}
-		$special_price_percentage_value_selectbox.='</select>';
+		$special_price_percentage_value_selectbox.='</select><label for="specials_price_percentage">' . $this->pi_getLL('discount').'</label>';
 		$subpartArray['###LABEL_PERCENTAGE_SELECTBOX###']=$this->pi_getLL('admin_label_or');
 		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
 		//
