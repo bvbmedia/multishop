@@ -30,7 +30,7 @@ if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($t
 			}
 			break;
 	}
-	header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
 	exit();
 }
 if (is_numeric($this->get['disable']) and is_numeric($this->get['customer_id'])) {
