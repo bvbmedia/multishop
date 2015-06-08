@@ -327,7 +327,7 @@ CREATE TABLE `tx_multishop_invoices` (
 
 CREATE TABLE `tx_multishop_manufacturers` (
   `manufacturers_id` int(5) auto_increment,
-  `manufacturers_name` varchar(32) default '',
+  `manufacturers_name` varchar(64) default '',
   `manufacturers_image` varchar(64) default '',
   `date_added` int(11) default '0',
   `last_modified` int(11) default '0',
