@@ -1844,7 +1844,7 @@ class mslib_befe {
 			`categories_id` int(5) NULL,
 			`categories_name` varchar(150) NULL,
 			`manufacturers_id` int(5) NULL,
-			`manufacturers_name` varchar(32) NULL,
+			`manufacturers_name` varchar(64) NULL,
 			`categories_id_0` int(5) NULL,
 			`categories_name_0` varchar(150) NULL,
 			`categories_id_1` int(5) NULL,

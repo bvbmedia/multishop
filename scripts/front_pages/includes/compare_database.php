@@ -620,6 +620,18 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
+	$str="describe tx_multishop_manufacturers";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='manufacturers_name') {
+			if ($row['Type']!='varchar(64)') {
+				$str="ALTER TABLE  `tx_multishop_manufacturers` CHANGE  `manufacturers_name`  `manufacturers_name` VARCHAR(64);";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				$messages[]=$str;
+			}
+		}
+	}
+
 	$str="select page_uid from tx_multishop_cart_contents limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {

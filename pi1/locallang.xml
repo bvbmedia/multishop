@@ -1083,7 +1083,7 @@
 			<label index="succesfully_updated_user">User has succesfully updated</label>
 			<label index="suppliers">Suppliers</label>
 			<label index="surname_is_required">Surname is a required field. Only characters are allowed.</label>
-			<label index="switch_to">Switch to</label>
+			<label index="switch_to">Go to</label>
 			<label index="tab">tab</label>
 			<label index="table">Table</label>
 			<label index="target_column">Target column</label>
