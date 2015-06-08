@@ -2097,6 +2097,17 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Display customer comments on order product level',
+	'configuration_key'=>'ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS',
+	'configuration_value'=>'0',
+	'description'=>'Display customer comments on order product level',
+	'group_id'=>'9',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

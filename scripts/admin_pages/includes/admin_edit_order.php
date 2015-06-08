@@ -97,6 +97,10 @@ if (is_numeric($this->get['orders_id'])) {
 							$updateArray['products_price']=$this->post['product_price'];
 							$updateArray['final_price']=$this->post['product_price'];
 							$updateArray['products_tax']=$this->post['product_tax'];
+
+							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
+								$updateArray['customer_comments']=$this->post['product_customer_comments'];
+							}
 							// hook for adding new items to details fieldset
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'])) {
 								// hook
@@ -1185,6 +1189,10 @@ if (is_numeric($this->get['orders_id'])) {
 			$order_products_header_data['products_order_status']['class']='cell_status';
 			$order_products_header_data['products_order_status']['value']=$this->pi_getLL('order_status');
 		}
+		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+			$order_products_header_data['products_order_customer_comments']['class']='cell_customer_comments';
+			$order_products_header_data['products_order_customer_comments']['value']=$this->pi_getLL('customer_comments');
+		}
 		// products vat header col
 		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 			$order_products_header_data['products_vat']['class']='cell_products_vat';
@@ -1307,6 +1315,12 @@ if (is_numeric($this->get['orders_id'])) {
 							}
 						}
 						$order_products_body_data['products_status']['value'].='</select>';
+					}
+					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+						// products status col
+						$order_products_body_data['products_customer_comments']['align']='left';
+						$order_products_body_data['products_customer_comments']['class']='cell_products_customer_comments';
+						$order_products_body_data['products_customer_comments']['value']='<input type="text" name="product_customer_comments" value="'.$order['customer_comments'].'" />';
 					}
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						// products vat col
@@ -1453,6 +1467,12 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$order_products_body_data['products_status']['value'].='</select>';
 					}
+					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+						// products status col
+						$order_products_body_data['products_customer_comments']['align']='left';
+						$order_products_body_data['products_customer_comments']['class']='cell_products_customer_comments';
+						$order_products_body_data['products_customer_comments']['value']=$order['customer_comments'];
+					}
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						// products vat col
 						$order_products_body_data['products_vat']['align']='right';
@@ -1503,6 +1523,9 @@ if (is_numeric($this->get['orders_id'])) {
 							// products status col
 							$order_products_body_data['products_status']['value']='';
 						}
+						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+							$order_products_body_data['products_customer_comments']['value']='';
+						}
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 							// products vat col
 							$order_products_body_data['products_vat']['value']='';
@@ -1532,6 +1555,9 @@ if (is_numeric($this->get['orders_id'])) {
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							// products status col
 							$order_products_body_data['products_status']['value']='';
+						}
+						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+							$order_products_body_data['products_customer_comments']['value']='';
 						}
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 							// products vat col
@@ -1613,6 +1639,9 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 									// products status col
 									$order_products_body_data['products_status']['value']='';
+								}
+								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+									$order_products_body_data['products_customer_comments']['value']='';
 								}
 								if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 									// products vat col
@@ -1714,6 +1743,9 @@ if (is_numeric($this->get['orders_id'])) {
 								// products status col
 								$order_products_body_data['products_status']['value']='';
 							}
+							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+								$order_products_body_data['products_customer_comments']['value']='';
+							}
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 								// products vat col
 								$order_products_body_data['products_vat']['value']='';
@@ -1771,6 +1803,9 @@ if (is_numeric($this->get['orders_id'])) {
 								// products status col
 								$order_products_body_data['products_status']['value']='';
 							}
+							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+								$order_products_body_data['products_customer_comments']['value']='';
+							}
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 								// products vat col
 								$order_products_body_data['products_vat']['value']='';
@@ -1811,6 +1846,10 @@ if (is_numeric($this->get['orders_id'])) {
 						// products status col
 						$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
 						$order_products_body_data['products_status']['value']='';
+					}
+					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+						$order_products_body_data['products_customer_comments']['class']='last_edit_product_row_ccomments_col';
+						$order_products_body_data['products_customer_comments']['value']='';
 					}
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 						// products vat col
@@ -1878,6 +1917,9 @@ if (is_numeric($this->get['orders_id'])) {
 				// products status col
 				$order_products_body_data['products_status']['value']='';
 			}
+			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+				$order_products_body_data['products_customer_comments']['value']='';
+			}
 			$customer_country=mslib_fe::getCountryByName($orders['billing_country']);
 			$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name, trg.default_status', // SELECT ...
 				'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
@@ -1943,6 +1985,9 @@ if (is_numeric($this->get['orders_id'])) {
 					// products status col
 					$order_products_body_data['products_status']['value']='';
 				}
+				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+					$order_products_body_data['products_customer_comments']['value']='';
+				}
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					// products vat col
 					$order_products_body_data['products_vat']['value']='';
@@ -1974,6 +2019,10 @@ if (is_numeric($this->get['orders_id'])) {
 				// products status col
 				$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
 				$order_products_body_data['products_status']['value']='';
+			}
+			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']>0) {
+				$order_products_body_data['products_customer_comments']['class']='last_edit_product_row_ccomments_col';
+				$order_products_body_data['products_customer_comments']['value']='';
 			}
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				// products vat col
