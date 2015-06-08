@@ -962,10 +962,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				$this->get['force_delete']=1;
 			}
 			if (isset($this->get['force_delete']) && $this->get['force_delete']==1) {
-				if (!$total_product) {
-					$str="delete from tx_multishop_products_attributes where options_id = ".$option_id." and options_values_id = ".$option_value_id;
-					$GLOBALS['TYPO3_DB']->sql_query($str);
-				}
+				//if (!$total_product) {
+				$str="delete from tx_multishop_products_attributes where options_id = ".$option_id." and options_values_id = ".$option_value_id;
+				$GLOBALS['TYPO3_DB']->sql_query($str);
+				//}
 				$str="delete from tx_multishop_products_options_values_to_products_options where products_options_id = ".$option_id." and products_options_values_id = ".$option_value_id;
 				$GLOBALS['TYPO3_DB']->sql_query($str);
 				$return_data['delete_status']='ok';
