@@ -3,9 +3,9 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 if ($this->post) {
-	$man_target_id=$this->post['mergemanufacturers_target'];
+	$man_target_id=(int) $this->post['mergemanufacturers_target'];
 	foreach ($this->post['mergemanufacturers_source'] as $man_source_id) {
-		if ($man_source_id!=$man_target_id) {
+		if ($man_source_id!=$man_target_id && $man_target_id>0) {
 			//
 			$updateArray=array();
 			$where="manufacturers_id = ".$man_source_id;
@@ -29,7 +29,7 @@ if ($this->post) {
 $manufacturers=mslib_fe::getManufacturers();
 //
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_manufacturers').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_manufacturers').'" method="post" class="merge_attribute_options_form">
+<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_manufacturers').'" method="post" id="merge_attribute_options_form" class="merge_attribute_options_form">
 	<div class="account-field">
 			<ul>
 			';
@@ -49,6 +49,13 @@ $cat_selectbox='<select name="mergemanufacturers_target" id="mergemanufacturers_
 <script type="text/javascript">
 jQuery(document).ready(function(){
 	jQuery("#mergemanufacturers_target").select2();
+	jQuery("#merge_attribute_options_form").submit(function(event){
+		if (jQuery("#mergemanufacturers_target").val()=="0") {
+			alert("please select the manufacturer target");
+			jQuery("#mergemanufacturers_target").addClass("danger");
+			event.preventDefault();
+		}
+	});
 });
 </script>
 ';
