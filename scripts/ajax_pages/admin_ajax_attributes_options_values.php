@@ -833,6 +833,14 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 								);
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', $where, $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								// products level
+								$where="options_id = ".$this->post['products_options_id']." and options_values_id=".$prod_id;
+								$updateArray=array();
+								$updateArray=array(
+									'sort_order_option_value'=>$no
+								);
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								$no++;
 							}
 						}
