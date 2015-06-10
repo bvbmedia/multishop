@@ -251,14 +251,23 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			die();
 		}
 		*/
+		if ($this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']) {
+			$settings=explode(',',$this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']);
+		} else {
+			$settings[]='arial';
+			$settings[]='bold';
+			$settings[]='11';
+			$settings[]='500';
+			$settings[]='795';
+		}
 		$dompdf = new DOMPDF();
 		$dompdf->set_paper('A4');
 		$dompdf->load_html($content, 'UTF-8');
 		$dompdf->render();
 		// ADD PAGE NUMBER IN FOOTER
 		$canvas = $dompdf->get_canvas();
-		$font = Font_Metrics::get_font("arial", "bold");
-		$canvas->page_text(500, 795, $this->pi_getLL('page','page').' {PAGE_NUM} '.$this->pi_getLL('of','of').' {PAGE_COUNT}', $font, 11, array(0,0,0));
+		$font = Font_Metrics::get_font($settings[0], $settings[1]);
+		$canvas->page_text($settings[3], $settings[4], $this->pi_getLL('page','page').' {PAGE_NUM} '.$this->pi_getLL('of','of').' {PAGE_COUNT}', $font, $settings[2], array(0,0,0));
 		// SAVE AS FILE
 		file_put_contents($pdfFilePath, $dompdf->output(array('compress' => 0)));
 	}

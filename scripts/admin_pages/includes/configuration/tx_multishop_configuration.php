@@ -2108,6 +2108,28 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Packingslip PDF page numbering settings',
+	'configuration_key'=>'PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS',
+	'configuration_value'=>'',
+	'description'=>'Change the default page numbering settings. I.e. arial,bold,11,500,795.',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Invoice PDF page numbering settings',
+	'configuration_key'=>'INVOICE_PDF_PAGE_NUMBERING_SETTINGS',
+	'configuration_value'=>'',
+	'description'=>'Change the default page numbering settings. I.e. arial,bold,11,500,795.',
+	'group_id'=>'12',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(
