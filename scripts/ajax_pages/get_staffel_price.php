@@ -110,13 +110,13 @@ if (is_array($this->get['attributes'])) {
 							}
 						}
 						// hook
-						if ($multiple) {
+						//if ($multiple) {
 							$attr['attributes'][$key][]=$row;
 							$original_attr['attributes'][$key][]=$original_row;
-						} else {
-							$attr['attributes'][$key]=$row;
-							$original_attr['attributes'][$key]=$original_row;
-						}
+						//} else {
+							//$attr['attributes'][$key]=$row;
+							//$original_attr['attributes'][$key]=$original_row;
+						//}
 					}
 				}
 			}
@@ -125,16 +125,23 @@ if (is_array($this->get['attributes'])) {
 }
 if (is_array($attr['attributes'])) {
 	foreach ($attr['attributes'] as $attribute_key=>$attribute_values) {
-		$original_attribute_values=$original_attr['attributes'][$attribute_key];
-		if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$attribute_values['options_values_price']=round($attribute_values['options_values_price']*(1+$product['tax_rate']), 2);
-			$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price']*(1+$product['tax_rate']), 2);
+		if (!isset($attribute_values[0])) {
+			$attributes_array=array($attribute_values);
 		} else {
-			$attribute_values['options_values_price']=round($attribute_values['options_values_price'], 2);
-			$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price'], 2);
+			$attributes_array=$attribute_values;
 		}
-		$price=$price+($qty*($attribute_values['price_prefix'].$attribute_values['options_values_price']));
-		$original_price=$original_price+($qty*($original_attribute_values['price_prefix'].$original_attribute_values['options_values_price']));
+		foreach ($attributes_array as $idx=>$attribute_array) {
+			$original_attribute_values=$original_attr['attributes'][$attribute_key][$idx];
+			if ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$attribute_array['options_values_price']=round($attribute_array['options_values_price']*(1+$product['tax_rate']), 2);
+				$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price']*(1+$product['tax_rate']), 2);
+			} else {
+				$attribute_array['options_values_price']=round($attribute_array['options_values_price'], 2);
+				$original_attribute_values['options_values_price']=round($original_attribute_values['options_values_price'], 2);
+			}
+			$price=$price+($qty*($attribute_array['price_prefix'].$attribute_array['options_values_price']));
+			$original_price=$original_price+($qty*($original_attribute_values['price_prefix'].$original_attribute_values['options_values_price']));
+		}
 	}
 }
 $data['old_price_format']='';
