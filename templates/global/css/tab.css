@@ -1055,3 +1055,6 @@ div.popover #adminOrderDetailsFooter { font-size:12px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li ul { margin:10px -5px 0; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li li label { font-weight:bold; padding:0 0 5px; }
 #tx_multishop_pi1_core #tab-container .tab_container .tab_content ul.treeview > li li select { margin-right:10px; }
+
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container #products_feature_highlights.tab_content label { margin:0; padding:7px 10px 0 0; }
+#tx_multishop_pi1_core #tab-container.msadminVerticalTabs .tab_container #products_feature_highlights.tab_content .feature_highlights_value { margin-left:190px; padding-top:5px; }
