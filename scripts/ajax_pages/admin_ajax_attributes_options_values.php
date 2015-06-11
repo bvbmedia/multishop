@@ -21,9 +21,13 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 			$new_option_name=$this->post['new_option_name'];
 			$required=0;
 			$hide_in_cart=0;
+			$hide_in_details_page=0;
 			$listtype='select';
 			if (isset($this->post['required']) && $this->post['required']>0) {
 				$required=1;
+			}
+			if (isset($this->post['hide_in_details_page']) && $this->post['hide_in_details_page']>0) {
+				$hide_in_details_page=1;
 			}
 			if (isset($this->post['hide_in_cart']) && $this->post['hide_in_cart']>0) {
 				$hide_in_cart=1;
@@ -50,6 +54,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 			$insertArray['language_id']=$this->sys_language_uid;
 			$insertArray['products_options_name']=$new_option_name;
 			$insertArray['listtype']=$listtype;
+			$insertArray['hide']=$hide_in_details_page;
 			$insertArray['hide_in_cart']=$hide_in_cart;
 			$insertArray['required']=$required;
 			$insertArray['attributes_values']='0';
@@ -84,6 +89,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				$options_data['option_name']=$new_option_name;
 				$options_data['option_id']=$max_optid;
 				$options_data['required']=$required;
+				$options_data['hide_in_details_page']=$hide_in_details_page;
 				$options_data['hide_in_cart']=$hide_in_cart;
 
 				$selects=array();
@@ -202,7 +208,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id=\''.$opt_id.'\' and language_id = '.$lang_id, $updateArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				} else {
-					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_id, products_options_descriptions, language_id', // SELECT ...
+					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 						"tx_multishop_products_options po", // FROM ...
 						"po.products_options_id='".$opt_id."' and language_id='0'", // WHERE...
 						'', // GROUP BY...

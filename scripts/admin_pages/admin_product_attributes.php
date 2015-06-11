@@ -57,6 +57,9 @@ $content.='</span>';
 $content.='<span class="required">
 		<input name="required" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('required').'
 	</span>';
+$content.='<span class="hide_in_details_page">
+		<input name="hide_in_details_page" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('admin_label_hide_in_details_page').'
+	</span>';
 $content.='<span class="hide_in_cart">
 		<input name="hide_in_cart" type="checkbox" value="1" class="add_new_attributes_options"/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
 	</span>';
@@ -76,6 +79,7 @@ if ($this->post) {
 			$updateArray['products_options_id']=$products_options_id;
 			$updateArray['listtype']=$settings_value;
 			$updateArray['required']=$this->post['required'][$products_options_id];
+			$updateArray['hide']=$this->post['hide_in_details_page'][$products_options_id];
 			$updateArray['hide_in_cart']=$this->post['hide_in_cart'][$products_options_id];
 			$str=$GLOBALS['TYPO3_DB']->SELECTquery('1', // SELECT ...
 				'tx_multishop_products_options', // FROM ...
@@ -174,6 +178,9 @@ if ($rows) {
 		$content.='</span>';
 		$content.='<span class="required">
 			<input name="required['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['required'] ? ' checked' : '').'/> '.$this->pi_getLL('required').'
+		</span>';
+		$content.='<span class="hide_in_details_page">
+			<input name="hide_in_details_page['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide'] ? ' checked' : '').'/> '.$this->pi_getLL('admin_label_hide_in_details_page').'
 		</span>';
 		$content.='<span class="hide_in_cart">
 			<input name="hide_in_cart['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide_in_cart'] ? ' checked' : '').'/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
@@ -452,7 +459,6 @@ if ($rows) {
 					success: function(s) {
 						var ul_option_listings=$("#attribute_listings");
 						var new_option_html=\'\';
-						console.log(s);
 						if (s.status=="OK") {
 							new_option_html+=\'<li id="options_\' + s.option_id + \'">\';
 							new_option_html+=\'<h2>\';
@@ -474,6 +480,13 @@ if ($rows) {
 								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.$this->pi_getLL('required').'\';
 							} else {
 								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" /> '.$this->pi_getLL('required').'\';
+							}
+							new_option_html+=\'</span>\';
+							new_option_html+=\'<span class="hide_in_details_page">\';
+							if (s.hide_in_details_page=="1") {
+								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'\';
+							} else {
+								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" /> '.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'\';
 							}
 							new_option_html+=\'</span>\';
 							new_option_html+=\'<span class="hide_in_cart">\';
