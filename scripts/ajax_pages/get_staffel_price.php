@@ -103,7 +103,8 @@ if (is_array($this->get['attributes'])) {
 							$params=array(
 								'product_id'=>$products_id,
 								'options_id'=>&$key,
-								'row'=>&$row
+								'row'=>&$row,
+								'original_row'=>&$original_row
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'] as $funcRef) {
 								t3lib_div::callUserFunction($funcRef, $params, $this);

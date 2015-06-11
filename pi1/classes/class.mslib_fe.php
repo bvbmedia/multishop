@@ -1818,6 +1818,18 @@ class mslib_fe {
 						$items='';
 						$options_values=array();
 						while ($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
+							$value_desc='';
+							$str_val_desc="SELECT povdesc.* from tx_multishop_products_options_values_to_products_options_desc povdesc, tx_multishop_products_options_values_to_products_options povpo where povdesc.products_options_values_to_products_options_id=povpo.products_options_values_to_products_options_id and povpo.products_options_id='".(int) $options['products_options_id']."' and povpo.products_options_values_id='".$products_options_values['options_values_id']."' and povdesc.language_id='".$this->sys_language_uid."'";
+							$qry_val_desc=$GLOBALS['TYPO3_DB']->sql_query($str_val_desc);
+							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_val_desc)>0) {
+								$row_val_desc=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_val_desc);
+								if (!empty($row_val_desc['description'])) {
+									$value_desc=htmlspecialchars('<div class="valuesdesc_title">'.$products_options_values['products_options_values_name'].'</div><div class="valuesdesc_info">'.$row_val_desc['description'].'</div>');
+									$value_desc='&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="' . $value_desc . '"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>';
+								}
+							}
+
+
 							$options_values[]=$products_options_values;
 							$attribute_value_image='';
 							if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
@@ -1871,7 +1883,7 @@ class mslib_fe {
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
 										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
 											'.$attribute_value_image.'
-											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span>
+											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].$value_desc.'</span>
 										</label>
 										<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
 											if (count($sessionData['attributes'][$options['products_options_id']])) {

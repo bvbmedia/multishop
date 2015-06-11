@@ -174,6 +174,11 @@ switch ($this->ms['page']) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options_values.php');
 		}
 		break;
+	case 'remove_incomplete_p2c_link':
+		if ($this->ADMIN_USER) {
+			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_remove_incomplete_p2c_link.php');
+		}
+		break;
 	case 'admin_system_clear_database':
 		if ($this->ROOTADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_system_clear_database.php');
