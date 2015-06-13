@@ -2042,7 +2042,10 @@ class mslib_befe {
 	}
 	public function loadCurrency($value, $field='cu_iso_nr') {
 		if ($value) {
+			//$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=1;
 			$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', ' static_currencies', $field.'=\''.addslashes($value).'\'', '');
+			//echo $GLOBALS['TYPO3_DB']->debug_lastBuiltQuery."\n";
+			//die();
 			return $data[0];
 		}
 	}

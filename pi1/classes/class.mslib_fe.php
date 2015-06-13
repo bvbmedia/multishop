@@ -44,8 +44,6 @@ class mslib_fe {
 		$this->shop_pid= &$ref->shop_pid;
 		$this->showCatalogFromPage= &$ref->showCatalogFromPage;
 		$this->sys_language_uid= &$ref->sys_language_uid;
-		$this->ADMIN_USER=$ref->ADMIN_USER;
-		$this->ROOTADMIN_USER=$ref->ROOTADMIN_USER;
 		$this->tta_user_info=&$ref->tta_user_info;
 		$this->tta_shop_info=&$ref->tta_shop_info;
 		$this->sys_language_uid=&$ref->sys_language_uid;
@@ -58,6 +56,18 @@ class mslib_fe {
 		$this->cookie=&$ref->cookie;
 		$this->msDebugInfo=&$ref->msDebugInfo;
 		$this->masterShop=&$ref->masterShop;
+		// PERMISSIONS
+		$this->ADMIN_USER=$ref->ADMIN_USER;
+		$this->ROOTADMIN_USER=$ref->ROOTADMIN_USER;
+		$this->CMSADMIN_USER=&$ref->CMSADMIN_USER;
+		$this->CUSTOMERSADMIN_USER=&$ref->CUSTOMERSADMIN_USER;
+		$this->CMSADMIN_USER=&$ref->CMSADMIN_USER;
+		$this->CATALOGADMIN_USER=&$ref->CATALOGADMIN_USER;
+		$this->ORDERSADMIN_USER=&$ref->ORDERSADMIN_USER;
+		$this->STORESADMIN_USER=&$ref->STORESADMIN_USER;
+		$this->SEARCHADMIN_USER=&$ref->SEARCHADMIN_USER;
+		$this->SYSTEMADMIN_USER=&$ref->SYSTEMADMIN_USER;
+		$this->STATISTICSADMIN_USER=&$ref->STATISTICSADMIN_USER;
 		$this->initLanguage($ref->LOCAL_LANG);
 	}
 	/**
