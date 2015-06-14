@@ -242,16 +242,17 @@ if (is_array($products) && count($products)) {
 				}
 			}
 			$count=$start_number;
+			$products_multiplication=0;
 			for ($i=0; $i<$steps; $i++) {
 				if ($current_product['products_multiplication']) {
-					$item=$current_product['products_multiplication'];
+					$products_multiplication=$current_product['products_multiplication'];
 				} else {
 					if ($i) {
-						$item=1;
+						$products_multiplication=1;
 					}
 				}
 				$quantity_html.='<option value="'.$count.'"'.($qty==$count ? ' selected' : '').'>'.$count.'</option>';
-				$count=($count+$item);
+				$count=($count+$products_multiplication);
 			}
 			$quantity_html.='</select>';
 		} else {
