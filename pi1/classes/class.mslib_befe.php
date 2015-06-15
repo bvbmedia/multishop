@@ -594,7 +594,9 @@ class mslib_befe {
 					'original_path'=>$original_path,
 					'target'=>$target,
 					'module_path'=>$module_path,
-					'run_in_background'=>$run_in_background
+					'run_in_background'=>$run_in_background,
+					'folder'=>&$folder,
+					'filename'=>&$filename
 				);
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'])) {
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'] as $funcRef) {
