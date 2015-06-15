@@ -48,16 +48,22 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		if ($num_rows) {
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 				if (!empty($row['products_name'])) {
-					if ((isset($row['product_types']) && $row['product_types']!='normal')) {
-						$row['products_name'].=' ('.$row['product_types'].' ID:'.$row['products_id'].')';
-					}
 					if ($row['products_status']<1) {
 						$row['products_name'].=' [disabled]';
 					}
-					$data[]=array(
-						'id'=>$row['products_id'],
-						'text'=>$row['products_name']
-					);
+					if (isset($row['is_hidden'])) {
+						if (!$row['is_hidden']) {
+							$data[]=array(
+								'id'=>$row['products_id'],
+								'text'=>$row['products_name']
+							);
+						}
+					} else {
+						$data[]=array(
+							'id'=>$row['products_id'],
+							'text'=>$row['products_name']
+						);
+					}
 				}
 			}
 		} else {
