@@ -251,6 +251,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			die();
 		}
 		*/
+		$settings=array();
 		if ($this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']) {
 			$settings=explode(',',$this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']);
 		} else {
@@ -269,6 +270,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$font = Font_Metrics::get_font($settings[0], $settings[1]);
 		$canvas->page_text($settings[3], $settings[4], $this->pi_getLL('page','page').' {PAGE_NUM} '.$this->pi_getLL('of','of').' {PAGE_COUNT}', $font, $settings[2], array(0,0,0));
 		// SAVE AS FILE
+		if ($this->get['tx_multishop_pi1']['forceRecreate'] && file_exists($pdfFilePath)) {
+			unlink($pdfFilePath);
+		}
 		file_put_contents($pdfFilePath, $dompdf->output(array('compress' => 0)));
 	}
 }
