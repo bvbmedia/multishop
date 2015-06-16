@@ -8,11 +8,11 @@ if ($this->post) {
 		if ($cat_source_id!=$cat_target_id) {
 			$cat_source=mslib_fe::getCategory($cat_source_id, 1);
 			//
-			$updateArray=array();
+			/*$updateArray=array();
 			$where="categories_id = ".$cat_target_id;
 			$updateArray['parent_id']=$cat_source['parent_id'];
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', $where, $updateArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
 			//
 			$updateArray=array();
 			$where="parent_id = ".$cat_source_id;
