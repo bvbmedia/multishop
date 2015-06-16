@@ -3510,6 +3510,7 @@ class mslib_fe {
 					// first we load all options
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
+					$count_b=0;
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_payment_methods s', // FROM ...
@@ -3528,11 +3529,12 @@ class mslib_fe {
 							} else {
 								if ($row['negate']>0) {
 									unset($allmethods[$row['code']]);
+									$count_b++;
 								}
 							}
 						}
 					}
-					$count_b=count($allmethods);
+					//$count_b=count($allmethods);
 					if ($count_a==$count_b) {
 						$allmethods=array();
 					}
@@ -3541,6 +3543,7 @@ class mslib_fe {
 					// first we load all options
 					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
+					$count_b=0;
 					foreach ($pids as $pid) {
 						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
@@ -3558,11 +3561,12 @@ class mslib_fe {
 							} else {
 								if ($row['negate']>0) {
 									unset($allmethods[$row['code']]);
+									$count_b++;
 								}
 							}
 						}
 					}
-					$count_b=count($allmethods);
+					//$count_b=count($allmethods);
 					if ($count_a==$count_b) {
 						$allmethods=array();
 					}

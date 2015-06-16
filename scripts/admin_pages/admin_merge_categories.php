@@ -28,6 +28,7 @@ if ($this->post) {
 				'' // LIMIT ...
 			);
 			$categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
+			$product_ids=array();
 			while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
 				$crumbar_identifier=explode(',', $rs['crumbar_identifier']);
 				foreach ($crumbar_identifier as $idx=>$ident) {
@@ -47,6 +48,15 @@ if ($this->post) {
 				$updateArray['crumbar_identifier']=$rs['crumbar_identifier'];
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_to_categories', "products_to_categories_id = ".$rs['products_to_categories_id'], $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				if (!in_array($rs['products_id'], $product_ids)) {
+					$product_ids[]=$rs['products_id'];
+				}
+			}
+			if ($this->ms['MODULES']['FLAT_DATABASE']) {
+				foreach ($product_ids as $product_id) {
+					// if the flat database module is enabled we have to sync the changes to the flat table
+					mslib_befe::convertProductToFlat($product_id);
+				}
 			}
 			//
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_categories', 'categories_id=\''.$cat_source_id.'\'');

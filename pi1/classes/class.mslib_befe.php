@@ -1464,6 +1464,7 @@ class mslib_befe {
 			$where[]='p2c.categories_id=c.categories_id';
 			$where[]='p2c.categories_id=cd.categories_id';
 			$where[]='pd.language_id=cd.language_id';
+			$where[]='p2c.is_deepest=1';
 			$orderby=array();
 			$orderby[]='pd.language_id';
 			$query_elements=array();
