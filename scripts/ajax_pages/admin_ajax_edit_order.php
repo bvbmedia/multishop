@@ -35,10 +35,10 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='p.products_id = \''.addslashes($this->get['preselected_id']).'\'';
 		}
-		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('p.products_id, p.products_model, p.products_status, pd.products_name', // SELECT ...
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('p.*, pd.products_name', // SELECT ...
 			'tx_multishop_products p, tx_multishop_products_description pd', // FROM ...
 			implode(' and ', $where), // WHERE.
-			'', // GROUP BY...
+			'p.products_id', // GROUP BY...
 			'pd.products_name asc, p.products_status asc', // ORDER BY...
 			'' // LIMIT ...
 		);
@@ -51,10 +51,19 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 					if ($row['products_status']<1) {
 						$row['products_name'].=' [disabled]';
 					}
-					$data[]=array(
-						'id'=>$row['products_id'],
-						'text'=>$row['products_name']
-					);
+					if (isset($row['is_hidden'])) {
+						if (!$row['is_hidden']) {
+							$data[]=array(
+								'id'=>$row['products_id'],
+								'text'=>$row['products_name']
+							);
+						}
+					} else {
+						$data[]=array(
+							'id'=>$row['products_id'],
+							'text'=>$row['products_name']
+						);
+					}
 				}
 			}
 		} else {
