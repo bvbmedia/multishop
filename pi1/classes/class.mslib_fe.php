@@ -3511,7 +3511,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadPaymentMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($pids as $pid) {
-						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code', // SELECT ...
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.code, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_payment_methods s', // FROM ...
 							's.status=1 and pmm.type=\''.$type.'\' and pmm.products_id = \''.$pid.'\' and pmm.method_id=s.id', // WHERE...
 							'', // GROUP BY...
@@ -3542,7 +3542,7 @@ class mslib_fe {
 					$allmethods=mslib_fe::loadShippingMethods(0, $user_country, true, true);
 					$count_a=count($allmethods);
 					foreach ($pids as $pid) {
-						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name', // SELECT ...
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery('s.*, d.description, d.name, pmm.negate', // SELECT ...
 							'tx_multishop_products_method_mappings pmm, tx_multishop_shipping_methods s, tx_multishop_shipping_methods_description d', // FROM ...
 							's.status=1 and pmm.type=\''.$type.'\' and pmm.products_id = \''.$pid.'\' and pmm.method_id=s.id and d.language_id=\''.$this->sys_language_uid.'\' and s.id=d.id', // WHERE...
 							'', // GROUP BY...
@@ -4651,6 +4651,7 @@ class mslib_fe {
 			return false;
 		}
 		$product_data=mslib_fe::getProduct($products_id);
+		$product_mappings=mslib_fe::getProductMappedMethods(array($products_id), 'shipping', $countries_id);
 		$shipping_method_data=mslib_fe::loadShippingMethods(0, $countries_id, true, true);
 		$shipping_methods=array();
 		foreach ($shipping_method_data as $shipping_method) {
@@ -4666,137 +4667,139 @@ class mslib_fe {
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry3)) {
 				$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
 				$shipping_method=mslib_fe::getShippingMethod($shipping_method_id, 's.id', $countries_id);
-				if ($row3['shipping_costs_type']=='weight') {
-					$total_weight=($product_data['products_weight']*$products_quantity);
-					$steps=explode(",", $row3['price']);
-					$current_price='';
-					foreach ($steps as $step) {
-						$cols=explode(":", $step);
-						if (isset($cols[1])) {
-							$current_price=$cols[1];
+				if (isset($product_mappings[$shipping_method['code']])) {
+					if ($row3['shipping_costs_type']=='weight') {
+						$total_weight=($product_data['products_weight']*$products_quantity);
+						$steps=explode(",", $row3['price']);
+						$current_price='';
+						foreach ($steps as $step) {
+							$cols=explode(":", $step);
+							if (isset($cols[1])) {
+								$current_price=$cols[1];
+							}
+							if ($total_weight<=$cols[0]) {
+								$current_price=$cols[1];
+								break;
+							}
 						}
-						if ($total_weight<=$cols[0]) {
-							$current_price=$cols[1];
-							break;
+						$shipping_cost=$current_price;
+					} elseif ($row3['shipping_costs_type']=='quantity') {
+						$total_quantity=$products_quantity;
+						$steps=explode(",", $row3['price']);
+						$current_price='';
+						foreach ($steps as $step) {
+							$cols=explode(":", $step);
+							if (isset($cols[1])) {
+								$current_price=$cols[1];
+							}
+							if ($total_quantity<=$cols[0]) {
+								$current_price=$cols[1];
+								break;
+							}
 						}
+						$shipping_cost=$current_price;
+					} else {
+						$shipping_cost=$row3['price'];
 					}
-					$shipping_cost=$current_price;
-				} elseif ($row3['shipping_costs_type']=='quantity') {
-					$total_quantity=$products_quantity;
-					$steps=explode(",", $row3['price']);
-					$current_price='';
-					foreach ($steps as $step) {
-						$cols=explode(":", $step);
-						if (isset($cols[1])) {
-							$current_price=$cols[1];
-						}
-						if ($total_quantity<=$cols[0]) {
-							$current_price=$cols[1];
-							break;
-						}
-					}
-					$shipping_cost=$current_price;
-				} else {
-					$shipping_cost=$row3['price'];
-				}
-				// custom code to change the shipping costs based on cart amount
-				if (strstr($shipping_cost, ",")) {
-					$steps=explode(",", $shipping_cost);
-					// calculate total costs
-					$subtotal=$product_data['final_price'];
-					$count=0;
-					foreach ($steps as $step) {
-						// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
-						// example setting: 0:6.95,50:0
-						$split=explode(":", $step);
-						if (is_numeric($split[0])) {
-							if ($count==0) {
-								if (isset($split[1])) {
+					// custom code to change the shipping costs based on cart amount
+					if (strstr($shipping_cost, ",")) {
+						$steps=explode(",", $shipping_cost);
+						// calculate total costs
+						$subtotal=$product_data['final_price'];
+						$count=0;
+						foreach ($steps as $step) {
+							// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+							// example setting: 0:6.95,50:0
+							$split=explode(":", $step);
+							if (is_numeric($split[0])) {
+								if ($count==0) {
+									if (isset($split[1])) {
+										$shipping_cost=$split[1];
+									} else {
+										$shipping_cost=$split[0];
+										next();
+									}
+								}
+								if ($subtotal>$split[0] and isset($split[1])) {
 									$shipping_cost=$split[1];
-								} else {
-									$shipping_cost=$split[0];
 									next();
 								}
 							}
-							if ($subtotal>$split[0] and isset($split[1])) {
-								$shipping_cost=$split[1];
-								next();
+							$count++;
+						}
+					}
+					// custom code to change the shipping costs based on cart amount
+					if ($shipping_cost) {
+						if ($shipping_method['tax_id'] && $shipping_cost) {
+							$shipping_total_tax_rate=$shipping_method['tax_rate'];
+							if ($shipping_method['country_tax_rate']) {
+								$shipping_country_tax_rate=$shipping_method['country_tax_rate'];
+								$shipping_country_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['country_tax_rate']));
+							} else {
+								$shipping_country_tax_rate=0;
+								$shipping_country_tax=0;
+							}
+							if ($shipping_method['region_tax_rate']) {
+								$shipping_region_tax_rate=$shipping_method['region_tax_rate'];
+								$shipping_region_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['region_tax_rate']));
+							} else {
+								$shipping_region_tax_rate=0;
+								$shipping_region_tax=0;
+							}
+							if ($shipping_region_tax && $shipping_country_tax) {
+								$shipping_tax=$shipping_country_tax+$shipping_region_tax;
+							} else {
+								$shipping_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['tax_rate']));
 							}
 						}
-						$count++;
 					}
+					$handling_cost=0;
+					$handling_tax=0;
+					if (!empty($row3['handling_costs'])) {
+						$handling_cost=$row3['handling_costs'];
+						$percentage_handling_cost=false;
+						if (strpos($handling_cost, '%')!==false) {
+							$handling_cost=str_replace('%', '', $handling_cost);
+							$percentage_handling_cost=true;
+						}
+						if ($percentage_handling_cost) {
+							$tmp_handling_cost=$handling_cost;
+							$subtotal=$product_data['final_price'];
+							if ($subtotal) {
+								$handling_cost=($subtotal/100*$tmp_handling_cost);
+							}
+						}
+						if ($shipping_method['tax_id'] && $handling_cost) {
+							$handling_total_tax_rate=$shipping_method['tax_rate'];
+							if ($shipping_method['country_tax_rate']) {
+								$handling_country_tax_rate=$shipping_method['country_tax_rate'];
+								$handling_country_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['country_tax_rate']));
+							} else {
+								$handling_country_tax_rate=0;
+								$handling_country_tax=0;
+							}
+							if ($shipping_method['region_tax_rate']) {
+								$handling_region_tax_rate=$shipping_method['region_tax_rate'];
+								$handling_region_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['region_tax_rate']));
+							} else {
+								$handling_region_tax_rate=0;
+								$handling_region_tax=0;
+							}
+							if ($handling_region_tax && $handling_country_tax) {
+								$handling_tax=$handling_country_tax+$handling_region_tax;
+							} else {
+								$handling_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['tax_rate']));
+							}
+						}
+					}
+					$shipping_cost+=$handling_cost;
+					$shipping_tax+=$handling_tax;
+					$shipping_methods[$shipping_method['code']]['shipping_costs']=$shipping_cost;
+					$shipping_methods[$shipping_method['code']]['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
+					$unserialize_sm=unserialize($row3['vars']);
+					$shipping_methods[$shipping_method['code']]['deliver_by']=$shipping_method['name'];//$unserialize_sm['name'][0];
+					$shipping_methods[$shipping_method['code']]['product_name']=$product_data['products_name'];
 				}
-				// custom code to change the shipping costs based on cart amount
-				if ($shipping_cost) {
-					if ($shipping_method['tax_id'] && $shipping_cost) {
-						$shipping_total_tax_rate=$shipping_method['tax_rate'];
-						if ($shipping_method['country_tax_rate']) {
-							$shipping_country_tax_rate=$shipping_method['country_tax_rate'];
-							$shipping_country_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['country_tax_rate']));
-						} else {
-							$shipping_country_tax_rate=0;
-							$shipping_country_tax=0;
-						}
-						if ($shipping_method['region_tax_rate']) {
-							$shipping_region_tax_rate=$shipping_method['region_tax_rate'];
-							$shipping_region_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['region_tax_rate']));
-						} else {
-							$shipping_region_tax_rate=0;
-							$shipping_region_tax=0;
-						}
-						if ($shipping_region_tax && $shipping_country_tax) {
-							$shipping_tax=$shipping_country_tax+$shipping_region_tax;
-						} else {
-							$shipping_tax=mslib_fe::taxDecimalCrop($shipping_cost*($shipping_method['tax_rate']));
-						}
-					}
-				}
-				$handling_cost=0;
-				$handling_tax=0;
-				if (!empty($row3['handling_costs'])) {
-					$handling_cost=$row3['handling_costs'];
-					$percentage_handling_cost=false;
-					if (strpos($handling_cost, '%')!==false) {
-						$handling_cost=str_replace('%', '', $handling_cost);
-						$percentage_handling_cost=true;
-					}
-					if ($percentage_handling_cost) {
-						$tmp_handling_cost=$handling_cost;
-						$subtotal=$product_data['final_price'];
-						if ($subtotal) {
-							$handling_cost=($subtotal/100*$tmp_handling_cost);
-						}
-					}
-					if ($shipping_method['tax_id'] && $handling_cost) {
-						$handling_total_tax_rate=$shipping_method['tax_rate'];
-						if ($shipping_method['country_tax_rate']) {
-							$handling_country_tax_rate=$shipping_method['country_tax_rate'];
-							$handling_country_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['country_tax_rate']));
-						} else {
-							$handling_country_tax_rate=0;
-							$handling_country_tax=0;
-						}
-						if ($shipping_method['region_tax_rate']) {
-							$handling_region_tax_rate=$shipping_method['region_tax_rate'];
-							$handling_region_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['region_tax_rate']));
-						} else {
-							$handling_region_tax_rate=0;
-							$handling_region_tax=0;
-						}
-						if ($handling_region_tax && $handling_country_tax) {
-							$handling_tax=$handling_country_tax+$handling_region_tax;
-						} else {
-							$handling_tax=mslib_fe::taxDecimalCrop($handling_cost*($shipping_method['tax_rate']));
-						}
-					}
-				}
-				$shipping_cost+=$handling_cost;
-				$shipping_tax+=$handling_tax;
-				$shipping_methods[$shipping_method['code']]['shipping_costs']=$shipping_cost;
-				$shipping_methods[$shipping_method['code']]['shipping_costs_including_vat']=$shipping_cost+$shipping_tax;
-				$unserialize_sm=unserialize($row3['vars']);
-				$shipping_methods[$shipping_method['code']]['deliver_by']=$shipping_method['name'];//$unserialize_sm['name'][0];
-				$shipping_methods[$shipping_method['code']]['product_name']=$product_data['products_name'];
 			}
 		}
 		if (count($shipping_methods)) {
