@@ -60,7 +60,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$markerArray['###BILLING_COUNTRY###']='';
 		if (mslib_befe::strtolower($order['billing_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
 			// ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
-			$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']);
+			$markerArray['###BILLING_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['billing_country']).'<br/>';
 		}
 		// delivery address
 		if (!empty($order['delivery_company'])) {
@@ -75,7 +75,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$markerArray['###DELIVERY_COUNTRY###']='';
 		if (mslib_befe::strtolower($order['delivery_country'])!=mslib_befe::strtolower($this->tta_shop_info['country'])) {
 			// ONLY PRINT COUNTRY IF THE COUNTRY OF THE CUSTOMER IS DIFFERENT THAN FROM THE SHOP
-			$markerArray['###DELIVERY_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']);
+			$markerArray['###DELIVERY_COUNTRY###']=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order['delivery_country']).'<br/>';
 		}
 		$markerArray['###LABEL_CUSTOMER_ID###']=$this->pi_getLL('admin_customer_id');
 		$markerArray['###CUSTOMER_ID###']=$order['customer_id'];
@@ -106,8 +106,22 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###LABEL_YOUR_VAT_ID###']=$this->pi_getLL('your_vat_id');
 			$markerArray['###YOUR_VAT_ID###']=strtoupper($order['billing_vat_id']);
 		}
-		$markerArray['###BILLING_TELEPHONE###']=$order['billing_telephone'];
-		$markerArray['###DELIVERY_TELEPHONE###']=$order['delivery_telephone'];
+		$markerArray['###BILLING_TELEPHONE###']='';
+		if (!empty($order['billing_telephone'])) {
+			$markerArray['###BILLING_TELEPHONE###']=$order['billing_telephone'].'<br/>';
+		}
+		$markerArray['###BILLING_MOBILE###']='';
+		if (!empty($order['billing_mobile'])) {
+			$markerArray['###BILLING_MOBILE###']=$order['billing_mobile'].'<br/>';
+		}
+		$markerArray['###DELIVERY_TELEPHONE###']='';
+		if (!empty($order['delivery_telephone'])) {
+			$markerArray['###DELIVERY_TELEPHONE###']=$order['delivery_telephone'].'<br/>';
+		}
+		$markerArray['###DELIVERY_MOBILE###']='';
+		if (!empty($order['delivery_mobile'])) {
+			$markerArray['###DELIVERY_MOBILE###']=$order['delivery_mobile'].'<br/>';
+		}
 		$markerArray['###CUSTOMER_COMMENTS###']=$order['customer_comments'];
 		// CMS HEADER
 		$markerArray['###INVOICE_CONTENT_HEADER_MESSAGE###']='';

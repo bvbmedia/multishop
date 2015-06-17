@@ -81,7 +81,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###YOUR_VAT_ID###']=$order['billing_vat_id'];
 		}
 		$markerArray['###BILLING_TELEPHONE###']=$order['billing_telephone'];
+		$markerArray['###BILLING_MOBILE###']=$order['billing_mobile'];
 		$markerArray['###DELIVERY_TELEPHONE###']=$order['delivery_telephone'];
+		$markerArray['###DELIVERY_MOBILE###']=$order['delivery_mobile'];
 		$markerArray['###CUSTOMER_COMMENTS###']=$order['customer_comments'];
 		// CMS HEADER
 		$markerArray['###PACKINGSLIP_CONTENT_HEADER_MESSAGE###']='';
