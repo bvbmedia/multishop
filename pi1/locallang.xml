@@ -4074,7 +4074,7 @@
 			<label index="admin_product_feeds">PRODUCT BESTANDEN</label>
 			<label index="admin_product_has_been_saved">Product is opgeslagen</label>
 			<label index="admin_product_images">PRODUCT AFBEELDINGEN</label>
-			<label index="admin_product_options">PRODUCT OPTIES</label>
+			<label index="admin_product_options">PRODUCTOPTIES</label>
 			<label index="admin_product_units">PRODUCT EENHEDEN</label>
 			<label index="admin_products">PRODUCTEN</label>
 			<label index="admin_products_search">Product zoekopdrachten</label>
@@ -4643,7 +4643,7 @@
 			<label index="product_details">Product omschrijving</label>
 			<label index="product_feeds">Product Feeds</label>
 			<label index="product_has_been_removed">Product is verwijderd</label>
-			<label index="product_options">Product Opties</label>
+			<label index="product_options">Productopties</label>
 			<label index="product_relatives">Gerelateerde artikelen</label>
 			<label index="product_saved">Product opgeslagen</label>
 			<label index="product_shipping_and_handling_cost_overview">Product verzend- en verwerkkosten</label>
