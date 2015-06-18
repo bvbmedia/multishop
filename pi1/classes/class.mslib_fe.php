@@ -1897,9 +1897,11 @@ class mslib_fe {
 										</label>
 										<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
 											if (count($sessionData['attributes'][$options['products_options_id']])) {
-												foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
-													if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
-														$items.=' checked';
+												foreach ($sessionData['attributes'] as $options_id=> $item) {
+													if ($options_id==$options['products_options_id']) {
+														if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
+															$items.=' checked';
+														}
 													}
 												}
 											}
