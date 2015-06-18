@@ -2356,7 +2356,7 @@ class tx_mslib_cart extends tslib_pibase {
 										$subPrices.=mslib_fe::amount2Cents(($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price'])));
 									}
 									$subPrices.='<br />';
-									$item['ITEM_NAME'].='<br />'.$row['products_options_name'].': '.$attribute_values['products_options_values_name'];
+									$item['ITEM_NAME'].='<div class="attributes-items"><span class="attribute-option">'.$row['products_options_name'].':</span><span class="attribute-value">'.$attribute_values['products_options_values_name'].'</span></div>';
 									$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
 								}
 							}
