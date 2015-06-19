@@ -7,33 +7,40 @@ if (!$this->cObj->data['header']) {
 	$this->cObj->data['header']=$this->pi_getLL('catalog');
 }
 $this->box_class="multishop_catalog_box";
-if (intval($this->conf['parentID'])) {
+if (is_numeric($this->conf['parentID'])) {
 	$this->parentID=$this->conf['parentID'];
 } else {
 	$this->parentID=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'parentID', 's_listing');
 }
-if (intval($this->conf['showIfsub'])) {
+if (is_numeric($this->conf['showIfsub'])) {
 	$this->showIfsub=$this->conf['showIfsub'];
 } else {
 	$this->showIfsub=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'showIfsub', 's_listing');
 }
-if (intval($this->conf['maxDEPTH'])) {
+if (is_numeric($this->conf['maxDEPTH'])) {
 	$this->maxDEPTH=$this->conf['maxDEPTH'];
 } else {
 	$this->maxDEPTH=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'maxDEPTH', 's_listing');
 }
-if (intval($this->conf['maxDEPTHifSubs'])) {
+if (is_numeric($this->conf['maxDEPTHifSubs'])) {
 	$this->maxDEPTHifSubs=$this->conf['maxDEPTHifSubs'];
 } else {
 	$this->maxDEPTHifSubs=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'maxDEPTHifSubs', 's_listing');
 }
-if (!intval($this->maxDEPTHifSubs)) {
+if (!is_numeric($this->maxDEPTHifSubs)) {
 	$this->maxDEPTHifSubs=$this->maxDEPTH;
 }
-if (intval($this->conf['hideHeader'])) {
+if (is_numeric($this->conf['hideHeader'])) {
 	$this->hideHeader=$this->conf['hideHeader'];
 } else {
 	$this->hideHeader=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideHeader', 'sDEFAULT');
+}
+$this->expAll=1;
+if (is_numeric($this->conf['expAll'])) {
+	$this->expAll=$this->conf['expAll'];
+} else {
+	// later
+	//$this->expAll=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'expAll', 's_listing');
 }
 if ($this->ms['MODULES']['CACHE_FRONT_END'] and !$this->ms['MODULES']['CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU']) {
 	$this->ms['MODULES']['CACHE_FRONT_END']=0;
@@ -433,9 +440,14 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						$actifsub=0;
 						$act=0;
 						$hasChild=0;
+						$showNextLevel=0;
+						if ($this->expAll) {
+							$showNextLevel=1;
+						}
 						if (is_array($user_crumbar) && $user_crumbar[$nested_level]['id']==$cat['categories_id']) {
 							if ($this->get['categories_id']==$cat['categories_id'] or $this->maxDEPTH==$nested_level+1) {
 								$act=1;
+								$showNextLevel=1;
 							}
 							if ($user_crumbar[($nested_level+1)]) {
 								$actifsub=1;
@@ -449,7 +461,10 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 						$content.='<li ';
 						$class='';
 						$class_h2='';
-						$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
+						$catlist2=array();
+						if ($showNextLevel) {
+							$catlist2=mslib_fe::getSubcatsOnly($cat['categories_id']);
+						}
 						if (count($catlist2)>0) {
 							$class_h2='main';
 							$num=$item_counter_accordion;
