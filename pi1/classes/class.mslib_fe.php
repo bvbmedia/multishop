@@ -1723,6 +1723,7 @@ class mslib_fe {
 			$next_index=0;
 			$index_key=0;
 			while ($options=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+				$warning_holder='';
 				if (!$options['hide']) {
 					$load_default=0;
 					switch ($options['listtype']) {
@@ -1768,10 +1769,12 @@ class mslib_fe {
 							break;
 						case 'radio':
 							$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio';
+							$warning_holder='<div class="required-warning-box required-warning'.$options['products_options_id'].'" style="display:none"></div>';
 							$load_default=1;
 							break;
 						case 'checkbox':
 							$class='opties-field-attribute'.$options['products_options_id'].' opties-field-radio opties-field-checkbox';
+							$warning_holder='<div class="required-warning-box required-warning'.$options['products_options_id'].'" style="display:none"></div>';
 							$load_default=1;
 							break;
 						default:
@@ -1814,9 +1817,9 @@ class mslib_fe {
 						$products_options=$GLOBALS['TYPO3_DB']->sql_query($str);
 						$total_values=$GLOBALS['TYPO3_DB']->sql_num_rows($products_options);
 						if (!$readonly) {
-							$output_html[$options['products_options_id']].='<div class="'.$class.'" id="attribute_item_wrapper_'.$options['products_options_id'].'"><label>'.$options['products_options_name'].':</label><div class="attribute_item_wrapper">';
+							$output_html[$options['products_options_id']].='<div class="'.$class.'" id="attribute_item_wrapper_'.$options['products_options_id'].'"><label>'.$options['products_options_name'].':</label>'.$warning_holder.'<div class="attribute_item_wrapper">';
 						} else {
-							$output_html[$options['products_options_id']].='<li><label>'.$options['products_options_name'].':</label> ';
+							$output_html[$options['products_options_id']].='<li><label>'.$options['products_options_name'].':</label>';
 						}
 						// SHOW_ATTRIBUTE_DESCRIPTION
 						if (SHOW_ATTRIBUTE_DESCRIPTION && !empty($products_options_name_values['description'])) {
@@ -1827,6 +1830,7 @@ class mslib_fe {
 						$next_index2=0;
 						$items='';
 						$options_values=array();
+						$value_counter=1;
 						while ($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
 							$value_desc='';
 							$str_val_desc="SELECT povdesc.* from tx_multishop_products_options_values_to_products_options_desc povdesc, tx_multishop_products_options_values_to_products_options povpo where povdesc.products_options_values_to_products_options_id=povpo.products_options_values_to_products_options_id and povpo.products_options_id='".(int) $options['products_options_id']."' and povpo.products_options_values_id='".$products_options_values['options_values_id']."' and povdesc.language_id='".$this->sys_language_uid."'";
@@ -1904,8 +1908,12 @@ class mslib_fe {
 														}
 													}
 												}
+											} else {
+												if ($value_counter===1) {
+													//$items.=' checked';
+												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
+											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
 										<div class="attribute_item_price">';
 											if ($products_options_values['options_values_price']!='0') {
 												$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
@@ -1927,7 +1935,7 @@ class mslib_fe {
 													}
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput" '.($options['required'] ? 'required="required"' : '').' />
+											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
 										<div class="attribute_item_price">';
 											if ($products_options_values['options_values_price']!='0') {
 												$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
@@ -1963,6 +1971,7 @@ class mslib_fe {
 								}
 							}
 							$next_index2++;
+							$value_counter++;
 						}
 						if ($total_values>0) {
 							if (!$readonly) {
