@@ -428,3 +428,8 @@ filter             :progid:DXImageTransform.Microsoft.gradient(startColorStr='#1
 .ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input .redactor-toolbar li { display:inline-block; }
 
 ul.normalListContent li { background:url(../images/bullet_black.gif) left 6px no-repeat; padding-left:10px; }
+
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input table { display:table; border-collapse:collapse; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input table tr { display:table-row; }
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input table th,
+.ui-dialog-content.ui-widget-content .edit_dialog_input_options .edit_dialog_input table td { display:table-cell; }
