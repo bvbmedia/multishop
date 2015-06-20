@@ -1311,6 +1311,9 @@ class mslib_fe {
 				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
 				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
 					$mail->SMTPAuth=true;
+					if(!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])){
+						$mail->SMTPSecure=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'];
+					}
 					$mail->Username=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'];
 					$mail->Password=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'];
 				}
@@ -1386,6 +1389,9 @@ class mslib_fe {
 				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
 				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
 					$mail->SMTPAuth=true;
+					if(!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])){
+						$mail->SMTPSecure=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'];
+					}
 					$mail->Username=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'];
 					$mail->Password=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_password'];
 				}
