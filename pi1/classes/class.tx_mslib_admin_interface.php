@@ -194,16 +194,17 @@ class tx_mslib_admin_interface extends tslib_pibase {
 			$p=0;
 			$queryData['offset']=0;
 		}
+		if ($params['msDebug']) {
+			$this->msDebug=1;
+		}
 		//$this->msDebug=1;
 		//echo print_r($queryData);
 		//die();
 		$pageset=mslib_fe::getRecordsPageSet($queryData);
-		/*
 		if ($this->msDebug) {
 			echo $this->msDebugInfo;
 			die();
 		}
-		*/
 		//echo print_r($queryData);
 		//die();
 		if (count($pageset['dataset'])) {
