@@ -40,10 +40,21 @@ switch ($this->ms['page']) {
 	case 'get_shoppingcart_shippingmethod_overview':
 		$return_data=array();
 		$country_cn_iso_nr=$this->post['tx_multishop_pi1']['country_id'];
+		//
+		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+		$products=$cart['products'];
+		$pids=array();
+		foreach ($products as $product) {
+			$pids[]=$product['products_id'];
+		}
+		$product_mappings=mslib_fe::getProductMappedMethods($pids, 'shipping', $country_cn_iso_nr);
+		//
 		$shipping_methods=mslib_fe::loadShippingMethods(0, $country_cn_iso_nr, true, true);
 		$return_data['shipping_methods']=array();
 		foreach ($shipping_methods as $shipping_method) {
-			$return_data['shipping_methods'][]=$shipping_method;
+			if (isset($product_mappings[$shipping_method['code']])) {
+				$return_data['shipping_methods'][]=$shipping_method;
+			}
 		}
 		echo json_encode($return_data);
 		exit();
@@ -66,16 +77,18 @@ switch ($this->ms['page']) {
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
 		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id);
 		$count_cart_incl_vat=0;
-		if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-			$count_cart_incl_vat=1;
-			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs_including_vat'];
-			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs_including_vat']);
-		} else {
-			$return_data['shipping_cost']=$shipping_cost_data['shipping_costs'];
-			$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost_data['shipping_costs']);
+		foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
+			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$count_cart_incl_vat=1;
+				$return_data['shipping_cost']=$shipping_cost['shipping_costs_including_vat'];
+				$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
+			} else {
+				$return_data['shipping_cost']=$shipping_cost['shipping_costs'];
+				$return_data['shipping_costs_display']=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+			}
+			$return_data['shipping_method']=$shipping_cost;
+			$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr'])+$return_data['shipping_cost']);
 		}
-		$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr'])+$return_data['shipping_cost']);
-		$return_data['shipping_method']=$shipping_cost_data;
 		echo json_encode($return_data);
 		exit();
 		break;
