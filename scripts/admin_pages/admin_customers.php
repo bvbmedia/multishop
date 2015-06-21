@@ -25,7 +25,7 @@ if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($t
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'])) {
 				$params=array();
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			break;
@@ -395,7 +395,7 @@ $extra_selected_customers_action_js_filters='';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersExtraJSForSelectedActions'])) {
 	$params=array('extra_selected_customers_action_js_filters'=>$extra_selected_customers_action_js_filters);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersExtraJSForSelectedActions'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='

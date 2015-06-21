@@ -10,7 +10,7 @@ $qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 $row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
 $countries_id=$row3['cn_iso_nr'];
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-$mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
+$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
 
@@ -106,7 +106,7 @@ foreach ($payment_methods as $payment_name=>$payment_data) {
 			'payment_data'=>&$payment_data
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/ajax_pages/get_country_payment_methods.php']['paymentMethodDataArray'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$k++;

@@ -23,7 +23,7 @@ if (!defined('TYPO3_MODE')) {
  * [CLASS/FUNCTION INDEX of SCRIPT]
  * Hint: use extdeveval to insert/update function index above.
  */
-class tx_mslib_admin_import extends tslib_pibase {
+class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	function initLanguage($ms_locallang) {
 		$this->pi_loadLL();
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
@@ -240,7 +240,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 							if ($that->conf['debugEnabled']=='1') {
 								$logString='Load records for importer query: '.$str;
-								t3lib_div::devLog($logString, 'multishop', -1);
+								 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 							}
 							$datarows=array();
 							while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -680,7 +680,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 								'processed'=>&$processed
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['TmpproductImportParserTemplateProc'] as $funcRef) {
-								t3lib_div::callUserFunction($funcRef, $params, $that);
+								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $that);
 							}
 						}
 						*/
@@ -718,7 +718,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								if ($that->conf['debugEnabled']=='1') {
 									$logString='Load records for importer query: '.$str;
-									t3lib_div::devLog($logString, 'multishop', -1);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 								}
 								$datarows=array();
 								while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -920,7 +920,7 @@ class tx_mslib_admin_import extends tslib_pibase {
 									'content'=>&$content
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_import.php']['msAdminImportItemIterateProc'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $that);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $that);
 								}
 							}
 						}

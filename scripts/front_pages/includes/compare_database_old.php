@@ -4323,7 +4323,7 @@ if ($rows) {
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-			$mslib_order=t3lib_div::makeInstance('tx_mslib_order');
+			$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 			$mslib_order->init($this);
 			$mslib_order->repairOrder($row['orders_id']);
 		}
@@ -4413,7 +4413,7 @@ if ($rows) {
 							$dirs[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/'.$imageType.'/original/'.$folder;
 							foreach ($dirs as $dir) {
 								if (!is_dir($dir)) {
-									t3lib_div::mkdir($dir);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($dir);
 								}
 							}
 							if (copy($v1_folder, $v3_folder)) {

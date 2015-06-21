@@ -121,7 +121,7 @@ foreach ($products as $product) {
 			'product'=>&$product
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_listing']['specialsProductsListingHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof
@@ -137,7 +137,7 @@ if ($specials_items and $this->ajax_content) {
 			'subpartArray'=>&$subpartArray
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_listing']['specialsListingPostHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof

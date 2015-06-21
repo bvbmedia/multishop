@@ -178,7 +178,7 @@ if ($this->post) {
 				'uid'=>&$GLOBALS["TSFE"]->fe_user->user['uid']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -191,7 +191,7 @@ if ($this->post) {
 				'uid'=>&$GLOBALS["TSFE"]->fe_user->user['uid']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -615,7 +615,7 @@ if ($this->post) {
 			'markerArray'=>&$markerArray
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof

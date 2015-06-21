@@ -123,7 +123,7 @@ class mslib_befe {
 				'this'=>&$this
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['loadConfiguration'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		return $settings;
@@ -149,7 +149,7 @@ class mslib_befe {
 					'run_in_background'=>$run_in_background
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeCategoryImage'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
 				if ($run_in_background) {
@@ -169,7 +169,7 @@ class mslib_befe {
 							switch($ext) {
 								case 'png':
 									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
-									$command=t3lib_div::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									$info=shell_exec($command);
 									if (strstr($info,'Alpha:')) {
 										// THIS IMAGE HAS A TRANSPARANT BACKGROUND SO WE MAY NOT CONVERT IT
@@ -185,7 +185,7 @@ class mslib_befe {
 											$i++;
 										} while (file_exists($newOriginal_path));
 									}
-									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
 										if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -212,7 +212,7 @@ class mslib_befe {
 											$i++;
 										} while (file_exists($newOriginal_path));
 									}
-									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
 										if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -237,12 +237,12 @@ class mslib_befe {
 				$dirs[]=PATH_site.$this->ms['image_paths']['categories']['normal'].'/'.$folder;
 				foreach ($dirs as $dir) {
 					if (!is_dir($dir)) {
-						t3lib_div::mkdir($dir);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($dir);
 					}
 				}
 				$target=PATH_site.$this->ms['image_paths']['categories']['normal'].'/'.$folder.'/'.$filename;
 				copy($original_path, $target);
-				$commands[]=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 				if ($this->ms['MODULES']['CATEGORY_IMAGE_SHAPED_CORNERS'] and file_exists($GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite')) {
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthWest '.$module_path.'templates/images/curves/lb.png "'.$target.'" "'.$target.'"';
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthEast '.$module_path.'templates/images/curves/rb.png "'.$target.'" "'.$target.'"';
@@ -271,7 +271,7 @@ class mslib_befe {
 					'commands'=>$commands
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeCategoryImagePostProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			return $filename;
@@ -291,7 +291,7 @@ class mslib_befe {
 					'run_in_background'=>$run_in_background
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeManufacturerImage'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
 				if ($run_in_background) {
@@ -311,7 +311,7 @@ class mslib_befe {
 							switch($ext) {
 								case 'png':
 									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
-									$command=t3lib_div::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									$info=shell_exec($command);
 									if (strstr($info,'Alpha:')) {
 										// THIS IMAGE HAS A TRANSPARANT BACKGROUND SO WE MAY NOT CONVERT IT
@@ -327,7 +327,7 @@ class mslib_befe {
 											$i++;
 										} while (file_exists($newOriginal_path));
 									}
-									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
 										if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -354,7 +354,7 @@ class mslib_befe {
 											$i++;
 										} while (file_exists($newOriginal_path));
 									}
-									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
 										if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -379,12 +379,12 @@ class mslib_befe {
 				$dirs[]=PATH_site.$this->ms['image_paths']['manufacturers']['normal'].'/'.$folder;
 				foreach ($dirs as $dir) {
 					if (!is_dir($dir)) {
-						t3lib_div::mkdir($dir);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($dir);
 					}
 				}
 				$target=PATH_site.$this->ms['image_paths']['manufacturers']['normal'].'/'.$folder.'/'.$filename;
 				copy($original_path, $target);
-				$commands[]=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 				if ($this->ms['MODULES']['CATEGORY_IMAGE_SHAPED_CORNERS'] and file_exists($GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite')) {
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthWest '.$module_path.'templates/images/curves/lb.png "'.$target.'" "'.$target.'"';
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthEast '.$module_path.'templates/images/curves/rb.png "'.$target.'" "'.$target.'"';
@@ -411,7 +411,7 @@ class mslib_befe {
 					'commands'=>$commands
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeManufacturerImagePostProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			return $filename;
@@ -449,7 +449,7 @@ class mslib_befe {
 					'run_in_background'=>$run_in_background
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImage'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
 				if ($run_in_background) {
@@ -469,7 +469,7 @@ class mslib_befe {
 							switch($ext) {
 								case 'png':
 									// IMAGE IS PNG, BUT SOMETIMES JPEG IS REDUCING THE FILESIZE. LETS TRY
-									$command=t3lib_div::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('identify', ' -verbose "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									$info=shell_exec($command);
 									if (strstr($info,'Alpha:')) {
 										// THIS IMAGE HAS A TRANSPARANT BACKGROUND SO WE MAY NOT CONVERT IT
@@ -485,7 +485,7 @@ class mslib_befe {
 											$i++;
 										} while (file_exists($newOriginal_path));
 									}
-									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
 										if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -512,7 +512,7 @@ class mslib_befe {
 											$i++;
 										} while (file_exists($newOriginal_path));
 									}
-									$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+									$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$newOriginal_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 									exec($command);
 									if (file_exists($newOriginal_path)) {
 										if (filesize($original_path) > filesize($newOriginal_path)) {
@@ -532,7 +532,7 @@ class mslib_befe {
 				}
 				if (filesize($original_path) > 16384) {
 					// IF ORIGINAL VARIANT IS BIGGER THAN 2 MBYTE RESIZE IT FIRST
-					$command=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+					$command= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "1500x1500>" "'.$original_path.'" "'.$original_path.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					exec($command);
 				}
 				$folder=mslib_befe::getImagePrefixFolder($filename);
@@ -544,7 +544,7 @@ class mslib_befe {
 				$dirs[]=PATH_site.$this->ms['image_paths']['products']['normal'].'/'.$folder;
 				foreach ($dirs as $dir) {
 					if (!is_dir($dir)) {
-						t3lib_div::mkdir($dir);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($dir);
 					}
 				}
 				$target=PATH_site.$this->ms['image_paths']['products']['300'].'/'.$folder.'/'.$filename;
@@ -552,7 +552,7 @@ class mslib_befe {
 				// 300 thumbnail settings
 				$maxwidth=$this->ms['product_image_formats'][300]['width'];
 				$maxheight=$this->ms['product_image_formats'][300]['height'];
-				$commands[]=t3lib_div::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', $params.' -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 				if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthWest '.$module_path.'templates/images/curves/lb.png "'.$target.'" "'.$target.'"';
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthEast '.$module_path.'templates/images/curves/rb.png "'.$target.'" "'.$target.'"';
@@ -564,7 +564,7 @@ class mslib_befe {
 				// 200 thumbnail settings
 				$maxwidth=$this->ms['product_image_formats'][200]['width'];
 				$maxheight=$this->ms['product_image_formats'][200]['height'];
-				$commands[]=t3lib_div::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 				if ($this->ms['MODULES']['PRODUCT_IMAGE_SHAPED_CORNERS']) {
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthWest '.$module_path.'templates/images/curves/lb.png "'.$target.'" "'.$target.'"';
 					$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -gravity NorthEast '.$module_path.'templates/images/curves/rb.png "'.$target.'" "'.$target.'"';
@@ -576,19 +576,19 @@ class mslib_befe {
 				// 100 thumbnail settings
 				$maxwidth=$this->ms['product_image_formats'][100]['width'];
 				$maxheight=$this->ms['product_image_formats'][100]['height'];
-				$commands[]=t3lib_div::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 				$target=PATH_site.$this->ms['image_paths']['products']['50'].'/'.$folder.'/'.$filename;
 				copy($original_path, $target);
 				// 50 thumbnail settings
 				$maxwidth=$this->ms['product_image_formats'][50]['width'];
 				$maxheight=$this->ms['product_image_formats'][50]['height'];
-				$commands[]=t3lib_div::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 				$target=PATH_site.$this->ms['image_paths']['products']['normal'].'/'.$folder.'/'.$filename;
 				copy($original_path, $target);
 				// normal thumbnail settings
 				$maxwidth=$this->ms['product_image_formats']['enlarged']['width'];
 				$maxheight=$this->ms['product_image_formats']['enlarged']['height'];
-				$commands[]=t3lib_div::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+				$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 
 				$params=array(
 					'original_path'=>$original_path,
@@ -600,14 +600,14 @@ class mslib_befe {
 				);
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'])) {
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImageWatermarkHook'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				} else {
 					if (!$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT']) {
-						$commands[]=t3lib_div::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+						$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 					} else {
-						exec(t3lib_div::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
-						//t3lib_utility_Command::exec(t3lib_div::imageMagickCommand('convert', '-quality 90 -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target .'" "'.$target .'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
+						exec( \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target.'" "'.$target.'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
+						//t3lib_utility_Command::exec( \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-quality 90 -resize "'.$maxwidth.'x'.$maxheight.'>" "'.$target .'" "'.$target .'"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']));
 						$newsize=@getimagesize($target);
 						$text_width=$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_WIDTH'];
 						$text_height=$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_HEIGHT'];
@@ -654,8 +654,8 @@ class mslib_befe {
 							$tmppath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/cache';
 							// watermark bugfix
 							// removing the width, to make it proportional width based on height, so the text are always visible in any image size
-							$commands[]=t3lib_div::imageMagickCommand('convert', '-resize x'.$final_height.' xc:black -font "'.$font_file.'" -pointsize '.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'].' -fill white -draw "text '.$pos_x.','.$pos_y.' \''.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'].'\'" -shade '.$text_width.'x'.($text_height-30).'  "'.$tmppath.'/beveled_'.$savenametest.'.jpg"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
-							$commands[]=t3lib_div::imageMagickCommand('convert', '-resize x'.$final_height.' xc:black -font "'.$font_file.'" -pointsize '.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'].' -fill white -draw "text '.$pos_x.','.$pos_y.' \''.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'].'\'" -shade '.$text_width.'x'.$text_height.'  -negate -normalize  "'.$tmppath.'/beveled_mask_'.$savenametest.'.jpg"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+							$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-resize x'.$final_height.' xc:black -font "'.$font_file.'" -pointsize '.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'].' -fill white -draw "text '.$pos_x.','.$pos_y.' \''.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'].'\'" -shade '.$text_width.'x'.($text_height-30).'  "'.$tmppath.'/beveled_'.$savenametest.'.jpg"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
+							$commands[]= \TYPO3\CMS\Core\Utility\GeneralUtility::imageMagickCommand('convert', '-resize x'.$final_height.' xc:black -font "'.$font_file.'" -pointsize '.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE'].' -fill white -draw "text '.$pos_x.','.$pos_y.' \''.$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'].'\'" -shade '.$text_width.'x'.$text_height.'  -negate -normalize  "'.$tmppath.'/beveled_mask_'.$savenametest.'.jpg"', $GLOBALS['TYPO3_CONF_VARS']['GFX']['im_path_lzw']);
 							$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -compose CopyOpacity "'.$tmppath.'/beveled_mask_'.$savenametest.'.jpg'.'" "'.$tmppath.'/beveled_'.$savenametest.'.jpg'.'" "'.$tmppath.'/beveled_trans_'.$savenametest.'.png"';
 							$commands[]=$GLOBALS['TYPO3_CONF_VARS']['GFX']["im_path"].'composite -quality '.$GLOBALS['TYPO3_CONF_VARS']['GFX']['jpg_quality'].' "'.$tmppath.'/beveled_trans_'.$savenametest.'.png" "'.$target.'" "'.$target.'"';
 							$commands[]="rm -f ".$tmppath.'/beveled_'.$savenametest.'.jpg';
@@ -696,7 +696,7 @@ class mslib_befe {
 					'commands'=>$commands
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['resizeProductImagePostProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			return $filename;
@@ -858,7 +858,7 @@ class mslib_befe {
 					'products_id'=>&$products_id
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableProductPreHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			//hook to let other plugins further manipulate the create table query eol
@@ -876,7 +876,7 @@ class mslib_befe {
 					'products_id'=>&$products_id
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableProductPostHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			//hook to let other plugins further manipulate the create table query eol
@@ -893,7 +893,7 @@ class mslib_befe {
 					'products_id'=>&$products_id
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableProductPreHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			//hook to let other plugins further manipulate the create table query eol
@@ -914,7 +914,7 @@ class mslib_befe {
 					'this'=>&$this
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableCustomer'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
 				$disable=0;
@@ -925,7 +925,7 @@ class mslib_befe {
 						'disable'=>&$disable
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['enableCustomerPreHook'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				$updateArray=array();
@@ -948,7 +948,7 @@ class mslib_befe {
 					'disable'=>&$disable
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['disableCustomerPreHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			$updateArray=array();
@@ -970,7 +970,7 @@ class mslib_befe {
 					'deleted'=>&$deleted
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteCustomerPreHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			$updateArray['deleted']=$deleted;
@@ -1005,7 +1005,7 @@ class mslib_befe {
 							'categories_id'=>&$categories_id
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// just delete the relation to the category
@@ -1037,7 +1037,7 @@ class mslib_befe {
 							'categories_id'=>''
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPreHook'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
@@ -1077,7 +1077,7 @@ class mslib_befe {
 							'products_id'=>$products_id
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteProductPostHook'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					return 1;
@@ -1161,7 +1161,7 @@ class mslib_befe {
 					'categories_id'=>$categories_id
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['deleteCategoryPostHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 		}
@@ -1346,7 +1346,7 @@ class mslib_befe {
 								$filename=mslib_fe::rewritenamein($item['products_name']).'.'.$ext;
 								$folder=mslib_befe::getImagePrefixFolder($filename);
 								if (!is_dir(PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-									t3lib_div::mkdir(PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder);
 								}
 								$folder.='/';
 								$target=PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -1355,7 +1355,7 @@ class mslib_befe {
 										$filename=mslib_fe::rewritenamein($item['products_name']).($ix>0 ? '-'.$ix : '').'.'.$ext;
 										$folder=mslib_befe::getImagePrefixFolder($filename);
 										if (!is_dir(PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-											t3lib_div::mkdir(PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder);
+											 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder);
 										}
 										$folder.='/';
 										$target=PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -1429,7 +1429,7 @@ class mslib_befe {
 				'this'=>&$this,
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlat'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		} else {
 			if ($table_name=='tx_multishop_products_flat') {
@@ -1481,7 +1481,7 @@ class mslib_befe {
 					'query_elements'=>&$query_elements
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlatPreFetchProductHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -1494,17 +1494,17 @@ class mslib_befe {
 			);
 			if ($this->debug) {
 				$logString=$str;
-				t3lib_div::devLog($logString, 'multishop',0);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',0);
 			}
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 			if ($this->conf['debugEnabled']=='1') {
 				$logString='convertProductToFlat query: '.$str.'.';
-				t3lib_div::devLog($logString, 'multishop',0);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',0);
 			}
 			if (!$rows) {
 				$logString='convertProductToFlat fetch query returned zero results. Query: '.$str;
-				t3lib_div::devLog($logString, 'multishop',3);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',3);
 			}
 			if ($rows) {
 				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -1629,7 +1629,7 @@ class mslib_befe {
 							'table_name'=>&$table_name
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlatPreInsert'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
@@ -1643,12 +1643,12 @@ class mslib_befe {
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					if (!$res) {
 						$logString='Query failed! Query: '.$query;
-						t3lib_div::devLog($logString, 'multishop',3);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',3);
 					}
 					if ($this->debug) {
 						error_log($query);
 						$logString=$query;
-						t3lib_div::devLog($logString, 'multishop',0);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',0);
 					}
 					// custom hook that can be controlled by third-party plugin
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlatProcInsert'])) {
@@ -1659,7 +1659,7 @@ class mslib_befe {
 							'table_name'=>&$table_name
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['convertProductToFlatProcInsert'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
@@ -1908,7 +1908,7 @@ class mslib_befe {
 				'additional_indexes'=>&$additional_indexes
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabaseQueryProc'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		$str.="PRIMARY KEY (`id`),
@@ -1955,13 +1955,13 @@ class mslib_befe {
 				'str'=>&$str
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePreHook'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$qry || $this->conf['debugEnabled']=='1') {
 			$logString='rebuildFlatDatabase CREATE TABLE failed query: '.$str;
-			t3lib_div::devLog($logString, 'multishop',-1);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
 			//echo $str;
 			//exit();
 		}
@@ -1988,7 +1988,7 @@ class mslib_befe {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if ($this->conf['debugEnabled']=='1') {
 			$logString='rebuildFlatDatabase query: '.$str;
-			t3lib_div::devLog($logString, 'multishop',-1);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
 		}
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$products[]=$row['products_id'];
@@ -2014,7 +2014,7 @@ class mslib_befe {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePostHook'])) {
 			$params=array();
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['rebuildFlatDatabasePostHook'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		return $content;
@@ -2471,7 +2471,7 @@ class mslib_befe {
 										$folder=mslib_befe::getImagePrefixFolder($filename);
 										$array=explode(".", $filename);
 										if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-											t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+											 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 										}
 										$folder.='/';
 										$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -2483,7 +2483,7 @@ class mslib_befe {
 												$array=explode(".", $filename);
 												$folder=$folder_name;
 												if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-													t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+													 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 												}
 												$folder.='/';
 												$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -2992,12 +2992,12 @@ class mslib_befe {
 			require_once(t3lib_extMgm::extPath('t3sec_saltedpw').'res/staticlib/class.tx_t3secsaltedpw_div.php');
 			if (tx_t3secsaltedpw_div::isUsageEnabled()) {
 				require_once(t3lib_extMgm::extPath('t3sec_saltedpw').'res/lib/class.tx_t3secsaltedpw_phpass.php');
-				$objPHPass=t3lib_div::makeInstance('tx_t3secsaltedpw_phpass');
+				$objPHPass= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3secsaltedpw_phpass');
 			}
 		}
 		if (!$objPHPass && t3lib_extMgm::isLoaded('saltedpasswords')) {
 			if (tx_saltedpasswords_div::isUsageEnabled()) {
-				$objPHPass=t3lib_div::makeInstance(tx_saltedpasswords_div::getDefaultSaltingHashingMethod());
+				$objPHPass= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(tx_saltedpasswords_div::getDefaultSaltingHashingMethod());
 			}
 		}
 		if ($objPHPass) {
@@ -3172,7 +3172,7 @@ class mslib_befe {
 				'lifeTime'=>$timeout
 			);
 			$Cache_Lite=new Cache_Lite($options);
-			//$Cache_Lite = t3lib_div::makeInstance('Cache_Lite');
+			//$Cache_Lite =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Cache_Lite');
 			$string=md5($key);
 			switch ($action) {
 				case 'get':
@@ -3201,7 +3201,7 @@ class mslib_befe {
 				'action'=>$action
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['cacheLitePostProc'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 	}
@@ -3235,7 +3235,7 @@ class mslib_befe {
 		$whereClause.=$this->cObj->enableFields($tableB);
 		//$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($selectFields, $table, $whereClause);
 		// If $languagesUidsList is not empty, the languages will be sorted in the order it specifies
-		$languagesUidsArray=t3lib_div::trimExplode(',', $languagesUidsList, 1);
+		$languagesUidsArray= \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $languagesUidsList, 1);
 		$index=0;
 		$str="select * from sys_language where hidden=0 order by title";
 		$res=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -3310,7 +3310,7 @@ class mslib_befe {
 					'section'=>&$section
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['loginAsUserRedirectLinkPreProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if ($redirect_url) {

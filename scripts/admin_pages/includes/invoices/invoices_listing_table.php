@@ -118,7 +118,7 @@ $actions['update_selected_invoices_to_not_paid']=$this->pi_getLL('update_selecte
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesActionSelectboxProc'])) {
 	$params=array('actions'=>&$actions);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesActionSelectboxProc'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $tmp.='

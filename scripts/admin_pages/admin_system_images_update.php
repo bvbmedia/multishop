@@ -24,7 +24,7 @@ if (count($files)>0) {
 					$source=$this->DOCUMENT_ROOT.$item.'/'.$filename;
 					$target=$this->DOCUMENT_ROOT.$item.'/'.$folder.'/'.$filename;
 					if (!is_dir($this->DOCUMENT_ROOT.$item.'/'.$folder)) {
-						t3lib_div::mkdir($this->DOCUMENT_ROOT.$item.'/'.$folder);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$item.'/'.$folder);
 					}
 					exec("mv ".$source.' '.$target);
 					$updated=1;
@@ -52,7 +52,7 @@ if (count($files)>0) {
 					$source=$this->DOCUMENT_ROOT.$item.'/'.$filename;
 					$target=$this->DOCUMENT_ROOT.$item.'/'.$folder.'/'.$filename;
 					if (!is_dir($this->DOCUMENT_ROOT.$item.'/'.$folder)) {
-						t3lib_div::mkdir($this->DOCUMENT_ROOT.$item.'/'.$folder);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$item.'/'.$folder);
 					}
 					exec("mv ".$source.' '.$target);
 					$updated=1;

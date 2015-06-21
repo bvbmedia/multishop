@@ -11,7 +11,7 @@ if ($this->post) {
 			'post'=>&$this->post
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['postedShippingCostData'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	//print_r($this->post);
@@ -152,7 +152,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'shipping_cost_types'=>&$shipping_cost_types,
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['addShippingCostType'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // hook to add shipping cost type eof
@@ -302,7 +302,7 @@ if (count($shipping_methods)>0) {
 									'end_weight'=>&$end_weight
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['weightConversion'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							$weight_next=$i>1 ? $weight_old : '0';
@@ -415,7 +415,7 @@ if (count($shipping_methods)>0) {
 						'content'=>&$content
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['processZoneShippingCostType'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// hook to process custom visual shipping cost type eof

@@ -23,7 +23,7 @@ if (!defined('TYPO3_MODE')) {
  * [CLASS/FUNCTION INDEX of SCRIPT]
  * Hint: use extdeveval to insert/update function index above.
  */
-class tx_mslib_admin_interface extends tslib_pibase {
+class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	function initLanguage($ms_locallang) {
 		$this->pi_loadLL();
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
@@ -338,7 +338,7 @@ class tx_mslib_admin_interface extends tslib_pibase {
 							'summarize'=>&$summarize
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_import.php']['msAdminImportItemIterateProc'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $conf, $that);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
 						}
 					}
 					$tableContent.='<td'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';

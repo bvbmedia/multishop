@@ -760,7 +760,7 @@ if ($this->post and $_FILES) {
 											$folder=mslib_befe::getImagePrefixFolder($filename);
 											$array=explode(".", $filename);
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-												t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -771,7 +771,7 @@ if ($this->post and $_FILES) {
 													$array=explode(".", $filename);
 													$folder=$folder_name;
 													if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-														t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+														 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 													}
 													$folder.='/';
 													$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -920,7 +920,7 @@ if ($this->post) {
 				'products_id'=>$this->post['pid']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -1978,7 +1978,7 @@ if ($this->post) {
 					'products_id'=>$prodid
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPostHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -1989,7 +1989,7 @@ if ($this->post) {
 					'products_id'=>$prodid
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['insertProductPostHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -2000,7 +2000,7 @@ if ($this->post) {
 				'prodid'=>$prodid
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_product.php']['saveProductPostHook'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// lets notify plugin that we have update action in product
@@ -2119,7 +2119,7 @@ if ($this->post) {
 				'js_extra'=>&$js_extra
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
@@ -2227,7 +2227,7 @@ if ($this->post) {
 				'product_tax_rate'=>&$product_tax_rate
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductPrice'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
@@ -2675,7 +2675,7 @@ if ($this->post) {
 					'extra_js_after_clone_new_attributes_row'=>&$extra_js_after_clone_new_attributes_row
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -3325,7 +3325,7 @@ if ($this->post) {
 										'attribute_data'=>&$attribute_data
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductAttributesData'] as $funcRef) {
-										t3lib_div::callUserFunction($funcRef, $params, $this);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -3430,7 +3430,7 @@ if ($this->post) {
 										'product_tax_rate'=>&$product_tax_rate
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'] as $funcRef) {
-										t3lib_div::callUserFunction($funcRef, $params, $this);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								$attributes_tab_block.='<div class="wrap-attributes-item '.$item_row_type.'" id="item_product_attribute_'.$attribute_data['products_attributes_id'].'" rel="'.$attribute_data['products_attributes_id'].'">';
@@ -4389,7 +4389,7 @@ if ($this->post) {
 				'plugins_extra_tab'=>&$plugins_extra_tab
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductPreProc'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof

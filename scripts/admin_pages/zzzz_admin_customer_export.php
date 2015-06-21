@@ -36,7 +36,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'fields'=>&$fields
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_export.php']['msCustomersExportFieldsHook'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $field_keys=array_flip($fields);

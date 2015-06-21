@@ -16,7 +16,7 @@ class tx_multishop_addMiscFieldsToFlexForm {
 				'optionList' => &$optionList
 			); 
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/class.tx_multishop_addMiscFieldsToFlexForm.php']['addMiscFields'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		if (!count($optionList)) {

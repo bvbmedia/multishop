@@ -65,7 +65,7 @@ if (mslib_fe::loggedin()) {
 		$erno=array();
 		if ($this->post) {
 			$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
-			$mslib_user=t3lib_div::makeInstance('tx_mslib_user');
+			$mslib_user= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_user');
 			$mslib_user->init($this);
 			$mslib_user->setUsername($this->post['email']);
 			$mslib_user->setEmail($this->post['email']);
@@ -343,7 +343,7 @@ if (mslib_fe::loggedin()) {
 					'markerArray'=>&$markerArray
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/create_account/default.php']['createAccountPostHook'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof

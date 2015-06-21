@@ -23,7 +23,7 @@ if (!defined('TYPO3_MODE')) {
  * [CLASS/FUNCTION INDEX of SCRIPT]
  * Hint: use extdeveval to insert/update function index above.
  */
-class tx_mslib_dashboard extends tslib_pibase {
+class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	var $dashboardArray = array();
 	var $widgetsArray = array();
 	var $compiledWidgets = array();

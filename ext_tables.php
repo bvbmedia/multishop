@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
-t3lib_div::loadTCA('tt_content');
+// \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('tt_content');
 $TCA["tt_content"]["types"]["list"]["subtypes_excludelist"][$_EXTKEY."_pi1"]="layout,select_key,pages";
 t3lib_extMgm::addStaticFile($_EXTKEY, 'pi1/static/rootpage', 'MultiShop Root Page Setup');
 t3lib_extMgm::addStaticFile($_EXTKEY, 'pi1/static/corepage', 'MultiShop Core Page Setup');
@@ -98,7 +98,7 @@ $tempColumns=array(
 		)
 	)
 );
-t3lib_div::loadTCA("fe_users");
+// \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("fe_users");
 t3lib_extMgm::addTCAcolumns("fe_users", $tempColumns, 1);
 t3lib_extMgm::addToAllTCAtypes("fe_users", '--div--; Multishop, tx_multishop_discount, page_uid;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
@@ -117,7 +117,7 @@ unset($tempColumns['gender']);
 unset($tempColumns['street_name']);
 unset($tempColumns['address_number']);
 unset($tempColumns['address_ext']);
-t3lib_div::loadTCA("fe_groups");
+// \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("fe_groups");
 t3lib_extMgm::addTCAcolumns("fe_groups", $tempColumns, 1);
 t3lib_extMgm::addToAllTCAtypes("fe_groups", '--div--; Multishop, tx_multishop_discount;;;;1-1-1');
 // EXTEND TT_ADDRESS TABLE
@@ -193,7 +193,7 @@ $tempColumns=array(
 		)
 	),
 );
-t3lib_div::loadTCA("tt_address");
+// \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("tt_address");
 t3lib_extMgm::addTCAcolumns("tt_address", $tempColumns, 1);
 t3lib_extMgm::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type, tx_multishop_customer_id;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
@@ -203,10 +203,20 @@ $TCA['tt_address']['palettes']['multishopaddress']=array(
 t3lib_extMgm::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
 // TT ADDRESS EOF
 // ADD CUSTOM PAGE TYPE
-t3lib_div::loadTCA('pages');
-$TCA['pages']['columns']['module']['config']['items'][] = array('Multishop: core shop', 'mscore', t3lib_extMgm::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif');
-t3lib_SpriteManager::addTcaTypeIcon('pages', 'contains-mscore', t3lib_extMgm::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif');
-$ICON_TYPES['mscore']['icon'] = t3lib_extMgm::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif';
+// \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('pages');
+
+$GLOBALS['TCA']['pages']['columns']['module']['config']['items'][] =
+	array(
+		'Multishop: core shop',
+		'mscore',
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif'
+	);
+
+\TYPO3\CMS\Backend\Sprite\SpriteManager::addTcaTypeIcon(
+	'pages',
+	'contains-mscore',
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif'
+);
 // ADD CUSTOM PAGE TYPE EOF
 
 
@@ -214,7 +224,7 @@ $ICON_TYPES['mscore']['icon'] = t3lib_extMgm::extRelPath($_EXTKEY) . 'mod1/image
 t3lib_extMgm::addPlugin(array(
 	'LLL:EXT:multishop/locallang_db.xml:tt_content.list_type_pi1',
 	$_EXTKEY.'_pi1',
-	t3lib_extMgm::extRelPath($_EXTKEY).'ext_icon.gif'
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'ext_icon.gif'
 ), 'list_type');
 $TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
 t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:'.$_EXTKEY.'/flexform_ds.xml');
@@ -223,5 +233,5 @@ if (TYPO3_MODE=='BE') {
 	t3lib_extMgm::addModulePath('web_txmultishopM1', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 	t3lib_extMgm::addModule('web', 'txmultishopM1', '', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 }
-include_once(t3lib_extMgm::extPath($_EXTKEY).'class.tx_multishop_addMiscFieldsToFlexForm.php');
+include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'class.tx_multishop_addMiscFieldsToFlexForm.php');
 ?>

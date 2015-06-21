@@ -261,7 +261,7 @@ jQuery(document).ready(function($) {
 </script>
 ';
 $default_payment_methods=mslib_fe::loadAllPaymentMethods();
-$mslib_payment=t3lib_div::makeInstance('mslib_payment');
+$mslib_payment= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
 $mslib_payment->init($this);
 $payment_methods=array();
 $payment_methods=$mslib_payment->getInstalledPaymentMethods($this);

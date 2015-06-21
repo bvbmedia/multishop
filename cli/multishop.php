@@ -50,15 +50,15 @@ class tx_multishop extends t3lib_cli {
 		/* @var $cObj tslib_cObj */
 		chdir(PATH_site);
 		if (!$GLOBALS['TSFE'] instanceof tslib_fe) {
-			$GLOBALS['TSFE']=t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+			$GLOBALS['TSFE']= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
 			$GLOBALS['TSFE']->config['config']['language']=null;
 			$GLOBALS['TSFE']->initTemplate();
 		}
 		if (!isset($GLOBALS['TT'])) {
-			$GLOBALS['TT']=t3lib_div::makeInstance('t3lib_TimeTrackNull');
+			$GLOBALS['TT']= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_TimeTrackNull');
 		}
 		$GLOBALS['TSFE']->tmpl->getFileName_backPath=PATH_site;
-		$this->cObj=t3lib_div::makeInstance('tslib_cObj');
+		$this->cObj= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_cObj');
 		switch ($commands_array['action']) {
 			case 'rebuild_flat_database':
 				mslib_befe::rebuildFlatDatabase();
@@ -68,7 +68,7 @@ class tx_multishop extends t3lib_cli {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/cli/multishop.php']['cli_cron'])) {
 			$params=array('commands_array'=>&$commands_array);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/cli/multishop.php']['cli_cron'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 	}
@@ -108,7 +108,7 @@ if ($halt) {
 fwrite(STDOUT, "TYPO3 Multishop Cli\n\n");
 set_time_limit(86400);
 ignore_user_abort(true);
-$object=t3lib_div::makeInstance('tx_multishop');
+$object= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop');
 $object->setShopPid($commands_array['shop_pid']);
 $object->execute($commands_array);
 ?>

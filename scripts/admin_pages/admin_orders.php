@@ -231,7 +231,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$array1[]='###TOTAL_AMOUNT###';
 					$array2[]=mslib_fe::amount2Cents($tmpArray['total_amount']);
 					require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-					$mslib_order=t3lib_div::makeInstance('tx_mslib_order');
+					$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 					$mslib_order->init($this);
 					$ORDER_DETAILS=$mslib_order->printOrderDetailsTable($tmpArray, 'site');
 					$array1[]='###ORDER_DETAILS###';
@@ -342,7 +342,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'])) {
 			$params=array();
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		break;

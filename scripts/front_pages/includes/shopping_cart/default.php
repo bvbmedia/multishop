@@ -6,7 +6,7 @@ if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 	$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 }
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-$mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
+$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $disable_checkout=false;
 $output=array();
@@ -272,7 +272,7 @@ if (count($cart['products'])>0) {
 				'markerArray'=>&$markerArray
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPostHook'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
@@ -368,7 +368,7 @@ if (count($cart['products'])>0) {
 			'markerArray'=>&$markerArray
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['footerPostHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$footerItem=$this->cObj->substituteMarkerArray($subparts['footer'], $markerArray, '###|###');
@@ -428,7 +428,7 @@ if (count($cart['products'])>0) {
 			'subpartArray'=>&$subpartArray,
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['shoppingCartPagePostHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// completed the template expansion by replacing the "item" marker in the template

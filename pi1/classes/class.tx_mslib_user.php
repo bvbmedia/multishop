@@ -514,7 +514,7 @@ class tx_mslib_user {
 						'customer_id'=>&$customer_id
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['updateUserPostProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				return $customer_id;
@@ -607,7 +607,7 @@ class tx_mslib_user {
 						'customer_id'=>&$customer_id
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				return $customer_id;

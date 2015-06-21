@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-$mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
+$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
 if (!count($cart['products'])) {
@@ -11,7 +11,7 @@ if (!count($cart['products'])) {
 } else {
 	if ($this->post) {
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-		$mslib_order=t3lib_div::makeInstance('tx_mslib_order');
+		$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		$orders_id=$mslib_cart->convertCartToOrder($GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid));
 		if ($orders_id) {

@@ -284,7 +284,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			'totalCountWhere'=>&$totalCountWhere,
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchPreHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// counter query init eof
@@ -796,7 +796,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						'sortby_options'=>&$sortby_options,
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchSortByFilterTypes'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				if (count($sortby_options)) {
@@ -1070,7 +1070,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							'formField'=>&$formField,
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchTypeHook'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 				}
@@ -1457,7 +1457,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						'extra_join'=>&$extra_join
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/includes/ultrasearch_server.php']['ultrasearchOrderByFilter'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				break;

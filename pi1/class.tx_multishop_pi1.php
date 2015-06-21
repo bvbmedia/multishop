@@ -26,7 +26,8 @@
  *
  * Hint: use extdeveval to insert/update function index above.
  */
-if (!class_exists('tslib_pibase')) {
+$version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+if ($version <= 7000000) {
 	require_once(PATH_tslib . 'class.tslib_pibase.php');
 }
 /**
@@ -36,7 +37,7 @@ if (!class_exists('tslib_pibase')) {
  * @package	TYPO3
  * @subpackage	tx_multishop
  */
-class tx_multishop_pi1 extends tslib_pibase {
+class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	var $cObj; // reference to the calling object.
 	var $prefixId = 'tx_multishop_pi1';		// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_multishop_pi1.php';	// Path to this script relative to the extension dir.
@@ -68,7 +69,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 		$this->pi_initPIflexForm();
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
-		$this->HTTP_HOST = t3lib_div::getIndpEnv('HTTP_HOST');
+		$this->HTTP_HOST =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
 		// Get the vhost full path (example: /var/www/html/domain.com/public_html/my_cms/)
 		$this->DOCUMENT_ROOT=PATH_site;
 		// Get the vhost full path to multishop (example: /var/www/html/domain.com/public_html/my_cms/typo3conf/ext/multishop/)
@@ -76,27 +77,27 @@ class tx_multishop_pi1 extends tslib_pibase {
 		// Get the vhost full path to TYPO3 (example: /var/www/html/domain.com/public_html/my_cms/typo3/)
 		$this->DOCUMENT_ROOT_TYPO3=PATH_site.TYPO3_mainDir;
 		// Get the site full URL (example: http://domain.com/my_cms/)
-		$this->FULL_HTTP_URL = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+		$this->FULL_HTTP_URL =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 		// Get the multishop full URL (example: http://domain.com/my_cms/typo3/ext/multishop/ or http://domain.com/my_cms/typo3conf/ext/multishop/)
-		$this->FULL_HTTP_URL_MS=t3lib_div::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath($this->extKey);
+		$this->FULL_HTTP_URL_MS= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath($this->extKey);
 		// Get the full URL (example: http://domain.com/my_cms/typo3/)
-		$this->FULL_HTTP_URL_TYPO3=t3lib_div::getIndpEnv('TYPO3_SITE_URL').TYPO3_mainDir;
-		$this->get = t3lib_div::_GET();
-		$this->post = t3lib_div::_POST();
+		$this->FULL_HTTP_URL_TYPO3= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').TYPO3_mainDir;
+		$this->get =  \TYPO3\CMS\Core\Utility\GeneralUtility::_GET();
+		$this->post =  \TYPO3\CMS\Core\Utility\GeneralUtility::_POST();
 		$this->server=array();
-		$this->server['HTTP_ACCEPT_LANGUAGE'] = t3lib_div::getIndpEnv('HTTP_ACCEPT_LANGUAGE');
-		$this->server['HTTP_USER_AGENT'] = t3lib_div::getIndpEnv('HTTP_USER_AGENT');
-		$this->server['HTTP_REFERER'] = t3lib_div::getIndpEnv('HTTP_REFERER');
+		$this->server['HTTP_ACCEPT_LANGUAGE'] =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_ACCEPT_LANGUAGE');
+		$this->server['HTTP_USER_AGENT'] =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_USER_AGENT');
+		$this->server['HTTP_REFERER'] =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_REFERER');
 		if (!$this->server['HTTP_ACCEPT_LANGUAGE']) {
 			$this->server['HTTP_ACCEPT_LANGUAGE']='en';
 		}
 		$this->server['DOCUMENT_ROOT'] = $this->DOCUMENT_ROOT;
-		$this->server['REQUEST_URI'] = t3lib_div::getIndpEnv('REQUEST_URI');
-		$this->server['REDIRECT_URL'] = t3lib_div::getIndpEnv('REDIRECT_URL');
-		$this->server['QUERY_STRING'] = t3lib_div::getIndpEnv('QUERY_STRING');
-		$this->server['REMOTE_ADDR'] = t3lib_div::getIndpEnv('REMOTE_ADDR');
-		$this->REMOTE_ADDR = t3lib_div::getIndpEnv('REMOTE_ADDR');
-		$this->server['HTTP_HOST'] = mslib_befe::strtolower(t3lib_div::getIndpEnv('TYPO3_HOST_ONLY'));
+		$this->server['REQUEST_URI'] =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REQUEST_URI');
+		$this->server['REDIRECT_URL'] =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REDIRECT_URL');
+		$this->server['QUERY_STRING'] =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('QUERY_STRING');
+		$this->server['REMOTE_ADDR'] =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
+		$this->REMOTE_ADDR =  \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
+		$this->server['HTTP_HOST'] = mslib_befe::strtolower( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'));
 		$tmp=explode("?",$this->server['REQUEST_URI']);
 		$this->server['REQUEST_URI']=$tmp[0];
 		$this->server['REQUEST_URI']=preg_replace("/^\//is",'',$this->server['REQUEST_URI']);
@@ -402,7 +403,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['shopping_cartPreProc'])) {
 							$params = array ();
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['shopping_cartPreProc'] as $funcRef) {
-								t3lib_div::callUserFunction($funcRef, $params, $this);
+								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						if (strstr($this->ms['MODULES']['SHOPPING_CART_TYPE'],"..")) {
@@ -421,7 +422,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'])) {
 							$params = array ();
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'] as $funcRef) {
-								t3lib_div::callUserFunction($funcRef, $params, $this);
+								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
@@ -454,7 +455,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['order_historyPreProc'])) {
 								$params = array ();
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['order_historyPreProc'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							if (strstr($this->ms['MODULES']['ORDER_HISTORY_TYPE'],"..")) {
@@ -482,7 +483,7 @@ class tx_multishop_pi1 extends tslib_pibase {
 								'filePath' => &$filePath,
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['contentMisc'] as $funcRef) {
-								t3lib_div::callUserFunction($funcRef, $params, $this);
+								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						if ($filePath) {

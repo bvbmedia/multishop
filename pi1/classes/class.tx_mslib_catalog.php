@@ -543,7 +543,7 @@ class tx_mslib_catalog {
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									if ($this->conf['debugEnabled']=='1') {
 										$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
-										t3lib_div::devLog($logString, 'multishop',0);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',0);
 									}
 									$updateArray=array();
 									$updateArray['sort_order']=$no;
@@ -551,7 +551,7 @@ class tx_mslib_catalog {
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									if ($this->conf['debugEnabled']=='1') {
 										$logString='Resort catalog ('.$sortByField.'). Query: '.$query;
-										t3lib_div::devLog($logString, 'multishop',0);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',0);
 									}
 									if ($this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION']=='desc') {
 										$no--;
@@ -657,7 +657,7 @@ class tx_mslib_catalog {
 				'product_id'=>&$product_id
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['pi1/classes/class.tx_mslib_catalog.php']['productsUpdateNotifierForPlugin'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 	}

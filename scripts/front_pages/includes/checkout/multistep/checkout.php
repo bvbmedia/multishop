@@ -13,7 +13,7 @@ $cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 $count_products=count($cart['products']);
 // minimum order amount
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-$mslib_cart=t3lib_div::makeInstance('tx_mslib_cart');
+$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart_total_amount=$mslib_cart->countCartTotalPrice(0);
 if (!empty($this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']) && $this->ms['MODULES']['MINIMUM_ORDER_AMOUNT']>0) {

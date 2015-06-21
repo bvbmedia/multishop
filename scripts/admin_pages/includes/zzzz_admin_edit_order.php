@@ -389,7 +389,7 @@ if (is_numeric($this->get['orders_id'])) {
 			} // if ($this->post) eol
 			// repair tax stuff
 			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-			$mslib_order=t3lib_div::makeInstance('tx_mslib_order');
+			$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 			$mslib_order->init($this);
 			$mslib_order->repairOrder($this->get['orders_id']);
 			//is proposal
@@ -1024,7 +1024,7 @@ if (is_numeric($this->get['orders_id'])) {
 				'orders'=>&$orders
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 			// hook oef
 		}
@@ -1277,7 +1277,7 @@ if (is_numeric($this->get['orders_id'])) {
 							'row'=>&$row
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderListItemPreHook'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
@@ -2133,7 +2133,7 @@ if (is_numeric($this->get['orders_id'])) {
 			'orders'=>&$orders
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersFieldset'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 		// hook oef
 	}
@@ -2283,7 +2283,7 @@ if (is_numeric($this->get['orders_id'])) {
 			'orders'=>&$orders
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 		// hook oef
 	}

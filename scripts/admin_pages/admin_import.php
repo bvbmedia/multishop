@@ -152,7 +152,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'coltypes'=>&$coltypes
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_importer.php']['adminProductsImporterColtypesHook'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $total_coltypes=count($coltypes);
@@ -253,7 +253,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'prefix_source_name'=>$this->post['prefix_source_name']
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateTypesProc'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof
@@ -414,7 +414,7 @@ if ($this->post['action']=='category-insert') {
 					'processed'=>&$processed
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 		} else {
@@ -431,7 +431,7 @@ if ($this->post['action']=='category-insert') {
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					if ($this->conf['debugEnabled']=='1') {
 						$logString='Load records for importer query: '.$str;
-						t3lib_div::devLog($logString, 'multishop',-1);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
 					}
 					$datarows=array();
 					while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -941,7 +941,7 @@ if ($this->post['action']=='category-insert') {
 						'processed'=>&$processed
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 			} else {
@@ -967,7 +967,7 @@ if ($this->post['action']=='category-insert') {
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						if ($this->conf['debugEnabled']=='1') {
 							$logString='Load records for importer query: '.$str;
-							t3lib_div::devLog($logString, 'multishop',-1);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
 						}
 						$datarows=array();
 						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -1129,7 +1129,7 @@ if ($this->post['action']=='category-insert') {
 					'rows'=>&$rows
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -1143,7 +1143,7 @@ if ($this->post['action']=='category-insert') {
 						'skipRow'=>&$skipRow
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIteratePreProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// custom hook that can be controlled by third-party plugin eof
@@ -1418,7 +1418,7 @@ if ($this->post['action']=='category-insert') {
 						'skipItem'=>&$skipItem
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIterateProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// custom hook that can be controlled by third-party plugin eof
@@ -1558,7 +1558,7 @@ if ($this->post['action']=='category-insert') {
 											$filename=mslib_fe::rewritenamein($categories_name).'.'.$ext;
 											$folder=mslib_befe::getImagePrefixFolder($filename);
 											if (!is_dir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-												t3lib_div::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1567,7 +1567,7 @@ if ($this->post['action']=='category-insert') {
 													$filename=mslib_fe::rewritenamein($categories_name).($ix>0 ? '-'.$ix : '').'.'.$ext;
 													$folder=mslib_befe::getImagePrefixFolder($filename);
 													if (!is_dir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-														t3lib_div::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+														 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 													}
 													$folder.='/';
 													$target=PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1744,7 +1744,7 @@ if ($this->post['action']=='category-insert') {
 										$filename=mslib_fe::rewritenamein($categories_name).'.'.$ext;
 										$folder=mslib_befe::getImagePrefixFolder($filename);
 										if (!is_dir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-											t3lib_div::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+											 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 										}
 										$folder.='/';
 										$target=PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -1753,7 +1753,7 @@ if ($this->post['action']=='category-insert') {
 												$filename=mslib_fe::rewritenamein($manufacturers_name).($ix>0 ? '-'.$ix : '').'.'.$ext;
 												$folder=mslib_befe::getImagePrefixFolder($filename);
 												if (!is_dir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-													t3lib_div::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+													 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 												}
 												$folder.='/';
 												$target=PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -2051,7 +2051,7 @@ if ($this->post['action']=='category-insert') {
 										'old_product'=>&$old_product
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductPreHook'] as $funcRef) {
-										t3lib_div::callUserFunction($funcRef, $params, $this);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -2144,7 +2144,7 @@ if ($this->post['action']=='category-insert') {
 										'prefix_source_name'=>$this->post['prefix_source_name']
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductsDescriptionPreHook'] as $funcRef) {
-										t3lib_div::callUserFunction($funcRef, $params, $this);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -2215,7 +2215,7 @@ if ($this->post['action']=='category-insert') {
 										'prefix_source_name'=>$this->post['prefix_source_name']
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'] as $funcRef) {
-										t3lib_div::callUserFunction($funcRef, $params, $this);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -2431,7 +2431,7 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPreHook'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// TYPO3 6.2 NULL VALUE FIX
@@ -2481,7 +2481,7 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductsDescriptionPreHook'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
@@ -2557,7 +2557,7 @@ if ($this->post['action']=='category-insert') {
 										'prefix_source_name'=>$this->post['prefix_source_name']
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertSpecialsPricePreHook'] as $funcRef) {
-										t3lib_div::callUserFunction($funcRef, $params, $this);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -2832,7 +2832,7 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPostHook'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
@@ -2845,7 +2845,7 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductPostHook'] as $funcRef) {
-									t3lib_div::callUserFunction($funcRef, $params, $this);
+									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
@@ -2929,7 +2929,7 @@ if ($this->post['action']=='category-insert') {
 				'stats'=>&$stats
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportPostProcHook'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof

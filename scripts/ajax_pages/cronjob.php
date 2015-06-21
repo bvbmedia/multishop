@@ -8,7 +8,7 @@ ignore_user_abort(true);
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/cronjob.php']['cronjobProc'])) {
 	$params=array('action'=>$this->get['tx_multishop_pi1']['action']);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/cronjob.php']['cronjobProc'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // hook oef	

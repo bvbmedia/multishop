@@ -147,7 +147,7 @@ if ($this->post && $this->post['email']) {
 					'erno'=>$erno
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if (count($erno)) {
@@ -212,7 +212,7 @@ if ($this->post && $this->post['email']) {
 						'uid'=>$this->post['tx_multishop_pi1']['cid']
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPostProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 			}
@@ -291,7 +291,7 @@ if ($this->post && $this->post['email']) {
 					'updateArray'=>&$updateArray
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPreProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -349,7 +349,7 @@ if ($this->post && $this->post['email']) {
 					'uid'=>$customer_id
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// customer shipping/payment method mapping
@@ -996,7 +996,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'js_extra'=>&$js_extra
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerTmplPreProc'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom page hook that can be controlled by third-party plugin eof
@@ -1020,7 +1020,7 @@ if (!count($js_extra['triggers'])) {
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 if ($customer_id) {
 	require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
-	$mslib_dashboard=t3lib_div::makeInstance('tx_mslib_dashboard');
+	$mslib_dashboard= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_dashboard');
 	$mslib_dashboard->init($this);
 	$mslib_dashboard->setSection('admin_edit_customer');
 	$mslib_dashboard->renderWidgets();

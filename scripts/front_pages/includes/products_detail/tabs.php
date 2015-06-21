@@ -464,7 +464,7 @@ if (!$product['products_id']) {
 			'plugins_extra_content'=>&$plugins_extra_content
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###']='';

@@ -84,7 +84,7 @@ class tx_multishop {
 	 * @return string rendered preview html
 	 */
 	protected function preview($row) {
-		$data=t3lib_div::xml2array($row['pi_flexform']);
+		$data= \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
 		$selectedMethod=$data['data']['sDEFAULT']['lDEF']['method']['vDEF'];
 		if ($selectedMethod) {
 			$content='Multishop: '.$data['data']['sDEFAULT']['lDEF']['method']['vDEF'].'<br />';

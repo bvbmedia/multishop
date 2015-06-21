@@ -7,7 +7,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 	$updateArray=array();
 	$updateArray['disable']=0;
 	$updateArray['tx_multishop_optin_crdate']=time();
-	$updateArray['tx_multishop_optin_ip']=t3lib_div::getIndpEnv('REMOTE_ADDR');
+	$updateArray['tx_multishop_optin_ip']= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$user['uid'], $updateArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	// auto login the user
@@ -51,7 +51,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 			'redirect_url'=>&$redirect_url
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/confirm_create_account']['confirmationSuccesfulRedirectLinkPreProc'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	if ($redirect_url) {
@@ -70,7 +70,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 			'redirect_url'=>&$redirect_url
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/confirm_create_account']['confirmationRepeatedRedirectLinkPreProc'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	if ($redirect_url) {

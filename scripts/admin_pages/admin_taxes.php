@@ -13,7 +13,7 @@ if ($this->post) {
 			'erno'=>&$erno
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['postTaxesFormValidationPreProc'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	if (!count($erno)) {
@@ -29,7 +29,7 @@ if ($this->post) {
 						'updateArray'=>&$updateArray
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['updateTaxesPreProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_taxes', 'tax_id='.$this->post['tax_id'], $updateArray);
@@ -40,7 +40,7 @@ if ($this->post) {
 						'updateArray'=>&$updateArray
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['updateTaxesPostProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 			} else {
@@ -49,7 +49,7 @@ if ($this->post) {
 						'updateArray'=>&$updateArray
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['insertTaxesPreProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_taxes', $updateArray);
@@ -61,7 +61,7 @@ if ($this->post) {
 						'updateArray'=>&$updateArray
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['insertTaxesPostProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 			}
@@ -86,7 +86,7 @@ if ($this->get['delete'] and is_numeric($this->get['tax_id'])) {
 			'tax_id'=>&$this->get['tax_id']
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['deleteTaxesPostProc'] as $funcRef) {
-			t3lib_div::callUserFunction($funcRef, $params, $this);
+			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 } elseif (is_numeric($this->get['tax_id'])) {
@@ -117,7 +117,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'taxRow'=>&$taxRow
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['renderInsertEditTaxesFormPreProc'] as $funcRef) {
-		t3lib_div::callUserFunction($funcRef, $params, $this);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $content.='

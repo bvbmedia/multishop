@@ -23,7 +23,7 @@ if (!defined('TYPO3_MODE')) {
  * [CLASS/FUNCTION INDEX of SCRIPT]
  * Hint: use extdeveval to insert/update function index above.
  */
-class tx_mslib_order extends tslib_pibase {
+class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	var $orders_id='';
 	function initLanguage($ms_locallang) {
 		$this->pi_loadLL();
@@ -524,7 +524,7 @@ class tx_mslib_order extends tslib_pibase {
 					'mail_template'=>$mail_template
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if ($page[0]['content']) {
@@ -550,7 +550,7 @@ class tx_mslib_order extends tslib_pibase {
 					'order_details'=>$ORDER_DETAILS
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if ($send_mail) {
@@ -1022,7 +1022,7 @@ class tx_mslib_order extends tslib_pibase {
 					'template_type'=>&$template_type
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemPreProc'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			$itemsWrapper[]=$item;
@@ -1167,7 +1167,7 @@ class tx_mslib_order extends tslib_pibase {
 				'template_type'=>&$template_type
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTablePostProc'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		return $content;

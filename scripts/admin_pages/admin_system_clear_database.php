@@ -191,7 +191,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 						'tables'=>&$tables
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_system_clear_database.php']['clearEverythingPreProc'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				foreach ($tables as $table) {

@@ -669,7 +669,7 @@ switch ($this->ms['page']) {
 						}
 					}
 				}
-				$xml_string=t3lib_div::array2xml_cs($multishop_category_array);
+				$xml_string= \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml_cs($multishop_category_array);
 				echo $xml_string;
 				exit();
 			}
@@ -721,7 +721,7 @@ switch ($this->ms['page']) {
 						'orders_status_id'=>$this->post['tx_multishop_pi1']['orders_status_id']
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUpdateOrdersStatus'] as $funcRef) {
-						t3lib_div::callUserFunction($funcRef, $params, $this);
+						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// hook eof
@@ -759,7 +759,7 @@ switch ($this->ms['page']) {
 					'get'=>&$this->get,
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkode'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// hook oef
@@ -880,7 +880,7 @@ switch ($this->ms['page']) {
 		break;
 	case 'psp':
 		if ($_REQUEST['tx_multishop_pi1']['payment_lib']) {
-			$mslib_payment=t3lib_div::makeInstance('mslib_payment');
+			$mslib_payment= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
 			$mslib_payment->init($this);
 //			$payment_methods=$mslib_payment->getInstalledPaymentMethods($this);
 			if ($mslib_payment->setPaymentMethod($_REQUEST['tx_multishop_pi1']['payment_lib'])) {
@@ -888,7 +888,7 @@ switch ($this->ms['page']) {
 				$extkey='multishop_'.$_REQUEST['tx_multishop_pi1']['payment_lib'];
 				if (t3lib_extMgm::isLoaded($extkey)) {
 					require(t3lib_extMgm::extPath($extkey).'class.multishop_payment_method.php');
-					$paymentMethod=t3lib_div::makeInstance('tx_multishop_payment_method');
+					$paymentMethod= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
 					$paymentMethod->init($this);
 					$paymentMethod->paymentNotificationHandler();
 				}
@@ -916,7 +916,7 @@ switch ($this->ms['page']) {
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['confirm_create_account'])) {
 				$params=array('content'=>&$content);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['confirm_create_account'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
 				require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/confirm_create_account.php');
@@ -1042,7 +1042,7 @@ switch ($this->ms['page']) {
 					$fileUploadPathRelative='uploads/tx_multishop/images/cmsimages';
 					$fileUploadPathAbsolute=$this->DOCUMENT_ROOT.$fileUploadPathRelative;
 					if (is_dir($fileUploadPathAbsolute)) {
-						$items=t3lib_div::getAllFilesAndFoldersInPath(array(), $fileUploadPathAbsolute.'/');
+						$items= \TYPO3\CMS\Core\Utility\GeneralUtility::getAllFilesAndFoldersInPath(array(), $fileUploadPathAbsolute.'/');
 						if (count($items)) {
 							$array=array();
 							foreach ($items as $item) {
@@ -1191,7 +1191,7 @@ switch ($this->ms['page']) {
 									$folder=mslib_befe::getImagePrefixFolder($filename);
 									$array=explode(".", $filename);
 									if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-										t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 									}
 									$folder.='/';
 									$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1202,7 +1202,7 @@ switch ($this->ms['page']) {
 											$array=explode(".", $filename);
 											$folder=$folder_name;
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-												t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1261,7 +1261,7 @@ switch ($this->ms['page']) {
 									$folder=mslib_befe::getImagePrefixFolder($filename);
 									$array=explode(".", $filename);
 									if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-										t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+										 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 									}
 									$folder.='/';
 									$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -1272,7 +1272,7 @@ switch ($this->ms['page']) {
 											$array=explode(".", $filename);
 											$folder=$folder_name;
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-												t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -1340,7 +1340,7 @@ switch ($this->ms['page']) {
 												mslib_befe::deleteProductImage($this->get['old_image']);
 											}
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-												t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -1351,7 +1351,7 @@ switch ($this->ms['page']) {
 													$array=explode(".", $filename);
 													$folder=$folder_name;
 													if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-														t3lib_div::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+														 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 													}
 													$folder.='/';
 													$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -1787,10 +1787,10 @@ switch ($this->ms['page']) {
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'])) {
 				$params=array();
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'] as $funcRef) {
-					t3lib_div::callUserFunction($funcRef, $params, $this);
+					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
-				$cat_id=mslib_fe::RemoveXSS(t3lib_div::_GET('catid'));
+				$cat_id=mslib_fe::RemoveXSS( \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('catid'));
 				$getPost=$this->post['productlisting'];
 				$sort_type=$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
 				if ($sort_type=='desc') {
@@ -1902,7 +1902,7 @@ switch ($this->ms['page']) {
 							'row'=>&$row
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['get_micro_downloadPreProc'] as $funcRef) {
-							t3lib_div::callUserFunction($funcRef, $params, $this);
+							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom page hook that can be controlled by third-party plugin eof
@@ -1991,7 +1991,7 @@ switch ($this->ms['page']) {
 				'content'=>&$content
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAjaxPage'] as $funcRef) {
-				t3lib_div::callUserFunction($funcRef, $params, $this);
+				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 			if ($this->get['tx_multishop_pi1']['output']=='json') {
 				echo $content;

@@ -46,7 +46,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 		global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
 		parent::init();
 		/*
-		if (t3lib_div::_GP('clear_all_cache'))	{
+		if ( \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('clear_all_cache'))	{
 			$this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
 		}
 		*/
@@ -82,7 +82,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			$full_script_path=t3lib_extMgm::extPath('multishop').'scripts/';
 			$this->relative_site_path=t3lib_extMgm::siteRelPath('multishop');
 			// first get the http-path to typo3:
-			$this->httpTypo3Path=substr(substr(t3lib_div::getIndpEnv('TYPO3_SITE_URL'), strlen(t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST'))), 0, -1);
+			$this->httpTypo3Path=substr(substr( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), strlen( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST'))), 0, -1);
 			if (strlen($this->httpTypo3Path)==1) {
 				$this->httpTypo3Path='/';
 			} else {
@@ -93,14 +93,14 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			// Get the vhost full path to multishop (example: /var/www/html/domain.com/public_html/my_cms/typo3conf/ext/multishop/)
 			$this->DOCUMENT_ROOT_MS=PATH_site.t3lib_extMgm::siteRelPath('multishop');
 			// Get the site full URL (example: http://domain.com/my_cms/)
-			$this->FULL_HTTP_URL=t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+			$this->FULL_HTTP_URL= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 			// Get the multishop full URL (example: http://domain.com/my_cms/typo3/ext/multishop or http://domain.com/my_cms/typo3conf/ext/multishop)
-			$this->FULL_HTTP_URL_MS=t3lib_div::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath('multishop');
+			$this->FULL_HTTP_URL_MS= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath('multishop');
 			// Get the host URL (example: http://domain.com)
 			// dont use hostURL cause its not supporting subdirectory hosting
-			$this->hostURL=t3lib_div::getIndpEnv('TYPO3_REQUEST_HOST');
+			$this->hostURL= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
 			// Draw the header.
-			$this->doc=t3lib_div::makeInstance('bigDoc');
+			$this->doc= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('bigDoc');
 			$this->doc->backPath=$BACK_PATH;
 			// JavaScript
 			$this->doc->JScode='
@@ -219,7 +219,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 								if (top.fsMod) top.fsMod.recentIds["web"] = 0;
 							</script>
 						';
-			$headerSection=$this->doc->getHeader('pages', $this->pageinfo, $this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_cs($this->pageinfo['_thePath'], 50);
+			$headerSection=$this->doc->getHeader('pages', $this->pageinfo, $this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '. \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($this->pageinfo['_thePath'], 50);
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
 			$this->content.=$this->doc->spacer(5);
@@ -234,7 +234,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			$this->content.=$this->doc->spacer(10);
 		} else {
 			// If no access or if ID == zero
-			$this->doc=t3lib_div::makeInstance('mediumDoc');
+			$this->doc= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mediumDoc');
 			$this->doc->backPath=$BACK_PATH;
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
@@ -260,7 +260,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			tx_t3jquery::addJqJS();
 			$this->content.=tx_t3jquery::getJqJSBE();
 		}
-		$typo3Version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : t3lib_div::int_from_ver(TYPO3_version);
+		$typo3Version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
 		if ($typo3Version>=6000000) {
 			$t3lib_BEfuncAlias = '\TYPO3\CMS\Backend\Utility\BackendUtility';
 		} else {
@@ -544,7 +544,7 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/multish
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/multishop/mod1/index.php']);
 }
 // Make instance:
-$SOBE=t3lib_div::makeInstance('tx_multishop_module1');
+$SOBE= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_module1');
 $SOBE->init();
 // Include files?
 foreach ($SOBE->include_once as $INC_FILE) {

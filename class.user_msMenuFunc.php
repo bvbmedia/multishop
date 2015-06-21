@@ -1,5 +1,5 @@
 <?php
-class user_msMenuFunc extends tslib_pibase {
+class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	function subMenuArray($dataArray) {
 		if (count($dataArray['subs'])) {
 			$tel = 0;

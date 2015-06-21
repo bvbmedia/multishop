@@ -45,7 +45,7 @@ $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/attribute_values/orig
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/order_resources';
 foreach ($paths as $path) {
 	if (!is_dir($path)) {
-		t3lib_div::mkdir($path);
+		 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($path);
 	}
 }
 ?>
