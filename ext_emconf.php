@@ -34,8 +34,6 @@ $EM_CONF[$_EXTKEY] = array(
 		'depends' => array(
 			'php' => '5.3.15-5.5.99',
 			'typo3' => '6.2.5-7.3.99',
-			'tt_address' => '2.3.5-2.3.99',
-			'static_info_tables' => '0.0.0',
 		),
 		'conflicts' => array(
 			'dbal' => '0.0.0'
@@ -44,6 +42,8 @@ $EM_CONF[$_EXTKEY] = array(
 			't3jquery' => '2.7.1-3.9.99',
 			'rzcolorbox_jquery2' => '1.0.0-1.9.99',
 			'phpexcel_service' => '1.7.6-1.7.99',
+			'tt_address' => '2.3.5-2.3.99',
+			'static_info_tables' => '0.0.0',
 		)
 	),
 	'_md5_values_when_last_written' => ''
