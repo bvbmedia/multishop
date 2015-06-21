@@ -3,7 +3,7 @@ Multishop is the e-commerce plugin for TYPO3.
 It makes use of of jQuery 2. For optimal results install it on a webserver that uses PHP 5.4.X or higher and TYPO3 6.2.X LTS.
 
 The latest version can be downloaded from Atlassian Bitbucket:
-http://git.bvbmedia.nl/multishop
+https://bitbucket.org/bvbmedia/multishop
 
 Are you curious about what Multishop can do for you? On the following sites you can find live shops that are running on Multishop:
 http://www.typo3webshop.com/
