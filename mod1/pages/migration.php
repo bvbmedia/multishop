@@ -68,7 +68,7 @@ if (is_array($shopPids) && count($shopPids)>0) {
 $multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
 if (is_array($multishop_content_objects) && count($multishop_content_objects)>0) {
 	foreach ($multishop_content_objects as $content_object) {
-		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['uid'], '');
+		$pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($content_object['uid'], '');
 		if (is_numeric($pageinfo['uid'])) {
 			$sourceShops[$pageinfo['uid']]='PID: '.$pageinfo['uid'].' ('.$pageinfo['_thePathFull'].')';
 			$targetShops[$pageinfo['uid']]='PID: '.$pageinfo['uid'].' ('.$pageinfo['_thePathFull'].')';
@@ -77,7 +77,7 @@ if (is_array($multishop_content_objects) && count($multishop_content_objects)>0)
 }
 if (count($pids)) {
 	foreach ($pids as $pid) {
-		$record=t3lib_BEfunc::readPageAccess($pid, '');
+		$record=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($pid, '');
 		if (!array_key_exists($pid, $sourceShops)) {
 			$sourceShops[$pid]='PID: '.$pid.' (Unknown)';
 		}

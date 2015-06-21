@@ -3515,11 +3515,11 @@ class mslib_befe {
 					return $pageinfo;
 				}
 			} else {
-				$pageinfo=t3lib_BEfunc::getRecord('pages', $id, '*', ($perms_clause ? ' AND '.$perms_clause : ''));
+				$pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::getRecord('pages', $id, '*', ($perms_clause ? ' AND '.$perms_clause : ''));
 				if ($pageinfo['uid'] && $GLOBALS['BE_USER']->isInWebMount($id, $perms_clause)) {
-					t3lib_BEfunc::workspaceOL('pages', $pageinfo);
-					t3lib_BEfunc::fixVersioningPid('pages', $pageinfo);
-					list($pageinfo['_thePath'], $pageinfo['_thePathFull'])=t3lib_BEfunc::getRecordPath(intval($pageinfo['uid']), $perms_clause, 15, 1000);
+					\TYPO3\CMS\Backend\Utility\BackendUtility::workspaceOL('pages', $pageinfo);
+					\TYPO3\CMS\Backend\Utility\BackendUtility::fixVersioningPid('pages', $pageinfo);
+					list($pageinfo['_thePath'], $pageinfo['_thePathFull'])=\TYPO3\CMS\Backend\Utility\BackendUtility::getRecordPath(intval($pageinfo['uid']), $perms_clause, 15, 1000);
 					return $pageinfo;
 				}
 			}

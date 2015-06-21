@@ -16,17 +16,22 @@
  *  GNU General Public License for more details.
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Backend\Utility\IconUtility;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
  * Hint: use extdeveval to insert/update function index above.
  */
-
-$LANG->includeLLFile('EXT:multishop/mod1/locallang.xml');
+// TYPO3 V7 fix
+//$LANG->includeLLFile('EXT:multishop/mod1/locallang.xml');
+$GLOBALS['LANG']->includeLLFile('EXT:multishop/mod1/locallang.xml');
 //require_once(PATH_t3lib . 'class.t3lib_scbase.php');
 include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
 include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
 //require_once(PATH_t3lib . 'class.t3lib_iconworks.php');
-$BE_USER->modAccess($MCONF, 1); // This checks permissions and exits if the users has no permission for entry.
+$GLOBALS['BE_USER']->modAccess($GLOBALS['MCONF'], 1); // This checks permissions and exits if the users has no permission for entry.
 // DEFAULT initialization of a module [END]
 
 
@@ -36,12 +41,19 @@ $BE_USER->modAccess($MCONF, 1); // This checks permissions and exits if the user
  * @package    TYPO3
  * @subpackage    tx_multishop
  */
-class  tx_multishop_module1 extends t3lib_SCbase {
+class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
+	/**
+	 * Instance of template doc class
+	 *
+	 * @var \TYPO3\CMS\Backend\Template\DocumentTemplate
+	 */
+	public $doc;
 	var $pageinfo;
 	/**
 	 * Initializes the Module
 	 * @return    void
 	 */
+
 	function init() {
 		global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
 		parent::init();
@@ -76,7 +88,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 		global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
 		// Access check!
 		// The page will show only if there is a valid page and if this page may be viewed by the user
-		$this->pageinfo=t3lib_BEfunc::readPageAccess($this->id, $this->perms_clause);
+		$this->pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($this->id, $this->perms_clause);
 		$access=is_array($this->pageinfo) ? 1 : 0;
 		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id)) {
 			$full_script_path=t3lib_extMgm::extPath('multishop').'scripts/';
@@ -100,8 +112,12 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			// dont use hostURL cause its not supporting subdirectory hosting
 			$this->hostURL= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
 			// Draw the header.
-			$this->doc= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('bigDoc');
-			$this->doc->backPath=$BACK_PATH;
+			$this->doc = GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
+			//$this->doc->setModuleTemplate(ExtensionManagementUtility::extPath($this->extKey) . 'mod1/mod_template.html');
+			$this->doc->backPath = $GLOBALS['BACK_PATH'];
+
+			//$this->doc= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('bigDoc');
+			//$this->doc->backPath=$BACK_PATH;
 			// JavaScript
 			$this->doc->JScode='
 							<style type="text/css"> 
@@ -223,7 +239,7 @@ class  tx_multishop_module1 extends t3lib_SCbase {
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
 			$this->content.=$this->doc->spacer(5);
-			$this->content.=$this->doc->section('', $this->doc->funcMenu($headerSection, t3lib_BEfunc::getFuncMenu($this->id, 'SET[function]', $this->MOD_SETTINGS['function'], $this->MOD_MENU['function'])));
+			$this->content.=$this->doc->section('', $this->doc->funcMenu($headerSection, \TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->id, 'SET[function]', $this->MOD_SETTINGS['function'], $this->MOD_MENU['function'])));
 			$this->content.=$this->doc->divider(5);
 			// Render content:
 			$this->moduleContent();

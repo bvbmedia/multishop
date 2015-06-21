@@ -1379,7 +1379,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		);
 		if (count($multishop_content_objects) == 0)
 		{
-			$pageinfo = t3lib_BEfunc::readPageAccess($row['page_uid'],'');
+			$pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($row['page_uid'],'');
 			if (is_numeric($pageinfo['uid']))
 			{
 				echo 'ba';
@@ -1419,7 +1419,7 @@ $multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages'
 //$multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tt_content', 'deleted=0 and hidden=0 and sys_language_uid=0 and list_type = \'multishop_pi1\' and pi_flexform like \'%<value index="vDEF">coreshop</value>%\'', '');
 if (count($multishop_content_objects)>0) {
 	foreach ($multishop_content_objects as $content_object) {
-		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['uid'], '');
+		$pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($content_object['uid'], '');
 		if (is_numeric($pageinfo['uid'])) {
 			if (!$shops[$pageinfo['uid']]) {
 				$shops[$pageinfo['uid']]=0;
@@ -1430,14 +1430,14 @@ if (count($multishop_content_objects)>0) {
 if (count($shops)>0) {
 	$options='';
 	foreach ($shops as $page_uid=>$total) {
-		$pageinfo=t3lib_BEfunc::readPageAccess($page_uid, '');
+		$pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($page_uid, '');
 		if ($pageinfo['uid']) {
 			$label=$pageinfo['_thePathFull'];
 		} else {
 			$label='Unknown (pid: '.$page_uid.')';
 		}
 		foreach ($shops as $page_uid2=>$total2) {
-			$pageinfo2=t3lib_BEfunc::readPageAccess($page_uid2, '');
+			$pageinfo2=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($page_uid2, '');
 			if ($pageinfo2['uid']) {
 				$label2=$pageinfo2['_thePathFull'];
 			} else {
@@ -1475,7 +1475,7 @@ if (count($shops)>0) {
 	if (count($shops)) {
 		$options='';
 		foreach ($shops as $page_uid=>$total) {
-			$pageinfo=t3lib_BEfunc::readPageAccess($page_uid, '');
+			$pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($page_uid, '');
 			if ($pageinfo['uid']) {
 				$label=$pageinfo['_thePathFull'];
 				$options.='<option value="'.$page_uid.'">'.$label.': '.$total.' records</option>'."\n";
@@ -1520,14 +1520,14 @@ if (count($multishop_content_objects)>0) {
 					</fieldset>
 					';
 	foreach ($multishop_content_objects as $content_object) {
-		$pageinfo=t3lib_BEfunc::readPageAccess($content_object['uid'], '');
+		$pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($content_object['uid'], '');
 		if (is_numeric($pageinfo['uid'])) {
 			$typoLink=$t3lib_BEfuncAlias::getModuleUrl('web_txmultishopM1');
 			$content.='
 							<form action="'.$typoLink.'" method="post" enctype="multipart/form-data">
 							<div class="shadow_bottom">
 							<fieldset>
-							<legend><a href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['uid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['uid']), '', '')).'">'.trim($pageinfo['_thePathFull'], '/').'</a> <a title="View" href="#" onclick="'.htmlspecialchars(t3lib_BEfunc::viewOnClick($content_object['uid'], $this->backPath, t3lib_BEfunc::BEgetRootLine($content_object['uid']), '', '')).'">'.$this->Typo3Icon('actions-document-view', 'View').'</a> <a title="Delete" href="'. \TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=erase" onClick="return CONFIRM(\'Are you sure you want to delete the products, categories, orders, cms pages and settings of: '.$pageinfo['_thePathFull'].'?\')">'.$this->Typo3Icon('actions-edit-delete', 'Delete').'</a>
+							<legend><a href="#" onclick="'.htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($content_object['uid'], $this->backPath, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($content_object['uid']), '', '')).'">'.trim($pageinfo['_thePathFull'], '/').'</a> <a title="View" href="#" onclick="'.htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($content_object['uid'], $this->backPath, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($content_object['uid']), '', '')).'">'.$this->Typo3Icon('actions-document-view', 'View').'</a> <a title="Delete" href="'. \TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=erase" onClick="return CONFIRM(\'Are you sure you want to delete the products, categories, orders, cms pages and settings of: '.$pageinfo['_thePathFull'].'?\')">'.$this->Typo3Icon('actions-edit-delete', 'Delete').'</a>
 							</legend>';
 			$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total', 'fe_users', '', '');
 			$row=$data[0];
