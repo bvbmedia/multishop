@@ -21,7 +21,7 @@
  * Hint: use extdeveval to insert/update function index above.
  */
 $version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
-if ($version<=7000000) {
+if ($version<=6002000) {
 	require_once(PATH_tslib.'class.tslib_pibase.php');
 }
 /**
