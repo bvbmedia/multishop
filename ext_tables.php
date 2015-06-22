@@ -188,7 +188,6 @@ $tempColumns=array(
 					'Delivery address',
 					'delivery'
 				),
-
 			)
 		)
 	),
@@ -204,23 +203,13 @@ t3lib_extMgm::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddre
 // TT ADDRESS EOF
 // ADD CUSTOM PAGE TYPE
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('pages');
-
-$GLOBALS['TCA']['pages']['columns']['module']['config']['items'][] =
-	array(
-		'Multishop: core shop',
-		'mscore',
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif'
-	);
-
-\TYPO3\CMS\Backend\Sprite\SpriteManager::addTcaTypeIcon(
-	'pages',
-	'contains-mscore',
-	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'mod1/images/mscore_icon.gif'
+$GLOBALS['TCA']['pages']['columns']['module']['config']['items'][]=array(
+	'Multishop: core shop',
+	'mscore',
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'mod1/images/mscore_icon.gif'
 );
+\TYPO3\CMS\Backend\Sprite\SpriteManager::addTcaTypeIcon('pages', 'contains-mscore', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'mod1/images/mscore_icon.gif');
 // ADD CUSTOM PAGE TYPE EOF
-
-
-
 t3lib_extMgm::addPlugin(array(
 	'LLL:EXT:multishop/locallang_db.xml:tt_content.list_type_pi1',
 	$_EXTKEY.'_pi1',
