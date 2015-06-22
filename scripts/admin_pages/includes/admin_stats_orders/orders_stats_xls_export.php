@@ -72,7 +72,6 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-
 	$where=array();
 	if ($this->get['paid_orders_only']) {
 		$where[]='(o.paid=1)';
@@ -111,7 +110,7 @@ $col++;
 $phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 3, number_format(($total_amount/$dayOfTheYear)*365, 2, ',', '.'));
 //$worksheet->setMerge(3, 0, 3, 13);
 // header
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4,mslib_befe::strtoupper($this->pi_getLL('sales_volume_by_day')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, 4, mslib_befe::strtoupper($this->pi_getLL('sales_volume_by_day')));
 $phpexcel->getActiveSheet()->getStyle('A4')->applyFromArray($header_style);
 $phpexcel->getActiveSheet()->mergeCells('A4:N4');
 if ($currentMonth) {
@@ -128,18 +127,17 @@ for ($s=1; $s<13; $s++) {
 		$dates[strftime("%x", $time)]=$time;
 	}
 }
-
 $col=0;
 $col_char='A';
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper($this->pi_getLL('day')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5, mslib_befe::strtoupper($this->pi_getLL('day')));
 $phpexcel->getActiveSheet()->getColumnDimension($col_char)->setWidth(16);
 $col_char++;
 $col++;
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper($this->pi_getLL('amount')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5, mslib_befe::strtoupper($this->pi_getLL('amount')));
 $phpexcel->getActiveSheet()->getColumnDimension($col_char)->setWidth(16);
 $col_char++;
 $col++;
-$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5,mslib_befe::strtoupper($this->pi_getLL('orders_id')));
+$phpexcel->getActiveSheet()->setCellValueByColumnAndRow($col, 5, mslib_befe::strtoupper($this->pi_getLL('orders_id')));
 $phpexcel->getActiveSheet()->mergeCells('C5:N5');
 $row=6;
 $col=0;
@@ -150,7 +148,7 @@ foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$current_date=date('d', $value);
 	if ($current_date=='01') {
-		$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row,date('F', $value));
+		$phpexcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row, date('F', $value));
 		$phpexcel->getActiveSheet()->getStyle('A'.$row)->applyFromArray($header_style);
 		$phpexcel->getActiveSheet()->mergeCells('A'.$row.':N'.$row);
 		$row++;

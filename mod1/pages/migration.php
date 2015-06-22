@@ -6,8 +6,8 @@ switch ($_REQUEST['action']) {
 			$tables=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_products', '', 'page_uid');
 			$str="SHOW TABLES where tables_in_".$db." like 'tx_multishop_%'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			$array=explode('_',$_REQUEST['source_target_string']);
-			if (is_array($array) && count($array) == 2 && is_numeric($array[0]) && is_numeric($array[1])) {
+			$array=explode('_', $_REQUEST['source_target_string']);
+			if (is_array($array) && count($array)==2 && is_numeric($array[0]) && is_numeric($array[1])) {
 				while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 					$str2="UPDATE ".$row['Tables_in_'.$db]." SET page_uid='".$array[1]."' where page_uid='".$array[0]."'";
 					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
@@ -31,7 +31,6 @@ switch ($_REQUEST['action']) {
 }
 $sourceShops=array();
 $targetShops=array();
-
 $pids=array();
 $shopPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_products', '', 'page_uid');
 if (is_array($shopPids) && count($shopPids)>0) {
@@ -43,24 +42,24 @@ if (is_array($shopPids) && count($shopPids)>0) {
 }
 $otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'fe_users', '', 'page_uid');
 if (is_array($shopPids) && count($shopPids)>0) {
-	foreach($otherPids as $shopPid) {
-		if (!in_array($shopPid['page_uid'],$pids)) {
+	foreach ($otherPids as $shopPid) {
+		if (!in_array($shopPid['page_uid'], $pids)) {
 			$pids[]=$shopPid['page_uid'];
 		}
 	}
 }
 $otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_orders', '', 'page_uid');
 if (is_array($shopPids) && count($shopPids)>0) {
-	foreach($otherPids as $shopPid) {
-		if (!in_array($shopPid['page_uid'],$pids)) {
+	foreach ($otherPids as $shopPid) {
+		if (!in_array($shopPid['page_uid'], $pids)) {
 			$pids[]=$shopPid['page_uid'];
 		}
 	}
 }
 $otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_categories', '', 'page_uid');
 if (is_array($shopPids) && count($shopPids)>0) {
-	foreach($otherPids as $shopPid) {
-		if (!in_array($shopPid['page_uid'],$pids)) {
+	foreach ($otherPids as $shopPid) {
+		if (!in_array($shopPid['page_uid'], $pids)) {
 			$pids[]=$shopPid['page_uid'];
 		}
 	}
@@ -85,8 +84,8 @@ if (count($pids)) {
 }
 if (count($sourceShops) && count($targetShops)) {
 	$options='';
-	foreach ($sourceShops as $sourcePageUid => $sourcePageTitle) {
-		foreach ($targetShops as $targetPageUid => $targetPageTitle) {
+	foreach ($sourceShops as $sourcePageUid=>$sourcePageTitle) {
+		foreach ($targetShops as $targetPageUid=>$targetPageTitle) {
 			if ($sourcePageUid!=$targetPageUid) {
 				$options.='<option value="'.$sourcePageUid.'_'.$targetPageUid.'">Move ['.$sourcePageTitle.'] to ['.$targetPageTitle.']</option>'."\n";
 			}

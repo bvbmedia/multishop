@@ -25,7 +25,7 @@ if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($t
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'])) {
 				$params=array();
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			break;
@@ -156,7 +156,6 @@ foreach ($chars as $char) {
 	$searchCharNav.='<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[searchByChar]='.$char.'&tx_multishop_pi1[page_section]=admin_customers').'">'.mslib_befe::strtoupper($char).'</a></li>';
 }
 $searchCharNav.='</ul></div>';
-
 $user_countries=mslib_befe::getRecords('', 'fe_users f', '', array(), 'f.country', 'f.country asc');
 $fe_user_country=array();
 foreach ($user_countries as $user_country) {
@@ -301,7 +300,6 @@ if (strlen($this->get['tx_multishop_pi1']['keyword'])>0) {
 		$filter[]="(".implode(" OR ", $keywordOr).")";
 	}
 }
-
 switch ($this->get['tx_multishop_pi1']['order_by']) {
 	case 'username':
 		$order_by='f.username';
@@ -395,7 +393,7 @@ $extra_selected_customers_action_js_filters='';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersExtraJSForSelectedActions'])) {
 	$params=array('extra_selected_customers_action_js_filters'=>$extra_selected_customers_action_js_filters);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersExtraJSForSelectedActions'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='

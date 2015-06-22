@@ -34,7 +34,6 @@ if (!$product['products_id']) {
 	if ($product['products_multiplication']>0) {
 		$qty=round($product['products_multiplication'], 2);
 	}
-
 	if (!$this->conf['disableMetatags']) {
 		// meta tags
 		if ($product['products_meta_title']) {
@@ -172,7 +171,7 @@ if (!$product['products_id']) {
 			list($staffel_qty, $staffel_price)=explode(':', $staffel_data);
 			if (strpos($staffel_qty, '99999')!==false) {
 				list($qty_1, $qty_2)=explode('-', $staffel_qty);
-				$staffel_qty='> ' . $qty_1;
+				$staffel_qty='> '.$qty_1;
 			}
 			$staffel_table_content.='<tr class="'.$tr_type.'">';
 			$staffel_table_content.='<td class="staffel_list_qty">'.str_replace('-', ' - ', $staffel_qty).'</th>';
@@ -336,11 +335,10 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
 	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
 	$markerArray['###ORDER_UNIT_NAME###']=$product['order_unit_name'];
-
 	$js_detail_page_triggers[]='
-		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00'?$product['products_multiplication']:($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1')).'\');
-		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'\');
-		var maxQty=parseFloat(\''.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'\');
+		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : ($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1')).'\');
+		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'\');
+		var maxQty=parseFloat(\''.($product['maximum_quantity']!='0.00' ? $product['maximum_quantity'] : '0').'\');
 		if ($("#quantity").val() == "") {
 			$("#quantity").val(stepSize);
 		}
@@ -459,7 +457,7 @@ if (!$product['products_id']) {
 			'plugins_extra_content'=>&$plugins_extra_content
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###']='';

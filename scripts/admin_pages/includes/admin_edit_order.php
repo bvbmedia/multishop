@@ -97,7 +97,6 @@ if (is_numeric($this->get['orders_id'])) {
 							$updateArray['products_price']=$this->post['product_price'];
 							$updateArray['final_price']=$this->post['product_price'];
 							$updateArray['products_tax']=$this->post['product_tax'];
-
 							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
 								$updateArray['customer_comments']=$this->post['product_customer_comments'];
 							}
@@ -108,7 +107,7 @@ if (is_numeric($this->get['orders_id'])) {
 									'updateArray'=>&$updateArray
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 								// hook oef
 							}
@@ -195,7 +194,7 @@ if (is_numeric($this->get['orders_id'])) {
 									'insertArray'=>&$insertArray
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 								// hook oef
 							}
@@ -438,7 +437,7 @@ if (is_numeric($this->get['orders_id'])) {
 			} // if ($this->post) eol
 			// repair tax stuff
 			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-			$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 			$mslib_order->init($this);
 			$mslib_order->repairOrder($this->get['orders_id']);
 			//is proposal
@@ -658,7 +657,7 @@ if (is_numeric($this->get['orders_id'])) {
 		if ($orders['billing_company']) {
 			$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 		}
-		$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer',1);
+		$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
 		$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
 		'.$orders['billing_address'].'<br />
 		'.$orders['billing_zip'].' '.$orders['billing_city'].' <br />
@@ -1110,7 +1109,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem='<li>';
 			$orderDetailsItem.='<label>'.$this->pi_getLL('payment_condition').'</label>';
 			if (!$orders['is_locked']) {
-				$orderDetailsItem.='<input type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" style="width:90px" /> ' . $this->pi_getLL('days');
+				$orderDetailsItem.='<input type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" style="width:90px" /> '.$this->pi_getLL('days');
 			} else {
 				$orderDetailsItem.='<span>'.$orders['payment_condition'].' '.$this->pi_getLL('days').'</span>';
 			}
@@ -1132,7 +1131,7 @@ if (is_numeric($this->get['orders_id'])) {
 				'orders'=>&$orders
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 			// hook oef
 		}
@@ -1223,7 +1222,7 @@ if (is_numeric($this->get['orders_id'])) {
 				'order_products_header_data'=>&$order_products_header_data
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableHeader'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -1301,7 +1300,6 @@ if (is_numeric($this->get['orders_id'])) {
 						} else {
 							$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
 						}
-
 					}
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 						// products status col
@@ -1437,7 +1435,7 @@ if (is_numeric($this->get['orders_id'])) {
 							'row'=>&$row
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderListItemPreHook'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
@@ -1508,7 +1506,10 @@ if (is_numeric($this->get['orders_id'])) {
 					$order_products_body_data['products_action']['class']='cell_products_action';
 					$order_products_body_data['products_action']['value']=$product_action_button;
 				}
-				$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+				$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
+					'class'=>$tr_type,
+					'value'=>$order_products_body_data
+				);
 				if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
 					if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
 						$order_products_body_data=array();
@@ -1541,7 +1542,10 @@ if (is_numeric($this->get['orders_id'])) {
 						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 							$order_products_body_data['products_action']['value']='';
 						}
-						$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type.' order_products_description', 'value'=>$order_products_body_data);
+						$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
+							'class'=>$tr_type.' order_products_description',
+							'value'=>$order_products_body_data
+						);
 					}
 				} else {
 					if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD'] && !empty($order['products_description'])) {
@@ -1574,7 +1578,10 @@ if (is_numeric($this->get['orders_id'])) {
 						if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 							$order_products_body_data['products_action']['value']='';
 						}
-						$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type.' order_products_description', 'value'=>$order_products_body_data);
+						$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
+							'class'=>$tr_type.' order_products_description',
+							'value'=>$order_products_body_data
+						);
 					}
 				}
 				if ($orders_products_attributes[$order['orders_products_id']]) {
@@ -1669,7 +1676,10 @@ if (is_numeric($this->get['orders_id'])) {
 									$order_products_body_data['products_action']['align']='left';
 									$order_products_body_data['products_action']['value']='<input type="button" class="msadmin_button remove_attributes" value="-">';
 								}
-								$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+								$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
+									'class'=>$tr_type,
+									'value'=>$order_products_body_data
+								);
 								$attr_counter++;
 							}
 						}
@@ -1776,7 +1786,10 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 								}
 							}
-							$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
+								'class'=>$tr_type,
+								'value'=>$order_products_body_data
+							);
 						}
 					}
 				} else {
@@ -1820,7 +1833,10 @@ if (is_numeric($this->get['orders_id'])) {
 								// product action col
 								$order_products_body_data['products_action']['value']='';
 							}
-							$order_products_table['body'][$tbody_tag_id]['rows'][]=array('class'=>$tr_type, 'value'=>$order_products_body_data);
+							$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
+								'class'=>$tr_type,
+								'value'=>$order_products_body_data
+							);
 						}
 					}
 				}
@@ -1870,7 +1886,10 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_action']['class']='last_edit_product_row_paction_col';
 						$order_products_body_data['products_action']['value']='';
 					}
-					$order_products_table['body'][$tbody_tag_id]['rows'][]=array('id'=>'last_edit_product_row', 'value'=>$order_products_body_data);
+					$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
+						'id'=>'last_edit_product_row',
+						'value'=>$order_products_body_data
+					);
 				}
 				// custom hook that can be controlled by third-party plugin
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'])) {
@@ -1881,7 +1900,7 @@ if (is_numeric($this->get['orders_id'])) {
 						'order_products_table_body'=>&$order_products_table['body']
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableBody'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// custom hook that can be controlled by third-party plugin eof
@@ -1895,7 +1914,11 @@ if (is_numeric($this->get['orders_id'])) {
 			$order_products_body_data['products_id']['colspan']=$colspan;
 			$order_products_body_data['products_id']['style']='text-align:left;';
 			$order_products_body_data['products_id']['value']=$this->pi_getLL('add_item_to_order');
-			$order_products_table['body']['manual_add_new_product_header']['rows'][]=array('class'=>'manual_add_new_product', 'style'=>'display:none', 'value'=>$order_products_body_data);
+			$order_products_table['body']['manual_add_new_product_header']['rows'][]=array(
+				'class'=>'manual_add_new_product',
+				'style'=>'display:none',
+				'value'=>$order_products_body_data
+			);
 			// manual new product
 			$order_products_body_data=array();
 			// products id col
@@ -1934,7 +1957,6 @@ if (is_numeric($this->get['orders_id'])) {
 			while ($rs_tx_sb=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb)) {
 				$sb_tax_rate=($rs_tx_sb['rate']/100);
 				$vat_sb.='<option value="'.$rs_tx_sb['tax_id'].'"'.(($rs_tx_sb['default_status']) ? ' selected' : '').'>'.$rs_tx_sb['name'].'</option>';
-
 			}
 			$vat_sb.='</select>';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1970,7 +1992,11 @@ if (is_numeric($this->get['orders_id'])) {
 			$order_products_body_data['products_action']['class']='cell_products_action';
 			$order_products_body_data['products_action']['value']='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button">&nbsp;';
 			$order_products_body_data['products_action']['value'].='<input type="submit" value="'.$this->pi_getLL('add').'" class="msadmin_button submit_button">';
-			$order_products_table['body']['manual_add_new_product']['rows'][]=array('class'=>'odd manual_add_new_product', 'style'=>'display:none', 'value'=>$order_products_body_data);
+			$order_products_table['body']['manual_add_new_product']['rows'][]=array(
+				'class'=>'odd manual_add_new_product',
+				'style'=>'display:none',
+				'value'=>$order_products_body_data
+			);
 			// order product description
 			if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PRODUCTS_DESCRIPTION_FIELD']) {
 				$order_products_body_data=array();
@@ -2002,7 +2028,11 @@ if (is_numeric($this->get['orders_id'])) {
 					// product action col
 					$order_products_body_data['products_action']['value']='';
 				}
-				$order_products_table['body']['manual_add_new_product_description']['rows'][]=array('class'=>'manual_add_new_product', 'style'=>'display:none', 'value'=>$order_products_body_data);
+				$order_products_table['body']['manual_add_new_product_description']['rows'][]=array(
+					'class'=>'manual_add_new_product',
+					'style'=>'display:none',
+					'value'=>$order_products_body_data
+				);
 			}
 			$order_products_body_data=array();
 			// products id col
@@ -2043,7 +2073,12 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_action']['class']='last_edit_product_row_paction_col';
 				$order_products_body_data['products_action']['value']='';
 			}
-			$order_products_table['body']['last_edit_product_row']['rows'][]=array('class'=>'manual_add_new_product', 'id'=>'last_edit_product_row', 'style'=>'display:none', 'value'=>$order_products_body_data);
+			$order_products_table['body']['last_edit_product_row']['rows'][]=array(
+				'class'=>'manual_add_new_product',
+				'id'=>'last_edit_product_row',
+				'style'=>'display:none',
+				'value'=>$order_products_body_data
+			);
 			if (!isset($this->get['edit_product'])) {
 				$order_products_body_data=array();
 				// products id col
@@ -2063,7 +2098,7 @@ if (is_numeric($this->get['orders_id'])) {
 				'order_products_table'=>&$order_products_table['body']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderProductsTableAddManualProduct'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -2259,7 +2294,6 @@ if (is_numeric($this->get['orders_id'])) {
 			if (!empty($orders['coupon_code'])) {
 				$coupon_code=' (code: '.$orders['coupon_code'].')';
 			}
-
 			$content_discount='
 			<div class="account-field">
 				<label>'.$this->pi_getLL('discount').$coupon_code.'</label>
@@ -2644,13 +2678,11 @@ if (is_numeric($this->get['orders_id'])) {
 				manual_attributes_selectbox += \'<input type="hidden" name="is_manual_value[]"value="0"/>\';
 				manual_attributes_selectbox += \'</span>\';
 				manual_attributes_selectbox += \'</div>\';';
-
-				$tmpcontent.='
+			$tmpcontent.='
 				var manual_attributes_price = \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="msManualOrderProductPriceExcludingVat" value="\' + decimalCrop(price_data.display_values_price) + \'"><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
 				manual_attributes_price += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_manual_name_including_vat" class="msManualOrderProductPriceIncludingVat" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'"><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
 				manual_attributes_price += \'<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + (price_data.price_prefix!=\'+\' ? price_data.price_prefix : \'\') + price_data.values_price + \'" /></div>\';';
-
-				$tmpcontent.='
+			$tmpcontent.='
 				var cloned_row=$(\'#last_edit_product_row\').clone();
 				cloned_row.removeAttr("id");
 				cloned_row.removeAttr("class");
@@ -2717,7 +2749,7 @@ if (is_numeric($this->get['orders_id'])) {
 			'orders'=>&$orders
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersFieldset'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 		// hook oef
 	}
@@ -2867,7 +2899,7 @@ if (is_numeric($this->get['orders_id'])) {
 			'orders'=>&$orders
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 		// hook oef
 	}

@@ -1,5 +1,4 @@
 <?php
-
 $title='Help';
 $content.='
 	<div class="shadow_bottom">

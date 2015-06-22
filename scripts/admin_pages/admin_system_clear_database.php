@@ -160,14 +160,8 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 				$tables[]='tx_multishop_products_search_log';
 				$tables[]='tx_multishop_products_to_relative_products';
 				$tables[]='tx_multishop_product_crop_image_coordinate';
-
 				//$tables[]='tx_multishop_reviews';
 				//$tables[]='tx_multishop_reviews_description';
-
-
-
-
-
 				/*
 				$tables[]='tx_multishop_coupons';
 				$tables[]='tx_multishop_import_jobs';
@@ -191,7 +185,7 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 						'tables'=>&$tables
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_system_clear_database.php']['clearEverythingPreProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				foreach ($tables as $table) {

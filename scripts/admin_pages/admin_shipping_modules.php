@@ -22,7 +22,7 @@ if ($this->post) {
 				}
 			}
 		}
-		header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_method_zone_mappings');
+		header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules').'#admin_shipping_method_zone_mappings');
 	}
 	if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
 		$shipping_methods=mslib_fe::loadShippingMethods();
@@ -43,7 +43,7 @@ if ($this->post) {
 				}
 			}
 		}
-		header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules') . '#admin_shipping_payment_mappings');
+		header('Location: /'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules').'#admin_shipping_payment_mappings');
 	}
 	if ($this->post['sub']=='update_shipping_method' && $this->post['shipping_method_id']) {
 		// update shipping method
@@ -395,7 +395,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	}
 	$cost_tax_rate=0;
 	$percentage_handling_cost=$row['handling_costs'];
-	if (strpos($percentage_handling_cost, '%')===FALSE) {
+	if (strpos($percentage_handling_cost, '%')===false) {
 		$tmp_phc=explode('.', $percentage_handling_cost);
 		if (isset($tmp_phc[1])>0) {
 			$percentage_handling_cost=mslib_fe::taxDecimalCrop($percentage_handling_cost, 2, false).'%';
@@ -713,7 +713,11 @@ if ($this->ms['show_main']) {
 	//tabs array
 	$tabs=array();
 	// shipping methods tab
-	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), 'id'=>'admin_shipping_methods', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent));
+	$tabs[]=array(
+		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))),
+		'id'=>'admin_shipping_methods',
+		'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_shipping_methods'))), $tmpcontent)
+	);
 	// shipping methods to zones mapping
 	$tmpcontent='';
 	// load all shipping methods
@@ -775,7 +779,6 @@ if ($this->ms['show_main']) {
 					}
 					$tmpcontent.='</tr>';
 				}
-
 				$tmpcontent.='</table>';
 				$tmpcontent.='</td>';
 			}
@@ -789,7 +792,11 @@ if ($this->ms['show_main']) {
 	} else {
 		$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
 	}
-	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings'))), 'id'=>'admin_shipping_method_zone_mappings', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping'))), $tmpcontent));
+	$tabs[]=array(
+		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings'))),
+		'id'=>'admin_shipping_method_zone_mappings',
+		'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping'))), $tmpcontent)
+	);
 	// shipping to payment mappings
 	$tmpcontent='';
 	$payment_methods=mslib_fe::loadPaymentMethods();
@@ -834,7 +841,11 @@ if ($this->ms['show_main']) {
 	} else {
 		$tmpcontent.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
 	}
-	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_payment_mapping'))), 'id'=>'admin_shipping_payment_mappings', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_payment_mapping'))), $tmpcontent));
+	$tabs[]=array(
+		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_payment_mapping'))),
+		'id'=>'admin_shipping_payment_mappings',
+		'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_payment_mapping'))), $tmpcontent)
+	);
 	// render the tabs
 	$tab_button='';
 	$tab_content='';

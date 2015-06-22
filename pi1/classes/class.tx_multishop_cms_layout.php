@@ -50,6 +50,37 @@ class tx_multishop {
 		}
 	}
 	/**
+	 * Render the preview
+	 * @param array $row tt_content row of the plugin
+	 * @return string rendered preview html
+	 */
+	protected function preview($row) {
+		$data=\TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
+		$selectedMethod=$data['data']['sDEFAULT']['lDEF']['method']['vDEF'];
+		if ($selectedMethod) {
+			$content='Multishop: '.$data['data']['sDEFAULT']['lDEF']['method']['vDEF'].'<br />';
+			$methodToTabArray=array();
+			$methodToTabArray['categories']='s_listing';
+			$methodToTabArray['products']='s_products_listing';
+			$methodToTabArray['search']='s_search';
+			$methodToTabArray['specials']='s_specials';
+//manufacturers
+			$methodToTabArray['misc']='s_misc';
+//			$methodToTabArray[]='s_advanced';
+			if ($methodToTabArray[$selectedMethod]) {
+				foreach ($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'] as $key=>$valArray) {
+					if (isset($valArray['vDEF']) and $valArray['vDEF']!='') {
+						$subContent.=$key.': '.$valArray['vDEF'].'<br />';
+					}
+				}
+			}
+			if ($subContent) {
+				$content.='<br />'.$subContent;
+			}
+		}
+		return $content;
+	}
+	/**
 	 * Function called from page view, used to generate preview of this plugin
 	 * @param  array $params :  flexform params
 	 * @param  array $pObj :    parent object
@@ -77,37 +108,6 @@ class tx_multishop {
 			}
 		}
 		return $result;
-	}
-	/**
-	 * Render the preview
-	 * @param array $row tt_content row of the plugin
-	 * @return string rendered preview html
-	 */
-	protected function preview($row) {
-		$data= \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
-		$selectedMethod=$data['data']['sDEFAULT']['lDEF']['method']['vDEF'];
-		if ($selectedMethod) {
-			$content='Multishop: '.$data['data']['sDEFAULT']['lDEF']['method']['vDEF'].'<br />';
-			$methodToTabArray=array();
-			$methodToTabArray['categories']='s_listing';
-			$methodToTabArray['products']='s_products_listing';
-			$methodToTabArray['search']='s_search';
-			$methodToTabArray['specials']='s_specials';
-//manufacturers			
-			$methodToTabArray['misc']='s_misc';
-//			$methodToTabArray[]='s_advanced';	
-			if ($methodToTabArray[$selectedMethod]) {
-				foreach ($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'] as $key=>$valArray) {
-					if (isset($valArray['vDEF']) and $valArray['vDEF']!='') {
-						$subContent.=$key.': '.$valArray['vDEF'].'<br />';
-					}
-				}
-			}
-			if ($subContent) {
-				$content.='<br />'.$subContent;
-			}
-		}
-		return $content;
 	}
 }
 ?>

@@ -54,11 +54,6 @@ if (isset($this->get['upload']) && $this->get['upload']=='export_orders_task' &&
 				}
 			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices_export', $insertArray);
-
-
-
-
-
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			@unlink($target);
 		}
@@ -123,7 +118,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'array'=>&$array
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_invoices.php']['adminExportInvoiceColtypesHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 asort($array);
@@ -440,7 +435,7 @@ if ($this->ms['show_main']) {
 					'order'=>&$order
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_invoices.php']['ordersIterationItem'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom page hook that can be controlled by third-party plugin eof

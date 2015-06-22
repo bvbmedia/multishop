@@ -25,7 +25,7 @@ $this->searchKeywordListing=$this->pi_getFFvalue($this->cObj->data['pi_flexform'
 $this->customTemplatePath=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'customTemplatePath', 's_advanced');
 if ($this->customTemplatePath) {
 	$this->method=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'method', 'sDEFAULT');
-	switch($this->method) {
+	switch ($this->method) {
 		case 'products':
 		case 'specials':
 			$this->conf['products_listing_tmpl_path']=$this->customTemplatePath;
@@ -168,7 +168,7 @@ if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 	if ($this->get['categories_id'] && is_numeric($this->get['categories_id'])) {
 		$string.='_'.$this->get['categories_id'];
 	} elseif ($this->get['categories_id'] && is_array($this->get['categories_id']) && count($this->get['categories_id'])) {
-		$string.='_'.implode('_',$this->get['categories_id']);
+		$string.='_'.implode('_', $this->get['categories_id']);
 	}
 }
 $lifetime=36000;
@@ -212,32 +212,32 @@ if ($this->ADMIN_USER) {
 	// load enabled languages eof
 }
 if ($this->conf['addBox']) {
-	$this->addBox = $this->conf['addBox'];
+	$this->addBox=$this->conf['addBox'];
 } else {
 	$this->addBox=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'addBox', 'sDEFAULT');
 }
 if ($this->conf['hideHeader']) {
-	$this->hideHeader = $this->conf['hideHeader'];
+	$this->hideHeader=$this->conf['hideHeader'];
 } else {
 	$this->hideHeader=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideHeader', 'sDEFAULT');
 }
 if ($this->conf['hidePagination']) {
-	$this->hidePagination = $this->conf['hidePagination'];
+	$this->hidePagination=$this->conf['hidePagination'];
 } else {
 	$this->hidePagination=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hidePagination', 'sDEFAULT');
 }
 if ($this->conf['productsLimit']) {
-	$this->productsLimit = $this->conf['productsLimit'];
+	$this->productsLimit=$this->conf['productsLimit'];
 } else {
 	$this->productsLimit=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'productsLimit', 'sDEFAULT');
 }
 if ($this->conf['hideIfNoResults']) {
-	$this->hideIfNoResults = $this->conf['hideIfNoResults'];
+	$this->hideIfNoResults=$this->conf['hideIfNoResults'];
 } else {
 	$this->hideIfNoResults=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'hideIfNoResults', 'sDEFAULT');
 }
 if ($this->conf['disableMetatags']) {
-	$this->disableMetatags = $this->conf['disableMetatags'];
+	$this->disableMetatags=$this->conf['disableMetatags'];
 } else {
 	$this->disableMetatags=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'disableMetatags', 's_advanced');
 }
@@ -246,7 +246,7 @@ if ($this->disableMetatags) {
 }
 // Load custom settings by TypoScript setup field
 if ($this->conf['settings.'] && is_array($this->conf['settings.']) && count($this->conf['settings.'])) {
-	foreach ($this->conf['settings.'] as $key => $val) {
+	foreach ($this->conf['settings.'] as $key=>$val) {
 		$this->ms['MODULES'][$key]=$val;
 	}
 }
@@ -263,12 +263,12 @@ if ($this->conf['customSettings']) {
 	$this->customSettings.=$this->conf['customSettings'];
 }
 if ($this->conf['imageWidth']) {
-	$this->imageWidth = $this->conf['imageWidth'];
+	$this->imageWidth=$this->conf['imageWidth'];
 } else {
 	$this->imageWidth=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'imageWidth', 's_specials');
 }
 if ($this->conf['custom_script']) {
-	$this->custom_script = $this->conf['custom_script'];
+	$this->custom_script=$this->conf['custom_script'];
 } else {
 	$this->custom_script=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'custom_script', 's_misc');
 }

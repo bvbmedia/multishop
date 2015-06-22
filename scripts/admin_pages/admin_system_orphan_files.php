@@ -14,7 +14,7 @@ switch ($this->get['action']) {
 		$importTypes[]='import_product_images';
 		$importTypes[]='import_categories_images';
 		$importTypes[]='import_manufacturers_images';
-		foreach($importTypes as $importType) {
+		foreach ($importTypes as $importType) {
 			switch ($importType) {
 				case 'import_product_images':
 					$objectType='products_image';
@@ -44,9 +44,12 @@ switch ($this->get['action']) {
 				$GLOBALS['TYPO3_DB']->connectDB();
 				foreach ($files as $f) {
 					$path_parts=pathinfo($f);
-					$path=str_replace('/images/'.$objectFolderName.'/'.$key.'/','/images/'.$objectFolderName.'/original/',$path_parts['dirname']);
+					$path=str_replace('/images/'.$objectFolderName.'/'.$key.'/', '/images/'.$objectFolderName.'/original/', $path_parts['dirname']);
 					if (!$filesToInsert[$path.'/'.$path_parts['basename']]) {
-						$filesToInsert[$path.'/'.$path_parts['basename']]=array('path'=>$path,'file'=>$path_parts['basename']);
+						$filesToInsert[$path.'/'.$path_parts['basename']]=array(
+							'path'=>$path,
+							'file'=>$path_parts['basename']
+						);
 					}
 				}
 			}
@@ -79,7 +82,7 @@ switch ($this->get['action']) {
 		$stats['checked']=0;
 		$datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_multishop_orphan_files');
 		foreach ($datarows as $row) {
-			switch($row['type']) {
+			switch ($row['type']) {
 				case 'products_image':
 					$array=array();
 					$filter=array();
@@ -94,10 +97,10 @@ switch ($this->get['action']) {
 						}
 						$tmpOrFilter[]='products_image'.$i.'=\''.addslashes($row['file']).'\'';
 					}
-					$filter[]='('.implode(' OR ',$tmpOrFilter).')';
+					$filter[]='('.implode(' OR ', $tmpOrFilter).')';
 					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 						'tx_multishop_products', // FROM ...
-						implode(' AND ',$filter), // WHERE...
+						implode(' AND ', $filter), // WHERE...
 						'', // GROUP BY...
 						'', // ORDER BY...
 						'' // LIMIT ...
@@ -119,10 +122,10 @@ switch ($this->get['action']) {
 					$filter=array();
 					$tmpOrFilter=array();
 					$tmpOrFilter[]='categories_image=\''.addslashes($row['file']).'\'';
-					$filter[]='('.implode(' OR ',$tmpOrFilter).')';
+					$filter[]='('.implode(' OR ', $tmpOrFilter).')';
 					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 						'tx_multishop_categories', // FROM ...
-						implode(' AND ',$filter), // WHERE...
+						implode(' AND ', $filter), // WHERE...
 						'', // GROUP BY...
 						'', // ORDER BY...
 						'' // LIMIT ...
@@ -144,10 +147,10 @@ switch ($this->get['action']) {
 					$filter=array();
 					$tmpOrFilter=array();
 					$tmpOrFilter[]='manufacturers_image=\''.addslashes($row['file']).'\'';
-					$filter[]='('.implode(' OR ',$tmpOrFilter).')';
+					$filter[]='('.implode(' OR ', $tmpOrFilter).')';
 					$str2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 						'tx_multishop_manufacturers', // FROM ...
-						implode(' AND ',$filter), // WHERE...
+						implode(' AND ', $filter), // WHERE...
 						'', // GROUP BY...
 						'', // ORDER BY...
 						'' // LIMIT ...
@@ -176,7 +179,7 @@ switch ($this->get['action']) {
 		foreach ($datarows as $datarow) {
 			$stats['checked']++;
 			$deleted=0;
-			switch($datarow['type']) {
+			switch ($datarow['type']) {
 				case 'products_image':
 					$objectFolderName='products';
 					$objectFolders=$this->ms['image_paths']['products'];

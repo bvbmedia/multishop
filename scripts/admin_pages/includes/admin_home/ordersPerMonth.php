@@ -7,7 +7,7 @@ $compiledWidget['defaultCol']=1;
 $compiledWidget['title']=$this->pi_getLL('orders_volume_by_month', 'Bestellingen');
 $where=array();
 $where[]='(o.deleted=0)';
-switch($this->dashboardArray['section']) {
+switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
@@ -54,11 +54,10 @@ foreach ($dates as $key=>$value) {
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-
 	$where=array();
 	$where[]='(o.deleted=0)';
 	$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
-	switch($this->dashboardArray['section']) {
+	switch ($this->dashboardArray['section']) {
 		case 'admin_home':
 			break;
 		case 'admin_edit_customer':

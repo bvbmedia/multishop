@@ -7,7 +7,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 	$updateArray=array();
 	$updateArray['disable']=0;
 	$updateArray['tx_multishop_optin_crdate']=time();
-	$updateArray['tx_multishop_optin_ip']= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
+	$updateArray['tx_multishop_optin_ip']=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid='.$user['uid'], $updateArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	// auto login the user
@@ -38,7 +38,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
 		$GLOBALS['TSFE']->storeSessionData();
 		// redirect to checkout page
-		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]=checkout',1);
+		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]=checkout', 1);
 	} else {
 		// redirect to shop
 		$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid);
@@ -51,7 +51,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 			'redirect_url'=>&$redirect_url
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/confirm_create_account']['confirmationSuccesfulRedirectLinkPreProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	if ($redirect_url) {
@@ -70,7 +70,7 @@ if ($user['uid'] and !$user['tx_multishop_optin_crdate']) {
 			'redirect_url'=>&$redirect_url
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/confirm_create_account']['confirmationRepeatedRedirectLinkPreProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	if ($redirect_url) {

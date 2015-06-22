@@ -39,7 +39,7 @@ if ($this->post and $_REQUEST['action']=='edit_cms') {
 			$array['type']=$this->post['tx_multishop_pi1']['type'];
 		}
 		$array['crdate']=time();
-		$array['hash']=md5(uniqid('', TRUE));
+		$array['hash']=md5(uniqid('', true));
 		$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_cms', $array);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		$cms_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -172,7 +172,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'])) {
 		$params=array('types'=>&$types);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_cms.php']['adminEditCMSExtraTypes'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$tmpcontent.='<div class="account-field" id="cms_types">
@@ -265,7 +265,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			'markers'=>&$markers
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin/admin_edit_cms.php']['CmsMarkersPostProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	ksort($markers);

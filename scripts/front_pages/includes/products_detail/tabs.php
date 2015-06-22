@@ -34,7 +34,6 @@ if (!$product['products_id']) {
 	if ($product['products_multiplication']>0) {
 		$qty=round($product['products_multiplication'], 2);
 	}
-
 	if (!$this->conf['disableMetatags']) {
 		// meta tags
 		if ($product['products_meta_title']) {
@@ -116,7 +115,7 @@ if (!$product['products_id']) {
 	// products pagination module eof
 	$output['products_name'].=$product['products_name'];
 	if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
-		$output['products_name'].='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=edit_product',1).'" class="admin_menu_edit">Edit</a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=delete_product',1).'" class="admin_menu_remove" title="Remove"></a></div>';
+		$output['products_name'].='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit">Edit</a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
 	}
 	$final_price=mslib_fe::final_products_price($product);
 	if ($product['tax_id'] and $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
@@ -345,9 +344,9 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
 	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
 	$js_detail_page_triggers[]='
-		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00'?$product['products_multiplication']:($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1')).'\');
-		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'\');
-		var maxQty=parseFloat(\''.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'\');
+		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : ($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1')).'\');
+		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'\');
+		var maxQty=parseFloat(\''.($product['maximum_quantity']!='0.00' ? $product['maximum_quantity'] : '0').'\');
 		if ($("#quantity").val() == "") {
 			$("#quantity").val(stepSize);
 		}
@@ -464,7 +463,7 @@ if (!$product['products_id']) {
 			'plugins_extra_content'=>&$plugins_extra_content
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$markerArray['###PRODUCT_DETAILS_PLUGIN_EXTRA_CONTENT###']='';

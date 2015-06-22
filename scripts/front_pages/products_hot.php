@@ -70,7 +70,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 			$filter[]='('.$tbl.'categories_id IN ('.implode(",", $cats).'))';
 		}
 		$limit_per_page=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
-		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, $from, array(), 'hot_products','p.products_id,COUNT('.$tbl.'products_id) as total_quantity');
+		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'], $orderby, $having, $select, $where, 0, $from, array(), 'hot_products', 'p.products_id,COUNT('.$tbl.'products_id) as total_quantity');
 		$products=$pageset['products'];
 		if ($pageset['total_rows']>0) {
 			if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "..")) {

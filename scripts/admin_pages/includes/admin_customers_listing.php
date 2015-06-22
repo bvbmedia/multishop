@@ -43,7 +43,7 @@ foreach ($customers as $customer) {
 	} else {
 		$customer['crdate']='';
 	}
-	$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer',1);
+	$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer', 1);
 	$latest_order='';
 	$str="select orders_id from tx_multishop_orders where customer_id='".$customer['uid']."' and deleted=0 order by orders_id desc limit 2";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -108,21 +108,19 @@ foreach ($customers as $customer) {
 			'customer'=>&$customer
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customers_listing.php']['adminCustomersListingTmplIteratorPreProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$contentItem.=$this->cObj->substituteMarkerArray($subparts['customers'], $markerArray, '###|###');
 }
-
 $subpartArray=array();
-
 $actions=array();
 $actions['delete_selected_customers']=$this->pi_getLL('delete_selected_customers');
 // extra action
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionSelectboxProc'])) {
 	$params=array('actions'=>&$actions);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionSelectboxProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $formFields=array();
@@ -138,7 +136,7 @@ $formFields['customers_list_action'].='</select>';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionExtraInputProc'])) {
 	$params=array('formFields'=>&$formFields);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersActionExtraInputProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $formFields['submit_button']='<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
@@ -230,7 +228,6 @@ $subpartArray['###LABEL_FOOTER_CUSTOMER_TURN_OVER_THIS_YEAR###']=ucfirst($this->
 $subpartArray['###LABEL_FOOTER_CUSTOMER_LOGIN_AS_USER###']=ucfirst($this->pi_getLL('login_as_user'));
 $subpartArray['###LABEL_FOOTER_CUSTOMER_STATUS###']=ucfirst($this->pi_getLL('status'));
 $subpartArray['###LABEL_FOOTER_CUSTOMER_DELETE###']=ucfirst($this->pi_getLL('delete'));
-
 $subpartArray['###CUSTOM_MARKER_1_HEADER###']='';
 $subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
 $subpartArray['###CUSTOMERS###']=$contentItem;
@@ -247,7 +244,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'customer'=>&$customer
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/customers/customers_listing.php']['adminCustomersListingTmplPreProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom page hook that can be controlled by third-party plugin eof

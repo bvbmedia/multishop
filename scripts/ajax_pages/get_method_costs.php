@@ -8,7 +8,7 @@ header("Last-Modified: ".gmdate("D,d M YH:i:s")." GMT");
 header("Cache-Control: no-cache, must-revalidate");
 header("Pragma: no-cache");
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
 $tmp_countries=mslib_fe::getCountryByName($this->post['d_cc']);
@@ -114,7 +114,7 @@ foreach ($available_sid as $sids) {
 }
 // we display the shipping costs and payment costs including vat
 if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER'] && !$this->post['tx_multishop_pi1']['sid']) {
-	if (count($available_sid) == 1) {
+	if (count($available_sid)==1) {
 		$this->post['tx_multishop_pi1']['sid']=$available_sid[0];
 	} else {
 		// set to unreachable number for shipping method id so the session for shipping method are cleared

@@ -65,7 +65,7 @@ foreach ($categories as $category) {
 	$output['categories_counter']=$counter;
 	if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 		$output['categories_admin_sortable_id']=' id="sortable_subcat_'.$category['categories_id'].'" ';
-		$output['admin_icons']='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=edit_category',1).'" class="admin_menu_edit">Edit</a><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category',1).'" class="admin_menu_remove" title="Remove"></a></div>';
+		$output['admin_icons']='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=edit_category', 1).'" class="admin_menu_edit">Edit</a><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
 	}
 	$markerArray=array();
 	$markerArray['ADMIN_ICONS']=$output['admin_icons'];
@@ -87,7 +87,7 @@ foreach ($categories as $category) {
 			'products_compare'=>&$products_compare
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/categories_listing.php']['categoriesListingRecordHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof
@@ -109,7 +109,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 		'current'=>&$current
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/categories_listing.php']['categoriesListingPagePostHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof

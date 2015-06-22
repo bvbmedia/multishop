@@ -143,10 +143,9 @@ jQuery(document).ready(function(){
 });
 </script>
 ';
-if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_src']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_src'])) &&
-   (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_target']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_target']))) {
+if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_src']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_src'])) && (is_array($this->post['tx_multishop_pi1']['merge_attribute_options_target']) and count($this->post['tx_multishop_pi1']['merge_attribute_options_target']))) {
 	$new_attribute_option_id=array();
-	foreach ($this->post['tx_multishop_pi1']['merge_attribute_options_src'] as $src_option_id => $item) {
+	foreach ($this->post['tx_multishop_pi1']['merge_attribute_options_src'] as $src_option_id=>$item) {
 		$new_option=false;
 		$target_option_id=$this->post['tx_multishop_pi1']['merge_attribute_options_target'][$src_option_id];
 		// make sure the manual input is not option id
@@ -232,7 +231,7 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
 					if ($target_value_id) {
 						// delete the source value
 						if ($src_value_id!=$target_value_id) {
- 							/*$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values', 'products_options_values_id='.$src_value_id);
+							/*$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_options_values', 'products_options_values_id='.$src_value_id);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
 							//
 							$updateArray=array();
@@ -270,6 +269,6 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
 		}
 	}
 	//
-	header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
 }
 ?>

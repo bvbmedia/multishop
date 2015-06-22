@@ -95,7 +95,7 @@ foreach ($products as $product) {
 		}
 		$admin_menu='';
 		if ($this->ADMIN_USER) {
-			$admin_menu='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$product['products_id'].'&action=edit_product',1).'" class="admin_menu_edit"></a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$product['products_id'].'&action=delete_product',1).'" class="admin_menu_remove" title="Remove"></a></div>';
+			$admin_menu='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit"></a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&pid='.$product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
 		}
 		if (!strstr($product['products_url'], 'http://') and !strstr($product['products_url'], 'http://')) {
 			$product['products_url']='http://'.$product['products_url'];
@@ -121,7 +121,7 @@ foreach ($products as $product) {
 			'product'=>&$product
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_listing']['specialsProductsListingHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof
@@ -137,7 +137,7 @@ if ($specials_items and $this->ajax_content) {
 			'subpartArray'=>&$subpartArray
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_listing']['specialsListingPostHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof

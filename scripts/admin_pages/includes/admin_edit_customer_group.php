@@ -22,7 +22,7 @@ if ($this->post) {
 			'customer_group_id'=>&$this->post['customer_group_id']
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminUpdateCustomerGroupPreProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom page hook that can be controlled by third-party plugin eof
@@ -51,7 +51,7 @@ if ($this->post) {
 		$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_groups_method_mappings', 'customers_groups_id=\''.$this->post['customer_group_id'].'\'');
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-			foreach ($this->post['payment_method'] as $payment_method_id => $value) {
+			foreach ($this->post['payment_method'] as $payment_method_id=>$value) {
 				$updateArray=array();
 				$updateArray['customers_groups_id']=$this->post['customer_group_id'];
 				$updateArray['method_id']=$payment_method_id;
@@ -62,7 +62,7 @@ if ($this->post) {
 			}
 		}
 		if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-			foreach ($this->post['shipping_method'] as $shipping_method_id => $value) {
+			foreach ($this->post['shipping_method'] as $shipping_method_id=>$value) {
 				$updateArray=array();
 				$updateArray['customers_groups_id']=$this->post['customer_group_id'];
 				$updateArray['method_id']=$shipping_method_id;
@@ -78,7 +78,7 @@ if ($this->post) {
 		header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 		exit();
 	} else {
-		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups',1));
+		header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups', 1));
 		exit();
 	}
 }
@@ -195,7 +195,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'js_extra'=>&$js_extra
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer_groups.php']['adminEditCustomerGroupTmplPreProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom page hook that can be controlled by third-party plugin eof

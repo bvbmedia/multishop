@@ -231,7 +231,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$array1[]='###TOTAL_AMOUNT###';
 					$array2[]=mslib_fe::amount2Cents($tmpArray['total_amount']);
 					require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-					$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+					$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 					$mslib_order->init($this);
 					$ORDER_DETAILS=$mslib_order->printOrderDetailsTable($tmpArray, 'site');
 					$array1[]='###ORDER_DETAILS###';
@@ -342,7 +342,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'])) {
 			$params=array();
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersPostHookProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		break;
@@ -399,7 +399,7 @@ if ($_REQUEST['skeyword']) {
 	$this->post['skeyword']=$_REQUEST['skeyword'];
 	$this->post['skeyword']=trim($this->post['skeyword']);
 	$this->post['skeyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->post['skeyword'], $GLOBALS['TSFE']->metaCharset);
-	$this->post['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->post['skeyword'], TRUE);
+	$this->post['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->post['skeyword'], true);
 	$this->post['skeyword']=mslib_fe::RemoveXSS($this->post['skeyword']);
 }
 if (is_numeric($this->post['p'])) {
@@ -470,7 +470,7 @@ if ($this->post['skeyword']) {
 			//print_r($option_fields);
 			$items=array();
 			foreach ($option_fields as $fields=>$label) {
-				switch($fields) {
+				switch ($fields) {
 					case 'orders_id':
 						$items[]="o.".$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
 						break;
@@ -679,7 +679,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$row['payment_method']='nopm';
 		$row['payment_method_label']='Empty payment method';
 	}
-	$payment_methods[$row['payment_method']]=$row['payment_method_label'] . ($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
+	$payment_methods[$row['payment_method']]=$row['payment_method_label'].($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
 }
 $payment_method_input='';
 $payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
@@ -705,7 +705,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$row['shipping_method']='nosm';
 		$row['shipping_method_label']='Empty shipping method';
 	}
-	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'] . ($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
+	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'].($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
 }
 $shipping_method_input='';
 $shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method" style="width:200px">'."\n";

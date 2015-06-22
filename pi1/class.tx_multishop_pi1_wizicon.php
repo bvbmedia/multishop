@@ -53,14 +53,14 @@ class tx_multishop_pi1_wizicon {
 //						$LOCAL_LANG =  \TYPO3\CMS\Core\Utility\GeneralUtility::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
 		//$version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) :  \TYPO3\CMS\Core\Utility\GeneralUtility::int_from_ver(TYPO3_version);
 		// TYPO3 V7 fix
-		$version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
+		$version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
 		if ($version>=4007000) {
 			//$localizationParser= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_l10n_parser_Llxml');
 			//$LOCAL_LANG=$localizationParser->getParsedData($llFile, $GLOBALS['LANG']->lang);
 			// TYPO3 V7 fix
 			$LOCAL_LANG=TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llFile, $GLOBALS['LANG']->lang);
 		} else {
-			$LOCAL_LANG= \TYPO3\CMS\Core\Utility\GeneralUtility::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
+			$LOCAL_LANG=\TYPO3\CMS\Core\Utility\GeneralUtility::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
 		}
 		return $LOCAL_LANG;
 	}

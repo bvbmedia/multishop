@@ -129,7 +129,7 @@ $records[]=array(
 $records[]=array(
 	'configuration_title'=>'Multishop Encryption key',
 	'configuration_key'=>'MULTISHOP_ENCRYPTION_KEY',
-	'configuration_value'=>md5(uniqid('', TRUE)),
+	'configuration_value'=>md5(uniqid('', true)),
 	'description'=>'This security key is used for the system.',
 	'group_id'=>'15',
 	'use_function'=>'',
@@ -1901,15 +1901,16 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-'configuration_title'=>'Disable VAT rate for foreign customers',
-'configuration_key'=>'DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID',
-'configuration_value'=>'0',
-'description'=>'When a customer is coming from a foreign country then the store calculate zero tax.',
-'group_id'=>'3',
-'use_function'=>'',
-'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
-'depend_on_configuration_key'=>'',
-'use_function'=>'');
+	'configuration_title'=>'Disable VAT rate for foreign customers',
+	'configuration_key'=>'DISABLE_VAT_FOR_FOREIGN_CUSTOMERS_WITH_COMPANY_VAT_ID',
+	'configuration_value'=>'0',
+	'description'=>'When a customer is coming from a foreign country then the store calculate zero tax.',
+	'group_id'=>'3',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 $records[]=array(
 	'configuration_title'=>'Display popup link in listing page to show shipping cost',
 	'configuration_key'=>'DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE',
@@ -2136,7 +2137,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'records'=>&$records
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof

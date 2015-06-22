@@ -49,7 +49,6 @@ if ($this->ADMIN_USER) {
 				$product_tax_rate=$data['total_tax_rate'];
 				$attributes_tax=mslib_fe::taxDecimalCrop(($rs_option['options_values_price']*$product_tax_rate)/100);
 				$attribute_price_display_incl=mslib_fe::taxDecimalCrop($rs_option['options_values_price']+$attributes_tax, 2, false);
-
 				$option_data[$ctr]['valid']=$rs_option['options_values_id'];
 				$option_data[$ctr]['valname']=$rs_option['products_options_values_name'];
 				$option_data[$ctr]['values_price']=$rs_option['options_values_price'];

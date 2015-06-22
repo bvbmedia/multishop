@@ -43,7 +43,7 @@ if ($this->ms['MODULES']['PRICE_FILTER_BOX_STEPPINGS']) {
 		$this->get['skeyword']=$_REQUEST['skeyword'];
 		$this->get['skeyword']=trim($this->get['skeyword']);
 		$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['skeyword'], $GLOBALS['TSFE']->metaCharset);
-		$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], TRUE);
+		$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], true);
 		$this->get['skeyword']=mslib_fe::RemoveXSS($this->get['skeyword']);
 		if ($this->get['skeyword']) {
 			$where.='&skeyword='.urlencode($this->get['skeyword']).'&';

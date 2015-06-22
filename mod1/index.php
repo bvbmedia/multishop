@@ -20,6 +20,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\Utility\IconUtility;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
  * Hint: use extdeveval to insert/update function index above.
@@ -34,7 +35,6 @@ include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.ph
 $GLOBALS['BE_USER']->modAccess($GLOBALS['MCONF'], 1); // This checks permissions and exits if the users has no permission for entry.
 // DEFAULT initialization of a module [END]
 
-
 /**
  * Module 'Multishop' for the 'multishop' extension.
  * @author    BVB Media BV - Bas van Beek <bvbmedia@gmail.com>
@@ -44,7 +44,6 @@ $GLOBALS['BE_USER']->modAccess($GLOBALS['MCONF'], 1); // This checks permissions
 class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	/**
 	 * Instance of template doc class
-	 *
 	 * @var \TYPO3\CMS\Backend\Template\DocumentTemplate
 	 */
 	public $doc;
@@ -53,7 +52,6 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 * Initializes the Module
 	 * @return    void
 	 */
-
 	function init() {
 		global $BE_USER, $LANG, $BACK_PATH, $TCA_DESCR, $TCA, $CLIENT, $TYPO3_CONF_VARS;
 		parent::init();
@@ -94,7 +92,7 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			$full_script_path=t3lib_extMgm::extPath('multishop').'scripts/';
 			$this->relative_site_path=t3lib_extMgm::siteRelPath('multishop');
 			// first get the http-path to typo3:
-			$this->httpTypo3Path=substr(substr( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), strlen( \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST'))), 0, -1);
+			$this->httpTypo3Path=substr(substr(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), strlen(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST'))), 0, -1);
 			if (strlen($this->httpTypo3Path)==1) {
 				$this->httpTypo3Path='/';
 			} else {
@@ -105,17 +103,16 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			// Get the vhost full path to multishop (example: /var/www/html/domain.com/public_html/my_cms/typo3conf/ext/multishop/)
 			$this->DOCUMENT_ROOT_MS=PATH_site.t3lib_extMgm::siteRelPath('multishop');
 			// Get the site full URL (example: http://domain.com/my_cms/)
-			$this->FULL_HTTP_URL= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
+			$this->FULL_HTTP_URL=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 			// Get the multishop full URL (example: http://domain.com/my_cms/typo3/ext/multishop or http://domain.com/my_cms/typo3conf/ext/multishop)
-			$this->FULL_HTTP_URL_MS= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath('multishop');
+			$this->FULL_HTTP_URL_MS=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath('multishop');
 			// Get the host URL (example: http://domain.com)
 			// dont use hostURL cause its not supporting subdirectory hosting
-			$this->hostURL= \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
+			$this->hostURL=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
 			// Draw the header.
-			$this->doc = GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
+			$this->doc=GeneralUtility::makeInstance('TYPO3\\CMS\\Backend\\Template\\DocumentTemplate');
 			//$this->doc->setModuleTemplate(ExtensionManagementUtility::extPath($this->extKey) . 'mod1/mod_template.html');
-			$this->doc->backPath = $GLOBALS['BACK_PATH'];
-
+			$this->doc->backPath=$GLOBALS['BACK_PATH'];
 			//$this->doc= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('bigDoc');
 			//$this->doc->backPath=$BACK_PATH;
 			// JavaScript
@@ -235,7 +232,7 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 								if (top.fsMod) top.fsMod.recentIds["web"] = 0;
 							</script>
 						';
-			$headerSection=$this->doc->getHeader('pages', $this->pageinfo, $this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '. \TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($this->pageinfo['_thePath'], 50);
+			$headerSection=$this->doc->getHeader('pages', $this->pageinfo, $this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($this->pageinfo['_thePath'], 50);
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
 			$this->content.=$this->doc->spacer(5);
@@ -250,21 +247,13 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			$this->content.=$this->doc->spacer(10);
 		} else {
 			// If no access or if ID == zero
-			$this->doc= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mediumDoc');
+			$this->doc=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mediumDoc');
 			$this->doc->backPath=$BACK_PATH;
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
 			$this->content.=$this->doc->spacer(5);
 			$this->content.=$this->doc->spacer(10);
 		}
-	}
-	/**
-	 * Prints out the module HTML
-	 * @return    void
-	 */
-	function printContent() {
-		$this->content.=$this->doc->endPage();
-		echo $this->content;
 	}
 	/**
 	 * Generates the module content
@@ -278,11 +267,10 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		}
 		$typo3Version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger(TYPO3_version) : \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version);
 		if ($typo3Version>=6000000) {
-			$t3lib_BEfuncAlias = '\TYPO3\CMS\Backend\Utility\BackendUtility';
+			$t3lib_BEfuncAlias='\TYPO3\CMS\Backend\Utility\BackendUtility';
 		} else {
-			$t3lib_BEfuncAlias = 't3lib_BEfunc';
+			$t3lib_BEfuncAlias='t3lib_BEfunc';
 		}
-
 		$this->iconWorks=method_exists('t3lib_iconWorks', 'getSpriteIcon');
 		$this->mod_info=$this->getExtensionInfo('multishop');
 		$this->get=$_GET;
@@ -313,8 +301,8 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		$this->content.='
 
 <a title="Click for more information about TYPO3 Multishop" href="http://www.typo3multishop.com/?utm_source=Typo3Multishop_Backend&utm_medium=cpc&utm_term=Typo3Multishop&utm_content=Listing&utm_campaign=Typo3Multishop" target="_blank"><img src="'.$this->FULL_HTTP_URL_MS.'mod1/images/typo3multishop.png"></a><br><strong>version: '.$this->mod_info['version'].'</strong><BR><BR>
-<a title="Follow TYPO3 Multishop on Twitter" href="http://twitter.com/typo3multishop" target="_blank"><img src="'.$this->FULL_HTTP_URL_MS.'mod1/images/twitter.png"></a> 
-<a title="Follow TYPO3 Multishop on LinkedIn" href="http://www.linkedin.com/groups?gid=3117344" target="_blank"><img src="'.$this->FULL_HTTP_URL_MS.'mod1/images/linkedin.png"></a> 
+<a title="Follow TYPO3 Multishop on Twitter" href="http://twitter.com/typo3multishop" target="_blank"><img src="'.$this->FULL_HTTP_URL_MS.'mod1/images/twitter.png"></a>
+<a title="Follow TYPO3 Multishop on LinkedIn" href="http://www.linkedin.com/groups?gid=3117344" target="_blank"><img src="'.$this->FULL_HTTP_URL_MS.'mod1/images/linkedin.png"></a>
 <a title="Follow TYPO3 Multishop on FaceBook" href="http://www.facebook.com/typo3multishop" target="_blank"><img src="'.$this->FULL_HTTP_URL_MS.'mod1/images/facebook.png"></a>
 <br>skype: typo3multishop<BR><BR>
 					<a title="copyright '.$year_string.' by BVB Media BV" href="http://www.bvbmedia.com/?utm_source=Typo3Multishop_Backend&utm_medium=cpc&utm_term=Typo3Multishop&utm_content=Listing&utm_campaign=Typo3Multishop" target="_blank">copyright '.$year_string.' to BVB Media BV</a><br>
@@ -322,7 +310,55 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 					</center>
 					';
 	}
+	/**
+	 * Gets information for an extension, eg. version and most-recently-edited-script
+	 * @param    string        Extension key
+	 * @return    array        Information array (unless an error occured)
+	 */
+	function getExtensionInfo($extKey) {
+		$rc='';
+		if (t3lib_extMgm::isLoaded($extKey)) {
+			$path=t3lib_extMgm::extPath($extKey);
+			$file=$path.'/ext_emconf.php';
+			if (@is_file($file)) {
+				$_EXTKEY=$extKey;
+				$EM_CONF=array();
+				include($file);
+				$eInfo=array();
+				// Info from emconf:
+				$eInfo['title']=$EM_CONF[$extKey]['title'];
+				$eInfo['author']=$EM_CONF[$extKey]['author'];
+				$eInfo['author_email']=$EM_CONF[$extKey]['author_email'];
+				$eInfo['author_company']=$EM_CONF[$extKey]['author_company'];
+				$eInfo['version']=$EM_CONF[$extKey]['version'];
+				$eInfo['description']=$EM_CONF[$extKey]['description'];
+				$eInfo['CGLcompliance']=$EM_CONF[$extKey]['CGLcompliance'];
+				$eInfo['CGLcompliance_note']=$EM_CONF[$extKey]['CGLcompliance_note'];
+				if (is_array($EM_CONF[$extKey]['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
+					$eInfo['TYPO3_version']=$EM_CONF[$extKey]['constraints']['depends']['typo3'];
+				} else {
+					$eInfo['TYPO3_version']=$EM_CONF[$extKey]['TYPO3_version'];
+				}
+				$filesHash=unserialize($EM_CONF[$extKey]['_md5_values_when_last_written']);
+				$eInfo['manual']=@is_file($path.'/doc/manual.sxw');
+				$rc=$eInfo;
+			} else {
+				$rc='ERROR: No emconf.php file: '.$file;
+			}
+		} else {
+			$rc='Error: Extension '.$extKey.' has not been installed. (tx_fhlibrary_system::getExtensionInfo)';
+		}
+		return $rc;
+	}
 	// get tree
+	/**
+	 * Prints out the module HTML
+	 * @return    void
+	 */
+	function printContent() {
+		$this->content.=$this->doc->endPage();
+		echo $this->content;
+	}
 	function getPageTree($pid='0', $cates=array(), $times=0, $include_itself=0) {
 		if ($include_itself) {
 			$res=$GLOBALS['TYPO3_DB']->exec_SELECTquery('uid,title,keywords,description', 'pages', 'hidden = 0 and deleted = 0 and (uid='.$pid.')', '');
@@ -388,6 +424,52 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		return $result;
 	}
 	/**
+	 * This method helps filtering the output of the various archive binaries to get a clean php array
+	 * Credits goes to Kraft Bernhard (kraftb@think-open.at)
+	 * @param    array        The output of the executed archive binary
+	 * @param    string        The type/configuration for which to parse the output
+	 * @return    array        A clean list of the filenames returned by the binary
+	 */
+	function getFileResult($list, $type='zip') {
+		$sc=$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['split_char'];
+		$pre=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['pre_lines']);
+		$post=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['post_lines']);
+		$pos=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['file_pos']);
+		if ($sc=='') {
+			$sc=':';
+		}
+		if ($pre=='') {
+			$pre='1';
+		}
+		if ($pos=='') {
+			$pos='1';
+		}
+		// Removing trailing lines
+		while ($post--) {
+			array_pop($list);
+		}
+		// Only last lines
+		if ($pre===-1) {
+			$fl=array();
+			while ($line=trim(array_pop($list))) {
+				array_unshift($fl, $line);
+			}
+			$list=$fl;
+		}
+		// Remove preceeding lines
+		if ($pre>0) {
+			while ($pre--) {
+				array_shift($list);
+			}
+		}
+		$fl=array();
+		foreach ($list as $file) {
+			$parts=preg_split('/'.preg_quote($sc).'+/', $file);
+			$fl[]=trim($parts[$pos]);
+		}
+		return $fl;
+	}
+	/**
 	 * This function unpacks a zip file
 	 * Credits goes to Kraft Bernhard (kraftb@think-open.at)
 	 * @param    string        File to unpack
@@ -426,53 +508,6 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		return $result;
 	}
 	/**
-	 * This method helps filtering the output of the various archive binaries to get a clean php array
-	 * Credits goes to Kraft Bernhard (kraftb@think-open.at)
-	 * @param    array        The output of the executed archive binary
-	 * @param    string        The type/configuration for which to parse the output
-	 * @return    array        A clean list of the filenames returned by the binary
-	 */
-	function getFileResult($list, $type='zip') {
-		$sc=$GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['split_char'];
-		$pre=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['pre_lines']);
-		$post=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['post_lines']);
-		$pos=intval($GLOBALS['TYPO3_CONF_VARS']['BE']['unzip'][$type]['file_pos']);
-
-		if ($sc=='') {
-			$sc=':';
-		}
-		if ($pre=='') {
-			$pre='1';
-		}
-		if ($pos=='') {
-			$pos='1';
-		}
-		// Removing trailing lines
-		while ($post--) {
-			array_pop($list);
-		}
-		// Only last lines
-		if ($pre===-1) {
-			$fl=array();
-			while ($line=trim(array_pop($list))) {
-				array_unshift($fl, $line);
-			}
-			$list=$fl;
-		}
-		// Remove preceeding lines
-		if ($pre>0) {
-			while ($pre--) {
-				array_shift($list);
-			}
-		}
-		$fl=array();
-		foreach ($list as $file) {
-			$parts=preg_split('/'.preg_quote($sc).'+/', $file);
-			$fl[]=trim($parts[$pos]);
-		}
-		return $fl;
-	}
-	/**
 	 * This method recursively deletes folders
 	 * @param    string        The path of the folder to delete
 	 * @return    boolean        True or False
@@ -503,46 +538,6 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			return unlink($path);
 		}
 	}
-	/**
-	 * Gets information for an extension, eg. version and most-recently-edited-script
-	 * @param    string        Extension key
-	 * @return    array        Information array (unless an error occured)
-	 */
-	function getExtensionInfo($extKey) {
-		$rc='';
-		if (t3lib_extMgm::isLoaded($extKey)) {
-			$path=t3lib_extMgm::extPath($extKey);
-			$file=$path.'/ext_emconf.php';
-			if (@is_file($file)) {
-				$_EXTKEY=$extKey;
-				$EM_CONF=array();
-				include($file);
-				$eInfo=array();
-				// Info from emconf:
-				$eInfo['title']=$EM_CONF[$extKey]['title'];
-				$eInfo['author']=$EM_CONF[$extKey]['author'];
-				$eInfo['author_email']=$EM_CONF[$extKey]['author_email'];
-				$eInfo['author_company']=$EM_CONF[$extKey]['author_company'];
-				$eInfo['version']=$EM_CONF[$extKey]['version'];
-				$eInfo['description']=$EM_CONF[$extKey]['description'];
-				$eInfo['CGLcompliance']=$EM_CONF[$extKey]['CGLcompliance'];
-				$eInfo['CGLcompliance_note']=$EM_CONF[$extKey]['CGLcompliance_note'];
-				if (is_array($EM_CONF[$extKey]['constraints']) && is_array($EM_CONF[$extKey]['constraints']['depends'])) {
-					$eInfo['TYPO3_version']=$EM_CONF[$extKey]['constraints']['depends']['typo3'];
-				} else {
-					$eInfo['TYPO3_version']=$EM_CONF[$extKey]['TYPO3_version'];
-				}
-				$filesHash=unserialize($EM_CONF[$extKey]['_md5_values_when_last_written']);
-				$eInfo['manual']=@is_file($path.'/doc/manual.sxw');
-				$rc=$eInfo;
-			} else {
-				$rc='ERROR: No emconf.php file: '.$file;
-			}
-		} else {
-			$rc='Error: Extension '.$extKey.' has not been installed. (tx_fhlibrary_system::getExtensionInfo)';
-		}
-		return $rc;
-	}
 	/*
 		check if the method is existing, cause in older TYPO3 version it's not yet there
 	*/
@@ -555,12 +550,11 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	}
 }
 
-
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/multishop/mod1/index.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/multishop/mod1/index.php']);
 }
 // Make instance:
-$SOBE= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_module1');
+$SOBE=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_module1');
 $SOBE->init();
 // Include files?
 foreach ($SOBE->include_once as $INC_FILE) {

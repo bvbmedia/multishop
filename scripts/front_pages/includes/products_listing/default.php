@@ -67,7 +67,6 @@ if (is_array($products) && count($products)) {
 		}
 		$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$current_product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 		$output['catlink']=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
-
 		$formats=array();
 		$formats[]='100';
 		$formats[]='200';
@@ -135,19 +134,17 @@ if (is_array($products) && count($products)) {
 		}*/
 		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 			$output['admin_icons']='<div class="admin_menu">
-		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=edit_product',1).'" class="admin_menu_edit"></a>
-		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=delete_product',1).'" class="admin_menu_remove" title="Remove"></a>
+		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit"></a>
+		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a>
 		</div>';
 		}
 		$markerArray=array();
 		$markerArray['ADMIN_ICONS']=$output['admin_icons'];
 		$markerArray['PRODUCTS_ID']=$current_product['products_id'];
 		$markerArray['ITEM_CLASS']='';
-
 		if (($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) and !$current_product['products_status'] and !$this->ms['MODULES']['FLAT_DATABASE']) {
 			$markerArray['ITEM_CLASS']='disabled_product';
 		}
-
 		$markerArray['ITEM_COUNTER']=$itemCounter;
 		$markerArray['PRODUCTS_NAME']=$current_product['products_name'];
 		$markerArray['PRODUCTS_MODEL']=$current_product['products_model'];
@@ -166,8 +163,8 @@ if (is_array($products) && count($products)) {
 		$markerArray['ORDER_UNIT_NAME']=$current_product['order_unit_name'];
 		$markerArray['OLD_PRICE']=mslib_fe::amount2Cents($current_product['old_price']);
 		$markerArray['FINAL_PRICE']=mslib_fe::amount2Cents($current_product['final_price']);
-		$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'],2,',','.');
-		$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'],2,',','.');
+		$markerArray['OLD_PRICE_PLAIN']=number_format($current_product['old_price'], 2, ',', '.');
+		$markerArray['FINAL_PRICE_PLAIN']=number_format($current_product['final_price'], 2, ',', '.');
 		// STOCK INDICATOR
 		$product_qty=$current_product['products_quantity'];
 		if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']!='no') {
@@ -190,12 +187,11 @@ if (is_array($products) && count($products)) {
 		}
 		$markerArray['PRODUCTS_STOCK']=$product_qty;
 		// STOCK INDICATOR EOF
-
 		if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
 			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=$output['link'];
 			$button_submit='<a href="'.$link.'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
 		} else {
-			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$current_product['products_id']);
+			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid, '&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$current_product['products_id']);
 			$button_submit='<input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/>';
 		}
 		$qty=1;
@@ -256,7 +252,7 @@ if (is_array($products) && count($products)) {
 			}
 			$quantity_html.='</select>';
 		} else {
-			$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" rel="'.$current_product['products_id'].'" data-step-size="'.($current_product['products_multiplication']!='0.00'?$current_product['products_multiplication']:'1').'" class="qtyInput" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
+			$quantity_html.='<div class="quantity buttons_added" style=""><input type="button" value="-" class="qty_minus"><input type="text" name="quantity" size="5" rel="'.$current_product['products_id'].'" data-step-size="'.($current_product['products_multiplication']!='0.00' ? $current_product['products_multiplication'] : '1').'" class="qtyInput" value="'.$qty.'" /><input type="button" value="+" class="qty_plus"></div>';
 		}
 		// show selectbox by products multiplication or show default input eof
 		$markerArray['PRODUCTS_QUANTITY_INPUT_AND_ADD_TO_CART_BUTTON']='
@@ -272,7 +268,6 @@ if (is_array($products) && count($products)) {
 		</div>
 	';
 		// ADD TO CART BUTTON WITH QUANTITY FIELD EOL
-
 		$plugins_item_extra_content=array();
 		// shipping cost popup
 		if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
@@ -288,7 +283,7 @@ if (is_array($products) && count($products)) {
 				'plugins_item_extra_content'=>&$plugins_item_extra_content
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingRecordHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']='';
@@ -423,7 +418,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 		'current'=>&$current
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_listing.php']['productsListingPagePostHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof

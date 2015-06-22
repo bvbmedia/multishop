@@ -13,8 +13,8 @@ function UpdateWeightPrice(nextrow, zone_id, cur_weight) {
     if (cur_weight == 101) {
         if ($(next_row_id).is(':visible')) {
             // n+X rows checking
-            for (s=parseInt(nextrow); s <= 10; s++) {
-                var x_row_id='#' + zone_id + '_Row_' + s;
+            for (s = parseInt(nextrow); s <= 10; s++) {
+                var x_row_id = '#' + zone_id + '_Row_' + s;
                 var x_row_price_input = '.' + zone_id + '_priceInput' + s;
                 var x_begin_weight_label_id = '#' + zone_id + '_BeginWeightLevel' + s;
                 if ($(x_row_id).is(':visible')) {

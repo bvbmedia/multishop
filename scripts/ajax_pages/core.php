@@ -154,14 +154,25 @@ switch ($this->ms['page']) {
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
-			$return_data['truesize'][$image_size]=array($image_truesize[0], $image_truesize[1]);
+			$return_data['truesize'][$image_size]=array(
+				$image_truesize[0],
+				$image_truesize[1]
+			);
 			$return_data['aspectratio'][$image_size]=$this->ms[$image_format_key][$image_size_format]['width']/$this->ms[$image_format_key][$image_size_format]['height'];
 			// max width
 			$max_width=($this->ms[$image_format_key][$image_size_format]['width']>640 ? 640 : $this->ms[$image_format_key][$image_size_format]['width']);
 			$max_height=($this->ms[$image_format_key][$image_size_format]['height']>480 ? 480 : $this->ms[$image_format_key][$image_size_format]['height']);
 			// jcrop settings
-			$return_data['minsize'][$image_size]=array($max_width, $max_height);
-			$return_data['setselect'][$image_size]=array(0, 0, $max_width, $max_height);
+			$return_data['minsize'][$image_size]=array(
+				$max_width,
+				$max_height
+			);
+			$return_data['setselect'][$image_size]=array(
+				0,
+				0,
+				$max_width,
+				$max_height
+			);
 			// check if there any crop record
 			$image_data=mslib_befe::getRecord($image_name, $crop_table_name, 'image_filename', array('image_size=\''.$image_size.'\''));
 			$return_data['disable_crop_button']="";
@@ -234,7 +245,10 @@ switch ($this->ms['page']) {
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, ($image_size=='enlarged' ? 'normal' : $image_size)).'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
-			$return_data['truesize'][$image_size]=array($image_truesize[0], $image_truesize[1]);
+			$return_data['truesize'][$image_size]=array(
+				$image_truesize[0],
+				$image_truesize[1]
+			);
 			$return_data['aspectratio'][$image_size]=$this->ms[$image_format_key][$image_size_format]['width']/$this->ms[$image_format_key][$image_size_format]['height'];
 			$return_data['minsize'][$image_size]=array(
 				$this->ms[$image_format_key][$image_size_format]['width'],
@@ -326,7 +340,10 @@ switch ($this->ms['page']) {
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
-			$return_data['truesize'][$image_size]=array($image_truesize[0], $image_truesize[1]);
+			$return_data['truesize'][$image_size]=array(
+				$image_truesize[0],
+				$image_truesize[1]
+			);
 			$return_data['aspectratio'][$image_size]=$this->ms[$image_format_key][$image_size_format]['width']/$this->ms[$image_format_key][$image_size_format]['height'];
 			$return_data['minsize'][$image_size]=array(
 				$this->ms[$image_format_key][$image_size_format]['width'],
@@ -403,7 +420,7 @@ switch ($this->ms['page']) {
 					if (is_array($tmp_preselecteds) && count($tmp_preselecteds)) {
 						foreach ($tmp_preselecteds as $preselected_id) {
 							$preselected_id=trim($preselected_id);
-							$cats=mslib_fe::Crumbar($preselected_id,'',array(),$page_uid);
+							$cats=mslib_fe::Crumbar($preselected_id, '', array(), $page_uid);
 							$cats=array_reverse($cats);
 							$catpath=array();
 							foreach ($cats as $cat) {
@@ -427,10 +444,10 @@ switch ($this->ms['page']) {
 				if (isset($this->get['q']) && !empty($this->get['q'])) {
 					$keyword=trim($this->get['q']);
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, $keyword,'',$page_uid);
+					mslib_fe::getSubcatsArray($categories_tree, $keyword, '', $page_uid);
 					//print_r($categories_tree);
 					foreach ($categories_tree as $category_tree) {
-						$cats=mslib_fe::Crumbar($category_tree['id'],'',array(),$page_uid);
+						$cats=mslib_fe::Crumbar($category_tree['id'], '', array(), $page_uid);
 						$cats=array_reverse($cats);
 						$catpath=array();
 						foreach ($cats as $cat) {
@@ -438,7 +455,7 @@ switch ($this->ms['page']) {
 						}
 						// fetch subcat if any
 						$subcategories_tree=array();
-						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'],$page_uid);
+						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid);
 						if (count($subcategories_tree)) {
 							foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
 								$tmp_return_data[$subcategory_tree_0['id']]=implode(' \ ', $catpath).' \ '.$subcategory_tree_0['name'];
@@ -452,7 +469,7 @@ switch ($this->ms['page']) {
 					}
 				} else {
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree,'','',$page_uid);
+					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid);
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
@@ -479,7 +496,7 @@ switch ($this->ms['page']) {
 					foreach ($categories_tree as $category_tree) {
 						if (count($skip_ids)>0) {
 							if (!in_array($category_tree['id'], $skip_ids)) {
-								$cats=mslib_fe::Crumbar($category_tree['id'],'',array(),$page_uid);
+								$cats=mslib_fe::Crumbar($category_tree['id'], '', array(), $page_uid);
 								$cats=array_reverse($cats);
 								$catpath=array();
 								foreach ($cats as $cat_idx=>$cat) {
@@ -509,7 +526,7 @@ switch ($this->ms['page']) {
 								}
 							}
 						} else {
-							$cats=mslib_fe::Crumbar($category_tree['id'],'',array(),$page_uid);
+							$cats=mslib_fe::Crumbar($category_tree['id'], '', array(), $page_uid);
 							$cats=array_reverse($cats);
 							$catpath=array();
 							foreach ($cats as $cat_idx=>$cat) {
@@ -537,7 +554,7 @@ switch ($this->ms['page']) {
 					}
 				} else {
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree,'','',$page_uid);
+					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid);
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						if (!in_array($category_tree_0['id'], $skip_ids)) {
@@ -669,7 +686,7 @@ switch ($this->ms['page']) {
 						}
 					}
 				}
-				$xml_string= \TYPO3\CMS\Core\Utility\GeneralUtility::array2xml_cs($multishop_category_array);
+				$xml_string=\TYPO3\CMS\Core\Utility\GeneralUtility::array2xml_cs($multishop_category_array);
 				echo $xml_string;
 				exit();
 			}
@@ -721,7 +738,7 @@ switch ($this->ms['page']) {
 						'orders_status_id'=>$this->post['tx_multishop_pi1']['orders_status_id']
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['adminUpdateOrdersStatus'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// hook eof
@@ -759,7 +776,7 @@ switch ($this->ms['page']) {
 					'get'=>&$this->get,
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['generateBarkode'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// hook oef
@@ -880,7 +897,7 @@ switch ($this->ms['page']) {
 		break;
 	case 'psp':
 		if ($_REQUEST['tx_multishop_pi1']['payment_lib']) {
-			$mslib_payment= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
+			$mslib_payment=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
 			$mslib_payment->init($this);
 //			$payment_methods=$mslib_payment->getInstalledPaymentMethods($this);
 			if ($mslib_payment->setPaymentMethod($_REQUEST['tx_multishop_pi1']['payment_lib'])) {
@@ -888,7 +905,7 @@ switch ($this->ms['page']) {
 				$extkey='multishop_'.$_REQUEST['tx_multishop_pi1']['payment_lib'];
 				if (t3lib_extMgm::isLoaded($extkey)) {
 					require(t3lib_extMgm::extPath($extkey).'class.multishop_payment_method.php');
-					$paymentMethod= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
+					$paymentMethod=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
 					$paymentMethod->init($this);
 					$paymentMethod->paymentNotificationHandler();
 				}
@@ -916,7 +933,7 @@ switch ($this->ms['page']) {
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['confirm_create_account'])) {
 				$params=array('content'=>&$content);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['confirm_create_account'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
 				require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/confirm_create_account.php');
@@ -1042,7 +1059,7 @@ switch ($this->ms['page']) {
 					$fileUploadPathRelative='uploads/tx_multishop/images/cmsimages';
 					$fileUploadPathAbsolute=$this->DOCUMENT_ROOT.$fileUploadPathRelative;
 					if (is_dir($fileUploadPathAbsolute)) {
-						$items= \TYPO3\CMS\Core\Utility\GeneralUtility::getAllFilesAndFoldersInPath(array(), $fileUploadPathAbsolute.'/');
+						$items=\TYPO3\CMS\Core\Utility\GeneralUtility::getAllFilesAndFoldersInPath(array(), $fileUploadPathAbsolute.'/');
 						if (count($items)) {
 							$array=array();
 							foreach ($items as $item) {
@@ -1191,7 +1208,7 @@ switch ($this->ms['page']) {
 									$folder=mslib_befe::getImagePrefixFolder($filename);
 									$array=explode(".", $filename);
 									if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 									}
 									$folder.='/';
 									$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1202,7 +1219,7 @@ switch ($this->ms['page']) {
 											$array=explode(".", $filename);
 											$folder=$folder_name;
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+												\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1261,7 +1278,7 @@ switch ($this->ms['page']) {
 									$folder=mslib_befe::getImagePrefixFolder($filename);
 									$array=explode(".", $filename);
 									if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 									}
 									$folder.='/';
 									$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -1272,7 +1289,7 @@ switch ($this->ms['page']) {
 											$array=explode(".", $filename);
 											$folder=$folder_name;
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+												\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -1340,7 +1357,7 @@ switch ($this->ms['page']) {
 												mslib_befe::deleteProductImage($this->get['old_image']);
 											}
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+												\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -1351,7 +1368,7 @@ switch ($this->ms['page']) {
 													$array=explode(".", $filename);
 													$folder=$folder_name;
 													if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-														 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+														\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 													}
 													$folder.='/';
 													$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -1747,10 +1764,10 @@ switch ($this->ms['page']) {
 			$key='shipping_zone_';
 			if (is_array($this->post[$key]) and count($this->post[$key])) {
 				$no=1;
-				foreach ($this->post[$key] as $zone_id => $smid) {
+				foreach ($this->post[$key] as $zone_id=>$smid) {
 					foreach ($smid as $shipping_id) {
 						if (is_numeric($shipping_id)) {
-							$where="zone_id = '".$zone_id . "' and shipping_method_id = '".$shipping_id."'";
+							$where="zone_id = '".$zone_id."' and shipping_method_id = '".$shipping_id."'";
 							$updateArray=array(
 								'sort_order'=>$no
 							);
@@ -1764,10 +1781,10 @@ switch ($this->ms['page']) {
 			$key='payment_zone_';
 			if (is_array($this->post[$key]) and count($this->post[$key])) {
 				$no=1;
-				foreach ($this->post[$key] as $zone_id => $pmid) {
+				foreach ($this->post[$key] as $zone_id=>$pmid) {
 					foreach ($pmid as $payment_id) {
 						if (is_numeric($payment_id)) {
-							$where="zone_id = '".$zone_id . "' and payment_method_id = '".$payment_id."'";
+							$where="zone_id = '".$zone_id."' and payment_method_id = '".$payment_id."'";
 							$updateArray=array(
 								'sort_order'=>$no
 							);
@@ -1787,10 +1804,10 @@ switch ($this->ms['page']) {
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'])) {
 				$params=array();
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['ajaxSortingProducts'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			} else {
-				$cat_id=mslib_fe::RemoveXSS( \TYPO3\CMS\Core\Utility\GeneralUtility::_GET('catid'));
+				$cat_id=mslib_fe::RemoveXSS(\TYPO3\CMS\Core\Utility\GeneralUtility::_GET('catid'));
 				$getPost=$this->post['productlisting'];
 				$sort_type=$this->ms['MODULES']['PRODUCTS_LISTING_SORT_ORDER_OPTION'];
 				if ($sort_type=='desc') {
@@ -1902,7 +1919,7 @@ switch ($this->ms['page']) {
 							'row'=>&$row
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/core.php']['get_micro_downloadPreProc'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom page hook that can be controlled by third-party plugin eof
@@ -1991,7 +2008,7 @@ switch ($this->ms['page']) {
 				'content'=>&$content
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customAjaxPage'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 			if ($this->get['tx_multishop_pi1']['output']=='json') {
 				echo $content;

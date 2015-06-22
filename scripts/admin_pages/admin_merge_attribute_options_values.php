@@ -159,7 +159,7 @@ if ($this->post) {
 	$new_attribute_value_id=array();
 	$clean_up_db=false;
 	$clean_up_unused_value=array();
-	foreach ($this->post['tx_multishop_pi1']['merge_attribute_values_src'] as $src_option_id => $src_values) {
+	foreach ($this->post['tx_multishop_pi1']['merge_attribute_values_src'] as $src_option_id=>$src_values) {
 		if ((is_array($src_values) && count($src_values)) && (is_array($this->post['tx_multishop_pi1']['merge_attribute_values_target']) && $this->post['tx_multishop_pi1']['merge_attribute_values_target'][$src_option_id])) {
 			foreach ($src_values as $src_value_id) {
 				$new_value=false;
@@ -315,6 +315,6 @@ if ($this->post) {
 		$GLOBALS['TYPO3_DB']->sql_query($delete_qry);
 	}
 	//
-	header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
 }
 ?>

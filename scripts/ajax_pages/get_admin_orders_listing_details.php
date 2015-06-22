@@ -20,7 +20,7 @@ if ($this->ADMIN_USER) {
 				if ($order['billing_company']) {
 					$jsonData_content.=$order['billing_company'].'<br />';
 				}
-				$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$order['customer_id'].'&action=edit_customer',1);
+				$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$order['customer_id'].'&action=edit_customer', 1);
 				$jsonData_content.='<a href="'.$customer_edit_link.'">'.$order['billing_name'].'</a><br />
 '.$order['billing_address'].'<br />
 '.$order['billing_zip'].' '.$order['billing_city'].' <br />
@@ -199,7 +199,6 @@ if ($this->ADMIN_USER) {
 					if (!empty($order['coupon_code'])) {
 						$coupon_code=' (code: '.$order['coupon_code'].')';
 					}
-
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
 						<td colspan="3" class="align_right">'.htmlspecialchars($this->pi_getLL('discount')).$coupon_code.'</td>

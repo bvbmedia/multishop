@@ -535,11 +535,11 @@ if (!empty($filename)) {
 									} else {
 										$pprefix='';
 									}
-									if (strpos($optval3, ':hide')!==FALSE) {
+									if (strpos($optval3, ':hide')!==false) {
 										$valstat=1;
 										$optval3=str_replace(':hide', '', $optval3);
 									} else {
-										if (strpos($optval3, ':unhide')!==FALSE) {
+										if (strpos($optval3, ':unhide')!==false) {
 											$optval3=str_replace(':unhide', '', $optval3);
 										}
 									}
@@ -755,11 +755,11 @@ if (!empty($filename)) {
 									} else {
 										$pprefix='';
 									}
-									if (strpos($optval3, ':hide')!==FALSE) {
+									if (strpos($optval3, ':hide')!==false) {
 										$valstat=1;
 										$optval3=str_replace(':hide', '', $optval3);
 									} else {
-										if (strpos($optval3, ':unhide')!==FALSE) {
+										if (strpos($optval3, ':unhide')!==false) {
 											$optval3=str_replace(':unhide', '', $optval3);
 										}
 									}

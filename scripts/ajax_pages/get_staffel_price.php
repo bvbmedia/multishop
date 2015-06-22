@@ -14,7 +14,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 		'qty'=>&$qty
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['getProductPricePreProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // hook eof
@@ -45,7 +45,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/aj
 		'product'=>&$product
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['getProductPostProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // hook eof
@@ -107,16 +107,16 @@ if (is_array($this->get['attributes'])) {
 								'original_row'=>&$original_row
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_staffel_price.php']['ajaxCartAttributesArray'] as $funcRef) {
-								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						// hook
 						//if ($multiple) {
-							$attr['attributes'][$key][]=$row;
-							$original_attr['attributes'][$key][]=$original_row;
+						$attr['attributes'][$key][]=$row;
+						$original_attr['attributes'][$key][]=$original_row;
 						//} else {
-							//$attr['attributes'][$key]=$row;
-							//$original_attr['attributes'][$key]=$original_row;
+						//$attr['attributes'][$key]=$row;
+						//$original_attr['attributes'][$key]=$original_row;
 						//}
 					}
 				}

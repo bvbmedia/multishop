@@ -104,7 +104,7 @@ if (count($cart['products'])<1) {
 				'erno'=>&$erno
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressValidationPreHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -173,7 +173,7 @@ if (count($cart['products'])<1) {
 					'user'=>&$user
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressUserSessionPreHook'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -191,7 +191,7 @@ if (count($cart['products'])<1) {
 		$show_checkout_address=1;
 	}
 	if ($erno or $show_checkout_address) {
-		if($this->post['tx_multishop_pi1']['email_confirm']) {
+		if ($this->post['tx_multishop_pi1']['email_confirm']) {
 			$user['email_confirm']=$this->post['tx_multishop_pi1']['email_confirm'];
 		} else {
 			$user['email_confirm']=$user['email'];
@@ -444,7 +444,6 @@ if (count($cart['products'])<1) {
 		$markerArray['###LABEL_LAST_NAME###']=ucfirst($this->pi_getLL('last_name'));
 		$markerArray['###VALUE_LAST_NAME###']=htmlspecialchars($user['last_name']);
 		$markerArray['###LABEL_ERROR_LASTNAME_MESSAGE###']=$this->pi_getLL('surname_is_required');
-
 		$markerArray['###LABEL_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address'));
 		$markerArray['###VALUE_EMAIL###']=htmlspecialchars($user['email']);
 		$markerArray['###LABEL_ERROR_EMAIL_IS_REQUIRED###']=$this->pi_getLL('email_is_required');
@@ -566,7 +565,6 @@ if (count($cart['products'])<1) {
 		$markerArray['###NEWSLETTER_SUBSCRIBE###']=$newsletter_subscribe;
 		$markerArray['###DIFFERENT_DELIVERY_ADDRESS_CHECKED###']=(($user['different_delivery_address']) ? ' checked' : '');
 		$markerArray['###LABEL_USE_DIFFERENT_DELIVERY_ADDRESS###']=$this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address');
-
 		$markerArray['###LABEL_DELIVERY_ADDRESS###']=$this->pi_getLL('delivery_address');
 		$markerArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
 		$markerArray['###GENDER_MR_CHECKED###']=(($user['delivery_gender']=='m') ? ' checked' : '');
@@ -641,7 +639,7 @@ if (count($cart['products'])<1) {
 				'markerArray'=>&$markerArray
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_address.php']['checkoutAddressPostHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof

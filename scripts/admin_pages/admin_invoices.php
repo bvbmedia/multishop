@@ -10,7 +10,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 			$attachments=array();
 			foreach ($this->get['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
-					$invoice=mslib_fe::getInvoice($invoice,'id');
+					$invoice=mslib_fe::getInvoice($invoice, 'id');
 					if ($invoice['id']) {
 						// invoice as attachment
 						$invoice_path=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$invoice['invoice_id'].'.pdf';
@@ -40,7 +40,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
 			foreach ($this->get['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
-					$invoice=mslib_fe::getInvoice($invoice,'id');
+					$invoice=mslib_fe::getInvoice($invoice, 'id');
 					if ($invoice['id'] and $invoice['reversal_invoice']==0) {
 						mslib_fe::generateReversalInvoice($invoice['id']);
 					}
@@ -53,7 +53,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
 			foreach ($this->get['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
-					$invoice=mslib_fe::getInvoice($invoice,'id');
+					$invoice=mslib_fe::getInvoice($invoice, 'id');
 					if ($invoice['id']) {
 						$order=mslib_fe::getOrder($invoice['orders_id']);
 						if ($order['orders_id']) {
@@ -88,7 +88,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'])) {
 			$params=array();
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		break;
@@ -130,7 +130,7 @@ if ($_REQUEST['skeyword']) {
 	$this->get['skeyword']=$_REQUEST['skeyword'];
 	$this->get['skeyword']=trim($this->get['skeyword']);
 	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['skeyword'], $GLOBALS['TSFE']->metaCharset);
-	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], TRUE);
+	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], true);
 	$this->get['skeyword']=mslib_fe::RemoveXSS($this->get['skeyword']);
 }
 if (is_numeric($this->get['p'])) {
@@ -183,7 +183,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$row['payment_method']='nopm';
 		$row['payment_method_label']='Empty payment method';
 	}
-	$payment_methods[$row['payment_method']]=$row['payment_method_label'] . ($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
+	$payment_methods[$row['payment_method']]=$row['payment_method_label'].($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
 }
 $payment_method_input='';
 $payment_method_input.='<select id="payment_method" class="invoice_select2" name="payment_method" style="width:200px">'."\n";
@@ -209,7 +209,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 		$row['shipping_method']='nosm';
 		$row['shipping_method_label']='Empty shipping method';
 	}
-	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'] . ($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
+	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'].($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
 }
 $shipping_method_input='';
 $shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method" style="width:200px">'."\n";
@@ -355,7 +355,6 @@ if ($this->get['skeyword']) {
 			break;*/
 	}
 }
-
 if (!empty($this->get['invoice_date_from']) && !empty($this->get['invoice_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->get['invoice_date_from']);
 	list($fd, $fm, $fy)=explode('/', $from_date);

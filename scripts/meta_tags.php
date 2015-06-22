@@ -9,10 +9,10 @@ if (!$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']) {
 	$info=mslib_befe::getExtensionInfo($this->DOCUMENT_ROOT_MS, 'multishop');
 	//$current_version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger($this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']) :  \TYPO3\CMS\Core\Utility\GeneralUtility::int_from_ver($this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']);
 	// TYPO3 V7 FIX
-	$current_version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger($this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']);
+	$current_version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger($this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']);
 	//$new_version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger($info['version']) :  \TYPO3\CMS\Core\Utility\GeneralUtility::int_from_ver($info['version']);
 	// TYPO3 V7 FIX
-	$new_version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger($info['version']) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($info['version']);
+	$new_version=class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger($info['version']) : TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger($info['version']);
 	if ($current_version<$new_version) {
 		// update current_version
 		$array=array();
@@ -26,11 +26,11 @@ if (!$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION']) {
 if ($this->runUpdate) {
 	$runAutoUpdate=1;
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/meta_tags.php']['runAutoUpdatePreProc'])) {
-		$params = array (
-			'runAutoUpdate' => &$runAutoUpdate
+		$params=array(
+			'runAutoUpdate'=>&$runAutoUpdate
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/meta_tags.php']['runAutoUpdatePreProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	if ($runAutoUpdate) {
@@ -60,7 +60,7 @@ if (!$GLOBALS["TYPO3_CONF_VARS"]["tx_multishop_started"]) {
 		$params=array();
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/meta_tags.php']['insertToCart'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scripts/meta_tags.php']['insertToCart'] as $funcRef) {
-				$content.= \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				$content.=\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 	} else {
@@ -74,7 +74,7 @@ if (!$GLOBALS["TYPO3_CONF_VARS"]["tx_multishop_started"]) {
 		}
 		if ($updateCart) {
 			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-			$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 			$mslib_cart->init($this);
 			$mslib_cart->updateCart();
 			$link=mslib_fe::typolink($this->shoppingcart_page_pid, '&tx_multishop_pi1[page_section]=shopping_cart', 1);
@@ -206,7 +206,7 @@ if ($this->ADMIN_USER) {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/meta_tags.php']['adminPanelMessages'])) {
 			$params=array('messages'=>&$messages);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/meta_tags.php']['adminPanelMessages'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// orders this month eof

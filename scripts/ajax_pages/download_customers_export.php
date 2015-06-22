@@ -118,7 +118,7 @@ if ($this->get['customers_export_hash']) {
 						$excelCols[]=$row['fax'];
 						break;
 					case 'customer_gender':
-						switch($row['gender']) {
+						switch ($row['gender']) {
 							case '0':
 								$gender='m';
 								break;
@@ -171,7 +171,7 @@ if ($this->get['customers_export_hash']) {
 								'output'=>&$output
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_customers_export.php']['downloadCustomersExportIterateItemFieldProc'] as $funcRef) {
-								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 							$row[$field]=$output;
 						}

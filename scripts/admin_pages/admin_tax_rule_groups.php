@@ -162,7 +162,6 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 				while ($row_st=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_st)) {
 					$query="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c.cn_parent_tr_iso_nr='".$row_st['tr_iso_nr']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)) {
 						$tab_content.='<li class="item_territories_'.$counter.'">';
 						$tab_content.='<label class="tree_item_label">';
@@ -231,13 +230,9 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 						$tab_content.='</ul>';
 						$tab_content.='</li>';
 					}
-
 				}
 				$tab_content.='</ul>';
 			}
-
-
-
 			$tabs['zone_'.$counter]=array(
 				$zone['name'],
 				$tab_content
@@ -326,7 +321,7 @@ if (!$this->get['edit']) {
 				$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 				$content.='';
 			}
-			$content .='</td>
+			$content.='</td>
 				<td align="center">';
 			if (!$tax_rules_group['default_status']) {
 				$content.='';

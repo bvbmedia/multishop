@@ -113,17 +113,16 @@ $coltypes['username']=$this->pi_getLL('username');
 $coltypes['title']=$this->pi_getLL('job_title');
 $coltypes['www']=$this->pi_getLL('website');
 $coltypes['crdate']=$this->pi_getLL('creation_date');
-$coltypes['language_code_2char_iso']=$this->pi_getLL('language_code','Language (2 char ISO code)');
+$coltypes['language_code_2char_iso']=$this->pi_getLL('language_code', 'Language (2 char ISO code)');
 $coltypes['tx_multishop_source_id']=$this->pi_getLL('customer_id_external_id_for_reference');
-$coltypes['tx_multishop_payment_condition']=$this->pi_getLL('payment_condition','payment condition');
-
+$coltypes['tx_multishop_payment_condition']=$this->pi_getLL('payment_condition', 'payment condition');
 // hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'])) {
 	$params=array(
 		'coltypes'=>&$coltypes
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['adminCustomersImporterColtypesHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 natsort($coltypes);
@@ -201,14 +200,14 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				} else {
 					$limit='10';
 				}
-				if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+				if (strstr(mslib_befe::strtolower($this->post['database_name']), 'select ')) {
 					// its not a table name, its a full query
 					$this->databaseMode='query';
 					$str=$this->post['database_name'].' LIMIT '.$limit;
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					if ($this->conf['debugEnabled']=='1') {
 						$logString='Load records for importer query: '.$str;
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 					}
 					$datarows=array();
 					while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -236,7 +235,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 							exit();
 						}
-						if (fwrite($handle, $str)===FALSE) {
+						if (fwrite($handle, $str)===false) {
 							exit();
 						}
 						fclose($handle);
@@ -270,7 +269,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 								exit();
 							}
-							if (fwrite($handle, $str)===FALSE) {
+							if (fwrite($handle, $str)===false) {
 								exit();
 							}
 							fclose($handle);
@@ -321,9 +320,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if ($this->post['format']=='txt') {
 							$row=1;
 							$rows=array();
-							if (($handle=fopen($file_location, "r"))!==FALSE) {
+							if (($handle=fopen($file_location, "r"))!==false) {
 								$counter=0;
-								while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+								while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
 									if ($this->post['escape_first_line']) {
 										if ($counter==0) {
 											$table_cols=$data;
@@ -617,7 +616,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					} else {
 						$limit=2000;
 					}
-					if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+					if (strstr(mslib_befe::strtolower($this->post['database_name']), 'select ')) {
 						$this->databaseMode='query';
 						// its not a table name, its a full query
 						$this->databaseMode='query';
@@ -625,7 +624,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						if ($this->conf['debugEnabled']=='1') {
 							$logString='Load records for importer query: '.$str;
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 						}
 						$datarows=array();
 						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -742,9 +741,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					if ($this->post['format']=='txt') {
 						$row=1;
 						$rows=array();
-						if (($handle=fopen($file, "r"))!==FALSE) {
+						if (($handle=fopen($file, "r"))!==false) {
 							$counter=0;
-							while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+							while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
 								if ($this->post['escape_first_line']) {
 									if ($counter==0) {
 										$table_cols=$data;
@@ -802,19 +801,19 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					}
 					if ($item['uid']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['uid']);
-					} elseif($item['tx_multishop_source_id']) {
+					} elseif ($item['tx_multishop_source_id']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['tx_multishop_source_id']);
-					} elseif($item['company']) {
+					} elseif ($item['company']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['company']);
-					} elseif($item['full_name']) {
+					} elseif ($item['full_name']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['full_name']);
-					} elseif($item['first_name'] && $item['middle_name'] && $item['last_name']) {
+					} elseif ($item['first_name'] && $item['middle_name'] && $item['last_name']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['first_name'].'_'.$item['middle_name'].'_'.$item['last_name']);
-					} elseif($item['first_name'] && $item['last_name']) {
+					} elseif ($item['first_name'] && $item['last_name']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['first_name'].'_'.$item['last_name']);
-					} elseif($item['last_name']) {
+					} elseif ($item['last_name']) {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['last_name']);
-					} elseif(isset($item['email']) && $item['email'] !='') {
+					} elseif (isset($item['email']) && $item['email']!='') {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.$item['email']);
 					} else {
 						$item['extid']=md5($this->post['prefix_source_name'].'_'.serialize($item));
@@ -827,7 +826,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							'prefix_source_name'=>$this->post['prefix_source_name']
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterItemIterateProc'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin
@@ -860,7 +859,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							if ($item['uid']) {
 								$username='';
 								if ($item['company_name']) {
-									$username.=str_replace('-','',mslib_fe::rewritenamein($item['company_name']));
+									$username.=str_replace('-', '', mslib_fe::rewritenamein($item['company_name']));
 								}
 								$username.=$item['uid'];
 								$item['username']=$username;
@@ -986,7 +985,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if (isset($item['crdate'])) {
 							$user['crdate']=strtotime($item['crdate']);
 						}
-						if (isset($item['gender']) && $item['gender'] !='') {
+						if (isset($item['gender']) && $item['gender']!='') {
 							$user['gender']=$item['gender'];
 						}
 						if ($item['birthday']) {
@@ -1001,7 +1000,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if ($item['city']) {
 							$user['city']=$item['city'];
 						}
-						if (isset($item['country']) && $item['country'] != '') {
+						if (isset($item['country']) && $item['country']!='') {
 							if ($item['country']=='') {
 								$item['country']=$default_country;
 							} else {
@@ -1078,7 +1077,6 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						if ($item['email']) {
 							$user['email']=$item['email'];
 						}
-
 						if ($item['password_hashed']) {
 							$user['password']=$item['password_hashed'];
 						} elseif ($item['password']) {
@@ -1118,7 +1116,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								'update'=>&$update
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUpdateUserPreHook'] as $funcRef) {
-								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						// custom hook that can be controlled by third-party
@@ -1138,7 +1136,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPreHook'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party
@@ -1167,7 +1165,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterUpdateUserPostHook'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party
@@ -1181,7 +1179,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 							if (!$user['crdate']) {
 								$user['crdate']=time();
 							}
-							$user['tx_multishop_code']=md5(uniqid('', TRUE));
+							$user['tx_multishop_code']=md5(uniqid('', true));
 							$user['pid']=$this->conf['fe_customer_pid'];
 							$user['page_uid']=$this->shop_pid;
 							$user['cruser_id']=$GLOBALS['TSFE']->fe_user->user['uid'];
@@ -1198,7 +1196,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPreHook'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party
@@ -1244,7 +1242,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 										'prefix_source_name'=>$this->post['prefix_source_name']
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customer_import.php']['msCustomerImporterInsertUserPostHook'] as $funcRef) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party

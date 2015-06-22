@@ -389,7 +389,7 @@ if (is_numeric($this->get['orders_id'])) {
 			} // if ($this->post) eol
 			// repair tax stuff
 			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-			$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 			$mslib_order->init($this);
 			$mslib_order->repairOrder($this->get['orders_id']);
 			//is proposal
@@ -590,7 +590,7 @@ if (is_numeric($this->get['orders_id'])) {
 		if ($orders['billing_company']) {
 			$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 		}
-		$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer',1);
+		$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
 		$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
 		'.$orders['billing_address'].'<br />
 		'.$orders['billing_zip'].' '.$orders['billing_city'].' <br />
@@ -999,16 +999,13 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem='<li>';
 			$orderDetailsItem.='<label>'.$this->pi_getLL('payment_condition').'</label>';
 			if (!$orders['is_locked']) {
-				$orderDetailsItem.='<input type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" style="width:90px" /> ' . $this->pi_getLL('days');
+				$orderDetailsItem.='<input type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" style="width:90px" /> '.$this->pi_getLL('days');
 			} else {
 				$orderDetailsItem.='<span>'.$orders['payment_condition'].' '.$this->pi_getLL('days').'</span>';
 			}
 			$orderDetailsItem.='</li>';
 			$orderDetails[]=$orderDetailsItem;
 		}
-
-
-
 		$orderDetailsItem='';
 		if ($orders['customer_comments']) {
 			$orderDetailsItem='<li id="customer_comments"><label>'.$this->pi_getLL('customer_comments').'</label>
@@ -1024,7 +1021,7 @@ if (is_numeric($this->get['orders_id'])) {
 				'orders'=>&$orders
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsFieldset'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 			// hook oef
 		}
@@ -1171,7 +1168,6 @@ if (is_numeric($this->get['orders_id'])) {
 						} else {
 							$tmpcontent.='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
 						}
-
 					}
 					$tmpcontent.='</td>';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
@@ -1277,7 +1273,7 @@ if (is_numeric($this->get['orders_id'])) {
 							'row'=>&$row
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_order.php']['editOrderListItemPreHook'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
@@ -1743,7 +1739,6 @@ if (is_numeric($this->get['orders_id'])) {
 			if (!empty($orders['coupon_code'])) {
 				$coupon_code=' (code: '.$orders['coupon_code'].')';
 			}
-
 			$content_discount='
 			<div class="account-field">
 				<label>'.$this->pi_getLL('discount').$coupon_code.'</label>
@@ -2133,7 +2128,7 @@ if (is_numeric($this->get['orders_id'])) {
 			'orders'=>&$orders
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersFieldset'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 		// hook oef
 	}
@@ -2283,7 +2278,7 @@ if (is_numeric($this->get['orders_id'])) {
 			'orders'=>&$orders
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersTabs'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 		// hook oef
 	}

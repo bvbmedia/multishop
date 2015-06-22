@@ -42,7 +42,6 @@ $content.='
 	<div class="new_options_groups_name_input">
 		<label for="new_options_groups_name">'.$this->pi_getLL('name').':</label> <input type="text" name="new_options_groups_name" id="new_options_groups_name" /> <input type="submit" name="add_new_options_groups" value="'.$this->pi_getLL('add').'"></div>
 </form><br/>';
-
 $str="select * from tx_multishop_attributes_options_groups where language_id='0' order by sort_order";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);

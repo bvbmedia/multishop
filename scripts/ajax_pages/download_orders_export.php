@@ -108,16 +108,16 @@ if ($this->get['orders_export_hash']) {
 			if ($field!='order_products') {
 				$excelHeaderCols[$field]=$field;
 			} else {
-				$max_cols_num=($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:25);
+				$max_cols_num=($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
 				for ($i=0; $i<$max_cols_num; $i++) {
-					$excelHeaderCols['product_id' . $i]='product_id' . $i;
-					$excelHeaderCols['product_name' . $i]='product_name' . $i;
-					$excelHeaderCols['product_qty' . $i]='product_qty' . $i;
-					$excelHeaderCols['product_final_price_excl_tax' . $i]='product_final_price_excl_tax' . $i;
-					$excelHeaderCols['product_final_price_incl_tax' . $i]='product_final_price_incl_tax' . $i;
-					$excelHeaderCols['product_price_total_excl_tax' . $i]='product_final_price_total_excl_tax' . $i;
-					$excelHeaderCols['product_price_total_incl_tax' . $i]='product_final_price_total_incl_tax' . $i;
-					$excelHeaderCols['product_tax_rate' . $i]='product_tax_rate' . $i;
+					$excelHeaderCols['product_id'.$i]='product_id'.$i;
+					$excelHeaderCols['product_name'.$i]='product_name'.$i;
+					$excelHeaderCols['product_qty'.$i]='product_qty'.$i;
+					$excelHeaderCols['product_final_price_excl_tax'.$i]='product_final_price_excl_tax'.$i;
+					$excelHeaderCols['product_final_price_incl_tax'.$i]='product_final_price_incl_tax'.$i;
+					$excelHeaderCols['product_price_total_excl_tax'.$i]='product_final_price_total_excl_tax'.$i;
+					$excelHeaderCols['product_price_total_incl_tax'.$i]='product_final_price_total_incl_tax'.$i;
+					$excelHeaderCols['product_tax_rate'.$i]='product_tax_rate'.$i;
 				}
 			}
 		}
@@ -194,7 +194,7 @@ if ($this->get['orders_export_hash']) {
 						$excelCols[]=number_format($order_tax_data['grand_total'], 2, ',', '.');
 						break;
 					case 'payment_status':
-						$excelCols[]=($row['paid'])?$this->pi_getLL('paid'):$this->pi_getLL('unpaid');
+						$excelCols[]=($row['paid']) ? $this->pi_getLL('paid') : $this->pi_getLL('unpaid');
 						break;
 					case 'shipping_method':
 						$excelCols[]=$row['shipping_method_label'];
@@ -221,7 +221,7 @@ if ($this->get['orders_export_hash']) {
 						$excelCols[]=($order_tmp['orders_tax_data']['payment_total_tax_rate']*100).'%';
 						break;
 					case 'order_products':
-						$max_cols_num=($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:25);
+						$max_cols_num=($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : 25);
 						$order_products=$order_tmp['products'];
 						$prod_ctr=0;
 						foreach ($order_products as $product_tmp) {
@@ -230,7 +230,7 @@ if ($this->get['orders_export_hash']) {
 							}
 							$excelCols[]=$product_tmp['products_id'];
 							if (!empty($product_tmp['products_model'])) {
-								$excelCols[]=$product_tmp['products_name'] . ' ('.$product_tmp['products_model'].')';
+								$excelCols[]=$product_tmp['products_name'].' ('.$product_tmp['products_model'].')';
 							} else {
 								$excelCols[]=$product_tmp['products_name'];;
 							}

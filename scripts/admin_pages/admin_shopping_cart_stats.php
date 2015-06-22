@@ -75,8 +75,6 @@ if (!$tr_type or $tr_type=='even') {
 $content.='
 </table>';
 // LAST MONTHS EOF
-
-
 $tr_type='even';
 $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('day')).'</h2>';

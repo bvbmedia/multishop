@@ -20,7 +20,7 @@ if ($this->ADMIN_USER) {
 		$this->get['q']=$_REQUEST['q'];
 		$this->get['q']=trim($this->get['q']);
 		$this->get['q']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['q'], $GLOBALS['TSFE']->metaCharset);
-		$this->get['q']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['q'], TRUE);
+		$this->get['q']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['q'], true);
 		$this->get['q']=mslib_fe::RemoveXSS($this->get['q']);
 	}
 	if ($_REQUEST['q'] and strlen($_REQUEST['q'])<1) {

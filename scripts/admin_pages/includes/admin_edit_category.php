@@ -248,7 +248,7 @@ if ($this->post and is_array($_FILES) and count($_FILES)) {
 					$filename=mslib_fe::rewritenamein($this->post['categories_name'][0]).'.'.$ext;
 					$folder=mslib_befe::getImagePrefixFolder($filename);
 					if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 					}
 					$folder.='/';
 					$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -257,7 +257,7 @@ if ($this->post and is_array($_FILES) and count($_FILES)) {
 							$filename=mslib_fe::rewritenamein($this->post['categories_name'][0]).'-'.$i.'.'.$ext;
 							$folder=mslib_befe::getImagePrefixFolder($filename);
 							if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-								 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 							}
 							$folder.='/';
 							$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -527,7 +527,6 @@ if ($this->post) {
 						$insertArray['foreign_page_uid']=$page_uid;
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_to_categories', $insertArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-
 						$has_products=mslib_fe::getProducts('', $catid);
 						if (count($has_products)) {
 							foreach ($has_products as $product_id=>$product_data) {
@@ -584,7 +583,7 @@ if ($this->post) {
 					'categories_id'=>$catid
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['updateCategoryPostHook'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -595,7 +594,7 @@ if ($this->post) {
 					'categories_id'=>$catid
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['insertCategoryPostHook'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -606,7 +605,7 @@ if ($this->post) {
 				'catid'=>$catid
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['saveCategoryPostHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -711,7 +710,7 @@ if ($this->post) {
 				'category'=>&$category
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_category.php']['addItemsToTabDetails'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -1232,7 +1231,7 @@ $(document).on("change", "#remove_aspectratio", function(){
 				'js_extra'=>&$js_extra
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_category.php']['adminEditCategoryPreProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof

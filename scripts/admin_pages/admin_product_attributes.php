@@ -26,7 +26,6 @@ $selects['textarea']=$this->pi_getLL('admin_label_option_type_textarea');
 $selects['hidden_field']=$this->pi_getLL('admin_label_option_type_hidden_field');
 $selects['file']=$this->pi_getLL('admin_label_option_type_file_input');
 $selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
-
 // new options
 $content.='<form method="post" class="msadminFromFancybox" name="admin_product_new_attribute_options">';
 $content.='<ul>';
@@ -70,7 +69,6 @@ $content.='</div>';
 $content.='</li>';
 $content.='</ul>';
 $content.='</form>';
-
 if ($this->post) {
 	if (is_array($this->post['listtype']) and count($this->post['listtype'])) {
 		foreach ($this->post['listtype'] as $products_options_id=>$settings_value) {
@@ -121,7 +119,7 @@ if ($this->post) {
 			}
 		}
 		// redirect to current page after done saving an option settings
-		header('Location: ' . $this->FULL_HTTP_URL . mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes'));
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes'));
 	}
 }
 // select2 cache
@@ -132,7 +130,6 @@ $js_select2_cache='<script type="text/javascript">
 	var attributesValues=[];'."\n";
 // load the interface
 mslib_befe::loadLanguages();
-
 // load options
 $str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 	'tx_multishop_products_options', // FROM ...
@@ -199,10 +196,6 @@ if ($rows) {
 	$content.='</ul>';
 	$content.='<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
 	$content.='</form>';
-
-
-
-
 	$count_js_cache_values=count($js_select2_cache_values);
 	if ($count_js_cache_values) {
 		$js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";

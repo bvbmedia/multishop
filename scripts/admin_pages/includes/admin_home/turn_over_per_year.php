@@ -7,7 +7,7 @@ $compiledWidget['defaultCol']=1;
 $compiledWidget['title']=$this->pi_getLL('sales_volume_by_year', 'Jaaromzet');
 $where=array();
 $where[]='(o.deleted=0)';
-switch($this->dashboardArray['section']) {
+switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
@@ -48,7 +48,7 @@ if (!$row_year['crdate']) {
 		$where[]='(o.deleted=0)';
 		$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
 		$where[]='(o.paid=1 or o.paid=0)';
-		switch($this->dashboardArray['section']) {
+		switch ($this->dashboardArray['section']) {
 			case 'admin_home':
 				break;
 			case 'admin_edit_customer':

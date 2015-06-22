@@ -68,7 +68,7 @@ foreach ($invoices as $invoice) {
 	} else {
 		$totalAmount+=$invoice['amount'];
 	}
-	$tmp.='<td align="right" nowrap>'.($invoice['date_mail_last_sent'] >0 ? strftime("%x", $invoice['date_mail_last_sent']):'').'</td>';
+	$tmp.='<td align="right" nowrap>'.($invoice['date_mail_last_sent']>0 ? strftime("%x", $invoice['date_mail_last_sent']) : '').'</td>';
 	$tmp.='<td align="center" nowrap>';
 	if (!$invoice['paid']) {
 		$tmp.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
@@ -99,7 +99,6 @@ $footercol.='
 ';
 $footercol.='
 </tr>';
-
 $tmp.='
 <tr>
 	<th>
@@ -118,7 +117,7 @@ $actions['update_selected_invoices_to_not_paid']=$this->pi_getLL('update_selecte
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesActionSelectboxProc'])) {
 	$params=array('actions'=>&$actions);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesActionSelectboxProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $tmp.='

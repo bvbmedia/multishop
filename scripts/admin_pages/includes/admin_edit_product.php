@@ -760,7 +760,7 @@ if ($this->post and $_FILES) {
 											$folder=mslib_befe::getImagePrefixFolder($filename);
 											$array=explode(".", $filename);
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+												\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -771,7 +771,7 @@ if ($this->post and $_FILES) {
 													$array=explode(".", $filename);
 													$folder=$folder_name;
 													if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-														 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+														\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 													}
 													$folder.='/';
 													$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
@@ -920,7 +920,7 @@ if ($this->post) {
 				'products_id'=>$this->post['pid']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPreHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -1324,16 +1324,16 @@ if ($this->post) {
 							//	'(page_uid=0 or page_uid=\''.$this->shop_pid.'\')'
 							//));
 							//if (!is_array($p2c_record)) {
-								$updateArray=array();
-								$updateArray['categories_id']=$catId;
-								$updateArray['products_id']=$prodid;
-								$updateArray['sort_order']=time();
-								$updateArray['page_uid']=$page_uid;
-								$updateArray['related_to']=$relCatId;
-								/*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
-								$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
-								// create categories tree linking
-								tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $updateArray);
+							$updateArray=array();
+							$updateArray['categories_id']=$catId;
+							$updateArray['products_id']=$prodid;
+							$updateArray['sort_order']=time();
+							$updateArray['page_uid']=$page_uid;
+							$updateArray['related_to']=$relCatId;
+							/*$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_to_categories', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);*/
+							// create categories tree linking
+							tx_mslib_catalog::linkCategoriesTreeToProduct($prodid, $catId, $updateArray);
 							//}
 							// update the counterpart relation
 							$updateArray=array();
@@ -1570,7 +1570,7 @@ if ($this->post) {
 		//die();
 		// specials price
 		if ($this->post['specials_price_percentage'] && $this->post['specials_price_percentage']>0) {
-			$this->post['specials_new_products_price']=$this->post['products_price'] - (($this->post['products_price']*$this->post['specials_price_percentage'])/100);
+			$this->post['specials_new_products_price']=$this->post['products_price']-(($this->post['products_price']*$this->post['specials_price_percentage'])/100);
 		}
 		if ($this->post['specials_new_products_price']) {
 			$specials_start_date=0;
@@ -1978,7 +1978,7 @@ if ($this->post) {
 					'products_id'=>$prodid
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['updateProductPostHook'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -1989,7 +1989,7 @@ if ($this->post) {
 					'products_id'=>$prodid
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['insertProductPostHook'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -2000,7 +2000,7 @@ if ($this->post) {
 				'prodid'=>$prodid
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_product.php']['saveProductPostHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// lets notify plugin that we have update action in product
@@ -2119,7 +2119,7 @@ if ($this->post) {
 				'js_extra'=>&$js_extra
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
@@ -2207,7 +2207,6 @@ if ($this->post) {
 			} else {
 				$input_vat_rate.='<option value="'.$row['rules_group_id'].'" '.(($row['rules_group_id']==$product['tax_id']) ? 'selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
 			}
-
 		}
 		$input_vat_rate.='</select>';
 		if ($_REQUEST['action']=='edit_product') {
@@ -2227,7 +2226,7 @@ if ($this->post) {
 				'product_tax_rate'=>&$product_tax_rate
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductPrice'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
@@ -2675,7 +2674,7 @@ if ($this->post) {
 					'extra_js_after_clone_new_attributes_row'=>&$extra_js_after_clone_new_attributes_row
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -2712,7 +2711,7 @@ if ($this->post) {
 					var image_col=$(\'#add_attributes_holder>td\').find(\'.product_attribute_value_image\');
 					$(image_col).empty();
 					$(image_col).append(cols_image_attributes_html);
-					' : '') .'
+					' : '').'
 					// init select2
 					select2_sb("#tmp_options_sb", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 					select2_values_sb("#tmp_attributes_sb", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
@@ -3325,7 +3324,7 @@ if ($this->post) {
 										'attribute_data'=>&$attribute_data
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductAttributesData'] as $funcRef) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -3367,11 +3366,10 @@ if ($this->post) {
 									}
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='</div>';
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='</div>';
-
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='<script>
 									jQuery(document).ready(function($) {';
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='
-										var products_attribute_value_image=\''. $element_id .'\';
+										var products_attribute_value_image=\''.$element_id.'\';
 										var uploader_attribute_value_image'.$element_id.' = new qq.FileUploader({
 											element: document.getElementById(\'attribute_value_image'.$element_id.'\'),
 											action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
@@ -3403,7 +3401,6 @@ if ($this->post) {
 									</script>';
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='</td>';
 								}
-
 								$existing_product_attributes_block_columns['attribute_price_prefix_col']='<td class="product_attribute_prefix">
 								<select name="tx_multishop_pi1[prefix][]">
 								<option value="">&nbsp;</option>
@@ -3430,7 +3427,7 @@ if ($this->post) {
 										'product_tax_rate'=>&$product_tax_rate
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'] as $funcRef) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								$attributes_tab_block.='<div class="wrap-attributes-item '.$item_row_type.'" id="item_product_attribute_'.$attribute_data['products_attributes_id'].'" rel="'.$attribute_data['products_attributes_id'].'">';
@@ -3648,14 +3645,11 @@ if ($this->post) {
 		$subpartArray['###LABEL_ADMIN_YES###']=$this->pi_getLL('admin_yes');
 		$subpartArray['###LABEL_PRODUCT_STATUS_OFF_CHECKED###']=((!$product['products_status'] and $_REQUEST['action']=='edit_product') ? 'checked="checked"' : '');
 		$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
-
-
 		$subpartArray['###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###']=$this->pi_getLL('search_engine_indexing');
 		$subpartArray['###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED###']=(($product['search_engines_allow_indexing'] or $_REQUEST['action']=='add_product') ? 'checked="checked"' : '');
 		$subpartArray['###LABEL_ADMIN_YES_INDEXING###']=$this->pi_getLL('admin_yes');
 		$subpartArray['###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED###']=((!$product['search_engines_allow_indexing'] and $_REQUEST['action']=='edit_product') ? 'checked="checked"' : '');
 		$subpartArray['###LABEL_ADMIN_NO_INDEXING###']=$this->pi_getLL('admin_no');
-
 		$subpartArray['###LABEL_PRODUCT_CATEGORY###']=$this->pi_getLL('admin_category');
 		//categories path
 		$old_current_categories_id=mslib_fe::getProductToCategories($this->get['pid'], $product['categories_id']);
@@ -3681,7 +3675,12 @@ if ($this->post) {
 					if ($pageinfo['uid']) {
 						$old_products_to_shop_categories=mslib_fe::getProductToCategories($this->get['pid'], '', $pageinfo['uid']);
 						if ($pageinfo['uid']==$this->shop_pid) {
-							$old_products_to_shop_categories=str_replace(array(','.$local_primary_product_categories.',', ','.$local_primary_product_categories, $local_primary_product_categories.',', $local_primary_product_categories), '', $old_products_to_shop_categories);
+							$old_products_to_shop_categories=str_replace(array(
+								','.$local_primary_product_categories.',',
+								','.$local_primary_product_categories,
+								$local_primary_product_categories.',',
+								$local_primary_product_categories
+							), '', $old_products_to_shop_categories);
 						}
 						$main_shop_checkbox='';
 						$main_select2_block_visibility=' style="display:none"';
@@ -4121,7 +4120,6 @@ if ($this->post) {
 		$subpartArray['###INPUT_MULTIPLE_SHOPS_CATEGORY_TREE###']=$tmpcontent;
 		$subpartArray['###INFORMATION_SELECT2_LABEL0###']=$this->pi_getLL('admin_label_select_value_or_type_new_value');
 		$subpartArray['###DETAILS_CONTENT###']=$details_content;
-
 		//exclude list products
 		if (!$this->ms['MODULES']['DISPLAY_EXCLUDE_FROM_FEED_INPUT']) {
 			$subpartArray['###EXCLUDE_FROM_FEED_INPUT###']='';
@@ -4322,11 +4320,11 @@ if ($this->post) {
 		$subpartArray['###LABEL_ORDER_UNIT###']=$this->pi_getLL('admin_order_unit', 'Order Unit');
 		$subpartArray['###INPUT_PRODUCT_UNIT###']=$order_unit;
 		$subpartArray['###LABEL_MINIMUM_QTY###']=$this->pi_getLL('admin_minimum_quantity');
-		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity'] !='0' ? $product['minimum_quantity'] : '');
+		$subpartArray['###VALUE_MINIMUM_QTY###']=(isset($product['minimum_quantity']) && $product['minimum_quantity']!='0' ? $product['minimum_quantity'] : '');
 		$subpartArray['###LABEL_MAXIMUM_QTY###']=$this->pi_getLL('admin_maximum_quantity');
 		$subpartArray['###VALUE_MAXIMUM_QTY###']=($product['maximum_quantity'] ? $product['maximum_quantity'] : '');
 		$subpartArray['###LABEL_QTY_MULTIPLICATION###']=$this->pi_getLL('admin_quantity_multiplication');
-		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication'] !='0.00' ? $product['products_multiplication'] : '');
+		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : '');
 		$subpartArray['###LABEL_VIRTUAL_PRODUCT###']=$this->pi_getLL('admin_virtual_product', 'Virtual Product');
 		$subpartArray['###LABEL_FILE_NUMBER_OF_DOWNLOADS###']=$this->pi_getLL('file_number_of_downloads', 'NUMBER OF DOWNLOADS');
 		$subpartArray['###VALUE_FILE_NUMBER_OF_DOWNLOADS###']=($product['file_number_of_downloads'] ? $product['file_number_of_downloads'] : '');
@@ -4372,7 +4370,7 @@ if ($this->post) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
 			}
 		}
-		$special_price_percentage_value_selectbox.='</select><label for="specials_price_percentage">' . $this->pi_getLL('discount').'</label>';
+		$special_price_percentage_value_selectbox.='</select><label for="specials_price_percentage">'.$this->pi_getLL('discount').'</label>';
 		$subpartArray['###LABEL_PERCENTAGE_SELECTBOX###']=$this->pi_getLL('admin_label_or');
 		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
 		//
@@ -4389,7 +4387,7 @@ if ($this->post) {
 				'plugins_extra_tab'=>&$plugins_extra_tab
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductPreProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof

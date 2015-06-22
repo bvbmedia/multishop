@@ -42,7 +42,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'])) {
 			$params=array();
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getCartPreHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -285,7 +285,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'subtotal_tax'=>&$subtotal_tax,
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPostCalc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				//echo "<pre>";
@@ -326,7 +326,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				'cart'=>&$this->cart,
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_cart.php']['getCartPreSave'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eofq
@@ -368,7 +368,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCart'])) {
 			$params=array();
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCart'] as $funcRef) {
-				$content.= \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				$content.=\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		} else {
 			// custom hook that can be controlled by third-party plugin
@@ -378,7 +378,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'post'=>&$this->post
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPreHook'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -436,9 +436,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$this->post['quantity']=0;
 					}
 					// PROTECTION WHEN PRODUCT MULTIPLICATION IS NOT A FLOAT WE HAVE TO CAST THE QUANTITY AS INTEGER
-					if (!$product['products_multiplication'] || (int) $product['products_multiplication'] == $product['products_multiplication']) {
-						$this->post['quantity']=round($this->post['quantity'],0);
-						$cart['products'][$shopping_cart_item]['qty']=(int) $cart['products'][$shopping_cart_item]['qty'];
+					if (!$product['products_multiplication'] || (int)$product['products_multiplication']==$product['products_multiplication']) {
+						$this->post['quantity']=round($this->post['quantity'], 0);
+						$cart['products'][$shopping_cart_item]['qty']=(int)$cart['products'][$shopping_cart_item]['qty'];
 					}
 					$current_quantity=$cart['products'][$shopping_cart_item]['qty'];
 					if (!$this->post['tx_multishop_pi1']['cart_item']) {
@@ -467,7 +467,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							'product'=>&$product
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartProductPricePostHook'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
@@ -554,7 +554,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 												'getAtributesFromProductsId'=>&$getAtributesFromProductsId
 											);
 											foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartAttributesPreProc'] as $funcRef) {
-												 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+												\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 											}
 										}
 										// hook
@@ -571,7 +571,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 														'row'=>&$row
 													);
 													foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['cartAttributesArray'] as $funcRef) {
-														 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+														\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 													}
 												}
 												// hook
@@ -595,7 +595,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 														$row['tax']=mslib_fe::taxDecimalCrop(($row['price_prefix'].$row['options_values_price'])*($product['tax_rate']));
 													}
 												}
-
 //											$attributes_tax += $row['tax'] * $product['qty'];
 												$attributes_tax+=$row['tax'];
 												if ($multiple) {
@@ -660,7 +659,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							'cart'=>&$cart
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartProductPreHook'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					// custom hook that can be controlled by third-party plugin eof
@@ -724,8 +723,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 										$cart['products'][$product['products_id']]=$product;
 										$cart['products'][$product['products_id']]['qty']=$current_quantity+$rel_carty_quantity;
 										// PROTECTION WHEN PRODUCT MULTIPLICATION IS NOT A FLOAT WE HAVE TO CAST THE QUANTITY AS INTEGER
-										if (!$product['products_multiplication'] || (int) $product['products_multiplication']==$product['products_multiplication']) {
-											$cart['products'][$product['products_id']]['qty']=(int) $cart['products'][$product['products_id']]['qty'];
+										if (!$product['products_multiplication'] || (int)$product['products_multiplication']==$product['products_multiplication']) {
+											$cart['products'][$product['products_id']]['qty']=(int)$cart['products'][$product['products_id']]['qty'];
 										}
 										$cart['products'][$product['products_id']]['link']=$link;
 										if ($product['minimum_quantity']>$cart['products'][$product['products_id']]['qty']) {
@@ -777,7 +776,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						} else {
 							$sub_tr_type='even';
 						}
-						$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+						$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 						$mslib_cart->init($this);
 						$cart=$mslib_cart->getCart();
 						$cart_content.='<br />'.$this->pi_getLL('content').':<br />'.$mslib_cart->getHtmlCartContents('adminNotificationPopup');
@@ -814,8 +813,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 						$cart['products'][$shopping_cart_item]['qty']=$qty;
 						// PROTECTION WHEN PRODUCT MULTIPLICATION IS NOT A FLOAT WE HAVE TO CAST IT AS INTEGER
-						if (!$product['products_multiplication'] || (int) $product['products_multiplication'] == $product['products_multiplication']) {
-							$cart['products'][$shopping_cart_item]['qty']=(int) $cart['products'][$shopping_cart_item]['qty'];
+						if (!$product['products_multiplication'] || (int)$product['products_multiplication']==$product['products_multiplication']) {
+							$cart['products'][$shopping_cart_item]['qty']=(int)$cart['products'][$shopping_cart_item]['qty'];
 						}
 						if ($product['minimum_quantity']>$cart['products'][$shopping_cart_item]['qty']) {
 							$cart['products'][$shopping_cart_item]['qty']=$product['minimum_quantity'];
@@ -844,7 +843,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'cart'=>&$cart
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['updateCartPostHook'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -964,12 +963,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		return $products_tax;
 	}
 	function convertCartToOrder($cart) {
-
-
 		//print_r($cart);
 		//die();
-
-
 		// var for total amount
 		$tax_separation=array();
 		$total_price=0;
@@ -978,7 +973,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		// check for NULL, convert to empty string - typo3 v6.x related bug
 		if (is_array($address) && count($address)) {
 			foreach ($address as $key=>$val) {
-				if ($val==null || $val==NULL) {
+				if ($val==null || $val==null) {
 					$address[$key]='';
 				}
 			}
@@ -1246,7 +1241,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'customer_id'=>&$customer_id
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 			}
@@ -1541,7 +1536,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'insertArray'=>&$insertArray
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPreProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 				// hook oef
 			}
@@ -1556,7 +1551,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'insertArray'=>&$insertArray
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 				// hook oef
 			}
@@ -1682,7 +1677,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							}
 							$insertArray['products_tax_data']=serialize($product_tax);
 							// separation of tax
-							$tax_separation[($value['tax_rate']*100)]['products_total_tax']+=($product_tax['total_tax']*$value['qty']) + ($product_tax['total_attributes_tax']*$value['qty']);
+							$tax_separation[($value['tax_rate']*100)]['products_total_tax']+=($product_tax['total_tax']*$value['qty'])+($product_tax['total_attributes_tax']*$value['qty']);
 							$tax_separation[($value['tax_rate']*100)]['products_sub_total_excluding_vat']+=($value['final_price']*$value['qty']);
 							$tax_separation[($value['tax_rate']*100)]['products_sub_total']+=(($value['final_price']+$product_tax['total_tax']+$product_tax['total_attributes_tax'])*$value['qty']);
 							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductPreProc'])) {
@@ -1693,7 +1688,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									'insertArray'=>&$insertArray
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductPreProc'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 								// hook oef
 							}
@@ -1777,7 +1772,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 													'mailTo'=>&$mailTo
 												);
 												foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
-													 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+													\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 												}
 											}
 											//end of hook to let other plugins further manipulate the replacers
@@ -1835,7 +1830,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 													'mailTo'=>&$mailTo
 												);
 												foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['mailAlertQuantityThresholdPostProc'] as $funcRef) {
-													 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+													\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 												}
 											}
 											//end of hook to let other plugins further manipulate the replacers
@@ -1911,7 +1906,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									'cart'=>$cart
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductsPostProc'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 								// hook eof
 							}
@@ -1939,7 +1934,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'cart'=>$cart
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersTotalProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 					// hook eof
 				}
@@ -2000,7 +1995,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'cart'=>&$cart
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderDiscountPreProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 					// hook oef
 				}
@@ -2030,7 +2025,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'orders_id'=>&$orders_id
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrderPostHook'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 					// hook oef
 				}
@@ -2053,7 +2048,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					mslib_fe::updateOrderStatusToPaid($order['orders_id']);
 				}
 				require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-				$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+				$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 				$mslib_order->init($this);
 				$mslib_order->repairOrder($orders_id);
 				return $orders_id;
@@ -2117,10 +2112,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				'cart_user'=>&$this->cart['user']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['setShippingMethodPreSaveHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		self::storeCart();
+	}
+	function storeCart() {
+		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
+		$GLOBALS['TSFE']->storeSessionData();
 	}
 	function setPaymentMethod($payment_method) {
 		if (!$payment_method) {
@@ -2179,10 +2178,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		// payment eof
 		self::storeCart();
 	}
-	function storeCart() {
-		$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $this->cart);
-		$GLOBALS['TSFE']->storeSessionData();
-	}
 	function setCountry($countries_name, $delivery_country='') {
 		$str3="SELECT * from static_countries where cn_short_en='".addslashes($countries_name)."' ";
 		$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
@@ -2223,7 +2218,6 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					} else {
 						$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site_excluding_vat.tmpl');
 					}
-
 				}
 				break;
 			default:
@@ -2253,7 +2247,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				'content'=>&$content
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContents'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		} else {
 			$itemsWrapper=array();
@@ -2395,7 +2389,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							'sectionTemplateType'=>&$sectionTemplateType
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_cart.php']['getHtmlCartContentsItemPreProc'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 						}
 					}
 					$itemsWrapper[]=$item;

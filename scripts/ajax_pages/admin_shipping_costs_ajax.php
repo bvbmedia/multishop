@@ -124,7 +124,7 @@ if ($this->ADMIN_USER) {
 								'end_weight'=>&$end_weight
 							);
 							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['weightConversion'] as $funcRef) {
-								 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 							}
 						}
 						$weight_next=$i>1 ? $weight_old : '0';
@@ -364,7 +364,7 @@ if ($this->ADMIN_USER) {
 			'content'=>&$content
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_shipping_costs_ajax.php']['processCustomShippingTypeAjaxRequest'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// hook to process custom shipping type ajax request eof

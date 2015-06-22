@@ -164,9 +164,9 @@ switch ($_REQUEST['action']) {
 			$fields[]='products_image'.$s;
 		}
 		$data['products']=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows(implode(",", $fields), 'tx_multishop_products', 'page_uid=\''.$_GET['page_uid'].'\'', '');
-		foreach($data as $type => $items) {
+		foreach ($data as $type=>$items) {
 			$content.='<h2>'.$type.'</h2>';
-			switch($type) {
+			switch ($type) {
 				case 'categories':
 					foreach ($items as $item) {
 						$dbFilename=$item['categories_image'];
@@ -174,7 +174,7 @@ switch ($_REQUEST['action']) {
 						$newFilename=mslib_befe::resizeCategoryImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
 						if ($newFilename) {
 							$content.=$newFilename.'<BR>';
-							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
+							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
 								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
 								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
 								$updateArray=array();
@@ -205,7 +205,7 @@ switch ($_REQUEST['action']) {
 						$newFilename=mslib_befe::resizeManufacturerImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
 						if ($newFilename) {
 							$content.=$newFilename.'<BR>';
-							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
+							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
 								// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
 								$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
 								$updateArray=array();
@@ -239,13 +239,12 @@ switch ($_REQUEST['action']) {
 								$s=$i;
 							}
 							$col='products_image'.$s;
-
 							$dbFilename=$item[$col];
 							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
 							$newFilename=mslib_befe::resizeProductImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
 							if ($newFilename) {
 								$content.=$newFilename.'<BR>';
-								if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename != $dbFilename) {
+								if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
 									// FILE IS ALSO CONVERTED. LETS UPDATE THE DATABASE
 									$content.='<i>('.$dbFilename.' has been converted to: '.$newFilename.')</i><br/>';
 									$updateArray[$col]=$newFilename;
@@ -374,7 +373,7 @@ switch ($_REQUEST['action']) {
 		$paths[]=PATH_site.'uploads/tx_multishop/images/manufacturers/original';
 		foreach ($paths as $path) {
 			if (!is_dir($path)) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($path, 0766);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($path, 0766);
 			}
 		}
 		break;
@@ -423,7 +422,7 @@ switch ($_REQUEST['action']) {
 			if (!$_FILES['restore_file']['error'] or $this->post['custom_file']) {
 				$backup_folder='restore_'.date("Y-m-d_G-i-s").'-'.md5(uniqid());
 				$fullpath=PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder;
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($fullpath);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($fullpath);
 				$content.='Restoring:<BR>'.$fullpath;
 				if ($_FILES['restore_file']['tmp_name']) {
 					move_uploaded_file($_FILES['restore_file']['tmp_name'], $fullpath.'/'.$_FILES['restore_file']['name']);
@@ -433,7 +432,6 @@ switch ($_REQUEST['action']) {
 					$source_file=$fullpath.'/'.$this->post['custom_file'];
 				}
 				$files=$this->zipUnpack($source_file);
-
 				$import_files=array();
 				if (in_array('bvbshop.txt', $files)) {
 					$mode='bvbshop';
@@ -485,7 +483,7 @@ switch ($_REQUEST['action']) {
 						// backup original
 						$folder=mslib_befe::getImagePrefixFolder($filename);
 						if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
 						}
 						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$filename;
 						if (copy($path, $target)) {
@@ -500,7 +498,7 @@ switch ($_REQUEST['action']) {
 						// backup original
 						$folder=mslib_befe::getImagePrefixFolder($filename);
 						if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 						}
 						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$filename;
 						if (copy($path, $target)) {
@@ -896,7 +894,6 @@ switch ($_REQUEST['action']) {
 							$final_db[$key][$rs['Field']]='';
 						}
 					}
-
 					$insert_records=0;
 					$content.='<strong>'.$key.'</strong>';
 					// FULL IMPORT
@@ -945,7 +942,6 @@ switch ($_REQUEST['action']) {
 							// older multishop versions has sometimes columnes that are not existing in the newer version. lets filter them out EOF
 							$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=true;
 							$res =$GLOBALS['TYPO3_DB']->exec_INSERTquery($key, $record);
-
 							if ($GLOBALS['TYPO3_DB']->sql_insert_id() or $GLOBALS['TYPO3_DB']->sql_affected_rows()) {
 								$insert_records++;
 							} else {
@@ -1305,10 +1301,10 @@ switch ($_REQUEST['action']) {
 			}
 			$output=serialize($data);
 			$backup_folder=date("Y-m-d_G-i-s").'-'.md5(uniqid());
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder);
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder.'/images');
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder.'/images/categories');
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder.'/images/products');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder.'/images');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder.'/images/categories');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.'uploads/tx_multishop/tmp/'.$backup_folder.'/images/products');
 			if (in_array('images', $_GET['tx_multishop_pi']['selected_tables']) or !count($_GET['tx_multishop_pi']['selected_tables'])) {
 				// copy the category images to the backup folder
 				foreach ($data['tx_multishop_categories'] as $record) {
@@ -1514,8 +1510,8 @@ if (count($multishop_content_objects)>0) {
 	$content.='
 					<fieldset class="mod1MultishopFieldset"><legend>Global Features</legend>
 						<ul>
-							<li><a class="buttons" href="'. \TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=clearMultishopCache">Clear Multishop Cache</a></li>
-							<li><a class="buttons" href="'. \TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=full_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
+							<li><a class="buttons" href="'.\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=clearMultishopCache">Clear Multishop Cache</a></li>
+							<li><a class="buttons" href="'.\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=full_erase" onClick="return CONFIRM(\'WARNING THIS IS UNREVERSABLE AND WILL DESTROY ALL MULTISHOP DATA.\n\nAre you sure you want to delete the products, categories, orders, cms pages and settings of every Multishop?\')">Clear All Multishop Data</a></li>
 						</ul>
 					</fieldset>
 					';
@@ -1527,7 +1523,7 @@ if (count($multishop_content_objects)>0) {
 							<form action="'.$typoLink.'" method="post" enctype="multipart/form-data">
 							<div class="shadow_bottom">
 							<fieldset>
-							<legend><a href="#" onclick="'.htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($content_object['uid'], $this->backPath, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($content_object['uid']), '', '')).'">'.trim($pageinfo['_thePathFull'], '/').'</a> <a title="View" href="#" onclick="'.htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($content_object['uid'], $this->backPath, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($content_object['uid']), '', '')).'">'.$this->Typo3Icon('actions-document-view', 'View').'</a> <a title="Delete" href="'. \TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=erase" onClick="return CONFIRM(\'Are you sure you want to delete the products, categories, orders, cms pages and settings of: '.$pageinfo['_thePathFull'].'?\')">'.$this->Typo3Icon('actions-edit-delete', 'Delete').'</a>
+							<legend><a href="#" onclick="'.htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($content_object['uid'], $this->backPath, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($content_object['uid']), '', '')).'">'.trim($pageinfo['_thePathFull'], '/').'</a> <a title="View" href="#" onclick="'.htmlspecialchars(\TYPO3\CMS\Backend\Utility\BackendUtility::viewOnClick($content_object['uid'], $this->backPath, \TYPO3\CMS\Backend\Utility\BackendUtility::BEgetRootLine($content_object['uid']), '', '')).'">'.$this->Typo3Icon('actions-document-view', 'View').'</a> <a title="Delete" href="'.\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=erase" onClick="return CONFIRM(\'Are you sure you want to delete the products, categories, orders, cms pages and settings of: '.$pageinfo['_thePathFull'].'?\')">'.$this->Typo3Icon('actions-edit-delete', 'Delete').'</a>
 							</legend>';
 			$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(1) as total', 'fe_users', '', '');
 			$row=$data[0];
@@ -1561,7 +1557,7 @@ if (count($multishop_content_objects)>0) {
 	<table>
 		<tr>
 			<td>
-				<a class="buttons" href="'. \TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$pageinfo['uid'].'&action=image_resizer" onClick="return CONFIRM(\'Are you sure you want to resize all images?\')">Resize Images</a>
+				<a class="buttons" href="'.\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$pageinfo['uid'].'&action=image_resizer" onClick="return CONFIRM(\'Are you sure you want to resize all images?\')">Resize Images</a>
 			</td>
 		</tr>
 	</table>
@@ -1585,7 +1581,7 @@ if (count($multishop_content_objects)>0) {
 				$content.='<li><input name="tx_multishop_pi[selected_tables][]" class="selected_tables" type="checkbox" value="'.$type.'" /> '.$type.'</li>'."\n";
 			}
 			$content.='
-	<li><strong><a class="buttons_db backup_subshop_btn" href="'. \TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=backup">Download Backup</a></strong></li>
+	<li><strong><a class="buttons_db backup_subshop_btn" href="'.\TYPO3\CMS\Core\Utility\GeneralUtility::linkThisScript().'&page_uid='.$content_object['uid'].'&action=backup">Download Backup</a></strong></li>
 </ul>
 <script type="text/javascript">
 	$(function(){

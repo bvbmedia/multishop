@@ -7,7 +7,7 @@ if ($_REQUEST['skeyword']) {
 	$this->get['skeyword']=$_REQUEST['skeyword'];
 	$this->get['skeyword']=trim($this->get['skeyword']);
 	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['skeyword'], $GLOBALS['TSFE']->metaCharset);
-	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], TRUE);
+	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], true);
 	$this->get['skeyword']=mslib_fe::RemoveXSS($this->get['skeyword']);
 }
 if (is_numeric($this->get['p'])) {
@@ -471,7 +471,6 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			$content.='<div class="main-heading"><h2>'.$this->pi_getLL('no_products_found_heading').'</h2></div>'."\n";
 			$content.='<p>'.$this->pi_getLL('no_products_found_description').'</p>'."\n";
 		}
-
 	}
 	if ($this->ms['MODULES']['CACHE_FRONT_END']) {
 		$output_array['content']=$content;

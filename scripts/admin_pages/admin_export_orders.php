@@ -54,11 +54,6 @@ if (isset($this->get['upload']) && $this->get['upload']=='export_orders_task' &&
 				}
 			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_export', $insertArray);
-
-
-
-
-
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			@unlink($target);
 		}
@@ -112,7 +107,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'array'=>&$array
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_orders.php']['adminExportOrdersColtypesHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 asort($array);
@@ -182,7 +177,6 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$first_order_qry=$GLOBALS['TYPO3_DB']->sql_query($first_order_sql);
 		$first_order_rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($first_order_qry);
 		$first_year=date('Y', $first_order_rs['crdate']);
-
 		$content.='
 		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_orders_export_wizard').'</h2></div>
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="orders_export_form">
@@ -205,9 +199,9 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$order_status_sb.='</select>';
 		// payment status selectbox
 		$payment_status_sb='<select name="payment_status">
-			<option value="all"'.($post_data['payment_status']=='all'?' selected="selected"':'').'>'.$this->pi_getLL('all').'</option>
-			<option value="paid"'.($post_data['payment_status']=='paid'?' selected="selected"':'').'>'.$this->pi_getLL('paid').'</option>
-			<option value="unpaid"'.($post_data['payment_status']=='unpaid'?' selected="selected"':'').'>'.$this->pi_getLL('unpaid').'</option>
+			<option value="all"'.($post_data['payment_status']=='all' ? ' selected="selected"' : '').'>'.$this->pi_getLL('all').'</option>
+			<option value="paid"'.($post_data['payment_status']=='paid' ? ' selected="selected"' : '').'>'.$this->pi_getLL('paid').'</option>
+			<option value="unpaid"'.($post_data['payment_status']=='unpaid' ? ' selected="selected"' : '').'>'.$this->pi_getLL('unpaid').'</option>
 		</select>';
 		// order by selectbox
 		$order_by_sb='<select name="order_by">
@@ -277,7 +271,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</div>
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('maximum_number_of_order_products')).'</label>
-			<input type="text" name="maximum_number_of_order_products" value="'.($post_data['maximum_number_of_order_products']?$post_data['maximum_number_of_order_products']:'25').'" />
+			<input type="text" name="maximum_number_of_order_products" value="'.($post_data['maximum_number_of_order_products'] ? $post_data['maximum_number_of_order_products'] : '25').'" />
 		</div>
 		<div class="account-field">
 			<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
@@ -430,7 +424,7 @@ if ($this->ms['show_main']) {
 					'order'=>&$order
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_export_orders.php']['ordersIterationItem'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom page hook that can be controlled by third-party plugin eof

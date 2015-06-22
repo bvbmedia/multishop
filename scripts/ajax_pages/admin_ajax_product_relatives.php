@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$pid=(int) $this->post['pid'];
+$pid=(int)$this->post['pid'];
 $json_data=array();
 if ($this->post['req']=='init') {
 	// pre-defined product relation
@@ -17,10 +17,10 @@ if ($this->post['req']=='init') {
 	);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	while ($rows=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-		if ($rows['relative_product_id']!=$pid && $rows['relative_product_id'] > 0) {
+		if ($rows['relative_product_id']!=$pid && $rows['relative_product_id']>0) {
 			$relations_data[]=$rows['relative_product_id'];
 		} else {
-			if ($rows['products_id']!=$pid && $rows['products_id'] > 0) {
+			if ($rows['products_id']!=$pid && $rows['products_id']>0) {
 				$relations_data[]=$rows['products_id'];
 			}
 		}
@@ -166,7 +166,6 @@ if ($this->post['req']=='init') {
 		$pid_regs=array();
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
-
 			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
 				if ($row['categories_name']) {
 					$productFilter=$filter;

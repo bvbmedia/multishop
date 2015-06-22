@@ -91,7 +91,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				$options_data['required']=$required;
 				$options_data['hide_in_details_page']=$hide_in_details_page;
 				$options_data['hide_in_cart']=$hide_in_cart;
-
 				$selects=array();
 				$selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
 				$selects['select_multiple']=$this->pi_getLL('admin_label_option_type_selectbox_multiple');
@@ -108,9 +107,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				}
 				$list_type.='</select>';
 				$options_data['listtype']=$list_type;
-
-
-
 				if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
 					$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($max_optid);
 					if (!empty($options_group)) {
@@ -122,12 +118,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				} else {
 					$options_data['options_groups']='';
 				}
-
-
-
 			}
 		}
-
 		$json_data=mslib_befe::array2json($options_data);
 		echo $json_data;
 		exit();
@@ -403,10 +395,9 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 			$values_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 			$json_data['values_id']=$values_id;
 			$json_data['values_name']=$this->post['new_values'];
-
 			// new relations
-			list($usec, $sec) = explode(" ", microtime());
-			$sort_order=((float)$usec + (float)$sec);
+			list($usec, $sec)=explode(" ", microtime());
+			$sort_order=((float)$usec+(float)$sec);
 			$insertArray=array();
 			$insertArray['products_options_id']=$optid;
 			$insertArray['products_options_values_id']=$values_id;
@@ -433,8 +424,8 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				$json_data['pov2po_id']=$row['products_options_values_to_products_options_id'];
 			} else {
 				// new relations
-				list($usec, $sec) = explode(" ", microtime());
-				$sort_order=((float)$usec + (float)$sec);
+				list($usec, $sec)=explode(" ", microtime());
+				$sort_order=((float)$usec+(float)$sec);
 				$insertArray=array();
 				$insertArray['products_options_id']=$optid;
 				$insertArray['products_options_values_id']=$values_id;
@@ -661,7 +652,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 						$folder=mslib_befe::getImagePrefixFolder($filename);
 						$array=explode(".", $filename);
 						if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder)) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
 						}
 						$folder.='/';
 						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.$filename;
@@ -672,7 +663,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 								$array=explode(".", $filename);
 								$folder=$folder_name;
 								if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder)) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
 								}
 								$folder.='/';
 								$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.$filename;
@@ -760,7 +751,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 						$folder=mslib_befe::getImagePrefixFolder($filename);
 						$array=explode(".", $filename);
 						if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder)) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
 						}
 						$folder.='/';
 						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.$filename;
@@ -771,7 +762,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 								$array=explode(".", $filename);
 								$folder=$folder_name;
 								if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder)) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder);
 								}
 								$folder.='/';
 								$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['attribute_values']['original'].'/'.$folder.$filename;

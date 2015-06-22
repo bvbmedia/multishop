@@ -11,7 +11,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 		'skipMultishopUpdates'=>&$skipMultishopUpdates
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/compare_database.php']['compareDatabasePreHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof
@@ -102,7 +102,6 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
 	// V3 COMPARE DATABASE EOL
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN)
 	$str="select page_uid from tx_multishop_products_to_categories limit 1";
@@ -181,8 +180,6 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
-
 	$str="select related_to from tx_multishop_products_to_categories limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -317,8 +314,18 @@ if (!$skipMultishopUpdates) {
 	}
 	// TYPO3 6 - NULL VALUES BUGFIX
 	$items=array();
-	$items[]=array('table'=>'tx_multishop_products_description','column'=>'products_meta_title','columnDefinition'=>'varchar(254)','allowNull'=>1);
-	$items[]=array('table'=>'tx_multishop_products_description','column'=>'products_meta_description','columnDefinition'=>'varchar(254)','allowNull'=>1);
+	$items[]=array(
+		'table'=>'tx_multishop_products_description',
+		'column'=>'products_meta_title',
+		'columnDefinition'=>'varchar(254)',
+		'allowNull'=>1
+	);
+	$items[]=array(
+		'table'=>'tx_multishop_products_description',
+		'column'=>'products_meta_description',
+		'columnDefinition'=>'varchar(254)',
+		'allowNull'=>1
+	);
 	foreach ($items as $item) {
 		$str="describe `".$item['table']."`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -469,7 +476,7 @@ if (!$skipMultishopUpdates) {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		if ($row['Field']=='specials_new_products_price') {
-			if ($row['Type'] !='decimal(24,14)') {
+			if ($row['Type']!='decimal(24,14)') {
 				$str2="ALTER TABLE  `tx_multishop_specials` CHANGE  `specials_new_products_price`  `specials_new_products_price` decimal(24,14) DEFAULT  '0.00000000000000'";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$messages[]=$str2;
@@ -517,7 +524,6 @@ if (!$skipMultishopUpdates) {
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$messages[]=$str2;
 			}
-
 		}
 	}
 	$str="describe `tx_multishop_products`";
@@ -631,7 +637,6 @@ if (!$skipMultishopUpdates) {
 			}
 		}
 	}
-
 	$str="select page_uid from tx_multishop_cart_contents limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -729,7 +734,7 @@ if (!$skipMultishopUpdates) {
 			'messages'=>&$messages
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/compare_database.php']['compareDatabasePostHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof

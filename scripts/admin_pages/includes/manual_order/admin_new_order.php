@@ -45,7 +45,7 @@ if (count($products)<0) {
 		$regex_for_character="/[^0-9]$/";
 		$birthday_validation='';
 		//if ($this->ms['MODULES']['CHECKOUT_ENABLE_BIRTHDAY']) {
-			$birthday_validation='
+		$birthday_validation='
 			$("#birthday_visitor").datepicker({
 				dateFormat: "'.$this->pi_getLL('locale_date_format', 'm/d/Y').'",
 				altField: "#birthday",

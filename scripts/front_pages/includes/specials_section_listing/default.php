@@ -103,12 +103,11 @@ foreach ($products as $product) {
 		$markerArray['DETAILS_PAGE_LINK']=$output['link'];
 		$markerArray['PRODUCTS_NAME']=$output['products_name'];
 		$markerArray['PRODUCTS_PRICE']=$output['special_section_price'];
-
 		if (mslib_fe::ProductHasAttributes($current_product['products_id'])) {
 			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=$output['link'];
 			$button_submit='<a href="'.$output['link'].'" class="ajax_link"><input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/></a>';
 		} else {
-			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid,'&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$product['products_id']);
+			$markerArray['PRODUCTS_ADD_TO_CART_BUTTON_LINK']=mslib_fe::typolink($this->shop_pid, '&tx_multishop_pi1[page_section]=shopping_cart&tx_multishop_pi1[action]=add_to_cart&products_id='.$product['products_id']);
 			$button_submit='<input name="Submit" type="submit" value="'.$this->pi_getLL('add_to_basket').'"/>';
 		}
 		$markerArray['ITEM_DETAILS_ADD_TO_CART_BUTTON']='
@@ -130,7 +129,6 @@ foreach ($products as $product) {
 		);
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$res=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-
 		$markerArray['SPECIALS_SECTIONS_ID']=$res['specials_id'];
 		$markerArray['SPECIALS_SECTIONS_CODE']=$this->section_code;
 		// custom hook that can be controlled by third-party plugin
@@ -143,7 +141,7 @@ foreach ($products as $product) {
 				'plugins_item_extra_content'=>&$plugins_item_extra_content
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionProductsListingHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		$markerArray['PRODUCT_LISTING_ITEM_PLUGIN_EXTRA_CONTENT']='';
@@ -168,7 +166,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 		'subpartArray'=>&$subpartArray
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/specials_section_listing']['specialsSectionsPostHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof
@@ -256,7 +254,7 @@ if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 			cursor:     "move",
 			//axis:       "y",
 			update: function(e, ui) {
-				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=sort_specials_sections&tx_multishop_pi1[sort_specials_sections]=' . $this->section_code).'";
+				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=sort_specials_sections&tx_multishop_pi1[sort_specials_sections]='.$this->section_code).'";
 				jQuery(this).sortable("refresh");
 				sorted = jQuery(this).sortable("serialize", "id");
 				jQuery.ajax({

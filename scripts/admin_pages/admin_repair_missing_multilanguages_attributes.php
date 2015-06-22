@@ -8,7 +8,6 @@ $prefix_domain=$this->FULL_HTTP_URL;
 @unlink($log_file);
 set_time_limit(7200);
 ignore_user_abort(true);
-
 // fix option multilanguage
 $pa_option_name=$pa_option;
 $sql_chk=$GLOBALS['TYPO3_DB']->SELECTquery('products_options_name, products_options_id', // SELECT ...

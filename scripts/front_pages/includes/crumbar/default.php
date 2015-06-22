@@ -58,7 +58,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$contentItem='';
 				$output['product_name']='<li class="crumbar_product_level"><strong>'.$rowCms['manufacturers_name'].'</strong></li>';
 			}
-		} elseif($categories_id) {
+		} elseif ($categories_id) {
 			if ($GLOBALS['TYPO3_CONF_VARS']['tx_multishop_data']['user_crumbar']) {
 				$cats=$GLOBALS['TYPO3_CONF_VARS']['tx_multishop_data']['user_crumbar'];
 			} else {

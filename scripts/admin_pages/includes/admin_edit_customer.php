@@ -81,7 +81,6 @@ if ($this->post && $this->post['email']) {
 		$updateArray['mobile']=$this->post['mobile'];
 		$updateArray['tx_multishop_discount']=$this->post['tx_multishop_discount'];
 		$updateArray['tx_multishop_payment_condition']=$this->post['tx_multishop_payment_condition'];
-
 		if ($this->post['password']) {
 			$updateArray['password']=mslib_befe::getHashedPassword($this->post['password']);
 		}
@@ -147,7 +146,7 @@ if ($this->post && $this->post['email']) {
 					'erno'=>$erno
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPreProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if (count($erno)) {
@@ -212,7 +211,7 @@ if ($this->post && $this->post['email']) {
 						'uid'=>$this->post['tx_multishop_pi1']['cid']
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['updateCustomerUserPostProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 			}
@@ -255,7 +254,7 @@ if ($this->post && $this->post['email']) {
 				$updateArray['usergroup']=$this->conf['fe_customer_usergroup'];
 			}
 			$updateArray['pid']=$this->conf['fe_customer_pid'];
-			$updateArray['tx_multishop_code']=md5(uniqid('', TRUE));
+			$updateArray['tx_multishop_code']=md5(uniqid('', true));
 			$updateArray['tstamp']=time();
 			$updateArray['crdate']=time();
 			if ($this->post['password']) {
@@ -291,7 +290,7 @@ if ($this->post && $this->post['email']) {
 					'updateArray'=>&$updateArray
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPreProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -349,7 +348,7 @@ if ($this->post && $this->post['email']) {
 					'uid'=>$customer_id
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// customer shipping/payment method mapping
@@ -719,7 +718,6 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
 		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
 		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
-
 		$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
 		$subpartArray['###VALUE_CUSTOMER_ID###']=$this->get['tx_multishop_pi1']['cid'];
 		if ($_GET['action']=='edit_customer') {
@@ -820,24 +818,24 @@ switch ($_REQUEST['action']) {
 						<th width="110" class="cell_date">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
 						<th width="50" class="cell_paid">'.$this->pi_getLL('admin_paid').'</th>
 					</tr>';
+			$tr_type='odd';
+			foreach ($orders_pageset['orders'] as $order) {
+				if (!isset($tr_type) || $tr_type=='odd') {
+					$tr_type='even';
+				} else {
 					$tr_type='odd';
-					foreach ($orders_pageset['orders'] as $order) {
-						if (!isset($tr_type) || $tr_type=='odd') {
-							$tr_type='even';
-						} else {
-							$tr_type='odd';
-						}
-						if ($order['is_proposal']>0) {
-							$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
-						} else {
-							$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
-						}
-						if (!$order['paid']) {
-							$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
-						} else {
-							$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
-						}
-						$order_listing.='<tr class="'.$tr_type.'">
+				}
+				if ($order['is_proposal']>0) {
+					$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
+				} else {
+					$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+				}
+				if (!$order['paid']) {
+					$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
+				} else {
+					$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
+				}
+				$order_listing.='<tr class="'.$tr_type.'">
 							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
 							<td align="right" nowrap>'.strftime("%x %X", $order['crdate']).'</td>
 							<td align="right" nowrap id="order_amount_###ORDER_ID###">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
@@ -847,7 +845,7 @@ switch ($_REQUEST['action']) {
 							<td align="right" nowrap>'.($order['status_last_modified'] ? strftime("%x %X", $order['status_last_modified']) : '').'</td>
 							<td align="center" nowrap>'.$paid_status.'</td>
 						</tr>';
-					}
+			}
 			$order_listing.='<tr>
 						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
 						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
@@ -927,7 +925,6 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
 		$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
 		$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
-
 		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
 		$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
@@ -982,7 +979,6 @@ if (!$this->ms['MODULES']['FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_P
 	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name'));
 	$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name'));
 }
-
 $plugins_extra_tab=array();
 $js_extra=array();
 $plugins_extra_tab['tabs_header']=array();
@@ -996,7 +992,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'js_extra'=>&$js_extra
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerTmplPreProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom page hook that can be controlled by third-party plugin eof
@@ -1020,7 +1016,7 @@ if (!count($js_extra['triggers'])) {
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 if ($customer_id) {
 	require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
-	$mslib_dashboard= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_dashboard');
+	$mslib_dashboard=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_dashboard');
 	$mslib_dashboard->init($this);
 	$mslib_dashboard->setSection('admin_edit_customer');
 	$mslib_dashboard->renderWidgets();

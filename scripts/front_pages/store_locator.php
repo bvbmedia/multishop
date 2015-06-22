@@ -6,7 +6,7 @@ if ($_REQUEST['skeyword']) {
 	$this->get['tx_multishop_pi1']['zip']=$_REQUEST['skeyword'];
 	$this->get['tx_multishop_pi1']['zip']=trim($this->get['tx_multishop_pi1']['zip']);
 	$this->get['tx_multishop_pi1']['zip']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['tx_multishop_pi1']['zip'], $GLOBALS['TSFE']->metaCharset);
-	$this->get['tx_multishop_pi1']['zip']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['tx_multishop_pi1']['zip'], TRUE);
+	$this->get['tx_multishop_pi1']['zip']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['tx_multishop_pi1']['zip'], true);
 	$this->get['tx_multishop_pi1']['zip']=mslib_fe::RemoveXSS($this->get['tx_multishop_pi1']['zip']);
 }
 $title='Store Locator';

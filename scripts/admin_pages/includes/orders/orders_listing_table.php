@@ -83,7 +83,7 @@ foreach ($tmporders as $order) {
 			'order'=>&$order
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersListingButton'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$order_list_button_extra='';
@@ -96,22 +96,20 @@ foreach ($tmporders as $order) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['ORDER_ID']=$order['orders_id'];
-
 	$markerArray['INVOICE_NUMBER']='';
 	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 		$markerArray['INVOICE_NUMBER']='<td align="right">';
 		$filter=array();
-		$invoices=mslib_befe::getRecords($order['orders_id'],'tx_multishop_invoices i','i.orders_id',$filter);
-
+		$invoices=mslib_befe::getRecords($order['orders_id'], 'tx_multishop_invoices i', 'i.orders_id', $filter);
 		$links=array();
 		if (is_array($invoices) && count($invoices)) {
 			foreach ($invoices as $invoice) {
-				$invoice=mslib_fe::getInvoice($invoice['id'],'id');
+				$invoice=mslib_fe::getInvoice($invoice['id'], 'id');
 				$links[]='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank">'.$invoice['invoice_id'].'</a>';
 			}
 		}
 		if (count($links)) {
-			$markerArray['INVOICE_NUMBER'].=implode('<br/>',$links);
+			$markerArray['INVOICE_NUMBER'].=implode('<br/>', $links);
 		}
 		$markerArray['INVOICE_NUMBER'].='</td>';
 	}
@@ -140,7 +138,7 @@ foreach ($tmporders as $order) {
 			'order'=>&$order
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplIteratorPreProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom page hook that can be controlled by third-party plugin eof
@@ -156,12 +154,11 @@ $actions['mail_selected_orders_to_merchant']=$this->pi_getLL('mail_selected_orde
 $actions['export_selected_order_to_xls']=$this->pi_getLL('export_selected_order_to_xls', 'Export selected orders to Excel');
 $actions['mail_selected_orders_for_payment_reminder']=$this->pi_getLL('mail_selected_orders_for_payment_reminder', 'Mail selected orders for payment reminder');
 $actions['create_invoice_for_selected_orders']=$this->pi_getLL('create_invoice_for_selected_orders', 'Create invoice for selected orders');
-
 // extra action
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionSelectboxProc'])) {
 	$params=array('actions'=>&$actions);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionSelectboxProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $formFields=array();
@@ -184,7 +181,7 @@ $formFields['update_to_order_status'].='</select>';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputProc'])) {
 	$params=array('formFields'=>&$formFields);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $formFields['submit_button']='<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
@@ -310,7 +307,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'order'=>&$order
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplPreProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom page hook that can be controlled by third-party plugin eof
@@ -345,7 +342,7 @@ $headerData.='
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputJQueryProc'])) {
 	$params=array('tmp'=>&$headerData);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_orders.php']['adminOrdersActionExtraInputJQueryProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $headerData.='});

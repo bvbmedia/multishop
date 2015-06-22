@@ -8,7 +8,6 @@ if (!$this->imageWidth) {
 }
 $subpartArray=array();
 // now parse all the objects in the tmpl file
-
 if ($this->conf['products_relatives_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['products_relatives_tmpl_path']);
 } else {
@@ -20,7 +19,6 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['title']=$this->cObj->getSubpart($subparts['template'], '###TITLE###');
 $subparts['header']=$this->cObj->getSubpart($subparts['template'], '###HEADER###');
 $subparts['item']=$this->cObj->getSubpart($subparts['template'], '###ITEM###');
-
 $markerArray=array();
 // TITLE
 $title=$this->pi_getLL('product_relatives');
@@ -55,7 +53,6 @@ if ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN'] && $this->ms['MODULES'][
 	$subpartHeaderArray=array();
 	$subpartHeaderArray['###HEADER_STOCK_RELATIVE_WRAPPER###']='';
 	$subparts['header']=$this->cObj->substituteMarkerArrayCached($subparts['header'], array(), $subpartHeaderArray);
-
 	$subpartHeaderArray=array();
 	$subpartHeaderArray['###ITEM_STOCK_RELATIVE_WRAPPER###']='';
 	$subparts['item']=$this->cObj->substituteMarkerArrayCached($subparts['item'], array(), $subpartHeaderArray);
@@ -152,13 +149,11 @@ foreach ($rel_products as $rel_rs) {
 	$markerArray['ITEM_PRODUCTS_NAME']=$rel_rs['products_name'].($rel_rs['products_model'] ? ' <br />'.$rel_rs['products_model'] : '');
 	$markerArray['ITEM_PRODUCTS_SHORTDESCRIPTION_ENCODED']=htmlspecialchars($rel_rs['products_shortdescription']);
 	$markerArray['ITEM_PRODUCTS_PRICE']=mslib_fe::amount2Cents($final_price);
-
 	$quantity_html='<div class="quantity buttons_added">';
-	$quantity_html.='<input type="button" value="-" data-stepSize="'.($rel_rs['products_multiplication']!='0.00'?$rel_rs['products_multiplication']:'1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00'?$rel_rs['minimum_quantity']:'1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00'?$rel_rs['maximum_quantity']:'0').'" class="rel_qty_minus" rel="relation_cart_quantity_'.$i.'">';
+	$quantity_html.='<input type="button" value="-" data-stepSize="'.($rel_rs['products_multiplication']!='0.00' ? $rel_rs['products_multiplication'] : '1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00' ? $rel_rs['minimum_quantity'] : '1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00' ? $rel_rs['maximum_quantity'] : '0').'" class="rel_qty_minus" rel="relation_cart_quantity_'.$i.'">';
 	$quantity_html.='<input class="qty_input" name="relation_cart_quantity['.$i.']" type="text" id="relation_cart_quantity_'.$i.'" value="1" size="4" maxlength="4" />';
-	$quantity_html.='<input type="button" value="+" data-stepSize="'.($rel_rs['products_multiplication']!='0.00'?$rel_rs['products_multiplication']:'1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00'?$rel_rs['minimum_quantity']:'1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00'?$rel_rs['maximum_quantity']:'0').'" class="rel_qty_plus" rel="relation_cart_quantity_'.$i.'"></div>';
+	$quantity_html.='<input type="button" value="+" data-stepSize="'.($rel_rs['products_multiplication']!='0.00' ? $rel_rs['products_multiplication'] : '1').'" data-minQty="'.($rel_rs['minimum_quantity']!='0.00' ? $rel_rs['minimum_quantity'] : '1').'" data-maxQty="'.($rel_rs['maximum_quantity']!='0.00' ? $rel_rs['maximum_quantity'] : '0').'" class="rel_qty_plus" rel="relation_cart_quantity_'.$i.'"></div>';
 	$markerArray['ITEM_PRODUCTS_QUANTITY']=$quantity_html;//'<input type="text" name="relation_cart_quantity['.$i.']" value="1" maxlength="4" size="2" />';
-
 	$markerArray['ITEM_BUY_NOW']='<label for="relative_'.$i.'"></label>
 		<input type="checkbox" class="PrettyInput" name="winkelwagen['.$i.']" id="relative_'.$i.'" value="1">'.$rel_rs['hidden_fields'];
 	$markerArray['ITEM_PRODUCTS_STOCK']=$rel_rs['products_quantity'];
@@ -176,7 +171,6 @@ foreach ($rel_products as $rel_rs) {
 	$markerArray['ITEM_HEADER_QUANTITY']=htmlspecialchars(ucfirst($this->pi_getLL('qty')));
 	$markerArray['ITEM_HEADER_BUY_NOW']=htmlspecialchars(ucfirst($this->pi_getLL('buy_now')));
 	$markerArray['ITEM_HEADER_STOCK']=htmlspecialchars(ucfirst($this->pi_getLL('stock')));
-
 	$i++;
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'])) {
@@ -187,7 +181,7 @@ foreach ($rel_products as $rel_rs) {
 			'products_compare'=>&$products_compare
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingRecordHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof
@@ -278,7 +272,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 		'current'=>&$current
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsListingPagePostHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof

@@ -178,7 +178,7 @@ if ($this->post) {
 				'uid'=>&$GLOBALS["TSFE"]->fe_user->user['uid']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPreProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -191,7 +191,7 @@ if ($this->post) {
 				'uid'=>&$GLOBALS["TSFE"]->fe_user->user['uid']
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['updateAccountDetailsPostProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
@@ -500,7 +500,6 @@ if ($this->post) {
 				</select>
 				<div id="invalid-country" class="error-space" style="display:none"></div>
 			</div>';
-
 			$delivery_country_block='<div id="input-dcountry" class="account-field col-sm-'.($this->conf['edit_account_tmpl_path'] ? '12' : '8').'">
 				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
 				<select name="delivery_country" id="delivery_country" class="delivery_country">
@@ -555,8 +554,6 @@ if ($this->post) {
 	$markerArray['###LABEL_DELIVERY_GENDER_MR###']=ucfirst($this->pi_getLL('mr'));
 	$markerArray['###DELIVERY_GENDER_MRS_CHECKED###']=(($user['delivery_gender']=='f') ? 'checked' : '');
 	$markerArray['###LABEL_DELIVERY_GENDER_MRS###']=ucfirst($this->pi_getLL('mrs'));
-
-
 	$markerArray['###LABEL_DELIVERY_COMPANY###']=ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '');
 	$markerArray['###VALUE_DELIVERY_COMPANY###']=htmlspecialchars($user['delivery_company']);
 	$markerArray['###DELIVERY_COMPANY_VALIDATION###']=($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-delivery_company" title="'.$this->pi_getLL('company_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')"' : '');
@@ -615,7 +612,7 @@ if ($this->post) {
 			'markerArray'=>&$markerArray
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/edit_account/default.php']['editAccountPostHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof

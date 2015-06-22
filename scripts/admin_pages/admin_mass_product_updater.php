@@ -88,7 +88,6 @@ if ($this->post) {
 				$str="update tx_multishop_products_attributes set options_values_price=(options_values_price*".$multiply.") where options_values_price>0 and products_id='".$rs_products['products_id']."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$sql_attribute_values_affected_rows+=$GLOBALS['TYPO3_DB']->sql_affected_rows();
-
 			}
 			$content.='<strong>'.sprintf($this->pi_getLL('admin_mass_updater_flash_msg_x_attributes_updated'), $sql_attribute_values_affected_rows).'</strong><br />';
 		}

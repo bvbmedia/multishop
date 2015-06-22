@@ -6,8 +6,8 @@ if (!$this->get['tx_multishop_pi1']['order_id']) {
 	die();
 }
 $order_id=$this->get['tx_multishop_pi1']['order_id'];
-$pdfFileName = 'packingslip_'.$order_id.'.pdf';
-$pdfFilePath = $this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
+$pdfFileName='packingslip_'.$order_id.'.pdf';
+$pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
 if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePath)) && $order_id) {
 	$order=mslib_fe::getOrder($order_id);
 	$orders_tax_data=$order['orders_tax_data'];
@@ -206,10 +206,9 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		} else {
 			$array2[]='';
 		}
-
 		$array1[]='###PAYMENT_DUE_DATE###';
 		if ($order['payment_condition']) {
-			$array2[]=strftime("%x", strtotime('+'.$order['payment_condition'].' day',$order['crdate']));
+			$array2[]=strftime("%x", strtotime('+'.$order['payment_condition'].' day', $order['crdate']));
 		} else {
 			$array2[]='';
 		}
@@ -224,7 +223,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 				'mail_template'=>$mail_template
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		if ($markerArray['###PACKINGSLIP_CONTENT_HEADER_MESSAGE###']) {
@@ -239,8 +238,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###LABEL_PACKINGSLIP_PAYMENT_CONDITION###']=$this->pi_getLL('payment_condition');
 			$markerArray['###PACKINGSLIP_PAYMENT_CONDITION###']=$order['payment_condition'].' '.$this->pi_getLL('days');
 		}
-
-
 		// MARKERS EOL
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
 		// debug html output
@@ -255,7 +252,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		*/
 		$settings=array();
 		if ($this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']) {
-			$settings=explode(',',$this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']);
+			$settings=explode(',', $this->ms['MODULES']['PACKINGSLIP_PDF_PAGE_NUMBERING_SETTINGS']);
 		} else {
 			$settings[]='arial';
 			$settings[]='bold';
@@ -263,19 +260,23 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$settings[]='500';
 			$settings[]='795';
 		}
-		$dompdf = new DOMPDF();
+		$dompdf=new DOMPDF();
 		$dompdf->set_paper('A4');
 		$dompdf->load_html($content, 'UTF-8');
 		$dompdf->render();
 		// ADD PAGE NUMBER IN FOOTER
-		$canvas = $dompdf->get_canvas();
-		$font = Font_Metrics::get_font($settings[0], $settings[1]);
-		$canvas->page_text($settings[3], $settings[4], $this->pi_getLL('page','page').' {PAGE_NUM} '.$this->pi_getLL('of','of').' {PAGE_COUNT}', $font, $settings[2], array(0,0,0));
+		$canvas=$dompdf->get_canvas();
+		$font=Font_Metrics::get_font($settings[0], $settings[1]);
+		$canvas->page_text($settings[3], $settings[4], $this->pi_getLL('page', 'page').' {PAGE_NUM} '.$this->pi_getLL('of', 'of').' {PAGE_COUNT}', $font, $settings[2], array(
+			0,
+			0,
+			0
+		));
 		// SAVE AS FILE
 		if ($this->get['tx_multishop_pi1']['forceRecreate'] && file_exists($pdfFilePath)) {
 			unlink($pdfFilePath);
 		}
-		file_put_contents($pdfFilePath, $dompdf->output(array('compress' => 0)));
+		file_put_contents($pdfFilePath, $dompdf->output(array('compress'=>0)));
 	}
 }
 if (file_exists($pdfFilePath)) {

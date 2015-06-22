@@ -1,12 +1,11 @@
 <?php
 //print_r($this->get);
 // if there are no Ultrasearch fields defined through the Multishop configuration system, lets check if the Ultrasearch fields are defined through FlexForms.
-
 // setting coming from typoscript or from flexform
 if ($this->conf['ultrasearch_fields']) {
-	$this->ultrasearch_fields = $this->conf['ultrasearch_fields'];
+	$this->ultrasearch_fields=$this->conf['ultrasearch_fields'];
 } else {
-	$this->ultrasearch_fields = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_fields', 's_search');
+	$this->ultrasearch_fields=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_fields', 's_search');
 }
 if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	if ($this->ultrasearch_fields) {
@@ -18,33 +17,32 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 } else {
 	// setting coming from typoscript or from flexform
 	if (is_numeric($this->conf['filterCategoriesFormByCategoriesIdGetParam'])) {
-		$this->filterCategoriesFormByCategoriesIdGetParam = $this->conf['filterCategoriesFormByCategoriesIdGetParam'];
+		$this->filterCategoriesFormByCategoriesIdGetParam=$this->conf['filterCategoriesFormByCategoriesIdGetParam'];
 	} else {
-		$this->filterCategoriesFormByCategoriesIdGetParam = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_filtered_by_current_category', 's_search');
+		$this->filterCategoriesFormByCategoriesIdGetParam=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_filtered_by_current_category', 's_search');
 	}
 	// setting coming from typoscript or from flexform
 	if (is_numeric($this->conf['ultrasearch_exclude_negative_filter_values'])) {
-		$this->ultrasearch_exclude_negative_filter_values = $this->conf['ultrasearch_exclude_negative_filter_values'];
+		$this->ultrasearch_exclude_negative_filter_values=$this->conf['ultrasearch_exclude_negative_filter_values'];
 	} else {
-		$this->ultrasearch_exclude_negative_filter_values = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_exclude_negative_filter_values', 's_search');
+		$this->ultrasearch_exclude_negative_filter_values=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_exclude_negative_filter_values', 's_search');
 	}
-
 	// setting coming from typoscript or from flexform
 	if ($this->conf['ultrasearch_target_element']) {
-		$this->ultrasearch_target_element = $this->conf['ultrasearch_target_element'];
+		$this->ultrasearch_target_element=$this->conf['ultrasearch_target_element'];
 	} else {
-		$this->ultrasearch_target_element = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_target_element', 's_search');
+		$this->ultrasearch_target_element=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_target_element', 's_search');
 	}
 	// setting coming from typoscript or from flexform
 	if ($this->conf['ultrasearch_javascript_client_file']) {
-		$this->ultrasearch_javascript_client_file = $this->conf['ultrasearch_javascript_client_file'];
+		$this->ultrasearch_javascript_client_file=$this->conf['ultrasearch_javascript_client_file'];
 	} else {
-		$this->ultrasearch_javascript_client_file = $this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_javascript_client_file', 's_search');
+		$this->ultrasearch_javascript_client_file=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_javascript_client_file', 's_search');
 	}
 	if (!$this->ultrasearch_javascript_client_file or $this->ultrasearch_javascript_client_file=='default.js') {
 		$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/default.js';
 	} else if ($this->ultrasearch_javascript_client_file) {
-		if (strstr($this->ultrasearch_javascript_client_file,"/")) {
+		if (strstr($this->ultrasearch_javascript_client_file, "/")) {
 			$this->ultrasearch_javascript_client_file=$this->ultrasearch_javascript_client_file;
 		} else if ($this->ultrasearch_javascript_client_file) {
 			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/'.$this->ultrasearch_javascript_client_file;
@@ -69,7 +67,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$headers.='ultrasearch_exclude_negative_filter_values=\'1\';';
 	}
 	$headers.='// location of the ultrasearch server
-	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002','&tx_multishop_pi1[page_section]=ultrasearch_server&manufacturers_id='.$this->get['manufacturers_id'].'&categories_id='.$this->get['categories_id'].'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam,1).'\';
+	var ultrasearch_resultset_server_path=\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=ultrasearch_server&manufacturers_id='.$this->get['manufacturers_id'].'&categories_id='.$this->get['categories_id'].'&ultrasearch_exclude_negative_filter_values='.$this->ultrasearch_exclude_negative_filter_values.'&filterCategoriesFormByCategoriesIdGetParam='.$this->filterCategoriesFormByCategoriesIdGetParam, 1).'\';
 	var shipping_costs_overview=false;'."\n";
 	if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 		$headers.='
@@ -110,7 +108,6 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 				'', // ORDER BY...
 				'' // LIMIT ...
 			);
-
 			$qryCms=$GLOBALS['TYPO3_DB']->sql_query($strCms);
 			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qryCms)) {
 				$rowCms=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qryCms);
@@ -144,8 +141,8 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.form.js"></script>
 	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.dform-1.1.0.min.js"></script>
 	<script type="text/javascript" src="'.$this->ultrasearch_javascript_client_file.'"></script>';
-	$GLOBALS['TSFE']->additionalHeaderData[] =$headers;
-	$content = '<form method="get" action="" id="msFrontUltrasearchForm">
+	$GLOBALS['TSFE']->additionalHeaderData[]=$headers;
+	$content='<form method="get" action="" id="msFrontUltrasearchForm">
 	<input name="locationHash" type="hidden" value="" id="locationHash" />
 	</form>';
 }

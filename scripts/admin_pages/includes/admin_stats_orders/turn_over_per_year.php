@@ -25,7 +25,7 @@ $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_ui
 if (is_array($all_orders_status) and count($all_orders_status)) {
 	$order_status_sb.='<ul class="horizontal_list order_status_checkbox" id="admin_sales_stats_order_status">';
 	foreach ($all_orders_status as $row) {
-		$order_status_sb.='<li><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" '.(in_array($row['id'], $this->get['tx_multishop_pi1']['status']) ?'checked="checked"':'').' class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /><label for="sales_stats_status_'.$row['id'].'">'.$row['name'].'</label></li>';
+		$order_status_sb.='<li><input type="checkbox" name="tx_multishop_pi1[status][]" value="'.$row['id'].'" '.(in_array($row['id'], $this->get['tx_multishop_pi1']['status']) ? 'checked="checked"' : '').' class="admin_sales_stats_order_status" id="sales_stats_status_'.$row['id'].'" /><label for="sales_stats_status_'.$row['id'].'">'.$row['name'].'</label></li>';
 	}
 	$order_status_sb.='</ul>';
 }
@@ -87,7 +87,6 @@ for ($yr=$current_year; $yr>=$oldest_year; $yr--) {
 		$start_time=strtotime($value."-01 00:00:00");
 		//$end_time=strtotime($value."-31 23:59:59");
 		$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-
 		$where=array();
 		if ($this->cookie['paid_orders_only_py']) {
 			$where[]='(o.paid=1)';

@@ -63,96 +63,6 @@ class tx_mslib_user {
 		return true;
 	}
 	/**
-	 * @return the $username
-	 */
-	public function getUsername() {
-		return $this->username;
-	}
-	/**
-	 * @param string $username
-	 */
-	public function setUsername($username) {
-		$this->username=$username;
-	}
-	/**
-	 * @return the $email
-	 */
-	public function getEmail() {
-		return $this->email;
-	}
-	/**
-	 * @param string $email
-	 */
-	public function setEmail($email) {
-		if (strpos($email, '@')===false) {
-			$email='';
-		}
-		$this->email=$email;
-	}
-	/**
-	 * @return the $confirmation_email
-	 */
-	public function getConfirmation_email() {
-		return $this->confirmation_email;
-	}
-	/**
-	 * @param string $confirmation_email
-	 */
-	public function setConfirmation_email($confirmation_email) {
-		if (strpos($confirmation_email, '@')===false) {
-			$confirmation_email='';
-		}
-		$this->confirmation_email=$confirmation_email;
-	}
-	/**
-	 * @return the $gender
-	 */
-	public function getGender() {
-		return $this->gender;
-	}
-	/**
-	 * @param string $gender
-	 */
-	public function setGender($gender) {
-		$this->gender=$gender;
-	}
-	/**
-	 * @return the $password
-	 */
-	public function getPassword() {
-		return $this->password;
-	}
-	/**
-	 * @param string $password
-	 */
-	public function setPassword($password) {
-		$this->password=$password;
-	}
-	/**
-	 * @return the $confirmation_password
-	 */
-	public function getConfirmation_password() {
-		return $this->confirmation_password;
-	}
-	/**
-	 * @param string $confirmation_password
-	 */
-	public function setConfirmation_password($confirmation_password) {
-		$this->confirmation_password=$confirmation_password;
-	}
-	/**
-	 * @return the $first_name
-	 */
-	public function getFirst_name() {
-		return $this->first_name;
-	}
-	/**
-	 * @param string $first_name
-	 */
-	public function setFirst_name($first_name) {
-		$this->first_name=$first_name;
-	}
-	/**
 	 * @return the $middle_name
 	 */
 	public function getMiddle_name() {
@@ -163,18 +73,6 @@ class tx_mslib_user {
 	 */
 	public function setMiddle_name($middle_name) {
 		$this->middle_name=$middle_name;
-	}
-	/**
-	 * @return the $last_name
-	 */
-	public function getLast_name() {
-		return $this->last_name;
-	}
-	/**
-	 * @param string $last_name
-	 */
-	public function setLast_name($last_name) {
-		$this->last_name=$last_name;
 	}
 	/**
 	 * @return the $name
@@ -190,54 +88,6 @@ class tx_mslib_user {
 		$this->name=$name;
 	}
 	/**
-	 * @return the $company
-	 */
-	public function getCompany() {
-		return $this->company;
-	}
-	/**
-	 * @param string $company
-	 */
-	public function setCompany($company) {
-		$this->company=$company;
-	}
-	/**
-	 * @return the $country
-	 */
-	public function getCountry() {
-		return $this->country;
-	}
-	/**
-	 * @param string $country
-	 */
-	public function setCountry($country) {
-		$this->country=$country;
-	}
-	/**
-	 * @return the $address
-	 */
-	public function getAddress() {
-		return $this->address;
-	}
-	/**
-	 * @param string $address
-	 */
-	public function setAddress($address) {
-		$this->address=$address;
-	}
-	/**
-	 * @return the $address_number
-	 */
-	public function getAddress_number() {
-		return $this->address_number;
-	}
-	/**
-	 * @param string $address_number
-	 */
-	public function setAddress_number($address_number) {
-		$this->address_number=$address_number;
-	}
-	/**
 	 * @return the $address_ext
 	 */
 	public function getAddress_ext() {
@@ -248,30 +98,6 @@ class tx_mslib_user {
 	 */
 	public function setAddress_ext($address_ext) {
 		$this->address_ext=$address_ext;
-	}
-	/**
-	 * @return the $zip
-	 */
-	public function getZip() {
-		return $this->zip;
-	}
-	/**
-	 * @param string $zip
-	 */
-	public function setZip($zip) {
-		$this->zip=$zip;
-	}
-	/**
-	 * @return the $city
-	 */
-	public function getCity() {
-		return $this->city;
-	}
-	/**
-	 * @param string $city
-	 */
-	public function setCity($city) {
-		$this->city=$city;
 	}
 	/**
 	 * @return the $telephone
@@ -308,18 +134,6 @@ class tx_mslib_user {
 	 */
 	public function setNewsletter($newsletter) {
 		$this->newsletter=$newsletter;
-	}
-	/**
-	 * @return the $captcha_code
-	 */
-	public function getCaptcha_code() {
-		return $this->captcha_code;
-	}
-	/**
-	 * @param string $captcha_code
-	 */
-	public function setCaptcha_code($captcha_code) {
-		$this->captcha_code=$captcha_code;
 	}
 	/**
 	 * @return the $birthday
@@ -422,6 +236,192 @@ class tx_mslib_user {
 		}
 		return $erno;
 	}
+	/**
+	 * @return the $captcha_code
+	 */
+	public function getCaptcha_code() {
+		return $this->captcha_code;
+	}
+	/**
+	 * @param string $captcha_code
+	 */
+	public function setCaptcha_code($captcha_code) {
+		$this->captcha_code=$captcha_code;
+	}
+	/**
+	 * @return the $gender
+	 */
+	public function getGender() {
+		return $this->gender;
+	}
+	/**
+	 * @param string $gender
+	 */
+	public function setGender($gender) {
+		$this->gender=$gender;
+	}
+	/**
+	 * @return the $email
+	 */
+	public function getEmail() {
+		return $this->email;
+	}
+	/**
+	 * @param string $email
+	 */
+	public function setEmail($email) {
+		if (strpos($email, '@')===false) {
+			$email='';
+		}
+		$this->email=$email;
+	}
+	/**
+	 * @return the $address
+	 */
+	public function getAddress() {
+		return $this->address;
+	}
+	/**
+	 * @param string $address
+	 */
+	public function setAddress($address) {
+		$this->address=$address;
+	}
+	/**
+	 * @return the $address_number
+	 */
+	public function getAddress_number() {
+		return $this->address_number;
+	}
+	/**
+	 * @param string $address_number
+	 */
+	public function setAddress_number($address_number) {
+		$this->address_number=$address_number;
+	}
+	/**
+	 * @return the $first_name
+	 */
+	public function getFirst_name() {
+		return $this->first_name;
+	}
+	/**
+	 * @param string $first_name
+	 */
+	public function setFirst_name($first_name) {
+		$this->first_name=$first_name;
+	}
+	/**
+	 * @return the $last_name
+	 */
+	public function getLast_name() {
+		return $this->last_name;
+	}
+	/**
+	 * @param string $last_name
+	 */
+	public function setLast_name($last_name) {
+		$this->last_name=$last_name;
+	}
+	/**
+	 * @return the $zip
+	 */
+	public function getZip() {
+		return $this->zip;
+	}
+	/**
+	 * @param string $zip
+	 */
+	public function setZip($zip) {
+		$this->zip=$zip;
+	}
+	/**
+	 * @return the $city
+	 */
+	public function getCity() {
+		return $this->city;
+	}
+	/**
+	 * @param string $city
+	 */
+	public function setCity($city) {
+		$this->city=$city;
+	}
+	/**
+	 * @return the $country
+	 */
+	public function getCountry() {
+		return $this->country;
+	}
+	/**
+	 * @param string $country
+	 */
+	public function setCountry($country) {
+		$this->country=$country;
+	}
+	/**
+	 * @return the $password
+	 */
+	public function getPassword() {
+		return $this->password;
+	}
+	/**
+	 * @param string $password
+	 */
+	public function setPassword($password) {
+		$this->password=$password;
+	}
+	/**
+	 * @return the $confirmation_email
+	 */
+	public function getConfirmation_email() {
+		return $this->confirmation_email;
+	}
+	/**
+	 * @param string $confirmation_email
+	 */
+	public function setConfirmation_email($confirmation_email) {
+		if (strpos($confirmation_email, '@')===false) {
+			$confirmation_email='';
+		}
+		$this->confirmation_email=$confirmation_email;
+	}
+	/**
+	 * @return the $confirmation_password
+	 */
+	public function getConfirmation_password() {
+		return $this->confirmation_password;
+	}
+	/**
+	 * @param string $confirmation_password
+	 */
+	public function setConfirmation_password($confirmation_password) {
+		$this->confirmation_password=$confirmation_password;
+	}
+	/**
+	 * @return the $company
+	 */
+	public function getCompany() {
+		return $this->company;
+	}
+	/**
+	 * @param string $company
+	 */
+	public function setCompany($company) {
+		$this->company=$company;
+	}
+	/**
+	 * @return the $username
+	 */
+	public function getUsername() {
+		return $this->username;
+	}
+	/**
+	 * @param string $username
+	 */
+	public function setUsername($username) {
+		$this->username=$username;
+	}
 	function saveUserData() {
 		$checkEmail=mslib_fe::getUser($this->getEmail(), 'email');
 		// if quick_checkout == 1 then update the fe_users
@@ -514,7 +514,7 @@ class tx_mslib_user {
 						'customer_id'=>&$customer_id
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['updateUserPostProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				return $customer_id;
@@ -607,7 +607,7 @@ class tx_mslib_user {
 						'customer_id'=>&$customer_id
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_user.php']['createUserPostProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				return $customer_id;
@@ -663,7 +663,7 @@ class tx_mslib_user {
 			$updateArray['tx_multishop_address_type']='billing';
 			$updateArray['tx_multishop_default']=($is_default) ? 1 : 0;
 			$updateArray['tx_multishop_customer_id']=$customer_id;
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id=' . $customer_id, $updateArray);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tt_address', 'tx_multishop_customer_id='.$customer_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
 				return true;

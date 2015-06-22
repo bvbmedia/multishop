@@ -11,7 +11,7 @@ if ($this->ADMIN_USER) {
 	$limit=50;
 	if (is_numeric($groupid) and $groupid>0) {
 		$filter=array();
-		if (isset($this->get['q']) &&!empty($this->get['q'])) {
+		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			$limit='';
 			$this->get['q']=addslashes($this->get['q']);
 			$filter[]='(company like \'%'.$this->get['q'].'%\' or name like \'%'.$this->get['q'].'%\' or email like \'%'.$this->get['q'].'%\' or username like \'%'.$this->get['q'].'%\' or address like \'%'.$this->get['q'].'%\' or telephone like \'%'.$this->get['q'].'%\')';
@@ -45,24 +45,39 @@ if ($this->ADMIN_USER) {
 			if ($customer['company']) {
 				$itemTitle=$customer['company'];
 			}
-			if (!$itemTitle && ($customer['name'] && $customer['name'] !=$customer['company'])) {
+			if (!$itemTitle && ($customer['name'] && $customer['name']!=$customer['company'])) {
 				$itemTitle=$customer['name'];
 			}
 			$itemArray=array();
 			if ($customer['name']) {
-				$itemArray[]=array('label'=>$this->pi_getLL('name'),'value'=>$customer['name']);
+				$itemArray[]=array(
+					'label'=>$this->pi_getLL('name'),
+					'value'=>$customer['name']
+				);
 			}
 			if ($customer['email']) {
-				$itemArray[]=array('label'=>$this->pi_getLL('email'),'value'=>$customer['email']);
+				$itemArray[]=array(
+					'label'=>$this->pi_getLL('email'),
+					'value'=>$customer['email']
+				);
 			}
 			if ($customer['username']) {
-				$itemArray[]=array('label'=>$this->pi_getLL('username'),'value'=>$customer['username']);
+				$itemArray[]=array(
+					'label'=>$this->pi_getLL('username'),
+					'value'=>$customer['username']
+				);
 			}
 			if ($customer['address']) {
-				$itemArray[]=array('label'=>$this->pi_getLL('address'),'value'=>$customer['address']);
+				$itemArray[]=array(
+					'label'=>$this->pi_getLL('address'),
+					'value'=>$customer['address']
+				);
 			}
 			if ($customer['telephone']) {
-				$itemArray[]=array('label'=>$this->pi_getLL('telephone'),'value'=>$customer['telephone']);
+				$itemArray[]=array(
+					'label'=>$this->pi_getLL('telephone'),
+					'value'=>$customer['telephone']
+				);
 			}
 			// CUSTOM HTML MARKUP FOR SELECT2
 			$htmlTitle='<h3>'.$itemTitle.'</h3>';

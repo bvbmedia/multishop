@@ -66,7 +66,6 @@ if (!$qry) {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$messages[]=$str;
 }
-
 $str="select sort_order_option_name from tx_multishop_products_attributes limit 1";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 if (!$qry) {
@@ -211,7 +210,6 @@ if ($rows) {
 			$messages[]=$str;
 		}
 	}
-
 	$str="select plain_text from tx_multishop_product_feeds limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	if (!$qry) {
@@ -1803,7 +1801,7 @@ if ($rows) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms', 'id=\''.$row['id'].'\'', array('hash'=>md5(uniqid('', TRUE))));
+				$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_cms', 'id=\''.$row['id'].'\'', array('hash'=>md5(uniqid('', true))));
 				$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 			}
 		}
@@ -2159,7 +2157,7 @@ if ($rows) {
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
-			$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=\''.$row['id'].'\'', array('hash'=>md5(uniqid('', TRUE))));
+			$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_invoices', 'id=\''.$row['id'].'\'', array('hash'=>md5(uniqid('', true))));
 			$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 		}
 	}
@@ -2173,7 +2171,7 @@ if ($rows) {
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))!=false) {
-			$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=\''.$row['uid'].'\'', array('tx_multishop_code'=>md5(uniqid('', TRUE))));
+			$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('fe_users', 'uid=\''.$row['uid'].'\'', array('tx_multishop_code'=>md5(uniqid('', true))));
 			$res2=$GLOBALS['TYPO3_DB']->sql_query($query2);
 		}
 	}
@@ -4229,7 +4227,6 @@ if ($rows) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-
 	if (!$this->conf['tt_address_record_id_store']) {
 		//$str="select uid from tt_address where tx_multishop_address_type='store' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
 		$str="select uid from tt_address where tx_multishop_address_type='store' and page_uid='".$this->showCatalogFromPage."'";
@@ -4323,7 +4320,7 @@ if ($rows) {
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-			$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 			$mslib_order->init($this);
 			$mslib_order->repairOrder($row['orders_id']);
 		}
@@ -4413,7 +4410,7 @@ if ($rows) {
 							$dirs[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/'.$imageType.'/original/'.$folder;
 							foreach ($dirs as $dir) {
 								if (!is_dir($dir)) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($dir);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($dir);
 								}
 							}
 							if (copy($v1_folder, $v3_folder)) {
@@ -4456,81 +4453,365 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 }
 // MOVE SEVERAL SETTINGS TO DIFFERENT GROUPS
 $keys=array();
-$keys[]=array('key' => 'SEARCH_ALSO_IN_ATTRIBUTE_OPTION_IDS', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_CATEGORIES_NAME', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_EAN_CODE', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_MANUFACTURERS_NAME', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_PRODUCTS_ID', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_PRODUCTS_MODEL', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_PRODUCTS_NEGATIVE_KEYWORDS', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_SKU_CODE', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'SEARCH_ALSO_IN_VENDOR_CODE', 'oldGroupId'=>'3', 'newGroupId'=>'13');
-$keys[]=array('key' => 'ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-$keys[]=array('key' => 'FULLTEXT_SEARCH_MIN_CHARS', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-$keys[]=array('key' => 'PRODUCTS_SEARCH_FALLBACK_SEARCH', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-$keys[]=array('key' => 'REGULAR_SEARCH_MODE', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-$keys[]=array('key' => 'CATEGORIES_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'5');
-$keys[]=array('key' => 'DEFAULT_CURRENCY', 'oldGroupId'=>'11', 'newGroupId'=>'3');
-$keys[]=array('key' => 'DISABLE_CHECKOUT_FOR_GUESTS', 'oldGroupId'=>'11', 'newGroupId'=>'3');
-$keys[]=array('key' => 'DISABLE_CRUMBAR', 'oldGroupId'=>'11', 'newGroupId'=>'3');
-$keys[]=array('key' => 'DISPLAY_SPECIALS_ABOVE_PRODUCTS_LISTING', 'oldGroupId'=>'11', 'newGroupId'=>'6');
-$keys[]=array('key' => 'DOWNLOAD_INVOICE_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'12');
-$keys[]=array('key' => 'ENABLED_CURRENCIES', 'oldGroupId'=>'11', 'newGroupId'=>'3');
-$keys[]=array('key' => 'ENABLED_LANGUAGES', 'oldGroupId'=>'11', 'newGroupId'=>'3');
-$keys[]=array('key' => 'REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART', 'oldGroupId'=>'11', 'newGroupId'=>'3');
-$keys[]=array('key' => 'CART_PAGE_UID', 'oldGroupId'=>'11', 'newGroupId'=>'3');
-$keys[]=array('key' => 'LOCK_ORDER_AFTER_CREATING_INVOICE', 'oldGroupId'=>'11', 'newGroupId'=>'12');
-$keys[]=array('key' => 'PRODUCTS_DETAIL_NUMBER_OF_TABS', 'oldGroupId'=>'11', 'newGroupId'=>'7');
-$keys[]=array('key' => 'PRODUCTS_LISTING_SORT_ORDER_OPTION', 'oldGroupId'=>'11', 'newGroupId'=>'6');
-$keys[]=array('key' => 'PRODUCTS_LISTING_SPECIALS', 'oldGroupId'=>'1', 'newGroupId'=>'6');
-$keys[]=array('key' => 'SHOW_INNER_FOOTER_NAV', 'oldGroupId'=>'1', 'newGroupId'=>'3');
-$keys[]=array('key' => 'USE_FLAT_DATABASE_ALSO_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'PRODUCTS_NEW_NUMBER_OF_DAYS', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-$keys[]=array('key' => 'MANUAL_ORDER', 'oldGroupId'=>'3', 'newGroupId'=>'9');
-$keys[]=array('key' => 'INVOICE_PRINT', 'oldGroupId'=>'3', 'newGroupId'=>'12');
-$keys[]=array('key' => 'INVOICE_PREFIX', 'oldGroupId'=>'3', 'newGroupId'=>'12');
-$keys[]=array('key' => 'ORDER_EDIT', 'oldGroupId'=>'3', 'newGroupId'=>'12');
-$keys[]=array('key' => 'PACKING_LIST_PRINT', 'oldGroupId'=>'3', 'newGroupId'=>'12');
-$keys[]=array('key' => 'PRODUCTS_LISTING_LIMIT', 'oldGroupId'=>'3', 'newGroupId'=>'6');
-$keys[]=array('key' => 'CATEGORIES_LISTING_SPECIALS_CATEGORIES_SUBLEVEL', 'oldGroupId'=>'3', 'newGroupId'=>'5');
-$keys[]=array('key' => 'CACHE_FRONT_END', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'CACHE_TIME_OUT_LISTING_PAGES', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'CACHE_TIME_OUT_SEARCH_PAGES', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'FLAT_DATABASE', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS', 'oldGroupId'=>'3', 'newGroupId'=>'14');
-$keys[]=array('key' => 'DISPLAY_REALTIME_NOTIFICATION_MESSAGES', 'oldGroupId'=>'3', 'newGroupId'=>'11');
-$keys[]=array('key' => 'CART_PAGE_UID', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'CHECKOUT_TYPE', 'oldGroupId'=>'3', 'newGroupId'=>'8');
-$keys[]=array('key' => 'DISABLE_CHECKOUT_FOR_GUESTS', 'oldGroupId'=>'3', 'newGroupId'=>'8');
-$keys[]=array('key' => 'DISABLE_CRUMBAR', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'DISABLE_MULTISHOP_CONFIGURATION_VALIDATION', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'DISABLE_PRODUCT_ATTRIBUTES_TAB_IN_EDITOR', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'ENABLE_ATTRIBUTES_OPTIONS_GROUP', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'MULTISHOP_ENCRYPTION_KEY', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'MULTISHOP_VERSION', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'PAGE_TITLE_DELIMETER', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'PRICE_FILTER_BOX_STEPPINGS', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'ULTRASEARCH_FIELDS', 'oldGroupId'=>'3', 'newGroupId'=>'15');
-$keys[]=array('key' => 'BASKET_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'CREATE_ACCOUNT_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'CRUMBAR_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'EDIT_ACCOUNT_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'MANUFACTURERS_PRODUCTS_LISTING_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'MANUFACTURERS_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'ORDER_HISTORY_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'SHOPPING_CART_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'15');
-$keys[]=array('key' => 'ULTRASEARCH_SERVER_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-$keys[]=array('key' => 'ULTRASEARCH_TYPE', 'oldGroupId'=>'11', 'newGroupId'=>'13');
-$keys[]=array('key' => 'NUMBER_OF_PRODUCT_IMAGES', 'oldGroupId'=>'11', 'newGroupId'=>'3');
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_ATTRIBUTE_OPTION_IDS',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_CATEGORIES_NAME',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_EAN_CODE',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_MANUFACTURERS_NAME',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_PRODUCTS_DESCRIPTION',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_PRODUCTS_ID',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_PRODUCTS_MODEL',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_PRODUCTS_NEGATIVE_KEYWORDS',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_SKU_CODE',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'SEARCH_ALSO_IN_VENDOR_CODE',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'ENABLE_FULLTEXT_SEARCH_IN_PRODUCTS_SEARCH',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'FULLTEXT_SEARCH_MIN_CHARS',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'PRODUCTS_SEARCH_FALLBACK_SEARCH',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'REGULAR_SEARCH_MODE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'CATEGORIES_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'5'
+);
+$keys[]=array(
+	'key'=>'DEFAULT_CURRENCY',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'DISABLE_CHECKOUT_FOR_GUESTS',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'DISABLE_CRUMBAR',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'DISPLAY_SPECIALS_ABOVE_PRODUCTS_LISTING',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'6'
+);
+$keys[]=array(
+	'key'=>'DOWNLOAD_INVOICE_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'12'
+);
+$keys[]=array(
+	'key'=>'ENABLED_CURRENCIES',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'ENABLED_LANGUAGES',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'CART_PAGE_UID',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'LOCK_ORDER_AFTER_CREATING_INVOICE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'12'
+);
+$keys[]=array(
+	'key'=>'PRODUCTS_DETAIL_NUMBER_OF_TABS',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'7'
+);
+$keys[]=array(
+	'key'=>'PRODUCTS_LISTING_SORT_ORDER_OPTION',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'6'
+);
+$keys[]=array(
+	'key'=>'PRODUCTS_LISTING_SPECIALS',
+	'oldGroupId'=>'1',
+	'newGroupId'=>'6'
+);
+$keys[]=array(
+	'key'=>'SHOW_INNER_FOOTER_NAV',
+	'oldGroupId'=>'1',
+	'newGroupId'=>'3'
+);
+$keys[]=array(
+	'key'=>'USE_FLAT_DATABASE_ALSO_IN_ADMIN_PRODUCTS_SEARCH_AND_EDIT',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'PRODUCTS_NEW_NUMBER_OF_DAYS',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'MANUAL_ORDER',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'9'
+);
+$keys[]=array(
+	'key'=>'INVOICE_PRINT',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'12'
+);
+$keys[]=array(
+	'key'=>'INVOICE_PREFIX',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'12'
+);
+$keys[]=array(
+	'key'=>'ORDER_EDIT',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'12'
+);
+$keys[]=array(
+	'key'=>'PACKING_LIST_PRINT',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'12'
+);
+$keys[]=array(
+	'key'=>'PRODUCTS_LISTING_LIMIT',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'6'
+);
+$keys[]=array(
+	'key'=>'CATEGORIES_LISTING_SPECIALS_CATEGORIES_SUBLEVEL',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'5'
+);
+$keys[]=array(
+	'key'=>'CACHE_FRONT_END',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'CACHE_TIME_OUT_LISTING_PAGES',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'CACHE_TIME_OUT_SEARCH_PAGES',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'FLAT_DATABASE',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'FLAT_DATABASE_EXTRA_ATTRIBUTE_OPTION_COLUMNS',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'14'
+);
+$keys[]=array(
+	'key'=>'DISPLAY_REALTIME_NOTIFICATION_MESSAGES',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'11'
+);
+$keys[]=array(
+	'key'=>'CART_PAGE_UID',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'CHECKOUT_TYPE',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'8'
+);
+$keys[]=array(
+	'key'=>'DISABLE_CHECKOUT_FOR_GUESTS',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'8'
+);
+$keys[]=array(
+	'key'=>'DISABLE_CRUMBAR',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'DISABLE_MULTISHOP_CONFIGURATION_VALIDATION',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'DISABLE_PRODUCT_ATTRIBUTES_TAB_IN_EDITOR',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'ENABLE_ATTRIBUTES_OPTIONS_GROUP',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'MULTISHOP_ENCRYPTION_KEY',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'MULTISHOP_VERSION',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'PAGE_TITLE_DELIMETER',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'PRICE_FILTER_BOX_STEPPINGS',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'REDIRECT_BACK_TO_PRODUCTS_DETAIL_PAGE_AFTER_ADD_TO_CART',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'ULTRASEARCH_FIELDS',
+	'oldGroupId'=>'3',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'BASKET_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'CREATE_ACCOUNT_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'CRUMBAR_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'EDIT_ACCOUNT_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'MANUFACTURERS_PRODUCTS_LISTING_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'MANUFACTURERS_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'ORDER_HISTORY_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'SHOPPING_CART_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'15'
+);
+$keys[]=array(
+	'key'=>'ULTRASEARCH_SERVER_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'ULTRASEARCH_TYPE',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'13'
+);
+$keys[]=array(
+	'key'=>'NUMBER_OF_PRODUCT_IMAGES',
+	'oldGroupId'=>'11',
+	'newGroupId'=>'3'
+);
 foreach ($keys as $row) {
 	$filter=array();
 	$filter[]='group_id='.$row['oldGroupId'];
-	if (mslib_befe::ifExists($row['key'],'tx_multishop_configuration','configuration_key',$filter)) {
+	if (mslib_befe::ifExists($row['key'], 'tx_multishop_configuration', 'configuration_key', $filter)) {
 		$updateArray=array();
 		$updateArray['group_id']=$row['newGroupId'];
 		$query2=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_configuration', 'configuration_key=\''.addslashes($row['key']).'\'', $updateArray);

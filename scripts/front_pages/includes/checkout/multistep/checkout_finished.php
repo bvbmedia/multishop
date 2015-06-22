@@ -97,7 +97,7 @@ if (!$order_session['orders_id']) {
 	$array1[]='###TOTAL_AMOUNT###';
 	$array2[]=mslib_fe::amount2Cents($order['total_amount']);
 	require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-	$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+	$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 	$mslib_order->init($this);
 	$ORDER_DETAILS=$mslib_order->printOrderDetailsTable($order, 'site');
 	$array1[]='###ORDER_DETAILS###';
@@ -187,7 +187,7 @@ if (!$order_session['orders_id']) {
 			'array2'=>&$array2
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout.php']['checkoutThankYouPageMarkerPreProc'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// custom hook that can be controlled by third-party plugin eof
@@ -210,7 +210,7 @@ if (!$order_session['orders_id']) {
 		$content.='Your order has been paid.';
 	} elseif ($order['payment_method']) {
 		// load optional payment button
-		$mslib_payment= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
+		$mslib_payment=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
 		$mslib_payment->init($this);
 		$paymentMethods=$mslib_payment->getEnabledPaymentMethods();
 		if (is_array($paymentMethods)) {
@@ -222,7 +222,7 @@ if (!$order_session['orders_id']) {
 							$extkey='multishop_'.$user_method['provider'];
 							if (t3lib_extMgm::isLoaded($extkey)) {
 								require(t3lib_extMgm::extPath($extkey).'class.multishop_payment_method.php');
-								$paymentMethod= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
+								$paymentMethod=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
 								$paymentMethod->setPaymentMethod($user_method['provider']);
 								$paymentMethod->setVariables($vars);
 								$content.=$paymentMethod->displayPaymentButton($order['orders_id'], $this);

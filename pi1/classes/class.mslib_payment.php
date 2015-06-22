@@ -24,19 +24,11 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
-	var $name='';
-	var $variables='';
 	static $installedPaymentMethods=array();
 	static $enabledPaymentMethods=array();
+	var $name='';
+	var $variables='';
 	public $ref='';
-	function initLanguage($ms_locallang) {
-		$this->pi_loadLL();
-		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
-		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
-		if ($this->altLLkey) {
-			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
-		}
-	}
 	function init($ref) {
 		mslib_fe::init($ref);
 		$this->initLanguage($ref->LOCAL_LANG);
@@ -45,7 +37,7 @@ class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_payment'])) {
 			$params=array('installedPaymentMethods'=>&$installedPaymentMethods);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_payment.php']['mslib_payment'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $ref);
 			}
 		}
 		$this->installedPaymentMethods=$params['installedPaymentMethods'];
@@ -64,7 +56,15 @@ class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 			$this->enabledPaymentMethods=$array;
 		}
-		// load enabled payment methods eof	
+		// load enabled payment methods eof
+	}
+	function initLanguage($ms_locallang) {
+		$this->pi_loadLL();
+		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
+		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		if ($this->altLLkey) {
+			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		}
 	}
 	function getInstalledPaymentMethods() {
 		return $this->installedPaymentMethods;
@@ -81,11 +81,11 @@ class mslib_payment extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	function ajaxNotificationServer($ref) {
 		return $content;
 	}
-	function setVariables($vars) {
-		$this->variables=$vars;
-	}
 	function getVariables($vars) {
 		return $this->variables;
+	}
+	function setVariables($vars) {
+		$this->variables=$vars;
 	}
 	function displayPaymentButton($orders_id, $ref) {
 		return $content;

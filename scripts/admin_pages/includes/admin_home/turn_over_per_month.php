@@ -5,10 +5,9 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key']='turnoverPerMonth';
 $compiledWidget['defaultCol']=1;
 $compiledWidget['title']=$this->pi_getLL('sales_volume_by_month');
-
 $where=array();
 $where[]='(o.deleted=0)';
-switch($this->dashboardArray['section']) {
+switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
@@ -63,7 +62,7 @@ foreach ($dates as $key=>$value) {
 	}
 	$where[]='(o.deleted=0)';
 	$where[]='(o.crdate BETWEEN '.$start_time.' and '.$end_time.')';
-	switch($this->dashboardArray['section']) {
+	switch ($this->dashboardArray['section']) {
 		case 'admin_home':
 			break;
 		case 'admin_edit_customer':

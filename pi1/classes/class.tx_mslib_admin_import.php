@@ -124,7 +124,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$that->post['cron_period']='';
 			$cron_data[1]=$that->post;
 			$updateArray['data']=serialize($cron_data);
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$that->post['job_id'],$updateArray);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$that->post['job_id'], $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 		if ($that->post['action']=='import-preview' or (is_numeric($that->get['job_id']) and $_REQUEST['action']=='edit_job')) {
@@ -240,7 +240,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 							if ($that->conf['debugEnabled']=='1') {
 								$logString='Load records for importer query: '.$str;
-								 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 							}
 							$datarows=array();
 							while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -623,7 +623,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$that->post['cron_period']='';
 						$cron_data[1]=$that->post;
 						$updateArray['data']=serialize($cron_data);
-						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$that->get['job_id'],$updateArray);
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id='.$that->get['job_id'], $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					}
 				}
@@ -718,7 +718,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 								if ($that->conf['debugEnabled']=='1') {
 									$logString='Load records for importer query: '.$str;
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 								}
 								$datarows=array();
 								while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -905,7 +905,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							}
 							if ($jobArray['predefined_variables']) {
 								$array=unserialize($jobArray['predefined_variables']);
-								foreach ($array as $col => $val) {
+								foreach ($array as $col=>$val) {
 									$item[$col]=$val;
 								}
 							}
@@ -920,7 +920,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									'content'=>&$content
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_import.php']['msAdminImportItemIterateProc'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $that);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $that);
 								}
 							}
 						}
@@ -938,7 +938,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$that->ms['show_default_form']=1;
 		}
 		if ($that->ms['show_default_form']) {
-			$that->ms['upload_'.$params['importKey'].'feed_form'].=self::renderImportJobProperties($params,$that);
+			$that->ms['upload_'.$params['importKey'].'feed_form'].=self::renderImportJobProperties($params, $that);
 			$content.='<form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">';
 			$content.=$that->ms['upload_'.$params['importKey'].'feed_form'];
 			$content.='</form>';

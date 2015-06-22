@@ -45,7 +45,7 @@ if ($this->post) {
 				'insertArray'=>&$insertArray
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customer_groups.php']['adminInsertCustomerGroupPreProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
@@ -61,7 +61,7 @@ if ($_REQUEST['skeyword']) {
 	$this->get['skeyword']=$_REQUEST['skeyword'];
 	$this->get['skeyword']=trim($this->get['skeyword']);
 	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['skeyword'], $GLOBALS['TSFE']->metaCharset);
-	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], TRUE);
+	$this->get['skeyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['skeyword'], true);
 	$this->get['skeyword']=mslib_fe::RemoveXSS($this->get['skeyword']);
 }
 if (is_numeric($this->get['p'])) {

@@ -104,7 +104,6 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		$limits[]='2500';
 		$limits[]='3000';
 		$limits[]='3500';
-
 		foreach ($limits as $limit) {
 			$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$that->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 		}
@@ -180,7 +179,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (is_array($params['query']['group_by'])) {
 			$queryData['group_by']=implode(',', $params['query']['group_by']);
-		} elseif($params['query']['group_by']) {
+		} elseif ($params['query']['group_by']) {
 			$queryData['group_by'][]=$params['query']['group_by'];
 		}
 		$queryData['order_by']=$orderby;
@@ -253,14 +252,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							}
 							break;
 						case 'timestamp':
-							if (is_numeric($row[$col]) && $row[$col] >0) {
+							if (is_numeric($row[$col]) && $row[$col]>0) {
 								$row[$col]=strftime("%x %X", $row[$col]);
 							} else {
 								$row[$col]='';
 							}
 							break;
 						case 'timestamp_to_date':
-							if (is_numeric($row[$col]) && $row[$col] >0) {
+							if (is_numeric($row[$col]) && $row[$col]>0) {
 								$row[$col]=strftime("%x", $row[$col]);
 							} else {
 								$row[$col]='';
@@ -268,7 +267,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							break;
 						case 'form':
 							$content='<form method="';
-							switch($valArray['formAction']) {
+							switch ($valArray['formAction']) {
 								case 'post':
 									$content.='POST';
 									break;
@@ -282,9 +281,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								$content.=$valArray['content'];
 							}
 							if (is_array($valArray['hiddenFields'])) {
-								foreach ($valArray['hiddenFields'] as $hiddenFieldKey => $hiddenFieldVal) {
-									foreach ($row as $tmpCol => $tmpVal) {
-										$hiddenFieldVal=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$hiddenFieldVal);
+								foreach ($valArray['hiddenFields'] as $hiddenFieldKey=>$hiddenFieldVal) {
+									foreach ($row as $tmpCol=>$tmpVal) {
+										$hiddenFieldVal=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $hiddenFieldVal);
 									}
 									$content.='<input name="'.$hiddenFieldKey.'" type="hidden" value="'.$hiddenFieldVal.'" />';
 								}
@@ -293,8 +292,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							$row[$col]=$content;
 							break;
 						case 'content':
-							foreach ($row as $tmpCol => $tmpVal) {
-								$valArray['content']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['content']);
+							foreach ($row as $tmpCol=>$tmpVal) {
+								$valArray['content']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['content']);
 							}
 							$row[$col]=$valArray['content'];
 							break;
@@ -303,15 +302,15 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							if (!$row[$col]) {
 								$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
 								if ($valArray['hrefEnable']) {
-									foreach ($row as $tmpCol => $tmpVal) {
-										$valArray['hrefEnable']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['hrefEnable']);
+									foreach ($row as $tmpCol=>$tmpVal) {
+										$valArray['hrefEnable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefEnable']);
 									}
 									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 								}
 							} else {
 								if ($valArray['hrefDisable']) {
-									foreach ($row as $tmpCol => $tmpVal) {
-										$valArray['hrefDisable']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['hrefDisable']);
+									foreach ($row as $tmpCol=>$tmpVal) {
+										$valArray['hrefDisable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefDisable']);
 									}
 									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 								}
@@ -322,8 +321,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					}
 					$adjustedValue=$row[$col];
 					if ($valArray['href']) {
-						foreach ($row as $tmpCol => $tmpVal) {
-							$valArray['href']=str_replace('###'.$tmpCol.'###',$row[$tmpCol],$valArray['href']);
+						foreach ($row as $tmpCol=>$tmpVal) {
+							$valArray['href']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['href']);
 						}
 						$adjustedValue='<a href="'.$valArray['href'].'">'.$adjustedValue.'</a>';
 					}
@@ -338,7 +337,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							'summarize'=>&$summarize
 						);
 						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_import.php']['msAdminImportItemIterateProc'] as $funcRef) {
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
 						}
 					}
 					$tableContent.='<td'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';

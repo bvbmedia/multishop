@@ -11,24 +11,24 @@ plugin.multishop {
 	# cat=plugin.multishop - main; type=int+; label= FE Customer Usergroup: The ID number of the customer usergroup record.
 	fe_customer_usergroup =
 	# cat=plugin.multishop - main/enable; type=boolean; label= Include example CSS: For testing Multishop in TYPO3 introduction package.
-	exampleCSS =0
+	exampleCSS = 0
 
 	# MAIN SETTINGS EOF
 	# OPTIONAL SETTINGS
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include all internal JavaScript libraries (BlockUI, jQuery Cookie, jQuery Hotkeys, PrettyCheckboxes):
-	includeJS =1
+	includeJS = 1
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include global CSS files:
-	includeCSS =1
+	includeCSS = 1
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include internal jQuery UI theme: If you want to include your own jQuery UI theme disable this checkbox.
-	includeJqueryUiTheme=1
+	includeJqueryUiTheme = 1
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable SYSTEM / SETTINGS for admin users: Optional field. When this checkbox is enabled the SYSTEM / SETTINGS link in the front-end admin panel will be shown to admin users.
-	enableAdminPanelSettings =1
+	enableAdminPanelSettings = 1
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable SYSTEM / SORT CATALOG ON ALPHABET for admin users: Optional field. When this checkbox is enabled the SYSTEM / SORT CATALOG ON ALPHABET link in the front-end admin panel will be shown to admin users.
-	enableAdminPanelSortCatalog=1
+	enableAdminPanelSortCatalog = 1
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable SYSTEM / REBUILD FLAT DATABASE for admin users: Optional field. When this checkbox is enabled the SYSTEM / REBUILD FLAT DATABASE link in the front-end admin panel will be shown to admin users.
-	enableAdminPanelRebuildFlatDatabase=0
+	enableAdminPanelRebuildFlatDatabase = 0
 
 	# cat=plugin.multishop - optional; type=int+; label= PID of the catalog page: Optional field. If you want to use a different catalog as source (when creating slave shops), here you can fill in the ID number of the page that contains the catalog.
 	catalog_shop_pid =
@@ -41,15 +41,15 @@ plugin.multishop {
 	# cat=plugin.multishop - optional; type=int+; label= Starting point of the categories tree: Optional field. The ID number of the category that should be used as root for building up the categories tree.
 	categoriesStartingPoint =
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Show Powered by TYPO3 Multishop: Show the Powered by TYPO3 Multishop logo in the front of the webshop.
-	show_powered_by_multishop =1
+	show_powered_by_multishop = 1
 	# cat=plugin.multishop - optional/ajax; type=int+; label= Ajax server pagetype ID: Ajax server pagetype ID
-	ajax_pagetype_id_server=2002
+	ajax_pagetype_id_server = 2002
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include jQuery Autocomplete: Shows direct results when a user is typing a keyword in the products searchform.
-	includejAutocomplete =0
+	includejAutocomplete = 0
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Include jQuery Carousel:
-	includejCarousel =1
+	includejCarousel = 1
 	# cat=plugin.multishop - optional/file; type=string; label= Admin template skin: Folder of the admin template. Example: EXT:multishop/templates/admin_multishop.
-	admin_template_folder=EXT:multishop/templates/admin_multishop
+	admin_template_folder = EXT:multishop/templates/admin_multishop
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend logout page: Optional field. The ID number of the page where the logout content element is put on.
 	logout_pid =
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend login page: Optional field. The ID number of the page where the (felogin) login content element is put on.
@@ -62,22 +62,22 @@ plugin.multishop {
 	edit_account_pid =
 
 	# cat=plugin.multishop - optional/file; type=string; label= Admin help URL: The link that must be added on the Help button in the admin panel. Example: http://www.typo3multishop.com.
-	admin_help_url=http://www.typo3multishop.com
+	admin_help_url = http://www.typo3multishop.com
 
 	# cat=plugin.multishop - optional/file; type=string; label= Development company URL: The link that must be added to the admin panel logo. Example: http://www.typo3multishop.com.
-	admin_development_company_url=http://www.typo3multishop.com
+	admin_development_company_url = http://www.typo3multishop.com
 
 	# cat=plugin.multishop - optional/file; type=string; label= Development company name: The company name of the development company. Example: TYPO3 Multishop.
-	admin_development_company_name=TYPO3 Multishop
+	admin_development_company_name = TYPO3 Multishop
 
 	# cat=plugin.multishop - optional/file; type=string; label= Development company logo: The logo of the development company. Example: fileadmin/logo.png or http://www.domain.com/fileadmin/logo.png.
-	admin_development_company_logo=
+	admin_development_company_logo =
 
 	# cat=plugin.multishop - optional/file; type=string; label= Development company logo (grayed) path: The development company logo (grayed) path.
-	admin_development_company_logo_gray_path=
+	admin_development_company_logo_gray_path =
 
-	customSettings=
-	jQueryPopup_rel={$plugin.rzcolorbox.rel}
+	customSettings =
+	jQueryPopup_rel = {$plugin.rzcolorbox.rel}
 
 	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE Catalog Admin Usergroup: The uid number of the website usergroup Catalog Admin. This usergroup can maintain the catalog.
 	fe_catalogadmin_usergroup =
@@ -103,21 +103,20 @@ plugin.multishop {
 	# cat=plugin.multishop - optional admin usergroups; type=int+; label= FE System Admin Usergroup: The uid number of the website usergroup System Admin. This usergroup can see the system menu item of the admin panel.
 	fe_systemadmin_usergroup =
 
-
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Enable SYSTEM for admin users: Optional field. When this checkbox is enabled the SYSTEM menu in the front-end admin panel will be shown to admin users.
-	enableAdminPanelSystem =1
+	enableAdminPanelSystem = 1
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Disable inclusion of internal meta tags: Disable inclusion of internal meta tags.
-	disableMetatags=0
+	disableMetatags = 0
 
 	# cat=plugin.multishop - advanced/enable; type=boolean; label= Act as master shop: Load complete database and don't care about sub shops.
-	masterShop=0
+	masterShop = 0
 
 	# cat=plugin.multishop - advanced/enable; type=boolean; label= Enable debug mode: Enable on development server for debugging with Devlog plugin.
-	debugEnabled=0
+	debugEnabled = 0
 	# OPTIONAL SETTINGS EOF
 
-    #TEMPLATE CONSTANTS
+	#TEMPLATE CONSTANTS
 	# cat=plugin.multishop - templates/file; type=string; label= Products Detail Page Template File Path: Location of the HTML-template file of the products detail page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/products_detail.tmpl.
 	product_detail_tmpl_path =
 
@@ -131,7 +130,7 @@ plugin.multishop {
 	specials_products_listing_tmpl_path = EXT:multishop/templates/specials_listing.tmpl
 
 	# cat=plugin.multishop - templates/file; type=string; label= E-mail Template File Path: Optionally specify the location of the e-mail template file. Example: fileadmin/templates/multishop/email_template.tmpl.
-	email_tmpl_path=
+	email_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Create Account Page Template File Path: Location of the HTML-template file of the create account page. Use this option OR use the Template File option. If both are filled the Template File Path will overrule. Example: fileadmin/templates/multishop/create_account.tmpl.
 	create_account_tmpl_path =
@@ -146,9 +145,9 @@ plugin.multishop {
 	html_box_tmpl_path = EXT:multishop/templates/html_box.tmpl
 
 	# cat=plugin.multishop - advanced/enable; type=boolean; label= Cache Multishop Configuration: Cache the Multishop settings for faster pages.
-	cacheConfiguration=0
+	cacheConfiguration = 0
 	# cat=plugin.multishop - advanced/enable; type=boolean; label= Disable frontend from calculating VAT prices: This will improve performance, but the shop will not work with VAT rates.
-	disableFeFromCalculatingVatPrices=0
+	disableFeFromCalculatingVatPrices = 0
 
 	# cat=plugin.multishop - advanced; type=string; label= Unique identifier of the cart: Optional field. The unique identifier of the cart. This way you can seperate carts from shops.
 	cart_uid =
@@ -160,16 +159,16 @@ plugin.multishop {
 	products_listing_page_pid =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (web site) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_site.tmpl.
-	order_details_table_site_tmpl_path=
+	order_details_table_site_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (e-mail) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_email.tmpl.
-	order_details_table_email_tmpl_path=
+	order_details_table_email_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (PDF invoice) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_pdf_invoice.tmpl.
-	order_details_table_invoice_pdf_tmpl_path=
+	order_details_table_invoice_pdf_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (PDF packing slip) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_pdf_packingslip.tmpl.
-	order_details_table_packingslip_pdf_tmpl_path=
+	order_details_table_packingslip_pdf_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Products Relatives Table File Path: Optionally specify the location of the template file that is being used for building up the products relatives table. Example: fileadmin/templates/multishop/products_relatives.tmpl.
 	products_relatives_tmpl_path = EXT:multishop/templates/products_relatives.tmpl
@@ -235,22 +234,22 @@ plugin.multishop {
 	admin_home_tmpl_path = EXT:multishop/templates/admin_home.tmpl
 
 	# cat=plugin.multishop - templates/file; type=string; label= Order Details Table (admin notification popup) File Path: Optionally specify the location of the template file that is being used for building up the order details. Example: fileadmin/templates/multishop/order_details_adminNotificationPopup.tmpl.
-	order_details_table_adminNotificationPopup_tmpl_path=
+	order_details_table_adminNotificationPopup_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Admin invoice PDF File Path: Optionally specify the location of the template file that is being used for generating invoice PDF. Example: fileadmin/templates/multishop/admin_invoice_pdf.tmpl.
-	admin_invoice_pdf_tmpl_path=
+	admin_invoice_pdf_tmpl_path =
 
 	# cat=plugin.multishop - templates/file; type=string; label= Admin packing slip PDF File Path: Optionally specify the location of the template file that is being used for generating packing slip PDF. Example: fileadmin/templates/multishop/admin_packingslip_pdf.tmpl.
-	admin_packingslip_pdf_tmpl_path=
+	admin_packingslip_pdf_tmpl_path =
 
 	# cat=plugin.multishop - optional/enable; type=boolean; label= Hide Facebook like box in admin interface
-	hideFacebookInAdminInterface=0
+	hideFacebookInAdminInterface = 0
 
 	# cat=plugin.multishop - main; type=int+; label= TT address record ID of the store: The uid number of the tt_address record that contains the Store address details. This record is mandatory for correct calculation of VAT.
 	tt_address_record_id_store =
 
-	order_details_table_ajaxProductsToBasket_tmpl_path=
-	order_details_table_ajaxGetMethodCosts_tmpl_path=
+	order_details_table_ajaxProductsToBasket_tmpl_path =
+	order_details_table_ajaxGetMethodCosts_tmpl_path =
 
 	# cat=plugin.multishop - advanced; type=string; label= Title of the rootline page: Change the root title in the crumbar. Example: Home.
 	crumbar_rootline_title =
@@ -259,7 +258,7 @@ plugin.multishop {
 	crumbar_rootline_pid =
 
 	# cat=plugin.multishop - multiple shops/enable; type=boolean; label= Enable multiple shops: If you enable this constant you can relate products to multiple shops. WARNING: when this setting is enabled the module "flat database" is not supported.
-	enableMultipleShops=0
+	enableMultipleShops = 0
 	# cat=plugin.multishop - multiple shops; type=string; label= PIDs of the core shops: The page id's of the core shops that should be connected. I.e.: 1,2
-	connectedShopPids=
+	connectedShopPids =
 }

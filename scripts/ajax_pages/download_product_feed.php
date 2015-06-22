@@ -38,7 +38,7 @@ if ($this->get['feed_hash']) {
 					'feed'=>&$feed
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['feedTypesProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom page hook that can be controlled by third-party plugin eof
@@ -128,7 +128,7 @@ if ($this->get['feed_hash']) {
 								$imageKeys[]='products_image_normal'.$s;
 								$imageKeys[]='products_image_original'.$s;
 							}
-							if (count($imageKeys) && in_array($field,$imageKeys)) {
+							if (count($imageKeys) && in_array($field, $imageKeys)) {
 								// we need to print the products image url
 								$tmpcontent.=$field;
 							} else {
@@ -338,67 +338,67 @@ if ($this->get['feed_hash']) {
 				} else {
 					$includeDisabled=0;
 				}
-				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 999999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds','',0,1,array(),$includeDisabled);
+				$pageset=mslib_fe::getProductsPageSet($filter, $offset, 999999, $orderby, $having, $select, $where, 0, array(), array(), 'products_feeds', '', 0, 1, array(), $includeDisabled);
 				$products=$pageset['products'];
 				if ($pageset['total_rows']>0) {
 					foreach ($pageset['products'] as $row) {
-						$product=mslib_fe::getProduct($row['products_id'],'','',$includeDisabled);
+						$product=mslib_fe::getProduct($row['products_id'], '', '', $includeDisabled);
 						if ($product['products_id']) {
 							// TEMPORARY DISABLE THIS IF CONDITION, CAUSE PRODUCTFEED WAS MISSING ATTRIBUTE VALUES IN FLAT ENABLED SHOP
 							//if (!$this->ms['MODULES']['FLAT_DATABASE']) {
-								// fetch the attributes manually
-								$loadAttributeValues=0;
-								foreach ($fields as $field) {
-									if (strstr($field, 'attribute_option_name')) {
-										$loadAttributeValues=1;
-									}
+							// fetch the attributes manually
+							$loadAttributeValues=0;
+							foreach ($fields as $field) {
+								if (strstr($field, 'attribute_option_name')) {
+									$loadAttributeValues=1;
 								}
-								if ($loadAttributeValues) {
-									$attributes_data=array();
-									//$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
-									$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id']." and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
-									$qry_attributes=$GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
-									while ($row_attributes=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
-										$attributes_data['attribute_option_name_'.$row_attributes['options_id']]['values'][]=$row_attributes['products_options_values_name'];
-										$attributes_data['attribute_option_name_'.$row_attributes['options_id']]['array'][]=$row_attributes;
-									}
-									foreach ($attributes_data as $attribute_key=>$attribute_val) {
-										$row[$attribute_key]=implode(', ', $attributes_data[$attribute_key]['values']);
-										// now with prices
-										$itemsWithPrice=array();
-										$itemsWithPriceIncludingVat=array();
-										foreach ($attributes_data[$attribute_key]['array'] as $valueArray) {
-											// excluding vat
-											$final_price=number_format($valueArray['options_values_price'], 2);
-											// store value with corresponding price, divided with double ;
-											$itemsWithPrice[]=$valueArray['products_options_values_name'].'::'.$final_price;
-											// including vat
-											if ($row['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
-												$final_price=$valueArray['options_values_price'];
-												// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
-												if ($row['country_tax_rate'] && $row['region_tax_rate']) {
-													$country_tax_rate=mslib_fe::taxDecimalCrop($final_price*($row['country_tax_rate']));
-													$region_tax_rate=mslib_fe::taxDecimalCrop($final_price*($row['region_tax_rate']));
-													$final_price=$final_price+($country_tax_rate+$region_tax_rate);
-												} else {
-													$tax_rate=mslib_fe::taxDecimalCrop($final_price*($row['tax_rate']));
-													$final_price=$final_price+$tax_rate;
-												}
+							}
+							if ($loadAttributeValues) {
+								$attributes_data=array();
+								//$sql_attributes = "select pa.options_id, pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = " . $product['products_id'];
+								$sql_attributes="select * from tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.options_id=povp.products_options_id and pa.options_values_id=povp.products_options_values_id and pa.options_id=po.products_options_id and po.language_id = '".$this->sys_language_uid."' and pov.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$product['products_id']." and pa.options_values_id = pov.products_options_values_id order by po.sort_order, povp.sort_order";
+								$qry_attributes=$GLOBALS['TYPO3_DB']->sql_query($sql_attributes);
+								while ($row_attributes=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_attributes)) {
+									$attributes_data['attribute_option_name_'.$row_attributes['options_id']]['values'][]=$row_attributes['products_options_values_name'];
+									$attributes_data['attribute_option_name_'.$row_attributes['options_id']]['array'][]=$row_attributes;
+								}
+								foreach ($attributes_data as $attribute_key=>$attribute_val) {
+									$row[$attribute_key]=implode(', ', $attributes_data[$attribute_key]['values']);
+									// now with prices
+									$itemsWithPrice=array();
+									$itemsWithPriceIncludingVat=array();
+									foreach ($attributes_data[$attribute_key]['array'] as $valueArray) {
+										// excluding vat
+										$final_price=number_format($valueArray['options_values_price'], 2);
+										// store value with corresponding price, divided with double ;
+										$itemsWithPrice[]=$valueArray['products_options_values_name'].'::'.$final_price;
+										// including vat
+										if ($row['tax_rate'] and ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT'])) {
+											$final_price=$valueArray['options_values_price'];
+											// in this mode the stored prices in the tx_multishop_products are excluding VAT and we have to add it manually
+											if ($row['country_tax_rate'] && $row['region_tax_rate']) {
+												$country_tax_rate=mslib_fe::taxDecimalCrop($final_price*($row['country_tax_rate']));
+												$region_tax_rate=mslib_fe::taxDecimalCrop($final_price*($row['region_tax_rate']));
+												$final_price=$final_price+($country_tax_rate+$region_tax_rate);
+											} else {
+												$tax_rate=mslib_fe::taxDecimalCrop($final_price*($row['tax_rate']));
+												$final_price=$final_price+$tax_rate;
 											}
-											$final_price=number_format($final_price, 2);
-											// store value with corresponding price, divided with double ;
-											$itemsWithPriceIncludingVat[]=$valueArray['products_options_values_name'].'::'.$final_price;
 										}
-										if (count($itemsWithPrice)) {
-											// add all values with prices excluding VAT as one big string, divided with double pipe
-											$row[$attribute_key.'_including_prices']=implode('||', $itemsWithPrice);
-										}
-										if (count($itemsWithPriceIncludingVat)) {
-											// add all values with prices including VAT as one big string, divided with double pipe
-											$row[$attribute_key.'_including_prices_including_vat']=implode('||', $itemsWithPriceIncludingVat);
-										}
+										$final_price=number_format($final_price, 2);
+										// store value with corresponding price, divided with double ;
+										$itemsWithPriceIncludingVat[]=$valueArray['products_options_values_name'].'::'.$final_price;
+									}
+									if (count($itemsWithPrice)) {
+										// add all values with prices excluding VAT as one big string, divided with double pipe
+										$row[$attribute_key.'_including_prices']=implode('||', $itemsWithPrice);
+									}
+									if (count($itemsWithPriceIncludingVat)) {
+										// add all values with prices including VAT as one big string, divided with double pipe
+										$row[$attribute_key.'_including_prices_including_vat']=implode('||', $itemsWithPriceIncludingVat);
 									}
 								}
+							}
 							//}
 							$cats=mslib_fe::Crumbar($product['categories_id']);
 							$cats=array_reverse($cats);
@@ -511,7 +511,7 @@ if ($this->get['feed_hash']) {
 						if ($row['content']) {
 							$string=$row['content'];
 							if (!$this->get['format']=='excel') {
-								$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 							}
 							$tmpcontent.=$string;
 						}
@@ -520,7 +520,7 @@ if ($this->get['feed_hash']) {
 						if ($row['content_footer']) {
 							$string=$row['content_footer'];
 							if (!$this->get['format']=='excel') {
-								$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+								$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 							}
 							$tmpcontent.=$string;
 						}
@@ -589,7 +589,7 @@ if ($this->get['feed_hash']) {
 							if ($row2['content']) {
 								$string=$row2['content'];
 								if (!$this->get['format']=='excel') {
-									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 								}
 								$tmpcontent.=$string;
 							}
@@ -608,7 +608,7 @@ if ($this->get['feed_hash']) {
 							if ($row2['categories_name']) {
 								$string=$row2['categories_name'];
 								if (!$this->get['format']=='excel') {
-									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 								}
 								$tmpcontent.=$string;
 							}
@@ -646,7 +646,7 @@ if ($this->get['feed_hash']) {
 							if ($row2['content_footer']) {
 								$string=$row2['content_footer'];
 								if (!$this->get['format']=='excel') {
-									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 								}
 								$tmpcontent.=$string;
 							}
@@ -766,7 +766,7 @@ if ($this->get['feed_hash']) {
 					case 'products_shortdescription':
 						$string=$row['products_shortdescription'];
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
@@ -776,7 +776,7 @@ if ($this->get['feed_hash']) {
 					case 'products_description':
 						$string=$row['products_description'];
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
@@ -786,7 +786,7 @@ if ($this->get['feed_hash']) {
 					case 'products_description_encoded':
 						$string=$row['products_description'];
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 						}
 						$string=htmlentities($string);
 						if ($string) {
@@ -797,7 +797,7 @@ if ($this->get['feed_hash']) {
 					case 'products_description_strip_tags':
 						$string=strip_tags($row['products_description']);
 						if (!$this->get['format']=='excel') {
-							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$string);
+							$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 						}
 						if ($string) {
 							$string=preg_replace('/\s+/', ' ', $string);
@@ -908,7 +908,7 @@ if ($this->get['feed_hash']) {
 								$imageKeys[]='products_image_normal'.$s;
 								$imageKeys[]='products_image_original'.$s;
 							}
-							if (count($imageKeys) && in_array($field,$imageKeys)) {
+							if (count($imageKeys) && in_array($field, $imageKeys)) {
 								// we need to print the products image url
 								for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
 									if (!$x) {
@@ -959,7 +959,7 @@ if ($this->get['feed_hash']) {
 						'output'=>&$output
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 					if ($output) {
 						$tmpcontent=$output;
@@ -987,7 +987,7 @@ if ($this->get['feed_hash']) {
 					}
 					// test extra delimiter strip
 					if ($feed['delimiter_char']) {
-						$tmpcontent=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ",$tmpcontent);
+						$tmpcontent=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $tmpcontent);
 					}
 				}
 				if ($this->get['format']=='excel') {

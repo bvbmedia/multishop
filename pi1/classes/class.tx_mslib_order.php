@@ -204,8 +204,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				//echo "<pre>";
 				//echo $sub_total."<br/>";
 				//echo $sub_total_excluding_vat."<br/>";
-
-
 				if ($row['discount']>0) {
 					if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 						$discount_price=round($row['discount'], 2);
@@ -223,12 +221,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$tax_separation=array();
 					}
 				}
-
 				//echo $discount_percentage."<br/>";
 				//echo $discount_price."<br/>";
 				//echo $sub_total_tax."<br/>";
 				//die();
-
 				$order_tax_data['total_orders_tax']=(string)$sub_total_tax+$shipping_tax+$payment_tax;
 				if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 					$order_tax_data['grand_total']=(string)(($sub_total_excluding_vat-$discount_price)+$sub_total_tax)+($row['shipping_method_costs']+$shipping_tax)+($row['payment_method_costs']+$payment_tax);
@@ -405,7 +401,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$array2[]=$order['billing_name'];
 			$array1[]='###BILLING_COMPANY###';
 			$array2[]=$order['billing_company'];
-
 			$array1[]='###BILLING_FIRST_NAME###';
 			$array2[]=$order['billing_first_name'];
 			$array1[]='###BILLING_LAST_NAME###';
@@ -435,15 +430,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$array2[]=$order['delivery_mobile'];
 			$array1[]='###CUSTOMER_EMAIL###';
 			$array2[]=$order['billing_email'];
-
 			if ($order['cruser_id'] && is_numeric($order['cruser_id'])) {
 				$crUser=mslib_fe::getUser($order['cruser_id']);
 				$array1[]='###CREATED_BY_FIRST_NAME###';
-				$array2[]=preg_replace('/\s+/', ' ',$crUser['first_name']);
+				$array2[]=preg_replace('/\s+/', ' ', $crUser['first_name']);
 				$array1[]='###CREATED_BY_LAST_NAME###';
-				$array2[]=preg_replace('/\s+/', ' ',$crUser['middle_name'].' '.$crUser['last_name']);
+				$array2[]=preg_replace('/\s+/', ' ', $crUser['middle_name'].' '.$crUser['last_name']);
 				$array1[]='###CREATED_BY_FULL_NAME###';
-				$array2[]=preg_replace('/\s+/', ' ',$crUser['first_name'].' '.$crUser['middle_name'].' '.$crUser['last_name']);
+				$array2[]=preg_replace('/\s+/', ' ', $crUser['first_name'].' '.$crUser['middle_name'].' '.$crUser['last_name']);
 			} else {
 				$array1[]='###CREATED_BY_FIRST_NAME###';
 				$array2[]='';
@@ -452,15 +446,12 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$array1[]='###CREATED_BY_FULL_NAME###';
 				$array2[]='';
 			}
-
-
 			$time=$order['crdate'];
 			$long_date=strftime($this->pi_getLL('full_date_format'), $time);
 			$array1[]='###ORDER_DATE_LONG###'; // ie woensdag 23 juni, 2010
 			$array2[]=$long_date;
 			$array1[]='###ORDER_DATE###'; // 21-12-2010 in localized format
 			$array2[]=strftime("%x", $time);
-
 			// backwards compatibility
 			$array1[]='###LONG_DATE###'; // ie woensdag 23 juni, 2010
 			$array2[]=$long_date;
@@ -524,7 +515,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'mail_template'=>$mail_template
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if ($page[0]['content']) {
@@ -550,7 +541,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'order_details'=>$ORDER_DETAILS
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if ($send_mail) {
@@ -583,6 +574,277 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 			return 1;
 		}
+	}
+	function printOrderDetailsTable($order, $template_type='site') {
+		$subtotalIncludingVatArray=array();
+		switch ($template_type) {
+			case 'site':
+			case 'order_history_site':
+				if ($this->conf['order_details_table_site_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['order_details_table_site_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
+				}
+				break;
+			case 'email':
+				if ($this->conf['order_details_table_email_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['order_details_table_email_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_email.tmpl');
+				}
+				break;
+			case 'pdf':
+				if ($this->conf['order_details_table_pdf_tmpl_path']) {
+					$template=$this->cObj->fileResource($this->conf['order_details_table_pdf_tmpl_path']);
+				} else {
+					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_pdf.tmpl');
+				}
+				break;
+		}
+		$itemsWrapper=array();
+		$c=true;
+		foreach ($order['products'] as $product) {
+			if ($product['products_id']) {
+				$product_db=mslib_fe::getProduct($product['products_id']);
+			}
+			$subprices='';
+			$price=$product['qty']*$product['final_price'];
+			$item=array();
+			// ITEM CLASS
+			$item['ITEM_CLASS']=(($c=!$c) ? 'odd' : 'even');
+			// ITEM IMAGE
+			if (!$product_db['products_image']) {
+				$item['ITEM_IMAGE']='<div class="no_image_50"></div>';
+			} else {
+				if (!strstr(mslib_befe::strtolower($product_db['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_db['products_image']), 'https://')) {
+					$product_db['products_image']=mslib_befe::getImagePath($product_db['products_image'], 'products', '50');
+				}
+				$item['ITEM_IMAGE']='<img src="'.$product_db['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
+			}
+			// ITEM_NAME
+			$item['ITEM_NAME']=$product['products_name'];
+			if ($product['products_model']) {
+				$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
+			}
+			// for virtual product download link
+			if ($template_type=='email' && $order['mail_template']=='email_order_paid_letter' && $order['paid']==1 && isset($product['file_download_code']) && !empty($product['file_download_code'])) {
+				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.$product['products_name'].'" title="'.$product['products_name'].'">Download product</a>';
+				$item['ITEM_NAME'].=$download_link;
+			}
+			if (!empty($product['ean_code'])) {
+				$item['ITEM_NAME'].='<br/>EAN: '.$product['ean_code'];
+			}
+			if (!empty($product['sku_code'])) {
+				$item['ITEM_NAME'].='<br/>SKU: '.$product['sku_code'];
+			}
+			if (!empty($product['vendor_code'])) {
+				$item['ITEM_NAME'].='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
+			}
+			if (count($product['attributes'])) {
+				foreach ($product['attributes'] as $tmpkey=>$options) {
+					$subprices.='<BR>';
+					if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+						$tmp_tax=round(($options['options_values_price']*($product['products_tax']/100)), 2);
+						$attribute_price=+$options['options_values_price']+$tmp_tax;
+					} else if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$attribute_price=round(($options['options_values_price']*($product['products_tax']/100)), 4)+$options['options_values_price'];
+					} else {
+						$attribute_price=$options['options_values_price'];
+					}
+					$item['ITEM_NAME'].='<BR>'.$options['products_options'].': '.$options['products_options_values'];
+					$price=$price+($product['qty']*($options['price_prefix'].$options['options_values_price']));
+					if ($price<0) {
+						$price=0;
+					}
+					if ($options['options_values_price']>0) {
+						$subprices.=mslib_fe::amount2Cents(($product['qty']*($options['price_prefix'].$attribute_price)));
+					}
+				}
+			}
+			// ITEM NAME EOF
+			// ITEM_QUANTITY
+			$item['ITEM_QUANTITY']=round($product['qty'], 14);
+			// ITEM_SKU
+			$item['ITEM_SKU']=$product_db['sku_code'];
+			// ITEM_TOTAL
+			if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
+				$tmp_tax=round(($product['final_price']*($product['products_tax']/100)), 2);
+				$final_price=($product['qty']*($product['final_price']+$tmp_tax));
+			} else if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+				$final_price=($product['qty']*$product['final_price']);
+				$final_price=round(($final_price*($product['products_tax']/100)), 4)+$final_price;
+			} else {
+				$final_price=($product['qty']*$product['final_price']);
+			}
+			$item['ITEM_TOTAL']=mslib_fe::amount2Cents($final_price).$subprices;
+			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
+				$item['ITEM_PRODUCT_STATUS']=mslib_fe::getOrderStatusName($product['status']);
+			}
+			// GRAND TOTAL CALCULATIONS
+			$subtotal=($subtotal+$price);
+			$subtotal_tax=($subtotal_tax+$product['products_tax_data']['total_tax']+$product['products_tax_data']['total_attributes_tax']);
+			$subtotalIncludingVatArray[]=$product['total_price'];
+			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_tax'];
+			$subtotalIncludingVatArray[]=$product['products_tax_data']['total_attributes_tax'];
+			// GRAND TOTAL CALCULATIONS EOF
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemPreProc'])) {
+				$params=array(
+					'item'=>&$item,
+					'order'=>&$order,
+					'product'=>&$product,
+					'template_type'=>&$template_type
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			$itemsWrapper[]=$item;
+		}
+		// MERGE TO TEMPLATE
+		// Extract the subparts from the template
+		$subparts=array();
+		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
+		$subparts['ITEMS_HEADER_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###ITEMS_HEADER_WRAPPER###');
+		$subparts['ITEMS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###ITEMS_WRAPPER###');
+		$subparts['SUBTOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_WRAPPER###');
+		$subparts['SHIPPING_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SHIPPING_COSTS_WRAPPER###');
+		$subparts['PAYMENT_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###PAYMENT_COSTS_WRAPPER###');
+		$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
+		$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
+		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
+		if (!$this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] || $template_type!='order_history_site') {
+			$subProductStatusPart=array();
+			$subProductStatusPart['ITEMS_HEADER_PRODUCT_STATUS_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_PRODUCT_STATUS_WRAPPER###');
+			$subProductStatus=array();
+			$subProductStatus['###ITEMS_HEADER_PRODUCT_STATUS_WRAPPER###']='';
+			$subparts['ITEMS_HEADER_WRAPPER']=$this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductStatus);
+			$subProductStatusPart=array();
+			$subProductStatusPart['ITEMS_PRODUCT_STATUS_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEMS_PRODUCT_STATUS_WRAPPER###');
+			$subProductStatus=array();
+			$subProductStatus['###ITEMS_PRODUCT_STATUS_WRAPPER###']='';
+			$subparts['ITEMS_WRAPPER']=$this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductStatus);
+		}
+		$subpartArray=array();
+		//ITEMS_HEADER_WRAPPER
+		$markerArray=array();
+		$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
+		$markerArray['HEADING_SKU']=$this->pi_getLL('sku', 'SKU');
+		$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
+		$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
+		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
+			$markerArray['HEADING_PRODUCT_STATUS']=$this->pi_getLL('order_product_status');
+		}
+		$subpartArray['###ITEMS_HEADER_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['ITEMS_HEADER_WRAPPER'], $markerArray, '###|###');
+		//ITEMS_HEADER_WRAPPER EOF
+		//ITEMS_WRAPPER
+		$keys=array();
+		$keys[]='ITEM_CLASS';
+		$keys[]='ITEM_IMAGE';
+		$keys[]='ITEM_NAME';
+		$keys[]='ITEM_QUANTITY';
+		$keys[]='ITEM_SKU';
+		$keys[]='ITEM_TOTAL';
+		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
+			$keys[]='ITEM_PRODUCT_STATUS';
+		}
+		foreach ($itemsWrapper as $item) {
+			$markerArray=array();
+			foreach ($keys as $key) {
+				$markerArray[$key]=$item[$key];
+			}
+			foreach ($item as $key=>$val) {
+				// hooked plugins wants to add more types. lets find them and add them
+				if (!in_array($key, $keys)) {
+					$markerArray[$key]=$item[$key];
+				}
+			}
+			$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEMS_WRAPPER'], $markerArray, '###|###');
+		}
+		$subpartArray['###ITEMS_WRAPPER###']=$contentItem;
+		//ITEMS_WRAPPER EOF
+		//SUBTOTAL_WRAPPER
+		$key='SUBTOTAL_WRAPPER';
+		$markerArray=array();
+		$markerArray['SUBTOTAL_LABEL']=$this->pi_getLL('subtotal').':';
+		$markerArray['PRODUCTS_TOTAL_PRICE_LABEL']=$this->pi_getLL('total_price').':';
+		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
+		// rounding is problem with including vat shops.
+//		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,FALSE));
+		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
+		$markerArray['PRODUCTS_TOTAL_PRICE']=mslib_fe::amount2Cents($subtotal);
+		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		//SUBTOTAL_WRAPPER EOF
+		//SHIPPING_COSTS_WRAPPER
+		$key='SHIPPING_COSTS_WRAPPER';
+		if ($order['shipping_method_costs']>0) {
+			$markerArray=array();
+			$markerArray['SHIPPING_COSTS_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
+			$markerArray['SHIPPING_COSTS']=mslib_fe::amount2Cents($order['shipping_method_costs']);
+			$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
+			$markerArray['SHIPPING_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax']));
+			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		} else {
+			$subpartArray['###'.$key.'###']='';
+		}
+		//SHIPPING_COSTS_WRAPPER EOF
+		//PAYMENT_COSTS_WRAPPER
+		$key='PAYMENT_COSTS_WRAPPER';
+		if ($order['payment_method_costs']>0) {
+			$markerArray=array();
+			$markerArray['PAYMENT_COSTS_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
+			$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($order['payment_method_costs']);
+			$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
+			$markerArray['PAYMENT_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['payment_method_costs']+$order['orders_tax_data']['payment_tax']));
+			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		} else {
+			$subpartArray['###'.$key.'###']='';
+		}
+		//PAYMENT_COSTS_WRAPPER EOF
+		//GRAND_TOTAL_WRAPPER
+		$key='GRAND_TOTAL_WRAPPER';
+		$markerArray=array();
+		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total')).':';
+//		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
+		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total'], 0);
+		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		//GRAND_TOTAL_WRAPPER EOF
+		//DISCOUNT_WRAPPER
+		$key='DISCOUNT_WRAPPER';
+		if ($order['discount']>0) {
+			$markerArray=array();
+			$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount').':';
+			$markerArray['DISCOUNT']=mslib_fe::amount2Cents($order['discount']);
+			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		} else {
+			$subpartArray['###'.$key.'###']='';
+		}
+		//DISCOUNT_WRAPPER EOF
+		//TAX_COSTS_WRAPPER
+		$key='TAX_COSTS_WRAPPER';
+		if ($order['orders_tax_data']['total_orders_tax']) {
+			$markerArray=array();
+			$markerArray['TAX_RATE_LABEL']=$this->pi_getLL('vat');
+			$markerArray['INCLUDED_TAX_RATE_LABEL']=$this->pi_getLL('included_vat_amount');
+			$markerArray['TAX_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['total_orders_tax']);
+			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
+		} else {
+			$subpartArray['###'.$key.'###']='';
+		}
+		// finally convert global markers and return output
+		//hook to let other plugins further manipulate the replacers
+		$content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTablePostProc'])) {
+			$params=array(
+				'content'=>&$content,
+				'order'=>&$order,
+				'template_type'=>&$template_type
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTablePostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		return $content;
 	}
 	function getOrderTotalPrice($orders_id, $skip_method_costs=0) {
 		$order=mslib_fe::getOrder($orders_id);
@@ -679,7 +941,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$orders['subtotal_tax'] = ($orders['subtotal_tax'] + $extra_vat);
 		} */
 		$orders['total_amount']=round($orders['orders_tax_data']['grand_total'], 2);
-		if ($orders['total_amount'] > 0 && $orders['total_amount'] <0.01) {
+		if ($orders['total_amount']>0 && $orders['total_amount']<0.01) {
 			$orders['total_amount']=0;
 		}
 		//round($orders['subtotal_amount']+$orders['subtotal_tax']+$orders['payment_method_costs']+$orders['shipping_method_costs']-$orders['discount'],2);
@@ -900,277 +1162,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 			}
 		}
-	}
-	function printOrderDetailsTable($order, $template_type='site') {
-		$subtotalIncludingVatArray=array();
-		switch ($template_type) {
-			case 'site':
-			case 'order_history_site':
-				if ($this->conf['order_details_table_site_tmpl_path']) {
-					$template=$this->cObj->fileResource($this->conf['order_details_table_site_tmpl_path']);
-				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
-				}
-				break;
-			case 'email':
-				if ($this->conf['order_details_table_email_tmpl_path']) {
-					$template=$this->cObj->fileResource($this->conf['order_details_table_email_tmpl_path']);
-				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_email.tmpl');
-				}
-				break;
-			case 'pdf':
-				if ($this->conf['order_details_table_pdf_tmpl_path']) {
-					$template=$this->cObj->fileResource($this->conf['order_details_table_pdf_tmpl_path']);
-				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_pdf.tmpl');
-				}
-				break;
-		}
-		$itemsWrapper=array();
-		$c=true;
-		foreach ($order['products'] as $product) {
-			if ($product['products_id']) {
-				$product_db=mslib_fe::getProduct($product['products_id']);
-			}
-			$subprices='';
-			$price=$product['qty']*$product['final_price'];
-			$item=array();
-			// ITEM CLASS
-			$item['ITEM_CLASS']=(($c=!$c) ? 'odd' : 'even');
-			// ITEM IMAGE
-			if (!$product_db['products_image']) {
-				$item['ITEM_IMAGE']='<div class="no_image_50"></div>';
-			} else {
-				if (!strstr(mslib_befe::strtolower($product_db['products_image']), 'http://') and !strstr(mslib_befe::strtolower($product_db['products_image']), 'https://')) {
-					$product_db['products_image']=mslib_befe::getImagePath($product_db['products_image'], 'products', '50');
-				}
-				$item['ITEM_IMAGE']='<img src="'.$product_db['products_image'].'" title="'.htmlspecialchars($product['products_name']).'">';
-			}
-			// ITEM_NAME
-			$item['ITEM_NAME']=$product['products_name'];
-			if ($product['products_model']) {
-				$item['ITEM_NAME'].=' ('.$product['products_model'].') ';
-			}
-			// for virtual product download link
-			if ($template_type=='email' && $order['mail_template']=='email_order_paid_letter' && $order['paid']==1 && isset($product['file_download_code']) && !empty($product['file_download_code'])) {
-				$download_link='<br/><a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download&orders_id='.$order['orders_id'].'&code='.$product['file_download_code'], 1).'" alt="'.$product['products_name'].'" title="'.$product['products_name'].'">Download product</a>';
-				$item['ITEM_NAME'].=$download_link;
-			}
-			if (!empty($product['ean_code'])) {
-				$item['ITEM_NAME'].='<br/>EAN: '.$product['ean_code'];
-			}
-			if (!empty($product['sku_code'])) {
-				$item['ITEM_NAME'].='<br/>SKU: '.$product['sku_code'];
-			}
-			if (!empty($product['vendor_code'])) {
-				$item['ITEM_NAME'].='<br/>'.$this->pi_getLL('label_order_details_vendor_code', 'Vendor code').': '.$product['vendor_code'];
-			}
-			if (count($product['attributes'])) {
-				foreach ($product['attributes'] as $tmpkey=>$options) {
-					$subprices.='<BR>';
-					if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-						$tmp_tax=round(($options['options_values_price']*($product['products_tax']/100)), 2);
-						$attribute_price=+$options['options_values_price']+$tmp_tax;
-					} else if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$attribute_price=round(($options['options_values_price']*($product['products_tax']/100)), 4)+$options['options_values_price'];
-					} else {
-						$attribute_price=$options['options_values_price'];
-					}
-					$item['ITEM_NAME'].='<BR>'.$options['products_options'].': '.$options['products_options_values'];
-					$price=$price+($product['qty']*($options['price_prefix'].$options['options_values_price']));
-					if ($price<0) {
-						$price=0;
-					}
-					if ($options['options_values_price']>0) {
-						$subprices.=mslib_fe::amount2Cents(($product['qty']*($options['price_prefix'].$attribute_price)));
-					}
-				}
-			}
-			// ITEM NAME EOF
-			// ITEM_QUANTITY
-			$item['ITEM_QUANTITY']=round($product['qty'], 14);
-			// ITEM_SKU
-			$item['ITEM_SKU']=$product_db['sku_code'];
-			// ITEM_TOTAL
-			if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
-				$tmp_tax=round(($product['final_price']*($product['products_tax']/100)), 2);
-				$final_price=($product['qty']*($product['final_price']+$tmp_tax));
-			} else if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$final_price=($product['qty']*$product['final_price']);
-				$final_price=round(($final_price*($product['products_tax']/100)), 4)+$final_price;
-			} else {
-				$final_price=($product['qty']*$product['final_price']);
-			}
-			$item['ITEM_TOTAL']=mslib_fe::amount2Cents($final_price).$subprices;
-			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
-				$item['ITEM_PRODUCT_STATUS']=mslib_fe::getOrderStatusName($product['status']);
-			}
-			// GRAND TOTAL CALCULATIONS
-			$subtotal=($subtotal+$price);
-			$subtotal_tax=($subtotal_tax+$product['products_tax_data']['total_tax']+$product['products_tax_data']['total_attributes_tax']);
-			$subtotalIncludingVatArray[]=$product['total_price'];
-			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_tax'];
-			$subtotalIncludingVatArray[]=$product['products_tax_data']['total_attributes_tax'];
-			// GRAND TOTAL CALCULATIONS EOF
-			//hook to let other plugins further manipulate the replacers
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemPreProc'])) {
-				$params=array(
-					'item'=>&$item,
-					'order'=>&$order,
-					'product'=>&$product,
-					'template_type'=>&$template_type
-				);
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemPreProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-				}
-			}
-			$itemsWrapper[]=$item;
-		}
-		// MERGE TO TEMPLATE
-		// Extract the subparts from the template
-		$subparts=array();
-		$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
-		$subparts['ITEMS_HEADER_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###ITEMS_HEADER_WRAPPER###');
-		$subparts['ITEMS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###ITEMS_WRAPPER###');
-		$subparts['SUBTOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SUBTOTAL_WRAPPER###');
-		$subparts['SHIPPING_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###SHIPPING_COSTS_WRAPPER###');
-		$subparts['PAYMENT_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###PAYMENT_COSTS_WRAPPER###');
-		$subparts['GRAND_TOTAL_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###GRAND_TOTAL_WRAPPER###');
-		$subparts['TAX_COSTS_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###TAX_COSTS_WRAPPER###');
-		$subparts['DISCOUNT_WRAPPER']=$this->cObj->getSubpart($subparts['template'], '###DISCOUNT_WRAPPER###');
-		if (!$this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS'] || $template_type!='order_history_site') {
-			$subProductStatusPart=array();
-			$subProductStatusPart['ITEMS_HEADER_PRODUCT_STATUS_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_HEADER_WRAPPER'], '###ITEMS_HEADER_PRODUCT_STATUS_WRAPPER###');
-			$subProductStatus=array();
-			$subProductStatus['###ITEMS_HEADER_PRODUCT_STATUS_WRAPPER###']='';
-			$subparts['ITEMS_HEADER_WRAPPER']=$this->cObj->substituteMarkerArrayCached($subparts['ITEMS_HEADER_WRAPPER'], array(), $subProductStatus);
-			$subProductStatusPart=array();
-			$subProductStatusPart['ITEMS_PRODUCT_STATUS_WRAPPER']=$this->cObj->getSubpart($subparts['ITEMS_WRAPPER'], '###ITEMS_PRODUCT_STATUS_WRAPPER###');
-			$subProductStatus=array();
-			$subProductStatus['###ITEMS_PRODUCT_STATUS_WRAPPER###']='';
-			$subparts['ITEMS_WRAPPER']=$this->cObj->substituteMarkerArrayCached($subparts['ITEMS_WRAPPER'], array(), $subProductStatus);
-		}
-		$subpartArray=array();
-		//ITEMS_HEADER_WRAPPER
-		$markerArray=array();
-		$markerArray['HEADING_PRODUCTS_NAME']=ucfirst($this->pi_getLL('product'));
-		$markerArray['HEADING_SKU']=$this->pi_getLL('sku', 'SKU');
-		$markerArray['HEADING_QUANTITY']=$this->pi_getLL('qty');
-		$markerArray['HEADING_TOTAL']=$this->pi_getLL('total');
-		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
-			$markerArray['HEADING_PRODUCT_STATUS']=$this->pi_getLL('order_product_status');
-		}
-		$subpartArray['###ITEMS_HEADER_WRAPPER###']=$this->cObj->substituteMarkerArray($subparts['ITEMS_HEADER_WRAPPER'], $markerArray, '###|###');
-		//ITEMS_HEADER_WRAPPER EOF
-		//ITEMS_WRAPPER
-		$keys=array();
-		$keys[]='ITEM_CLASS';
-		$keys[]='ITEM_IMAGE';
-		$keys[]='ITEM_NAME';
-		$keys[]='ITEM_QUANTITY';
-		$keys[]='ITEM_SKU';
-		$keys[]='ITEM_TOTAL';
-		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0 && $template_type=='order_history_site') {
-			$keys[]='ITEM_PRODUCT_STATUS';
-		}
-		foreach ($itemsWrapper as $item) {
-			$markerArray=array();
-			foreach ($keys as $key) {
-				$markerArray[$key]=$item[$key];
-			}
-			foreach ($item as $key=>$val) {
-				// hooked plugins wants to add more types. lets find them and add them
-				if (!in_array($key, $keys)) {
-					$markerArray[$key]=$item[$key];
-				}
-			}
-			$contentItem.=$this->cObj->substituteMarkerArray($subparts['ITEMS_WRAPPER'], $markerArray, '###|###');
-		}
-		$subpartArray['###ITEMS_WRAPPER###']=$contentItem;
-		//ITEMS_WRAPPER EOF
-		//SUBTOTAL_WRAPPER
-		$key='SUBTOTAL_WRAPPER';
-		$markerArray=array();
-		$markerArray['SUBTOTAL_LABEL']=$this->pi_getLL('subtotal').':';
-		$markerArray['PRODUCTS_TOTAL_PRICE_LABEL']=$this->pi_getLL('total_price').':';
-		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
-		// rounding is problem with including vat shops.
-//		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,FALSE));
-		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
-		$markerArray['PRODUCTS_TOTAL_PRICE']=mslib_fe::amount2Cents($subtotal);
-		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		//SUBTOTAL_WRAPPER EOF
-		//SHIPPING_COSTS_WRAPPER
-		$key='SHIPPING_COSTS_WRAPPER';
-		if ($order['shipping_method_costs']>0) {
-			$markerArray=array();
-			$markerArray['SHIPPING_COSTS_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
-			$markerArray['SHIPPING_COSTS']=mslib_fe::amount2Cents($order['shipping_method_costs']);
-			$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
-			$markerArray['SHIPPING_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax']));
-			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		} else {
-			$subpartArray['###'.$key.'###']='';
-		}
-		//SHIPPING_COSTS_WRAPPER EOF
-		//PAYMENT_COSTS_WRAPPER
-		$key='PAYMENT_COSTS_WRAPPER';
-		if ($order['payment_method_costs']>0) {
-			$markerArray=array();
-			$markerArray['PAYMENT_COSTS_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
-			$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($order['payment_method_costs']);
-			$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
-			$markerArray['PAYMENT_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents(($order['payment_method_costs']+$order['orders_tax_data']['payment_tax']));
-			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		} else {
-			$subpartArray['###'.$key.'###']='';
-		}
-		//PAYMENT_COSTS_WRAPPER EOF
-		//GRAND_TOTAL_WRAPPER
-		$key='GRAND_TOTAL_WRAPPER';
-		$markerArray=array();
-		$markerArray['GRAND_TOTAL_COSTS_LABEL']=ucfirst($this->pi_getLL('total')).':';
-//		$markerArray['GRAND_TOTAL_COSTS'] = mslib_fe::amount2Cents($subtotal+$order['orders_tax_data']['total_orders_tax']+$order['payment_method_costs']+$order['shipping_method_costs']-$order['discount']);
-		$markerArray['GRAND_TOTAL_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['grand_total'], 0);
-		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		//GRAND_TOTAL_WRAPPER EOF
-		//DISCOUNT_WRAPPER
-		$key='DISCOUNT_WRAPPER';
-		if ($order['discount']>0) {
-			$markerArray=array();
-			$markerArray['DISCOUNT_LABEL']=$this->pi_getLL('discount').':';
-			$markerArray['DISCOUNT']=mslib_fe::amount2Cents($order['discount']);
-			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		} else {
-			$subpartArray['###'.$key.'###']='';
-		}
-		//DISCOUNT_WRAPPER EOF
-		//TAX_COSTS_WRAPPER
-		$key='TAX_COSTS_WRAPPER';
-		if ($order['orders_tax_data']['total_orders_tax']) {
-			$markerArray=array();
-			$markerArray['TAX_RATE_LABEL']=$this->pi_getLL('vat');
-			$markerArray['INCLUDED_TAX_RATE_LABEL']=$this->pi_getLL('included_vat_amount');
-			$markerArray['TAX_COSTS']=mslib_fe::amount2Cents($order['orders_tax_data']['total_orders_tax']);
-			$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
-		} else {
-			$subpartArray['###'.$key.'###']='';
-		}
-		// finally convert global markers and return output
-		//hook to let other plugins further manipulate the replacers
-		$content=$this->cObj->substituteMarkerArrayCached($subparts['template'], null, $subpartArray);
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTablePostProc'])) {
-			$params=array(
-				'content'=>&$content,
-				'order'=>&$order,
-				'template_type'=>&$template_type
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTablePostProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
-			}
-		}
-		return $content;
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_order.php"]) {

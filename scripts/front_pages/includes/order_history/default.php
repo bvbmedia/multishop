@@ -40,11 +40,11 @@ if (mslib_fe::loggedin()) {
 							}
 						}
 						require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-						$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+						$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 						$mslib_cart->init($this);
 						$mslib_cart->updateCart();
 					}
-					header('Location: '. \TYPO3\CMS\Core\Utility\GeneralUtility::locationHeaderUrl($this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart')));
+					header('Location: '.\TYPO3\CMS\Core\Utility\GeneralUtility::locationHeaderUrl($this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart')));
 				}
 			}
 			$this->ms['MODULES']['ORDERS_LISTING_LIMIT']=50;

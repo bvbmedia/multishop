@@ -26,7 +26,7 @@ if ($this->ADMIN_USER) {
 			$this->get['q']=$_REQUEST['q'];
 			$this->get['q']=trim($this->get['q']);
 			$this->get['q']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['q'], $GLOBALS['TSFE']->metaCharset);
-			$this->get['q']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['q'], TRUE);
+			$this->get['q']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['q'], true);
 			$this->get['q']=mslib_fe::RemoveXSS($this->get['q']);
 		}
 		//	if ($_REQUEST['q'] and strlen($_REQUEST['q']) < 3) exit();
@@ -102,6 +102,7 @@ if ($this->ADMIN_USER) {
 			}
 			return $text;
 		}
+
 		if (!is_numeric($p)) {
 			$p=0;
 		}
@@ -428,7 +429,7 @@ if ($this->ADMIN_USER) {
 					$name[]=$customer['uid'];
 					$prod=array();
 					$prod['is_children']=true;
-					$prod['Name']=substr(implode(' - ',$name), 0, 50);
+					$prod['Name']=substr(implode(' - ', $name), 0, 50);
 					$prod['id']=md5($customer['name']);
 					$prod['text']=$customer['name'];
 					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
@@ -722,10 +723,9 @@ if ($this->ADMIN_USER) {
 				'section'=>&$section,
 				'page'=>&$p,
 				'offset'=>&$offset
-
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		$page_marker=array();

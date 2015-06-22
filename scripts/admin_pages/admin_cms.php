@@ -74,12 +74,12 @@ if (isset($this->get['upload']) && $this->get['upload']=='cms' && $_FILES) {
 					if (is_array($cms_data['cms_data']) && count($cms_data['cms_data'])) {
 						foreach ($cms_data['cms_data'] as $cms_col=>$cms_val) {
 							if ($cms_col && $cms_col!='description' && $cms_col!='id') {
-								switch($cms_col) {
+								switch ($cms_col) {
 									case 'page_uid':
 										$insertArray['page_uid']=$this->shop_pid;
 										break;
 									case 'hash':
-										$insertArray['hash']=md5(uniqid('', TRUE));
+										$insertArray['hash']=md5(uniqid('', true));
 										break;
 									case 'crdate':
 										$insertArray['crdate']=time();
@@ -99,7 +99,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='cms' && $_FILES) {
 							if (is_array($cms_desc_data) && count($cms_desc_data)) {
 								$insertArrayDesc=array();
 								foreach ($cms_desc_data as $cms_desc_col_name=>$cms_desc_val) {
-									switch($cms_desc_col_name) {
+									switch ($cms_desc_col_name) {
 										case 'id':
 											$insertArrayDesc['id']=$cms_id;
 											break;
@@ -151,7 +151,7 @@ if ($this->get['tx_multishop_pi1']['keyword']) {
 	//  using $_REQUEST cause TYPO3 converts "Command & Conquer" to "Conquer" (the & sign sucks ass)
 	$this->get['tx_multishop_pi1']['keyword']=trim($this->get['tx_multishop_pi1']['keyword']);
 	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['tx_multishop_pi1']['keyword'], $GLOBALS['TSFE']->metaCharset);
-	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['tx_multishop_pi1']['keyword'], TRUE);
+	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['tx_multishop_pi1']['keyword'], true);
 	$this->get['tx_multishop_pi1']['keyword']=mslib_fe::RemoveXSS($this->get['tx_multishop_pi1']['keyword']);
 	$this->searchKeywords[]=$this->get['tx_multishop_pi1']['keyword'];
 	$this->searchMode='%keyword%';

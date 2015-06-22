@@ -3,7 +3,6 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 // now parse all the objects in the tmpl file
-
 if ($this->conf['admin_edit_manufacturer_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_manufacturer_tmpl_path']);
 } else {
@@ -48,7 +47,7 @@ if ($this->post and is_array($_FILES) and count($_FILES)) {
 					$filename=mslib_fe::rewritenamein($this->post['manufacturers_name'][0]).'.'.$ext;
 					$folder=mslib_befe::getImagePrefixFolder($filename);
 					if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 					}
 					$folder.='/';
 					$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -57,7 +56,7 @@ if ($this->post and is_array($_FILES) and count($_FILES)) {
 							$filename=mslib_fe::rewritenamein($this->post['manufacturers_name'][0]).'-'.$i.'.'.$ext;
 							$folder=mslib_befe::getImagePrefixFolder($filename);
 							if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-								 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+								\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 							}
 							$folder.='/';
 							$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;

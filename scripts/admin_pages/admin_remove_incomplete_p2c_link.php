@@ -13,6 +13,5 @@ $qry=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.*', // SELECT ...
 );
 $categories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
 while ($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($categories_query)) {
-
 }
 ?>

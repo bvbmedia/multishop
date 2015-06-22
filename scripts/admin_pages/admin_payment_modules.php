@@ -261,7 +261,7 @@ jQuery(document).ready(function($) {
 </script>
 ';
 $default_payment_methods=mslib_fe::loadAllPaymentMethods();
-$mslib_payment= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
+$mslib_payment=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
 $mslib_payment->init($this);
 $payment_methods=array();
 $payment_methods=$mslib_payment->getInstalledPaymentMethods($this);
@@ -317,7 +317,7 @@ if ($this->get['edit']) {
 	}
 	$cost_tax_rate=0;
 	$percentage_handling_cost=$row['handling_costs'];
-	if (strpos($percentage_handling_cost, '%')===FALSE) {
+	if (strpos($percentage_handling_cost, '%')===false) {
 		$tmp_phc=explode('.', $percentage_handling_cost);
 		if (isset($tmp_phc[1])>0) {
 			$percentage_handling_cost=mslib_fe::taxDecimalCrop($percentage_handling_cost, 2, false).'%';
@@ -340,7 +340,6 @@ if ($this->get['edit']) {
 		$tmpcontent.='<div class="account-field">
 			<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 			<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
-
 		foreach ($active_shop as $pageinfo) {
 			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
 		}
@@ -751,7 +750,11 @@ if ($this->ms['show_main']) {
 	//tabs array
 	$tabs=array();
 	// shipping methods tab
-	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))), 'id'=>'admin_payment_methods', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))), $tmpcontent));
+	$tabs[]=array(
+		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))),
+		'id'=>'admin_payment_methods',
+		'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))), $tmpcontent)
+	);
 	// payment methods to zone mappings
 	$tmpcontent='';
 	$shipping_methods=mslib_fe::loadShippingMethods();
@@ -810,7 +813,6 @@ if ($this->ms['show_main']) {
 					}
 					$tmpcontent.='</tr>';
 				}
-
 				$tmpcontent.='</table>';
 				$tmpcontent.='</td>';
 			}
@@ -824,7 +826,11 @@ if ($this->ms['show_main']) {
 	} else {
 		$tmpcontent.=$this->pi_getLL('admin_label_currently_no_payment_method_defined');
 	}
-	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_zone_mapping'))), 'id'=>'payment_to_zone_mapping', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_zone_mapping'))), $tmpcontent));
+	$tabs[]=array(
+		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_zone_mapping'))),
+		'id'=>'payment_to_zone_mapping',
+		'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_zone_mapping'))), $tmpcontent)
+	);
 	// shipping to payment mappings
 	$tmpcontent='';
 	$payment_methods=mslib_fe::loadPaymentMethods();
@@ -869,7 +875,11 @@ if ($this->ms['show_main']) {
 	} else {
 		$tmpcontent.=$this->pi_getLL('admin_label_currently_no_payment_method_defined');
 	}
-	$tabs[]=array('label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_shipping_mapping'))), 'id'=>'admin_shipping_payment_mappings', 'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_shipping_mapping'))), $tmpcontent));
+	$tabs[]=array(
+		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_shipping_mapping'))),
+		'id'=>'admin_shipping_payment_mappings',
+		'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('payment_to_shipping_mapping'))), $tmpcontent)
+	);
 	// render the tabs
 	$tab_button='';
 	$tab_content='';

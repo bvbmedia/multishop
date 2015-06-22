@@ -215,7 +215,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 			$filter[]=$prefix."manufacturers_id IN (".implode(",", $this->post['brands']).")";
 		} else {
-			if (strpos($this->post['brands'], ',')===FALSE) {
+			if (strpos($this->post['brands'], ',')===false) {
 				$filter[]=$prefix.'manufacturers_id='.addslashes($this->post['brands']);
 			} else {
 				$filter[]=$prefix."manufacturers_id IN (".addslashes($this->post['brands']).")";

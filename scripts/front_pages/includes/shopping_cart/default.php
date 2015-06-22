@@ -6,7 +6,7 @@ if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 	$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 }
 require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
-$mslib_cart= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
+$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $disable_checkout=false;
 $output=array();
@@ -220,9 +220,9 @@ if (count($cart['products'])>0) {
 				$quantity_html.='<div class="quantity buttons_added"><input type="button" value="-" class="qty_minus" rel="qty_'.$shopping_cart_item.'"><input class="qty_input" name="qty['.$shopping_cart_item.']" type="text" id="qty_'.$shopping_cart_item.'" value="'.$value['qty'].'" size="4" maxlength="4" /><input type="button" value="+" class="qty_plus" rel="qty_'.$shopping_cart_item.'"></div>';
 			}*/
 			$quantity_html.='<div class="quantity buttons_added">';
-			$quantity_html.='<input type="button" value="-" data-stepSize="'.($product['products_multiplication']!='0.00'?$product['products_multiplication']:'1').'" data-minQty="'.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'" data-maxQty="'.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'" class="qty_minus" rel="qty_'.$shopping_cart_item.'">';
+			$quantity_html.='<input type="button" value="-" data-stepSize="'.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : '1').'" data-minQty="'.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'" data-maxQty="'.($product['maximum_quantity']!='0.00' ? $product['maximum_quantity'] : '0').'" class="qty_minus" rel="qty_'.$shopping_cart_item.'">';
 			$quantity_html.='<input class="qty_input" name="qty['.$shopping_cart_item.']" type="text" id="qty_'.$shopping_cart_item.'" value="'.$value['qty'].'" size="4" maxlength="4" />';
-			$quantity_html.='<input type="button" value="+" data-stepSize="'.($product['products_multiplication']!='0.00'?$product['products_multiplication']:'1').'" data-minQty="'.($product['minimum_quantity']!='0.00'?$product['minimum_quantity']:'1').'" data-maxQty="'.($product['maximum_quantity']!='0.00'?$product['maximum_quantity']:'0').'" class="qty_plus" rel="qty_'.$shopping_cart_item.'"></div>';
+			$quantity_html.='<input type="button" value="+" data-stepSize="'.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : '1').'" data-minQty="'.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'" data-maxQty="'.($product['maximum_quantity']!='0.00' ? $product['maximum_quantity'] : '0').'" class="qty_plus" rel="qty_'.$shopping_cart_item.'"></div>';
 			// show selectbox by products multiplication or show default input eof
 			if (!$this->ms['MODULES']['ALLOW_ORDER_OUT_OF_STOCK_PRODUCT']) {
 				if ($value['qty']>$value['products_quantity']) {
@@ -272,7 +272,7 @@ if (count($cart['products'])>0) {
 				'markerArray'=>&$markerArray
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['cartItemPostHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		$contentItem.=$this->cObj->substituteMarkerArray($subparts['item'], $markerArray, '###|###');
@@ -368,7 +368,7 @@ if (count($cart['products'])>0) {
 			'markerArray'=>&$markerArray
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['footerPostHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	$footerItem=$this->cObj->substituteMarkerArray($subparts['footer'], $markerArray, '###|###');
@@ -428,7 +428,7 @@ if (count($cart['products'])>0) {
 			'subpartArray'=>&$subpartArray,
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/shopping_cart/default.php']['shoppingCartPagePostHook'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	// completed the template expansion by replacing the "item" marker in the template

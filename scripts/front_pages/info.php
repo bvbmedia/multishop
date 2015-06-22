@@ -21,7 +21,7 @@ if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
 			'cms_type'=>$page['type'],
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/info.php']['infoCMSContent'] as $funcRef) {
-			 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
 	if ($page['name']) {

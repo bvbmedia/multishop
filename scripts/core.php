@@ -20,7 +20,7 @@ switch ($this->ms['page']) {
 				if ($order['payment_method']) {
 					$content.='<h2 class="pay_order_heading">Pay order '.$order['orders_id'].'</h2>';
 					// load optional payment button
-					$mslib_payment= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
+					$mslib_payment=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
 					$mslib_payment->init($this);
 					$paymentMethods=$mslib_payment->getEnabledPaymentMethods();
 					if (is_array($paymentMethods)) {
@@ -32,7 +32,7 @@ switch ($this->ms['page']) {
 										$extkey='multishop_'.$user_method['provider'];
 										if (t3lib_extMgm::isLoaded($extkey)) {
 											require(t3lib_extMgm::extPath($extkey).'class.multishop_payment_method.php');
-											$paymentMethod= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
+											$paymentMethod=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
 											$paymentMethod->setPaymentMethod($user_method['provider']);
 											$paymentMethod->setVariables($vars);
 											$content.=$paymentMethod->displayPaymentButton($order['orders_id'], $this);
@@ -63,9 +63,9 @@ switch ($this->ms['page']) {
 	case 'checkout':
 		// more items could be added through hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'])) {
-			$params = array ();
+			$params=array();
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['checkoutPreProc'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
@@ -327,7 +327,7 @@ switch ($this->ms['page']) {
 			$array1[]='###TOTAL_AMOUNT###';
 			$array2[]=mslib_fe::amount2Cents($order['total_amount']);
 			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-			$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 			$mslib_order->init($this);
 			$ORDER_DETAILS=$mslib_order->printOrderDetailsTable($order, 'site');
 			$array1[]='###ORDER_DETAILS###';
@@ -404,7 +404,7 @@ switch ($this->ms['page']) {
 				$content.=$this->pi_getLL('your_payment_is_pending');
 			} else if ($this->ms['page']=='psp_declineurl') {
 				$content.=$this->pi_getLL('your_payment_is_declined');
-			} else if ($this->ms['page']=='psp_exceptionurl'){
+			} else if ($this->ms['page']=='psp_exceptionurl') {
 				$content.=$this->pi_getLL('your_payment_is_failed_');
 			} else if ($this->ms['page']=='psp_cancelurl') {
 				$content.=$this->pi_getLL('your_payment_has_been_cancelled');
@@ -419,7 +419,7 @@ switch ($this->ms['page']) {
 				'content'=>&$content
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/core.php']['paymentFallback'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// make sure the payment fallback marker are replaced with empty string if the plugin not installed
@@ -430,7 +430,6 @@ switch ($this->ms['page']) {
 		$array1[]='###PAYMENT_PAGE_LINK###';
 		$array2[]='';
 		$content=str_replace($array1, $array2, $content);
-
 		// custom hook that can be controlled by third-party plugin eof
 		break;
 	// psp thank you or error pages eof
@@ -527,7 +526,7 @@ switch ($this->ms['page']) {
 				$array1[]='###TOTAL_AMOUNT###';
 				$array2[]=mslib_fe::amount2Cents($order['total_amount']);
 				require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
-				$mslib_order= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
+				$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 				$mslib_order->init($this);
 				$ORDER_DETAILS=$mslib_order->printOrderDetailsTable($order, 'site');
 				$array1[]='###ORDER_DETAILS###';
@@ -617,7 +616,7 @@ switch ($this->ms['page']) {
 						'array2'=>&$array2
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout.php']['checkoutThankYouPageMarkerPreProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// custom hook that can be controlled by third-party plugin eof
@@ -640,7 +639,7 @@ switch ($this->ms['page']) {
 					$content.='Your order has been paid.';
 				} elseif ($order['payment_method']) {
 					// load optional payment button
-					$mslib_payment= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
+					$mslib_payment=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mslib_payment');
 					$mslib_payment->init($this);
 					$paymentMethods=$mslib_payment->getEnabledPaymentMethods();
 					if (is_array($paymentMethods)) {
@@ -652,7 +651,7 @@ switch ($this->ms['page']) {
 										$extkey='multishop_'.$user_method['provider'];
 										if (t3lib_extMgm::isLoaded($extkey)) {
 											require(t3lib_extMgm::extPath($extkey).'class.multishop_payment_method.php');
-											$paymentMethod= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
+											$paymentMethod=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
 											$paymentMethod->setPaymentMethod($user_method['provider']);
 											$paymentMethod->setVariables($vars);
 											$content.=$paymentMethod->displayPaymentButton($order['orders_id'], $this);
@@ -674,7 +673,7 @@ switch ($this->ms['page']) {
 				'content'=>&$content
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['customPage'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof

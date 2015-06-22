@@ -7,7 +7,7 @@ if ($this->get['tx_multishop_pi1']['keyword']) {
 	//  using $_REQUEST cause TYPO3 converts "Command & Conquer" to "Conquer" (the & sign sucks ass)
 	$this->get['tx_multishop_pi1']['keyword']=trim($this->get['tx_multishop_pi1']['keyword']);
 	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->utf8_encode($this->get['tx_multishop_pi1']['keyword'], $GLOBALS['TSFE']->metaCharset);
-	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['tx_multishop_pi1']['keyword'], TRUE);
+	$this->get['tx_multishop_pi1']['keyword']=$GLOBALS['TSFE']->csConvObj->entities_to_utf8($this->get['tx_multishop_pi1']['keyword'], true);
 	$this->get['tx_multishop_pi1']['keyword']=mslib_fe::RemoveXSS($this->get['tx_multishop_pi1']['keyword']);
 	$this->searchKeywords[]=$this->get['tx_multishop_pi1']['keyword'];
 	$this->searchMode='%keyword%';
@@ -118,7 +118,7 @@ if (!count($pageset['dataset'])) {
 	<th width="100" nowrap align="right">'.$this->pi_getLL('admin_customer_id').'</th>
 	<th width="100" nowrap>'.$this->pi_getLL('admin_customer_name').'</th>
 	<th width="100" nowrap align="right">'.$this->pi_getLL('ip_address').'</th>
-	<th width="100" nowrap>'.$this->pi_getLL('session_id','Session ID').'</th>
+	<th width="100" nowrap>'.$this->pi_getLL('session_id', 'Session ID').'</th>
 	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
 	<th>'.$this->pi_getLL('content').'</th>
 	';
@@ -131,7 +131,7 @@ if (!count($pageset['dataset'])) {
 		}
 		$customer_edit_link='';
 		if ($row['customer_id']) {
-			$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$row['customer_id'].'&action=edit_customer',1);
+			$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$row['customer_id'].'&action=edit_customer', 1);
 		}
 		$content.='
 		<tr class="'.$tr_type.'">
@@ -140,10 +140,10 @@ if (!count($pageset['dataset'])) {
 			'.htmlspecialchars($row['title']).'
 		</td>
 		<td valign="top" nowrap align="right">
-			'.($row['customer_id'] >0?'<a href="'.$customer_edit_link.'">'.$row['customer_id'].'</a>':'').'
+			'.($row['customer_id']>0 ? '<a href="'.$customer_edit_link.'">'.$row['customer_id'].'</a>' : '').'
 		</td>
 		<td valign="top" nowrap>
-			'.($row['company']?'<a href="'.$customer_edit_link.'">'.htmlspecialchars($row['company']).'</a>':htmlspecialchars($row['name'])).'
+			'.($row['company'] ? '<a href="'.$customer_edit_link.'">'.htmlspecialchars($row['company']).'</a>' : htmlspecialchars($row['name'])).'
 		</td>
 		<td valign="top" nowrap align="right">
 			'.htmlspecialchars($row['ip_address']).'

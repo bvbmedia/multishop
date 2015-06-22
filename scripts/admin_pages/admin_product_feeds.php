@@ -87,7 +87,6 @@ $array['products_shortdescription']=$this->pi_getLL('feed_exporter_fields_label_
 $array['products_description']=$this->pi_getLL('feed_exporter_fields_label_products_description');
 $array['products_description_encoded']=$this->pi_getLL('feed_exporter_fields_label_products_description_html_encoded');
 $array['products_description_strip_tags']=$this->pi_getLL('feed_exporter_fields_label_products_description_plain_stripped_tags');
-
 for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
 	if (!$x) {
 		$s='';
@@ -95,7 +94,6 @@ for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
 		$s='_'.($x+1);
 	}
 	$suffix=' ('.($x+1).')';
-
 	$array['products_image_50'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_50').$suffix;
 	$array['products_image_100'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_100').$suffix;
 	$array['products_image_200'.$s]=$this->pi_getLL('feed_exporter_fields_label_products_image_thumbnail_200').$suffix;
@@ -115,7 +113,7 @@ $array['products_weight']=$this->pi_getLL('feed_exporter_fields_label_products_w
 $array['products_status']=$this->pi_getLL('feed_exporter_fields_label_products_status');
 $array['minimum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_minimum_quantity');
 $array['maximum_quantity']=$this->pi_getLL('feed_exporter_fields_label_products_maximum_quantity');
-$array['products_multiplication']=$this->pi_getLL('feed_exporter_fields_label_products_multiplication','Multiplication');
+$array['products_multiplication']=$this->pi_getLL('feed_exporter_fields_label_products_multiplication', 'Multiplication');
 $array['order_unit_name']=$this->pi_getLL('feed_exporter_fields_label_products_order_unit_name');
 $array['products_vat_rate']=$this->pi_getLL('feed_exporter_fields_label_products_vat_rate');
 $array['category_link']=$this->pi_getLL('feed_exporter_fields_label_category_link');
@@ -146,7 +144,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'array'=>&$array
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['adminProductFeedsColtypesHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 uksort($array, "strnatcmp");
@@ -248,7 +246,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				'feed_types'=>&$feed_types
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedTypesPreHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
@@ -286,7 +284,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				</select>
 		</div>
 		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('include_disabled_products','Include disabled products')).'</label>
+				<label>'.htmlspecialchars($this->pi_getLL('include_disabled_products', 'Include disabled products')).'</label>
 				<select name="include_disabled">
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 					<option value="1"'.(($this->post['include_disabled']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
@@ -431,7 +429,7 @@ if ($this->ms['show_main']) {
 					'feed'=>&$feed
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_product_feeds.php']['feedsIterationItem'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom page hook that can be controlled by third-party plugin eof

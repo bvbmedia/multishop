@@ -55,9 +55,8 @@ $sortOrderArray=array();
 $language_id=$GLOBALS['TSFE']->sys_language_uid;
 // define the different columns
 $coltypes=array();
-
 // MULTILANGUAGE FIELDS
-foreach ($this->languages as $langKey => $langTitle) {
+foreach ($this->languages as $langKey=>$langTitle) {
 	$suffix='';
 	if ($langKey>0) {
 		$suffix='_'.$langKey;
@@ -139,20 +138,18 @@ for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
 	}
 	$coltypes['products_image'.$x2]='Products image '.($x+1);
 }
-
 $coltypes['categories_id']='Categories id';
 $coltypes['manufacturers_image']='Manufacturers image';
 $coltypes['manufacturers_products_id']='Manufacturers products id';
 //$total_static_coltypes=count($coltypes);
 //$counter=$total_static_coltypes;
-
 //hook to let other plugins add more columns
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_importer.php']['adminProductsImporterColtypesHook'])) {
 	$params=array(
 		'coltypes'=>&$coltypes
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_importer.php']['adminProductsImporterColtypesHook'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 $total_coltypes=count($coltypes);
@@ -253,7 +250,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		'prefix_source_name'=>$this->post['prefix_source_name']
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateTypesProc'] as $funcRef) {
-		 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
 // custom hook that can be controlled by third-party plugin eof
@@ -414,7 +411,7 @@ if ($this->post['action']=='category-insert') {
 					'processed'=>&$processed
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 		} else {
@@ -424,14 +421,14 @@ if ($this->post['action']=='category-insert') {
 				} else {
 					$limit='10';
 				}
-				if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+				if (strstr(mslib_befe::strtolower($this->post['database_name']), 'select ')) {
 					// its not a table name, its a full query
 					$this->databaseMode='query';
 					$str=$this->post['database_name'].' LIMIT '.$limit;
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					if ($this->conf['debugEnabled']=='1') {
 						$logString='Load records for importer query: '.$str;
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 					}
 					$datarows=array();
 					while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -463,7 +460,7 @@ if ($this->post['action']=='category-insert') {
 					if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 						exit;
 					}
-					if (fwrite($handle, $str)===FALSE) {
+					if (fwrite($handle, $str)===false) {
 						exit;
 					}
 					fclose($handle);
@@ -499,7 +496,7 @@ if ($this->post['action']=='category-insert') {
 					if (!$handle=fopen($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$filename, 'w')) {
 						exit;
 					}
-					if (fwrite($handle, $str)===FALSE) {
+					if (fwrite($handle, $str)===false) {
 						exit;
 					}
 					fclose($handle);
@@ -551,9 +548,9 @@ if ($this->post['action']=='category-insert') {
 				if ($this->post['format']=='txt') {
 					$row=1;
 					$rows=array();
-					if (($handle=fopen($file_location, "r"))!==FALSE) {
+					if (($handle=fopen($file_location, "r"))!==false) {
 						$counter=0;
-						while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+						while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
 							//print_r($data);
 							if ($this->post['escape_first_line']) {
 								if ($counter==0) {
@@ -941,7 +938,7 @@ if ($this->post['action']=='category-insert') {
 						'processed'=>&$processed
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productImportParserTemplateProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 			} else {
@@ -959,7 +956,7 @@ if ($this->post['action']=='category-insert') {
 					} else {
 						$limit=2000;
 					}
-					if (strstr(mslib_befe::strtolower($this->post['database_name']),'select ')) {
+					if (strstr(mslib_befe::strtolower($this->post['database_name']), 'select ')) {
 						$this->databaseMode='query';
 						// its not a table name, its a full query
 						$this->databaseMode='query';
@@ -967,7 +964,7 @@ if ($this->post['action']=='category-insert') {
 						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 						if ($this->conf['debugEnabled']=='1') {
 							$logString='Load records for importer query: '.$str;
-							 \TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop',-1);
+							\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($logString, 'multishop', -1);
 						}
 						$datarows=array();
 						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -1084,9 +1081,9 @@ if ($this->post['action']=='category-insert') {
 					if ($this->post['format']=='txt') {
 						$row=1;
 						$rows=array();
-						if (($handle=fopen($file, "r"))!==FALSE) {
+						if (($handle=fopen($file, "r"))!==false) {
 							$counter=0;
-							while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==FALSE) {
+							while (($data=fgetcsv($handle, '', $delimiter, $backquotes))!==false) {
 								if ($this->post['escape_first_line']) {
 									if ($counter==0) {
 										$table_cols=$data;
@@ -1106,8 +1103,8 @@ if ($this->post['action']=='category-insert') {
 			}
 			$item_counter=0;
 			$inserteditems=array();
-			$global_start_time=microtime(TRUE);
-			$start_time=microtime(TRUE);
+			$global_start_time=microtime(true);
+			$start_time=microtime(true);
 			$total_datarows=count($rows);
 			if ($this->msLogFile) {
 				if ($total_datarows) {
@@ -1129,7 +1126,7 @@ if ($this->post['action']=='category-insert') {
 					'rows'=>&$rows
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['iteratorPreProc'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			// custom hook that can be controlled by third-party plugin eof
@@ -1143,7 +1140,7 @@ if ($this->post['action']=='category-insert') {
 						'skipRow'=>&$skipRow
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIteratePreProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// custom hook that can be controlled by third-party plugin eof
@@ -1256,7 +1253,6 @@ if ($this->post['action']=='category-insert') {
 												// when working with Multishop productfeed that contains attribute values with prices use AUX:
 												// Example data: Yes::1.00||No::0.00
 												// Use AUX to import: ||::
-
 												// extreme setup: FORMAAT|#|;|$value|$price
 												// example value: 15ml;0,00#350ml;17,45#1000ml;34,65
 												$option_value2=explode($subdelimiter, $option_value);
@@ -1418,7 +1414,7 @@ if ($this->post['action']=='category-insert') {
 						'skipItem'=>&$skipItem
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['itemIterateProc'] as $funcRef) {
-						 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
 				// custom hook that can be controlled by third-party plugin eof
@@ -1437,7 +1433,7 @@ if ($this->post['action']=='category-insert') {
 						if ($item['categories_name'.$x]) {
 							$item['categories_name'.$x]=trim($item['categories_name'.$x]);
 							// sometimes importer can have &amp; characters as category name. lets convert it to plain text first
-							$item['categories_name'.$x]=html_entity_decode($item['categories_name'.$x],ENT_QUOTES,'UTF-8');
+							$item['categories_name'.$x]=html_entity_decode($item['categories_name'.$x], ENT_QUOTES, 'UTF-8');
 							if ($hashed_id) {
 								$hashed_id.=' / ';
 							}
@@ -1500,7 +1496,7 @@ if ($this->post['action']=='category-insert') {
 								}
 							}
 							// LANGUAGE OVERLAYS for categories description
-							foreach ($this->languages as $langKey => $langTitle) {
+							foreach ($this->languages as $langKey=>$langTitle) {
 								if ($langKey>0) {
 									$suffix='_'.$langKey;
 									$updateArray2=array();
@@ -1522,7 +1518,7 @@ if ($this->post['action']=='category-insert') {
 									$updateArray2['categories_id']=$this->ms['target-cid'];
 									$updateArray2['language_id']=$langKey;
 									// get existing record
-									$record=mslib_befe::getRecord($this->ms['target-cid'],'tx_multishop_categories_description','categories_id',array(0=>'language_id='.$langKey));
+									$record=mslib_befe::getRecord($this->ms['target-cid'], 'tx_multishop_categories_description', 'categories_id', array(0=>'language_id='.$langKey));
 									if ($record['categories_id']) {
 										$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories_description', 'categories_id='.$this->ms['target-cid'].' and language_id='.$langKey, $updateArray2);
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -1558,7 +1554,7 @@ if ($this->post['action']=='category-insert') {
 											$filename=mslib_fe::rewritenamein($categories_name).'.'.$ext;
 											$folder=mslib_befe::getImagePrefixFolder($filename);
 											if (!is_dir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-												 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+												\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 											}
 											$folder.='/';
 											$target=PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1567,7 +1563,7 @@ if ($this->post['action']=='category-insert') {
 													$filename=mslib_fe::rewritenamein($categories_name).($ix>0 ? '-'.$ix : '').'.'.$ext;
 													$folder=mslib_befe::getImagePrefixFolder($filename);
 													if (!is_dir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder)) {
-														 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
+														\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder);
 													}
 													$folder.='/';
 													$target=PATH_site.$this->ms['image_paths']['categories']['original'].'/'.$folder.$filename;
@@ -1607,10 +1603,10 @@ if ($this->post['action']=='category-insert') {
 						$groupDelimiter='';
 						$catDelimiter='';
 						$tmp=explode(';', $this->post['input'][$flipped_select['category_group']]);
-						if (count($tmp) == 2) {
+						if (count($tmp)==2) {
 							$groupDelimiter=$tmp[0];
 							$catDelimiter=$tmp[1];
-						} elseif(count($tmp) == 1) {
+						} elseif (count($tmp)==1) {
 							$catDelimiter=$tmp[0];
 						}
 						if ($groupDelimiter) {
@@ -1619,7 +1615,7 @@ if ($this->post['action']=='category-insert') {
 							$groups=array($item['category_group']);
 						}
 						$languageGroups=array();
-						foreach ($this->languages as $langKey => $langTitle) {
+						foreach ($this->languages as $langKey=>$langTitle) {
 							if ($langKey>0) {
 								if ($groupDelimiter) {
 									$groups2=explode($groupDelimiter, $item['category_group_'.$langKey]);
@@ -1635,7 +1631,7 @@ if ($this->post['action']=='category-insert') {
 							$this->ms['target-cid']=$this->post['cid'];
 							$cats=explode($catDelimiter, $group);
 							$languageCats=array();
-							foreach ($this->languages as $langKey => $langTitle) {
+							foreach ($this->languages as $langKey=>$langTitle) {
 								if ($langKey>0) {
 									$languageCats[$langKey]=explode($catDelimiter, $languageGroups[$langKey][$groupCounter]);
 								}
@@ -1670,18 +1666,17 @@ if ($this->post['action']=='category-insert') {
 									$updateArray['categories_name']=trim($cat);
 									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $updateArray);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-
 									$this->ms['sqls'][]=$str;
 									$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 									$image='';
 									$categories_image='';
 									$stats['categories_added']++;
 									// LANGUAGE OVERLAYS
-									foreach ($this->languages as $langKey => $langTitle) {
+									foreach ($this->languages as $langKey=>$langTitle) {
 										if ($langKey>0) {
 											$suffix='_'.$langKey;
 											$updateArray2=$updateArray;
-											if (isset($languageCats[$langKey][$tel]) && $languageCats[$langKey][$tel] !='') {
+											if (isset($languageCats[$langKey][$tel]) && $languageCats[$langKey][$tel]!='') {
 												$updateArray2['categories_name']=$languageCats[$langKey][$tel];
 											}
 											$updateArray2['language_id']=$langKey;
@@ -1744,7 +1739,7 @@ if ($this->post['action']=='category-insert') {
 										$filename=mslib_fe::rewritenamein($categories_name).'.'.$ext;
 										$folder=mslib_befe::getImagePrefixFolder($filename);
 										if (!is_dir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-											 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+											\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 										}
 										$folder.='/';
 										$target=PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -1753,7 +1748,7 @@ if ($this->post['action']=='category-insert') {
 												$filename=mslib_fe::rewritenamein($manufacturers_name).($ix>0 ? '-'.$ix : '').'.'.$ext;
 												$folder=mslib_befe::getImagePrefixFolder($filename);
 												if (!is_dir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder)) {
-													 \TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
+													\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir(PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder);
 												}
 												$folder.='/';
 												$target=PATH_site.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.$filename;
@@ -1798,7 +1793,7 @@ if ($this->post['action']=='category-insert') {
 						}
 						if ($item['products_name']) {
 							// sometimes importer can have &amp; characters as products name. lets convert it to plain text first
-							$item['products_name']=html_entity_decode($item['products_name'],ENT_QUOTES,'UTF-8');
+							$item['products_name']=html_entity_decode($item['products_name'], ENT_QUOTES, 'UTF-8');
 							// if productsname is supplied
 							// if the date available is only a year, add the default month and day
 							if ($item['products_date_added'] and strlen($item['products_date_added'])==4) {
@@ -1918,7 +1913,6 @@ if ($this->post['action']=='category-insert') {
 							} else {
 								$item['products_price']=number_format($item['products_price_including_vat'], 14, '.', '');
 							}
-
 						}
 						if ($item['products_specials_price_including_vat']) {
 							if ($item['products_vat_rate']) {
@@ -1996,7 +1990,7 @@ if ($this->post['action']=='category-insert') {
 								$updateArray['staffel_price']=$item['products_staffel_price'];
 							}
 							if (isset($item['products_quantity']) and (!$item['imported_product'] or ($item['imported_product'] and !in_array('products_quantity', $importedProductsLockedFields)))) {
-								switch($item['products_quantity']) {
+								switch ($item['products_quantity']) {
 									case 'Y':
 										$item['products_quantity']=1;
 										break;
@@ -2051,7 +2045,7 @@ if ($this->post['action']=='category-insert') {
 										'old_product'=>&$old_product
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductPreHook'] as $funcRef) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -2144,14 +2138,14 @@ if ($this->post['action']=='category-insert') {
 										'prefix_source_name'=>$this->post['prefix_source_name']
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductsDescriptionPreHook'] as $funcRef) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
 								$filter=array();
 								$filter[]='language_id='.$language_id;
 								$filter[]='(page_uid=0 or page_uid='.$this->showCatalogFromPage.')';
-								$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
+								$record=mslib_befe::getRecord($item['updated_products_id'], 'tx_multishop_products_description', 'products_id', $filter);
 								if (is_array($record) && $record['products_id']) {
 									$updateArray['page_uid']=$this->showCatalogFromPage;
 									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\') and language_id='.$language_id, $updateArray);
@@ -2164,12 +2158,12 @@ if ($this->post['action']=='category-insert') {
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 								// LANGUAGE OVERLAYS
-								foreach ($this->languages as $langKey => $langTitle) {
+								foreach ($this->languages as $langKey=>$langTitle) {
 									if ($langKey>0) {
 										$suffix='_'.$langKey;
 										$updateArray2=$updateArray;
-										foreach ($updateArray2 as $key => $val) {
-											if (isset($item[$key.$suffix]) && $item[$key.$suffix] != '') {
+										foreach ($updateArray2 as $key=>$val) {
+											if (isset($item[$key.$suffix]) && $item[$key.$suffix]!='') {
 												$updateArray2[$key]=$item[$key.$suffix];
 											}
 										}
@@ -2178,7 +2172,7 @@ if ($this->post['action']=='category-insert') {
 										$filter=array();
 										$filter[]='language_id='.$langKey;
 										$filter[]='(page_uid=0 or page_uid='.$this->showCatalogFromPage.')';
-										$record=mslib_befe::getRecord($item['updated_products_id'],'tx_multishop_products_description','products_id',$filter);
+										$record=mslib_befe::getRecord($item['updated_products_id'], 'tx_multishop_products_description', 'products_id', $filter);
 										if ($record['products_id']) {
 											$updateArray['page_uid']=$this->showCatalogFromPage;
 											$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_description', 'products_id='.$item['updated_products_id'].' AND (page_uid=0 or page_uid=\''.$this->showCatalogFromPage.'\') and language_id='.$langKey, $updateArray2);
@@ -2194,7 +2188,7 @@ if ($this->post['action']=='category-insert') {
 								}
 								// LANGUAGE OVERLAYS EOL
 							}
-							if (isset($item['products_specials_price']) && ($item['products_specials_price']<$item['products_price'] && $item['products_specials_price'] > 0)) {
+							if (isset($item['products_specials_price']) && ($item['products_specials_price']<$item['products_price'] && $item['products_specials_price']>0)) {
 								$updateArray=array();
 								$updateArray['specials_new_products_price']=$item['products_specials_price'];
 								if (strstr($updateArray['specials_new_products_price'], ",")) {
@@ -2215,7 +2209,7 @@ if ($this->post['action']=='category-insert') {
 										'prefix_source_name'=>$this->post['prefix_source_name']
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateSpecialsPricePreHook'] as $funcRef) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -2242,8 +2236,8 @@ if ($this->post['action']=='category-insert') {
 									}
 									if ($item['products_specials_section'] and $specials_id) {
 										$sections=array();
-										if ($this->post['input'][$i] && strstr($item['products_specials_section'],$this->post['input'][$i])) {
-											$sections=explode($this->post['input'][$i],$item['products_specials_section']);
+										if ($this->post['input'][$i] && strstr($item['products_specials_section'], $this->post['input'][$i])) {
+											$sections=explode($this->post['input'][$i], $item['products_specials_section']);
 										} else {
 											$sections[]=$item['products_specials_section'];
 										}
@@ -2273,7 +2267,7 @@ if ($this->post['action']=='category-insert') {
 									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id='.$item['updated_products_id']);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
-								foreach($this->ms['products_to_categories_array'] as $categories_id) {
+								foreach ($this->ms['products_to_categories_array'] as $categories_id) {
 									$updateArray=array();
 									$updateArray['products_id']=$item['updated_products_id'];
 									$updateArray['categories_id']=$categories_id;
@@ -2343,7 +2337,7 @@ if ($this->post['action']=='category-insert') {
 							if (isset($item['order_unit_id'])) {
 								$updateArray['order_unit_id']=$item['order_unit_id'];
 							}
-							switch($item['products_quantity']) {
+							switch ($item['products_quantity']) {
 								case 'Y':
 									$item['products_quantity']=1;
 									break;
@@ -2431,7 +2425,7 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPreHook'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// TYPO3 6.2 NULL VALUE FIX
@@ -2481,19 +2475,19 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductsDescriptionPreHook'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_description', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							// LANGUAGE OVERLAYS
-							foreach ($this->languages as $langKey => $langTitle) {
+							foreach ($this->languages as $langKey=>$langTitle) {
 								if ($langKey>0) {
 									$suffix='_'.$langKey;
 									$updateArray2=$updateArray;
-									foreach ($updateArray2 as $key => $val) {
-										if (isset($item[$key.$suffix]) && $item[$key.$suffix] != '') {
+									foreach ($updateArray2 as $key=>$val) {
+										if (isset($item[$key.$suffix]) && $item[$key.$suffix]!='') {
 											$updateArray2[$key]=$item[$key.$suffix];
 										}
 									}
@@ -2510,7 +2504,7 @@ if ($this->post['action']=='category-insert') {
 								$this->ms['products_to_categories_array'][]=$this->ms['target-cid'];
 							}
 							if (count($this->ms['products_to_categories_array'])) {
-								foreach($this->ms['products_to_categories_array'] as $categories_id) {
+								foreach ($this->ms['products_to_categories_array'] as $categories_id) {
 									$updateArray=array();
 									$updateArray['products_id']=$item['added_products_id'];
 									$updateArray['categories_id']=$categories_id;
@@ -2557,7 +2551,7 @@ if ($this->post['action']=='category-insert') {
 										'prefix_source_name'=>$this->post['prefix_source_name']
 									);
 									foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertSpecialsPricePreHook'] as $funcRef) {
-										 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+										\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 									}
 								}
 								// custom hook that can be controlled by third-party plugin eof
@@ -2577,11 +2571,11 @@ if ($this->post['action']=='category-insert') {
 							// these attributes need further processing since the prices are including VAT
 							// we will substract the VAT of each option value and then copy it to the traditional $item['attribute_option_value'] array
 							foreach ($item['attribute_option_value_including_vat'] as $option_row) {
-								if ($option_row[2] > 0) {
+								if ($option_row[2]>0) {
 									// if attribute option value has price
-									if (substr_count($option_row[2], '.') > 1) {
+									if (substr_count($option_row[2], '.')>1) {
 										// this amount has double dot (Excel issue). We need to strip the first dot.
-										$option_row[2]=preg_replace("/\./","",$option_row[2],1);
+										$option_row[2]=preg_replace("/\./", "", $option_row[2], 1);
 									}
 									$vatRate=0;
 									if ($item['products_vat_rate']) {
@@ -2598,7 +2592,7 @@ if ($this->post['action']=='category-insert') {
 									if ($vatRate) {
 										// reduce VAT from the price
 										$price=($option_row[2]/(100+$vatRate)*100);
-										$option_row[2]=number_format($price,16,'.','');
+										$option_row[2]=number_format($price, 16, '.', '');
 									}
 								}
 								// now add it to the attribute_option_value array for further processing
@@ -2643,7 +2637,7 @@ if ($this->post['action']=='category-insert') {
 										$products_options_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 									}
 									// LANGUAGE OVERLAYS for products options
-									foreach ($this->languages as $langKey => $langTitle) {
+									foreach ($this->languages as $langKey=>$langTitle) {
 										if ($langKey>0) {
 											$insertArray=array();
 											$insertArray['products_options_name']=$option_name;
@@ -2657,7 +2651,7 @@ if ($this->post['action']=='category-insert') {
 											$insertArray['products_options_id']=$products_options_id;
 											$insertArray['language_id']=$langKey;
 											// get existing record
-											$record=mslib_befe::getRecord($products_options_id,'tx_multishop_products_options','products_options_id',array(0=>'language_id='.$langKey));
+											$record=mslib_befe::getRecord($products_options_id, 'tx_multishop_products_options', 'products_options_id', array(0=>'language_id='.$langKey));
 											if ($record['products_options_id']) {
 												$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', 'products_options_id='.$products_options_id.' and language_id='.$langKey, $insertArray);
 												$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2694,7 +2688,7 @@ if ($this->post['action']=='category-insert') {
 											}
 										}
 										// LANGUAGE OVERLAYS for products options
-										foreach ($this->languages as $langKey => $langTitle) {
+										foreach ($this->languages as $langKey=>$langTitle) {
 											if ($langKey>0) {
 												$insertArray=array();
 												$insertArray['products_options_values_id']=$option_value_id;
@@ -2702,7 +2696,7 @@ if ($this->post['action']=='category-insert') {
 												$insertArray['products_options_values_name']=$option_value;
 												$insertArray['language_id']=$langKey;
 												// get existing record
-												$record=mslib_befe::getRecord($option_value_id,'tx_multishop_products_options_values','products_options_values_id',array(0=>'language_id='.$langKey));
+												$record=mslib_befe::getRecord($option_value_id, 'tx_multishop_products_options_values', 'products_options_values_id', array(0=>'language_id='.$langKey));
 												if ($record['products_options_values_id']) {
 													$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values', 'products_options_values_id='.$option_value_id.' and language_id='.$langKey, $insertArray);
 													$res=$GLOBALS['TYPO3_DB']->sql_query($query);
@@ -2832,7 +2826,7 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertProductPostHook'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
@@ -2845,7 +2839,7 @@ if ($this->post['action']=='category-insert') {
 									'prefix_source_name'=>$this->post['prefix_source_name']
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['updateProductPostHook'] as $funcRef) {
-									 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 								}
 							}
 							// custom hook that can be controlled by third-party plugin eof
@@ -2856,7 +2850,7 @@ if ($this->post['action']=='category-insert') {
 							$message=($item['updated_products_id'] ? 'Updated: ' : 'Added: ').$item['products_name']." (products_id: ".$products_id.", hashed id: ".$item['extid'].")\n";
 							if ($subtel==50) {
 								if ($start_time) {
-									$end_time=microtime(TRUE);
+									$end_time=microtime(true);
 									$message.="----------------------------------\n";
 									$ms_string=number_format(($end_time-$start_time), 3, '.', '');
 									// calculate progress in percentage
@@ -2898,7 +2892,7 @@ if ($this->post['action']=='category-insert') {
 								}
 								// reset timer and subtel
 								$subtel=0;
-								$start_time=microtime(TRUE);
+								$start_time=microtime(true);
 							}
 							if ($this->msLogFile) {
 								file_put_contents($this->msLogFile, $message, FILE_APPEND);
@@ -2929,12 +2923,12 @@ if ($this->post['action']=='category-insert') {
 				'stats'=>&$stats
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportPostProcHook'] as $funcRef) {
-				 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}
 		// custom hook that can be controlled by third-party plugin eof
 		if ($this->msLogFile) {
-			$end_time=microtime(TRUE);
+			$end_time=microtime(true);
 			$global_ms_string=number_format(($end_time-$global_start_time), 3, '.', '');
 			$running_seconds=round($global_ms_string);
 			if ($running_seconds>60) {
@@ -2942,7 +2936,7 @@ if ($this->post['action']=='category-insert') {
 			} else {
 				$time_running=number_format(($running_seconds), 0, '.', '').' seconds';
 			}
-			file_put_contents($this->msLogFile, print_r($stats,1)."\n".'Import task completed on: '.date("Y-m-d G:i:s", time()).' and took: '.$time_running.".\n", FILE_APPEND);
+			file_put_contents($this->msLogFile, print_r($stats, 1)."\n".'Import task completed on: '.date("Y-m-d G:i:s", time()).' and took: '.$time_running.".\n", FILE_APPEND);
 		}
 	}
 }

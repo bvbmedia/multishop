@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content='';
-switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
+switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 	case 'get_attributes_options':
 		$where=array();
 		$where[]="language_id = '".$this->sys_language_uid."'";
@@ -135,7 +135,6 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 						'text'=>$row['products_options_values_name']
 					);
 				}
-
 			}
 		} else {
 			if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
@@ -160,7 +159,7 @@ switch($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_attributes.php']['deleteProductAttributes'])) {
 				$params=array();
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_attributes.php']['deleteProductAttributes'] as $funcRef) {
-					 \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 		}

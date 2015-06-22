@@ -34,7 +34,7 @@ if (count($manufacturers)>0) {
 		if ($this->ADMIN_USER) {
 			$output['admin_manufacturers_sortable_id']='sortable_manufacturer_'.$row['manufacturers_id'].'';
 		}
-		$output['class_active']=(($row['manufacturers_id']==$this->get['manufacturers_id']) ? 'active': '');
+		$output['class_active']=(($row['manufacturers_id']==$this->get['manufacturers_id']) ? 'active' : '');
 		$output['manufacturers_link']=$link;
 		$output['manufacturers_name']=htmlspecialchars($row['manufacturers_name']);
 		$markerArray=array();

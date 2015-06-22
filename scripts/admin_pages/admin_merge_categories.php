@@ -66,7 +66,7 @@ if ($this->post) {
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 	}
-	header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories'));
 }
 //
 $categories=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint, 1);
@@ -87,7 +87,7 @@ foreach ($categories as $category) {
 		'id'=>$category['categories_id'],
 		'name'=>$category['categories_name']
 	);
-	mslib_fe::getSubcatsArray($categories_tree,'',$category['categories_id']);
+	mslib_fe::getSubcatsArray($categories_tree, '', $category['categories_id']);
 	//level 0
 	foreach ($categories_tree[$category['categories_id']] as $category_tree_0) {
 		$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
@@ -105,10 +105,10 @@ foreach ($categories as $category) {
 		$tree_path=str_replace('\\', '>', $tree_path);
 		$content.='<li>';
 		$content.='<input type="checkbox" class="movecats" name="mergecats_source[]" value="'.$tree_id.'" id="tree_cats_'.$tree_id.'">&nbsp;';
-		$content.='<label for="tree_cats_'.$tree_id.'">'.$tree_path. ' (ID: '.$tree_id.')' .'</label>';
+		$content.='<label for="tree_cats_'.$tree_id.'">'.$tree_path.' (ID: '.$tree_id.')'.'</label>';
 		$content.='</li>'."\n";
 		//
-		$cat_selectbox.='<option value="'.$tree_id.'" id="sl-cat_'.$tree_id.'">'.$tree_path. ' (ID: '.$tree_id.')' .'</option>';
+		$cat_selectbox.='<option value="'.$tree_id.'" id="sl-cat_'.$tree_id.'">'.$tree_path.' (ID: '.$tree_id.')'.'</option>';
 	}
 }
 $cat_selectbox='<select name="mergecats_target" id="mergecats_target" style="width:400px">
@@ -121,7 +121,6 @@ jQuery(document).ready(function(){
 });
 </script>
 ';
-
 $content.='
 			</ul>
 	</div>

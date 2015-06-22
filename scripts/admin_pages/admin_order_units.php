@@ -10,7 +10,7 @@ if ($this->get['tx_multishop_pi1']['action']) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_order_units_description', 'id=\''.$this->get['tx_multishop_pi1']['order_unit_id'].'\'');
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
+				header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
 			}
 			break;
 	}
@@ -30,7 +30,7 @@ if ($this->post) {
 				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_order_units_description', 'order_unit_id=\''.$order_unit_id.'\' and language_id = '.$key, $updateArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
-			header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
 		}
 	} else {
 		// add new order status eof
@@ -54,7 +54,7 @@ if ($this->post) {
 					}
 				}
 			}
-			header('Location: ' . $this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
 		}
 		// add new order status eof
 	}
@@ -92,13 +92,14 @@ foreach ($this->languages as $key=>$language) {
 				<input type="text" class="text" name="tx_multishop_pi1[order_unit_name]['.$language['uid'].']" id="order_unit_name_'.$language['uid'].'" value="'.htmlspecialchars($lngstatus[$language['uid']]['name']).'">
 			</div>
 		';
-$tmpcontent.='
+	$tmpcontent.='
 	<div class="account-field">
 		<label for="order_unit_code">'.$this->pi_getLL('code').'</label>
 		<input type="text" class="text" name="tx_multishop_pi1[order_unit_code]" value="'.htmlspecialchars($lngstatus[$language['uid']]['code']).'">
 	</div>
 	';
-}if ($this->get['tx_multishop_pi1']['action']=='edit') {
+}
+if ($this->get['tx_multishop_pi1']['action']=='edit') {
 	$tmpcontent.='<input type="hidden" class="text" name="tx_multishop_pi1[order_unit_id]" value="'.$this->get['tx_multishop_pi1']['order_unit_id'].'">';
 }
 $content.=$tmpcontent.'
