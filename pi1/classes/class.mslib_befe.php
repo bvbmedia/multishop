@@ -1623,7 +1623,6 @@ class mslib_befe {
 								break;
 						}
 						if (is_numeric($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_SIZE']) && $this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'] && ($newsize[0]>$text_width && $newsize[1]>$text_height)) {
-							$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT']=$this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_TEXT'];
 							if (strstr($this->ms['MODULES']['PRODUCT_IMAGE_WATERMARK_FONT_FILE'], "..")) {
 								die('error in PRODUCT_IMAGE_WATERMARK_FONT_FILE value');
 							} else {
@@ -2790,7 +2789,7 @@ class mslib_befe {
 			$order['delivery_street_name']=$order['billing_street_name'];
 			$order['delivery_address_number']=$order['billing_address_number'];
 			$order['delivery_address_ext']=$order['billing_address_ext'];
-			$order['delivery_building']=$order['delivery_building'];
+			$order['delivery_building']=$order['billing_building'];
 			$order['delivery_zip']=$order['billing_zip'];
 			$order['delivery_city']=$order['billing_city'];
 			$order['delivery_telephone']=$order['billing_telephone'];
