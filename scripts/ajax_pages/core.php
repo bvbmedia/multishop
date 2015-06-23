@@ -75,7 +75,7 @@ switch ($this->ms['page']) {
 		}
 		$delivery_country_id=$this->post['tx_multishop_pi1']['country_id'];
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
-		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id);
+		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id, $shipping_method_id);
 		$count_cart_incl_vat=0;
 		foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
