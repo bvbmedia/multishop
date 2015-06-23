@@ -16,6 +16,7 @@ if ($this->ADMIN_USER) {
 		$Cache_Lite=new Cache_Lite($options);
 		$string=md5('ajax_products_attributes_search_'.$this->shop_pid.'_'.$_REQUEST['pid']);
 	}
+    $this->ms['MODULES']['CACHE_FRONT_END']=0;
 	if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRONT_END'] and !$content=$Cache_Lite->get($string))) {
 		if ($_REQUEST['pid']) {
 			$this->get['pid']=(int)$_REQUEST['pid'];
@@ -26,7 +27,7 @@ if ($this->ADMIN_USER) {
 		}
 		$option_data=array();
 		if ($this->get['optid']==0) {
-			$sql_option="select popt.products_options_id, popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$this->get['pid']."' and popt.language_id = '".$this->sys_language_uid."' and patrib.options_id = popt.products_options_id group by popt.products_options_id order by popt.sort_order";
+			$sql_option="select popt.products_options_id, popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$this->get['pid']."' and popt.language_id = '".$this->sys_language_uid."' and (popt.hide_in_cart=0 or popt.hide_in_cart is null) and patrib.options_id = popt.products_options_id group by popt.products_options_id order by popt.sort_order";
 			$qry_option=$GLOBALS['TYPO3_DB']->sql_query($sql_option);
 			$ctr=0;
 			while (($rs_option=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_option))!=false) {
@@ -38,7 +39,7 @@ if ($this->ADMIN_USER) {
 			if (isset($this->get['valid'])) {
 				$sql_option="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".$this->get['pid']."' and pa.options_id = '".$this->get['optid']."' and pa.options_values_id='".$this->get['valid']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
 			} else {
-				$sql_option="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".$this->get['pid']."' and pa.options_id = '".$this->get['optid']."' and pov.language_id = '".$this->sys_language_uid."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_id='".$this->get['optid']."' and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
+				$sql_option="select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.options_values_id, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp where pa.products_id = '".$this->get['pid']."' and pa.options_id = '".$this->get['optid']."' and pov.language_id = '".$this->sys_language_uid."' and povp.products_options_id='".$this->get['optid']."' and pa.options_values_id = pov.products_options_values_id and povp.products_options_values_id=pov.products_options_values_id order by povp.sort_order";
 			}
 			//var_dump($sql_option);
 			$qry_option=$GLOBALS['TYPO3_DB']->sql_query($sql_option);
