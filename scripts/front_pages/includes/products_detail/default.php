@@ -469,7 +469,61 @@ if (!$product['products_id']) {
 		$output_array['meta']['details_page_js']='
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
-			'.implode("\n", $js_detail_page_triggers).'
+			    '.implode("\n", $js_detail_page_triggers).'
+                $(document).on(\'click\', \'#multishop_add_to_cart\', function (e) {
+                    if ($(\'.attribute-value-radio\').length>0 || $(\'.attribute-value-checkbox\').length>0) {
+                        var attribute_radio_data=[];
+                        var attribute_checkbox_data=[];
+                        var submit_form=true;
+                        //
+                        $(\'.required-warning-box\').hide();
+                        $(\'.required-warning-box\').removeClass(\'alert\');
+                        $(\'.required-warning-box\').removeClass(\'alert-danger\');
+                        $(\'.required-warning-box\').empty();
+                        //
+                        $(\'.attribute-value-radio\').each(function(i, v){
+                            if ($.inArray($(v).attr(\'rel\'), attribute_radio_data)===-1) {
+                                attribute_radio_data.push($(v).attr(\'rel\'));
+                            }
+                        });
+                        //
+                        console.log(attribute_radio_data);
+                        //
+                        $.each(attribute_radio_data, function(x,y){
+                            var attribute_class=\'.\'+y+\':checked\';
+                            var warning_box_class=\'.\'+y.replace(\'attributes\', \'required-warning\');
+                            if ($(attribute_class).val()==undefined) {
+                                $(warning_box_class).addClass(\'alert alert-danger\');
+                                $(warning_box_class).html(\'<strong>'.$this->pi_getLL('attribute_radio_option_warning').'</strong>\');
+                                $(warning_box_class).show();
+                                submit_form=false;
+                            }
+                        });
+                        //
+                        $(\'.attribute-value-checkbox\').each(function(o, p){
+                            if ($.inArray($(p).attr(\'rel\'), attribute_checkbox_data)===-1) {
+                                attribute_checkbox_data.push($(p).attr(\'rel\'));
+                            }
+                        });
+                        //
+                        $.each(attribute_checkbox_data, function(l,m){
+                            var attribute_class=\'.\'+m+\':checked\';
+                            var warning_box_class=\'.\'+m.replace(\'attributes\', \'required-warning\');
+                            if ($(attribute_class).val()==undefined) {
+                                $(warning_box_class).addClass(\'alert alert-danger\');
+                                $(warning_box_class).html(\'<strong>'.$this->pi_getLL('attribute_radio_option_warning').'</strong>\');
+                                $(warning_box_class).show();
+                                submit_form=false;
+                            }
+                        });
+
+                        console.log(attribute_checkbox_data);
+                        if (submit_form) {
+                            return true;
+                        }
+                        e.preventDefault();
+                    }
+                });
 			});
 			</script>
 		';

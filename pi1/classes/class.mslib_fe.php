@@ -2551,7 +2551,7 @@ class mslib_fe {
 													}
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
+											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" rel="attributes'.$options['products_options_id'].'" />
 										<div class="attribute_item_price">';
 											if ($products_options_values['options_values_price']!='0') {
 												$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
