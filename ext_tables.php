@@ -4,11 +4,11 @@ if (!defined('TYPO3_MODE')) {
 }
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('tt_content');
 $TCA["tt_content"]["types"]["list"]["subtypes_excludelist"][$_EXTKEY."_pi1"]="layout,select_key,pages";
-t3lib_extMgm::addStaticFile($_EXTKEY, 'pi1/static/rootpage', 'MultiShop Root Page Setup');
-t3lib_extMgm::addStaticFile($_EXTKEY, 'pi1/static/corepage', 'MultiShop Core Page Setup');
-t3lib_extMgm::addStaticFile($_EXTKEY, 'pi1/static/tmenu', 'MultiShop Tmenu Setup');
-//t3lib_extMgm::addStaticFile($_EXTKEY,'pi1/static/custom_css','MultiShop Custom CSS Setup');
-//t3lib_extMgm::addStaticFile($_EXTKEY,'pi1/static/ajax','MultiShop Ajax Setup');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'pi1/static/rootpage', 'MultiShop Root Page Setup');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'pi1/static/corepage', 'MultiShop Core Page Setup');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'pi1/static/tmenu', 'MultiShop Tmenu Setup');
+//\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY,'pi1/static/custom_css','MultiShop Custom CSS Setup');
+//\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY,'pi1/static/ajax','MultiShop Ajax Setup');
 // EXTEND FE_USERS TABLE
 $tempColumns=array(
 	"tx_multishop_discount"=>array(
@@ -222,5 +222,5 @@ if (TYPO3_MODE=='BE') {
 	t3lib_extMgm::addModulePath('web_txmultishopM1', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 	t3lib_extMgm::addModule('web', 'txmultishopM1', '', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 }
-include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'class.tx_multishop_addMiscFieldsToFlexForm.php');
+include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY).'class.tx_multishop_addMiscFieldsToFlexForm.php');
 ?>
