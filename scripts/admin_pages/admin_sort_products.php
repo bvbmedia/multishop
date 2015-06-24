@@ -70,9 +70,9 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
            '.$imagePath.'
         </div>';*/
         $tmp_product.='<div class="button_wrapper">
-           <button type="button" class="btnOneUp btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-up"></span>Up</button>
-           <button type="button" class="btnOneDown btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-down"></span>Down</button>
            <button type="button" class="btnTop btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-up"></span>Top</button>
+           <button type="button" class="btnOneUp btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-circle-arrow-up"></span>Up</button>
+           <button type="button" class="btnOneDown btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-circle-arrow-down"></span>Down</button>
            <button type="button" class="btnBottom btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-down"></span>Bottom</button>
         </div>';
         $products_list[]='<li id="productlisting_'.$row_p['products_id'].'">'.$tmp_product.'</li>';
