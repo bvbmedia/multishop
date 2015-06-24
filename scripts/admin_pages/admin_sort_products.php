@@ -66,34 +66,63 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
         if ($row_p['products_image']) {
             $imagePath='<img src="'.mslib_befe::getImagePath($row_p['products_image'], 'products', '50').'" alt="'.htmlspecialchars($row_p['products_name']).'" />';
         }
-        $tmp_product.='<div class="image">
+        /*$tmp_product.='<div class="image">
            '.$imagePath.'
+        </div>';*/
+        $tmp_product.='<div class="button_wrapper">
+           <button type="button" class="btnOneUp btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-up"></span>Up</button>
+           <button type="button" class="btnOneDown btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-down"></span>Down</button>
+           <button type="button" class="btnTop btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-up"></span>Top</button>
+           <button type="button" class="btnBottom btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-down"></span>Bottom</button>
         </div>';
-
         $products_list[]='<li id="productlisting_'.$row_p['products_id'].'">'.$tmp_product.'</li>';
     }
     if (count($products_list)) {
-        $content.='<ul class="product_listing">';
+        $content.='<ul class="admin_sort_product_listing">';
         $content.=implode("\n", $products_list);
         $content.='</ul>';
-        $content.='<script type="text/javascript">
+        $content.='
+<script type="text/javascript">
+function AJAXSortProducts() {
+    jQuery(".admin_sort_product_listing").sortable("refresh");
+    sorted = jQuery(".admin_sort_product_listing").sortable("serialize", "id");
+    href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=product&catid='.$this->get['tx_multishop_pi1']['categories_id']).'";
+    jQuery.ajax({
+        type:   "POST",
+        url:    href,
+        data:   sorted,
+        success: function(msg) {
+            //do something with the sorted data
+        }
+    });
+}
 jQuery(document).ready(function($) {
-    var result = jQuery(".product_listing").sortable({
+    jQuery(".admin_sort_product_listing").sortable({
         cursor:     "move",
         //axis:       "y",
         update: function(e, ui) {
-        href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=product&catid='.$this->get['tx_multishop_pi1']['categories_id']).'";
-            jQuery(this).sortable("refresh");
-            sorted = jQuery(this).sortable("serialize", "id");
-            jQuery.ajax({
-                type:   "POST",
-                url:    href,
-                data:   sorted,
-                success: function(msg) {
-                    //do something with the sorted data
-                }
-            });
+            AJAXSortProducts();
         }
+    });
+    $(document).on("click", ".btnOneUp", function() {
+        var current = $($(this).attr("rel"));
+        current.prev().before(current);
+        AJAXSortProducts();
+    });
+    $(document).on("click", ".btnOneDown", function() {
+        var current = $($(this).attr("rel"));
+        current.next().after(current);
+        AJAXSortProducts();
+    });
+    $(document).on("click", ".btnTop", function() {
+        var current = $($(this).attr("rel"));
+        current.parent().prepend(current);
+        AJAXSortProducts();
+    });
+    $(document).on("click", ".btnBottom", function() {
+        var current = $($(this).attr("rel"));
+        current.parent().append(current);
+        AJAXSortProducts();
     });
 });
 </script>';
