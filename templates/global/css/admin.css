@@ -810,3 +810,11 @@ form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_
     }
     form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_source { width:40%; }
 }
+
+#msadmin_section ul.admin_sort_product_listing { border-top:1px solid #cdcdcd; margin:20px 0; }
+#msadmin_section ul.admin_sort_product_listing li { border:1px solid #cdcdcd; border-top:none; padding:10px; }
+#msadmin_section ul.admin_sort_product_listing li:after { clear:both; display:table; content:""; }
+#msadmin_section ul.admin_sort_product_listing li .image { float:left; }
+#msadmin_section ul.admin_sort_product_listing li strong { float:left; }
+#msadmin_section ul.admin_sort_product_listing li .button_wrapper { float:right; }
+#msadmin_section ul.admin_sort_product_listing li .button_wrapper .btn { float:left; margin-left:5px; }
