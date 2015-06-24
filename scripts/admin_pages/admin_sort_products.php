@@ -84,8 +84,6 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
         }
         $link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$row_p['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
         //
-        $tmp_product.='<strong><a href="'.$link.'" target="_blank">'.htmlspecialchars($row_p['products_name']).'</a> (ID: '.$row_p['products_id'].')</strong>';
-        //
         $imagePath='<div class="no_image"></div>';
         if ($row_p['products_image']) {
             $imagePath='<a href="'.$link.'" target="_blank"><img src="'.mslib_befe::getImagePath($row_p['products_image'], 'products', '50').'" alt="'.htmlspecialchars($row_p['products_name']).'" /></a>';
@@ -93,6 +91,9 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
         $tmp_product.='<div class="image">
            '.$imagePath.'
         </div>';
+        //
+        $tmp_product.='<strong><a href="'.$link.'" target="_blank">'.htmlspecialchars($row_p['products_name']).'</a> (ID: '.$row_p['products_id'].')</strong>';
+        //
         if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
             $tmp_product.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit">Edit</a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
         }
