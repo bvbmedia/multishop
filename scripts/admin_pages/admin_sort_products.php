@@ -45,11 +45,17 @@ $content.='<input type="hidden" name="id" value="'.$this->shop_pid.'">';
 $content.='<input type="hidden" name="type" value="2003">';
 $content.='<input type="hidden" name="tx_multishop_pi1[page_section]" value="admin_sort_products">';
 $content.='<select name="tx_multishop_pi1[categories_id]" id="sort_categories_id" style="width:400px"><option value="">'.$this->pi_getLL('choose').'</option>'.implode("\n", $categories_option).'</select>';
+$content.='<div class="show_disabled_status_wrapper"><input type="checkbox" name="tx_multishop_pi1[show_disabled_product]" id="show_disabled_product" value="1"'.(isset($this->get['tx_multishop_pi1']['show_disabled_product']) ? ' checked="checked"' : '').'>'.$this->pi_getLL('show_disabled_product').'</div>';
 $content.='</form>';
 if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->get['tx_multishop_pi1']['categories_id']) && $this->get['tx_multishop_pi1']['categories_id']>0) {
+    $categories_id=(int)$this->get['tx_multishop_pi1']['categories_id'];
+    $where_status='';
+    if (!isset($this->get['tx_multishop_pi1']['show_disabled_product'])) {
+        $where_status=' and p.products_status=1';
+    }
     $query_p=$GLOBALS['TYPO3_DB']->SELECTquery('p.products_id, p.products_image, pd.products_name', // SELECT ...
             'tx_multishop_products_to_categories p2c, tx_multishop_products p, tx_multishop_products_description pd', // FROM ...
-            'p.page_uid=' . $this->showCatalogFromPage . ' and pd.language_id=' . $this->sys_language_uid . ' and p2c.categories_id=' . (int)$this->get['tx_multishop_pi1']['categories_id'] . ' and p.products_id=pd.products_id and p2c.products_id=p.products_id and p2c.is_deepest=1', // WHERE...
+            'p.page_uid=' . $this->showCatalogFromPage . ' and pd.language_id=' . $this->sys_language_uid . ' and p2c.categories_id=' . $categories_id. $where_status . ' and p.products_id=pd.products_id and p2c.products_id=p.products_id and p2c.is_deepest=1', // WHERE...
             'p.products_id', // GROUP BY...
             'p2c.sort_order asc', // ORDER BY...
             '' // LIMIT ...
@@ -60,15 +66,36 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
     while ($row_p=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p)) {
         $tmp_product='';
         //
-        $tmp_product.='<strong>'.htmlspecialchars($row_p['products_name']).' (ID: '.$row_p['products_id'].')</strong>';
+        if ($categories_id) {
+            // get all cats to generate multilevel fake url
+            $level=0;
+            $cats=mslib_fe::Crumbar($categories_id);
+            $cats=array_reverse($cats);
+            $where='';
+            if (count($cats)>0) {
+                foreach ($cats as $cat) {
+                    $where.="categories_id[".$level."]=".$cat['id']."&";
+                    $level++;
+                }
+                $where=substr($where, 0, (strlen($where)-1));
+                $where.='&';
+            }
+            // get all cats to generate multilevel fake url eof
+        }
+        $link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$row_p['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+        //
+        $tmp_product.='<strong><a href="'.$link.'" target="_blank">'.htmlspecialchars($row_p['products_name']).'</a> (ID: '.$row_p['products_id'].')</strong>';
         //
         $imagePath='<div class="no_image"></div>';
         if ($row_p['products_image']) {
-            $imagePath='<img src="'.mslib_befe::getImagePath($row_p['products_image'], 'products', '50').'" alt="'.htmlspecialchars($row_p['products_name']).'" />';
+            $imagePath='<a href="'.$link.'" target="_blank"><img src="'.mslib_befe::getImagePath($row_p['products_image'], 'products', '50').'" alt="'.htmlspecialchars($row_p['products_name']).'" /></a>';
         }
-        /*$tmp_product.='<div class="image">
+        $tmp_product.='<div class="image">
            '.$imagePath.'
-        </div>';*/
+        </div>';
+        if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
+            $tmp_product.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit">Edit</a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
+        }
         $tmp_product.='<div class="button_wrapper">
            <button type="button" class="btnTop btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-up"></span>Top</button>
            <button type="button" class="btnOneUp btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-circle-arrow-up"></span>Up</button>
@@ -134,6 +161,9 @@ $content.='<script type="text/javascript">
 jQuery(document).ready(function($) {
     $("#sort_categories_id").select2();
     $(document).on("change", "#sort_categories_id", function() {
+        $("#sort_products_categories").submit();
+    });
+    $(document).on("change", "#show_disabled_product", function() {
         $("#sort_products_categories").submit();
     });
 });
