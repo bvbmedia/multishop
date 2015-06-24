@@ -43,6 +43,7 @@ if (count($categories_list)) {
 $content.='<form name="sort_products_categories" id="sort_products_categories" method="get" action="">';
 $content.='<input type="hidden" name="id" value="'.$this->shop_pid.'">';
 $content.='<input type="hidden" name="type" value="2003">';
+$content.='<input type="hidden" name="tx_multishop_pi1[page_section]" value="admin_sort_products">';
 $content.='<select name="tx_multishop_pi1[categories_id]" id="sort_categories_id" style="width:400px"><option value="">'.$this->pi_getLL('choose').'</option>'.implode("\n", $categories_option).'</select>';
 $content.='</form>';
 if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->get['tx_multishop_pi1']['categories_id']) && $this->get['tx_multishop_pi1']['categories_id']>0) {
