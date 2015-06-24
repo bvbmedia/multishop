@@ -222,5 +222,5 @@ if (TYPO3_MODE=='BE') {
 	t3lib_extMgm::addModulePath('web_txmultishopM1', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 	t3lib_extMgm::addModule('web', 'txmultishopM1', '', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
 }
-include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'class.tx_multishop_addMiscFieldsToFlexForm.php');
+include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY).'class.tx_multishop_addMiscFieldsToFlexForm.php');
 ?>
