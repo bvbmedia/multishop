@@ -696,6 +696,17 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+    $str="describe `tx_multishop_products_options_values_to_products_options_desc`";
+    $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+    while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+        if ($row['Field']=='description') {
+            if ($row['Type']=='varchar(255)') {
+                $str2="ALTER TABLE  `tx_multishop_products_options_values_to_products_options_desc` CHANGE  `description`  `description` text default ''";
+                $qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+                $messages[]=$str2;
+            }
+        }
+    }
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

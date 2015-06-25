@@ -35,7 +35,7 @@ if (!$qry) {
 						`id` int(11) NULL AUTO_INCREMENT,
 						`products_options_values_to_products_options_id` int(11) DEFAULT '0',
 						`language_id` int(11) DEFAULT '0',
-						`description` varchar(255) DEFAULT '',
+						`description` text DEFAULT '',
 						PRIMARY KEY (`id`),
 						KEY `products_options_values_to_products_options_id` (`products_options_values_to_products_options_id`),
 						KEY `language_id` (`language_id`)
