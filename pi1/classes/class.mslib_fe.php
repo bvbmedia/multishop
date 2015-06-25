@@ -2456,7 +2456,7 @@ class mslib_fe {
 							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_val_desc)>0) {
 								$row_val_desc=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_val_desc);
 								if (!empty($row_val_desc['description'])) {
-									$value_desc=htmlspecialchars('<div class="valuesdesc_title">'.$products_options_values['products_options_values_name'].'</div><div class="valuesdesc_info">'.$row_val_desc['description'].'</div>');
+									$value_desc=htmlspecialchars('<div class="valuesdesc_info">'.$row_val_desc['description'].'</div>');
 									$value_desc='&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="'.$value_desc.'"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>';
 								}
 							}
