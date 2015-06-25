@@ -4348,19 +4348,6 @@ class mslib_fe {
 							break;
 						}
 					}
-					if (!empty($row3['override_shippingcosts'])) {
-						$steps=explode(",", $row3['override_shippingcosts']);
-						foreach ($steps as $step) {
-							$cols=explode(":", $step);
-							if (isset($cols[1])) {
-								$current_price=$cols[1];
-							}
-							if ($total_weight<=$cols[0]) {
-								$current_price=$cols[1];
-								break;
-							}
-						}
-					}
 					$shipping_cost=$current_price;
 				} elseif ($row3['shipping_costs_type']=='quantity') {
 					$total_quantity=mslib_fe::countCartQuantity();
@@ -4379,15 +4366,35 @@ class mslib_fe {
 					$shipping_cost=$current_price;
 				} else {
 					$shipping_cost=$row3['price'];
-					if (!empty($row3['override_shippingcosts'])) {
-						$shipping_cost=$row3['override_shippingcosts'];
-					}
 				}
+                $subtotal=mslib_fe::countCartTotalPrice(1, 0, $delivery_countries_id);
+                if (!empty($row3['override_shippingcosts'])) {
+                    $old_shipping_costs=$shipping_cost;
+                    $shipping_cost=$row3['override_shippingcosts'];
+                    // custom code to change the shipping costs based on cart amount
+                    if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
+                        $steps=explode(",", $shipping_cost);
+                        $count=0;
+                        foreach ($steps as $step) {
+                            // example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+                            // example setting: 0:6.95,50:0
+                            $split=explode(":", $step);
+                            if (is_numeric($split[0])) {
+                                if ($subtotal>$split[0] and isset($split[1])) {
+                                    $shipping_cost=$split[1];
+                                    next();
+                                } else {
+                                    $shipping_cost=$old_shipping_costs;
+                                }
+                            }
+                            $count++;
+                        }
+                    }
+                }
 				// custom code to change the shipping costs based on cart amount
 				if (strstr($shipping_cost, ",")) {
 					$steps=explode(",", $shipping_cost);
 					// calculate total costs
-					$subtotal=mslib_fe::countCartTotalPrice(1, 0, $delivery_countries_id);
 					$count=0;
 					foreach ($steps as $step) {
 						// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
@@ -4632,7 +4639,7 @@ class mslib_fe {
 		$shipping_methods=array();
 		foreach ($shipping_method_data as $shipping_method) {
 			$shipping_method_id=$shipping_method['id'];
-			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
+			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.override_shippingcosts, c.price, c.zone_id', // SELECT ...
 				'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 				'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 				'', // GROUP BY...
@@ -4677,11 +4684,35 @@ class mslib_fe {
 					} else {
 						$shipping_cost=$row3['price'];
 					}
+                    $subtotal=$product_data['final_price'];
+
+                    if (!empty($row3['override_shippingcosts'])) {
+                        $old_shipping_costs=$shipping_cost;
+                        $shipping_cost=$row3['override_shippingcosts'];
+                        // custom code to change the shipping costs based on cart amount
+                        if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
+                            $steps=explode(",", $shipping_cost);
+                            $count=0;
+                            foreach ($steps as $step) {
+                                // example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+                                // example setting: 0:6.95,50:0
+                                $split=explode(":", $step);
+                                if (is_numeric($split[0])) {
+                                    if ($subtotal>$split[0] and isset($split[1])) {
+                                        $shipping_cost=$split[1];
+                                        next();
+                                    } else {
+                                        $shipping_cost=$old_shipping_costs;
+                                    }
+                                }
+                                $count++;
+                            }
+                        }
+                    }
 					// custom code to change the shipping costs based on cart amount
 					if (strstr($shipping_cost, ",")) {
 						$steps=explode(",", $shipping_cost);
 						// calculate total costs
-						$subtotal=$product_data['final_price'];
 						$count=0;
 						foreach ($steps as $step) {
 							// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
