@@ -453,6 +453,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 								$actifsub=1;
 							}
 						}
+						foreach ($user_crumbar as $item) {
+							if ($item['id']==$cat['categories_id']) {
+								$act=1;
+								$showNextLevel=1;
+							}
+						}
 						if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
 							$hasChild=1;
 						}
@@ -550,6 +556,11 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$content=$Cache_Lite->get($stri
 											}
 											if ($user_crumbar[($nested_level+1)]) {
 												$actifsub=1;
+											}
+										}
+										foreach ($user_crumbar as $item) {
+											if ($item['id']==$cat['categories_id']) {
+												$act=1;
 											}
 										}
 										if ($actifsub or mslib_fe::hasCats($cat['categories_id'], 0)) {
