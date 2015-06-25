@@ -811,10 +811,14 @@ form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_
     form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_attribute_options_source { width:40%; }
 }
 
-#msadmin_section ul.admin_sort_product_listing { border-top:1px solid #cdcdcd; margin:20px 0; }
-#msadmin_section ul.admin_sort_product_listing li { border:1px solid #cdcdcd; border-top:none; padding:10px; }
+#msadmin_section ul.admin_sort_product_listing { margin:20px 0; }
+#msadmin_section ul.admin_sort_product_listing * { box-sizing:border-box; }
+#msadmin_section ul.admin_sort_product_listing li { border:1px solid #cdcdcd; background:#fff; margin:0 0 -1px; text-align:justify; padding:10px; }
 #msadmin_section ul.admin_sort_product_listing li:after { clear:both; display:table; content:""; }
-#msadmin_section ul.admin_sort_product_listing li .image { float:left; }
-#msadmin_section ul.admin_sort_product_listing li strong { float:left; }
-#msadmin_section ul.admin_sort_product_listing li .button_wrapper { float:right; }
+#msadmin_section ul.admin_sort_product_listing li .image { float:left; width:60px; }
+#msadmin_section ul.admin_sort_product_listing li .image .no_image { display:block; width:50px; height:50px; background:url(../images/no-image-icon-small.png) center center no-repeat; }
+#msadmin_section ul.admin_sort_product_listing li strong { float:left; line-height:50px; }
+#msadmin_section ul.admin_sort_product_listing li .admin_menu { float:left; margin-left:10px; padding:12px 0 0 0; }
+#msadmin_section ul.admin_sort_product_listing li .admin_menu > a { float:left; border:1px solid rgba(0,0,0,.2); width:26px; height:26px; background-position:center center; text-indent:999em; padding:5px; border-radius:4px; }
+#msadmin_section ul.admin_sort_product_listing li .button_wrapper { float:right; padding:14px 0 0; }
 #msadmin_section ul.admin_sort_product_listing li .button_wrapper .btn { float:left; margin-left:5px; }
