@@ -1087,7 +1087,11 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_newsletter']='';
 			}
 			$insertArray['page_uid']=$this->shop_pid;
-			$insertArray['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10));
+            if (isset($address['password']) && !empty($address['password'])) {
+                $insertArray['password']=mslib_befe::getHashedPassword($address['password']);
+            } else {
+                $insertArray['password']=mslib_befe::getHashedPassword(mslib_befe::generateRandomPassword(10));
+            }
 			$insertArray['usergroup']=$this->conf['fe_customer_usergroup'];
 			$insertArray['pid']=$this->conf['fe_customer_pid'];
 			if (isset($this->cookie['HTTP_REFERER']) && !empty($this->cookie['HTTP_REFERER'])) {
@@ -1103,6 +1107,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['tx_multishop_coc_id']=$address['tx_multishop_coc_id'];
 			}
 			$insertArray['tx_multishop_quick_checkout']=1;
+
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($res) {
