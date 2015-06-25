@@ -13,6 +13,9 @@ require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart
 $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();
+$payment_methods_product=array();
+$payment_methods_group=array();
+$payment_methods_user=array();
 $payment_methods=array();
 $load_mappings_order=array();
 $load_mappings_order[]='products';
@@ -29,33 +32,36 @@ foreach ($load_mappings_order as $mapping) {
 					}
 				}
 				if (count($pids)) {
-					$payment_methods=mslib_fe::getProductMappedMethods($pids, 'payment', $countries_id);
+                    $payment_methods_product=mslib_fe::getProductMappedMethods($pids, 'payment', $countries_id);
 				}
 			}
 			break;
 		case 'customers_groups':
 			if (mslib_fe::loggedin() && $this->ms['MODULES']['GROUP_EDIT_METHOD_FILTER']) {
-				$payment_methods=array();
-				$shipping_methods=array();
 				$user_groups=array();
 				$user_groups=explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
 				if (count($user_groups)) {
-					$payment_methods=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'payment', $countries_id);
+                    $payment_methods_group=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'payment', $countries_id);
 				}
 			}
 			break;
 		case 'customers':
 			if (mslib_fe::loggedin() && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
-				$payment_methods=array();
-				$shipping_methods=array();
 				$user_id=array();
 				$user_id=$GLOBALS['TSFE']->fe_user->user['uid'];
 				if (is_numeric($user_id)) {
-					$payment_methods=mslib_fe::getCustomerMappedMethods($user_id, 'payment', $countries_id);
+                    $payment_methods_user=mslib_fe::getCustomerMappedMethods($user_id, 'payment', $countries_id);
 				}
 			}
 			break;
 	}
+}
+if (count($payment_methods_user)) {
+    $payment_methods = $payment_methods_user;
+} else if (count($payment_methods_group)) {
+    $payment_methods = $payment_methods_group;
+} else {
+    $payment_methods = $payment_methods_product;
 }
 if (!count($payment_methods)) {
 	// nothing is loaded. this cant be valid so let's load the default methods.
