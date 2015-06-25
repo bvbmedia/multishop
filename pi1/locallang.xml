@@ -1216,6 +1216,11 @@
             <label index="remove_incomplete_p2c_link">Remove incomplete products to categories link</label>
             <label index="admin_label_hide_in_details_page">hide in products detail page</label>
             <label index="attribute_radio_option_warning">You need to choose an option from the list below:</label>
+            <label index="admin_sort_products">sort products</label>
+            <label index="admin_label_please_select_categories_to_display_products">Please select category to display products</label>
+            <label index="show_disabled_product">Show disabled product</label>
+            <label index="create_account">Create account</label>
+            <label index="not_required">Not required</label>
         </languageKey>
         <languageKey index="af"></languageKey>
         <languageKey index="ar"></languageKey>
@@ -4895,6 +4900,8 @@
 
             <label index="admin_label_hide_in_details_page">verbergen op productdetail pagina</label>
             <label index="attribute_radio_option_warning">Je dient een optie te selecteren uit onderstaande lijst:</label>
+            <label index="create_account">Account aanmaken</label>
+            <label index="not_required">niet verplicht</label>
         </languageKey>
         <languageKey index="no"></languageKey>
         <languageKey index="pl"></languageKey>

@@ -2456,7 +2456,7 @@ class mslib_fe {
 							if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry_val_desc)>0) {
 								$row_val_desc=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_val_desc);
 								if (!empty($row_val_desc['description'])) {
-									$value_desc=htmlspecialchars('<div class="valuesdesc_title">'.$products_options_values['products_options_values_name'].'</div><div class="valuesdesc_info">'.$row_val_desc['description'].'</div>');
+									$value_desc=htmlspecialchars('<div class="valuesdesc_info">'.$row_val_desc['description'].'</div>');
 									$value_desc='&nbsp;<a href="#" data-placement="left" class="values_desc_tooltip" title="'.$value_desc.'"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a>';
 								}
 							}
@@ -4348,19 +4348,6 @@ class mslib_fe {
 							break;
 						}
 					}
-					if (!empty($row3['override_shippingcosts'])) {
-						$steps=explode(",", $row3['override_shippingcosts']);
-						foreach ($steps as $step) {
-							$cols=explode(":", $step);
-							if (isset($cols[1])) {
-								$current_price=$cols[1];
-							}
-							if ($total_weight<=$cols[0]) {
-								$current_price=$cols[1];
-								break;
-							}
-						}
-					}
 					$shipping_cost=$current_price;
 				} elseif ($row3['shipping_costs_type']=='quantity') {
 					$total_quantity=mslib_fe::countCartQuantity();
@@ -4379,15 +4366,35 @@ class mslib_fe {
 					$shipping_cost=$current_price;
 				} else {
 					$shipping_cost=$row3['price'];
-					if (!empty($row3['override_shippingcosts'])) {
-						$shipping_cost=$row3['override_shippingcosts'];
-					}
 				}
+                $subtotal=mslib_fe::countCartTotalPrice(1, 0, $delivery_countries_id);
+                if (!empty($row3['override_shippingcosts'])) {
+                    $old_shipping_costs=$shipping_cost;
+                    $shipping_cost=$row3['override_shippingcosts'];
+                    // custom code to change the shipping costs based on cart amount
+                    if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
+                        $steps=explode(",", $shipping_cost);
+                        $count=0;
+                        foreach ($steps as $step) {
+                            // example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+                            // example setting: 0:6.95,50:0
+                            $split=explode(":", $step);
+                            if (is_numeric($split[0])) {
+                                if ($subtotal>$split[0] and isset($split[1])) {
+                                    $shipping_cost=$split[1];
+                                    next();
+                                } else {
+                                    $shipping_cost=$old_shipping_costs;
+                                }
+                            }
+                            $count++;
+                        }
+                    }
+                }
 				// custom code to change the shipping costs based on cart amount
 				if (strstr($shipping_cost, ",")) {
 					$steps=explode(",", $shipping_cost);
 					// calculate total costs
-					$subtotal=mslib_fe::countCartTotalPrice(1, 0, $delivery_countries_id);
 					$count=0;
 					foreach ($steps as $step) {
 						// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
@@ -4632,7 +4639,7 @@ class mslib_fe {
 		$shipping_methods=array();
 		foreach ($shipping_method_data as $shipping_method) {
 			$shipping_method_id=$shipping_method['id'];
-			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.price, c.zone_id', // SELECT ...
+			$str3=$GLOBALS['TYPO3_DB']->SELECTquery('sm.shipping_costs_type, sm.handling_costs, c.override_shippingcosts, c.price, c.zone_id', // SELECT ...
 				'tx_multishop_shipping_methods sm, tx_multishop_shipping_methods_costs c, tx_multishop_countries_to_zones c2z', // FROM ...
 				'c.shipping_method_id=\''.$shipping_method_id.'\' and (sm.page_uid=0 or sm.page_uid=\''.$this->shop_pid.'\') and sm.id=c.shipping_method_id and c.zone_id=c2z.zone_id and c2z.cn_iso_nr=\''.$countries_id.'\'', // WHERE...
 				'', // GROUP BY...
@@ -4677,11 +4684,35 @@ class mslib_fe {
 					} else {
 						$shipping_cost=$row3['price'];
 					}
+                    $subtotal=$product_data['final_price'];
+
+                    if (!empty($row3['override_shippingcosts'])) {
+                        $old_shipping_costs=$shipping_cost;
+                        $shipping_cost=$row3['override_shippingcosts'];
+                        // custom code to change the shipping costs based on cart amount
+                        if (strstr($shipping_cost, ",") || strstr($shipping_cost, ":")) {
+                            $steps=explode(",", $shipping_cost);
+                            $count=0;
+                            foreach ($steps as $step) {
+                                // example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
+                                // example setting: 0:6.95,50:0
+                                $split=explode(":", $step);
+                                if (is_numeric($split[0])) {
+                                    if ($subtotal>$split[0] and isset($split[1])) {
+                                        $shipping_cost=$split[1];
+                                        next();
+                                    } else {
+                                        $shipping_cost=$old_shipping_costs;
+                                    }
+                                }
+                                $count++;
+                            }
+                        }
+                    }
 					// custom code to change the shipping costs based on cart amount
 					if (strstr($shipping_cost, ",")) {
 						$steps=explode(",", $shipping_cost);
 						// calculate total costs
-						$subtotal=$product_data['final_price'];
 						$count=0;
 						foreach ($steps as $step) {
 							// example: the value 200:15 means below 200 euro the shipping costs are 15 euro, above and equal 200 euro the shipping costs are 0 euro
@@ -6323,6 +6354,10 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['label']=$this->pi_getLL('admin_order_unit');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['description']='';
+            //
+            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_sort_product']['label']=$this->pi_getLL('admin_sort_products');
+            $ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_sort_product']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_sort_products');
+            //
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['label']=$this->pi_getLL('admin_manufacturers');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['description']=$this->pi_getLL('admin_add_and_modify_manufacturers_here').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers');

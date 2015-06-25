@@ -4,6 +4,11 @@ if (!defined('TYPO3_MODE')) {
 }
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
+    case 'admin_sort_products':
+        if ($this->ADMIN_USER) {
+            require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_sort_products.php');
+        }
+        break;
 	case 'admin_action_notification_log':
 		if ($this->ADMIN_USER) {
 			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/admin_action_notification_log.php');

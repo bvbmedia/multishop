@@ -65,6 +65,65 @@ while ($row_s2p=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_s2p)) {
 		$available_sid[]=$row_s2p['shipping_method'];
 	}
 }
+
+//
+$mapped_shipping_methods_product=array();
+$mapped_shipping_methods_group=array();
+$mapped_shipping_methods_user=array();
+$mapped_shipping_methods=array();
+$load_mappings_order=array();
+$load_mappings_order[]='products';
+$load_mappings_order[]='customers_groups';
+$load_mappings_order[]='customers';
+foreach ($load_mappings_order as $mapping) {
+    switch ($mapping) {
+        case 'products':
+            if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
+                $pids=array();
+                foreach ($cart['products'] as $key=>$array) {
+                    if (is_numeric($array['products_id'])) {
+                        $pids[]=$array['products_id'];
+                    }
+                }
+                if (count($pids)) {
+                    $mapped_shipping_methods_product=mslib_fe::getProductMappedMethods($pids, 'shipping', $tmp_countries['cn_iso_nr']);
+                }
+            }
+            break;
+        case 'customers_groups':
+            if (mslib_fe::loggedin() && $this->ms['MODULES']['GROUP_EDIT_METHOD_FILTER']) {
+                $user_groups=array();
+                $user_groups=explode(',', $GLOBALS['TSFE']->fe_user->user['usergroup']);
+                if (count($user_groups)) {
+                    $mapped_shipping_methods_group=mslib_fe::getCustomerGroupMappedMethods($user_groups, 'shipping', $tmp_countries['cn_iso_nr']);
+                }
+            }
+            break;
+        case 'customers':
+            if (mslib_fe::loggedin() && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+                $user_id=array();
+                $user_id=$GLOBALS['TSFE']->fe_user->user['uid'];
+                if (is_numeric($user_id)) {
+                    $mapped_shipping_methods_user=mslib_fe::getCustomerMappedMethods($user_id, 'shipping', $tmp_countries['cn_iso_nr']);
+                }
+            }
+            break;
+    }
+}
+if (count($mapped_shipping_methods_user)) {
+    $mapped_shipping_methods=$mapped_shipping_methods_user;
+} else if (count($mapped_shipping_methods_group)) {
+    $mapped_shipping_methods=$mapped_shipping_methods_group;
+} else {
+    $mapped_shipping_methods=$mapped_shipping_methods_product;
+}
+if (count($mapped_shipping_methods)) {
+    $available_sid=array();
+    foreach ($mapped_shipping_methods as $shipping_method_name=>$mapped_shipping_method) {
+        $available_sid[]=$mapped_shipping_method['id'];
+    }
+}
+//
 if (count($available_sid)>0) {
 	if (!$this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
 		if (!$this->post['tx_multishop_pi1']['sid'] or !in_array($this->post['tx_multishop_pi1']['sid'], $available_sid)) {

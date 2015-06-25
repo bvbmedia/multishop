@@ -743,15 +743,17 @@ class tx_mslib_catalog {
 		$str="show indexes from `tx_multishop_products_to_categories` ";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$unique_indexes=array();
-		while (($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-			$unique_indexes[]=$rs['Key_name'];
-		}
-		if (!in_array('p2c_unique_key', $unique_indexes)) {
-			// add unique p2c key
-			$unique_key='ALTER IGNORE TABLE `tx_multishop_products_to_categories` ADD UNIQUE `p2c_unique_key` (`products_id`, `categories_id`, `page_uid`, `node_id`, `is_deepest`, `crumbar_identifier`)';
-			$res=$GLOBALS['TYPO3_DB']->sql_query($unique_key);
-			$messages[]=$unique_key;
-		}
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+            while (($rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+                $unique_indexes[]=$rs['Key_name'];
+            }
+            if (!in_array('p2c_unique_key', $unique_indexes)) {
+                // add unique p2c key
+                $unique_key='ALTER IGNORE TABLE `tx_multishop_products_to_categories` ADD UNIQUE `p2c_unique_key` (`products_id`, `categories_id`, `page_uid`, `node_id`, `is_deepest`, `crumbar_identifier`)';
+                $res=$GLOBALS['TYPO3_DB']->sql_query($unique_key);
+                $messages[]=$unique_key;
+            }
+        }
 		//
 		$p2c_records=mslib_befe::getRecords('', 'tx_multishop_products_to_categories', '', array(), '', '', '');
 		foreach ($p2c_records as $p2c_record) {
@@ -769,28 +771,30 @@ class tx_mslib_catalog {
 		);
 		$res_p2c=$GLOBALS['TYPO3_DB']->sql_query($query_p2c);
 		$delete_counter=0;
-		while ($row_p2c=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p2c)) {
-			$query_p2c_del=$GLOBALS['TYPO3_DB']->SELECTquery('products_to_categories_id', // SELECT ...
-				'tx_multishop_products_to_categories', // FROM ...
-				'products_id = \''.$row_p2c['products_id'].'\' and categories_id = \''.$row_p2c['categories_id'].'\' and node_id=\''.$row_p2c['node_id'].'\' and crumbar_identifier=\''.$row_p2c['crumbar_identifier'].'\' and is_deepest=\''.$row_p2c['is_deepest'].'\'', // WHERE.
-				'', // GROUP BY...
-				'products_to_categories_id asc', // ORDER BY...
-				'' // LIMIT ...
-			);
-			$res_p2c_del=$GLOBALS['TYPO3_DB']->sql_query($query_p2c_del);
-			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_p2c_del)) {
-				while ($row_del=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p2c_del)) {
-					if ($row_p2c['products_to_categories_id']!=$row_del['products_to_categories_id']) {
-						$del_p2c_query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$row_del['products_to_categories_id'].'\'');
-						$res=$GLOBALS['TYPO3_DB']->sql_query($del_p2c_query);
-						$delete_counter++;
-					}
-				}
-			}
-		}
-		if ($delete_counter) {
-			$messages[]='Delete '.$delete_counter.' redundant record(s) from tx_multishop_products_to_categories';
-		}
+        if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_p2c)) {
+            while ($row_p2c=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p2c)) {
+                $query_p2c_del=$GLOBALS['TYPO3_DB']->SELECTquery('products_to_categories_id', // SELECT ...
+                        'tx_multishop_products_to_categories', // FROM ...
+                        'products_id = \''.$row_p2c['products_id'].'\' and categories_id = \''.$row_p2c['categories_id'].'\' and node_id=\''.$row_p2c['node_id'].'\' and crumbar_identifier=\''.$row_p2c['crumbar_identifier'].'\' and is_deepest=\''.$row_p2c['is_deepest'].'\'', // WHERE.
+                        '', // GROUP BY...
+                        'products_to_categories_id asc', // ORDER BY...
+                        '' // LIMIT ...
+                );
+                $res_p2c_del=$GLOBALS['TYPO3_DB']->sql_query($query_p2c_del);
+                if ($GLOBALS['TYPO3_DB']->sql_num_rows($res_p2c_del)) {
+                    while ($row_del=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res_p2c_del)) {
+                        if ($row_p2c['products_to_categories_id']!=$row_del['products_to_categories_id']) {
+                            $del_p2c_query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_to_categories_id=\''.$row_del['products_to_categories_id'].'\'');
+                            $res=$GLOBALS['TYPO3_DB']->sql_query($del_p2c_query);
+                            $delete_counter++;
+                        }
+                    }
+                }
+            }
+            if ($delete_counter) {
+                $messages[]='Delete '.$delete_counter.' redundant record(s) from tx_multishop_products_to_categories';
+            }
+        }
 		// p2c fixer routine code for redundant records eol
 		$message=implode("\n\n", $messages);
 		if (count($messages)) {
