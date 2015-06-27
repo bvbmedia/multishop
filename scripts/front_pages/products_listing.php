@@ -100,6 +100,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 				}
 			}
 		}
+		$categories=array();
 		foreach ($subCats as $subCat) {
 			if (!$subCat['hide_in_menu']) {
 				$categories[]=$subCat;
