@@ -38,11 +38,11 @@ $EM_CONF[$_EXTKEY]=array(
 			'dbal'=>'0.0.0'
 		),
 		'suggests'=>array(
-			't3jquery'=>'2.7.1-3.9.99',
+			't3jquery'=>'2.7.1-',
 			'rzcolorbox_jquery2'=>'1.0.0-1.9.99',
-			'phpexcel_service'=>'1.7.6-1.7.99',
-			'tt_address'=>'2.3.5-2.3.99',
-			'static_info_tables'=>'0.0.0',
+			'phpexcel_service'=>'1.7.6-',
+			'tt_address'=>'2.3.5-',
+			'static_info_tables'=>'6.2.1-',
 		)
 	),
 	'_md5_values_when_last_written'=>''
