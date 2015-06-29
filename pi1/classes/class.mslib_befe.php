@@ -3841,13 +3841,13 @@ class mslib_befe {
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$payment_tax_rate;
 			$payment_costs='0';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				if ($order['payment_method_costs']>0) {
+				//if ($order['payment_method_costs']>0) {
 					$payment_costs=$prefix.$order['payment_method_costs']+$order['orders_tax_data']['payment_tax'];
-				}
+				//}
 			} else {
-				if ($order['payment_method_costs']>0) {
+				//if ($order['payment_method_costs']>0) {
 					$payment_costs=$prefix.$order['payment_method_costs'];
-				}
+				//}
 			}
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0, $display_currency_symbol, 0);
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($payment_costs, 0, $display_currency_symbol, 0);
@@ -3870,13 +3870,13 @@ class mslib_befe {
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_VAT']=$shipping_tax_rate;
 			$shipping_costs='0';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				if ($order['shipping_method_costs']>0) {
+				//if ($order['shipping_method_costs']>0) {
 					$shipping_costs=$prefix.$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'];
-				}
+				//}
 			} else {
-				if ($order['shipping_method_costs']>0) {
+				//if ($order['shipping_method_costs']>0) {
 					$shipping_costs=$prefix.$order['shipping_method_costs'];
-				}
+				//}
 			}
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_NORMAL_PRICE']=mslib_fe::amount2Cents($shipping_costs, 0, $display_currency_symbol, 0);
 			$markerArray['ITEM_SHIPPING_PAYMENT_COSTS_FINAL_PRICE']=mslib_fe::amount2Cents($shipping_costs, 0, $display_currency_symbol, 0);
