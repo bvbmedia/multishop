@@ -540,7 +540,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'user'=>$user,
 					'order'=>$order,
 					'order_details'=>$ORDER_DETAILS,
-                    'mail_attachment'=>$mail_attachment
+                    'mail_attachment'=>&$mail_attachment
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
