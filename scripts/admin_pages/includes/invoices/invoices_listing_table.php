@@ -130,7 +130,7 @@ foreach ($actions as $key=>$value) {
 $tmp.='
 	</select>
 	<input name="tx_multishop_pi1[mailto]" type="text" value="'.$this->ms['MODULES']['STORE_EMAIL'].'" id="msadmin_invoices_mailto" />
-	<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" ></input>
+	<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" ></input>
 	<script>
 		jQuery(document).ready(function($) {
 			$(\'#selected_invoices_action\').change(function() {

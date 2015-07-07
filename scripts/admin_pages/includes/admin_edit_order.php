@@ -646,7 +646,7 @@ if (is_numeric($this->get['orders_id'])) {
 			<label>'.ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')).'</label>
 			<input name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
 			</div>
-			<a href="#" id="close_edit_billing_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
+			<a href="#" id="close_edit_billing_info" class="float_right btn btn-success">'.$this->pi_getLL('save').'</a>
 			</div>';
 		}
 		if ($hide_billing_vcard) {
@@ -681,7 +681,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='<strong>'.$this->pi_getLL('coc_id').': '.$orders['billing_coc_id'].'</strong><br />';
 		}
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-			$tmpcontent.='<span><a href="#" id="edit_billing_info" class="msadmin_button">'.$this->pi_getLL('edit').'</a></span>';
+			$tmpcontent.='<span><a href="#" id="edit_billing_info" class="btn btn-success">'.$this->pi_getLL('edit').'</a></span>';
 		}
 		$tmpcontent.='</div>';
 		$tmpcontent.='
@@ -754,8 +754,8 @@ if (is_numeric($this->get['orders_id'])) {
 			<label>'.ucfirst($this->pi_getLL('fax')).':</label>
 			<input name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
 			</div>
-			<a href="#" id="close_edit_delivery_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
-			<a href="#" id="copy_from_billing_details" class="float_right msadmin_button">'.$this->pi_getLL('copy_from_billing_details').'</a>
+			<a href="#" id="close_edit_delivery_info" class="float_right btn btn-success">'.$this->pi_getLL('save').'</a>
+			<a href="#" id="copy_from_billing_details" class="float_right btn btn-success">'.$this->pi_getLL('copy_from_billing_details').'</a>
 			</div>';
 		}
 		if ($hide_delivery_vcard) {
@@ -783,7 +783,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.=$this->pi_getLL('fax').': '.$orders['delivery_fax'].'<br />';
 		}
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-			$tmpcontent.='<span><a href="#" id="edit_delivery_info" class="msadmin_button">'.$this->pi_getLL('edit').'</a></span>';
+			$tmpcontent.='<span><a href="#" id="edit_delivery_info" class="btn btn-success">'.$this->pi_getLL('edit').'</a></span>';
 		}
 		$tmpcontent.='</div>';
 		$tmpcontent.='
@@ -965,7 +965,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			});
 			$("#billing_details_container").empty();
-			$("#billing_details_container").html(billing_details + "<span><a href=\"#\" id=\"edit_billing_info\" class=\"msadmin_button\">'.$this->pi_getLL('edit').'</a></span>");
+			$("#billing_details_container").html(billing_details + "<span><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-success\">'.$this->pi_getLL('edit').'</a></span>");
 			updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
 			$("#billing_details_container").show();
 			$("#edit_billing_details_container").hide();
@@ -1023,7 +1023,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			});
 			$("#delivery_details_container").empty();
-			$("#delivery_details_container").html(delivery_details + "<span><a href=\"#\" id=\"edit_delivery_info\" class=\"msadmin_button\">'.$this->pi_getLL('edit').'</a></span>");
+			$("#delivery_details_container").html(delivery_details + "<span><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-success\">'.$this->pi_getLL('edit').'</a></span>");
 			updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
 			$("#delivery_details_container").show();
 			$("#edit_delivery_details_container").hide();
@@ -1496,10 +1496,10 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 					if (!$this->get['edit_product'] || ($this->get['edit_product'] && $this->get['order_pid']!=$order['orders_products_id'])) {
-						$product_action_button='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="msadmin_button order_product_action">';
-						$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="msadmin_button order_product_action"></a>';
+						$product_action_button='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="btn btn-success order_product_action">';
+						$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="btn btn-success order_product_action"></a>';
 					} else {
-						$product_action_button='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button order_product_action">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button submit_button order_product_action">';
+						$product_action_button='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-success order_product_action">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success submit_button order_product_action">';
 					}
 					// product final price
 					$order_products_body_data['products_action']['align']='right';
@@ -1674,7 +1674,7 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 									// product final price
 									$order_products_body_data['products_action']['align']='left';
-									$order_products_body_data['products_action']['value']='<input type="button" class="msadmin_button remove_attributes" value="-">';
+									$order_products_body_data['products_action']['value']='<input type="button" class="btn btn-success remove_attributes" value="-">';
 								}
 								$order_products_table['body'][$tbody_tag_id]['rows'][]=array(
 									'class'=>$tr_type,
@@ -1857,7 +1857,7 @@ if (is_numeric($this->get['orders_id'])) {
 					// products name col
 					$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 					$order_products_body_data['products_name']['align']='left';
-					$order_products_body_data['products_name']['value']='<input type="button" id="edit_add_attributes" class="msadmin_button" value="add attribute">';
+					$order_products_body_data['products_name']['value']='<input type="button" id="edit_add_attributes" class="btn btn-success" value="add attribute">';
 					if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 						// products status col
 						$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -1990,8 +1990,8 @@ if (is_numeric($this->get['orders_id'])) {
 			// product action col
 			$order_products_body_data['products_action']['align']='right';
 			$order_products_body_data['products_action']['class']='cell_products_action';
-			$order_products_body_data['products_action']['value']='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button">&nbsp;';
-			$order_products_body_data['products_action']['value'].='<input type="submit" value="'.$this->pi_getLL('add').'" class="msadmin_button submit_button">';
+			$order_products_body_data['products_action']['value']='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-success">&nbsp;';
+			$order_products_body_data['products_action']['value'].='<input type="submit" value="'.$this->pi_getLL('add').'" class="btn btn-success submit_button">';
 			$order_products_table['body']['manual_add_new_product']['rows'][]=array(
 				'class'=>'odd manual_add_new_product',
 				'style'=>'display:none',
@@ -2044,7 +2044,7 @@ if (is_numeric($this->get['orders_id'])) {
 			// products name col
 			$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 			$order_products_body_data['products_name']['style']='border:0px solid #fff';
-			$order_products_body_data['products_name']['value']='<input type="button" class="msadmin_button" value="add attribute" id="add_attributes" />';
+			$order_products_body_data['products_name']['value']='<input type="button" class="btn btn-success" value="add attribute" id="add_attributes" />';
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 				// products status col
 				$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2084,7 +2084,7 @@ if (is_numeric($this->get['orders_id'])) {
 				// products id col
 				$order_products_body_data['products_id']['colspan']=$colspan;
 				$order_products_body_data['products_id']['style']='text-align:left;';
-				$order_products_body_data['products_id']['value']='<a href="#" id="button_manual_new_product" class="msadmin_button">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a>';
+				$order_products_body_data['products_id']['value']='<a href="#" id="button_manual_new_product" class="btn btn-success">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a>';
 				$order_products_table['body']['add_new_product_button']['rows'][]=array('value'=>$order_products_body_data);
 			}
 		} else {
@@ -2699,7 +2699,7 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 					if (current_class=="last_edit_product_row_paction_col") {
 						$(this).empty("");
-						$(this).append(\'<input type="button" class="msadmin_button remove_attributes" value="-">\');
+						$(this).append(\'<input type="button" class="btn btn-success remove_attributes" value="-">\');
 					}
 					$(this).removeAttr("style");
 					$(this).removeAttr("class");

@@ -429,7 +429,7 @@ if (count($shipping_methods)>0) {
 	</div>
 	<div class="account-field">
 		<label>&nbsp;</label>
-		<input name="Submit" type="submit" value="Save" class="msadmin_button" />
+		<input name="Submit" type="submit" value="Save" class="btn btn-success" />
 	</div>
 	</form>';
 	if (isset($this->ms['MODULES']['SHIPPING_COST_WEIGHT_JS_AJAX']) && !empty($this->ms['MODULES']['SHIPPING_COST_WEIGHT_JS_AJAX'])) {
@@ -574,6 +574,6 @@ if (count($shipping_methods)>0) {
 } else {
 	$content.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

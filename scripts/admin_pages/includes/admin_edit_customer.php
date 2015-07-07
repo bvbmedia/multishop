@@ -546,7 +546,7 @@ if (is_array($groups) and count($groups)) {
 }
 $login_as_this_user_link='';
 if ($this->get['tx_multishop_pi1']['cid']) {
-	$login_as_this_user_link='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$this->get['tx_multishop_pi1']['cid']).'" target="_parent" class="msadmin_button">'.$this->pi_getLL('login_as_user').'</a>';
+	$login_as_this_user_link='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$this->get['tx_multishop_pi1']['cid']).'" target="_parent" class="btn btn-success">'.$this->pi_getLL('login_as_user').'</a>';
 }
 $subpartArray=array();
 $subpartArray['###VALUE_REFERRER###']='';

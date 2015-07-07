@@ -169,8 +169,8 @@ $shipping_method_input.='</select>'."\n";
 // shipping method eol
 $content.='<div class="order_stats_mode_wrapper">
 <ul class="horizontal_list">
-	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
-	<li><strong class="msadmin_button">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</strong></li>
+	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
+	<li><strong class="btn btn-success">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</strong></li>
 </ul>
 </div>';
 $content.='
@@ -512,7 +512,7 @@ if ($param_val_ctr>0) {
 }
 $content.='</div>';
 $content.='<p class="extra_padding_bottom">';
-$content.='<a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a>';
+$content.='<a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a>';
 $content.='<span id="msAdminOrdersListingDownload">';
 $content.='<input type="button" name="download" class="link_block" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_download_as_excel_file')).'" onclick="'.$dlink.'" />';
 $content.='</span>';

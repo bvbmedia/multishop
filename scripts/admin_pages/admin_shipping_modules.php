@@ -355,7 +355,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			<label>&nbsp;</label>
 			<input name="shipping_method_code" type="hidden" value="'.htmlspecialchars($this->get['shipping_method_code']).'" />
 			<input name="sub" type="hidden" value="add_shipping_method" />
-			<input name="Submit" class="msadmin_button" type="submit" value="'.$this->pi_getLL('save').'" />
+			<input name="Submit" class="btn btn-success" type="submit" value="'.$this->pi_getLL('save').'" />
 		</div>
 		</form>';
 		$content.=mslib_fe::returnBoxedHTML($shipping_method['name'], $tmpcontent);
@@ -477,7 +477,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		</div>
 	<div class="account-field">
 		<label for="">&nbsp;</label>
-		<input name="Submit" type="submit" class="msadmin_button" value="'.$this->pi_getLL('save').'" />
+		<input name="Submit" type="submit" class="btn btn-success" value="'.$this->pi_getLL('save').'" />
 	</div>
 	</form>';
 	$content.=$tmpcontent;
@@ -663,7 +663,7 @@ if ($this->ms['show_main']) {
 			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>
 			</td>
 			<td align="center">
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=shipping&shipping_method_id='.$row['id']).'" class="msadmin_button"><i>'.ucfirst($this->pi_getLL('download_record')).'</i></a>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=shipping&shipping_method_id='.$row['id']).'" class="btn btn-success"><i>'.ucfirst($this->pi_getLL('download_record')).'</i></a>
 			</td>
 			</tr>';
 		}
@@ -679,7 +679,7 @@ if ($this->ms['show_main']) {
 				</div>
 				<div class="account-field">
 					<label for="upload_shipping_file">'.$this->pi_getLL('file').'</label>
-					<input type="file" name="shipping_file">&nbsp;<input type="submit" name="upload_shipping_file" class="submit msadmin_button" id="upload_shipping_file" value="upload">
+					<input type="file" name="shipping_file">&nbsp;<input type="submit" name="upload_shipping_file" class="submit btn btn-success" id="upload_shipping_file" value="upload">
 				</div>
 			</form>
 		</fieldset>';
@@ -867,7 +867,7 @@ if ($this->ms['show_main']) {
 	$content=$tabs_element;
 	// shipping method admin system eof
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 // javascript for shipping methods
 $GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods']='

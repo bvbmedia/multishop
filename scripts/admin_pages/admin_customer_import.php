@@ -1399,7 +1399,7 @@ if ($this->ms['show_default_form']) {
 			';
 			$schedule_content.='<td nowrap align="right">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
 			if (!$job['period']) {
-				$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="msadmin_button" onClick="return CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$this->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" ><i>'.$this->pi_getLL('run_by_crontab').'</i></a></td>';
+				$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success" onClick="return CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$this->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" ><i>'.$this->pi_getLL('run_by_crontab').'</i></a></td>';
 			} else {
 				$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 			}
@@ -1431,7 +1431,7 @@ if ($this->ms['show_default_form']) {
 			<td>
 			 	<form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1">
 					<input type="file" name="file" />
-					<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+					<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 					<input name="skip_import" type="hidden" value="1" />
 					<input name="preProcExistingTask" type="hidden" value="1" />
 					<input name="job_id" type="hidden" value="'.$job['id'].'" />
@@ -1440,7 +1440,7 @@ if ($this->ms['show_default_form']) {
 			</td>';
 			if ($this->ROOTADMIN_USER) {
 				$schedule_content.='<td>
-					<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&download=task&job_id='.$job['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_import_task').'</i></a>
+					<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&download=task&job_id='.$job['id']).'" class="btn btn-success"><i>'.$this->pi_getLL('download_import_task').'</i></a>
 				</td>';
 			}
 			$schedule_content.='</tr>';
@@ -1482,12 +1482,12 @@ if ($this->ms['show_default_form']) {
 				</div>
 				<div class="account-field">
 					<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
-					<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
+					<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
 				</div>
 			</form>
 		</fieldset>';
 	}
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

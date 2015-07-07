@@ -293,7 +293,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		<div class="account-field">
 			<label for="cms_name['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 			<input spellcheck="true" type="text" class="text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
-			<button type="button" class="tooltipMarker msadmin_button" data-container="body" data-toggle="popover">Markers</button>
+			<button type="button" class="tooltipMarker btn btn-success" data-container="body" data-toggle="popover">Markers</button>
 		</div>
 		<div class="account-field">
 			<label for="cms_content['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('content')).'</label>

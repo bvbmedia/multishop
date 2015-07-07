@@ -139,7 +139,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
-$formFields['submit_button']='<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
+$formFields['submit_button']='<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
 $form_fields_block='<div id="msAdminCustomersListingActionForm">';
 foreach ($formFields as $key=>$formField) {
 	$form_fields_block.='<div class="msAdminCustomersFormField" id="msAdminCustomersFormField'.$key.'">'.$formField.'</div>';

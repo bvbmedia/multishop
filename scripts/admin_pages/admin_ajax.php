@@ -142,7 +142,7 @@ switch ($_REQUEST['action']) {
 					<div class="mini-account-field">
 						<label>E-mail address</label>
 						<input name="tx_multishop_pi1[email]" type="text" value="'.htmlspecialchars($order['billing_email']).'" />
-						<input name="Submit" class="msadmin_button" type="submit" value="send e-mail" />
+						<input name="Submit" class="btn btn-success" type="submit" value="send e-mail" />
 						<input name="orders_id" type="hidden" value="'.$order['orders_id'].'" />
 					</div>
 				</form>

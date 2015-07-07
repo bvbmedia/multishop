@@ -75,11 +75,11 @@ foreach ($zones as $zone) {
 				$counter++;
 			}
 			$content.='</ul>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="msadmin_button" /><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+			<input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="btn btn-success" /><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
 			</form>
 			';
 		} else {
-			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="msadmin_button" />';
+			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="btn btn-success" />';
 		}
 	} else {
 		if ($rows>0) {
@@ -106,11 +106,11 @@ $content.='
 <fieldset><legend>'.$this->pi_getLL('add_new_zone').'</legend>
 <div class="account-field">
 		<label for="">'.$this->pi_getLL('name').'</label>
-		<input type="text" name="zone_name" id="zone_name" value=""> <input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+		<input type="text" name="zone_name" id="zone_name" value=""> <input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
 </div>
 </fieldset>
 </form>
 ';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

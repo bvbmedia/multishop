@@ -283,7 +283,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</div>
 		<div class="account-field hide_pf">
 				<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
-				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="msadmin_button" />
+				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-suc" />
 		</div>
 		<div id="admin_orders_exports_fields">';
 		$counter=0;
@@ -294,7 +294,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
+				$content.='</select><input class="delete_field btn btn-suc" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
 				// custom field
 				if ($field=='custom_field') {
 					$content.='<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
@@ -310,7 +310,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</div>
 		<div class="account-field">
 				<label>&nbsp;</label>
-				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="msadmin_button" /></span>
+				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-suc" /></span>
 		</div>
 		<input name="orders_export_id" type="hidden" value="'.$this->get['orders_export_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
@@ -358,7 +358,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		foreach ($array as $key=>$option) {
 			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
 		}
-		$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
+		$content.='</select><input class="delete_field btn btn-suc" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
 				$(\'#admin_orders_exports_fields\').append(item);
 				$(\'select.msAdminOrdersExportSelectField\').select2({
 					width:\'650px\'
@@ -453,7 +453,7 @@ if ($this->ms['show_main']) {
 			$content.='
 			</td>
 			<td>
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=export_orders_task&orders_export_id='.$order['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_export_record').'</i></a>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=export_orders_task&orders_export_id='.$order['id']).'" class="btn btn-suc"><i>'.$this->pi_getLL('download_export_record').'</i></a>
 			</td>
 			</tr>';
 		}
@@ -469,7 +469,7 @@ if ($this->ms['show_main']) {
 			</div>
 			<div class="account-field">
 				<label for="upload_export_orders_file">'.$this->pi_getLL('file').'</label>
-				<input type="file" name="export_orders_record_file">&nbsp;<input type="submit" name="upload_export_orders_file" class="submit msadmin_button" id="upload_export_orders_file" value="upload">
+				<input type="file" name="export_orders_record_file">&nbsp;<input type="submit" name="upload_export_orders_file" class="submit btn btn-suc" id="upload_export_orders_file" value="upload">
 			</div>
 		</form>
 	</fieldset>';

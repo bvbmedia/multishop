@@ -342,7 +342,7 @@ if (!count($pageset['dataset'])) {
 		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap><input type="checkbox" id="checkAllCMS"/></th>';
 		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap>&nbsp;</th>';
 		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<tr>
-				<td colspan="7"><input type="button" class="submit msadmin_button" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
+				<td colspan="7"><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
 			</tr>';
 	}
 	$results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
@@ -369,7 +369,7 @@ if ($this->ROOTADMIN_USER) {
                 <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="blockSubmitForm">
                     <div class="account-field">
                         <label for="upload_cms_file">'.$this->pi_getLL('file').'</label>
-                        <input type="file" name="cms_file">&nbsp;<input type="submit" name="upload_cms_file" class="submit msadmin_button" id="upload_cms_file" value="upload">
+                        <input type="file" name="cms_file">&nbsp;<input type="submit" name="upload_cms_file" class="submit btn btn-success" id="upload_cms_file" value="upload">
                     </div>
                 </form>
             </fieldset>
@@ -384,6 +384,6 @@ $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 $content.='<div class="float_right"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="admin_menu_add label">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a></div>';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 
 ?>
