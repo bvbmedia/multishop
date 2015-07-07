@@ -822,3 +822,6 @@ form.merge_attribute_options_form ul li .merge_attribute_options_wrapper .merge_
 #msadmin_section ul.admin_sort_product_listing li .admin_menu > a { float:left; border:1px solid rgba(0,0,0,.2); width:26px; height:26px; background-position:center center; text-indent:999em; padding:5px; border-radius:4px; }
 #msadmin_section ul.admin_sort_product_listing li .button_wrapper { float:right; padding:14px 0 0; }
 #msadmin_section ul.admin_sort_product_listing li .button_wrapper .btn { float:left; margin-left:5px; }
+
+.btn { transition:background .5s, color .5s; }
+#msadmin_section #msadmin_content #tx_multishop_pi1_core .btn { color:#fff !important; text-decoration:none !important; }
