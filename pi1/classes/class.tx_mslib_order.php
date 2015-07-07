@@ -530,6 +530,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$user['email']=$custom_email_address;
 			//hook
 			$send_mail=1;
+            $mail_attachment=array();
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'])) {
 				$params=array(
 					'this'=>&$this,
@@ -538,7 +539,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					'send_mail'=>&$send_mail,
 					'user'=>$user,
 					'order'=>$order,
-					'order_details'=>$ORDER_DETAILS
+					'order_details'=>$ORDER_DETAILS,
+                    'mail_attachment'=>&$mail_attachment
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrder'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -546,14 +548,14 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 			if ($send_mail) {
 				if ($user['email']) {
-					mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+					mslib_fe::mailUser($user, $page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 				}
 				if ($copy_to_merchant) {
 					// now mail a copy to the merchant
 					$merchant=array();
 					$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 					$merchant['email']=$this->ms['MODULES']['STORE_EMAIL'];
-					mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+					mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 					if ($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO']) {
 						$email=array();
 						if (!strstr($this->ms['MODULES']['SEND_ORDER_CONFIRMATION_LETTER_ALSO_TO'], ",")) {
@@ -566,7 +568,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								$merchant=array();
 								$merchant['name']=$this->ms['MODULES']['STORE_NAME'];
 								$merchant['email']=$item;
-								mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME']);
+								mslib_fe::mailUser($merchant, 'Copy for merchant: '.$page[0]['name'], $page[0]['content'], $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $mail_attachment);
 							}
 						}
 					}
@@ -777,7 +779,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		//SUBTOTAL_WRAPPER EOF
 		//SHIPPING_COSTS_WRAPPER
 		$key='SHIPPING_COSTS_WRAPPER';
-		if ($order['shipping_method_costs']>0) {
+		if ($order['shipping_method_costs']!==0) {
 			$markerArray=array();
 			$markerArray['SHIPPING_COSTS_LABEL']=$this->pi_getLL('shipping_costs').' ('.$order['shipping_method_label'].'):';
 			$markerArray['SHIPPING_COSTS']=mslib_fe::amount2Cents($order['shipping_method_costs']);
@@ -790,7 +792,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		//SHIPPING_COSTS_WRAPPER EOF
 		//PAYMENT_COSTS_WRAPPER
 		$key='PAYMENT_COSTS_WRAPPER';
-		if ($order['payment_method_costs']>0) {
+		if ($order['payment_method_costs']!==0) {
 			$markerArray=array();
 			$markerArray['PAYMENT_COSTS_LABEL']=$this->pi_getLL('payment_costs').' ('.$order['payment_method_label'].'):';
 			$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($order['payment_method_costs']);
