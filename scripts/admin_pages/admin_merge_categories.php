@@ -126,7 +126,7 @@ $content.='
 	</div>
 	<div class="account-field">
 			<label>Merge selected categories to: </label>
-			'.$cat_selectbox.'<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('merge_selected').'" />
+			'.$cat_selectbox.'<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('merge_selected').'" />
 	</div>
 </form>
 ';

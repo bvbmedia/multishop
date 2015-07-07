@@ -398,7 +398,7 @@ if ($this->get['edit']) {
 		</div>
 		<div class="account-field">
 			<label for="">&nbsp;</label>
-			<input name="Submit" type="submit" class="msadmin_button" value="'.$this->pi_getLL('save').'" />
+			<input name="Submit" type="submit" class="btn btn-success" value="'.$this->pi_getLL('save').'" />
 		</div>
 	</form>';
 	$content.=$tmpcontent;
@@ -514,7 +514,7 @@ if ($this->get['edit']) {
 			<label>&nbsp;</label>
 			<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($this->get['payment_method_code']).'" />
 			<input name="sub" type="hidden" value="add_payment_method" />
-			<input name="Submit" class="msadmin_button" type="submit" value="'.$this->pi_getLL('save').'" />
+			<input name="Submit" class="btn btn-success" type="submit" value="'.$this->pi_getLL('save').'" />
 		</div>
 		</form>';
 		$content.=mslib_fe::returnBoxedHTML($psp['name'], $tmpcontent);
@@ -695,7 +695,7 @@ if ($this->ms['show_main']) {
 			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"></a>
 			</td>
 			<td align="center">
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=payment&payment_method_id='.$row['id']).'" class="msadmin_button"><i>'.ucfirst($this->pi_getLL('download_record')).'</i></a>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=payment&payment_method_id='.$row['id']).'" class="btn btn-success"><i>'.ucfirst($this->pi_getLL('download_record')).'</i></a>
 			</td>
 			</tr>';
 		}
@@ -711,7 +711,7 @@ if ($this->ms['show_main']) {
 				</div>
 				<div class="account-field">
 					<label for="upload_payment_file">'.$this->pi_getLL('file').'</label>
-					<input type="file" name="payment_file">&nbsp;<input type="submit" name="upload_payment_file" class="submit msadmin_button" id="upload_payment_file" value="upload">
+					<input type="file" name="payment_file">&nbsp;<input type="submit" name="upload_payment_file" class="submit btn btn-success" id="upload_payment_file" value="upload">
 				</div>
 			</form>
 		</fieldset>';
@@ -901,7 +901,7 @@ if ($this->ms['show_main']) {
 	$content=$tabs_element;
 	// payment method admin system eof
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 $GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods']='
 <script type="text/javascript">

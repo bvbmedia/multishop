@@ -758,7 +758,7 @@ $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_selectbox;
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.$content.'</div>';
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">

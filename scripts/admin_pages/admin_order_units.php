@@ -105,7 +105,7 @@ if ($this->get['tx_multishop_pi1']['action']=='edit') {
 $content.=$tmpcontent.'
 <div class="account-field">
 	<label>&nbsp;</label>
-	<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+	<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
 </div>
 </fieldset>
 </form>
@@ -147,7 +147,7 @@ if (count($order_units)) {
 	}
 	$content.='</table>';
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>

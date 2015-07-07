@@ -279,7 +279,7 @@ $this->ms['upload_productfeed_form'].='
 <input type="checkbox" name="os" id="os" value="linux" /> '.$this->pi_getLL('unix_file').'
 <input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$this->pi_getLL('consolidate').'
 </div>
-<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 <input name="action" type="hidden" value="product-import-preview" />
 <!-- <input name="cid" class="cid" type="hidden" value="0" /> -->
 </div>
@@ -605,7 +605,7 @@ if ($this->post['action']=='category-insert') {
 				$tmpcontent.='
 					</select>
 					</div>
-					<input name="advanced_settings" class="importer_advanced_settings msadmin_button" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
+					<input name="advanced_settings" class="importer_advanced_settings btn btn-success" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
 					<fieldset class="advanced_settings_container hide">
 						<div class="form-field">
 							<span>aux</span>
@@ -808,7 +808,7 @@ if ($this->post['action']=='category-insert') {
 		<input name="database_name" type="hidden" value="'.$this->post['database_name'].'" />
 		<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($this->post)).'" />
 		</fieldset>
-		<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" class="msadmin_button" name="AdSubmit" value="'.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'"></span>
+		<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" class="btn btn-success" name="AdSubmit" value="'.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'"></span>
 		<p class="extra_padding_bottom"></p>
 		';
 	$combinedContent.='</form>';
@@ -2999,7 +2999,7 @@ if ($this->post['action']!='product-import-preview') {
 				$schedule_content.='<td>'.$category_name.'</td>';
 				$schedule_content.='<td nowrap align="right">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
 				if (!$job['period']) {
-					$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="msadmin_button msadminRunImporter" data-dialog-title=\'Warning\' data-dialog-body="'.addslashes(htmlspecialchars($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job').': '.$job['name'].'?')).'">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" >'.$this->pi_getLL('run_by_crontab').'</a></td>';
+					$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success msadminRunImporter" data-dialog-title=\'Warning\' data-dialog-body="'.addslashes(htmlspecialchars($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job').': '.$job['name'].'?')).'">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" >'.$this->pi_getLL('run_by_crontab').'</a></td>';
 				} else {
 					$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 				}
@@ -3031,7 +3031,7 @@ if ($this->post['action']!='product-import-preview') {
 				<td>
 					 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="blockSubmitForm">
 						<input type="file" name="file" />
-						<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+						<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
 						<input name="skip_import" type="hidden" value="1" />
 						<input name="preProcExistingTask" type="hidden" value="1" />
 						<input name="job_id" type="hidden" value="'.$job['id'].'" />
@@ -3040,7 +3040,7 @@ if ($this->post['action']!='product-import-preview') {
 				</td>';
 				if ($this->ROOTADMIN_USER) {
 					$schedule_content.='<td>
-						<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_import&download=task&job_id='.$job['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_import_task').'</i></a>
+						<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_import&download=task&job_id='.$job['id']).'" class="btn btn-success"><i>'.$this->pi_getLL('download_import_task').'</i></a>
 					</td>';
 				}
 				$schedule_content.='</tr>';
@@ -3152,7 +3152,7 @@ if ($this->post['action']!='product-import-preview') {
 					</div>
 					<div class="account-field">
 						<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
-						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
+						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
 					</div>
 				</form>
 			</fieldset>';
@@ -3216,7 +3216,7 @@ if ($this->post['action']!='product-import-preview') {
 			</div>
 		</div>
 		';
-		$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+		$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 		$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 	}
 }

@@ -69,7 +69,7 @@ $content.='
 	</div>
 	<div class="account-field">
 			<label></label>
-			<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('merge_selected').'" />
+			<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('merge_selected').'" />
 	</div>
 </form>
 <script type="text/javascript">

@@ -133,7 +133,7 @@ if ($this->post) {
 		</div>
 		<div class="account-field">
 			<label for="">&nbsp;</label>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('admin_mass_updater_update_all_products').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')" class="msadmin_button" />
+			<input name="Submit" type="submit" value="'.$this->pi_getLL('admin_mass_updater_update_all_products').'" onclick="return confirm(\''.$this->pi_getLL('admin_label_js_are_you_sure').'\')" class="btn btn-success" />
 		</div>
 		</form>
 		<script type="text/javascript">
