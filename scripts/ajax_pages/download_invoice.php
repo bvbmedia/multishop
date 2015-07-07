@@ -22,7 +22,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		if ($this->conf['admin_invoice_pdf_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['admin_invoice_pdf_tmpl_path']);
 		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_invoice_pdf.tmpl');
+			$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_invoice_pdf.tmpl');
 		}
 		$markerArray=array();
 		$markerArray['###GENDER_SALUTATION###']=mslib_fe::genderSalutation($order['billing_gender']);
@@ -285,8 +285,8 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		// MARKERS EOL
 		$tmpcontent=$this->cObj->substituteMarkerArray($template, $markerArray);
 		// debug html output
-		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
-		include(t3lib_extMgm::extPath('multishop').'res/dompdf/dompdf_config.custom.php');
+		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.inc.php');
+		include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/dompdf/dompdf_config.custom.php');
 		$content=$tmpcontent;
 		/*
 		if ($this->get['debug']) {

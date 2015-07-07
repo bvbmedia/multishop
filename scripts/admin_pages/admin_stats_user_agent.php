@@ -19,7 +19,7 @@ if ($this->get) {
 if ($this->conf['admin_useragents_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_useragents_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_useragents.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_useragents.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();
@@ -109,7 +109,7 @@ $orderby[]=$order_by.' '.$order;
 $pageset=mslib_fe::getOrdersPageSet($filter, $offset, $this->post['limit'], $orderby, $having, $select, $where, $from);
 $tmporders=$pageset['orders'];
 if ($pageset['total_rows']>0) {
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/user-agent_listing_table.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/user-agent_listing_table.php');
 } else {
 	$subpartArray=array();
 	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_orders_found').'.';

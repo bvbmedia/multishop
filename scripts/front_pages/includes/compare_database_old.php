@@ -150,7 +150,7 @@ $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
 	// OLD V1/V2 FIXES
-	if (t3lib_extMgm::isLoaded('static_info_tables')) {
+	if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
 		$required_indexes=array();
 		$required_indexes[]='cn_short_en';
 		$required_indexes[]='cn_iso_nr';
@@ -169,7 +169,7 @@ if ($rows) {
 			}
 		}
 	}
-	if (t3lib_extMgm::isLoaded('cooluri')) {
+	if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('cooluri')) {
 		$table_name='link_cache';
 		$str="show indexes from `".$table_name."` ";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -4318,7 +4318,7 @@ if ($rows) {
 	//$sql = "select orders_id from tx_multishop_orders order by orders_id asc";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 			$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 			$mslib_order->init($this);

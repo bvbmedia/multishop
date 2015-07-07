@@ -211,8 +211,8 @@ $content.='</table>';
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
 	$tmp='';
-	//require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/orders/pagination.php');
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+	//require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/orders/pagination.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 	$pagination_listing=$tmp;
 }
 $content.=$pagination_listing;

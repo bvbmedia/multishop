@@ -2052,7 +2052,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($order['orders_id'] and $order['grand_total']<0.001) {
 					mslib_fe::updateOrderStatusToPaid($order['orders_id']);
 				}
-				require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 				$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 				$mslib_order->init($this);
 				$mslib_order->repairOrder($orders_id);
@@ -2210,7 +2210,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($this->conf['order_details_table_adminNotificationPopup_tmpl_path']) {
 					$template=$this->cObj->fileResource($this->conf['order_details_table_adminNotificationPopup_tmpl_path']);
 				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_adminNotificationPopup.tmpl');
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_adminNotificationPopup.tmpl');
 				}
 				break;
 			case 'ajaxGetMethodCosts':
@@ -2219,9 +2219,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				} else {
 					$disable_product_status_col=true;
 					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-						$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
+						$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
 					} else {
-						$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site_excluding_vat.tmpl');
+						$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_site_excluding_vat.tmpl');
 					}
 				}
 				break;
@@ -2231,14 +2231,14 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$template=$this->cObj->fileResource($this->conf['order_details_table_'.$sectionTemplateType.'_tmpl_path']);
 					} else {
 						$disable_product_status_col=true;
-						$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
+						$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
 					}
 				} else {
 					if ($this->conf['order_details_table_site_tmpl_path']) {
 						$template=$this->cObj->fileResource($this->conf['order_details_table_site_tmpl_path']);
 					} else {
 						$disable_product_status_col=true;
-						$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
+						$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
 					}
 				}
 				break;

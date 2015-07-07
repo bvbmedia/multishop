@@ -7,7 +7,7 @@ $output=array();
 if ($this->conf['basket_default_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['basket_default_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/basket_default.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/basket_default.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();

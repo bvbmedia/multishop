@@ -29,7 +29,7 @@ if ($this->post['req']=='init') {
 	if (is_array($relations_data) and count($relations_data)) {
 		$where.=" WHERE p.page_uid='".$this->showCatalogFromPage."' ";
 		$where.=" and p.products_id IN (".implode(', ', $relations_data).") and pd.products_id=p.products_id";
-		if (t3lib_extMgm::isLoaded('multishop_product_variations')) {
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
 			$where.=' and p.is_hidden=0';
 		}
 		//die($where);
@@ -150,7 +150,7 @@ if ($this->post['req']=='init') {
 			$subcat_query='('.implode(' OR ', $subcat_queries).')';
 			$filter[]=$subcat_query;
 		}
-		if (t3lib_extMgm::isLoaded('multishop_product_variations')) {
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
 			$filter[]='p.is_hidden=0';
 		}
 		//die($where);

@@ -2,18 +2,18 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
-<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
+$GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/css/style.css">
+<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
 ';
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
 $selects=array();

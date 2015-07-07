@@ -24,8 +24,8 @@ if ($this->get) {
 switch ($this->post['tx_multishop_pi1']['action']) {
 	case 'export_selected_order_to_xls':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/orders/orders_xls_export.php');
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/orders/orders_xls_export.php');
 		}
 		break;
 	case 'create_invoice_for_selected_orders':
@@ -230,7 +230,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$array2[]=$this->ms['MODULES']['STORE_NAME'];
 					$array1[]='###TOTAL_AMOUNT###';
 					$array2[]=mslib_fe::amount2Cents($tmpArray['total_amount']);
-					require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+					require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 					$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 					$mslib_order->init($this);
 					$ORDER_DETAILS=$mslib_order->printOrderDetailsTable($tmpArray, 'site');
@@ -351,7 +351,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 if ($this->conf['admin_orders_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_orders_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_orders.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_orders.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();
@@ -635,7 +635,7 @@ if ($this->post['tx_multishop_pi1']['is_proposal']) {
 $pageset=mslib_fe::getOrdersPageSet($filter, $offset, $this->post['limit'], $orderby, $having, $select, $where, $from);
 $tmporders=$pageset['orders'];
 if ($pageset['total_rows']>0) {
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/orders/orders_listing_table.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/orders/orders_listing_table.php');
 } else {
 	$subpartArray=array();
 	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_orders_found').'.';

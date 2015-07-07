@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
 $option_search=array(
 	"orders_id"=>$this->pi_getLL('admin_order_id'),
 	"invoice"=>$this->pi_getLL('admin_invoice_number'),

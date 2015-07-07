@@ -35,7 +35,7 @@ class mslib_befe {
 	example input:
 	/var/www/vhosts/multishop.com/httpdocs/upload/tx_multishop/images/categories/original/my,
 	my-photo.jpg,
-	PATH_site.t3lib_extMgm::siteRelPath($this->extKey)
+	PATH_site.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey)
 	example output: my-photo.jpg
 	*/
 	public function loadConfiguration($multishop_page_uid='') {
@@ -1371,7 +1371,7 @@ class mslib_befe {
 								$target=PATH_site.$this->ms['image_paths']['products']['original'].'/'.$folder.$filename;
 								copy($tmpfile, $target);
 								// backup original eof
-								$products_image_name=mslib_befe::resizeProductImage($target, $filename, PATH_site.t3lib_extMgm::siteRelPath($this->extKey), 1);
+								$products_image_name=mslib_befe::resizeProductImage($target, $filename, PATH_site.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
 								$item['img'][$i]=$products_image_name;
 								if ($log_file) {
 									file_put_contents($log_file, 'Downloading product'.$i.' image ('.$item[$colname].') succeeded and has been resized to '.$item['img'][$i].'.'."\n", FILE_APPEND);
@@ -2267,7 +2267,7 @@ class mslib_befe {
 		if ($settings['update_database']) {
 			set_time_limit(86400);
 			ignore_user_abort(true);
-			require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database.php');
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/compare_database.php');
 		} // check database eof
 		// delete duplicates eof
 		// load default vars for upgrade purposes eof
@@ -2499,7 +2499,7 @@ class mslib_befe {
 										}
 										if (copy($file, $target)) {
 											$target_origineel=$target;
-											$update_product_images=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath($this->extKey));
+											$update_product_images=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey));
 										}
 									}
 								}
@@ -2998,21 +2998,21 @@ class mslib_befe {
 	}
 	public function getHashedPassword($password) {
 		$objPHPass=null;
-		if (t3lib_extMgm::isLoaded('t3sec_saltedpw')) {
-			require_once(t3lib_extMgm::extPath('t3sec_saltedpw').'res/staticlib/class.tx_t3secsaltedpw_div.php');
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('t3sec_saltedpw')) {
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('t3sec_saltedpw').'res/staticlib/class.tx_t3secsaltedpw_div.php');
 			if (tx_t3secsaltedpw_div::isUsageEnabled()) {
-				require_once(t3lib_extMgm::extPath('t3sec_saltedpw').'res/lib/class.tx_t3secsaltedpw_phpass.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('t3sec_saltedpw').'res/lib/class.tx_t3secsaltedpw_phpass.php');
 				$objPHPass=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_t3secsaltedpw_phpass');
 			}
 		}
-		if (!$objPHPass && t3lib_extMgm::isLoaded('saltedpasswords')) {
+		if (!$objPHPass && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('saltedpasswords')) {
 			if (tx_saltedpasswords_div::isUsageEnabled()) {
 				$objPHPass=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(tx_saltedpasswords_div::getDefaultSaltingHashingMethod());
 			}
 		}
 		if ($objPHPass) {
 			$password=$objPHPass->getHashedPassword($password);
-		} else if (t3lib_extMgm::isLoaded('kb_md5fepw')) { //if kb_md5fepw is installed, crypt password
+		} else if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('kb_md5fepw')) { //if kb_md5fepw is installed, crypt password
 			$password=md5($password);
 		}
 		return $password;
@@ -3023,7 +3023,7 @@ class mslib_befe {
 		} elseif (!$type) {
 			$type='unpronounceable';
 		}
-		require_once(t3lib_extMgm::extPath('multishop').'res/Password.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/Password.php');
 		$suite=new Text_Password();
 		switch ($type) {
 			case 'pronounceable':
@@ -3174,7 +3174,7 @@ class mslib_befe {
 			}
 		} else {
 			if (!class_exists('Cache_Lite')) {
-				require_once(t3lib_extMgm::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/Lite.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/Lite.php');
 			}
 			$options=array(
 				'caching'=>true,
@@ -3628,14 +3628,14 @@ class mslib_befe {
 				if ($this->conf['order_details_table_invoice_pdf_tmpl_path']) {
 					$template=$this->cObj->fileResource($this->conf['order_details_table_invoice_pdf_tmpl_path']);
 				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_invoice_pdf.tmpl');
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_invoice_pdf.tmpl');
 				}
 				break;
 			case 'packingslip':
 				if ($this->conf['order_details_table_packingslip_pdf_tmpl_path']) {
 					$template=$this->cObj->fileResource($this->conf['order_details_table_packingslip_pdf_tmpl_path']);
 				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_packingslip_pdf.tmpl');
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_packingslip_pdf.tmpl');
 				}
 				break;
 		}

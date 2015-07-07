@@ -198,7 +198,7 @@ if (mslib_fe::loggedin()) {
 			if ($this->conf['create_account_tmpl_path']) {
 				$template=$this->cObj->fileResource($this->conf['create_account_tmpl_path']);
 			} else {
-				$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/create_account.tmpl');
+				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/create_account.tmpl');
 			}
 			//
 			$vat_input_block='';

@@ -265,7 +265,7 @@ if ($this->post and is_array($_FILES) and count($_FILES)) {
 						} while (file_exists($target));
 					}
 					if (move_uploaded_file($file['tmp_name'], $target)) {
-						$update_category_image=mslib_befe::resizeCategoryImage($target, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath($this->extKey), 1);
+						$update_category_image=mslib_befe::resizeCategoryImage($target, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
 					}
 				}
 			}
@@ -633,7 +633,7 @@ if ($this->post) {
 		if ($this->conf['admin_edit_category_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['admin_edit_category_tmpl_path']);
 		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_edit_category.tmpl');
+			$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_edit_category.tmpl');
 		}
 		// Extract the subparts from the template
 		$subparts=array();
@@ -997,9 +997,9 @@ if ($this->post) {
 		// crop images
 		if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
 			$jcrop_js='
-<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.Jcrop.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.color.js"></script>
-<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/css/jquery.Jcrop.css" type="text/css" />';
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.Jcrop.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.color.js"></script>
+<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/css/jquery.Jcrop.css" type="text/css" />';
 			$GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_js;
 			$js_extra['functions'][]='
 var jcrop_api;

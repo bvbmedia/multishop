@@ -29,8 +29,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 //$LANG->includeLLFile('EXT:multishop/mod1/locallang.xml');
 $GLOBALS['LANG']->includeLLFile('EXT:multishop/mod1/locallang.xml');
 //require_once(PATH_t3lib . 'class.t3lib_scbase.php');
-include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
-include_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
+include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.mslib_fe.php');
+include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.mslib_befe.php');
 //require_once(PATH_t3lib . 'class.t3lib_iconworks.php');
 $GLOBALS['BE_USER']->modAccess($GLOBALS['MCONF'], 1); // This checks permissions and exits if the users has no permission for entry.
 // DEFAULT initialization of a module [END]
@@ -89,8 +89,8 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		$this->pageinfo=\TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($this->id, $this->perms_clause);
 		$access=is_array($this->pageinfo) ? 1 : 0;
 		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id)) {
-			$full_script_path=t3lib_extMgm::extPath('multishop').'scripts/';
-			$this->relative_site_path=t3lib_extMgm::siteRelPath('multishop');
+			$full_script_path=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/';
+			$this->relative_site_path=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop');
 			// first get the http-path to typo3:
 			$this->httpTypo3Path=substr(substr(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL'), strlen(\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST'))), 0, -1);
 			if (strlen($this->httpTypo3Path)==1) {
@@ -101,11 +101,11 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 			// Get the vhost full path (example: /var/www/html/domain.com/public_html/my_cms/)
 			$this->DOCUMENT_ROOT=PATH_site;
 			// Get the vhost full path to multishop (example: /var/www/html/domain.com/public_html/my_cms/typo3conf/ext/multishop/)
-			$this->DOCUMENT_ROOT_MS=PATH_site.t3lib_extMgm::siteRelPath('multishop');
+			$this->DOCUMENT_ROOT_MS=PATH_site.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop');
 			// Get the site full URL (example: http://domain.com/my_cms/)
 			$this->FULL_HTTP_URL=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 			// Get the multishop full URL (example: http://domain.com/my_cms/typo3/ext/multishop or http://domain.com/my_cms/typo3conf/ext/multishop)
-			$this->FULL_HTTP_URL_MS=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath('multishop');
+			$this->FULL_HTTP_URL_MS=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop');
 			// Get the host URL (example: http://domain.com)
 			// dont use hostURL cause its not supporting subdirectory hosting
 			$this->hostURL=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_HOST');
@@ -260,8 +260,8 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 * @return    void
 	 */
 	function moduleContent() {
-		if (t3lib_extMgm::isLoaded('t3jquery')) {
-			require_once(t3lib_extMgm::extPath('t3jquery').'class.tx_t3jquery.php');
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('t3jquery')) {
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('t3jquery').'class.tx_t3jquery.php');
 			tx_t3jquery::addJqJS();
 			$this->content.=tx_t3jquery::getJqJSBE();
 		}
@@ -277,16 +277,16 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 		$this->post=$_POST;
 		switch ((string)$this->MOD_SETTINGS['function']) {
 			case 1:
-				require_once(t3lib_extMgm::extPath('multishop').'mod1/pages/welcome.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'mod1/pages/welcome.php');
 				break;
 			case 2:
-				require_once(t3lib_extMgm::extPath('multishop').'mod1/pages/administration.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'mod1/pages/administration.php');
 				break;
 			case 3:
-				require_once(t3lib_extMgm::extPath('multishop').'mod1/pages/help.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'mod1/pages/help.php');
 				break;
 			case 4:
-				require_once(t3lib_extMgm::extPath('multishop').'mod1/pages/migration.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'mod1/pages/migration.php');
 				break;
 		}
 		$year=date("Y");
@@ -317,8 +317,8 @@ class  tx_multishop_module1 extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 */
 	function getExtensionInfo($extKey) {
 		$rc='';
-		if (t3lib_extMgm::isLoaded($extKey)) {
-			$path=t3lib_extMgm::extPath($extKey);
+		if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey)) {
+			$path=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extKey);
 			$file=$path.'/ext_emconf.php';
 			if (@is_file($file)) {
 				$_EXTKEY=$extKey;

@@ -91,34 +91,34 @@ class tx_mslib_dashboard extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$compiledWidget=array();
 		switch ($key) {
 			case 'google_chart_orders':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_new_orders.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_new_orders.php');
 				break;
 			case 'google_chart_customers':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_new_customers.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_new_customers.php');
 				break;
 			case 'google_chart_carts':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_carts.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/google_chart_carts.php');
 				break;
 			case 'turnoverPerMonth':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/turn_over_per_month.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/turn_over_per_month.php');
 				break;
 			case 'turnoverPerYear':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/turn_over_per_year.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/turn_over_per_year.php');
 				break;
 			case 'referrerToplist':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/referrerToplist.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/referrerToplist.php');
 				break;
 			case 'customersPerMonth':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/customersPerMonth.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/customersPerMonth.php');
 				break;
 			case 'searchKeywordsToplist':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/searchKeywordsToplist.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/searchKeywordsToplist.php');
 				break;
 			case 'ordersLatest':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/ordersLatest.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/ordersLatest.php');
 				break;
 			case 'ordersPerMonth':
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_home/ordersPerMonth.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_home/ordersPerMonth.php');
 				break;
 		}
 		return $compiledWidget;

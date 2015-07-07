@@ -99,16 +99,16 @@ $tempColumns=array(
 	)
 );
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("fe_users");
-t3lib_extMgm::addTCAcolumns("fe_users", $tempColumns, 1);
-t3lib_extMgm::addToAllTCAtypes("fe_users", '--div--; Multishop, tx_multishop_discount, page_uid;;;;1-1-1');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns("fe_users", $tempColumns, 1);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes("fe_users", '--div--; Multishop, tx_multishop_discount, page_uid;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
 $TCA['fe_users']['palettes']['multishopaddress']=array(
 	'showitem'=>'address,street_name,address_number,address_ext'
 );
-t3lib_extMgm::addToAllTCAtypes('fe_users', '--palette--;Address;multishopaddress', '', 'replace:address');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', '--palette--;Address;multishopaddress', '', 'replace:address');
 // ADDING MOBILE NUMBER AFTER TELEPHONE
-t3lib_extMgm::addToAllTCAtypes('fe_users', 'mobile', '', 'after:telephone');
-t3lib_extMgm::addToAllTCAtypes('fe_users', 'gender', '', 'after:address');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', 'mobile', '', 'after:telephone');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', 'gender', '', 'after:address');
 // FE_USERS EOF
 // PREPARE $TEMPCOLUMNS FOR FE_GROUPS
 unset($tempColumns['page_uid']);
@@ -118,8 +118,8 @@ unset($tempColumns['street_name']);
 unset($tempColumns['address_number']);
 unset($tempColumns['address_ext']);
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("fe_groups");
-t3lib_extMgm::addTCAcolumns("fe_groups", $tempColumns, 1);
-t3lib_extMgm::addToAllTCAtypes("fe_groups", '--div--; Multishop, tx_multishop_discount;;;;1-1-1');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns("fe_groups", $tempColumns, 1);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes("fe_groups", '--div--; Multishop, tx_multishop_discount;;;;1-1-1');
 // EXTEND TT_ADDRESS TABLE
 $tempColumns=array(
 	"street_name"=>array(
@@ -193,13 +193,13 @@ $tempColumns=array(
 	),
 );
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("tt_address");
-t3lib_extMgm::addTCAcolumns("tt_address", $tempColumns, 1);
-t3lib_extMgm::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type, tx_multishop_customer_id;;;;1-1-1');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns("tt_address", $tempColumns, 1);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type, tx_multishop_customer_id;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
 $TCA['tt_address']['palettes']['multishopaddress']=array(
 	'showitem'=>'address,street_name,address_number,address_ext'
 );
-t3lib_extMgm::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
 // TT ADDRESS EOF
 // ADD CUSTOM PAGE TYPE
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('pages');
@@ -210,17 +210,17 @@ $GLOBALS['TCA']['pages']['columns']['module']['config']['items'][]=array(
 );
 \TYPO3\CMS\Backend\Sprite\SpriteManager::addTcaTypeIcon('pages', 'contains-mscore', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'mod1/images/mscore_icon.gif');
 // ADD CUSTOM PAGE TYPE EOF
-t3lib_extMgm::addPlugin(array(
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(array(
 	'LLL:EXT:multishop/locallang_db.xml:tt_content.list_type_pi1',
 	$_EXTKEY.'_pi1',
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY).'ext_icon.gif'
 ), 'list_type');
 $TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
-t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:'.$_EXTKEY.'/flexform_ds.xml');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:'.$_EXTKEY.'/flexform_ds.xml');
 if (TYPO3_MODE=='BE') {
-	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_multishop_pi1_wizicon']=t3lib_extMgm::extPath($_EXTKEY).'pi1/class.tx_multishop_pi1_wizicon.php';
-	t3lib_extMgm::addModulePath('web_txmultishopM1', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
-	t3lib_extMgm::addModule('web', 'txmultishopM1', '', t3lib_extMgm::extPath($_EXTKEY).'mod1/');
+	$TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['tx_multishop_pi1_wizicon']=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY).'pi1/class.tx_multishop_pi1_wizicon.php';
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModulePath('web_txmultishopM1', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY).'mod1/');
+	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addModule('web', 'txmultishopM1', '', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY).'mod1/');
 }
 include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY).'class.tx_multishop_addMiscFieldsToFlexForm.php');
 ?>

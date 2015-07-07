@@ -3,7 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 set_time_limit(0);
-require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
 $filter=array();
 $from=array();
 $having=array();

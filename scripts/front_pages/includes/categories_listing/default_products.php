@@ -8,7 +8,7 @@ if (is_array($current) && $current['categories_id']==$this->conf['categoriesStar
 }
 if (!is_numeric($categories_id)) {
 	// FALLBACK TO NORMAL CATEGORIES LISTING
-	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/categories_listing/default.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/categories_listing/default.php');
 } else {
 	// get all subcategories
 	$cats=array();
@@ -161,15 +161,15 @@ if (!is_numeric($categories_id)) {
 			if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_TYPE'], "/")) {
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
 			} else {
-				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing/'.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/products_listing/'.$this->ms['MODULES']['PRODUCTS_LISTING_TYPE'].'.php');
 			}
 		}
 		// pagination
 		if (!$this->hidePagination and ($pageset['total_rows']>$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'])) {
 			if (!isset($this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']) || $this->ms['MODULES']['PRODUCTS_LISTING_PAGINATION_TYPE']=='default') {
-				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');
 			} else {
-				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination_with_number.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination_with_number.php');
 			}
 		}
 		// pagination eof

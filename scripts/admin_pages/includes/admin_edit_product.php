@@ -53,9 +53,9 @@ if (count($shopPids)) {
 	}
 }
 $jcrop_html='
-<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.Jcrop.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.color.js"></script>
-<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/css/jquery.Jcrop.css" type="text/css" />';
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.Jcrop.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.color.js"></script>
+<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/css/jquery.Jcrop.css" type="text/css" />';
 $js_languages=array();
 foreach ($this->languages as $key=>$language) {
 	$js_languages[]=json_encode($language);
@@ -780,7 +780,7 @@ if ($this->post and $_FILES) {
 											}
 											if (move_uploaded_file($file['tmp_name'], $target)) {
 												$target_origineel=$target;
-												$update_product_images[$key]=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath($this->extKey), 1);
+												$update_product_images[$key]=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
 											}
 										}
 									}
@@ -2061,7 +2061,7 @@ if ($this->post) {
 		if ($this->conf['admin_edit_product_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['admin_edit_product_tmpl_path']);
 		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_edit_product.tmpl');
+			$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_edit_product.tmpl');
 		}
 		// Extract the subparts from the template
 		$subparts=array();

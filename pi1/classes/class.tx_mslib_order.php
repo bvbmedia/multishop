@@ -583,21 +583,21 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if ($this->conf['order_details_table_site_tmpl_path']) {
 					$template=$this->cObj->fileResource($this->conf['order_details_table_site_tmpl_path']);
 				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_site.tmpl');
 				}
 				break;
 			case 'email':
 				if ($this->conf['order_details_table_email_tmpl_path']) {
 					$template=$this->cObj->fileResource($this->conf['order_details_table_email_tmpl_path']);
 				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_email.tmpl');
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_email.tmpl');
 				}
 				break;
 			case 'pdf':
 				if ($this->conf['order_details_table_pdf_tmpl_path']) {
 					$template=$this->cObj->fileResource($this->conf['order_details_table_pdf_tmpl_path']);
 				} else {
-					$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/order_details_table_pdf.tmpl');
+					$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/order_details_table_pdf.tmpl');
 				}
 				break;
 		}

@@ -6,7 +6,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->conf['admin_customers_listing_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_customers_listing_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_customers_listing.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_customers_listing.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();

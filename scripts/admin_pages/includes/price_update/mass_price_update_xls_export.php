@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
 function getOptionValuesExtraName($optvalid) {
 	$sql_opt="select products_options_values_extra_name from tx_multishop_products_options_values_extra where products_options_values_extra_id = ".$optvalid." and language_id = 0";
 	$qry_opt=$GLOBALS['TYPO3_DB']->sql_query($sql_opt);

@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 	$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']=1;
 }
-require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $disable_checkout=false;
@@ -15,7 +15,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='<meta name="robots" content="noindex">
 if ($this->conf['shopping_cart_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['shopping_cart_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/shopping_cart.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/shopping_cart.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();

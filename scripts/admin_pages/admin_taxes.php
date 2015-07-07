@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-set_include_path(t3lib_extMgm::extPath('multishop').PATH_SEPARATOR.t3lib_extMgm::extPath('multishop').'scripts/admin_pages/');
+set_include_path(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').PATH_SEPARATOR.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/');
 if ($this->post) {
 	$erno=array();
 	if (!$this->post['tax_name']) {

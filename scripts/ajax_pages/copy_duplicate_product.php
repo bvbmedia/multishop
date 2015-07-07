@@ -83,7 +83,7 @@ if ($id_category==0) {
 									}
 									if (copy($file, $target)) {
 										$target_origineel=$target;
-										$update_product_images=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath($this->extKey));
+										$update_product_images=mslib_befe::resizeProductImage($target_origineel, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey));
 									}
 								}
 							}

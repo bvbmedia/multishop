@@ -134,12 +134,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if (strstr($this->ms['MODULES']['STORES_LISTING_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['STORES_LISTING_TYPE'].'.php');
 				} else {
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/stores_listing/'.$this->ms['MODULES']['STORES_LISTING_TYPE'].'.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/stores_listing/'.$this->ms['MODULES']['STORES_LISTING_TYPE'].'.php');
 				}
 			}
 			// pagination
 			if (!$this->hidePagination and $pageset['total_rows']>$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT']) {
-//				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');	
+//				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/products_listing_pagination.php');
 			}
 			// pagination eof
 		} else {

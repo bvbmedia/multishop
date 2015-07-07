@@ -176,7 +176,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if (strstr($this->ms['MODULES']['PRODUCTS_LISTING_AUTO_COMPLETE_TYPE'], "/")) {
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_LISTING_AUTO_COMPLETE_TYPE'].'.php');
 			} else {
-				require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/includes/products_listing_auto_complete/'.$this->ms['MODULES']['PRODUCTS_LISTING_AUTO_COMPLETE_TYPE'].'.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/ajax_pages/includes/products_listing_auto_complete/'.$this->ms['MODULES']['PRODUCTS_LISTING_AUTO_COMPLETE_TYPE'].'.php');
 			}
 		}
 	} else {

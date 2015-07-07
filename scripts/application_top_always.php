@@ -184,7 +184,7 @@ if (!isset($this->ms['MODULES']['PAGE_TITLE_DELIMETER'])) {
 	$this->ms['MODULES']['PAGE_TITLE_DELIMETER']=' :: ';
 }
 $this->ms=mslib_befe::convertConfiguration($this->ms);
-//if ($this->ms['MODULES']['CACHE_FRONT_END'] or $this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'])	require_once(t3lib_extMgm::extPath('multishop').'res/Cache_Lite-1.7.8/Lite.php');
+//if ($this->ms['MODULES']['CACHE_FRONT_END'] or $this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'])	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/Cache_Lite-1.7.8/Lite.php');
 if ($this->ADMIN_USER) {
 	// load enabled languages
 	$enabled_countries=array();
@@ -369,10 +369,10 @@ if (!$this->conf['admin_development_company_name']) {
 	$this->conf['admin_development_company_name']='TYPO3 Multishop';
 }
 if (!$this->conf['admin_development_company_logo']) {
-	$this->conf['admin_development_company_logo']=t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_multishop/images/admin_logo.gif';
+	$this->conf['admin_development_company_logo']=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_multishop/images/admin_logo.gif';
 }
 if (!$this->conf['admin_development_company_logo_gray_path']) {
-	$this->conf['admin_development_company_logo_gray_path']=t3lib_extMgm::siteRelPath($this->extKey).'templates/images/powered_by_typo3multishop_gray.png';
+	$this->conf['admin_development_company_logo_gray_path']=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/powered_by_typo3multishop_gray.png';
 }
 if ($this->conf['cart_uid']) {
 	$this->ms['MODULES']['CART_PAGE_UID']=$this->conf['cart_uid'];

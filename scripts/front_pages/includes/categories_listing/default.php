@@ -4,7 +4,7 @@ $output=array();
 if ($this->conf['categories_listing_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['categories_listing_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/categories_listing.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/categories_listing.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();

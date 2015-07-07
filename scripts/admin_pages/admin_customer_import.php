@@ -191,7 +191,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				die();
 			}
 			// include a pre-defined xml to php array converter
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
 			// include a pre-defined xml to php array converter eof
 		} else {
 			if ($this->post['database_name']) {
@@ -241,7 +241,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						fclose($handle);
 					}
 					// excel
-					require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+					require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 					$phpexcel=PHPExcel_IOFactory::load($file_location);
 					foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 						$counter=0;
@@ -604,7 +604,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 			}
 			if ($this->post['parser_template']) {
 				// include a pre-defined xml to php array way
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_import_parser_templates/'.$this->post['parser_template'].".php");
 				// include a pre-defined xml to php array way eof
 			} else {
 				if ($this->post['database_name']) {
@@ -671,7 +671,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 						$i++;
 					}
 				} else if ($this->post['format']=='excel') {
-					require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+					require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 					$phpexcel=PHPExcel_IOFactory::load($file);
 					foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 						$counter=0;

@@ -402,7 +402,7 @@ if (count($cart['products'])<1) {
 		if ($this->conf['multistep_checkout_address_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['multistep_checkout_address_tmpl_path']);
 		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/multistep_checkout_address.tmpl');
+			$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/multistep_checkout_address.tmpl');
 		}
 		//
 		if (is_array($erno) and count($erno)>0) {

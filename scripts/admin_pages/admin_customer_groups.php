@@ -158,10 +158,10 @@ $orderby[]=$order_by.' '.$order;
 $pageset=mslib_fe::getCustomerGroupsPageSet($filter, $offset, 0, $orderby, $having, $select, $where);
 $groups=$pageset['groups'];
 if ($pageset['total_rows']>0) {
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_customer_groups_listing.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_customer_groups_listing.php');
 	// pagination
 	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ADMIN_CUSTOMERS_LISTING_LIMIT']) {
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$content.=$tmp;
 	}
 	// pagination eof

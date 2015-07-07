@@ -107,7 +107,7 @@ $tabs['manual_orders']=array(
 	htmlspecialchars($this->pi_getLL('admin_manual_order')),
 	$tmp
 );
-require(t3lib_extMgm::extPath('multishop')."scripts/admin_pages/includes/manual_order/admin_add_order.php");
+require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop')."scripts/admin_pages/includes/manual_order/admin_add_order.php");
 $content.='
 <div class="main-heading"><h2>Orders</h2></div>
 

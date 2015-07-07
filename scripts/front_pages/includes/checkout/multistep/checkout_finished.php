@@ -96,7 +96,7 @@ if (!$order_session['orders_id']) {
 	$array2[]=$this->ms['MODULES']['STORE_NAME'];
 	$array1[]='###TOTAL_AMOUNT###';
 	$array2[]=mslib_fe::amount2Cents($order['total_amount']);
-	require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 	$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 	$mslib_order->init($this);
 	$ORDER_DETAILS=$mslib_order->printOrderDetailsTable($order, 'site');
@@ -220,8 +220,8 @@ if (!$order_session['orders_id']) {
 						$vars=unserialize($user_method['vars']);
 						if ($mslib_payment->setPaymentMethod($user_method['provider'])) {
 							$extkey='multishop_'.$user_method['provider'];
-							if (t3lib_extMgm::isLoaded($extkey)) {
-								require(t3lib_extMgm::extPath($extkey).'class.multishop_payment_method.php');
+							if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extkey)) {
+								require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extkey).'class.multishop_payment_method.php');
 								$paymentMethod=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_multishop_payment_method');
 								$paymentMethod->setPaymentMethod($user_method['provider']);
 								$paymentMethod->setVariables($vars);

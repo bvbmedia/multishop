@@ -6,7 +6,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->conf['admin_manufacturers_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_manufacturers_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_manufacturers.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_manufacturers.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();
@@ -276,7 +276,7 @@ if (!count($pageset['dataset'])) {
 		// pagination
 		if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
 			$content='';
-			require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 			$results.=$tmp;
 		}
 		// pagination eof

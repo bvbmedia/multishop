@@ -10,7 +10,7 @@ $postMessageArray=array();
 if ($this->conf['admin_products_search_and_edit_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_products_search_and_edit_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_products_search_and_edit.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_products_search_and_edit.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();
@@ -707,7 +707,7 @@ if ($pageset['total_rows']>0) {
 	$this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['PRODUCTS_LISTING_LIMIT'];
 	// pagination
 	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$pagination=$tmp;
 	}
 	// pagination eof

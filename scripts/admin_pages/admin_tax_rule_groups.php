@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-set_include_path(t3lib_extMgm::extPath('multishop').PATH_SEPARATOR.t3lib_extMgm::extPath('multishop').'scripts/admin_pages/');
+set_include_path(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').PATH_SEPARATOR.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/');
 if ($this->post) {
 	$erno=array();
 	if (!$this->post['name']) {
@@ -113,8 +113,8 @@ $content.='
 ';
 if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	$GLOBALS['TSFE']->additionalHeaderData['msTreeLevelJs']='
-	<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
+	<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 	<style>
 		.tree_item_label
 		{

@@ -110,7 +110,7 @@ if ($invoice['orders_id']) {
 	// total eof
 	// pdf
 	define('FPDF_FONTPATH', 'font/');
-	require(t3lib_extMgm::extPath('multishop').'res/fpdf17/fpdf.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/fpdf17/fpdf.php');
 	class PDF extends FPDF {
 		var $widths;
 		var $aligns;

@@ -40,14 +40,14 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$this->ultrasearch_javascript_client_file=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_javascript_client_file', 's_search');
 	}
 	if (!$this->ultrasearch_javascript_client_file or $this->ultrasearch_javascript_client_file=='default.js') {
-		$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/default.js';
+		$this->ultrasearch_javascript_client_file=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/ultrasearch/default.js';
 	} else if ($this->ultrasearch_javascript_client_file) {
 		if (strstr($this->ultrasearch_javascript_client_file, "/")) {
 			$this->ultrasearch_javascript_client_file=$this->ultrasearch_javascript_client_file;
 		} else if ($this->ultrasearch_javascript_client_file) {
-			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/'.$this->ultrasearch_javascript_client_file;
+			$this->ultrasearch_javascript_client_file=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/ultrasearch/'.$this->ultrasearch_javascript_client_file;
 		} else {
-			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath('multishop').'js/ultrasearch/default.js';
+			$this->ultrasearch_javascript_client_file=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/ultrasearch/default.js';
 		}
 	}
 	if (!$this->ultrasearch_target_element) {
@@ -124,7 +124,7 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 	}
 	$headers.='var ultrasearch_message_no_results=\'<div id="msFrontUltrasearchNoResults"><div class="main-heading"><h1>'.addslashes($this->pi_getLL('no_products_found_heading')).'</h1></div><p>'.addslashes($this->pi_getLL('no_products_found_description')).'</p></div>\';
 	</script>
-	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery-hashchange-master/jquery.ba-hashchange.min.js"></script>
+	<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/jquery-hashchange-master/jquery.ba-hashchange.min.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready(function($) {
 		  // Bind an event to window.onhashchange that, when the hash changes, gets the
@@ -138,8 +138,8 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		  // $(window).hashchange();
 		});
 	</script>
-	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.form.js"></script>
-	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath('multishop').'js/jquery.dform-1.1.0.min.js"></script>
+	<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/jquery.form.js"></script>
+	<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/jquery.dform-1.1.0.min.js"></script>
 	<script type="text/javascript" src="'.$this->ultrasearch_javascript_client_file.'"></script>';
 	$GLOBALS['TSFE']->additionalHeaderData[]=$headers;
 	$content='<form method="get" action="" id="msFrontUltrasearchForm">

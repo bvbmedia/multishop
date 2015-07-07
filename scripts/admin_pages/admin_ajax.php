@@ -3,32 +3,32 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.blockUI.js"></script>
+<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.blockUI.js"></script>
 <link href="'.$this->FULL_HTTP_URL_MS.'js/jqui/css/smoothness/jquery-ui-1.8.custom.css" rel="stylesheet" type="text/css"/>
-<link type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jqui/css/smoothness/jquery-ui-1.8.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.h5validate.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
-<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect_normal.js"></script>
-<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-sliderAccess.js"></script>
-<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-timepicker-addon.js"></script>
-<link href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-timepicker-addon.css" rel="stylesheet" type="text/css"/>
-<link href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
+<link type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jqui/css/smoothness/jquery-ui-1.8.custom.css" rel="stylesheet" />
+<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.h5validate.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
+<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect_normal.js"></script>
+<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-sliderAccess.js"></script>
+<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-timepicker-addon.js"></script>
+<link href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-timepicker-addon.css" rel="stylesheet" type="text/css"/>
+<link href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 	jQuery(function($){
 		$(".multiselect").multiselect();
 	});
 </script>
-<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/css/style.css">
-<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
+<link rel="stylesheet" type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/css/style.css">
+<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
 <script type="text/javascript">
 $(function() {
 	$(\'.mceEditor\').redactor({
@@ -85,7 +85,7 @@ $content.='
 ';
 switch ($_REQUEST['action']) {
 	case 'edit_customer_group':
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_customer_group.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_customer_group.php');
 		break;
 	case 'add_product':
 	case 'edit_product':
@@ -96,12 +96,12 @@ switch ($_REQUEST['action']) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'].'.php');
 			} else {
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_product.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_product.php');
 			}
 		}
 		break;
 	case 'delete_product':
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_delete_product.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_delete_product.php');
 		break;
 	case 'add_category':
 	case 'edit_category':
@@ -112,15 +112,15 @@ switch ($_REQUEST['action']) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'].'.php');
 			} else {
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_category.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_category.php');
 			}
 		}
 		break;
 	case 'add_multiple_category':
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_add_multiple_categories.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_add_multiple_categories.php');
 		break;
 	case 'delete_category':
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_delete_category.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_delete_category.php');
 		break;
 	case 'mail_order':
 		if ($this->post['orders_id'] and $this->post['tx_multishop_pi1']['email']) {
@@ -160,7 +160,7 @@ switch ($_REQUEST['action']) {
 				if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'].'.php');
 				} else {
-					require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order_print.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order_print.php');
 				}
 			}
 		} else {
@@ -170,16 +170,16 @@ switch ($_REQUEST['action']) {
 				if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'].'.php');
 				} else {
-					require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order.php');
 				}
 			}
 		}
 		break;
 	case 'edit_module':
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_module.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_module.php');
 		break;
 	case 'edit_cms':
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_cms.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_cms.php');
 		break;
 	case 'add_manufacturer':
 	case 'edit_manufacturer':
@@ -190,7 +190,7 @@ switch ($_REQUEST['action']) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'].'.php');
 			} else {
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_manufacturer.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_manufacturer.php');
 			}
 		}
 		break;
@@ -203,7 +203,7 @@ switch ($_REQUEST['action']) {
 				// relative mode
 				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'].'.php');
 			} else {
-				require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_edit_customer.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_customer.php');
 			}
 		}
 		break;

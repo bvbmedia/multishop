@@ -6,7 +6,7 @@ if (!defined('TYPO3_MODE')) {
 if ($this->conf['admin_edit_customer_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_edit_customer.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_edit_customer.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();
@@ -1015,7 +1015,7 @@ if (!count($js_extra['triggers'])) {
 }
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 if ($customer_id) {
-	require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
 	$mslib_dashboard=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_dashboard');
 	$mslib_dashboard->init($this);
 	$mslib_dashboard->setSection('admin_edit_customer');

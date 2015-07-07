@@ -1,7 +1,7 @@
 <?php
 class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	function itemArrayProcFunc($menuArr, $conf) {
-		require_once(t3lib_extMgm::siteRelPath('multishop').'pi1/classes/class.mslib_fe.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'pi1/classes/class.mslib_fe.php');
 		$this->conf=$conf;
 		if (!is_numeric($this->conf['categoriesStartingPoint'])) {
 			$this->conf['categoriesStartingPoint']=0;

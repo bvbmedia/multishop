@@ -37,22 +37,22 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 		$this->ultrasearch_javascript_client_file=$this->pi_getFFvalue($this->cObj->data['pi_flexform'], 'ultrasearch_javascript_client_file', 's_search');
 	}
 	if (!$this->ultrasearch_javascript_client_file or $this->ultrasearch_javascript_client_file=='default.js') {
-		$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath($this->extKey).'js/ultrasearch/default.js';
+		$this->ultrasearch_javascript_client_file=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/ultrasearch/default.js';
 	} elseif ($this->ultrasearch_javascript_client_file) {
 		if (strstr($this->ultrasearch_javascript_client_file, "/")) {
 			$this->ultrasearch_javascript_client_file=$this->ultrasearch_javascript_client_file;
 		} elseif ($this->ultrasearch_javascript_client_file) {
-			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath($this->extKey).'js/ultrasearch/'.$this->ultrasearch_javascript_client_file;
+			$this->ultrasearch_javascript_client_file=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/ultrasearch/'.$this->ultrasearch_javascript_client_file;
 		} else {
-			$this->ultrasearch_javascript_client_file=t3lib_extMgm::siteRelPath($this->extKey).'js/ultrasearch/default.js';
+			$this->ultrasearch_javascript_client_file=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/ultrasearch/default.js';
 		}
 	}
 	if (!$this->ultrasearch_target_element) {
 		$this->ultrasearch_target_element='#content';
 	}
 	$headers='
-	<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect.js"></script>
-	<link href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect.js"></script>
+	<link href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
 	<script type="text/javascript">
 		jQuery(function($){
 			$(".multiselect").multiselect();

@@ -12,7 +12,7 @@ if (!mslib_fe::loggedin() and $this->ms['MODULES']['DISABLE_CHECKOUT_FOR_GUESTS'
 $cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 $count_products=count($cart['products']);
 // minimum order amount
-require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart_total_amount=$mslib_cart->countCartTotalPrice(0);

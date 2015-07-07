@@ -8,9 +8,9 @@ if (!defined('TYPO3_MODE')) {
 */
 // explanation: loading globals
 // checking if the required extensions are loaded
-if (!t3lib_extMgm::isLoaded('static_info_tables', 0)) {
+if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables', 0)) {
 	echo '<div class="main-heading"><h2>Please install the following extension:</h2></div>';
-	if (!t3lib_extMgm::isLoaded('static_info_tables', 0)) {
+	if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables', 0)) {
 		echo 'static_info_tables<BR />';
 	}
 	exit();

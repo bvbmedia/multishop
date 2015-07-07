@@ -1026,7 +1026,7 @@ if ($this->get['feed_hash']) {
 			}
 		}
 		if ($this->get['format']=='excel') {
-			require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel.php');
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
 			$objPHPExcel=new PHPExcel();
 			$objPHPExcel->getSheet(0)->setTitle('Productfeed');
 			$objPHPExcel->getActiveSheet()->fromArray($excelRows);

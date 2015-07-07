@@ -275,7 +275,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							fclose($handle);
 						}
 						// excel
-						require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+						require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 						$phpexcel=PHPExcel_IOFactory::load($file_location);
 						foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 							$counter=0;
@@ -763,7 +763,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							}
 						} elseif ($that->post['format']=='excel') {
 							// excel
-							require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+							require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 							$phpexcel=PHPExcel_IOFactory::load($file);
 							foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 								$counter=0;

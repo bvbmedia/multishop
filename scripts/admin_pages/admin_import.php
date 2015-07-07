@@ -3,8 +3,8 @@ if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript" src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect_normal.js"></script>
-<link href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect_normal.js"></script>
+<link href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(".multiselect").multiselect();
@@ -466,7 +466,7 @@ if ($this->post['action']=='category-insert') {
 					fclose($handle);
 				}
 				// excel
-				require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 				$phpexcel=PHPExcel_IOFactory::load($file_location);
 				foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 					$counter=0;
@@ -1012,7 +1012,7 @@ if ($this->post['action']=='category-insert') {
 					}
 				} elseif ($this->post['format']=='excel') {
 					// excel
-					require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+					require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 					$phpexcel=PHPExcel_IOFactory::load($file);
 					foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 						$counter=0;
@@ -1577,7 +1577,7 @@ if ($this->post['action']=='category-insert') {
 											copy($tmpfile, $target);
 											@unlink($tmpfile);
 											// backup original eof
-											$categories_image_name=mslib_befe::resizeCategoryImage($target, $filename, PATH_site.t3lib_extMgm::siteRelPath($this->extKey), 1);
+											$categories_image_name=mslib_befe::resizeCategoryImage($target, $filename, PATH_site.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
 											if ($categories_image_name) {
 												$updateArray=array();
 												$updateArray['categories_image']=$categories_image_name;
@@ -1762,7 +1762,7 @@ if ($this->post['action']=='category-insert') {
 										copy($tmpfile, $target);
 										@unlink($tmpfile);
 										// backup original eof
-										$manufacturers_image_name=mslib_befe::resizeManufacturerImage($target, $filename, PATH_site.t3lib_extMgm::siteRelPath($this->extKey), 1);
+										$manufacturers_image_name=mslib_befe::resizeManufacturerImage($target, $filename, PATH_site.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey), 1);
 										if ($manufacturers_image_name) {
 											$updateArray=array();
 											$updateArray['manufacturers_image']=$manufacturers_image_name;

@@ -45,9 +45,9 @@ if ($this->get['categories_id'] or $this->get['products_id']) {
 	if (strstr($this->ms['MODULES']['CRUMBAR_TYPE'], "/")) {
 		require($this->DOCUMENT_ROOT.$this->ms['MODULES']['CRUMBAR_TYPE'].'.php');
 	} elseif ($this->ms['MODULES']['CRUMBAR_TYPE']) {
-		require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/crumbar/'.$this->ms['MODULES']['CRUMBAR_TYPE'].'.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/crumbar/'.$this->ms['MODULES']['CRUMBAR_TYPE'].'.php');
 	} else {
-		require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
 	}
 	if ($crum) {
 		$GLOBALS["TYPO3_CONF_VARS"]["tx_multishop"]['crumbar_html']=$crum;
@@ -73,7 +73,7 @@ if (!$GLOBALS["TYPO3_CONF_VARS"]["tx_multishop_started"]) {
 			}
 		}
 		if ($updateCart) {
-			require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 			$mslib_cart->init($this);
 			$mslib_cart->updateCart();

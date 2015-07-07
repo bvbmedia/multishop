@@ -63,7 +63,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] || !$output_array=$Cache_Lite->get(
 	if (strstr($this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'], "/")) {
 		require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'].'.php');
 	} elseif ($this->ms['MODULES']['PRODUCTS_DETAIL_TYPE']) {
-		require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_detail/'.$this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'].'.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/products_detail/'.$this->ms['MODULES']['PRODUCTS_DETAIL_TYPE'].'.php');
 	} else {
 		require_once('includes/products_detail/default.php');
 	}

@@ -9,7 +9,7 @@ $str3="SELECT * from static_countries where cn_short_en='".addslashes($this->pos
 $qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 $row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
 $countries_id=$row3['cn_iso_nr'];
-require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 $mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 $mslib_cart->init($this);
 $cart=$mslib_cart->getCart();

@@ -202,7 +202,7 @@ class mslib_fe {
 				break;
 			case 'relatives':
 				//$GLOBALS['TYPO3_DB']->store_lastBuiltQuery=1;
-				if (t3lib_extMgm::isLoaded('multishop_product_variations')) {
+				if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('multishop_product_variations')) {
 					$limit='';
 				}
 				$data=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('products_id,relative_product_id', 'tx_multishop_products_to_relative_products', "(products_id = '".$product['products_id']."' or relative_product_id = '".$product['products_id']."') and relation_types='cross-sell'", '', '', $limit);
@@ -310,7 +310,7 @@ class mslib_fe {
 					if (strstr($this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'], "/")) {
 						require($this->DOCUMENT_ROOT.$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'].'.php');
 					} else {
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/products_relatives/'.$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'].'.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/products_relatives/'.$this->ms['MODULES']['PRODUCTS_RELATIVES_TYPE'].'.php');
 					}
 				}
 			}
@@ -1994,7 +1994,7 @@ class mslib_fe {
 			if ($this->conf['email_tmpl_path']) {
 				$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
 			} else {
-				$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/email_template.tmpl');
+				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
 			}
 			$markerArray=array();
 			$markerArray['###BODY###']=$content;
@@ -2115,7 +2115,7 @@ class mslib_fe {
 			if ($this->conf['email_tmpl_path']) {
 				$template=$this->cObj->fileResource($this->conf['email_tmpl_path']);
 			} else {
-				$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/email_template.tmpl');
+				$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/email_template.tmpl');
 			}
 			$markerArray=array();
 			$markerArray['###BODY###']=$content;
@@ -3425,19 +3425,19 @@ class mslib_fe {
 		switch ($contentType) {
 			case 'home':
 				if ($this->ms['MODULES']['HOME_SPECIALS_BOX']) {
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_specials.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_specials.php');
 				}
 				break;
 			case 'single_special':
-				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_specials.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_specials.php');
 				break;
 			case 'specials_listing_page':
-				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_specials.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_specials.php');
 				break;
 			case 'products_search':
 			case 'specials_section':
 			default:
-				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_specials.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_specials.php');
 				break;
 		}
 		return $content;
@@ -4615,13 +4615,13 @@ class mslib_fe {
 		return $weight;
 	}
 	public function countCartQuantity() {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 		$mslib_cart->init($this);
 		return $mslib_cart->countCartQuantity();
 	}
 	public function countCartTotalPrice($subtract_discount=1, $include_vat=0, $country_id=0) {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 		$mslib_cart->init($this);
 		return $mslib_cart->countCartTotalPrice($subtract_discount, $include_vat, $country_id);
@@ -5760,7 +5760,7 @@ class mslib_fe {
 		if ($this->conf['html_box_tmpl_path']) {
 			$template=$this->cObj->fileResource($this->conf['html_box_tmpl_path']);
 		} else {
-			$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath('multishop').'templates/html_box.tmpl');
+			$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'templates/html_box.tmpl');
 		}
 		// Extract the subparts from the template
 		$subparts=array();
@@ -6615,7 +6615,7 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_multishop_cache']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_clear_multishop_cache', 1);
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_multishop_cache']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_reset_the_multishop_cache').'?\')"';
 			}
-			if (t3lib_extMgm::isLoaded('cooluri')) {
+			if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('cooluri')) {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['label']=$this->pi_getLL('admin_clear_cooluri_cache');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_clear_cooluri_cache', 1);
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_reset_the_cooluri_cache').'?\')"';
@@ -7310,7 +7310,7 @@ class mslib_fe {
 		}
 	}
 	public function getOrder($string, $field='orders_id') {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		return $mslib_order->getOrder($string, $field);
@@ -7411,7 +7411,7 @@ class mslib_fe {
 		array example:  $filter[]='o.orders_id=12'
 	*/
 	public function getOrderTotalPrice($orders_id, $skip_method_costs=0) {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		return $mslib_order->getOrderTotalPrice($orders_id, $skip_method_costs);
@@ -7444,7 +7444,7 @@ class mslib_fe {
 		array example:  $filter[]='o.orders_id=12'
 	*/
 	public function mailOrder($orders_id, $copy_to_merchant=1, $custom_email_address='', $mail_template='') {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		return $mslib_order->mailOrder($orders_id, $copy_to_merchant, $custom_email_address, $mail_template);
@@ -8899,31 +8899,31 @@ class mslib_fe {
 		return $output;
 	}
 	public function updateCart() {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 		$mslib_cart->init($this);
 		$mslib_cart->updateCart();
 	}
 	public function countCartTotalTax($country_id=0) {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_cart.php');
 		$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 		$mslib_cart->init($this);
 		return $mslib_cart->countCartTotalTax($country_id);
 	}
 	public function createOrder($address) {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		return $mslib_order->createOrder($address);
 	}
 	public function createOrdersProduct($orders_id, $orders_product=array()) {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		return $mslib_order->createOrdersProduct($orders_id, $orders_product);
 	}
 	public function printOrderDetailsTable($order, $template_type='site') {
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_order.php');
 		$mslib_order=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_order');
 		$mslib_order->init($this);
 		return $mslib_order->printOrderDetailsTable($order, $template_type);

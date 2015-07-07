@@ -17,7 +17,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/fr
 // custom hook that can be controlled by third-party plugin eof
 if (!$skipMultishopUpdates) {
 	// V1/V2 COMPARE DATABASE FIRST
-	require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/compare_database_old.php');
 	// V3 COMPARE DATABASE
 	$str="select id from tx_multishop_sessions limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -722,7 +722,7 @@ if (!$skipMultishopUpdates) {
 	*/
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	// CREATE / UPDATE MULTISHOP SETTINGS. CAN BE FURTHER CONTROLLED BY THIRD PARTY PLUGINS.
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/configuration/tx_multishop_configuration_group.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/configuration/tx_multishop_configuration_group.php');
 	foreach ($records as $record) {
 		if (!mslib_befe::ifExists($record['id'], 'tx_multishop_configuration_group', 'id')) {
 			$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_configuration_group', $record);
@@ -730,7 +730,7 @@ if (!$skipMultishopUpdates) {
 			$messages[]=$query2;
 		}
 	}
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/configuration/tx_multishop_configuration.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/configuration/tx_multishop_configuration.php');
 	foreach ($records as $record) {
 		if (!mslib_befe::ifExists($record['configuration_key'], 'tx_multishop_configuration', 'configuration_key')) {
 			$query2=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_configuration', $record);

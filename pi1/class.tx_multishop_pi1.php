@@ -52,10 +52,10 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		self::construct($conf);
 		if (!defined('MsApplicationTopOnceIsLoaded')) {
 			define('MsApplicationTopOnceIsLoaded', 1);
-			require(t3lib_extMgm::extPath('multishop').'scripts/application_top_once.php');
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/application_top_once.php');
 		}
-		require(t3lib_extMgm::extPath('multishop').'scripts/application_top_always.php');
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/core.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/application_top_always.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/core.php');
 		return '<div class="boxes csc-plugin csc-plugin-multishop_pi1"><div id="tx_multishop_pi1_core">'.$this->pi_wrapInBaseClass($content).'</div></div>';
 	}
 	/**
@@ -68,19 +68,19 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->pi_setPiVarDefaults();
 		$this->pi_USER_INT_obj=1;
 		$this->pi_initPIflexForm();
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_fe.php');
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_befe.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.mslib_fe.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.mslib_befe.php');
 		$this->HTTP_HOST=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
 		// Get the vhost full path (example: /var/www/html/domain.com/public_html/my_cms/)
 		$this->DOCUMENT_ROOT=PATH_site;
 		// Get the vhost full path to multishop (example: /var/www/html/domain.com/public_html/my_cms/typo3conf/ext/multishop/)
-		$this->DOCUMENT_ROOT_MS=PATH_site.t3lib_extMgm::siteRelPath($this->extKey);
+		$this->DOCUMENT_ROOT_MS=PATH_site.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey);
 		// Get the vhost full path to TYPO3 (example: /var/www/html/domain.com/public_html/my_cms/typo3/)
 		$this->DOCUMENT_ROOT_TYPO3=PATH_site.TYPO3_mainDir;
 		// Get the site full URL (example: http://domain.com/my_cms/)
 		$this->FULL_HTTP_URL=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 		// Get the multishop full URL (example: http://domain.com/my_cms/typo3/ext/multishop/ or http://domain.com/my_cms/typo3conf/ext/multishop/)
-		$this->FULL_HTTP_URL_MS=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath($this->extKey);
+		$this->FULL_HTTP_URL_MS=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey);
 		// Get the full URL (example: http://domain.com/my_cms/typo3/)
 		$this->FULL_HTTP_URL_TYPO3=\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').TYPO3_mainDir;
 		$this->get=\TYPO3\CMS\Core\Utility\GeneralUtility::_GET();
@@ -188,10 +188,10 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		// Autoloader works great in TYPO3 4.7.7. But in TYPO3 4.5.X the invalid namespace classes are not autoloaded so lets load it manually then too
 		// PHP Fatal error:  Access to undeclared static property: t3lib_autoloader::$classNameToFileMapping in /shopcvs/skeleton/typo3_src-4.7.5/t3lib/class.t3lib_autoloader.php on line 151
 		if (!class_exists('Cache_Lite')) {
-			require_once(t3lib_extMgm::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/Lite.php');
+			require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'res/Cache_Lite-1.7.16/Cache/Lite.php');
 		}
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.mslib_payment.php');
-		require_once(t3lib_extMgm::extPath('multishop').'pi1/classes/class.tx_mslib_catalog.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.mslib_payment.php');
+		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_catalog.php');
 	}
 	/*
 		this method is created for returning ajax content.
@@ -201,19 +201,19 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		self::construct($conf);
 		if (!defined('MsApplicationTopOnceIsLoaded')) {
 			define('MsApplicationTopOnceIsLoaded', 1);
-			require(t3lib_extMgm::extPath('multishop').'scripts/application_top_once.php');
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/application_top_once.php');
 		}
-		require(t3lib_extMgm::extPath('multishop').'scripts/application_top_always.php');
-		require(t3lib_extMgm::extPath('multishop').'scripts/ajax_pages/core.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/application_top_always.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/ajax_pages/core.php');
 		return $this->pi_wrapInBaseClass($content);
 	}
 	function main($content, $conf) {
 		self::construct($conf);
 		if (!defined('MsApplicationTopOnceIsLoaded')) {
 			define('MsApplicationTopOnceIsLoaded', 1);
-			require(t3lib_extMgm::extPath('multishop').'scripts/application_top_once.php');
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/application_top_once.php');
 		}
-		require(t3lib_extMgm::extPath('multishop').'scripts/application_top_always.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/application_top_always.php');
 		switch ($this->method) {
 			case 'custom_script':
 				if ($this->custom_script_location) {
@@ -221,7 +221,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				break;
 			case 'meta_tags':
-				require(t3lib_extMgm::extPath('multishop').'scripts/meta_tags.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/meta_tags.php');
 				if (!$this->ajax_content) {
 					ksort($meta_tags);
 					$meta_tags_html='';
@@ -244,9 +244,9 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					if ($this->ms['MODULES']['BASKET_TYPE']=='default') {
 						$this->ms['MODULES']['BASKET_TYPE']='basket_default';
 					}
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/'.$this->ms['MODULES']['BASKET_TYPE'].'.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/'.$this->ms['MODULES']['BASKET_TYPE'].'.php');
 				} else {
-					require_once(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/basket_default.php');
+					require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/basket_default.php');
 				}
 				break;
 			case 'manufacturers':
@@ -256,9 +256,9 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				if (strstr($this->ms['MODULES']['MANUFACTURERS_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['MANUFACTURERS_TYPE'].'.php');
 				} elseif ($this->ms['MODULES']['MANUFACTURERS_TYPE']) {
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/manufacturers_listing/'.$this->ms['MODULES']['MANUFACTURERS_TYPE'].'.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/manufacturers_listing/'.$this->ms['MODULES']['MANUFACTURERS_TYPE'].'.php');
 				} else {
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/manufacturers_listing/default.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/manufacturers_listing/default.php');
 				}
 				break;
 			case 'categories':
@@ -268,20 +268,20 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					if ($this->ms['MODULES']['CATEGORIES_TYPE']=='default') {
 						$this->ms['MODULES']['CATEGORIES_TYPE']='categories_default';
 					}
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/'.$this->ms['MODULES']['CATEGORIES_TYPE'].'.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/'.$this->ms['MODULES']['CATEGORIES_TYPE'].'.php');
 				} else {
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/categories_default.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/categories_default.php');
 				}
 				break;
 			case 'crumbar':
 				if (strstr($this->ms['MODULES']['CRUMBAR_TYPE'], "/")) {
 					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['CRUMBAR_TYPE'].'.php');
 				} elseif ($this->ms['MODULES']['CRUMBAR_TYPE']) {
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/crumbar/'.$this->ms['MODULES']['CRUMBAR_TYPE'].'.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/crumbar/'.$this->ms['MODULES']['CRUMBAR_TYPE'].'.php');
 				} else {
-					require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
 				}
-				require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
 				$content=$crum;
 				break;
 			case 'search':
@@ -293,27 +293,27 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				switch ($this->contentType) {
 					case 'searchform_with_keyword_and_category_dropdown_menu':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/searchform_with_keyword_and_category_dropdown_menu.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/searchform_with_keyword_and_category_dropdown_menu.php');
 						break;
 					case 'ultrasearch':
 						if (strstr($this->ms['MODULES']['ULTRASEARCH_TYPE'], "/")) {
 							require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ULTRASEARCH_TYPE'].'.php');
 						} else {
-							require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/ultrasearch.php');
+							require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/ultrasearch.php');
 						}
 						break;
 					case 'price_filter_navigation_box':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/price_filter_navigation_box.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/price_filter_navigation_box.php');
 						break;
 					case 'manufacturers_dropdown_menu':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/manufacturers_dropdown_menu.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/manufacturers_dropdown_menu.php');
 						break;
 					case 'searchform_with_manufacturers_dropdown_menu':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/searchform_with_manufacturers_dropdown_menu.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/searchform_with_manufacturers_dropdown_menu.php');
 						break;
 					case 'default':
 					default:
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/searchform.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/searchform.php');
 						break;
 				}
 				break;
@@ -351,19 +351,19 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				switch ($this->contentType) {
 					case 'products_new':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_new.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_new.php');
 						break;
 					case 'products_modified':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_modified.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_modified.php');
 						break;
 					case 'products_upcoming':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_upcoming.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_upcoming.php');
 						break;
 					case 'products_hot':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_hot.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_hot.php');
 						break;
 					case 'products_last_visited':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_last_visited.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_last_visited.php');
 						break;
 					case 'products_detail':
 						if ($this->productsID and !$this->get['products_id']) {
@@ -372,7 +372,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						if (!$this->ms['MODULES']['DISABLE_CRUMBAR'] and $GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html']) {
 							$content.=$GLOBALS['TYPO3_CONF_VARS']["tx_multishop"]['crumbar_html'];
 						}
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_detail.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_detail.php');
 						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 						break;
 					case 'products_listing':
@@ -381,7 +381,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						} elseif ($this->categoriesStartingPoint and !$this->get['categories_id']) {
 							$this->get['categories_id']=$this->categoriesStartingPoint;
 						}
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/products_listing.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/products_listing.php');
 						break;
 				}
 				break;
@@ -406,7 +406,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								// relative mode
 								require($this->DOCUMENT_ROOT.$this->ms['MODULES']['SHOPPING_CART_TYPE'].'.php');
 							} else {
-								require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/shopping_cart/default.php');
+								require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/shopping_cart/default.php');
 							}
 						}
 						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
@@ -429,19 +429,19 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								// relative mode
 								require($this->DOCUMENT_ROOT.$this->ms['MODULES']['CHECKOUT_TYPE'].'/checkout.php');
 							} else {
-								require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/checkout/'.$this->ms['MODULES']['CHECKOUT_TYPE'].'/checkout.php');
+								require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/checkout/'.$this->ms['MODULES']['CHECKOUT_TYPE'].'/checkout.php');
 							}
 						}
 						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 						break;
 					case 'create_account':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/create_account.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/create_account.php');
 						break;
 					case 'edit_account':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/edit_account.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/edit_account.php');
 						break;
 					case 'store_locator':
-						require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/store_locator.php');
+						require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/store_locator.php');
 						break;
 					case 'order_history':
 						if (mslib_fe::loggedin()) {
@@ -458,14 +458,14 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									// relative mode
 									require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ORDER_HISTORY_TYPE'].'.php');
 								} else {
-									require(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/order_history/default.php');
+									require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/order_history/default.php');
 								}
 							}
 						}
 						$content='<div id="tx_multishop_pi1_core">'.$content.'</div>';
 						break;
 					case 'currency_selector':
-						require_once(t3lib_extMgm::extPath('multishop').'scripts/front_pages/includes/content_elements/currency_selector.php');
+						require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/content_elements/currency_selector.php');
 						break;
 					default:
 						// more items could be added through hook
@@ -486,7 +486,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				break;
 			case 'coreshop':
-				require(t3lib_extMgm::extPath('multishop').'scripts/core.php');
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/core.php');
 				if ($this->conf['show_powered_by_multishop']) {
 					$content.='
 				<div class="align_center" id="typo3multishop_logo">

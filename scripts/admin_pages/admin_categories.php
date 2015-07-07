@@ -6,15 +6,15 @@ if (!defined('TYPO3_MODE')) {
 if ($this->conf['admin_categories_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_categories_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_categories.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_categories.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['categories']=$this->cObj->getSubpart($subparts['template'], '###CATEGORIES###');
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script src="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
-<link rel="stylesheet" href="'.t3lib_extMgm::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
+<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
+<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$(".master_categories_ul").sortable({

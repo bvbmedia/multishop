@@ -72,7 +72,7 @@ $subpartArray['###ADMIN_LABEL_LINK_DOWNLOAD_AS_EXCEL###']=$this->pi_getLL('admin
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
 	$tmp='';
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 	$pagination_listing=$tmp;
 }
 // pagination eof

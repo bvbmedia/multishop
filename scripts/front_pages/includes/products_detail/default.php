@@ -242,9 +242,9 @@ if (!$product['products_id']) {
 		switch ($this->ms['MODULES']['SHOW_STOCK_LEVEL_AS_BOOLEAN']) {
 			case 'yes_with_image':
 				if ($product_qty) {
-					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/icons/status_green.png" alt="'.htmlspecialchars($this->pi_getLL('in_stock')).'" /></div>';
 				} else {
-					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.t3lib_extMgm::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
+					$product_qty='<div class="products_stock"><span class="stock_label">'.$this->pi_getLL('stock').':</span><img src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/icons/status_red.png" alt="'.htmlspecialchars($this->pi_getLL('not_in_stock')).'" /></div>';
 				}
 				break;
 			case 'yes_without_image':
@@ -303,7 +303,7 @@ if (!$product['products_id']) {
 	if ($this->conf['product_detail_tmpl_path']) {
 		$template=$this->cObj->fileResource($this->conf['product_detail_tmpl_path']);
 	} else {
-		$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/products_detail.tmpl');
+		$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/products_detail.tmpl');
 	}
 	$markerArray['###CONTENT###']=$output['content'];
 	$markerArray['###PAGINATION###']=$output['pagination'];

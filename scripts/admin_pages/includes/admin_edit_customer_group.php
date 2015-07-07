@@ -7,7 +7,7 @@ $output=array();
 if ($this->conf['admin_edit_customer_group_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_group_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/admin_edit_customer_group.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_edit_customer_group.tmpl');
 }
 // Extract the subparts from the template
 if ($this->post) {

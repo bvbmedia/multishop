@@ -373,10 +373,10 @@ $select[]='(select sum(grand_total) from tx_multishop_orders where customer_id=f
 $pageset=mslib_fe::getCustomersPageSet($filter, $offset, $this->ms['MODULES']['PAGESET_LIMIT'], $orderby, $having, $select, $where);
 $customers=$pageset['customers'];
 if ($pageset['total_rows']>0 && isset($pageset['customers'])) {
-	require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_customers_listing.php');
+	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_customers_listing.php');
 	// pagination
 	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
-		require(t3lib_extMgm::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 		$content.=$tmp;
 	}
 	// pagination eof

@@ -193,7 +193,7 @@ function removeProductAttributeExtra($pid, $paid) {
 
 if (!empty($filename)) {
 	// +--------------------------------------------------------------------------------------------------------------------+	
-	require_once(t3lib_extMgm::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
+	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 	$phpexcel=PHPExcel_IOFactory::load($dest);
 	foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
 		$colname=array();

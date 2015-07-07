@@ -1,6 +1,6 @@
 <?php
 // DO NOT REMOVE OR CHANGE THESE 2 LINES:
-if (!strstr(t3lib_extMgm::extRelPath('multishop'), 'typo3conf')) {
+if (!strstr(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('multishop'), 'typo3conf')) {
 	$BACK_PATH='../../../';
 	define('TYPO3_MOD_PATH', 'ext/multishop/mod1/');
 } else {

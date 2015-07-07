@@ -171,7 +171,7 @@ switch ($_REQUEST['action']) {
 					foreach ($items as $item) {
 						$dbFilename=$item['categories_image'];
 						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-						$newFilename=mslib_befe::resizeCategoryImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
+						$newFilename=mslib_befe::resizeCategoryImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
 						if ($newFilename) {
 							$content.=$newFilename.'<BR>';
 							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
@@ -202,7 +202,7 @@ switch ($_REQUEST['action']) {
 					foreach ($items as $item) {
 						$dbFilename=$item['manufacturers_image'];
 						$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-						$newFilename=mslib_befe::resizeManufacturerImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
+						$newFilename=mslib_befe::resizeManufacturerImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['manufacturers']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
 						if ($newFilename) {
 							$content.=$newFilename.'<BR>';
 							if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
@@ -241,7 +241,7 @@ switch ($_REQUEST['action']) {
 							$col='products_image'.$s;
 							$dbFilename=$item[$col];
 							$folder=mslib_befe::getImagePrefixFolder($dbFilename);
-							$newFilename=mslib_befe::resizeProductImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'), 1);
+							$newFilename=mslib_befe::resizeProductImage($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$dbFilename, $dbFilename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'), 1);
 							if ($newFilename) {
 								$content.=$newFilename.'<BR>';
 								if ($this->ms['MODULES']['ADMIN_AUTO_CONVERT_UPLOADED_IMAGES_TO_PNG'] && $newFilename!=$dbFilename) {
@@ -488,7 +488,7 @@ switch ($_REQUEST['action']) {
 						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder.'/'.$filename;
 						if (copy($path, $target)) {
 							if ($this->post['resize_images']) {
-								$tmp=mslib_befe::resizeProductImage($target, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'));
+								$tmp=mslib_befe::resizeProductImage($target, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'));
 							}
 						}
 					}
@@ -503,7 +503,7 @@ switch ($_REQUEST['action']) {
 						$target=$this->DOCUMENT_ROOT.$this->ms['image_paths']['categories']['original'].'/'.$folder.'/'.$filename;
 						if (copy($path, $target)) {
 							if ($this->post['resize_images']) {
-								$tmp=mslib_befe::resizeCategoryImage($target, $filename, $this->DOCUMENT_ROOT.t3lib_extMgm::siteRelPath('multishop'));
+								$tmp=mslib_befe::resizeCategoryImage($target, $filename, $this->DOCUMENT_ROOT.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop'));
 							}
 						}
 					}

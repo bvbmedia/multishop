@@ -7,7 +7,7 @@ $output=array();
 if ($this->conf['crumbar_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['crumbar_tmpl_path']);
 } else {
-	$template=$this->cObj->fileResource(t3lib_extMgm::siteRelPath($this->extKey).'templates/crumbar.tmpl');
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/crumbar.tmpl');
 }
 // Extract the subparts from the template
 $subparts=array();
