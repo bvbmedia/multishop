@@ -87,8 +87,8 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$configuration['parent_id']=$this->get['cid'];
 	$save_block='
 		<div class="save_block">
-			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
-			<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>
+			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger">'.$this->pi_getLL('cancel').'</a>
+			<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
 		</div>
 	';
 	$content.='
