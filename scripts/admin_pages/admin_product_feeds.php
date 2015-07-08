@@ -469,7 +469,9 @@ if ($this->ms['show_main']) {
 	} else {
 		$content.='<h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')).'</h3></div></div>';
 	}
-	$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('import_feed_record').'</h3></div> <fieldset id="scheduled_import_jobs_form">
+	$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('import_feed_record').'</h3></div>
+	<div class="panel-body">
+	<fieldset id="scheduled_import_jobs_form">
 		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
 			<div class="account-field">
 				<label for="new_name">'.$this->pi_getLL('name').'</label>
