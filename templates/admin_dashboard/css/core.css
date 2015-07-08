@@ -3,7 +3,7 @@
 #msadmin_footer { background:#000; padding:0 0 0 220px; }
 
 html, body { height:100%; }
-body { background:#333; font-size:14px; line-height:24px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
+body { background:#333; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
 
 #msadmin_wrapper { background:#333; padding:0 0 0 220px; }
 #msadmin_section { background:#f5f5f5; padding:10px; }
