@@ -233,7 +233,7 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
-			awesomeFontCss = EXT:multishop/templates/css/font-awesome/font-awesome.min.css
+			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
 			awesomeFontCss {
 				media =
 				import = 0
