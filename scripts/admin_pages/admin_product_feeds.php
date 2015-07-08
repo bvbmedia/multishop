@@ -409,7 +409,7 @@ if ($this->ms['show_main']) {
 		$feeds[]=$row;
 	}
 	if (is_array($feeds) and count($feeds)) {
-		$content.='<div class="main-heading"><h2>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h2></div>
+		$content.='<div class="bvbBox-heading"><h3>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h3></div>
 		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
 		<tr>
 			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
