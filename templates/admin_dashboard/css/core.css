@@ -26,7 +26,7 @@ h5 { font-weight:normal; font-family:"Open Sans", Arial, Helvetica, sans-serif; 
 hr { margin-top:15px; margin-bottom:15px; }
 
 .btn { transition:background .25s, color .25s; }
-
+.btn.delete_field { margin-left:10px; }
 .table th { white-space:nowrap; }
 
 .cellID { text-align:right; }
