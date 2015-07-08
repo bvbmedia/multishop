@@ -30,6 +30,5 @@ h5 { font-weight:normal; font-family:"Open Sans", Arial, Helvetica, sans-serif; 
 .cellDate { text-align:right; }
 .cellDownload > .btn { width:100%; text-align:left; }
 .cellDownload > .btn:first-child { margin-bottom:5px; }
-.cellDownload > .btn > i { margin-right:5px; }
 td.cellAction { white-space:nowrap; }
 .cellBackup > .btn { width:100%; }
