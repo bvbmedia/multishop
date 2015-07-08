@@ -365,7 +365,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$content.='
 		</div>
 		<hr>
-		<button name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success pull-right"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span></button>
+		<button name="Submit" type="submit" class="btn btn-success pull-right"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('save')).'</button>
     	</div>
 		<input name="feed_id" type="hidden" value="'.$this->get['feed_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
