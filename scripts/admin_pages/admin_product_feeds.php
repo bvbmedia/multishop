@@ -341,7 +341,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="form-group hide_pf">
 				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('fields')).'</label>
 				<div class="col-md-10">
-				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success" />
+				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success btn-sm" />
 				</div>
 		</div>
 		<div id="product_feed_fields">';
@@ -364,11 +364,9 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 		$content.='
 		</div>
-		<div class="form-group">
-		    <div class="col-md-offset-2 col-md-10">
-				<input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success" />
-    		</div>
-		</div>
+		<hr>
+		<input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success pull-right" />
+    	</div>
 		<input name="feed_id" type="hidden" value="'.$this->get['feed_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
 		</form>
