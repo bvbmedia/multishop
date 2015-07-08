@@ -414,13 +414,13 @@ if ($this->ms['show_main']) {
 		<table width="100%" border="0" align="center" class="table table-striped table-bordered" id="admin_modules_listing">
 		<thead>
 		<tr>
-			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('name')).'</th>
-			<th width="100" nowrap>'.htmlspecialchars($this->pi_getLL('created')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('download_feed_record')).'</th>
+			<th class="cellID">'.htmlspecialchars($this->pi_getLL('id')).'</th>
+			<th class="cellName">'.htmlspecialchars($this->pi_getLL('name')).'</th>
+			<th class="cellDate">'.htmlspecialchars($this->pi_getLL('created')).'</th>
+			<th class="cellStatus">'.htmlspecialchars($this->pi_getLL('status')).'</th>
+			<th class="cellDownload">'.htmlspecialchars($this->pi_getLL('download')).'</th>
+			<th class="cellAction">'.htmlspecialchars($this->pi_getLL('action')).'</th>
+			<th class="cellBackup">'.htmlspecialchars($this->pi_getLL('download_feed_record')).'</th>
 		</tr>
 		</thead>';
 		foreach ($feeds as $feed) {
@@ -438,10 +438,10 @@ if ($this->ms['show_main']) {
 			// custom page hook that can be controlled by third-party plugin eof
 			$content.='
 			<tr>
-				<td align="right" width="25" nowrap><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['id']).'</a></td>
-				<td><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['name']).'</a></td>
-				<td width="100" align="center" nowrap>'.date("Y-m-d", $feed['crdate']).'</td>
-				<td width="50">
+				<td class="cellID"><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['id']).'</a></td>
+				<td class="cellName"><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['name']).'</a></td>
+				<td class="cellDate">'.date("Y-m-d", $feed['crdate']).'</td>
+				<td class="cellStatus">
 				';
 			if (!$feed['status']) {
 				$content.='<span class="admin_status_red" alt="Disable"></span>';
@@ -451,16 +451,16 @@ if ($this->ms['show_main']) {
 				$content.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$content.='</td>
-			<td width="150">
+			<td class="cellDownload">
 				<a href="'.$feed['feed_link'].'" class="admin_menu">Download feed</a><br />
 				<a href="'.$feed['feed_link_excel'].'" class="admin_menu">Download Excel feed</a>
 			</td>
-			<td width="50">
+			<td class="cellAction">
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="admin_menu_edit">edit</a>
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';
 			$content.='
 			</td>
-			<td>
+			<td class="cellBackup">
 				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="btn btn-success">'.$this->pi_getLL('download_feed_record').'</a>
 			</td>
 			</tr>';
