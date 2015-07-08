@@ -1,17 +1,10 @@
 <!-- ###TEMPLATE### begin -->
 <script type="text/javascript">
     jQuery(document).ready(function ($) {
-        $(".tab_content").hide();
-        $("ul.tabs li:first").addClass("active").show();
-        $(".tab_content:first").show();
-        $("ul.tabs li").click(function () {
-            $("ul.tabs li").removeClass("active");
-            $(this).addClass("active");
-            $(".tab_content").hide();
-            var activeTab = $(this).find("a").attr("href");
-            $(activeTab).fadeIn(0);
-            return false;
-        });
+$('.nav-tabs a:first').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
         $(document).on('click', ".delete_manufacturers_images", function (e) {
             e.preventDefault();
             var img_filename = $(this).attr("rel");
@@ -34,27 +27,34 @@
         });
     });
 </script>
-<form class="admin_manufacturers_edit blockSubmitForm" name="admin_manufacturers_edit_###MANUFACTURER_ID###" id="admin_manufacturers_edit_###MANUFACTURER_ID###" method="post" action="###MANUFACTURER_EDIT_FORM_URL###" enctype="multipart/form-data">
+<div class="panel panel-default">
+    <div class="panel-heading"><h3>###MANUFACTURER_FORM_HEADING###</h3></div>
+
+    <div class="panel-body">
+    <form class="admin_manufacturers_edit blockSubmitForm form-horizontal" name="admin_manufacturers_edit_###MANUFACTURER_ID###" id="admin_manufacturers_edit_###MANUFACTURER_ID###" method="post" action="###MANUFACTURER_EDIT_FORM_URL###" enctype="multipart/form-data">
     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
     <input name="action" type="hidden" value="###VALUE_FORM_MANUFACTURER_ACTION_URL###" />
 
-    <div class="main-heading"><h1>###MANUFACTURER_FORM_HEADING###</h1></div>
-    <div id="tab-container" class="msadminVerticalTabs">
-        <ul class="tabs" id="admin_orders">
-            <li class="active"><a href="#category_main">###ADMIN_LABEL_TABS_DETAILS###</a></li>
-            <li><a href="#manufacturer_content">###ADMIN_LABEL_TABS_CONTENT###</a></li>
-            <li><a href="#manufacturer_meta">###ADMIN_LABEL_TABS_META###</a></li>
-        </ul>
-        <div class="tab_container">
-            <div style="display: block;" id="category_main" class="tab_content">
-                <div class="account-field" id="msEditManufacturerInputName">
-                    <label for="manufacturers_name">###LABEL_MANUFACTURER_NAME###</label>
-                    <input spellcheck="true" type="text" class="text" name="manufacturers_name" id="manufacturers_name" value="###VALUE_MANUFACTURER_NAME###">
-                </div>
-                <div class="account-field" id="msEditManufacturerInputImage">
-                    <label for="manufacturers_image">###LABEL_MANUFACTURER_IMAGE###</label>
 
-                    <div id="manufacturers_image">
+    <div id="tab-container" class="msadminVerticalTabs">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#category_main" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_DETAILS###</a></li>
+            <li role="presentation"><a href="#manufacturer_content" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_CONTENT###</a></li>
+            <li role="presentation"><a href="#manufacturer_meta" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_META###</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="category_main">
+                <div class="form-group" id="msEditManufacturerInputName">
+                    <label for="manufacturers_name" class="control-label col-md-2">###LABEL_MANUFACTURER_NAME###</label>
+                    <div class="col-md-10">
+                    <input spellcheck="true" type="text" class="text form-control" name="manufacturers_name" id="manufacturers_name" value="###VALUE_MANUFACTURER_NAME###">
+                    </div>
+                </div>
+                <div class="form-group" id="msEditManufacturerInputImage">
+                    <label for="manufacturers_image" class="control-label col-md-2">###LABEL_MANUFACTURER_IMAGE###</label>
+					<div class="col-md-10">
+                    <div id="manufacturers_image" class="form-control-static">
                         <noscript>
                             <input name="manufacturers_image" type="file" />
                         </noscript>
@@ -70,6 +70,7 @@
                             <a href="#" class="delete_manufacturers_images" rel="###MANUFACTURER_IMAGES_FILENAME###"><img src="###FULL_HTTP_URL###templates/images/icons/delete2.png" border="0" alt="delete image"></a>
                         </div>
                         <!-- ###MANUFACTURER_IMAGES### end -->
+                    </div>
                     </div>
                 </div>
                 <script type="text/javascript">
@@ -103,63 +104,88 @@
                         });
                     });
                 </script>
-                <div class="account-field" id="msEditManufacturerInputVisibility">
-                    <label for="status">###LABEL_MANUFACTURER_VISIBLE###</label>
-                    <input name="status" type="radio" value="1" ###MANUFACTURER_VISIBLE_CHECKED### /> ###LABEL_MANUFACTURER_ADMIN_YES### <input name="status" type="radio" value="0" ###MANUFACTURER_NOT_VISIBLE_CHECKED### />
-                    ###LABEL_MANUFACTURER_ADMIN_NO###
+                <div class="form-group" id="msEditManufacturerInputVisibility">
+                    <label for="status" class="control-label col-md-2">###LABEL_MANUFACTURER_VISIBLE###</label>
+                    <div class="col-md-10">
+                    <div class="radio-inline"><input name="status" type="radio" value="1" ###MANUFACTURER_VISIBLE_CHECKED### /> ###LABEL_MANUFACTURER_ADMIN_YES###</div>
+                    <div class="radio-inline"><input name="status" type="radio" value="0" ###MANUFACTURER_NOT_VISIBLE_CHECKED### /> ###LABEL_MANUFACTURER_ADMIN_NO###</div>
+                    </div>
                 </div>
             </div>
-            <div style="display: block;" id="manufacturer_content" class="tab_content">
+            <div role="tabpanel" class="tab-pane" id="manufacturer_content">
                 <!-- ###MANUFACTURERS_CONTENT### begin -->
-                <div class="account-field" id="msEditManufacturerInputDesc_###LANGUAGE_UID###">
-                    <label>###LABEL_MANUFACTURER_LANGUAGE###</label>
+                <div class="form-group" id="msEditManufacturerInputDesc_###LANGUAGE_UID###">
+                    <label class="control-label col-md-2">###LABEL_MANUFACTURER_LANGUAGE###</label>
+                    <div class="col-md-10"><p class="form-control-static">
                     ###MANUFACTURER_CONTENT_FLAG###
-                    ###MANUFACTURER_CONTENT_TITLE###
+                    ###MANUFACTURER_CONTENT_TITLE###</p>
+                    </div>
                 </div>
-                <div class="account-field" id="msEditManufacturerInputShortDesc_###LANGUAGE_UID###">
-                    <label for="content">###LABEL_MANUFACTURER_SHORT_DESCRIPTION###</label>
+                <div class="form-group" id="msEditManufacturerInputShortDesc_###LANGUAGE_UID###">
+                    <label for="content" class="control-label col-md-2">###LABEL_MANUFACTURER_SHORT_DESCRIPTION###</label>
+                    <div class="col-md-10">
                     <textarea spellcheck="true" name="shortdescription[###LANGUAGE_UID###]" id="shortdescription[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_SHORT_DESCRIPTION###</textarea>
+                    </div>
                 </div>
-                <div class="account-field" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
-                    <label for="content">###LABEL_MANUFACTURER_CONTENT###</label>
+                <div class="form-group" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
+                    <label for="content" class="control-label col-md-2">###LABEL_MANUFACTURER_CONTENT###</label>
+                    <div class="col-md-10">
                     <textarea spellcheck="true" name="content[###LANGUAGE_UID###]" id="content[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_CONTENT###</textarea>
+                    </div>
                 </div>
-                <div class="account-field" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
-                    <label for="content_footer">###LABEL_MANUFACTURER_CONTENT_FOOTER###</label>
+                <div class="form-group" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
+                    <label for="content_footer" class="control-label col-md-2">###LABEL_MANUFACTURER_CONTENT_FOOTER###</label>
+                    <div class="col-md-10">
                     <textarea spellcheck="true" name="content_footer[###LANGUAGE_UID###]" id="content_footer[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_CONTENT_FOOTER###</textarea>
+                    </div>
                 </div>
                 <!-- ###MANUFACTURERS_CONTENT### end -->
             </div>
 
-            <div style="display: block;" id="manufacturer_meta" class="tab_content">
+            <div role="tabpanel" class="tab-pane" id="manufacturer_meta">
                 <!-- ###MANUFACTURERS_META### begin -->
-                <div class="account-field" id="msEditManufacturerInputMeta_###LANGUAGE_UID###">
-                    <label>###LABEL_MANUFACTURER_META_LANGUAGE###</label>
-                    ###MANUFACTURER_META_FLAG###
-                    ###MANUFACTURER_META_TITLE###
+                <div class="form-group" id="msEditManufacturerInputMeta_###LANGUAGE_UID###">
+                    <label class="control-label col-md-2">###LABEL_MANUFACTURER_META_LANGUAGE###</label>
+                    <div class="col-md-10"><p class="form-control-static">
+                 	   ###MANUFACTURER_META_FLAG###
+                 	   ###MANUFACTURER_META_TITLE###</p>
+                    </div>
                 </div>
-                <div class="account-field" id="msEditManufacturerInputMetaTitle_###LANGUAGE_UID###">
-                    <label for="meta_title">###ADMIN_LABEL_INPUT_META_TITLE###</label>
-                    <input type="text" class="text" name="meta_title[###LANGUAGE_UID###]" id="meta_title[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_TITLE###">
+                <div class="form-group" id="msEditManufacturerInputMetaTitle_###LANGUAGE_UID###">
+                    <label for="meta_title" class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_TITLE###</label>
+                    <div class="col-md-10">
+                    	<input type="text" class="text form-control" name="meta_title[###LANGUAGE_UID###]" id="meta_title[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_TITLE###">
+                    </div>
                 </div>
-                <div class="account-field" id="msEditManufacturerInputMetaKeywords_###LANGUAGE_UID###">
-                    <label for="meta_keywords">###ADMIN_LABEL_INPUT_META_KEYWORDS###</label>
-                    <input type="text" class="text" name="meta_keywords[###LANGUAGE_UID###]" id="meta_keywords[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_KEYWORDS###">
+                <div class="form-group" id="msEditManufacturerInputMetaKeywords_###LANGUAGE_UID###">
+                    <label for="meta_keywords"class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_KEYWORDS###</label>
+                    <div class="col-md-10">
+                    	<input type="text" class="text form-control" name="meta_keywords[###LANGUAGE_UID###]" id="meta_keywords[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_KEYWORDS###">
+                    </div>
                 </div>
-                <div class="account-field" id="msEditManufacturerInputMetaDesc_###LANGUAGE_UID###">
-                    <label for="meta_description">###ADMIN_LABEL_INPUT_META_DESCRIPTION###</label>
-                    <input type="text" class="text" name="meta_description[###LANGUAGE_UID###]" id="meta_description[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_DESCRIPTION###">
+                <div class="form-group" id="msEditManufacturerInputMetaDesc_###LANGUAGE_UID###">
+                    <label for="meta_description"class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_DESCRIPTION###</label>
+                    <div class="col-md-10">
+                    	<input type="text" class="text form-control" name="meta_description[###LANGUAGE_UID###]" id="meta_description[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_DESCRIPTION###">
+                    </div>
                 </div>
                 <!-- ###MANUFACTURERS_META### end -->
             </div>
+			<hr>
+            <div class="clearfix">
 
-            <div class="save_block">
-                <a href="###LINK_BUTTON_CANCEL###" class="msBackendButton backState arrowLeft arrowPosLeft"><span>###LABEL_BUTTON_ADMIN_CANCEL###</span></a>
-                <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="###LABEL_BUTTON_ADMIN_SAVE###" /></span>
+            <div class="pull-right">
+                <a href="###LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_CANCEL###</a>
+                <button name="Submit" type="submit" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE###</button>
                 <input name="manufacturers_id" type="hidden" value="###MANUFACTURER_ID###" />
+            </div>
+
             </div>
         </div>
     </div>
 </form>
+</div>
+</div>
+
 <div id="ajax_message_###MANUFACTURER_ID###" class="ajax_message"></div>
 <!-- ###TEMPLATE### end -->

@@ -72,7 +72,7 @@ if (count($products)<0) {
 			}); //end of first load
 		</script>';
 		if (is_array($erno) and count($erno)>0) {
-			$content_.='<div class="error_msg">';
+			$content_.='<div class="alert alert-danger">';
 			$content_.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 			foreach ($erno as $item) {
 				$content_.='<li>'.$item.'</li>';
@@ -80,7 +80,7 @@ if (count($products)<0) {
 			$content_.='</ul>';
 			$content_.='</div>';
 		}
-		$content.='<div class="error_msg" style="display:none">';
+		$content.='<div class="alert alert-danger" style="display:none">';
 		$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul class="ul-display-error">';
 		$content.='<li class="item-error" style="display:none"></li>';
 		$content.='</ul></div>';

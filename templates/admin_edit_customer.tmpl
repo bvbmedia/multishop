@@ -14,7 +14,7 @@ jQuery(document).ready(function ($) {
         return false;
     });
     var lochash=window.location.hash;
-    if ($(".error_msg ul.ul-display-error li").length > 0) {
+    if ($(".alert alert-danger ul.ul-display-error li").length > 0) {
         lochash = '#edit_customer';
     }
     if (lochash != '') {

@@ -405,7 +405,7 @@ if ($this->get['edit']) {
 } else if ($this->get['sub']=='add_payment_method' && $this->get['payment_method_code']) {
 	if ($erno or !$this->post) {
 		if (count($erno)) {
-			$content.='<div class="error_msg">';
+			$content.='<div class="alert alert-danger">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';

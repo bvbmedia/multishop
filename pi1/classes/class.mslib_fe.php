@@ -6151,8 +6151,10 @@ class mslib_fe {
 			return 0;
 		}
 	} //end array2json
-	public function shadowBox($content) {
-		$output='
+    public function shadowBox($content) {
+        return $content;
+//TODO: Please remove all calls to this method and remove the method
+        $output='
 		<div class="shadowbox-outer">
 			<div class="shadowbox-inner">
 				<div class="shadowbox-container">

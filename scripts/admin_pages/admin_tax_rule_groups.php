@@ -54,7 +54,7 @@ if ($this->post) {
 	}
 }
 if (is_array($erno) and count($erno)>0) {
-	$content.='<div class="error_msg">';
+	$content.='<div class="alert alert-danger">';
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 	foreach ($erno as $item) {
 		$content.='<li>'.$item.'</li>';
