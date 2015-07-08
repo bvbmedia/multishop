@@ -474,19 +474,19 @@ if ($this->ms['show_main']) {
 	<fieldset id="scheduled_import_jobs_form">
 		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 			<div class="form-group">
-				<label for="new_name" class="control-label col-sm-2">'.$this->pi_getLL('name').'</label>
-				<div class="col-sm-10">
+				<label for="new_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+				<div class="col-md-10">
 				    <input name="new_name" type="text" value="" class="form-control" />
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="upload_feed_file" class="control-label col-sm-2">'.$this->pi_getLL('file').'</label>
-				<div class="col-sm-10">
+				<label for="upload_feed_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+				<div class="col-md-10">
 				    <input type="file" name="feed_record_file" class="form-control">
 				</div>
 			</div>
 			<div class="form-group">
-			    <div class="col-sm-offset-2">
+			    <div class="col-md-offset-2 col-md-10">
 			        <input type="submit" name="upload_feed_file" class="submit btn btn-success" id="upload_feed_file" value="upload">
 			    </div>
             </div>
