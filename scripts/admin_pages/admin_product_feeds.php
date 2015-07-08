@@ -320,8 +320,12 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="form-group">
 				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('status')).'</label>
 				<div class="col-md-10">
+				<label class="radio-inline">
 				<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
+				</label>
+				<label class="radio-inline">
 				<input name="status" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('enabled')).'
+				</label>
 				</div>
 		</div>
 		<div class="form-group hide_pf">
@@ -340,16 +344,16 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success" />
 				</div>
 		</div>
-		<div id="product_feed_fields" class="form-group">';
+		<div id="product_feed_fields">';
 		$counter=0;
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
 			foreach ($this->post['fields'] as $field) {
 				$counter++;
-				$content.='<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('type')).'</label><div class="col-md-10"><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
+				$content.='<div class="form-group"><label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('type')).'</label><div class="col-md-10"><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" />';
+				$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
 				// custom field
 				if ($field=='custom_field') {
 					$content.='<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
@@ -511,14 +515,14 @@ if ($this->ms['show_main']) {
 			<div class="form-group">
 				<label for="upload_feed_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
 				<div class="col-md-10">
+				    <div class="input-group">
 				    <input type="file" name="feed_record_file" class="form-control">
+				    <span class="input-group-btn">
+				        <input type="submit" name="upload_feed_file" class="submit btn btn-success" id="upload_feed_file" value="upload">
+                    </span>
+				    </div>
 				</div>
 			</div>
-			<div class="form-group">
-			    <div class="col-md-offset-2 col-md-10">
-			        <input type="submit" name="upload_feed_file" class="submit btn btn-success" id="upload_feed_file" value="upload">
-			    </div>
-            </div>
 		</form>
 	</fieldset>';
 	$content.='<hr><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success pull-right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a></div></div>';
