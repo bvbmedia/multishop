@@ -411,7 +411,7 @@ if ($this->ms['show_main']) {
 	if (is_array($feeds) and count($feeds)) {
 		$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h3></div>
 		<div class="panel-body">
-		<table width="100%" border="0" align="center" class="table table-striped" id="admin_modules_listing">
+		<table width="100%" border="0" align="center" class="table table-striped table-bordered" id="admin_modules_listing">
 		<thead>
 		<tr>
 			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
