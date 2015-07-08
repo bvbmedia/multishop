@@ -499,7 +499,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								<div class="formfield-container-wrapper">
 									<div class="formfield-wrapper">
 										<label>'.$that->pi_getLL('keyword').'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
-										<input type="submit" name="Search" class="msadmin_button" value="'.$that->pi_getLL('search').'" />
+										<input type="submit" name="Search" class="btn btn-success" value="'.$that->pi_getLL('search').'" />
 									</div>
 								</div>
 							</td>
@@ -540,7 +540,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-			$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+			$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 		}
 		return $content;
 	}
