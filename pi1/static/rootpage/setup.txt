@@ -221,7 +221,7 @@ multishop_ajax_server {
 
 	multishop_admin_page {
 		includeCSS {
-			bootstrapCss = EXT:multishop/templates/css/bootstrap/bootstrap.css
+			bootstrapCss = EXT:multishop/templates/css/bootstrap/css/bootstrap.css
 			bootstrapCss {
 				media =
 				import = 0
