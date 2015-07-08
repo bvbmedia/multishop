@@ -365,7 +365,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$content.='
 		</div>
 		<hr>
-		<input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success pull-right" />
+		<button name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success pull-right"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span></button>
     	</div>
 		<input name="feed_id" type="hidden" value="'.$this->get['feed_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
@@ -523,6 +523,6 @@ if ($this->ms['show_main']) {
 			</div>
 		</form>
 	</fieldset>';
-	$content.='<hr><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success pull-right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a></div></div>';
+	$content.='<hr><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success pull-right"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div>';
 }
 ?>
