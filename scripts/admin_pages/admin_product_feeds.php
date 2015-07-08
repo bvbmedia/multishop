@@ -472,15 +472,22 @@ if ($this->ms['show_main']) {
 	$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('import_feed_record').'</h3></div>
 	<div class="panel-body">
 	<fieldset id="scheduled_import_jobs_form">
-		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-			<div class="account-field">
-				<label for="new_name">'.$this->pi_getLL('name').'</label>
-				<input name="new_name" type="text" value="" />
+		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+			<div class="form-group">
+				<label for="new_name" class="control-label col-sm-2">'.$this->pi_getLL('name').'</label>
+				<div class="col-sm-10">
+				    <input name="new_name" type="text" value="" class="form-control" />
+				</div>
 			</div>
-			<div class="account-field">
-				<label for="upload_feed_file">'.$this->pi_getLL('file').'</label>
-				<input type="file" name="feed_record_file">&nbsp;<input type="submit" name="upload_feed_file" class="submit btn btn-success" id="upload_feed_file" value="upload">
+			<div class="form-group">
+				<label for="upload_feed_file" class="control-label col-sm-2">'.$this->pi_getLL('file').'</label>
+				<input type="file" name="feed_record_file">
 			</div>
+			<div class="form-group">
+			    <div class="col-sm-offset-2">
+			        <input type="submit" name="upload_feed_file" class="submit btn btn-success" id="upload_feed_file" value="upload">
+			    </div>
+            </div>
 		</form>
 	</fieldset>';
 	$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="msBackendButton continueState arrowRight arrowPosLeft float_right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a></div></div>';
