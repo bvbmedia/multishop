@@ -484,7 +484,7 @@ if ($this->ms['show_main']) {
 			$content.='</td>
 			<td class="cellDownload">
 				<a href="'.$feed['feed_link'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download feed</a>
-				<a href="'.$feed['feed_link_excel'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i>Download Excel feed</a>
+				<a href="'.$feed['feed_link_excel'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel feed</a>
 			</td>
 			<td class="cellAction">
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
