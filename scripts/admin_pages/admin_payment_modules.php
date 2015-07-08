@@ -654,7 +654,7 @@ if ($this->ms['show_main']) {
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$tr_type='even';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-		$tmpcontent.='<table class="msZebraTable msadmin_border" id="admin_modules_listing">';
+		$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 		$tmpcontent.='<tr>';
 		if (count($active_shop)>1) {
 			$tmpcontent.='<th>'.$this->pi_getLL('shop', 'Shop').'</th>';
@@ -766,7 +766,7 @@ if ($this->ms['show_main']) {
 		if (count($payment_methods)) {
 			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 			$tmpcontent.='<input type="hidden" name="payment_to_zone_mappings" value="1" />';
-			$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+			$tmpcontent.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<tr>';
 			// zone header
 			$zone_cols=array();
@@ -840,7 +840,7 @@ if ($this->ms['show_main']) {
 		$tr_type='even';
 		if (count($shipping_methods)) {
 			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
-			$tmpcontent.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+			$tmpcontent.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<tr><th>&nbsp;</th>';
 			foreach ($shipping_methods as $shipping_method) {
 				$tmpcontent.='<th>'.$shipping_method['name'].'</th>';

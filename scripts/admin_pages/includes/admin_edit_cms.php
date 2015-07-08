@@ -211,7 +211,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		<div class="account-field" style="display:none" id="msadminMarkersBox">
 			<label>'.$this->pi_getLL('marker').'</label>
 			<div class="valueField">
-				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msAdminTooltipTable msZebraTable msadmin_orders_listing">
+				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msAdminTooltipTable table table-striped table-bordered msadmin_orders_listing">
 				<tr>
 					<th>'.$this->pi_getLL('marker').'</th>
 					<th>'.$this->pi_getLL('description').'</th>

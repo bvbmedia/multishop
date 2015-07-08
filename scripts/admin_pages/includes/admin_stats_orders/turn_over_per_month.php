@@ -284,7 +284,7 @@ for ($i=1; $i<13; $i++) {
 	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
 }
-$content.='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
+$content.='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
 $content.='<tr class="odd">';
 foreach ($dates as $key=>$value) {
 	$content.='<td align="right">'.ucfirst($key).'</td>';
@@ -351,7 +351,7 @@ for ($i=1; $i<13; $i++) {
 	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
 }
-$content.='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
+$content.='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
 $content.='<tr class="odd">';
 foreach ($dates as $key=>$value) {
 	$content.='<td align="right">'.ucfirst($key).'</td>';
@@ -436,7 +436,7 @@ for ($i=0; $i<$endDay; $i++) {
 	$time=strtotime("-".$i." day", strtotime(date($currentDay.'-'.$month.'-'.$this->cookie['stats_year_sb'])));
 	$dates[strftime("%x", $time)]=$time;
 }
-$content.='<table width="100%" class="msZebraTable" cellpadding="0" cellspacing="0" border="0" id="product_import_table">
+$content.='<table width="100%" class="table table-striped table-bordered" cellpadding="0" cellspacing="0" border="0" id="product_import_table">
 <tr>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('amount')).'</th>

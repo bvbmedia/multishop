@@ -1056,7 +1056,7 @@ if (is_numeric($this->get['orders_id'])) {
 <fieldset>
 <legend>'.$this->pi_getLL('product_details').'</legend>';
 		$tr_type='even';
-		$tmpcontent.='<table class="msZebraTable msadmin_border orders_products_listing" width="100%">';
+		$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing" width="100%">';
 		$order_product_level_th='';
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus();
@@ -2222,7 +2222,7 @@ if (is_numeric($this->get['orders_id'])) {
 		<div class="tabs-fieldset" id="order_status_history">
 		<fieldset>
 		<legend>'.$this->pi_getLL('order_status_history').'</legend>
-		<table class="msZebraTable msadmin_border" width="100%">
+		<table class="table table-striped table-bordered msadmin_border" width="100%">
 		<tr>
 			<th>'.$this->pi_getLL('status').'</th>
 			<th>'.$this->pi_getLL('old_status').'</th>

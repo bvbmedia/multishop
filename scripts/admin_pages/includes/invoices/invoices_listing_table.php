@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE')) {
 $counter=0;
 $tr_type='even';
 $tmp='
-<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_invoices_listing">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="table table-striped table-bordered msadmin_invoices_listing">
 <tr>
 	<th align="center" width="17">
 		<label for="check_all_1"></label>

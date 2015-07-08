@@ -117,7 +117,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$order_units[]=$row;
 }
 if (count($order_units)) {
-	$content.='<table class="msZebraTable msadmin_border" width="100%">
+	$content.='<table class="table table-striped table-bordered msadmin_border" width="100%">
 		<th>&nbsp;</th>
 		<th>'.$this->pi_getLL('code').'</th>
 		<th>'.$this->pi_getLL('name').'</th>

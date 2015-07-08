@@ -122,7 +122,7 @@ if (!count($pageset['dataset'])) {
 	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
 	<th>'.$this->pi_getLL('content').'</th>
 	';
-	$content.='<table class="msZebraTable msadmin_orders_listing" id="product_import_table"><tr>'.$headercol.'</tr>';
+	$content.='<table class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table"><tr>'.$headercol.'</tr>';
 	foreach ($pageset['dataset'] as $row) {
 		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';

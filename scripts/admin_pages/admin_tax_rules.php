@@ -71,7 +71,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$tax_rules[]=$row;
 }
 if (count($tax_rules)) {
-	$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+	$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
 	<tr>
 		<th>ID</th>
 		<th>Name</th>

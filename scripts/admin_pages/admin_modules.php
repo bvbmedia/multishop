@@ -46,7 +46,7 @@ $content.='<div id="accordion2">';
 foreach ($categories as $cat) {
 	$innerContent='';
 	$innerContent.='<div>';
-	$innerContent.='<table width="100%" border="0" align="center" class="msadmin_border msZebraTable" id="admin_modules_listing">';
+	$innerContent.='<table width="100%" border="0" align="center" class="msadmin_border table table-striped table-bordered" id="admin_modules_listing">';
 	$innerContent.='<tr><td colspan="'.$colspan.'" class="module_heading">'.mslib_befe::strtoupper($cat['gtitle']).' (ID: '.$cat['gid'].')</div></td></tr>';
 	$innerContent.='<tr>
 	<th>'.$this->pi_getLL('name').'</th>

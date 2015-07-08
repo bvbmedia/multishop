@@ -415,7 +415,7 @@ if ($this->ms['show_main']) {
 	}
 	if (is_array($orders) and count($orders)) {
 		$content.='<div class="main-heading"><h2>'.htmlspecialchars($this->pi_getLL('admin_export_invoices')).'</h2></div>
-		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+		<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
 		<tr>
 			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('name')).'</th>

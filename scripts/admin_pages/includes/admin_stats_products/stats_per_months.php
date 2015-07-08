@@ -71,7 +71,7 @@ for ($i=1; $i<13; $i++) {
 	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
 }
-$content.='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
+$content.='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
 $content.='<tr class="odd">';
 foreach ($dates as $key=>$value) {
 	$content.='<td align="right">'.ucfirst($key).'</td>';
@@ -98,7 +98,7 @@ foreach ($dates as $key=>$value) {
 		';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$content.='
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">
 			<tr class="'.$tr_type.'">
 				<th valign="top">Qty</td>
 				<th valign="top">Product</td>

@@ -20,7 +20,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 }
 $content.='<fieldset class="multishop_fieldset">';
 $content.='<legend>Shipping Options</legend>';
-$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 $content.='<tr><th>Shipping Option</th><th>Price</th><th>Date Added</th><th>Status</th></tr>';
 foreach ($shipping_options as $option) {
 	if (!$tr_type or $tr_type=='even') {

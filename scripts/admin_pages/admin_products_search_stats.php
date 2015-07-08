@@ -33,7 +33,7 @@ for ($i=1; $i<13; $i++) {
 	$time=strtotime(date("Y-".$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">';
+$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">';
 $content.='<tr class="odd">';
 foreach ($dates as $key=>$value) {
 	$content.='<td align="center">'.ucfirst($key).'</td>';
@@ -52,7 +52,7 @@ foreach ($dates as $key=>$value) {
 		$where[]='(s.negative_results=0 or s.negative_results=1)';
 	}
 	$content.='<td align="left" valign="top">';
-	$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">';
+	$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">';
 	$str="SELECT s.keyword, count(s.keyword) as total, s.negative_results FROM tx_multishop_products_search_log s WHERE (".implode(" AND ", $where).") and (s.crdate BETWEEN ".$start_time." and ".$end_time.") group by s.keyword order by total desc limit 10";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$search_amount=0;
@@ -100,7 +100,7 @@ for ($i=0; $i<31; $i++) {
 	$time=strtotime("-".$i." day");
 	$dates[strftime("%x", $time)]=$time;
 }
-$content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class="msZebraTable" id="product_import_table">
+$content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="product_import_table">
 <tr>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
 	<th>'.htmlspecialchars($this->pi_getLL('keyword')).'</th>
@@ -132,7 +132,7 @@ foreach ($dates as $key=>$value) {
 	}
 	/*
 		$content.='<td align="right">';
-		$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">';
+		$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">';
 		foreach ($key_data as $idx => $row) {
 			$content.='<tr><td class="text_right" nowrap width="50">'.$row['total'].'</td></tr>';
 		}

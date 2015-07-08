@@ -75,7 +75,7 @@ if (!$row_year['crdate']) {
 		}
 	}
 	if ($tmpContent!='') {
-		$compiledWidget['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
+		$compiledWidget['content'].='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" >';
 		$compiledWidget['content'].='<tr class="odd">';
 		foreach ($dates as $key=>$value) {
 			$compiledWidget['content'].='<td align="right">'.ucfirst($key).'</td>';

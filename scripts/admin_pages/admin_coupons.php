@@ -171,7 +171,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 if (count($coupons_options)>0) {
 	$content.='<fieldset class="multishop_fieldset">';
 	$content.='<legend>'.$this->pi_getLL('coupon_codes').'</legend>';
-	$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_orders_listing" id="product_import_table">';
+	$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table">';
 	$content.='<tr>
 				<th nowrap>'.$this->pi_getLL('coupon_code').'</th>
 				<th width="60" nowrap>'.$this->pi_getLL('discount').'</th>

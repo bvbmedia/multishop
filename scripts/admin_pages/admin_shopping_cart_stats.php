@@ -42,7 +42,7 @@ for ($i=1; $i<13; $i++) {
 	$time=strtotime(date("Y-".$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">';
+$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">';
 $content.='<tr class="odd">';
 foreach ($dates as $key=>$value) {
 	$content.='<td align="right">'.ucfirst($key).'</td>';
@@ -82,7 +82,7 @@ for ($i=0; $i<31; $i++) {
 	$time=strtotime("-".$i." day");
 	$dates[strftime("%x", $time)]=$time;
 }
-$content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class="msZebraTable" id="product_import_table">
+$content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="product_import_table">
 <tr>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('number_of_shopping_carts')).'</th>
@@ -127,7 +127,7 @@ foreach ($dates as $key=>$value) {
 				}
 				if (count($products)>0) {
 					// print customer settings
-					$content.='<table cellspacing="0" cellpadding="0" border="0" id="product_import_table" class="msZebraTable '.(!$row['is_checkout'] ? 'is_not_checkout' : '').'">';
+					$content.='<table cellspacing="0" cellpadding="0" border="0" id="product_import_table" class="table table-striped table-bordered '.(!$row['is_checkout'] ? 'is_not_checkout' : '').'">';
 					$tr_rows=array();
 					$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('date').'</th><td>'.strftime("%x %X", $row['crdate']).'</td>';
 					if ($row['ip_address']) {
@@ -166,7 +166,7 @@ foreach ($dates as $key=>$value) {
 					if ($cart['user']['email']) {
 						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('email').'</th><td>'.$cart['user']['email'].'</td>';
 					}
-					$tmp_content='<table width="500" cellspacing="0" class="msZebraTable" cellpadding="0" border="1">';
+					$tmp_content='<table width="500" cellspacing="0" class="table table-striped table-bordered" cellpadding="0" border="1">';
 					$tmp_content.='<tr>
 					<th>'.$this->pi_getLL('qty').'</th>
 					<th>'.$this->pi_getLL('products_name').'</th>

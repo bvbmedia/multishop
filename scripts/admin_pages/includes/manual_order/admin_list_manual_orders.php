@@ -58,7 +58,7 @@ var uncheckAll = function() {
 </script>
 ';
 $tr_type='even';
-$tmp.='<table class="msZebraTable msadmin_border" width="100%">';
+$tmp.='<table class="table table-striped table-bordered msadmin_border" width="100%">';
 if ($this->ms['MODULES']['INVOICE_PRINT'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 	$tmp.='<th align="center"><input type="checkbox" onclick="if (this.checked == true) { checkAll(); } else { uncheckAll(); }"></th>';
 }

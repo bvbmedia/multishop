@@ -118,7 +118,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$statusses[]=$row;
 }
 if (count($statusses)) {
-	$content.='<table class="msZebraTable msadmin_border" width="100%">
+	$content.='<table class="table table-striped table-bordered msadmin_border" width="100%">
 		<th>&nbsp;</th>
 		<th>'.$this->pi_getLL('name').'</th>
 		<th>'.$this->pi_getLL('default', 'Default').'</th>

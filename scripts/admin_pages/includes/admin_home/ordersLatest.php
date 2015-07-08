@@ -302,7 +302,7 @@ if ($pageset['total_rows']>0) {
 		);
 	}
 	$counter=0;
-	$compiledWidget['content'].='<div id="tblWidgetOrdersLatest-wrapper"><table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="tblWidgetOrdersLatest">';
+	$compiledWidget['content'].='<div id="tblWidgetOrdersLatest-wrapper"><table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="tblWidgetOrdersLatest">';
 	$tr_type='';
 	$rowCounter=0;
 	foreach ($data as $host=>$item) {

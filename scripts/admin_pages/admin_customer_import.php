@@ -363,7 +363,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 		if (!$rows) {
 			$tmpcontent.='<h1>No customers available.</h1>';
 		} else {
-			$tmpcontent.='<table id="product_import_table" class="msZebraTable" cellpadding="0" cellspacing="0" border="0">';
+			$tmpcontent.='<table id="product_import_table" class="table table-striped table-bordered" cellpadding="0" cellspacing="0" border="0">';
 			$header='<tr><th>'.$this->pi_getLL('target_column').'</th><th>'.$this->pi_getLL('source_column').'</th>';
 			for ($x=1; $x<6; $x++) {
 				$header.='<th>'.$this->pi_getLL('row').' '.$x.'</th>';
@@ -1374,7 +1374,7 @@ if ($this->ms['show_default_form']) {
 	if (count($jobs)>0) {
 		$schedule_content.='
 		<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_tasks').'</legend>
-		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+		<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
 		<th>'.$this->pi_getLL('source_name').'</th>
 		<th>'.$this->pi_getLL('name').'</th>
 		<th>'.$this->pi_getLL('last_run').'</th>

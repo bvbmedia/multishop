@@ -22,7 +22,7 @@ for ($i=3; $i>=0; $i--) {
 //	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-$compiledWidget['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
+$compiledWidget['content'].='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" >';
 $compiledWidget['content'].='<tr class="odd">';
 foreach ($dates as $key=>$value) {
 	$compiledWidget['content'].='<td align="right">'.ucfirst($key).'</td>';

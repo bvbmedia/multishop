@@ -28,7 +28,7 @@ if (count($payment_methods)) {
 	$tr_type='even';
 	if (count($shipping_methods)) {
 		$content.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
-		$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+		$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 		$content.='<tr><th>&nbsp;</th>';
 		foreach ($payment_methods as $payment_method) {
 			$content.='<th>'.$payment_method['name'].'</th>';

@@ -219,7 +219,7 @@ switch ($this->get['action']) {
 $datarows=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'tx_multishop_orphan_files', '', '', 'orphan desc', '100');
 if (count($datarows)>0) {
 	$tr_type='even';
-	$content.='<table class="msZebraTable msadmin_border" id="admin_modules_listing">';
+	$content.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 	$content.='<tr><th><span title="Checked" alt="Checked">C</span></th><th><span title="Orphan" alt="Orphan">O</span></th><th><span title="Type" alt="Type">T</span></th><th>Path</th><th>File</th><th>Date</th><th>Action</th></tr>';
 	foreach ($datarows as $datarow) {
 		if ($tr_type=='even') {
