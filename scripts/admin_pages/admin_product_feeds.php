@@ -410,7 +410,8 @@ if ($this->ms['show_main']) {
 	}
 	if (is_array($feeds) and count($feeds)) {
 		$content.='<div class="bvbBox-heading"><h3>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h3></div>
-		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+		<table width="100%" border="0" align="center" class="table table-striped" id="admin_modules_listing">
+		<thead>
 		<tr>
 			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('name')).'</th>
@@ -419,7 +420,8 @@ if ($this->ms['show_main']) {
 			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('download_feed_record')).'</th>
-		</tr>';
+		</tr>
+		</thead>';
 		foreach ($feeds as $feed) {
 			$feed['feed_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'];
 			$feed['feed_link_excel']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'].'&format=excel';
