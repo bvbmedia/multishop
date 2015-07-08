@@ -218,26 +218,45 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 	}
 	if (!$this->ms['show_main']) {
-		$content.='
-		<div class="bvbBox-heading"><h3>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h3></div>
-		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form">
-			<div class="account-field">
-					<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+		$content.='<div class="panel panel-default">
+		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h3></div>
+		<div class="panel-body">
+		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form" class="form-horizontal">
+			<div class="form-group">
+					<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
+					<div class="col-md-10">
+					<input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_source</label><input type="text" name="utm_source" value="'.htmlspecialchars($this->post['utm_source']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_source</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_source" value="'.htmlspecialchars($this->post['utm_source']).'" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_medium</label><input type="text" name="utm_medium" value="'.htmlspecialchars($this->post['utm_medium']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_medium</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_medium" value="'.htmlspecialchars($this->post['utm_medium']).'" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_term</label><input type="text" name="utm_term" value="'.htmlspecialchars($this->post['utm_term']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_term</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_term" value="'.htmlspecialchars($this->post['utm_term']).'" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_content</label><input type="text" name="utm_content" value="'.htmlspecialchars($this->post['utm_content']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_content</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_content" value="'.htmlspecialchars($this->post['utm_content']).'" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_campaign</label><input type="text" name="utm_campaign" value="'.htmlspecialchars($this->post['utm_campaign']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_campaign</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_campaign" value="'.htmlspecialchars($this->post['utm_campaign']).'" />
+					</div>
 			</div>';
 		$feed_types=array();
 		// custom page hook that can be controlled by third-party plugin
@@ -252,8 +271,9 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		// custom page hook that can be controlled by third-party plugin eof
 		if (count($feed_types)) {
 			$content.='
-				<div class="account-field">
-						<label>Feed Type</label>
+				<div class="form-group">
+						<label class="control-label">Feed Type</label>
+						<div class="col-md-10">
 						<select name="feed_type" id="feed_type">
 						<option value="">'.htmlspecialchars('Custom').'</option>
 				';
@@ -264,50 +284,61 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$content.='
 				</select>
 				</div>
+				</div>
 				';
 		}
 		$content.='
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('delimiter')).'</label>
+		<div class="form-group hide_pf">
+				<label class="control-label">'.htmlspecialchars($this->pi_getLL('delimiter')).'</label>
+				<div class="col-md-10">
 				<select name="delimiter">
 					<option value="">'.htmlspecialchars($this->pi_getLL('choose')).'</option>
 					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>dash</option>
 					<option value="dotcomma"'.(($this->post['delimiter']=='dotcomma') ? ' selected' : '').'>dotcomma</option>
 					<option value="tab"'.(($this->post['delimiter']=='tab') ? ' selected' : '').'>tab</option>
 				</select>
+				</div>
 		</div>
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('include_header')).'</label>
+		<div class="form-group hide_pf">
+				<label class="control-label">'.htmlspecialchars($this->pi_getLL('include_header')).'</label>
+				<div class="col-md-10">
 				<select name="include_header">
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 					<option value="1"'.(($this->post['include_header']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 				</select>
+				</div>
 		</div>
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('include_disabled_products', 'Include disabled products')).'</label>
+		<div class="form-group hide_pf">
+				<label class="control-label">'.htmlspecialchars($this->pi_getLL('include_disabled_products', 'Include disabled products')).'</label>
+				<div class="col-md-10">
 				<select name="include_disabled">
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 					<option value="1"'.(($this->post['include_disabled']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 				</select>
+				</div>
 		</div>
-		<div class="account-field">
-				<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
+		<div class="form-group">
+				<label class="control-label">'.htmlspecialchars($this->pi_getLL('status')).'</label>
+				<div class="col-md-10">
 				<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
 				<input name="status" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('enabled')).'
+				</div>
 		</div>
-		<div class="account-field hide_pf">
-			<label>'.htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')).'</label>
+		<div class="form-group hide_pf">
+			<label class="control-label">'.htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')).'</label>
+			<div class="col-md-10">
 			<select name="plain_text">
 				<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 				<option value="1"'.(($this->post['plain_text']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 			</select>
+			</div>
 		</div>
-		<div class="account-field hide_pf">
-			<div class="hr"></div>
-		</div>
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+		<hr class="hide_pf">
+		<div class="form-group hide_pf">
+				<label class="control-label">'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+				<div class="col-md-10">
 				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success" />
+				</div>
 		</div>
 		<div id="product_feed_fields">';
 		$counter=0;
@@ -329,12 +360,8 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 		$content.='
 		</div>
-		<div class="account-field">
-			<div class="hr"></div>
-		</div>
-		<div class="account-field">
-				<label>&nbsp;</label>
-				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success" /></span>
+		<div class="col-md-offset-2 col-md-10">
+				<input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success" />
 		</div>
 		<input name="feed_id" type="hidden" value="'.$this->get['feed_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
@@ -385,7 +412,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				}
 			});
 		});
-		</script>';
+		</script></div></div>';
 	}
 } else {
 	$this->ms['show_main']=1;
