@@ -481,7 +481,9 @@ if ($this->ms['show_main']) {
 			</div>
 			<div class="form-group">
 				<label for="upload_feed_file" class="control-label col-sm-2">'.$this->pi_getLL('file').'</label>
-				<input type="file" name="feed_record_file">
+				<div class="col-sm-10">
+				    <input type="file" name="feed_record_file" class="form-control">
+				</div>
 			</div>
 			<div class="form-group">
 			    <div class="col-sm-offset-2">
