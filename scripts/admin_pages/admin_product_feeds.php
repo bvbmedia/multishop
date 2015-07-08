@@ -461,7 +461,7 @@ if ($this->ms['show_main']) {
 			$content.='
 			</td>
 			<td class="cellBackup">
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="btn btn-success">'.$this->pi_getLL('download_feed_record').'</a>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="btn btn-success btn-sm">'.$this->pi_getLL('download_feed_record').'</a>
 			</td>
 			</tr>';
 		}
