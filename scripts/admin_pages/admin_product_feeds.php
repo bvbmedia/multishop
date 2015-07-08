@@ -410,6 +410,7 @@ if ($this->ms['show_main']) {
 	}
 	if (is_array($feeds) and count($feeds)) {
 		$content.='<div class="bvbBox-heading"><h3>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h3></div>
+		<div class=""bvbBox-content">
 		<table width="100%" border="0" align="center" class="table table-striped" id="admin_modules_listing">
 		<thead>
 		<tr>
@@ -480,6 +481,6 @@ if ($this->ms['show_main']) {
 			</div>
 		</form>
 	</fieldset>';
-	$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="msBackendButton continueState arrowRight arrowPosLeft float_right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a>';
+	$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="msBackendButton continueState arrowRight arrowPosLeft float_right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a></div>';
 }
 ?>
