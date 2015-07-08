@@ -6,7 +6,8 @@ html, body { height:100%; }
 body { background:#333; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
 
 #msadmin_wrapper { background:#333; padding:0 0 0 220px; }
-#msadmin_section { background:#f5f5f5; padding:10px; }
+#msadmin_section { background:#f5f5f5; padding:20px 20px 0; }
+#msadmin_section:after { clear:both; display:table; content:""; }
 
 h1 { font-size:24px; line-height:28px; }
 h2 { font-size:20px; line-height:24px; }
