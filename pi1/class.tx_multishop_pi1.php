@@ -56,7 +56,7 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/application_top_always.php');
 		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/core.php');
-		return '<div class="boxes csc-plugin csc-plugin-multishop_pi1"><div id="tx_multishop_pi1_core">'.$this->pi_wrapInBaseClass($content).'</div></div>';
+		return '<div class="bvbBox csc-plugin csc-plugin-multishop_pi1"><div id="tx_multishop_pi1_core">'.$this->pi_wrapInBaseClass($content).'</div></div>';
 	}
 	/**
 	 * Init Function: here all the needed configuration values are stored in class variables

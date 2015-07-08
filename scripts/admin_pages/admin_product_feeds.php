@@ -219,7 +219,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 	}
 	if (!$this->ms['show_main']) {
 		$content.='
-		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h2></div>
+		<div class="bvbBox-heading"><h3>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h3></div>
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form">
 			<div class="account-field">
 					<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
