@@ -75,34 +75,34 @@
 			<thead>
 				<tr>
                     ###HEADER_CHECKALL_COLUMN###
-                    <th width="50" nowrap><a href="###HEADER_SORTBY_LINK_ID###">###LABEL_HEADER_CMS_ID###</a></th>
-                    <th><a href="###HEADER_SORTBY_LINK_TITLE###">###LABEL_HEADER_CMS_TITLE###</a></th>
+                    <th class="cellID"><a href="###HEADER_SORTBY_LINK_ID###">###LABEL_HEADER_CMS_ID###</a></th>
+                    <th class="cellName"><a href="###HEADER_SORTBY_LINK_TITLE###">###LABEL_HEADER_CMS_TITLE###</a></th>
 					<th width="150" nowrap><a href="###HEADER_SORTBY_LINK_TYPE###">Type</a></th>
-					<th width="100" nowrap><a href="###HEADER_SORTBY_LINK_DATE_ADDED###">###LABEL_HEADER_CMS_DATE_ADDED###</a></th>
-					<th width="50" nowrap>###LABEL_HEADER_STATUS###</th>
-					<th>###LABEL_HEADER_CMS_ACTION###</th>
+					<th class="cellDate"><a href="###HEADER_SORTBY_LINK_DATE_ADDED###">###LABEL_HEADER_CMS_DATE_ADDED###</a></th>
+					<th class="cellStatus">###LABEL_HEADER_STATUS###</th>
+					<th class="cellAction">###LABEL_HEADER_CMS_ACTION###</th>
 				</tr>
 				</thead>
 				<tbody id="cms_group_###CMS_GROUP_ID###">
                 <!-- ###CMS_LIST### begin -->
                 <tr class="###ROW_TYPE###">
                     ###DOWNLOAD_CMS_CHECKBOX###
-                    <td align="right" nowrap>
+                    <td class="cellID">
                     ###CMS_ID###
 					</td>
-					<td>
+					<td class="cellName">
 						###CMS_TITLE###
                     </td>
                     <td nowrap>
 						###CMS_TYPE###
                     </td>
-                    <td align="right" nowrap>
+                    <td class="cellDate">
 						###CMS_DATE_CREATED###
                     </td>
-                    <td width="60" align="center">
+                    <td class="cellStatus">
 						###CMS_STATUS###
 					</td>
-					<td width="30" align="center">
+					<td class="cellAction">
 						###CMS_REMOVE_BUTTON###
 					</td>
 				</tr>
@@ -110,12 +110,12 @@
                 <tfoot>
                 <tr>
                     ###FOOTER_CHECKALL_COLUMN###
-                    <th width="50" nowrap><a href="###FOOTER_SORTBY_LINK_ID###">###LABEL_FOOTER_CMS_ID###</a></th>
-					<th><a href="###FOOTER_SORTBY_LINK_TITLE###">###LABEL_FOOTER_CMS_TITLE###</a></th>
+                    <th class="cellID"><a href="###FOOTER_SORTBY_LINK_ID###">###LABEL_FOOTER_CMS_ID###</a></th>
+					<th class="cellName"><a href="###FOOTER_SORTBY_LINK_TITLE###">###LABEL_FOOTER_CMS_TITLE###</a></th>
 					<th width="150" nowrap><a href="###FOOTER_SORTBY_LINK_TYPE###">Type</a></th>
-					<th width="100" nowrap><a href="###FOOTER_SORTBY_LINK_DATE_ADDED###">###LABEL_FOOTER_CMS_DATE_ADDED###</a></th>
-					<th width="50" nowrap>###LABEL_FOOTER_STATUS###</th>
-					<th>###LABEL_FOOTER_CMS_ACTION###</th>
+					<th class="cellDate"><a href="###FOOTER_SORTBY_LINK_DATE_ADDED###">###LABEL_FOOTER_CMS_DATE_ADDED###</a></th>
+					<th class="cellStatus">###LABEL_FOOTER_STATUS###</th>
+					<th class="cellAction">###LABEL_FOOTER_CMS_ACTION###</th>
 				</tr>
 				</tfoot>
                 ###DOWNLOAD_CMS_BUTTON###
@@ -126,7 +126,7 @@
 			###LABEL_NO_RESULTS###
 			<!-- ###NORESULTS### end -->
             ###IMPORT_CMS_FILE###
-        </div>
-    </div>
-</div>
+
+
+
 <!-- ###TEMPLATE### end -->

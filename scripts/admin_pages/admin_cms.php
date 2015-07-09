@@ -365,11 +365,18 @@ $subpartArray['###IMPORT_CMS_FILE###']='';
 if ($this->ROOTADMIN_USER) {
 	$subpartArray['###IMPORT_CMS_FILE###']='
 		<fieldset id="scheduled_import_jobs_form">
-                <legend>'.$this->pi_getLL('upload_cms').'</legend>
-                <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="blockSubmitForm">
-                    <div class="account-field">
-                        <label for="upload_cms_file">'.$this->pi_getLL('file').'</label>
-                        <input type="file" name="cms_file">&nbsp;<input type="submit" name="upload_cms_file" class="submit btn btn-success" id="upload_cms_file" value="upload">
+                <div class="page-header"><h4>'.$this->pi_getLL('upload_cms').'</h4></div>
+                <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="form-horizontal blockSubmitForm">
+                    <div class="form-group">
+                        <label for="upload_cms_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+                        <div class="col-md-10">
+                        	<div class="input-group">
+	                        	<input type="file" name="cms_file" class="form-control">
+	                        	<span class="input-group-btn">
+	                        		<input type="submit" name="upload_cms_file" class="submit btn btn-success" id="upload_cms_file" value="upload">
+	                        	</span>
+	                        </div>
+                        </div>
                     </div>
                 </form>
             </fieldset>
@@ -383,7 +390,7 @@ $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=mslib_fe::shadowBox($content);
-$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
-$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div>';
+$content.='<hr><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
+$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div></div></div>';
 
 ?>

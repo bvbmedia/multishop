@@ -75,10 +75,10 @@ if ($this->post and $_REQUEST['action']=='edit_cms') {
 }
 if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$save_block='
-		<div class="save_block">
-			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger">'.$this->pi_getLL('cancel').'</a>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
-		</div>
+		<hr><div class="clearfix"><div class="pull-right">
+			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
+			<button name="Submit" type="button" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
+		</div></div>
 	';
 	$types=array();
 	$payment_methods=mslib_fe::loadPaymentMethods();
@@ -175,22 +175,23 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
-	$tmpcontent.='<div class="account-field" id="cms_types">
-			<label for="type">Type
+	$tmpcontent.='<div class="form-group" id="cms_types">
+			<label for="type" class="control-label col-md-2">Type
 			<span class="multishop_help_icon">
 				<a href="http://www.typo3multishop.com/help/english/multishop-owners/setting-up-your-multishop/catalog/content-management/e-mail-order-confirmation-letter/" target="_blank"></a>
 			</span>
 			</label>
-			<select name="tx_multishop_pi1[type]" id="selected_type"><option value="" data-title="'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
+			<div class="col-md-10">
+			<select name="tx_multishop_pi1[type]" id="selected_type" class="control-form"><option value="" data-title="'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
 	foreach ($types as $key=>$value) {
 		$tmpcontent.='<option value="'.$key.'" '.(($cms[0]['type']==$key) ? 'selected' : '').' data-title="'.htmlspecialchars($value).'">'.htmlspecialchars('<h3>'.$value.'</h3>Key: '.$key).'</option>'."\n";
 	}
-	$tmpcontent.='</select>
+	$tmpcontent.='</select></div>
 		</div>
-		<div class="account-field custom_type">
-			<label>custom type</label>
-			<div><input name="tx_multishop_pi1[custom_type]" type="text" value="'.htmlspecialchars($cms[0]['type']).'" class="text" /></div>
+		<div class="form-group custom_type">
+			<label class="col-md-2 control-label">custom type</label>
+			<div class="col-md-10"><input name="tx_multishop_pi1[custom_type]" type="text" value="'.htmlspecialchars($cms[0]['type']).'" class="text form-control" /></div>
 		</div>
 		<script type="text/javascript">
 			function updateForm() {
@@ -208,9 +209,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 				updateForm();
 			});
 		</script>
-		<div class="account-field" style="display:none" id="msadminMarkersBox">
-			<label>'.$this->pi_getLL('marker').'</label>
-			<div class="valueField">
+		<div class="form-group" style="display:none" id="msadminMarkersBox">
+			<label class="col-md-2 control-label">'.$this->pi_getLL('marker').'</label>
+			<div class="col-md-10">
 				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msAdminTooltipTable table table-striped table-bordered msadmin_orders_listing">
 				<tr>
 					<th>'.$this->pi_getLL('marker').'</th>
@@ -283,21 +284,29 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			</div>';
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
-		<div class="account-field">
-		<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+		<div class="form-group">
+		<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
-		$tmpcontent.=''.$language['title'].'
+		$tmpcontent.=''.$language['title'].'</p></div>
 		</div>
-		<div class="account-field">
-			<label for="cms_name['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('name')).'</label>
-			<input spellcheck="true" type="text" class="text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
+		<div class="form-group">
+			<label for="cms_name['.$language['uid'].']" class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
+			<div class="col-md-10">
+			<div class="input-group">
+			<input spellcheck="true" type="text" class="form-control text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
+			<span class="input-group-btn">
 			<button type="button" class="tooltipMarker btn btn-success" data-container="body" data-toggle="popover">Markers</button>
+			</span>
+			</div>
+			</div>
 		</div>
-		<div class="account-field">
-			<label for="cms_content['.$language['uid'].']">'.htmlspecialchars($this->pi_getLL('content')).'</label>
+		<div class="form-group">
+			<label for="cms_content['.$language['uid'].']" class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('content')).'</label>
+			<div class="col-md-10">
 			<textarea spellcheck="true" name="cms_content['.$language['uid'].']" id="cms_content['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($cms[$language['uid']]['content']).'</textarea>
+			</div>
 		</div>';
 	}
 	$tabs['cms_details']=array(
@@ -341,7 +350,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		});
 	});
 	</script>
-	<div id="tab-container">
+	<div class="panel panel-default"><div class="panel-body">
 	    <ul class="tabs">';
 	foreach ($tabs as $key=>$value) {
 		$count++;
@@ -349,7 +358,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	}
 	$content.='</ul>
 	    <div class="tab_container">
-	<form class="admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
+	<form class="form-horizontal admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
 	$count=0;
@@ -362,6 +371,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$content.=$save_block.'<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
 		<input name="cms_id" type="hidden" value="'.$_REQUEST['cms_id'].'" />
 	</form>
+	</div>
 	</div>
 	</div>';
 	// tabs eof
