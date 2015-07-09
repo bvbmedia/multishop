@@ -156,7 +156,7 @@ if ($this->get['tx_multishop_pi1']['keyword']) {
 	$this->searchKeywords[]=$this->get['tx_multishop_pi1']['keyword'];
 	$this->searchMode='%keyword%';
 }
-$limit_search_result_selectbox='<label>'.$this->pi_getLL('limit_number_of_records_to').':</label><select name="limit">';
+$limit_search_result_selectbox='<div class="form-inline"><div class="form-group"><label>'.$this->pi_getLL('limit_number_of_records_to').':</label><select name="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -177,7 +177,7 @@ $limits[]='500';
 foreach ($limits as $limit) {
 	$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['cmsLimit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
-$limit_search_result_selectbox.='</select>';
+$limit_search_result_selectbox.='</select></div></div>';
 $queryData=array();
 $queryData['where']=array();
 if (count($this->searchKeywords)) {
@@ -382,8 +382,8 @@ $subpartArray['###INPUT_LIMIT_RESULT_SELECTBOX###']=$limit_search_result_selectb
 $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<div class="float_right"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="admin_menu_add label">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a></div>';
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content=mslib_fe::shadowBox($content);
+$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
+$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div>';
 
 ?>

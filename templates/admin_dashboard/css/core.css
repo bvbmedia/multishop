@@ -56,6 +56,8 @@ ul.qq-upload-list { margin-bottom:0; }
 	.form-horizontal .control-label { padding-top:8px; }
 	.form-horizontal #product_feed_fields .control-label { padding-top:6px; }
 }
+.well .form-inline label { margin-right:10px; }
+.searchLimit { text-align:right; }
 
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
 
