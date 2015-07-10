@@ -2,19 +2,6 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/css/style.css">
-<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
-';
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
 $selects=array();
 $selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');

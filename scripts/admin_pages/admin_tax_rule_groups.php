@@ -112,16 +112,6 @@ $content.='
 	</fieldset>
 ';
 if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
-	$GLOBALS['TSFE']->additionalHeaderData['msTreeLevelJs']='
-	<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
-	<style>
-		.tree_item_label
-		{
-			display:block;
-		}
-	</style>
-	';
 	$state_modus_array=array();
 	$state_modus_array[0]='Apply country tax only';
 	$state_modus_array[1]='Apply state tax only';

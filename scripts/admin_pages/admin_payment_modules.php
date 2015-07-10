@@ -145,9 +145,6 @@ if ($this->post) {
 }
 $active_shop=mslib_fe::getActiveShop();
 $GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods_edit']='
-<link rel="stylesheet" type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/css/style.css">
-<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
 <script type="text/javascript">
 function productPrice(to_include_vat, o, type) {
 	var original_val = o.val();
