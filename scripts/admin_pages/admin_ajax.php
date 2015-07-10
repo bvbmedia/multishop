@@ -51,10 +51,6 @@ if (strstr($this->conf['admin_template_folder'], "/")) {
 } else {
 	$prefixed_url=$this->FULL_HTTP_URL_MS.'templates/';
 }
-if ($this->conf['highslide_folder']=='highslide') {
-	// this shop uses highslide with black outlines. lets include black tab css to change the css
-	$GLOBALS['TSFE']->additionalHeaderData[]='<link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/tab_black.css" media="screen" />';
-}
 $GLOBALS['TSFE']->additionalHeaderData[]=mslib_fe::jQueryBlockUI();
 $content.='
 <div id="tx_multishop_pi1_core" class="msAdminHighslidePopup">

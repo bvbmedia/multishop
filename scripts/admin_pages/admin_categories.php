@@ -13,8 +13,6 @@ $subparts=array();
 $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['categories']=$this->cObj->getSubpart($subparts['template'], '###CATEGORIES###');
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
-<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$(".master_categories_ul").sortable({
