@@ -204,6 +204,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed for Bootstrap
+			jqueryAutocomplete >
 
 			core = EXT:multishop/templates/global/css/core.css
 			core {
@@ -211,6 +213,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed for Bootstrap
+			core >
 
 			prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
 			prettycheckboxes {
@@ -250,6 +254,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed for Bootstrap
+			jqueryAutocomplete >
 
 			core = EXT:multishop/templates/global/css/core.css
 			core {
@@ -257,6 +263,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed for Bootstrap
+			core >
 
 			prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
 			prettycheckboxes {
