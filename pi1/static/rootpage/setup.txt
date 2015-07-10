@@ -447,7 +447,7 @@ multishop_ajax_server {
 		# MultiSelect
 		includeJS.msAdminMultiSelect=EXT:multishop/js/multiselect/js/ui.multiselect_normal.js
 		includeJS.msAdminMultiSelect.compress = 1
-		includeCSS.msAdminMultiSelect=EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.css
+		includeCSS.msAdminMultiSelect=EXT:multishop/js/multiselect/css/ui.multiselect.css
 		includeCSS.msAdminMultiSelect  {
 			media =
 			import = 0

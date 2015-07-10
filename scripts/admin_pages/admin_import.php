@@ -3,8 +3,6 @@ if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect_normal.js"></script>
-<link href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(".multiselect").multiselect();
