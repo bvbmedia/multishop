@@ -2143,11 +2143,11 @@ if ($this->post) {
 			if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
 				for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
 					$details_tab_content.='
-					<div class="account-field" id="msEditProductInputTabTitle_'.$i.'">
+					<div class="account-field" id="msEditProductInputTabTitle_'.$i.'_'.$language['uid'].'">
 						<label for="products_description_tab_title_'.$i.'">'.$this->pi_getLL('title').' (tab: '.$i.')</label>
 						<input type="text" class="text" name="products_description_tab_title_'.$i.'['.$language['uid'].']" id="products_description_tab_title_'.$i.'['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_title_'.$i.'']).'">
 					</div>
-					<div class="account-field" id="msEditProductInputTabContent_'.$i.'">
+					<div class="account-field" id="msEditProductInputTabContent_'.$i.'_'.$language['uid'].'">
 						<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
 						<textarea name="products_description_tab_content_'.$i.'['.$language['uid'].']" id="products_description_tab_content_'.$i.'['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
 					</div>';
@@ -3730,28 +3730,28 @@ if ($this->post) {
 													<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
 													<strong>'.$language_label.'</strong>
 												</div>
-												<div class="account-field" id="msEditProductInputName">
+												<div class="account-field" id="msEditProductInputName'.$language['uid'].'">
 													<label for="products_name">'.$this->pi_getLL('admin_name').'</label>
 													<input type="text" class="text" name="customProductsDescription_products_name['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_name_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_name']).'">
 												</div>
-												<div class="account-field" id="msEditProductInputShortDesc">
+												<div class="account-field" id="msEditProductInputShortDesc'.$language['uid'].'">
 													<label for="products_shortdescription">'.$this->pi_getLL('admin_short_description').'</label>
 													<textarea name="customProductsDescription_products_shortdescription['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" '.$textarea_short_description_params.' id="customProductsDescription_products_shortdescription_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" rows="4" '.$textarea_short_description_class.'>'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_shortdescription']).'</textarea>
 												</div>
-												<div class="account-field" id="msEditProductInputDesc">
+												<div class="account-field" id="msEditProductInputDesc'.$language['uid'].'">
 													<label for="products_description">'.$this->pi_getLL('admin_full_description').'</label>
 													<textarea name="customProductsDescription_products_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description']).'</textarea>
 												</div>
 												'.$details_tab_content_multishops.'
-												<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl">
+												<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl'.$language['uid'].'">
 													<label for="products_url">'.$this->pi_getLL('admin_external_url').'</label>
 													<input type="text" class="text" name="customProductsDescription_products_url['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_url_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_url']).'">
 												</div>
-												<div class="account-field" id="msEditProductInputDeliveryTime">
+												<div class="account-field" id="msEditProductInputDeliveryTime'.$language['uid'].'">
 													<label for="delivery_time">'.$this->pi_getLL('admin_delivery_time').'</label>
 													<input type="text" class="text" name="customProductsDescription_delivery_time['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_delivery_time_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['delivery_time']).'">
 												</div>
-												<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords">
+												<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords'.$language['uid'].'">
 													<label for="products_negative_keywords">Negative keywords</label>
 													<textarea name="customProductsDescription_products_negative_keywords['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_negative_keywords_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="expand20-100">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_negative_keywords']).'</textarea>
 												</div>
@@ -3959,28 +3959,28 @@ if ($this->post) {
 						details_content+=\'<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>\';
 						details_content+=\'<strong>\' + language_label + \'</strong>\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputName">\';
+						details_content+=\'<div class="account-field" id="msEditProductInputName\' + lang.uid + \'">\';
 						details_content+=\'<label for="products_name">'.$this->pi_getLL('admin_name').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_products_name[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_name_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputShortDesc">\';
+						details_content+=\'<div class="account-field" id="msEditProductInputShortDesc\' + lang.uid + \'">\';
 						details_content+=\'<label for="products_shortdescription">'.$this->pi_getLL('admin_short_description').'</label>\';
 						details_content+=\'<textarea name="customProductsDescription_products_shortdescription[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" \' + textarea_short_description_params + \' id="customProductsDescription_products_shortdescription_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" rows="4" \' + textarea_short_description_class + \'></textarea>\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputDesc">\';
+						details_content+=\'<div class="account-field" id="msEditProductInputDesc\' + lang.uid + \'">\';
 						details_content+=\'<label for="products_description">'.$this->pi_getLL('admin_full_description').'</label>\';
 						details_content+=\'<textarea name="customProductsDescription_products_description[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="mceEditor" rows="4"></textarea>\';
 						details_content+=\'</div>\';
 						details_content+=details_tab_content;
-						details_content+=\'<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl">\';
+						details_content+=\'<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUr\' + lang.uid + \'l">\';
 						details_content+=\'<label for="products_url">'.$this->pi_getLL('admin_external_url').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_products_url[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_url_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputDeliveryTime">\';
+						details_content+=\'<div class="account-field" id="msEditProductInputDeliveryTime\' + lang.uid + \'">\';
 						details_content+=\'<label for="delivery_time">'.$this->pi_getLL('admin_delivery_time').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_delivery_time[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_delivery_time_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords">\';
+						details_content+=\'<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords\' + lang.uid + \'">\';
 						details_content+=\'<label for="products_negative_keywords">Negative keywords</label>\';
 						details_content+=\'<textarea name="customProductsDescription_products_negative_keywords[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_negative_keywords_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="expand20-100"></textarea>\';
 						details_content+=\'</div>\';
