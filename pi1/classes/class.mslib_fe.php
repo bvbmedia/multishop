@@ -5655,11 +5655,11 @@ class mslib_fe {
 		$string='';
 		for ($i=0; $i<sizeof($select_array); $i++) {
 			$name=(($key) ? 'configuration['.$key.']' : 'configuration_value');
-			$string.=' <input type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
+			$string.=' <div class="radio-inline"><input type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
 			if ($key_value==$select_array[$i]) {
 				$string.=' CHECKED';
 			}
-			$string.='> '.$select_array[$i];
+			$string.='> '.$select_array[$i].'</div>';
 		}
 		return $string;
 	}

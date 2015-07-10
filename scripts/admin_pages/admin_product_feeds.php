@@ -349,11 +349,11 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
 			foreach ($this->post['fields'] as $field) {
 				$counter++;
-				$content.='<div class="form-group"><label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('type')).'</label><div class="col-md-10"><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
+				$content.='<div class="form-group"><label class="control-label control-label-select2 col-md-2">'.htmlspecialchars($this->pi_getLL('type')).'</label><div class="col-md-10"><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><input class="delete_field btn btn-danger btn-sm" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
+				$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button></div>';
 				// custom field
 				if ($field=='custom_field') {
 					$content.='<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
@@ -395,11 +395,11 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			});
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
-				var item=\'<div class="form-group"><label class="control-label col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
+				var item=\'<div class="form-group"><label class="control-label control-label-select2 col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
 		foreach ($array as $key=>$option) {
 			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
 		}
-		$content.='</select><input class="delete_field btn btn-danger btn-sm" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
+		$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button></div></div>\';
 				$(\'#product_feed_fields\').append(item);
 				$(\'select.msAdminProductsFeedSelectField\').select2({
 					width:\'650px\'

@@ -86,50 +86,59 @@ if ($this->post and $_REQUEST['action']=='edit_module') {
 if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$configuration['parent_id']=$this->get['cid'];
 	$save_block='
-		<div class="save_block">
-			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger">'.$this->pi_getLL('cancel').'</a>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
+<div class="clearfix">
+		<div class="pull-right">
+			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
+			<button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
 		</div>
+		</div>
+		<hr>
 	';
 	$content.='
-	<form class="admin_configuration_edit" name="admin_categories_edit_'.$configuration['categories_id'].'" id="admin_categories_edit_'.$configuration['categories_id'].'" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$configuration['id']).'" enctype="multipart/form-data">';
+	<form class="form-horizontal admin_configuration_edit" name="admin_categories_edit_'.$configuration['categories_id'].'" id="admin_categories_edit_'.$configuration['categories_id'].'" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$configuration['id']).'" enctype="multipart/form-data">';
 	$content.=$save_block;
 	$content.='
-		<div class="account-field">
-			<label for="categories_name">'.$this->pi_getLL('title').'</label>
-			'.htmlspecialchars($configuration['configuration_title']).'
+		<div class="form-group">
+			<label for="categories_name" class="control-label col-md-2">'.$this->pi_getLL('title').'</label>
+			<div class="col-md-10">
+			<p class="form-control-static">'.htmlspecialchars($configuration['configuration_title']).'</p>
+			</div>
 		</div>
-		<div class="account-field">		
-			<label>'.$this->pi_getLL('description').'</label>
-			'.htmlspecialchars($configuration['description']).'
+		<div class="form-group">		
+			<label class="control-label col-md-2">'.$this->pi_getLL('description').'</label>
+			<div class="col-md-10">
+			<p class="form-control-static">'.htmlspecialchars($configuration['description']).'</p>
+			</div>
 		</div>
-		<div class="account-field">
-			<label>'.$this->pi_getLL('name').'</label>
-			'.htmlspecialchars($configuration['configuration_key']).'
+		<div class="form-group">
+			<label class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+			<div class="col-md-10">
+			<p class="form-control-static">'.htmlspecialchars($configuration['configuration_key']).'</p>
+			</div>
 		</div>
 		';
 	$content.='
-		<div class="account-field configuration_modules">
-			<label for="value">'.$this->pi_getLL('default_value').'</label>
+		<div class="form-group configuration_modules">
+			<label for="value" class="control-label col-md-2">'.$this->pi_getLL('default_value').'</label><div class="col-md-10">
 ';
 	if ($configuration['set_function']) {
 		eval('$value_field = mslib_fe::'.$configuration['set_function'].'\''.addslashes(htmlspecialchars($this->ms['MODULES']['GLOBAL_MODULES'][$configuration['configuration_key']])).'\',\'global\');');
 	} else {
-		$value_field=mslib_fe::tep_draw_input_field('configuration[global]', $this->ms['MODULES']['GLOBAL_MODULES'][$configuration['configuration_key']]);
+		$value_field=mslib_fe::tep_draw_input_field('configuration[global]', $this->ms['MODULES']['GLOBAL_MODULES'][$configuration['configuration_key']], 'class="form-control"');
 	}
 	$content.=$value_field.'
-		</div>';
+		</div></div>';
 	$content.='
-		<div class="account-field configuration_modules">
-			<label for="value">'.$this->pi_getLL('current_value').'</label>
+		<div class="form-group configuration_modules">
+			<label for="value" class="control-label col-md-2">'.$this->pi_getLL('current_value').'</label><div class="col-md-10">
 ';
 	if ($configuration['set_function']) {
 		eval('$value_field = mslib_fe::'.$configuration['set_function'].'\''.addslashes(htmlspecialchars($this->ms['MODULES'][$configuration['configuration_key']])).'\',\'local\');');
 	} else {
-		$value_field=mslib_fe::tep_draw_input_field('configuration[local]', $this->ms['MODULES'][$configuration['configuration_key']]);
+		$value_field=mslib_fe::tep_draw_input_field('configuration[local]', $this->ms['MODULES'][$configuration['configuration_key']], 'class="form-control"');
 	}
 	$content.=$value_field.'
-		</div>';
+		</div></div>';
 	$content.='
 	<input name="configuration_key" type="hidden" value="'.$configuration['configuration_key'].'" />
 	<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
@@ -144,18 +153,10 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 		$content
 	);
 	$content='';
-	$content='<div class="main-heading"><h2>'.$this->pi_getLL('admin_multishop_settings').'</h2></div>';
+	$content='<div class="panel-heading"><h3>'.$this->pi_getLL('admin_multishop_settings').' INSERT DUMMY HEADING HERE</h3></div>';
 	$content.='
-<div id="tab-container">
-    <ul class="tabs" id="admin_modules">';
-	$count=0;
-	foreach ($tabs as $key=>$value) {
-		$count++;
-		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
-	}
+<div class="panel-body">';
 	$content.='
-    </ul>
-    <div class="tab_container">
 	<form id="form1" name="form1" method="get" action="index.php">
 	'.$formTopSearch.'
 	</form>
@@ -163,16 +164,12 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='
-        <div style="display: block;" id="'.$key.'" class="tab_content">
-			'.$value[1].'
-        </div>
-	';
+		$content.=$value[1];
 	}
 	$content.='
     </div>
-</div>';
-	$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-	$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+';
+	$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div></div>';
+	$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 }
 ?>

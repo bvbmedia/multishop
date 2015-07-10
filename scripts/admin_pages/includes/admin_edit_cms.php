@@ -176,11 +176,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		}
 	}
 	$tmpcontent.='<div class="form-group" id="cms_types">
-			<label for="type" class="control-label col-md-2">Type
-			<span class="multishop_help_icon">
-				<a href="http://www.typo3multishop.com/help/english/multishop-owners/setting-up-your-multishop/catalog/content-management/e-mail-order-confirmation-letter/" target="_blank"></a>
-			</span>
-			</label>
+			<label for="type" class="control-label control-label-select2 col-md-2">Type <a href="http://www.typo3multishop.com/help/english/multishop-owners/setting-up-your-multishop/catalog/content-management/e-mail-order-confirmation-letter/" target="_blank"><i class="fa fa-question-circle"></i></a></label>
 			<div class="col-md-10">
 			<select name="tx_multishop_pi1[type]" id="selected_type" class="control-form"><option value="" data-title="'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'">'.htmlspecialchars($this->pi_getLL('choose_type_of_content')).'</option>';
 	asort($types);
@@ -350,14 +346,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		});
 	});
 	</script>
-	<div class="panel panel-default"><div class="panel-body">
-	    <ul class="tabs">';
-	foreach ($tabs as $key=>$value) {
-		$count++;
-		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
-	}
-	$content.='</ul>
-	    <div class="tab_container">
+	<div class="panel panel-default">
+	    <div class="panel-heading"><h3>INSERT PAGE TITLE HERE</div>
+	    <div class="panel-body">
 	<form class="form-horizontal admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
@@ -371,7 +362,6 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$content.=$save_block.'<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
 		<input name="cms_id" type="hidden" value="'.$_REQUEST['cms_id'].'" />
 	</form>
-	</div>
 	</div>
 	</div>';
 	// tabs eof
