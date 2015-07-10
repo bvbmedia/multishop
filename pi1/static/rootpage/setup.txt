@@ -195,6 +195,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed in Bootstrap
+			jqueryTab >
 
 			jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
 			jqueryAutocomplete {
@@ -233,6 +235,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed in Bootstrap
+			jqueryTab >
 			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
 			awesomeFontCss {
 				media =
@@ -516,7 +520,8 @@ multishop_admin_page {
 		)
 	}
 
-	includeCSS.adminDashboard = EXT:multishop/templates/admin_dashboard/css/core.css
+	# not needed in Bootstrap
+	#includeCSS.adminDashboard = EXT:multishop/templates/admin_dashboard/css/core.css
 	# loading application top (meta tags + admin panel)
 	1 = USER_INT
 	1 =< plugin.tx_multishop_pi1
