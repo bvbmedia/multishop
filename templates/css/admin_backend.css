@@ -9,9 +9,13 @@ body { background:#333; font-size:14px; line-height:20px; font-family:"Open Sans
 #tx_multishop_admin_header_wrapper ul { margin:0; padding:0; list-style:none; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header { line-height:18px; text-transform:uppercase; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li { position:relative; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:nth-child(2):before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:nth-child(4):before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:nth-child(5):before { position:absolute; right:10px; top:16px; border-top:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:""; transition:opacity .25s; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_has_subs:before { position:absolute; right:10px; top:12px; border-left:5px solid #cdcdcd; border-top:5px solid transparent; border-bottom:5px solid transparent; content:""; transition:opacity .25s; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.ms_admin_has_subs:hover:before { opacity:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo a { background:#000; padding:5px 10px; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:hover.ms_admin_logo a { background:#000; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span { display:block; border-bottom:1px solid rgba(255,255,255,.1); color:#fff; font-size:14px; padding:8px 20px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:hover > a,
