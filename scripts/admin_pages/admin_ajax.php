@@ -3,32 +3,11 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.blockUI.js"></script>
-<link href="'.$this->FULL_HTTP_URL_MS.'js/jqui/css/smoothness/jquery-ui-1.8.custom.css" rel="stylesheet" type="text/css"/>
-<link type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jqui/css/smoothness/jquery-ui-1.8.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.h5validate.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
-<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/js/ui.multiselect_normal.js"></script>
-<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-sliderAccess.js"></script>
-<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-timepicker-addon.js"></script>
-<link href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.timepicker/jquery-ui-timepicker-addon.css" rel="stylesheet" type="text/css"/>
-<link href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/multiselect/css/ui.multiselect.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
 	jQuery(function($){
 		$(".multiselect").multiselect();
 	});
 </script>
-<link rel="stylesheet" type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/css/style.css">
-<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
 <script type="text/javascript">
 $(function() {
 	$(\'.mceEditor\').redactor({
@@ -67,9 +46,6 @@ jQuery().ready(function($){
 </script>
 <link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/print.css" media="print" />
 ';
-/*
-<script type="text/javascript" src="'.$this->FULL_HTTP_URL_MS.'js/jquery.textarea-expander.js"></script>
-*/
 if (strstr($this->conf['admin_template_folder'], "/")) {
 	$prefixed_url=$this->FULL_HTTP_URL;
 } else {

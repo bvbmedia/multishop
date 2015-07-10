@@ -416,6 +416,81 @@ multishop_ajax_server {
 	}
 
 	multishop_admin_page {
+		# Blockui
+		includeJS.msAdminBlockUi=EXT:multishop/js/jquery.blockUI.js
+		includeJS.msAdminBlockUi.compress = 1
+		includeCSS.msAdminBlockUi=EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
+		includeCSS.msAdminBlockUi  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# Blockui EOL
+		# H5validate
+		includeJS.msH5validate=EXT:multishop/js/jquery.h5validate.js
+		includeJS.msH5validate.compress = 1
+		# H5validate EOL
+		# ValumsFileUploader
+		includeJS.msAdminValumsFileUploader=EXT:multishop/js/valums-file-uploader/client/fileuploader.js
+		includeJS.msAdminValumsFileUploader.compress = 1
+		# H5validate EOL
+		# MultiSelect
+		includeJS.msAdminMultiSelect=EXT:multishop/js/multiselect/js/ui.multiselect_normal.js
+		includeJS.msAdminMultiSelect.compress = 1
+		includeCSS.msAdminMultiSelect=EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.css
+		includeCSS.msAdminMultiSelect  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# MultiSelect EOL
+		# TimePicker
+		includeJS.msAdminTimePicker1=EXT:multishop/js/jquery.timepicker/jquery-ui-sliderAccess.js
+		includeJS.msAdminTimePicker1.compress = 1
+		includeJS.msAdminTimePicker2=EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.js
+		includeJS.msAdminTimePicker2.compress = 1
+		includeCSS.msAdminTimePicker=EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.css
+		includeCSS.msAdminTimePicker  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# TimePicker EOL
+		# Redactor
+		includeJS.msRedactor=EXT:multishop/js/redactor/redactor/redactor.js
+		includeJS.msRedactor.compress = 1
+		includeCSS.msRedactorCore=EXT:multishop/js/redactor/redactor/redactor.css
+		includeCSS.msRedactorCore  {
+			media =
+			import = 0
+			compress = 1
+		}
+		includeCSS.msRedactor=EXT:multishop/js/redactor/css/style.css
+		includeCSS.msRedactor  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# Redactor EOL
+		# Redactor Plugins
+		includeJS.msRedactorTable=EXT:multishop/js/redactor/plugins/table.js
+		includeJS.msRedactorTable.compress = 1
+		includeJS.msRedactorFontColor=EXT:multishop/js/redactor/plugins/fontcolor.js
+		includeJS.msRedactorFontColor.compress = 1
+		includeJS.msRedactorFontSize=EXT:multishop/js/redactor/plugins/fontsize.js
+		includeJS.msRedactorFontSize.compress = 1
+		includeJS.msRedactorFileManager=EXT:multishop/js/redactor/plugins/filemanager.js
+		includeJS.msRedactorFileManager.compress = 1
+		includeJS.msRedactorImageManager=EXT:multishop/js/redactor/plugins/imagemanager.js
+		includeJS.msRedactorImageManager.compress = 1
+		includeJS.msRedactorVideo=EXT:multishop/js/redactor/plugins/video.js
+		includeJS.msRedactorVideo.compress = 1
+		includeJS.msRedactorTextExpander=EXT:multishop/js/redactor/plugins/textexpander.js
+		includeJS.msRedactorTextExpander.compress = 1
+		includeJS.msRedactorFullScreen=EXT:multishop/js/redactor/plugins/fullscreen.js
+		includeJS.msRedactorFullScreen.compress = 1
+		# Redactor Plugins EOL
+
 		includeJS {
 			msAdminPanel = EXT:multishop/js/admin/admin_panel.js
 			msAdminPanel.compress = 1
