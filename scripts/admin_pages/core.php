@@ -380,6 +380,96 @@ switch ($this->ms['page']) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_rebuild_flat_database.php');
 		}
 		break;
+// move from front
+	case 'admin_sitemap_generator':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_sitemap_generator.php');
+		}
+		break;
+	case 'admin_repair_missing_multilanguages_attributes':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_repair_missing_multilanguages_attributes.php');
+		}
+		break;
+	case 'merge_categories':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_categories.php');
+		}
+		break;
+	case 'merge_manufacturers':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_manufacturers.php');
+		}
+		break;
+	case 'merge_attribute_options':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options.php');
+		}
+		break;
+	case 'merge_attribute_options_values':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options_values.php');
+		}
+		break;
+	case 'admin_system_clear_database':
+		if ($this->ROOTADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_clear_database.php');
+		}
+		break;
+	case 'admin_system_consistency_checker':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_consistency_checker.php');
+		}
+		break;
+	case 'admin_system_images_update':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_images_update.php');
+		}
+		break;
+	case 'admin_system_clear_cooluri_cache':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_clear_cooluri_cache.php');
+		}
+		break;
+	case 'admin_system_orphan_files':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_orphan_files.php');
+		}
+		break;
+	case 'admin_mass_product_updater':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_mass_product_updater.php');
+		}
+		break;
+	/*
+	 * TODO: can be removed soon, because I can't seeing it being used
+	case 'admin_list_manual_orders':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/manual_order/admin_list_manual_orders.php');
+		}
+		break;
+	*/
+	case 'admin_processed_manual_order':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/manual_order/admin_processed_manual_order.php');
+		}
+		break;
+	/*
+	 * TODO: can be removed soon, because I can't seeing it being used
+	case 'admin_shipping_options':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_shipping_options.php');
+		}
+		break;
+	*/
+	/*
+	 * TODO: can be removed soon, because I can't seeing it being used
+	case 'admin_add_order':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_add_order.php');
+		}
+		break;
+	*/
 	case 'custom_page':
 		if ($this->ADMIN_USER) {
 			// custom page hook that can be controlled by third-party plugin

@@ -66,13 +66,14 @@ if ($this->post) {
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_categories'));
+	exit();
 }
 //
 $categories=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint, 1);
 //
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_categories').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories').'" method="post" class="merge_attribute_options_form">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_categories').'" method="post" class="merge_attribute_options_form">
 	<div class="account-field">
 			<ul>
 			';

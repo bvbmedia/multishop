@@ -20,7 +20,7 @@ if ($rows) {
 	}
 }
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_attribute_options').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options').'" method="post" class="merge_attribute_options_form">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options').'" method="post" class="merge_attribute_options_form">
 	<div class="account-field">
 			<ul>
 			';
@@ -269,6 +269,7 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
 		}
 	}
 	//
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options'));
+	exit();
 }
 ?>

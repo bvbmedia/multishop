@@ -6307,7 +6307,7 @@ class mslib_fe {
 			}
 			// merge categories
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['label']=$this->pi_getLL('merge_categories');
-			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_categories');
+			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_merge_categories']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_categories');
 			// remove incomplete p2c link
 			//$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_remove_incomplete_p2c_link']['label']=$this->pi_getLL('remove_incomplete_p2c_link');
 			//$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_remove_incomplete_p2c_link']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=remove_incomplete_p2c_link');
@@ -6340,13 +6340,13 @@ class mslib_fe {
 			}
 			// merge attributes options
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_options']['label']=$this->pi_getLL('merge_attribute_options');
-			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_options']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_options']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_values']['label']=$this->pi_getLL('merge_attribute_values');
-			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_values']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_attributes']['subs']['admin_merge_attribute_values']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options_values');
 			//
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['label']=$this->pi_getLL('admin_update_prices');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['description']=$this->pi_getLL('admin_update_product_prices_by_percentage').'.';
-			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_mass_product_updater');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_update_prices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_mass_product_updater');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_feeds']['label']=$this->pi_getLL('admin_product_feeds');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_feeds']['description']=$this->pi_getLL('admin_create_your_custom_product_feeds_by_using_this_wizard').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_feeds']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds');
@@ -6365,7 +6365,7 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers');
 			// merge manufacturers
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['subs']['admin_merge_manufacturers']['label']=$this->pi_getLL('merge_manufacturers');
-			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['subs']['admin_merge_manufacturers']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_manufacturers');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['subs']['admin_merge_manufacturers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_manufacturers');
 			if ($this->ms['MODULES']['COUPONS']) {
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_coupon']['label']=$this->pi_getLL('admin_coupon_module');
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_coupon']['description']=$this->pi_getLL('admin_give_customers_discount_by_coupon_code').'.';
@@ -6619,7 +6619,7 @@ class mslib_fe {
 			}
 			if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('cooluri')) {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['label']=$this->pi_getLL('admin_clear_cooluri_cache');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_clear_cooluri_cache', 1);
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_clear_cooluri_cache', 1);
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_cooluri_cache']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_reset_the_cooluri_cache').'?\')"';
 			}
 			if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSortCatalog']) {
@@ -6698,16 +6698,16 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_compare_database']['link']='#';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_compare_database']['link_params']='id="multishop_update_button"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['label']=$this->pi_getLL('admin_consistency_checker');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_consistency_checker');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_consistency_checker');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_consistency_checker']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_run_consistency_checker').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_delete_disabled_products']['label']=$this->pi_getLL('admin_delete_disabled_products');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_delete_disabled_products']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_delete_disabled_products');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_delete_disabled_products']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_delete_the_disabled_products').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['label']=$this->pi_getLL('admin_clear_whole_database');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_clear_database');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_clear_database');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_clear_whole_database']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_all_over_again').'?\');"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_scan_for_orphan_files']['label']=$this->pi_getLL('admin_scan_for_orphan_files');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_scan_for_orphan_files']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_orphan_files');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_scan_for_orphan_files']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_orphan_files');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_scan_for_orphan_files']['link_params']='';
 			}
 			if ($this->ms['MODULES']['FLAT_DATABASE'] and ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelRebuildFlatDatabase'])) {
@@ -6716,11 +6716,11 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_rebuild_flat_database']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_rebuild_flat_database').'?\')"';
 			}
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['label']=$this->pi_getLL('admin_sitemap_generator');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_sitemap_generator');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_sitemap_generator');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sitemap_generator']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
 			// repair missing multilanguages attributes
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['label']=$this->pi_getLL('repair_missing_attribute_language_values');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link']=mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_repair_missing_multilanguages_attributes');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_repair_missing_multilanguages_attributes');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_label_are_you_sure_want_to_start_this').'?\')"';
 			// footer eof
 		} // end if enableAdminPanelSystem
