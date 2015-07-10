@@ -112,7 +112,7 @@ if ($pageset['total_rows']>0) {
 	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/user-agent_listing_table.php');
 } else {
 	$subpartArray=array();
-	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_orders_found').'.';
+	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_records_found').'.';
 	$no_results=$this->cObj->substituteMarkerArrayCached($subparts['useragents_noresults'], array(), $subpartArray);
 }
 $subpartArray=array();
