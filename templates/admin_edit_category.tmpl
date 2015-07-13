@@ -36,7 +36,9 @@ jQuery(document).ready(function ($) {
     ###JS_TRIGGERS_EXTRA###
 });
 </script>
+<div class="panel panel-default">
 ###HEADING_PAGE###
+<div class="panel-body">
 <form class="admin_category_edit blockSubmitForm" name="admin_categories_edit_###CATEGORIES_ID0###" id="admin_categories_edit_###CATEGORIES_ID1###" method="post" action="###FORM_POST_URL###" enctype="multipart/form-data">
     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
     <div id="tab-container">
@@ -141,9 +143,12 @@ jQuery(document).ready(function ($) {
             </div>
             <!-- ###ADVANCED_SETTINGS_TAB_CONTENT### end -->
             ###CONTENT_EXTRA_PLUGIN_TABS###
-            <div class="save_block">
-                <a href="###LINK_BUTTON_CANCEL_FOOTER###" class="msBackendButton backState arrowLeft arrowPosLeft"><span>###LABEL_BUTTON_CANCEL_FOOTER###</span></a>
-                <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="###LABEL_BUTTON_SAVE_FOOTER###" /></span>
+            <hr>
+            <div class="cleafix">
+            <div class="pull-right">
+                <a href="###LINK_BUTTON_CANCEL_FOOTER###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###LABEL_BUTTON_CANCEL_FOOTER###</a>
+                <button name="Submit" type="button" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_SAVE_FOOTER###</button>
+            </div>
             </div>
         </div>
     </div>
@@ -151,4 +156,6 @@ jQuery(document).ready(function ($) {
     <input name="action" type="hidden" value="###PAGE_ACTION###" />
 </form>
 <div id="ajax_message_###CATEGORIES_ID_FOOTER1###" class="ajax_message"></div>
+</div>
+</div>
 <!-- ###TEMPLATE### end -->

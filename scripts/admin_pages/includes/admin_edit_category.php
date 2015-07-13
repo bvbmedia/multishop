@@ -644,7 +644,7 @@ if ($this->post) {
 		//$category['parent_id']=$this->get['cid'];
 		//}
 		if ($_REQUEST['action']=='add_category') {
-			$heading_page='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
+			$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('add_category').'</h3></div>';
 		} else {
 			if ($_REQUEST['action']=='edit_category') {
 				$level=0;
