@@ -454,7 +454,8 @@ if (!$product['products_id']) {
 			'product'=>&$product,
 			'output'=>&$output,
 			'output_array'=>&$output_array,
-			'plugins_extra_content'=>&$plugins_extra_content
+			'plugins_extra_content'=>&$plugins_extra_content,
+            'js_detail_page_triggers'=>&$js_detail_page_triggers
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_detail.php']['productsDetailsPagePostHook'] as $funcRef) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

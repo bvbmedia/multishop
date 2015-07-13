@@ -1756,6 +1756,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 											$array1[]='###ORDERED_QTY###';
 											$array2[]=$value['qty'];
 											$array1[]='###CURRENT_PRODUCT_QUANTITY###';
+											$array2[]=$row['products_id'];
+											$array1[]='###PRODUCT_ID###';
 											$array2[]=$row['products_quantity'];
 											$array1[]='###PRODUCT_NAME###';
 											$array2[]=$value['products_name'];
