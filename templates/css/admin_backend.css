@@ -88,15 +88,22 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .cellDate { text-align:right; }
 .cellDownload > .btn { width:100%; text-align:left; }
 .cellDownload > .btn:first-child { margin-bottom:5px; }
+td.cellPrice,
+td.cellSpecialPrice,
 td.cellAction { white-space:nowrap; }
 .cellBackup > .btn { width:100%; }
+
+td.cellPrice .msAttributesField .form-control,
+td.cellSpecialPrice .msAttributesField .form-control { width:90px}
 
 #msAdminSearchByCharNav { text-align:center; margin-bottom:20px; }
 
 ul.qq-upload-list { margin-bottom:0; }
 
-.well .form-inline label { margin-right:10px; }
+.well .form-inline label,
+.well .form-inline .form-control { margin-right:5px; }
 .searchLimit { text-align:right; }
+.searchLimit .form-inline .form-control { margin-right:0; }
 
 .table > thead > tr > th.module_heading { border:1px solid #333; background:#333; color:#fff; }
 .table > thead:first-child > tr:first-child > th.module_heading { border-top:1px solid #333; }
@@ -136,6 +143,11 @@ hr { margin-top:15px; margin-bottom:15px; }
 }
 
 .nav.nav-tabs { margin-bottom:20px; }
+.tab-content > form > .tab-pane { display:none; }
+.tab-content > form > .tab-pane.active { display:block; }
+
+#product_options .form-inline .form-control { min-width:184px; }
+#product_options .form-inline .form-control-static { padding-left:10px; padding-right:10px;  }
 
 .tooltip { text-align:left; }
 .tooltip .tooltip-inner { max-width:250px; font-size:12px; color:#cdcdcd; text-align:left; padding:10px; }
