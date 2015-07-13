@@ -2600,7 +2600,9 @@ if ($this->post['action']=='category-insert') {
 							}
 						}
 						if (is_array($item['attribute_option_value'])) {
+							$tx_multishop_products_attributes_sort_order_option_value=time();
 							foreach ($item['attribute_option_value'] as $option_row) {
+								$tx_multishop_products_attributes_sort_order_option_value++;
 								$option_price='';
 								if (isset($option_row[2])) {
 									$option_price=$option_row[2];
@@ -2737,6 +2739,7 @@ if ($this->post['action']=='category-insert') {
 												$insertArray['options_values_id']=$option_value_id;
 												$insertArray['options_values_price']=$option_price;
 												$insertArray['price_prefix']='+';
+												$insertArray['sort_order_option_value']=$tx_multishop_products_attributes_sort_order_option_value;
 												$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $insertArray);
 												$GLOBALS['TYPO3_DB']->sql_query($query);
 											}
@@ -2799,8 +2802,15 @@ if ($this->post['action']=='category-insert') {
 										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id='.$products_id.' and options_id=\''.$products_options_id.'\' and options_values_id=\''.$option_value_id.'\'');
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
-									$str2="INSERT into tx_multishop_products_attributes (products_id,options_id,options_values_id,options_values_price,price_prefix) VALUES ('".$products_id."','".$products_options_id."','".$option_value_id."','".$option_price."','+')";
-									$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+									$insertArray=array();
+									$insertArray['products_id']=$products_id;
+									$insertArray['options_id']=$products_options_id;
+									$insertArray['options_values_id']=$option_value_id;
+									$insertArray['options_values_price']=$option_price;
+									$insertArray['price_prefix']='+';
+									$insertArray['sort_order_option_value']=time();
+									$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $insertArray);
+									$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 							}
 						}

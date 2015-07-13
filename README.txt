@@ -31,7 +31,7 @@ jQuery TOOLS Version - typo.jQueryTOOLSVersion: 1.2.x
 
 TYPO3 MULTISHOP DEMO PACKAGE
 If you have difficulties with configuring Multishop you could download our demo package (which is configured on TYPO3 6.2.3 with Bootstrap 3). You can download it here:
-https://typo3multishop.com/index.php?id=425
+https://www.typo3multishop.com/download/
 
 Steps to configure:
 - Extract the file to the vhost folder (i.e. /var/www/domain.com/web/).
