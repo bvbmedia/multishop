@@ -219,7 +219,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
 			}
-			$tableContent.='</thead></tr>';
+			$tableContent.='</thead></tr><tbody>';
 			$summarize=array();
 			$recordCounter=0;
 			foreach ($pageset['dataset'] as $row) {
@@ -346,8 +346,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				*/
 				$tableContent.='</tr>';
 			}
+			$tableContent.='</tbody>';
 			// SUMMARIZE
-			$tableContent.='<tr>';
+			$tableContent.='<tfoot><tr>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				switch ($valArray['valueType']) {
 					case 'currency':
@@ -359,7 +360,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 			}
-			$tableContent.='</tr>';
+			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
 			$tableContent.='</table>';
 			if (!$params['settings']['disableForm']) {

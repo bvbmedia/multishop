@@ -6,8 +6,8 @@ $counter=0;
 $tr_type='even';
 $tmp='
 <table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminInvoicesListing" class="table table-striped table-bordered">
+<thead>
 <tr>
-	<thead>
 	<th align="center" width="17">
 		<label for="check_all_1"></label>
 		<input type="checkbox" class="PrettyInput" id="check_all_1">
@@ -31,8 +31,10 @@ $headercol.='
 <th width="50">'.$this->pi_getLL('admin_paid').'</th>
 ';
 $headercol.='
+</tr>
 </thead>
-</tr>';
+<tbody>
+';
 $cb_ctr=0;
 $tmp.=$headercol;
 $totalAmount=0;
@@ -82,6 +84,7 @@ foreach ($invoices as $invoice) {
 	$tmp.='</td>';
 	$tmp.='</tr>';
 }
+$tmp.='</tbody>';
 $footercol.='
 <th width="50" align="right"></th>
 <th width="50" align="right">'.$this->pi_getLL('invoice_number').'</th>
@@ -102,12 +105,14 @@ $footercol.='
 $footercol.='
 </tr>';
 $tmp.='
+<tfoot>
 <tr>
 	<th>
 		&nbsp;
 	</th>
 '.$footercol;
 $tmp.='
+</tfoot>
 </table>
 ';
 $actions=array();
