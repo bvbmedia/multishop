@@ -283,7 +283,7 @@ if ($this->ADMIN_USER) {
 						if (j) {
 							//var json_data = $.parseJSON(j);
 							var json_data = j;
-							
+
 							// top admin menu
 							var admin_menu_header = \'<div id="tx_multishop_admin_header_wrapper">\';
 							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
@@ -292,16 +292,24 @@ if ($this->ADMIN_USER) {
 							admin_menu_header += \'</ul></div>\';
 							admin_menu_header += \'<div id="ms_admin_minimaxi_wrapper"><ul id="ms_admin_minimize"><li><a href="#" class="ms_admin_minimize">'.$this->pi_getLL('minimize').'</a></li></ul></div>\';
 							admin_menu_header += \'</div>\';
-						
+
+							// new top admin menu
+							var admin_menu_newheader = \'<div id="tx_multishop_admin_newheader_wrapper">\';
+							admin_menu_newheader += \'<div id="tx_multishop_admin_newheader_bg"><ul id="tx_multishop_admin_newheader">\';
+							var admin_menu_newheader_html = renderAdminMenu(json_data.newheader, \'newheader\', 1);
+							admin_menu_newheader += admin_menu_newheader_html;
+							admin_menu_newheader += \'</ul></div>\';
+							admin_menu_newheader += \'</div>\';
+
 							// bottom admin menu
 							var admin_menu_footer = \'<div id="tx_multishop_admin_footer_wrapper"><ul id="tx_multishop_admin_footer">\';
 							var admin_menu_footer_html = renderAdminMenu(json_data.footer, \'footer\', 1);
 							admin_menu_footer += admin_menu_footer_html;
 							admin_menu_footer += \'</ul></div>\';
 
-							var admin_menu= admin_menu_header + admin_menu_footer;
+							var admin_menu= admin_menu_newheader + admin_menu_header + admin_menu_footer;
 							'.(!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] ? '$("body").prepend(admin_menu);' : '').'
-							
+
 							// load partial menu items and add them to the footer
 							if ($(".footer_content").length > 0) {
 								$("#footer_content_cols").hide();
@@ -329,7 +337,7 @@ if ($this->ADMIN_USER) {
 								if (json_data.footer.ms_admin_system != undefined) {
 									var admin_menu_system_html=renderAdminMenu(json_data.footer.ms_admin_system, \'footer\', 0);
 									$("#footer_content_cols #footer_content4").append(\'<ul>\'+admin_menu_system_html+\'</ul>\');
-								}																
+								}
 								$("#footer_content_cols").slideToggle("500");
 							}
 							';
@@ -343,7 +351,7 @@ if ($this->ADMIN_USER) {
 	$html.='}
 					}
 				});
-											
+
 				';
 	$html.='
 $(document).on("click", "#multishop_update_button", function(e) {

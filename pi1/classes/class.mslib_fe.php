@@ -6468,12 +6468,13 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_statistics']['subs']['admin_stats_user_agent']['description']=$this->pi_getLL('admin_user_agent_statistics_description').'.';
 			$ms_menu['header']['ms_admin_statistics']['subs']['admin_stats_user_agent']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_user_agent');
 		}
+        // new header TOP
 		if ($this->ROOTADMIN_USER or $this->SEARCHADMIN_USER) {
 			$pageinfo=$GLOBALS['TSFE']->sys_page->getPage($this->shop_pid);
-			$ms_menu['header']['ms_admin_search']['description']='<div id="ms_admin_user">
+			$ms_menu['newheader']['ms_admin_search']['description']='<div id="ms_admin_user">
 				<a href="'.mslib_fe::typolink($this->shop_pid, '').'">'.$this->pi_getLL('admin_user').': <strong>'.mslib_befe::strtoupper(substr($GLOBALS['TSFE']->fe_user->user['username'], 0, 10)).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.mslib_befe::strtoupper(substr($pageinfo['title'], 0, 10)).'</strong></a>
 			</div>';
-			$ms_menu['header']['ms_admin_search']['description'].='<form action="'.mslib_fe::typolink().'" method="get" id="ms_admin_top_search">
+			$ms_menu['newheader']['ms_admin_search']['description'].='<form action="'.mslib_fe::typolink().'" method="get" id="ms_admin_top_search">
 				<!-- <input class="admin_skeyword" id="ms_admin_skeyword" name="ms_admin_skeyword" type="text" placeholder="'.$this->pi_getLL('keyword').'" value="" />-->
 				<input type="hidden" class="adminpanel-search-bigdrop" id="ms_admin_skeyword" style="width: 200px" name="ms_admin_skeyword" value="" />
 				<input name="id" type="hidden" value="'.$this->shop_pid.'" />
@@ -6482,7 +6483,7 @@ class mslib_fe {
 				<input name="page" id="ms_admin_us_page" type="hidden" value="0" />
 				<input name="Submit" type="submit" id="btn_search_admin_panel" />
 			</form>'."\n";
-			$ms_menu['header']['ms_admin_search']['description'].='<script type="text/javascript">
+			$ms_menu['newheader']['ms_admin_search']['description'].='<script type="text/javascript">
 			adminPanelSearch();
 			$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
 				$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
@@ -6500,11 +6501,11 @@ class mslib_fe {
 				foreach ($multishop_content_objects as $pageinfo) {
 					$counter++;
 					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
-						$ms_menu['header']['ms_admin_stores']['label']=mslib_befe::strtoupper($pageinfo['title']);
+						$ms_menu['newheader']['ms_admin_stores']['label']=mslib_befe::strtoupper($pageinfo['title']);
 					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
-						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['label']=mslib_befe::strtoupper($pageinfo['title']);
-						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
-						$ms_menu['header']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');
+						$ms_menu['newheader']['ms_admin_stores']['subs']['shop_'.$counter]['label']=mslib_befe::strtoupper($pageinfo['title']);
+						$ms_menu['newheader']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
+						$ms_menu['newheader']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');
 					}
 				}
 			}
