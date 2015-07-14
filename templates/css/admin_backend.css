@@ -180,6 +180,15 @@ ul.qq-upload-list { margin-bottom:0; }
 
 .merge_attribute_options_form ul { margin:0; padding:0; list-style:none; }
 
+#categories_image,
+.image_action { float:left; }
+#categories_image,
+.image_action > img { margin-right:10px; }
+.image_action > img,
+.image_action > .image_tools { float:left; }
+
+#cat-selectbox1 { margin-bottom:0; }
+
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
 
