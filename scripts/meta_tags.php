@@ -295,10 +295,10 @@ if ($this->ADMIN_USER) {
 
 							// new top admin menu
 							var admin_menu_newheader = \'<div id="tx_multishop_admin_newheader_wrapper">\';
-							admin_menu_newheader += \'<div id="tx_multishop_admin_newheader_bg"><ul id="tx_multishop_admin_newheader">\';
+							admin_menu_newheader += \'<div id="tx_multishop_admin_newheader_bg">\';
 							var admin_menu_newheader_html = renderAdminMenu(json_data.newheader, \'newheader\', 1);
 							admin_menu_newheader += admin_menu_newheader_html;
-							admin_menu_newheader += \'</ul></div>\';
+							admin_menu_newheader += \'</div>\';
 							admin_menu_newheader += \'</div>\';
 
 							// bottom admin menu

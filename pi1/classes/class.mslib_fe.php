@@ -6481,7 +6481,7 @@ class mslib_fe {
 				<input name="type" type="hidden" value="2003" />
 				<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_search" />
 				<input name="page" id="ms_admin_us_page" type="hidden" value="0" />
-				<input name="Submit" type="submit" id="btn_search_admin_panel" />
+				<input name="Submit" type="submit" id="btn_search_admin_panel" class="btn btn-success" />
 			</form>'."\n";
 			$ms_menu['newheader']['ms_admin_search']['description'].='<script type="text/javascript">
 			adminPanelSearch();
