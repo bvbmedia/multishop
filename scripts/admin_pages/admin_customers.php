@@ -518,6 +518,7 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+/*
 $content.='
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">';
@@ -545,6 +546,19 @@ foreach ($tabs as $key=>$value) {
 $content.='
     </div>
 </div>';
+*/
+foreach ($tabs as $key=>$value) {
+	$content.='
+		<h1>'.$value[0].'</h1>
+		<form id="form1" name="form1" method="get" action="index.php">
+		'.$formTopSearch.'
+		</form>
+		'.$value[1].'
+	';
+	break;
+}
+
+
 $content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>
