@@ -200,13 +200,13 @@ $fields['products_quantity']=$this->pi_getLL('admin_stock');
 $fields['products_weight']=$this->pi_getLL('admin_weight');
 $fields['manufacturers_name']=$this->pi_getLL('manufacturer');
 //asort($fields);
-$searchby_selectbox='<select name="tx_multishop_pi1[search_by]">';
+$searchby_selectbox='<select name="tx_multishop_pi1[search_by]" class="form-control">';
 foreach ($fields as $key=>$label) {
 	$searchby_selectbox.='<option value="'.$key.'"'.($this->get['tx_multishop_pi1']['search_by']==$key ? ' selected="selected"' : '').'>'.$label.'</option>'."\n";
 }
 $searchby_selectbox.='</select>';
-$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid']);
-$search_limit='<select name="tx_multishop_pi1[limit]">';
+$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
+$search_limit='<select name="tx_multishop_pi1[limit]" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -692,12 +692,12 @@ if ($pageset['total_rows']>0) {
 		}
 	}
 	// custom page hook that can be controlled by third-party plugin eof
-	$action_selectbox.='<select name="tx_multishop_pi1[action]" id="products_search_action"><option value="">'.$this->pi_getLL('choose_action').'</option>';
+	$action_selectbox.='<select name="tx_multishop_pi1[action]" id="products_search_action" class="form-control"><option value="">'.$this->pi_getLL('choose_action').'</option>';
 	foreach ($actions as $key=>$value) {
 		$action_selectbox.='<option value="'.$key.'">'.$value.'</option>';
 	}
 	$action_selectbox.='</select>';
-	$input_categories_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('tx_multishop_pi1[target_categories_id]', mslib_fe::tx_multishop_get_category_tree('', '', ''), '', 'id="target_categories_id"');
+	$input_categories_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('tx_multishop_pi1[target_categories_id]', mslib_fe::tx_multishop_get_category_tree('', '', ''), '', 'class="form-control" id="target_categories_id"');
 	$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls')."'";
 	if (isset($this->get['cid']) && $this->get['cid']>0) {
 		$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls&cid='.$this->get['cid'])."'";
