@@ -241,9 +241,11 @@ if ($this->ADMIN_USER) {
 			$Cache_Lite->save($html);
 		}
 	}
+	/*
 	if ($this->get['tx_multishop_pi1']['page_section']=='admin_home') {
 		$this->ms['MODULES']['DISABLE_ADMIN_PANEL']=1;
 	}
+	*/
 	// admin stats eof
 	$html.='
 			<script type="text/javascript">
