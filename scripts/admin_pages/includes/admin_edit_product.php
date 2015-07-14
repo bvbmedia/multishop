@@ -2662,12 +2662,12 @@ if ($this->post) {
 			new_attributes_html+=\'</select>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
-			new_attributes_html+=\'<div class="msAttributesField">\';
-			new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceExcludingVat">\';
+			new_attributes_html+=\'<div class="form-inline msAttributesField"><div class="input-group"><span class="input-group-addon">\';
+			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat"></div>\';
 			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('excluding_vat').'</label>\';
 			new_attributes_html+=\'</div>\';
-			new_attributes_html+=\'<div class="msAttributesField">\';
-			new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat">\';
+			new_attributes_html+=\'<div class="form-inline msAttributesField"><div class="input-group"><span class="input-group-addon">\';
+			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat"></div>\';
 			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('including_vat').'</label>\';
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
@@ -3155,7 +3155,7 @@ if ($this->post) {
 				select2_sb(".product_attribute_options", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 			});
 			</script>
-			<h3>'.$this->pi_getLL('admin_product_attributes').'</h3>
+			<h3>'.$this->pi_getLL('admin_product_attributes').'</h3 >
 			';
 			if ($this->get['cid']) {
 				// optional predefined attributes menu
@@ -3425,8 +3425,8 @@ if ($this->post) {
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
 								$existing_product_attributes_block_columns['attribute_price_col']='<td class="product_attribute_price">
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"></div><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"></div><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
 									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
 								</td>';
 								$existing_product_attributes_block_columns['attribute_save_col']='<td>

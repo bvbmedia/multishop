@@ -72,7 +72,8 @@ if ($this->post) {
 //
 $categories=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint, 1);
 //
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_categories').'</h1></div>
+$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('merge_categories').'</h3></div>
+<div class="panel-body">
 <form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_categories').'" method="post" class="merge_attribute_options_form">
 	<div class="account-field">
 			<ul>
@@ -104,9 +105,9 @@ foreach ($categories as $category) {
 	//
 	foreach ($tmp_return_data as $tree_id=>$tree_path) {
 		$tree_path=str_replace('\\', '>', $tree_path);
-		$content.='<li>';
-		$content.='<input type="checkbox" class="movecats" name="mergecats_source[]" value="'.$tree_id.'" id="tree_cats_'.$tree_id.'">&nbsp;';
-		$content.='<label for="tree_cats_'.$tree_id.'">'.$tree_path.' (ID: '.$tree_id.')'.'</label>';
+		$content.='<li class="checkbox">';
+		$content.='<label><input type="checkbox" class="movecats" name="mergecats_source[]" value="'.$tree_id.'" id="tree_cats_'.$tree_id.'">&nbsp;';
+		$content.=''.$tree_path.' (ID: '.$tree_id.')'.'</label>';
 		$content.='</li>'."\n";
 		//
 		$cat_selectbox.='<option value="'.$tree_id.'" id="sl-cat_'.$tree_id.'">'.$tree_path.' (ID: '.$tree_id.')'.'</option>';
@@ -125,10 +126,13 @@ jQuery(document).ready(function(){
 $content.='
 			</ul>
 	</div>
-	<div class="account-field">
+	<hr>
+	<div class="form-group">
 			<label>Merge selected categories to: </label>
 			'.$cat_selectbox.'<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('merge_selected').'" />
 	</div>
 </form>
+</div>
+</div>
 ';
 ?>
