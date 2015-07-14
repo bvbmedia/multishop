@@ -5,8 +5,9 @@ if (!defined('TYPO3_MODE')) {
 $counter=0;
 $tr_type='even';
 $tmp='
-<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="table table-striped table-bordered msadmin_invoices_listing">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminInvoicesListing" class="table table-striped table-bordered">
 <tr>
+	<thead>
 	<th align="center" width="17">
 		<label for="check_all_1"></label>
 		<input type="checkbox" class="PrettyInput" id="check_all_1">
@@ -30,6 +31,7 @@ $headercol.='
 <th width="50">'.$this->pi_getLL('admin_paid').'</th>
 ';
 $headercol.='
+</thead>
 </tr>';
 $cb_ctr=0;
 $tmp.=$headercol;
