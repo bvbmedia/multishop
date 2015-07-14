@@ -214,15 +214,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';
 			}
-			$tableContent.='
-			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">';
-			$tableContent.='<tr>';
+			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
+			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
 			}
-			//<th>'.$that->pi_getLL('admin_action').'</th>
-			$tableContent.='
-			</tr>';
+			$tableContent.='</thead></tr>';
 			$summarize=array();
 			$recordCounter=0;
 			foreach ($pageset['dataset'] as $row) {
