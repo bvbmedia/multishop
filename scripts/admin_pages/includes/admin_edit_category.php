@@ -660,22 +660,24 @@ if ($this->post) {
 				}
 				// get all cats to generate multilevel fake url eof
 				$details_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-				$heading_page='<div class="main-heading"><h1>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].')</h1><span class="viewfront"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_category', 'View in front').'</a></span></div>';
+				$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].') <span class="viewfront pull-right"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_category', 'View in front').'</a></span></h3></div>';
 			}
 		}
 		$category_name_block='';
 		foreach ($this->languages as $key=>$language) {
 			$category_name_block.='
-			<div class="account-field" id="msEditCategoryInputName_'.$language['uid'].'">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+			<div class="form-group" id="msEditCategoryInputName_'.$language['uid'].'">
+			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$category_name_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$category_name_block.=''.$language['title'].'
-			</div>
-			<div class="account-field" id="msEditCategoryInputCategoryName_'.$language['uid'].'">
-				<label for="categories_name">'.$this->pi_getLL('admin_name').'</label>
-				<input spellcheck="true" type="text" class="text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'">
+			</p></div></div>
+			<div class="form-group" id="msEditCategoryInputCategoryName_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="categories_name">'.$this->pi_getLL('admin_name').'</label>
+				<div class="col-md-10">
+				<input spellcheck="true" type="text" class="form-control text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'">
+				</div>
 			</div>
 			';
 		}
@@ -687,9 +689,11 @@ if ($this->post) {
 			}
 		}
 		$category_tree='
-		<div class="account-field" id="msEditCategoryInputParent">
-			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>
+		<div class="form-group" id="msEditCategoryInputParent">
+			<label for="parent_id" class="control-label col-md-2">'.$this->pi_getLL('admin_parent').'</label>
+			<div class="col-md-10">
 			<input type="hidden" name="parent_id" id="parent_id" class="categoriesIdSelect2BigDropWider" value="'.$category['parent_id'].'" />
+			</div>
 		</div>';
 		//'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
 		$categories_image='<div class="image_action">';
@@ -697,9 +701,9 @@ if ($this->post) {
 			$categories_image.='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'">';
 			$categories_image.='<div class="image_tools">';
 			if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
-				$categories_image.=' <a href="#" id="cropEditor" rel="'.$category['categories_image'].'"><span>crop</span></a>';
+				$categories_image.=' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="'.$category['categories_image'].'"><i class="fa fa-crop"></i></a>';
 			}
-			$categories_image.=' <a  class="delete_categories_images" rel="\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+			$categories_image.=' <a  class="btn btn-danger btn-sm delete_categories_images" rel="\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>';
 			$categories_image.='</div>';
 		}
 		$categories_image.='</div>';
@@ -717,50 +721,63 @@ if ($this->post) {
 		$categories_content_block='';
 		foreach ($this->languages as $key=>$language) {
 			$categories_content_block.='
-			<div class="account-field" id="msEditCategoryInputContent_'.$language['uid'].'">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+			<div class="form-group" id="msEditCategoryInputContent_'.$language['uid'].'">
+			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$categories_content_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$categories_content_block.=''.$language['title'].'
+			</p>
 			</div>
-			<div class="account-field" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
-						<label for="content">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('top')).'</label>
+			</div>
+			<div class="form-group" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
+						<label class="control-label col-md-2" for="content">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('top')).'</label>
+						<div class="col-md-10">
 						<textarea spellcheck="true" name="content['.$language['uid'].']" id="content['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content']).'</textarea>
+						</div>
 					</div>
-					<div class="account-field" id="msEditCategoryInputContentFooter_'.$language['uid'].'">
-						<label for="content_footer">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('bottom')).'</label>
+					<div class="form-group" id="msEditCategoryInputContentFooter_'.$language['uid'].'">
+						<label class="control-label col-md-2" for="content_footer">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('bottom')).'</label>
+						<div class="col-md-10">
 						<textarea spellcheck="true" name="content_footer['.$language['uid'].']" id="content_footer['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content_footer']).'</textarea>
+						</div>
 			</div>';
 		}
 		$categories_meta_block='';
 		foreach ($this->languages as $key=>$language) {
 			$categories_meta_block.='
-			<div class="account-field" id="msEditCategoryInputMeta_'.$language['uid'].'">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+			<div class="form-group" id="msEditCategoryInputMeta_'.$language['uid'].'">
+			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$categories_meta_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$categories_meta_block.=''.$language['title'].'
+			</p></div>
 			</div>
-			<div class="account-field" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
-				<label for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
-				<input type="text" class="text" name="meta_title['.$language['uid'].']" id="meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_title']).'">
+			<div class="form-group" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="meta_title['.$language['uid'].']" id="meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_title']).'">
+				</div>
 			</div>
-			<div class="account-field" id="msEditCategoryInputMetaKeywords_'.$language['uid'].'">
-				<label for="meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
-				<input type="text" class="text" name="meta_keywords['.$language['uid'].']" id="meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_keywords']).'">
+			<div class="form-group" id="msEditCategoryInputMetaKeywords_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="meta_keywords['.$language['uid'].']" id="meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_keywords']).'">
+				</div>
 			</div>
-			<div class="account-field" id="msEditCategoryInputMetaDesc_'.$language['uid'].'">
-				<label for="meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
-				<input type="text" class="text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
+			<div class="form-group" id="msEditCategoryInputMetaDesc_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
+				</div>
 			</div>';
 		}
 		// INPUT_CATEGORY_TREE
 		$tmpcontent='';
 		if ($this->conf['enableMultipleShops'] && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 			$shopPids=explode(',', $this->conf['connectedShopPids']);
-			$tmpcontent.='<div class="account-field" class="msEditCategoriesInputMultipleShopCategory">
+			$tmpcontent.='<div class="form-group" class="msEditCategoriesInputMultipleShopCategory">
 				<label>'.$this->pi_getLL('link_to_categories_in_other_shops').'</label>
 				<div class="msAttributesWrapper">';
 			foreach ($shopPids as $shopPid) {
@@ -877,9 +894,11 @@ if ($this->post) {
 		if ($this->get['action']=='edit_category' && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 			$link_categories_id=mslib_fe::getCategoriesToCategories($this->get['cid'], $this->shop_pid);
 			$link_to_categories_elem='
-			<div class="account-field" id="msEditLinkInputCategory">
-            	<label for="link_categories_id">'.$this->pi_getLL('admin_link_category').'</label>
+			<div class="form-group" id="msEditLinkInputCategory">
+            	<label for="link_categories_id" class="control-label col-md-2">'.$this->pi_getLL('admin_link_category').'</label>
+            	<div class="col-md-10">
 				<input type="hidden" name="link_categories_id" id="link_categories_id" class="categoriesIdSelect2BigDropWider" value="'.$link_categories_id.'" />
+				</div>
             </div>';
 		}
 		$subpartArray=array();
@@ -926,8 +945,8 @@ if ($this->post) {
 			$(".image_action").empty();
 			var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
 			new_image+=\'<div class="image_tools">\';
-			new_image+=\'<a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
-			new_image+=\'<a href="#" class="delete_categories_images" rel="\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+			new_image+=\'<a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="\' + filenameServer + \'"><i class="fa fa-crop"></i></a>\';
+			new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_categories_images" rel="\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
 			new_image+=\'</div>\';
 			$(".image_action").html(new_image);';
 		}
