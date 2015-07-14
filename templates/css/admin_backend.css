@@ -187,6 +187,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .btn.delete_field { margin-left:10px; }
 .btn .fa-stack .fa-circle { color:rgba(255,255,255,.2); }
 
+.alert h3:last-child { margin-bottom:0; }
+
 .table th { white-space:nowrap; }
 
 .row { margin-left:-10px; margin-right:-10px; }
