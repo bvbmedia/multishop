@@ -12,7 +12,7 @@ if ($p>0) {
 				'Submit',
 				'tx_multishop_pi1[action]',
 				'clearcache'
-			))).'"><i class="fa fa-angle-double-left"></i> '.$this->pi_getLL('first').'</a></li>';
+			))).'"><i class="fa fa-angle-double-left"></i></a></li>';
 } else {
 	$tmp.='<li class="pagenav_first disabled"><span><i class="fa fa-angle-double-left"></i> '.$this->pi_getLL('first').'</span></li>';
 }
@@ -23,17 +23,17 @@ if ($p>0) {
 					'Submit',
 					'tx_multishop_pi1[action]',
 					'clearcache'
-				))).'"><i class="fa fa-angle-left"></i> '.$this->pi_getLL('previous').'</a></li>';
+				))).'"><i class="fa fa-angle-left"></i></a></li>';
 	} else {
 		$tmp.='<li class="pagenav_previous"><a href="'.mslib_fe::typolink(',2003', 'p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array(
 					'p',
 					'Submit',
 					'tx_multishop_pi1[action]',
 					'clearcache'
-				))).'"><i class="fa fa-angle-left"></i> '.$this->pi_getLL('previous').'</a></li>';
+				))).'"><i class="fa fa-angle-left"></i></a></li>';
 	}
 } else {
-	$tmp.='<li class="pagenav_previous disabled"><span><i class="fa fa-angle-left"></i> '.$this->pi_getLL('previous').'</span></li>';
+	$tmp.='<li class="pagenav_previous disabled"><span><i class="fa fa-angle-left"></i></span></li>';
 }
 if ($p==0 || $p<9) {
 	$start_page_number=1;
@@ -71,9 +71,9 @@ if ((($p+1)*$this->ms['MODULES']['PAGESET_LIMIT'])<$pageset['total_rows']) {
 				'Submit',
 				'tx_multishop_pi1[action]',
 				'clearcache'
-			))).'"><span>'.$this->pi_getLL('next').' <i class="fa fa-angle-right"></i></span></a></li>';
+			))).'"><span><i class="fa fa-angle-right"></i></span></a></li>';
 } else {
-	$tmp.='<li class="pagenav_next disabled"><span>'.$this->pi_getLL('next').' <i class="fa fa-angle-right"></i></span></li>';
+	$tmp.='<li class="pagenav_next disabled"><span><i class="fa fa-angle-right"></i></span></li>';
 }
 if ((($p+1)*$this->ms['MODULES']['PAGESET_LIMIT'])<$pageset['total_rows']) {
 	$lastpage=floor(($pageset['total_rows']/$this->ms['MODULES']['PAGESET_LIMIT']));
@@ -82,9 +82,9 @@ if ((($p+1)*$this->ms['MODULES']['PAGESET_LIMIT'])<$pageset['total_rows']) {
 				'Submit',
 				'tx_multishop_pi1[action]',
 				'clearcache'
-			))).'"><span>'.$this->pi_getLL('last').' <i class="fa fa-angle-double-right"></i></span></a></li>';
+			))).'"><span><i class="fa fa-angle-double-right"></i></span></a></li>';
 } else {
-	$tmp.='<li class="pagenav_last disabled"><span>'.$this->pi_getLL('last').' <i class="fa fa-angle-double-right"></i></span></li>';
+	$tmp.='<li class="pagenav_last disabled"><span><i class="fa fa-angle-double-right"></i></span></li>';
 }
 $tmp.='</ul>
 </div>

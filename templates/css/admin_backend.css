@@ -223,6 +223,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .tooltip .tooltip-inner { max-width:250px; font-size:12px; color:#cdcdcd; text-align:left; padding:10px; }
 .tooltip .tooltip-inner h3 { font-size:14px; line-height:18px; color:#fff; margin-bottom:5px; }
 
+ul.pagination .fa { line-height:20px; }
+
 /* redactor overrule */
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
 
