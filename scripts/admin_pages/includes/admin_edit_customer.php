@@ -859,15 +859,16 @@ switch ($_REQUEST['action']) {
 				</table>
 			</div>';
 		}
-		$customer_related_orders_listing='<div class="" id="orders_details">';
-		$customer_related_orders_listing.='<fieldset>';
-		$customer_related_orders_listing.='<legend>'.$this->pi_getLL('orders').'</legend>';
+		$customer_related_orders_listing='<div id="orders_details">';
+		$customer_related_orders_listing.='<div class="panel panel-default">';
+		$customer_related_orders_listing.='<div class="panel-heading"><h3>'.$this->pi_getLL('orders').'</h3></div>';
+		$customer_related_orders_listing.='<div class="panel-body"><fieldset>';
 		$customer_related_orders_listing.=$order_listing;
-		$customer_related_orders_listing.='</fieldset>';
-		$customer_related_orders_listing.='</div>';
+		$customer_related_orders_listing.='</fieldset></div>';
+		$customer_related_orders_listing.='</div></div>';
 		$markerArray['CUSTOMER_RELATED_ORDERS_LISTING']=$customer_related_orders_listing;
 		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
-		$subpartArray['###DETAILS_TAB###']='<li class="active"><a href="#view_customer">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
+		$subpartArray['###DETAILS_TAB###']='<li role="presentation"><a href="#view_customer" aria-controls="profile" role="tab" data-toggle="tab">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
 		$subpartArray['###DETAILS###']=$customer_details;
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		break;

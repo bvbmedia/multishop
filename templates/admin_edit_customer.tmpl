@@ -21,14 +21,24 @@ jQuery(document).ready(function ($) {
 });
 </script>
 <div class="panel panel-default">
-<div class="panel-heading"><h3>###ADMIN_LABEL_TABS_EDIT_CUSTOMER###</h3></div>
 <div class="panel-body">
+<div id="tab-container">
+    <ul class="nav nav-tabs" role="tablist" id="admin_orders">
+        ###DETAILS_TAB###
+        <li role="presentation"><a href="#edit_customer" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_EDIT_CUSTOMER###</a></li>
+        ###LABEL_EXTRA_PLUGIN_TABS###
+    </ul>
+    <div class="tab-content">
         <!-- ###DETAILS### begin -->
-        <div id="view_customer">
+        <div id="view_customer" class="tab-pane">
             <div class="topfieldset">
-                <div class="tabs-fieldset" id="address_details">
+                <div class="row">
+                <div class="col-md-6 tabs-fieldset" id="address_details">
+                    <div class="panel panel-default">
+                    <div class="panel-body">
                     <fieldset>
                         <h1 class="blackSquare">###DETAILS_COMPANY_NAME###</h1>
+                        <hr>
                         <div class="msAdminBlock" id="msAdminBlockFeUserLogo">
                             <div class="msAdminFeUserImageWrapper">
                                 ###CUSTOMER_IMAGE###
@@ -42,36 +52,39 @@ jQuery(document).ready(function ($) {
                         </div>
                         <div class="msAdminBlock-full">
                             <h3>###LAST_LOGIN###</h3>
+                            <hr>
                         </div>
                         <div class="msAdminBlock-full">
                             <h3>###ADMIN_LABEL_CONTACT_INFO###</h3>
                             ###BILLING_FULLNAME###
                             ###BILLING_TELEPHONE###
                             ###BILLING_EMAIL###
+                            <hr>
                         </div>
                         <div class="msAdminBlock">
                             <h3>###ADMIN_LABEL_BILLING_ADDRESS###</h3>
-
                             <div class="address_details_container" id="billing_details_container">###BILLING_ADDRESS###</div>
+                            <hr>
                         </div>
                         <div class="msAdminBlock">
                             <h3>###ADMIN_LABEL_DELIVERY_ADDRESS###</h3>
-
                             <div class="address_details_container" id="delivery_details_container">###DELIVERY_ADDRESS###</div>
                         </div>
                     </fieldset>
+                    </div>
+                    </div>
                 </div>
-                <div class="tabs-fieldset lastCol" id="order_google_map">
+                <div class="col-md-6 tabs-fieldset lastCol" id="order_google_map">
                     <fieldset>
                         <iframe width="100%" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="###GOOGLE_MAPS_URL_QUERY###"></iframe>
                     </fieldset>
                 </div>
             </div>
             ###CUSTOMER_RELATED_ORDERS_LISTING###
-            <div class="clear_both"></div>
+            </div>
         </div>
         <!-- ###DETAILS### end -->
-        <div id="edit_customer">
+        <div id="edit_customer" class="tab-pane">
             <div id="live-validation">
                 <form action="###CUSTOMER_EDIT_FORM_URL###" method="post" name="edit_customer" class="edit_customer" id="edit_customer">
                     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
@@ -95,10 +108,14 @@ jQuery(document).ready(function ($) {
                     <div class="form-group">
 							<span id="ValidRadio" class="InputGroup">
 								<label for="radio" id="account-gender">###LABEL_GENDER###*</label>
+								<div class="radio-inline">
 								<input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" ###GENDER_MR_CHECKED###>
-								<label class="account-male">###LABEL_GENDER_MR###</label>
+								###LABEL_GENDER_MR###
+								</div>
+								<div class="radio-inline">
 								<input type="radio" name="gender" value="1" class="InputGroup" id="radio2" ###GENDER_MRS_CHECKED###>
-								<label class="account-female">###LABEL_GENDER_MRS###</label>
+								###LABEL_GENDER_MRS###
+								</div>
 							</span>
                     </div>
                     <div class="form-group">
@@ -239,6 +256,8 @@ jQuery(document).ready(function ($) {
         </div>
         ###CONTENT_EXTRA_PLUGIN_TABS###
     </div>
+</div>
+</div>
 </div>
 <div id="ajax_message" class="ajax_message"></div>
 <script type="text/javascript">

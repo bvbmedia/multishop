@@ -3038,17 +3038,8 @@ if (is_numeric($this->get['orders_id'])) {
 		});
 		' : '').'
 		var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
-		$(".tab_content").hide();
-		$("ul.tabs li:first").addClass("active").show();
-		$(".tab_content:first").show();
-		$("ul.tabs li").click(function() {
-			$("ul.tabs li").removeClass("active");
-			$(this).addClass("active");
-			$(".tab_content").hide();
-			var activeTab = jQuery(this).find("a").attr("href");
-			$(activeTab).fadeIn(0);
-			return false;
-		});
+		$(.nav-tabs a:first).tab(show);
+
 		$("#load").hide();
 		$().ajaxStart(function() {
 			$("#load").show();
@@ -3097,21 +3088,23 @@ if (is_numeric($this->get['orders_id'])) {
     	});
 	});
 	</script>
+	<div class="panel panel-default">
+	<div class="panel-body">
 	<div id="tab-container">
-		<ul class="tabs">';
+		<ul class="nav nav-tabs" role="tablist">';
 	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+		$content.='<li'.(($count==1) ? '' : '').' role="presentation"><a href="#'.$key.'" aria-controls="profile" role="tab" data-toggle="tab">'.$value[0].'</a></li>';
 	}
 	$content.='</ul>
-		<div class="tab_container">
+		<div class="tab-content">
 		<form class="admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
-		<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >';
+		<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" />';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
-			<div style="display: block;" id="'.$key.'" class="tab_content">
+			<div id="'.$key.'" class="tab-pane">
 				'.$value[1].'
 			</div>
 		';
@@ -3119,6 +3112,6 @@ if (is_numeric($this->get['orders_id'])) {
 	$content.=$save_block.'
 			</form>
 		</div>
-	</div>';
+	</div></div></div>';
 }
 ?>
