@@ -537,36 +537,6 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
-$content.='
-<div id="tab-container">
-    <ul class="tabs" id="admin_orders">';
-$count=0;
-foreach ($tabs as $key=>$value) {
-	$count++;
-	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
-}
-$content.='
-    </ul>
-    <div class="tab_container">
-	';
-$count=0;
-foreach ($tabs as $key=>$value) {
-	$count++;
-	$content.='
-        <div style="display: block;" id="'.$key.'" class="tab_content">
-			<form id="form1" name="form1" method="get" action="index.php">
-			'.$formTopSearch.'
-			</form>
-			'.$value[1].'
-        </div>
-	';
-}
-$content.='
-    </div>
-</div>';
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div>';
-$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
-*/
 foreach ($tabs as $key=>$value) {
 	$content.='
 		<h1>'.$value[0].'</h1>
@@ -577,8 +547,6 @@ foreach ($tabs as $key=>$value) {
 	';
 	break;
 }
-
-
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>
