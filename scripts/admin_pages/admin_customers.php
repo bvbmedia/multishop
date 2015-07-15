@@ -112,14 +112,14 @@ foreach ($option_search as $key=>$val) {
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup" style="width:200px">'."\n";
+	$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup">'."\n";
 	$customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 	foreach ($groups as $group) {
 		$customer_groups_input.='<option value="'.$group['uid'].'"'.($this->get['usergroup']==$group['uid'] ? ' selected="selected"' : '').'>'.$group['title'].'</option>'."\n";
 	}
 	$customer_groups_input.='</select>'."\n";
 }
-$searchCharNav='<div id="msAdminSearchByCharNav"><ul>';
+$searchCharNav='<div id="msAdminSearchByCharNav"><ul class="pagination">';
 $chars=array();
 $chars=array(
 	'0-9',
@@ -167,36 +167,51 @@ foreach ($user_countries as $user_country) {
 ksort($fe_user_country);
 $user_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').' '.$this->pi_getLL('countries').'</option>'.implode("\n", $fe_user_country).'</select>';
 $formTopSearch='
-<div id="search-orders">
+<div id="search-orders" class="well">
 	<div class="row formfield-container-wrapper">
 		<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
 		<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 		<input name="type" type="hidden" value="2003" />
 		<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customers" />
 		<div class="col-sm-4 formfield-wrapper">
-			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
-			<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" class="customers_skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
-			<label for="type_search">'.$this->pi_getLL('search_for').'</label>
-			<select class="invoice_select2" name="tx_multishop_pi1[search_by]" style="width:200px">
-				<option value="all">'.$this->pi_getLL('all').'</option>
-				'.$option_item.'
-			</select>
-			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
-			'.$customer_groups_input.'
+			<div class="form-group">
+				<label class="control-label">'.ucfirst($this->pi_getLL('keyword')).'</label>
+				<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" class="form-control customers_skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="type_search">'.$this->pi_getLL('search_for').'</label>
+				<div class="form-inline">
+					<select class="invoice_select2" name="tx_multishop_pi1[search_by]">
+						<option value="all">'.$this->pi_getLL('all').'</option>
+						'.$option_item.'
+					</select>
+					<p for="groups" class="help-block labelInbetween">'.$this->pi_getLL('usergroup').'</p>
+					'.$customer_groups_input.'
+				</div>
+			</div>
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
-			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
-			<input type="text" name="crdate_from" id="crdate_from" value="'.$this->get['crdate_from'].'">
-			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
-			<input type="text" name="crdate_till" id="crdate_till" value="'.$this->get['crdate_till'].'">
-			<label for="includeDeletedAccounts">'.$this->pi_getLL('show_deleted_accounts').'</label>
-			<input type="checkbox" class="PrettyInput" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
+			<div class="form-group">
+				<label class="control-label" for="order_date_from">'.$this->pi_getLL('from').':</label>
+				<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="'.$this->get['crdate_from'].'">
+			</div>
+			<div class="form-group">
+				<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
+				<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="'.$this->get['crdate_till'].'">
+			</div>
+			<div class="form-group">
+				<label for="includeDeletedAccounts">'.$this->pi_getLL('show_deleted_accounts').'</label>
+				<input type="checkbox" class="PrettyInput" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
+			</div>
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
-			<label for="country">'.$this->pi_getLL('countries').'</label>
-			'.$user_countries_sb.'
-			<label for="limit">'.$this->pi_getLL('limit_number_of_records_to').':</label>
-			<select name="limit" id="limit">';
+			<div class="form-group">
+				<label class="control-label" for="country">'.$this->pi_getLL('countries').'</label>
+				'.$user_countries_sb.'
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="limit">'.$this->pi_getLL('limit_number_of_records_to').':</label>
+				<select name="limit" id="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -218,16 +233,20 @@ foreach ($limits as $limit) {
 	$formTopSearch.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
 $formTopSearch.='
-					</select>
+				</select>
+			</div>
 		</div>
 	</div>
 	<div class="row formfield-container-wrapper">
 		<div class="col-sm-12 formfield-wrapper">
+			<div class="pull-right">
 			<input type="submit" name="Search" class="btn btn-success" value="'.$this->pi_getLL('search').'" />
+			</div>
 		</div>
 	</div>
-	'.$searchCharNav.'
-</div>';
+</div>
+'.$searchCharNav.'
+';
 $filter=array();
 $having=array();
 $match=array();
@@ -518,7 +537,6 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
-/*
 $content.='
 <div id="tab-container">
     <ul class="tabs" id="admin_orders">';
@@ -546,6 +564,8 @@ foreach ($tabs as $key=>$value) {
 $content.='
     </div>
 </div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 */
 foreach ($tabs as $key=>$value) {
 	$content.='

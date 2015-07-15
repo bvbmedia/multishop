@@ -14,7 +14,7 @@ if ($p>0) {
 				'clearcache'
 			))).'"><i class="fa fa-angle-double-left"></i></a></li>';
 } else {
-	$tmp.='<li class="pagenav_first disabled"><span><i class="fa fa-angle-double-left"></i> '.$this->pi_getLL('first').'</span></li>';
+	$tmp.='<li class="pagenav_first disabled"><span><i class="fa fa-angle-double-left"></i></span></li>';
 }
 if ($p>0) {
 	if (($p-1)>0) {

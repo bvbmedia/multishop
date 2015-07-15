@@ -142,7 +142,7 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 /* custom */
 .cellID { text-align:right; }
 .cellName { width:90%; }
-.cellDate { text-align:right; }
+.cellDate { text-align:right; white-space:nowrap; }
 .cellDownload > .btn { width:100%; text-align:left; }
 .cellDownload > .btn:first-child { margin-bottom:5px; }
 td.cellPrice,
@@ -161,6 +161,8 @@ ul.qq-upload-list { margin-bottom:0; }
 .well .form-inline .form-control { margin-right:5px; }
 .searchLimit { text-align:right; }
 .searchLimit .form-inline .form-control { margin-right:0; }
+
+#search-orders .select2-container { width:100%; }
 
 .table > thead > tr > th.module_heading { border:1px solid #333; background:#333; color:#fff; }
 .table > thead:first-child > tr:first-child > th.module_heading { border-top:1px solid #333; }
@@ -223,7 +225,15 @@ hr { margin-top:15px; margin-bottom:15px; }
 .tooltip .tooltip-inner { max-width:250px; font-size:12px; color:#cdcdcd; text-align:left; padding:10px; }
 .tooltip .tooltip-inner h3 { font-size:14px; line-height:18px; color:#fff; margin-bottom:5px; }
 
-ul.pagination .fa { line-height:20px; }
+.admin_status_red { color:red; }
+.admin_status_red:first-child { margin-right:2px; }
+.admin_status_green { color:green; }
+.admin_status_green:last-child { margin-left:2px; }
+.admin_status_red.disabled,
+.admin_status_green.disabled { opacity:.3; }
+
+.fa { line-height:20px; }
+.fa-stack .fa { line-height:inherit; }
 
 /* redactor overrule */
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
