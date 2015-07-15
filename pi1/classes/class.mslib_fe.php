@@ -6456,9 +6456,8 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['label']=$this->pi_getLL('admin_new_customer');
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=add_customer');
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['link_params']='';
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']=1;
 			if (($this->post['tx_multishop_pi1']['page_section']=='admin_ajax' || $this->post['tx_multishop_pi1']['page_section']=='admin_ajax') && ($this->post['action']=='add_customer' || $this->post['action']=='add_customer')) {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']=1;
+				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['active']=1;
 			}
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['label']=$this->pi_getLL('admin_customers');
 			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['description']=$this->pi_getLL('admin_customers_description', 'Customers').'.';
