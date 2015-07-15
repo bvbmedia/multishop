@@ -245,3 +245,4 @@ hr { margin-top:15px; margin-bottom:15px; }
 /* select2 overrule */
 .select2-container .select2-choice { height:34px; }
 .select2-container .select2-choice > .select2-chosen { line-height:32px; }
+#edit_customer .select2-container { width:100%; }

@@ -539,7 +539,8 @@ jQuery(document).ready(function($) {
 ';
 foreach ($tabs as $key=>$value) {
 	$content.='
-		<h1>'.$value[0].'</h1>
+		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
+		<div class="panel-body">
 		<form id="form1" name="form1" method="get" action="index.php">
 		'.$formTopSearch.'
 		</form>
@@ -547,6 +548,6 @@ foreach ($tabs as $key=>$value) {
 	';
 	break;
 }
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>
