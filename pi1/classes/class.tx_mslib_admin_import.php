@@ -986,9 +986,9 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$schedule_content.='<td class="status_field" align="center">';
 					if (!$job['status']) {
 						$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
-						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=1"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=1"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 					} else {
-						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=0"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=0"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 						$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 					}
 					$schedule_content.='</td>

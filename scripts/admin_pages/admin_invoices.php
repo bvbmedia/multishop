@@ -453,34 +453,18 @@ jQuery(document).ready(function($) {
 	$(".invoice_select2").select2();
 });
 </script>
-<div id="tab-container">
-    <ul class="tabs" id="admin_invoices">
 ';
-$count=0;
 foreach ($tabs as $key=>$value) {
-	$count++;
-	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
-}
-$content.='
-    </ul>
-    <div class="tab_container">
-	<form action="index.php" method="get">
-	';
-$count=0;
-foreach ($tabs as $key=>$value) {
-	$count++;
 	$content.='
-        <div style="display: block;" id="'.$key.'" class="tab_content">
-        	'.$form_orders_search.'
-			'.$value[1].'
-        </div>
+		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
+		<div class="panel-body">
+		<form id="form1" name="form1" method="get" action="index.php">
+		'.$formTopSearch.'
+		</form>
+		'.$value[1].'
 	';
+	break;
 }
-$content.='
-	</form>
-    </div>
-</div>
-';
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
@@ -488,7 +472,7 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>

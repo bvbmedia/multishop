@@ -551,14 +551,14 @@ jQuery(document).ready(function ($) {
     <div class="form-group" id="msEditProductInputQuantity">
         <label for="products_quantity" class="col-md-2 control-label">###LABEL_STOCK###</label>
         <div class="col-md-10 form-inline">
-        <input type="text" name="products_quantity" class="form-control products_quantity" id="products_quantity" value="###VALUE_STOCK###"> <p class="form-control-static">###LABEL_THRESHOLD_QTY###</p> <input type="text" name="alert_quantity_threshold" class="form-control alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
+        <input type="text" name="products_quantity" class="form-control products_quantity" id="products_quantity" value="###VALUE_STOCK###"> <p class="form-control-static"><strong>###LABEL_THRESHOLD_QTY###</strong></p> <input type="text" name="alert_quantity_threshold" class="form-control alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
         </div>
     </div>
     <div class="form-group toggle_advanced_option" id="msEditProductInputStartEndTime">
         <label for="starttime" class="starttime col-md-2 control-label">###LABEL_STARTTIME###</label>
         <div class="col-md-10 form-inline">
         <input type="text" name="starttime_visitor" class="form-control starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
-        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">  <p class="form-control-static">###LABEL_ENDTIME###</p> <input type="text" name="endtime_visitor" class="form-control endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
+        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">  <p class="form-control-static"><strong>###LABEL_ENDTIME###</strong></p> <input type="text" name="endtime_visitor" class="form-control endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
         <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
         </div>
     </div>
@@ -566,7 +566,7 @@ jQuery(document).ready(function ($) {
         <label for="products_date_available" class="col-md-2 control-label">###LABEL_DATE_AVAILABLE###</label>
         <div class="col-md-10 form-inline">
         <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
-        <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###"> <p class="form-control-static">###LABEL_DATE_ADDED###</p> <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
+        <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###"> <p class="form-control-static"><strong>###LABEL_DATE_ADDED###</strong></p> <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
         <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
         </div>
     </div>
@@ -579,7 +579,7 @@ jQuery(document).ready(function ($) {
     <div class="form-group" id="msEditProductInputManufacturerName">
         <label for="manufacturers_id" class="col-md-2 control-label">###LABEL_PRODUCT_MANUFACTURER###</label>
         <div class="col-md-10 form-inline">
-        ###INPUT_MANUFACTURER### <p class="form-control-static">###LABEL_ADD_NEW_MANUFACTURER###</p> <input name="manufacturers_name" type="text" value="" class="form-control" />
+        ###INPUT_MANUFACTURER### <p class="form-control-static"><strong>###LABEL_ADD_NEW_MANUFACTURER###</strong></p> <input name="manufacturers_name" type="text" value="" class="form-control" />
         </div>
     </div>
     <div class="form-group" id="msEditProductInputWeight">
@@ -728,7 +728,7 @@ jQuery(document).ready(function ($) {
             }
         });
         if ($("#products_name_0").val() == "") {
-            $(".qq-uploader").before('<span class="file-upload-hidden">###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###</span>');
+            $(".qq-uploader").before('<p class="form-control-static file-upload-hidden">###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###</p>');
             $(".qq-uploader").hide();
         }
         $(document).on("change", "#products_name_0", function () {

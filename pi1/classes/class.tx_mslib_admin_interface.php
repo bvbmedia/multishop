@@ -302,14 +302,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 									foreach ($row as $tmpCol=>$tmpVal) {
 										$valArray['hrefEnable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefEnable']);
 									}
-									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 								}
 							} else {
 								if ($valArray['hrefDisable']) {
 									foreach ($row as $tmpCol=>$tmpVal) {
 										$valArray['hrefDisable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefDisable']);
 									}
-									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 								}
 								$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 							}

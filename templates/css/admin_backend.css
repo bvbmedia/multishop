@@ -148,6 +148,8 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 td.cellPrice,
 td.cellSpecialPrice,
 td.cellAction { white-space:nowrap; }
+.cellStatus,
+.cellAction { text-align:center; }
 .cellBackup > .btn { width:100%; }
 
 td.cellPrice .msAttributesField .form-control,
@@ -218,19 +220,21 @@ hr { margin-top:15px; margin-bottom:15px; }
 .tab-content > form > .tab-pane { display:none; }
 .tab-content > form > .tab-pane.active { display:block; }
 
-#product_options .form-inline .form-control { min-width:184px; }
+#product_options .form-inline .form-control { min-width:196px; }
 #product_options .form-inline .form-control-static { padding-left:10px; padding-right:10px;  }
 
 .tooltip { text-align:left; }
 .tooltip .tooltip-inner { max-width:250px; font-size:12px; color:#cdcdcd; text-align:left; padding:10px; }
 .tooltip .tooltip-inner h3 { font-size:14px; line-height:18px; color:#fff; margin-bottom:5px; }
 
-.admin_status_red { color:red; }
+.admin_status_red,
+.admin_status_green { display:inline-block; width:18px; height:18px; border-radius:50%; }
+.admin_status_red { background-color:red; }
 .admin_status_red:first-child { margin-right:2px; }
-.admin_status_green { color:green; }
+.admin_status_green { background-color:green; }
 .admin_status_green:last-child { margin-left:2px; }
 .admin_status_red.disabled,
-.admin_status_green.disabled { opacity:.3; }
+.admin_status_green.disabled { opacity:.2; }
 
 .fa { line-height:20px; }
 .fa-stack .fa { line-height:inherit; }
