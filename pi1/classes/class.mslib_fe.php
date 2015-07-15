@@ -2474,7 +2474,8 @@ class mslib_fe {
 									if ($products_options_values['options_values_price']!='0') {
 										$image_alt.=' '.$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
 									}
-									$attribute_value_image='<img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'original').'" alt="'.$image_alt.'" class="attribute_value_images" width="20px" height="20px" />';
+                                    $tooltips_attribute_image=htmlspecialchars('<div class="valuesdesc_info"><img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'original').'" />');
+                                    $attribute_value_image='<a href="#" data-placement="left" class="values_desc_tooltip" title="'.$tooltips_attribute_image.'"><img src="'.mslib_befe::getImagePath($products_options_values['attribute_image'], 'attribute_values', 'original').'" alt="'.$image_alt.'" class="attribute_value_images" width="20px" height="20px" /></a>';
 								}
 							}
 							// hook for manipulating the $products_options_values array
