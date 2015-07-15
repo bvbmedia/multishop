@@ -136,4 +136,5 @@ $content.='<p>'.$this->pi_getLL('admin_label_your_sitemap_has_been_created').'</
 TXT: <a href="'.$sitemap_file_web_path.'" target="_blank">'.$sitemap_file_web_path.'</a><br/>
 XML: <a href="'.$sitemap_xml_file_web_path.'" target="_blank">'.$sitemap_xml_file_web_path.'</a><br/>
 ';
+
 ?>
