@@ -189,7 +189,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$first_order_rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($first_order_qry);
 		$first_year=date('Y', $first_order_rs['crdate']);
 		$content.='
-		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_invoices_export_wizard').'</h2></div>
+		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_invoices_export_wizard').'</h3></div>
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="invoices_export_form">
 			<div class="form-group">
 				<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
