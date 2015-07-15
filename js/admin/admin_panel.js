@@ -281,13 +281,15 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                         counter_tablevel2 = 0;
 
                         if (tablevel1.link) {
-                            admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
+                            //admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
+                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel2_ctr + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">' + tablevel1.label + '</a>';
 
                         } else {
-                            admin_content += '<span>' + tablevel1.label + '</span>';
+                            //admin_content += '<span>' + tablevel1.label + '</span>';
+                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel2_ctr + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">' + tablevel1.label + '</a>';
                         }
 
-                        admin_content += '<ul>';
+                        admin_content += '<ul class="collapse" id="subs' + tablevel2_ctr + '">';
 
                         jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
                             counter_tablevel2++;
