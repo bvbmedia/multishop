@@ -1406,9 +1406,9 @@ if ($this->ms['show_default_form']) {
 			$schedule_content.='<td class="status_field" align="center">';
 			if (!$job['status']) {
 				$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
-				$schedule_content.='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				$schedule_content.='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$schedule_content.='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$schedule_content.='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$schedule_content.='</td>

@@ -469,7 +469,7 @@ if (count($enabled_countries)==1) {
 	if ($tmpcontent_con) {
 		$countries_input='
 		<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
-		<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'" style="width:295px">
+		<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 		<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 		'.$tmpcontent_con.'
 		</select>
@@ -519,7 +519,7 @@ jQuery(document).ready(function($) {
 		},
 		template: \'<div class="qq-uploader">\' +
 				  \'<div class="qq-upload-drop-area"><span>'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_drop_files_here_to_upload'))).'</span></div>\' +
-				  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+				  \'<div class="btn btn-primary btn-sm qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 				  \'<ul class="qq-upload-list"></ul>\' +
 				  \'</div>\',
 		onComplete: function(id, fileName, responseJSON){
@@ -558,10 +558,10 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 // global fields
 // VAT ID
 $vat_input_block='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
-<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/>';
+<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/>';
 //COC ID
 $coc_input_block='<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
-<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
+<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
 $subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
 $subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
@@ -859,15 +859,16 @@ switch ($_REQUEST['action']) {
 				</table>
 			</div>';
 		}
-		$customer_related_orders_listing='<div class="" id="orders_details">';
-		$customer_related_orders_listing.='<fieldset>';
-		$customer_related_orders_listing.='<legend>'.$this->pi_getLL('orders').'</legend>';
+		$customer_related_orders_listing='<div id="orders_details">';
+		$customer_related_orders_listing.='<div class="panel panel-default">';
+		$customer_related_orders_listing.='<div class="panel-heading"><h3>'.$this->pi_getLL('orders').'</h3></div>';
+		$customer_related_orders_listing.='<div class="panel-body"><fieldset>';
 		$customer_related_orders_listing.=$order_listing;
-		$customer_related_orders_listing.='</fieldset>';
-		$customer_related_orders_listing.='</div>';
+		$customer_related_orders_listing.='</fieldset></div>';
+		$customer_related_orders_listing.='</div></div>';
 		$markerArray['CUSTOMER_RELATED_ORDERS_LISTING']=$customer_related_orders_listing;
 		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
-		$subpartArray['###DETAILS_TAB###']='<li class="active"><a href="#view_customer">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
+		$subpartArray['###DETAILS_TAB###']='<li role="presentation"><a href="#view_customer" aria-controls="profile" role="tab" data-toggle="tab">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
 		$subpartArray['###DETAILS###']=$customer_details;
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		break;

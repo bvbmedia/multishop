@@ -90,9 +90,9 @@
         <td class="cellStock"><input type="text" name="up[stock][###PID7###]" class="form-control" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" size="10px" /></td>
 		<td class="cellWeight"><input type="text" name="up[weight][###PID8###]" class="form-control" value="###VALUE_PRODUCT_WEIGHT###" style="text-align:right;" size="4px" /></td>
 		<td class="cellAction">
-				<a href="###EDIT_PRODUCT_LINK1###" class="btn btn-primary admin_menu_edit" alt="Edit"><i class="fa fa-pencil"></i></a>
-				<a href="###PRODUCT_DETAIL_LINK###" class="btn btn-primary admin_menu_view" target="_blank"><i class="fa fa-eye"></i></a>
-				<a href="###DELETE_PRODUCT_LINK###" class="btn btn-danger admin_menu_remove" alt="Remove"><i class="fa fa-remove"></i></a>
+				<a href="###EDIT_PRODUCT_LINK1###" class="btn btn-primary btn-sm admin_menu_edit" alt="Edit"><i class="fa fa-pencil"></i></a>
+				<a href="###PRODUCT_DETAIL_LINK###" class="btn btn-primary btn-sm admin_menu_view" target="_blank"><i class="fa fa-eye"></i></a>
+				<a href="###DELETE_PRODUCT_LINK###" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-remove"></i></a>
         </td>
     </tr>
     </tbody>
@@ -190,9 +190,9 @@ jQuery(document).ready(function($) {
 			data:   "products_id="+products_id,
 			success: function(msg) {
                 if (msg.html == '0') {
-                    var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green_disable" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
+                    var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green disabled" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
                 } else if (msg.html==1) {
-                    var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red_disable" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
+                    var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red disabled" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
                 }
 				tthis.html(return_string);
 			}

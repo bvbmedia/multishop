@@ -35,9 +35,9 @@ foreach ($shipping_options as $option) {
 	<td width="60">';
 	if (!$option['status']) {
 		$content.='<span class="admin_status_red" alt="Disable"></span>';
-		$content.='<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_option_id='.$option['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+		$content.='<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_option_id='.$option['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 	} else {
-		$content.='<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_option_id='.$option['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+		$content.='<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_option_id='.$option['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 		$content.='<span class="admin_status_green" alt="Enable"></span>';
 	}
 	$content.='<a href="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_option_id='.$option['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';

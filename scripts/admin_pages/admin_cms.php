@@ -261,9 +261,9 @@ if (!count($pageset['dataset'])) {
 		$status_html='';
 		if (!$row['status']) {
 			$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
-			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
-			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 			$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 		}
 		$markerArray=array();
@@ -279,7 +279,7 @@ if (!count($pageset['dataset'])) {
 		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['type']).'</a>';
 		$markerArray['CMS_DATE_CREATED']=strftime("%x %X", $row['crdate']);
 		$markerArray['CMS_STATUS']=$status_html;
-		$markerArray['CMS_REMOVE_BUTTON']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&delete=1').'" onclick="return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')" class="admin_menu_remove" alt="Remove"></a>';
+		$markerArray['CMS_REMOVE_BUTTON']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&delete=1').'" onclick="return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')" class="text-danger admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-lg"></i></a>';
 		$contentItem.=$this->cObj->substituteMarkerArray($subparts['cms_list'], $markerArray, '###|###');
 	}
 	$subpartArray=array();

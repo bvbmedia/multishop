@@ -650,9 +650,9 @@ if ($this->ms['show_main']) {
 			<td align="center">';
 			if (!$row['status']) {
 				$tmpcontent.='<span class="admin_status_red" alt="Disable"></span>';
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$tmpcontent.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$tmpcontent.='</td>

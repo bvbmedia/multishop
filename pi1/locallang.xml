@@ -1221,6 +1221,7 @@
             <label index="show_disabled_product">Show disabled product</label>
             <label index="create_account">Create account</label>
             <label index="not_required">Not required</label>
+            <label index="order_not_found">Order not found</label>
         </languageKey>
         <languageKey index="af"></languageKey>
         <languageKey index="ar"></languageKey>

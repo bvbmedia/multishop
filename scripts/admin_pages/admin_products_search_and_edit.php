@@ -608,13 +608,13 @@ if ($pageset['total_rows']>0) {
 		if (isset($rs['products_status'])) {
 			if (!$rs['products_status']) {
 				$status.='<span class="admin_status_red" alt="Disable"></span>';
-				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$status.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 		} else {
-			$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+			$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 			$status.='<span class="admin_status_green" alt="Enable"></span>';
 		}
 		$product_tax_rate=0;
