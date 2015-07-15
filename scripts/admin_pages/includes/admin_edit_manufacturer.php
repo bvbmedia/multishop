@@ -134,6 +134,14 @@ if ($this->post) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 		}
+        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturers.php']['adminEditManufacturersSaveHook'])) {
+            $params=array(
+                'manufacturers_id'=>$manufacturers_id
+            );
+            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturers.php']['adminEditManufacturersSaveHook'] as $funcRef) {
+                \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+            }
+        }
 		if ($this->post['tx_multishop_pi1']['referrer']) {
 			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
 			exit();
@@ -271,6 +279,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	$subpartArray['###ADMIN_LABEL_TABS_CONTENT###']=$this->pi_getLL('admin_label_tabs_content');
 	$subpartArray['###ADMIN_LABEL_TABS_META###']=$this->pi_getLL('admin_label_tabs_meta');
 	// crop images
+    $js_extra=array();
 	if ($this->ms['MODULES']['ADMIN_CROP_MANUFACTURERS_IMAGES']) {
 		$jcrop_js='
 <script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'js/tapmodo-Jcrop-1902fbc/js/jquery.Jcrop.js"></script>
@@ -491,8 +500,20 @@ jQuery(document).ready(function ($) {
 });
 </script>
 ';
-		$GLOBALS['TSFE']->additionalHeaderData[]=$jcrop_js;
+        $js_extra[]=$jcrop_js;
 	}
+    if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturers.php']['adminEditManufacturersPreProc'])) {
+        $params=array(
+            'js_extra'=>&$js_extra,
+            'subpartArray'=>&$subpartArray
+        );
+        foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_manufacturers.php']['adminEditManufacturersPreProc'] as $funcRef) {
+            \TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+        }
+    }
+    if (count($js_extra)) {
+        $GLOBALS['TSFE']->additionalHeaderData['admin_edit_manufacturers_js']=implode("\n", $js_extra);
+    }
 	$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 }
 ?>
