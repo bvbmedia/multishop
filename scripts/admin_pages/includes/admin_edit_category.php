@@ -313,6 +313,7 @@ if ($this->post) {
 		$catid=$GLOBALS['TYPO3_DB']->sql_insert_id();
 	} else {
 		if ($_REQUEST['action']=='edit_category') {
+			$updateArray['last_modified']=time();
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_categories', 'categories_id=\''.$this->post['cid'].'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$catid=$this->post['cid'];
