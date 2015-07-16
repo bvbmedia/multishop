@@ -96,6 +96,7 @@ if ($this->post) {
 		}
 	} else {
 		if ($this->post['manufacturers_id']) {
+			$updateArray['last_modified']=time();
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_manufacturers', 'manufacturers_id=\''.$this->post['manufacturers_id'].'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$manufacturers_id=$this->post['manufacturers_id'];

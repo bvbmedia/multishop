@@ -82,11 +82,12 @@ if (!$product['products_id']) {
 		// get all cats to generate multilevel fake url eof
 	}
 	$link=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
+	$output_array['meta']['facebook']='';
 	if ($product['products_image']) {
-		$output_array['meta']['image_src']='<link rel="image_src" href="'.$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', '300').'" />
+		$output_array['meta']['facebook'].='<link rel="image_src" href="'.$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', '300').'" />
 		<meta property="og:image" content="'.$this->FULL_HTTP_URL.mslib_befe::getImagePath($product['products_image'], 'products', '300').'" />';
 	}
-	$output_array['meta'][]='<meta property="og:title" content="'.htmlspecialchars($product['products_name']).'" />
+	$output_array['meta']['facebook'].='<meta property="og:title" content="'.htmlspecialchars($product['products_name']).'" />
 	<meta property="og:type" content="product" />
 	'.($product['products_date_added'] ? '<meta property="article:published_time" content="'.date("Y-m-d", $product['products_date_added']).'" />' : '').'
 	'.($product['products_date_modified'] ? '<meta property="article:modified_time" content="'.date("Y-m-d", $product['products_date_modified']).'" />' : '').'
@@ -113,8 +114,10 @@ if (!$product['products_id']) {
 	}
 	// products pagination module eof
 	$output['products_name'].=$product['products_name'];
+	$output['admin_link']='';
 	if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
-		$output['products_name'].='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit">Edit</a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
+		$output['admin_link']='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit">Edit</a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$product['categories_id'].'&pid='.$product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
+		$output['products_name'].=$output['admin_link'];
 	}
 	$final_price=mslib_fe::final_products_price($product);
 	if ($product['tax_id'] && $this->ms['MODULES']['SHOW_PRICES_WITH_AND_WITHOUT_VAT']) {
@@ -264,7 +267,7 @@ if (!$product['products_id']) {
 	$output['products_extra_description']=$product['products_extra_description'];
 	$output['products_image']='<div class="image">';
 	if ($product['products_image']) {
-		$image='<a id="thumb_0" rel="'.$this->conf['jQueryPopup_rel'].'" class="'.$this->conf['jQueryPopup_rel'].'" href="'.mslib_befe::getImagePath($product['products_image'], 'products', 'normal').'"><img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'"></a>';
+		$image='<a id="thumb_0" rel="'.$this->conf['jQueryPopup_rel'].'" class="'.$this->conf['jQueryPopup_rel'].'" href="'.mslib_befe::getImagePath($product['products_image'], 'products', 'normal').'"><img src="'.mslib_befe::getImagePath($product['products_image'], 'products', $this->imageWidth).'" itemprop="image"></a>';
 	} else {
 		$image='<div class="no_image"></div>';
 	}
@@ -309,6 +312,7 @@ if (!$product['products_id']) {
 	$markerArray['###PAGINATION###']=$output['pagination'];
 	$markerArray['###STOCK###']=$output['products_quantity'];
 	$markerArray['###PRODUCTS_NAME###']=$output['products_name'];
+
 	$markerArray['###PRODUCTS_SHORT_DESCRIPTION###']=$output['PRODUCTS_SHORT_DESCRIPTION'];
 	$markerArray['###PRODUCTS_DESCRIPTION###']=$output['products_description'];
 	$markerArray['###PRODUCTS_EXTRA_DESCRIPTION###']=$output['products_extra_description'];
@@ -335,6 +339,9 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_META_TITLE###']=$product['products_meta_title'];
 	$markerArray['###PRODUCTS_URL###']=$product['products_url'];
 	$markerArray['###ORDER_UNIT_NAME###']=$product['order_unit_name'];
+	$markerArray['###MANUFACTURERS_NAME###']=$output['manufacturers_name'];
+	$markerArray['###MICRODATA_PRICE###']=$final_price;
+
 	$js_detail_page_triggers[]='
 		var stepSize=parseFloat(\''.($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : ($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1')).'\');
 		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'\');

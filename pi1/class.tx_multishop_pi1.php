@@ -281,7 +281,6 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				} else {
 					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
 				}
-				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/front_pages/includes/crumbar/default.php');
 				$content=$crum;
 				break;
 			case 'search':

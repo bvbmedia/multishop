@@ -26,10 +26,11 @@ if (is_numeric($this->get['orders_id'])) {
 			$zone['zn_country_iso_nr']=0;
 		}
 	}
+    $redirect_after_delete=false;
+    $close_window=0;
 	if ($this->ms['MODULES']['ORDER_EDIT']) {
 		if (!$order['is_locked']) {
 			// delete single item in order
-			$redirect_after_delete=false;
 			if (isset($this->get['delete_product']) && $this->get['delete_product']==1) {
 				if (isset($this->get['order_pid']) && $this->get['order_pid']>0) {
 					$sql="delete from tx_multishop_orders_products where orders_products_id = ".$this->get['order_pid']." limit 1";
@@ -446,58 +447,62 @@ if (is_numeric($this->get['orders_id'])) {
 				$is_proposal_params='&tx_multishop_pi1[is_proposal]=1';
 			}
 		} // if (!$order['is_locked']) eol
-		$updateArray=array();
-		if ($this->post['expected_delivery_date']) {
-			$updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
-		}
-		if ($this->post['track_and_trace_code']) {
-			$updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
-		}
-		if ($this->post['order_memo']) {
-			$updateArray['order_memo']=$this->post['order_memo'];
-		}
-		if (count($updateArray)) {
-			$close_window=1;
-			$updateArray['orders_last_modified']=time();
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
-			$orders['track_and_trace_code']=$this->post['track_and_trace_code'];
-			$orders['order_memo']=$this->post['order_memo'];
-		}
-		if ($this->post['order_status']) {
-			// first get current status
-			if ($this->post['order_status']==$order['status']) {
-				// no new order status has been defined. only mail when the email text box is containing content
-				if (!empty($this->post['comments'])) {
-					$continue_update=1;
-				}
-			} else {
-				$continue_update=1;
-			}
-			if ($continue_update) {
-				// dynamic variables
-				mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified']);
-			}
-		}
-		if ($redirect_after_delete) {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
-			exit();
-		} else {
-			if ($close_window) {
-				if ($this->post['tx_multishop_pi1']['referrer']) {
-					if (strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_product')!==false || strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_order')!==false) {
-						$this->post['tx_multishop_pi1']['referrer']=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders'.$is_proposal_params);
-					}
-					header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-					exit();
-				} else {
-					header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders'.$is_proposal_params, 1));
-					exit();
-				}
-			}
-		}
 	} // if ($this->ms['MODULES']['ORDER_EDIT']) eol
+    // editable properties of orders, even when ORDERS_EDIT is disabled
+    if ($this->post) {
+        $updateArray=array();
+        if ($this->post['expected_delivery_date']) {
+            $updateArray['expected_delivery_date']=strtotime($this->post['expected_delivery_date']);
+        }
+        if ($this->post['track_and_trace_code']) {
+            $updateArray['track_and_trace_code']=$this->post['track_and_trace_code'];
+        }
+        if ($this->post['order_memo']) {
+            $updateArray['order_memo']=$this->post['order_memo'];
+        }
+        if (count($updateArray)) {
+            $close_window=1;
+            $updateArray['orders_last_modified']=time();
+            $query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
+            $res=$GLOBALS['TYPO3_DB']->sql_query($query);
+            $orders['expected_delivery_date']=$this->post['expected_delivery_date'];
+            $orders['track_and_trace_code']=$this->post['track_and_trace_code'];
+            $orders['order_memo']=$this->post['order_memo'];
+        }
+        if ($this->post['order_status']) {
+            // first get current status
+            if ($this->post['order_status']==$order['status']) {
+                // no new order status has been defined. only mail when the email text box is containing content
+                if (!empty($this->post['comments'])) {
+                    $continue_update=1;
+                }
+            } else {
+                $continue_update=1;
+            }
+            if ($continue_update) {
+                // dynamic variables
+                mslib_befe::updateOrderStatus($this->get['orders_id'], $this->post['order_status'], $this->post['customer_notified']);
+            }
+        }
+    }
+    if ($redirect_after_delete) {
+        header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
+        exit();
+    } else {
+        if ($close_window) {
+            if ($this->post['tx_multishop_pi1']['referrer']) {
+                if (strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_product')!==false || strpos($this->post['tx_multishop_pi1']['referrer'], 'edit_order')!==false) {
+                    $this->post['tx_multishop_pi1']['referrer']=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders'.$is_proposal_params);
+                }
+                header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+                exit();
+            } else {
+                header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders'.$is_proposal_params, 1));
+                exit();
+            }
+        }
+    }
+    //
 	$str="SELECT *, o.crdate, o.status, osd.name as orders_status from tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id) where o.orders_id='".$this->get['orders_id']."'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$orders=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
