@@ -211,7 +211,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$array1[]='###STORE_NAME###';
 		$array2[]=$this->ms['MODULES']['STORE_NAME'];
 		$array1[]='###TOTAL_AMOUNT###';
-		$array2[]=mslib_fe::amount2Cents($order['total_amount']);
+		$array2[]=mslib_fe::amount2Cents($prefix.$order['total_amount']);
 		$array1[]='###PROPOSAL_NUMBER###';
 		$array2[]=$order['orders_id'];
 		$array1[]='###ORDER_NUMBER###';
