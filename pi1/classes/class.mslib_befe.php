@@ -3696,6 +3696,14 @@ class mslib_befe {
 			$subpartsTemplateWrapperRemove['###SHIPPING_COSTS_WRAPPER###']='';
 			$subpartsTemplateWrapperRemove['###PAYMENT_COSTS_WRAPPER###']='';
 		}
+		if (!$order['shipping_method_costs']) {
+			// If shipping method costs are zero, than remove the whole subpart
+			$subpartsTemplateWrapperRemove['###SHIPPING_COSTS_WRAPPER###']='';
+		}
+		if (!$order['payment_method_costs']) {
+			// If payment method costs are zero, than remove the whole subpart
+			$subpartsTemplateWrapperRemove['###PAYMENT_COSTS_WRAPPER###']='';
+		}
 		$subparts['template']=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartsTemplateWrapperRemove);
 		// items wrapper
 		$subpartsItemsWrapperRemove=array();
