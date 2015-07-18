@@ -1354,7 +1354,21 @@ switch ($this->ms['page']) {
 											$folder=mslib_befe::getImagePrefixFolder($filename);
 											$array=explode(".", $filename);
 											if (isset($this->get['old_image']) && !empty($this->get['old_image'])) {
-												mslib_befe::deleteProductImage($this->get['old_image']);
+												$orFilter=array();
+												for ($i=0; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+													$s='';
+													if ($i>0) {
+														$s=$i;
+													}
+													$orFilter[]='products_image'.$s.'=\''.addslashes($this->get['old_image']).'\'';
+												}
+												$filter=array();
+												$filter[]='('.implode(' OR ',$orFilter).')';
+												$count=mslib_befe::getCount('', 'tx_multishop_products', '', $filter);
+												if ($count < 2) {
+													// Only delete the file is we have found 1 product using it
+													mslib_befe::deleteProductImage($this->get['old_image']);
+												}
 											}
 											if (!is_dir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder)) {
 												\TYPO3\CMS\Core\Utility\GeneralUtility::mkdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original'].'/'.$folder);
@@ -1404,7 +1418,22 @@ switch ($this->ms['page']) {
 			$img_counter=$this->post['image_counter'];
 			$image_array_key="products_image".$img_counter;
 			$image_filename=$this->post['image_filename'];
-			mslib_befe::deleteProductImage($image_filename);
+
+			$orFilter=array();
+			for ($i=0; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+				$s='';
+				if ($i>0) {
+					$s=$i;
+				}
+				$orFilter[]='products_image'.$s.'=\''.addslashes($image_filename).'\'';
+			}
+			$filter=array();
+			$filter[]='('.implode(' OR ',$orFilter).')';
+			$count=mslib_befe::getCount('', 'tx_multishop_products', '', $filter);
+			if ($count < 2) {
+				// Only delete the file is we have found 1 product using it
+				mslib_befe::deleteProductImage($image_filename);
+			}
 			if (is_numeric($pid) && $pid>0) {
 				$updateArray=array();
 				$updateArray[$image_array_key]='';
@@ -1435,7 +1464,13 @@ switch ($this->ms['page']) {
 			if ($this->post['cid']>0) {
 				$cid=$this->post['cid'];
 			}
-			mslib_befe::deleteCategoryImage($image_filename);
+			$filter=array();
+			$filter[]='categories_image=\''.addslashes($image_filename).'\'';
+			$count=mslib_befe::getCount('', 'tx_multishop_categories', '', $filter);
+			if ($count < 2) {
+				// Only delete the file is we have found 1 category using it
+				mslib_befe::deleteCategoryImage($image_filename);
+			}
 			if ($cid>0) {
 				$updateArray=array();
 				$updateArray['categories_image']='';
@@ -1462,7 +1497,13 @@ switch ($this->ms['page']) {
 			if ($this->post['mid']>0) {
 				$mid=$this->post['mid'];
 			}
-			mslib_befe::deleteManufacturerImage($image_filename);
+			$filter=array();
+			$filter[]='manufacturers_image=\''.addslashes($image_filename).'\'';
+			$count=mslib_befe::getCount('', 'tx_multishop_manufacturers', '', $filter);
+			if ($count < 2) {
+				// Only delete the file is we have found 1 category using it
+				mslib_befe::deleteManufacturerImage($image_filename);
+			}
 			if ($mid>0) {
 				$updateArray=array();
 				$updateArray['manufacturers_image']='';
