@@ -1030,7 +1030,13 @@ class mslib_befe {
 				}
 				// finally delete the category
 				$filename=$row['categories_image'];
-				mslib_befe::deleteCategoryImage($filename);
+				$filter=array();
+				$filter[]='categories_image=\''.addslashes($filename).'\'';
+				$count=mslib_befe::getCount('', 'tx_multishop_categories', '', $filter);
+				if ($count < 2) {
+					// Only delete the file is we have found 1 category using it
+					mslib_befe::deleteCategoryImage($filename);
+				}
 				$tables=array();
 				$tables[]='tx_multishop_categories';
 				$tables[]='tx_multishop_categories_description';
@@ -1121,7 +1127,21 @@ class mslib_befe {
 							$i='';
 						}
 						$filename=$row['products_image'.$i];
-						mslib_befe::deleteProductImage($filename);
+						$orFilter=array();
+						for ($i=0; $i<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $i++) {
+							$s='';
+							if ($i>0) {
+								$s=$i;
+							}
+							$orFilter[]='products_image'.$s.'=\''.addslashes($filename).'\'';
+						}
+						$filter=array();
+						$filter[]='('.implode(' OR ',$orFilter).')';
+						$count=mslib_befe::getCount('', 'tx_multishop_products', '', $filter);
+						if ($count < 2) {
+							// Only delete the file is we have found 1 product using it
+							mslib_befe::deleteProductImage($filename);
+						}
 					}
 					$tables=array();
 					$tables[]='tx_multishop_products';
@@ -1201,6 +1221,16 @@ class mslib_befe {
 	}
 	public function deleteManufacturer($id) {
 		if (is_numeric($id)) {
+			$record=mslib_fe::getRecord($id,'tx_multishop_manufacturers','manufacturers_id');
+			if ($record['manufacturers_image']) {
+				$filter=array();
+				$filter[]='manufacturers_image=\''.addslashes($record['manufacturers_image']).'\'';
+				$count=mslib_befe::getCount('', 'tx_multishop_manufacturers', '', $filter);
+				if ($count < 2) {
+					// Only delete the file is we have found 1 category using it
+					mslib_befe::deleteManufacturersImage($record['manufacturers_image']);
+				}
+			}
 			$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers', 'manufacturers_id='.$id);
 			$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_cms', 'manufacturers_id='.$id);
 			$qry=$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_manufacturers_info', 'manufacturers_id='.$id);
@@ -3694,6 +3724,14 @@ class mslib_befe {
 		}
 		if (!empty($subparts['SINGLE_SHIPPING_PACKING_COSTS_WRAPPER'])) {
 			$subpartsTemplateWrapperRemove['###SHIPPING_COSTS_WRAPPER###']='';
+			$subpartsTemplateWrapperRemove['###PAYMENT_COSTS_WRAPPER###']='';
+		}
+		if (!$order['shipping_method_costs']) {
+			// If shipping method costs are zero, than remove the whole subpart
+			$subpartsTemplateWrapperRemove['###SHIPPING_COSTS_WRAPPER###']='';
+		}
+		if (!$order['payment_method_costs']) {
+			// If payment method costs are zero, than remove the whole subpart
 			$subpartsTemplateWrapperRemove['###PAYMENT_COSTS_WRAPPER###']='';
 		}
 		$subparts['template']=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartsTemplateWrapperRemove);
