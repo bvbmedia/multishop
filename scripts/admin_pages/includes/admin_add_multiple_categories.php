@@ -156,7 +156,6 @@ if ($this->post) {
 	<form class="form-horizontal admin_add_multiple_categories blockSubmitForm" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
-	$tmpcontent.=''.$save_block.'';
 	//$tmpcontent.='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
 	if (isset($this->get['cid']) && $this->get['cid']>0) {
 		$category['parent_id']=$this->get['cid'];
@@ -198,13 +197,10 @@ if ($this->post) {
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='
-
-			'.$value[1].'
-
-	';
+		$content.=$value[1];
 	}
 	// tabber eof
+	$content.=$save_block;
 	$content.='<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
 	</form></div></div>';
 	$content.='';

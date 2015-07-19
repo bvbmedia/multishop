@@ -587,7 +587,7 @@ if ($pageset['total_rows']>0) {
 		$product_categories=explode(',', $tmp_product_categories);
 		$cat_crumbar='';
 		foreach ($product_categories as $product_category) {
-			$cat_crumbar.='<ul class="msAdminCategoriesTree">';
+			$cat_crumbar.='<ul class="msAdminCategoriesCrum list-inline">';
 			$cats=mslib_fe::Crumbar($product_category);
 			$teller=0;
 			$total=count($cats);

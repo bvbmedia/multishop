@@ -2960,7 +2960,9 @@ if ($this->post['action']!='product-import-preview') {
 		if (count($jobs)>0) {
 			$schedule_content.='
 			<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_tasks').'</legend>
-			<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+			<table class="table table-striped table-bordered msadmin_border" id="msAdminProducsImport">
+			<thead>
+			<tr>
 			<th>'.$this->pi_getLL('source_name').'</th>
 			<th>'.$this->pi_getLL('name').'</th>
 			<th>'.$this->pi_getLL('mapped_to_category').'</th>
@@ -2973,6 +2975,8 @@ if ($this->post['action']!='product-import-preview') {
 			if ($this->ROOTADMIN_USER) {
 				$schedule_content.='<th>'.$this->pi_getLL('download_import_task').'</th>';
 			}
+			$schedule_content.='</tr></thead>';
+			$schedule_content.='<tbody>';
 			$switch='';
 			$jsSelect2InitialValue=array();
 			$jsSelect2InitialValue[]='var categoriesIdTerm=[];';
@@ -3053,6 +3057,7 @@ if ($this->post['action']!='product-import-preview') {
 					$jsSelect2InitialValue[]='categoriesIdTerm['.$job['categories_id'].']={id:"'.$job['categories_id'].'", text:"'.implode(' \\\\ ', $catpath).'"};';
 				}
 			}
+			$schedule_content.='</tbody>';
 			$schedule_content.='</table>
 			</fieldset>
 			<script type="text/javascript">
