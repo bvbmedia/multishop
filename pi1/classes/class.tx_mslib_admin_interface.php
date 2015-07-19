@@ -76,7 +76,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$that->searchKeywords[]=$that->get['tx_multishop_pi1']['keyword'];
 			$that->searchMode='%keyword%';
 		}
-		$limit_search_result_selectbox='<div class="form-inline"><div class="form-group"><label>'.$that->pi_getLL('limit_number_of_records_to').':</label><select name="limit" class="form-control">';
+		$limit_search_result_selectbox='<select name="limit" class="form-control">';
 		$limits=array();
 		$limits[]='10';
 		$limits[]='15';
@@ -107,7 +107,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		foreach ($limits as $limit) {
 			$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$that->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 		}
-		$limit_search_result_selectbox.='</select></div></div>';
+		$limit_search_result_selectbox.='</select>';
 		$queryData=array();
 		$queryData['where']=array();
 		if (count($that->searchKeywords)) {
@@ -486,28 +486,27 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		if ($params['settings']['enableKeywordSearch']) {
 			$searchForm='
 			<form id="form1" name="form1" method="get" action="index.php">
-				<div id="search-orders">
-					<table width="100%">
-						<tr>
-							<td nowrap valign="top">';
+				<div class="well">
+					<div class="row formfield-container-wrapper">
+						';
 			foreach ($params['searchForm']['hiddenFields'] as $key=>$val) {
 				$searchForm.='<input name="'.$key.'" type="hidden" value="'.htmlspecialchars($val).'" />'."\n";
 			}
 			$searchForm.='
-								<div class="formfield-container-wrapper">
-									<div class="formfield-wrapper">
-										<label>'.$that->pi_getLL('keyword').'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
-										<input type="submit" name="Search" class="btn btn-success" value="'.$that->pi_getLL('search').'" />
-									</div>
-								</div>
-							</td>
-							<td nowrap valign="top" align="right" class="searchLimit">
-								<div style="float:right;">
-									'.$limit_search_result_selectbox.'
-								</div>
-							</td>
-						</tr>
-					</table>
+						<div class="col-sm-8 formfield-wrapper">
+							<div class="form-group">
+								<label class="control-label">'.$that->pi_getLL('keyword').'</label>
+								<input type="text" name="tx_multishop_pi1[keyword]" class="form-control" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
+								<input type="submit" name="Search" class="btn btn-success" value="'.$that->pi_getLL('search').'" />
+							</div>
+						</div>
+						<div class="col-sm-4 formfield-wrapper">
+							<div class="form-group pull-right">
+								<label class="control-label">'.$that->pi_getLL('limit_number_of_records_to').'</label>
+								'.$limit_search_result_selectbox.'
+							</div>
+						</div>
+					</div>
 				</div>
 			</form>
 			';
