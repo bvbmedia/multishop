@@ -115,6 +115,7 @@
             <label index="admin_edit_view_front_category">View in front</label>
             <label index="admin_edit_view_front_product">view in front</label>
             <label index="admin_export_customers">Export customers</label>
+            <label index="admin_export_invoices">Export invoices wizard</label>
             <label index="admin_export_orders">Export orders wizard</label>
             <label index="admin_external_url">EXTERNAL URL</label>
             <label index="admin_from">from</label>
@@ -3799,7 +3800,7 @@
             <label index="admin_edit_view_front_category">Bekijk aan de voorkant</label>
             <label index="admin_edit_view_front_product">bekijk aan de voorkant</label>
             <label index="admin_export_customers">Exporteer debiteurenbestand</label>
-            <label index="admin_export_invoices">Export invoices wizard</label>
+            <label index="admin_export_invoices">Exporteer facturen</label>
             <label index="admin_export_orders">Exporteer bestellingen</label>
             <label index="admin_external_url">EXTERNE LINK</label>
             <label index="admin_from">van</label>
