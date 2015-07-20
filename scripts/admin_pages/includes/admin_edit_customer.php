@@ -769,26 +769,30 @@ switch ($_REQUEST['action']) {
 		if (!$markerArray['DETAILS_COMPANY_NAME']) {
 			$markerArray['DETAILS_COMPANY_NAME']=$fullname;
 		}
+		if ($company_name) {
+			$markerArray['BILLING_COMPANY']=$company_name.'<br/>';
+		}
 		$markerArray['BILLING_FULLNAME']=$fullname.'<br/>';
 		$markerArray['BILLING_TELEPHONE']=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
 		$markerArray['BILLING_EMAIL']=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
-		$markerArray['CUSTOMER_ID']='<strong>'.$this->pi_getLL('admin_customer_id').': '.$user['uid'].'</strong><br/>';
+		$markerArray['CUSTOMER_ID']=$this->pi_getLL('admin_customer_id').': '.$user['uid'].'<br/>';
 		if ($user['crdate']>0) {
 			$user['crdate']=strftime("%x %X", $user['crdate']);
 		} else {
 			$user['crdate']='';
 		}
-		$markerArray['REGISTERED_DATE']='<strong>'.$this->pi_getLL('created').': '.$user['crdate'].'</strong><br/>';
+		$markerArray['REGISTERED_DATE']=$this->pi_getLL('created').': '.$user['crdate'].'<br/>';
 		if ($user['lastlogin']) {
 			$user['lastlogin']=strftime("%x %X", $user['lastlogin']);
 		} else {
 			$user['lastlogin']='-';
 		}
-		$markerArray['LAST_LOGIN']='<strong>'.$this->pi_getLL('latest_login').': '.$user['lastlogin'].'</strong><br/>';
+		$markerArray['LAST_LOGIN']=$this->pi_getLL('latest_login').': '.$user['lastlogin'].'<br/>';
 		$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
 		$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
 		$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
 		$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
+
 		$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
 		$markerArray['ADMIN_LABEL_DELIVERY_ADDRESS']=$this->pi_getLL('admin_label_delivery_address');
 		// customers related orders listings

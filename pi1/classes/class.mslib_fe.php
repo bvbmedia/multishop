@@ -6538,6 +6538,11 @@ class mslib_fe {
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_invoices') {
 					$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['active']=1;
 				}
+				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices_overview');
+				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
+				if ($this->get['tx_multishop_pi1']['page_section']=='admin_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_invoices') {
+					$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices']['active']=1;
+				}
 				// invoices export wizard
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices_export']['label']=$this->pi_getLL('admin_export_invoices');
 				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_invoices');
