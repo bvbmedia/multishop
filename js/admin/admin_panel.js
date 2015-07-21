@@ -398,7 +398,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                     *//*
                                     admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                 }*/
-                                admin_content += '<li><a href="#">';
+                                admin_content += '<li class="ms_admin_has_subs"><a href="#">';
                                 if (tablevel2.class) {
                                     admin_content += '<i class="' + tablevel2.class + '"></i>';
                                 }
