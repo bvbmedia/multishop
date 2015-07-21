@@ -2163,6 +2163,11 @@ if ($this->post) {
 			}
 			$language_label.=''.$language['title'];
 			$markerArray=array();
+			$markerArray['PANEL_COLLAPSE_CLASS']='panel-collapse collapse';
+			if ($language['uid']=='0') {
+				// Show unfolded panel
+				$markerArray['PANEL_COLLAPSE_CLASS']='panel-collapse collapse in';
+			}
 			$markerArray['LANGUAGE_UID']=$language['uid'];
 			$markerArray['PAGE_UID']=$this->shop_pid;
 			$markerArray['LABEL_LANGUAGE']=mslib_befe::strtoupper($this->pi_getLL('language'));
