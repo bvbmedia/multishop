@@ -329,7 +329,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                         }
                         */
                         //<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">
-                        admin_content += '<a href="#" "role="button" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                        admin_content += '<a href="#" role="button" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                         if (tablevel1.class) {
                             admin_content += '<i class="' + tablevel1.class + '"></i>';
                         }
