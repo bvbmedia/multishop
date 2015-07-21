@@ -285,7 +285,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
             var tab_counter = 0;
             jQuery.each(json, function (tablevel1_key, tablevel1) {
                 tab_counter++;
-                admin_content += '<li class="' + tablevel1_key + ' dropdown">';
+                admin_content += '<li role="presentation" class="' + tablevel1_key + ' dropdown">';
                 if (tablevel1.label == null && tablevel1.description) {
                     admin_content += tablevel1.description;
 
@@ -329,7 +329,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                         }
                         */
                         //<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">
-                        admin_content += '<a href="#subs' + tablevel1_key + '" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">';
+                        admin_content += '<a href="#" "role="button" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                         if (tablevel1.class) {
                             admin_content += '<i class="' + tablevel1.class + '"></i>';
                         }
