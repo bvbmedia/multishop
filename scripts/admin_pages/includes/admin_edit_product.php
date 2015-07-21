@@ -2091,7 +2091,7 @@ if ($this->post) {
 				// get all cats to generate multilevel fake url eof
 			}
 			$details_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-			$heading_page='<h3>'.$this->pi_getLL('admin_edit_product').' (ID: '.$product['products_id'].')</h3><span class="viewfront"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_product', 'View in front').'</a></span>';
+			$heading_page='<h3>'.$this->pi_getLL('admin_edit_product').' (ID: '.$product['products_id'].') <span class="viewfront pull-right"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_product', 'View in front').'</a></span></h3>';
 		}
 		/*
 		 * js header
@@ -2324,28 +2324,31 @@ if ($this->post) {
 				</script>';
 			if (empty($product['staffel_price'])) {
 				$staffel_price_block.='
-						<div class="form-group toggle_advanced_option" id="msEditProductInputStaffelPrice">
-							<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
-							<input type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
+						<div class="toggle_advanced_option" id="msEditProductInputStaffelPrice">
+							<label for="products_price" class="control-label col-md-2">'.$this->pi_getLL('admin_staffel_price').'</label>
+							<div class="col-md-10">
+							<input class="btn btn-success" type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
 							<label>&nbsp;</label>
 							<div class="product_staffel_price">
-								<table cellpadding="0" cellspacing="0">
-									<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="0" /></td></tr>
+								<table class="table">
+									<thead><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="0" /></td></tr></thead>
 								</table>
+							</div>
 							</div>
 						</div>';
 			} else {
 				$staffel_price_block.='
 					<div class="form-group" id="msEditProductInputStaffelPrice">
-						<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
+						<label for="products_price"class="control-label col-md-2">'.$this->pi_getLL('admin_staffel_price').'</label>
 						<div class="product_staffel_price">
-							<table cellpadding="0" cellspacing="0">
+							<table class="table">
+								<thead>
 								<tr>
 									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_from')).'</td>
 									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_till')).'</td>
 									<td align="center">'.mslib_befe::strtolower($this->pi_getLL('admin_price')).'</td>
 									<td>&nbsp;</td>
-								</tr>';
+								</tr></thead>';
 				$sp_rows=explode(';', $product['staffel_price']);
 				foreach ($sp_rows as $sp_idx=>$sp_row) {
 					$sp_idx+=1;
@@ -2355,17 +2358,17 @@ if ($this->post) {
 					$sp_price_display=mslib_fe::taxDecimalCrop($sp_price, 2, false);
 					$staffel_price_display_incl=mslib_fe::taxDecimalCrop($sp_price+$staffel_tax, 2, false);
 					$staffel_price_block.='
-						<tr id="sp_'.$sp_idx.'">
+						<tbody><tr id="sp_'.$sp_idx.'">
 							<td><span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></td>
 							<td><span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></td>
 							<td>
-							<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-							<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
-							<td><input type="button" value="X" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="btn btn-success" /></td>
-						</tr>';
+							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="btn btn-success"><i class="fa fa-remove"></i></button></td>
+						</tr></tbody>';
 				}
-				$staffel_price_block.='<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><input type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input" /></td></tr>
+				$staffel_price_block.='<tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><input type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input" /></td></tr></tfoot>
 								</table>
 							</div>
 					</div>';
@@ -2499,24 +2502,24 @@ if ($this->post) {
 			<div class="form-group" id="msEditProductInputImage_'.$i.'">
 				<label for="products_image'.$i.'" class="col-md-2 control-label">'.$this->pi_getLL('admin_image').' '.($i+1).'</label>
 				<div class="col-md-10">
-				<div id="products_image'.$i.'">
+				<div id="products_image'.$i.'" class="products_image">
 					<noscript>
 						<input name="products_image'.$i.'" type="file" />
 					</noscript>
 				</div>
-				<input name="ajax_products_image'.$i.'" id="ajax_products_image'.$i.'" type="hidden" value="'.$product['products_image'.$i].'" /></div>';
+				<input name="ajax_products_image'.$i.'" id="ajax_products_image'.$i.'" type="hidden" value="'.$product['products_image'.$i].'" />';
 			$images_tab_block.='<div id="image_action'.$i.'" class="image_action">';
 			if ($_REQUEST['action']=='edit_product' && $product['products_image'.$i]) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'" />';
 				$images_tab_block.='<div class="image_tools">';
 				if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
-					$images_tab_block.=' <a href="#" id="cropEditor" rel="'.$product['products_image'.$i].'"><span>crop</span></a>';
+					$images_tab_block.=' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="'.$product['products_image'.$i].'"><i class="fa fa-crop"></i></a>';
 				}
-				$images_tab_block.=' <a href="#" class="delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+				$images_tab_block.=' <a href="#" class="btn btn-danger btn-sm delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><i class="fa fa-trash-o"></i></a>';
 				$images_tab_block.='</div>';
 			}
 			$images_tab_block.='</div>';
-			$images_tab_block.='</div>';
+			$images_tab_block.='</div></div>';
 		}
 		$images_tab_block.='<script>
 		jQuery(document).ready(function($) {';
@@ -2629,13 +2632,13 @@ if ($this->post) {
 			// new attributes
 			$new_product_attributes_block_columns_js=array();
 			$new_product_attributes_block_columns_js['attribute_option_col']='new_attributes_html+=\'<td class="product_attribute_option">\';
-			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" style="width:200px" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" value="0" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="0" />\';
 			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_value_col']='new_attributes_html+=\'<td class="product_attribute_value">\';
-			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" style="width:200px" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" value="0" />\';
 			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
 			new_attributes_html+=\'</td>\';';
@@ -2662,20 +2665,20 @@ if ($this->post) {
 			new_attributes_html+=\'</select>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
-			new_attributes_html+=\'<div class="form-inline msAttributesField"><div class="input-group"><span class="input-group-addon">\';
-			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat"></div>\';
-			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('excluding_vat').'</label>\';
-			new_attributes_html+=\'</div>\';
-			new_attributes_html+=\'<div class="form-inline msAttributesField"><div class="input-group"><span class="input-group-addon">\';
-			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat"></div>\';
-			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('including_vat').'</label>\';
-			new_attributes_html+=\'</div>\';
+			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">\';
+			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span>\';
+			new_attributes_html+=\'</div></div>\';
+			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">\';
+			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span>\';
+			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
-			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td>\';
-			new_attributes_html+=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-success save_new_attributes">&nbsp;<input type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-success delete_tmp_product_attributes">\';
+			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
+			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-primary save_new_attributes"><i class="fa fa-pencil"></i></button> <button type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-danger delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
@@ -2701,10 +2704,10 @@ if ($this->post) {
 					$(this).parent().parent().hide();
 					var new_attributes_html=\'\';
 					new_attributes_html+=\'<span class="new_product_attributes">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</span><div class="wrap-attributes-item" rel="new">\';
-					new_attributes_html+=\'<table>\';
-					new_attributes_html+=\'<tr class="option_row">\';
+					new_attributes_html+=\'<table class="table">\';
+					new_attributes_html+=\'<thead><tr class="option_row">\';
 					'.implode("\n", $new_product_attributes_block_columns_js).'
-					new_attributes_html+=\'</tr>\';
+					new_attributes_html+=\'</tr></thead>\';
 					new_attributes_html+=\'</table>\';
 					new_attributes_html+=\'</div>\';
 					$(\'#add_attributes_holder>td\').empty();
@@ -3292,7 +3295,7 @@ if ($this->post) {
 				'' // LIMIT ...
 			);
 			$qry_pa=$GLOBALS ['TYPO3_DB']->sql_query($sql_pa);
-			$attributes_tab_block.='<table width="100%" cellpadding="2" cellspacing="2" id="product_attributes_table">';
+			$attributes_tab_block.='<table class="table" id="product_attributes_table">';
 			$js_select2_cache='';
 			$js_select2_cache_options=array();
 			$js_select2_cache_values=array();
@@ -3317,7 +3320,7 @@ if ($this->post) {
 						$js_select2_cache_values[$row['options_values_id']]='attributesValues['.$row['options_values_id'].']={id:"'.$row['options_values_id'].'", text:"'.htmlentities($row['options_values_name'], ENT_QUOTES).'"}';
 					}
 					if (count($options_data)) {
-						$attributes_tab_block.='<tr id="product_attributes_content_row">';
+						$attributes_tab_block.='<thead><tr id="product_attributes_content_row">';
 						$attributes_tab_block.='<td colspan="5"><ul id="products_attributes_items">';
 						foreach ($options_data as $option_id=>$option_name) {
 							if (!isset($group_row_type) || $group_row_type=='even_group_row') {
@@ -3347,13 +3350,13 @@ if ($this->post) {
 								}
 								$existing_product_attributes_block_columns=array();
 								$existing_product_attributes_block_columns['attribute_option_col']='<td class="product_attribute_option">
-								<input type="hidden" name="tx_multishop_pi1[options][]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options" value="'.$option_id.'" style="width:200px" />
+								<input type="hidden" name="tx_multishop_pi1[options][]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options" value="'.$option_id.'" />
 								<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" id="manual_option_'.$attribute_data['products_attributes_id'].'" value="0" />
 								<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="'.$attribute_data['products_attributes_id'].'" />
 								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 								</td>';
 								$existing_product_attributes_block_columns['attribute_value_col']='<td class="product_attribute_value">
-								<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values_'.$option_id.'" value="'.$attribute_data['options_values_id'].'" style="width:200px" />
+								<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values_'.$option_id.'" value="'.$attribute_data['options_values_id'].'" />
 								<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" id="manual_attributes_'.$attribute_data['products_attributes_id'].'" value="0" />
 								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 								</td>';
@@ -3414,7 +3417,7 @@ if ($this->post) {
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='</td>';
 								}
 								$existing_product_attributes_block_columns['attribute_price_prefix_col']='<td class="product_attribute_prefix">
-								<select name="tx_multishop_pi1[prefix][]">
+								<select name="tx_multishop_pi1[prefix][]" class="form-control">
 								<option value="">&nbsp;</option>
 								<option value="+"'.($attribute_data['price_prefix']=='+' ? ' selected="selected"' : '').'>+</option>
 								<option value="-"'.($attribute_data['price_prefix']=='-' ? ' selected="selected"' : '').'>-</option>
@@ -3425,12 +3428,12 @@ if ($this->post) {
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
 								$existing_product_attributes_block_columns['attribute_price_col']='<td class="product_attribute_price">
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"></div><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"></div><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
 								</td>';
-								$existing_product_attributes_block_columns['attribute_save_col']='<td>
-								<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-success delete_product_attributes">
+								$existing_product_attributes_block_columns['attribute_save_col']='<td class="product_attribute_action">
+								<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-success delete_product_attributes"><i class="fa fa-remove"></i></button></div>
 								</td>';
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'])) {
 									$params=array(
@@ -3443,10 +3446,10 @@ if ($this->post) {
 									}
 								}
 								$attributes_tab_block.='<div class="wrap-attributes-item '.$item_row_type.'" id="item_product_attribute_'.$attribute_data['products_attributes_id'].'" rel="'.$attribute_data['products_attributes_id'].'">';
-								$attributes_tab_block.='<table>';
-								$attributes_tab_block.='<tr class="option_row">';
+								$attributes_tab_block.='<table class="table">';
+								$attributes_tab_block.='<thead><tr class="option_row">';
 								$attributes_tab_block.=implode("\n", $existing_product_attributes_block_columns);
-								$attributes_tab_block.='</tr>';
+								$attributes_tab_block.='</tr></thead>';
 								$attributes_tab_block.='</table>';
 								$attributes_tab_block.='</div>';
 							}
@@ -3454,7 +3457,7 @@ if ($this->post) {
 							$attributes_tab_block.='</li>';
 						}
 						$attributes_tab_block.='</ul></td>';
-						$attributes_tab_block.='</tr>';
+						$attributes_tab_block.='</tr></thead>';
 					}
 				}
 				$count_js_cache_options=count($js_select2_cache_options);
@@ -3473,9 +3476,9 @@ if ($this->post) {
 			if (!empty($js_select2_cache)) {
 				$GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
 			}
-			$attributes_tab_block.='<tr id="add_attributes_holder">
+			$attributes_tab_block.='<tbody><tr id="add_attributes_holder">
 					<td colspan="5">&nbsp;</td>
-			</tr>';
+			</tr></tbody>';
 			$attribute_values_sb_trigger='';
 			if (count($attribute_values_class_id)) {
 				$tmp_attribute_values_class_id=array_unique($attribute_values_class_id);
@@ -3483,9 +3486,9 @@ if ($this->post) {
 					$attribute_values_sb_trigger.='select2_values_sb("'.$value_sb_class_id.'", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");'."\n";
 				}
 			}
-			$attributes_tab_block.='<tr id="add_attributes_button">
+			$attributes_tab_block.='<tfoot><tr id="add_attributes_button">
 					<td colspan="5" align="right"><input id="addAttributes" type="button" class="btn btn-success" value="'.$this->pi_getLL('admin_add_new_attribute').' [+]"></td>
-			</tr>
+			</tr></tfoot>
 			</table>
 			<script type="text/javascript">
 			var select2_values_sb = function(selector_str, placeholder, dropdowncss, ajax_url) {

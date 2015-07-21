@@ -703,7 +703,7 @@ if ($this->post) {
 			if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
 				$categories_image.=' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="'.$category['categories_image'].'"><i class="fa fa-crop"></i></a>';
 			}
-			$categories_image.=' <a  class="btn btn-danger btn-sm delete_categories_images" rel="\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>';
+			$categories_image.=' <a class="btn btn-danger btn-sm delete_categories_images" rel="\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>';
 			$categories_image.='</div>';
 		}
 		$categories_image.='</div>';
