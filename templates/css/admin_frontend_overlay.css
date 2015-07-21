@@ -124,3 +124,18 @@ ul#ms_admin_maximize li a:focus { text-decoration:none; }
 .admin_menu > a:hover,
 .admin_menu > a:focus { color:#000; transition:color .5s; }
 .admin_menu > a:first-child { padding-right:5px; }
+
+.panel-heading-toggle {
+    cursor: pointer;
+}
+.panel-heading-toggle:after {
+    /* symbol for "opening" panels */
+    font-family:'FontAwesome';
+    content:"\f077";
+    float: right;
+    color: inherit;
+}
+.panel-heading-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content:"\f078";
+}
