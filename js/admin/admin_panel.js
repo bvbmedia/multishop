@@ -298,6 +298,9 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                             }
                             admin_content += tablevel1.label + '</a>';
                         } else {
+                            if (tablevel1.class) {
+                                admin_content += '<i class="' + tablevel1.class + '"></i>';
+                            }
                             admin_content += tablevel1.label;
                         }
                     } else {
@@ -363,7 +366,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                         admin_content += '<li class="' + tablevel2_params + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
                                     }
                                     */
-                                    admin_content += '<li class="' + tablevel2_params + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
+                                    admin_content += '<li class="' + tablevel2_params + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>';
+                                    if (tablevel2.class) {
+                                        admin_content += '<i class="' + tablevel2.class + '"></i>';
+                                    }
+                                    admin_content += tablevel2.label+'<span class="ms_admin_menu_item_description"></span></a></li>';
                                 } else {
                                     /*
                                     if (tablevel2.description != null) {
@@ -440,7 +447,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                 admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                             }
                                             */
-                                            admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
+                                            admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>';
+                                            if (tablevel3.class) {
+                                                admin_content += '<i class="' + tablevel3.class + '"></i>';
+                                            }
+                                            admin_content += tablevel3.label+'<span class="ms_admin_menu_item_description"></span></a>';
                                         } else {
                                             /*
                                             if (tablevel3.description != null) {
@@ -464,7 +475,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                 admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                             }
                                             */
-                                            admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
+                                            admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>';
+                                            if (tablevel3.class) {
+                                                admin_content += '<i class="' + tablevel3.class + '"></i>';
+                                            }
+                                            admin_content += tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
 
                                         } else {
                                             /*
@@ -514,7 +529,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                     }
                                                     */
 
-                                                    admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
+                                                    admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>';
+                                                    if (tablevel4.class) {
+                                                        admin_content += '<i class="' + tablevel4.class + '"></i>';
+                                                    }
+                                                    admin_content += tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                                 } else {
                                                     /*
                                                     if (tablevel4.description != null) {
@@ -539,7 +558,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                         admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                                     }
                                                     */
-                                                    admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
+                                                    admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>';
+                                                    if (tablevel4.class) {
+                                                        admin_content += '<i class="' + tablevel4.class + '"></i>';
+                                                    }
+                                                    admin_content += tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
 
                                                 } else {
                                                     /*
@@ -587,7 +610,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                             admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>' + tablevel5.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                                         }
                                                         */
-                                                        admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>' + tablevel5.label + '<span class="ms_admin_menu_item_description"></span></a>';
+                                                        admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>';
+                                                        if (tablevel5.class) {
+                                                            admin_content += '<i class="' + tablevel5.class + '"></i>';
+                                                        }
+                                                        admin_content += tablevel5.label + '<span class="ms_admin_menu_item_description"></span></a>';
 
                                                     } else {
                                                         /*(
