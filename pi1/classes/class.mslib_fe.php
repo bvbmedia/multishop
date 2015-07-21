@@ -6284,6 +6284,8 @@ class mslib_fe {
 		if ($this->ROOTADMIN_USER or $this->CATALOGADMIN_USER) {
 			$ms_menu['header']['ms_admin_catalog']['label']=$this->pi_getLL('admin_catalog');
 			$ms_menu['header']['ms_admin_catalog']['link']=mslib_fe::typolink($this->shop_pid, '', 1);
+			$ms_menu['header']['ms_admin_catalog']['class']='fa fa-book';
+
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['label']=$this->pi_getLL('admin_categories');
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['description']=$this->pi_getLL('admin_add_and_modify_categories_here').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_categories&cid='.$this->get['categories_id']);
@@ -6440,6 +6442,7 @@ class mslib_fe {
 		} // END IF CATALOGADMIN_USER
 		if ($this->ROOTADMIN_USER or $this->CMSADMIN_USER) {
 			$ms_menu['header']['ms_admin_cms']['label']=$this->pi_getLL('admin_cms');
+			$ms_menu['header']['ms_admin_cms']['class']='fa fa-file-text-o';
 			//	$ms_menu['header']['ms_admin_cms']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_cms');
 			$ms_menu['header']['ms_admin_cms']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_cms');
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_cms' || $this->post['tx_multishop_pi1']['page_section']=='admin_cms') {
@@ -6448,6 +6451,7 @@ class mslib_fe {
 		}
 		if ($this->ROOTADMIN_USER or $this->CUSTOMERSADMIN_USER) {
 			$ms_menu['header']['ms_admin_orders_customers']['label']=$this->pi_getLL('admin_orders_and_customers', 'KLANTEN EN BESTELLINGEN');
+			$ms_menu['header']['ms_admin_orders_customers']['class']='fa fa-user';
 			if ($this->ROOTADMIN_USER or $this->ORDERSADMIN_USER) {
 				$ms_menu['header']['ms_admin_orders_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
 			} elseif ($this->ROOTADMIN_USER or $this->CUSTOMERSADMIN_USER) {
@@ -6555,6 +6559,7 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_statistics']['label']=$this->pi_getLL('admin_statistics');
 			$ms_menu['header']['ms_admin_statistics']['description']=$this->pi_getLL('admin_statistics_description').'.';
 			$ms_menu['header']['ms_admin_statistics']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_home');
+			$ms_menu['header']['ms_admin_statistics']['class']='fa fa-bar-chart';
 
 			$ms_menu['header']['ms_admin_statistics']['subs']['ms_global_stats']['label']=$this->pi_getLL('admin_global_statistics');
 			$ms_menu['header']['ms_admin_statistics']['subs']['ms_global_stats']['description']=$this->pi_getLL('admin_global_statistics_description').'.';
@@ -6664,6 +6669,7 @@ class mslib_fe {
 			$members=mslib_fe::getSignedInUsers();
 			$total_members=count($members);
 			$ms_menu['footer']['ms_admin_online_users']['label']=$this->pi_getLL('admin_online_users').': '.$total_members.'/'.$guests_online;
+			$ms_menu['footer']['ms_admin_online_users']['class']='fa fa-users';
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['label']=$this->pi_getLL('admin_members').': '.$total_members;
 			if ($total_members) {
 				$counter=0;
@@ -6705,11 +6711,17 @@ class mslib_fe {
 		}
 		$ms_menu['footer']['ms_admin_logout']['label']=$this->pi_getLL('admin_log_out');
 		$ms_menu['footer']['ms_admin_logout']['link']=mslib_fe::typolink($this->conf['logout_pid'], '&logintype=logout');
+		$ms_menu['footer']['ms_admin_logout']['class']='fa fa-sign-out';
 		$ms_menu['footer']['ms_admin_scroller']['label']='';
 		$ms_menu['footer']['ms_admin_help']['label']=$this->pi_getLL('admin_help');
 		$ms_menu['footer']['ms_admin_help']['link']=$this->conf['admin_help_url'];
+		$ms_menu['footer']['ms_admin_help']['class']='fa fa-question';
 		// if admin user and system panel is enabled for normal admins
 		if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER==1 or $this->conf['enableAdminPanelSystem'])) {
+			$ms_menu['footer']['ms_admin_system']['label']=$this->pi_getLL('admin_system');
+			$ms_menu['footer']['ms_admin_system']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
+			$ms_menu['footer']['ms_admin_system']['class']='fa fa-wrench';
+
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['label']=$this->pi_getLL('admin_tax_rule_groups', 'TAX RULE GROUPS');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_tax_rule_groups');
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_tax_rule_groups' || $this->post['tx_multishop_pi1']['page_section']=='admin_tax_rule_groups') {
@@ -6722,8 +6734,6 @@ class mslib_fe {
 			}
 //			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rules']['label']='TAX RULES';
 //			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rules']['link']=mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=admin_tax_rules');
-			$ms_menu['footer']['ms_admin_system']['label']=$this->pi_getLL('admin_system');
-			$ms_menu['footer']['ms_admin_system']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_modules' || $this->post['tx_multishop_pi1']['page_section']=='admin_modules') {
 				$ms_menu['footer']['ms_admin_system']['active']=1;
 			}

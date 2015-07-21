@@ -286,18 +286,20 @@ function renderAdminMenu(json, type, includeDescinFooter) {
             jQuery.each(json, function (tablevel1_key, tablevel1) {
                 tab_counter++;
                 admin_content += '<li class="' + tablevel1_key + '">';
-
                 if (tablevel1.label == null && tablevel1.description) {
                     admin_content += tablevel1.description;
 
                 } else {
                     if (tablevel1.subs == null) {
                         if (tablevel1.link != null) {
-                            admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
+                            admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>';
+                            if (tablevel1.class) {
+                                admin_content += '<i class="' + tablevel1.class + '"></i>';
+                            }
+                            admin_content += tablevel1.label + '</a>';
                         } else {
                             admin_content += tablevel1.label;
                         }
-
                     } else {
                         var tablevel2_ctr = 0;
                         jQuery.each(tablevel1.subs, function (_tablevel2_key, _tablevel2) {
@@ -311,13 +313,20 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                         if (tablevel1.link) {
                             //admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
-                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">' + tablevel1.label + '</a>';
+                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">';
+                            if (tablevel1.class) {
+                                admin_content += '<i class="' + tablevel1.class + '"></i>';
+                            }
+                            admin_content += tablevel1.label+'</a>';
 
                         } else {
                             //admin_content += '<span>' + tablevel1.label + '</span>';
-                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">' + tablevel1.label + '</a>';
+                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">';
+                            if (tablevel1.class) {
+                                admin_content += '<i class="' + tablevel1.class + '"></i>';
+                            }
+                            admin_content += tablevel1.label+'</a>';
                         }
-
                         admin_content += '<ul class="collapse" id="subs' + tablevel1_key + '">';
 
                         jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
@@ -566,7 +575,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                         admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>' + tablevel5.label + '<span class="ms_admin_menu_item_description"></span></a>';
 
                                                     } else {
-                                                        /*
+                                                        /*(
                                                         if (tablevel5.description != null) {
                                                             admin_content += '<span>' + tablevel5.label + '<span class="ms_admin_menu_item_description">' + tablevel5.description + '</span></span>';
                                                         } else {
