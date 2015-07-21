@@ -334,7 +334,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                             admin_content += '<i class="' + tablevel1.class + '"></i>';
                         }
                         admin_content += tablevel1.label+'</a>';
-                        admin_content += '<ul class="dropdown-menu" aria-labelledby="subs' + tablevel1_key + '">';
+                        admin_content += '<ul class="dropdown-menu">';
 
                         jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
                             counter_tablevel2++;
@@ -398,12 +398,12 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                     *//*
                                     admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                 }*/
-                                admin_content += '<li class="dropdown-submenu"><a href="#">';
+                                admin_content += '<li><a href="#">';
                                 if (tablevel2.class) {
                                     admin_content += '<i class="' + tablevel2.class + '"></i>';
                                 }
                                 admin_content += tablevel2.label+'</a>';
-                                admin_content += '<ul class="dropdown-menu" aria-labelledby="subs' + tablevel2_key + '">';
+                                admin_content += '<ul class="dropdown-menu">';
 
                                 //admin_content += '<ul>';
 
