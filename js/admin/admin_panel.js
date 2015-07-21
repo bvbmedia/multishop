@@ -376,28 +376,36 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                 }
 
                             } else {
-                                admin_content += '<li class="' + (tablevel2_params != '' ? tablevel2_params + ' ' : '') + 'ms_admin_has_subs">';
 
+                                //admin_content += '<li class="' + (tablevel2_params != '' ? tablevel2_params + ' ' : '') + 'ms_admin_has_subs">';
+                                /*
                                 if (tablevel2.link) {
-                                    /*
+                                    *//*
                                     if (tablevel2.description != null) {
                                         admin_content += '<a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></a>';
                                     } else {
                                         admin_content += '<a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                     }
-                                    */
+                                    *//*
                                     admin_content += '<a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                 } else {
-                                    /*
+                                    *//*
                                     if (tablevel2.description != null) {
                                         admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></span>';
                                     } else {
                                         admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                     }
-                                    */
+                                    *//*
                                     admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                }*/
+                                admin_content += '<li class="dropdown-submenu"><a href="#">';
+                                if (tablevel2.class) {
+                                    admin_content += '<i class="' + tablevel2.class + '"></i>';
                                 }
-                                admin_content += '<ul>';
+                                admin_content += tablevel2.label+'</a>';
+                                admin_content += '<ul class="dropdown-menu" aria-labelledby="subs' + tablevel2_key + '">';
+
+                                //admin_content += '<ul>';
 
                                 var tablevel3_ctr = 0;
                                 jQuery.each(tablevel2.subs, function (_tablevel3_key, _tablevel3) {
