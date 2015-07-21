@@ -285,7 +285,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
             var tab_counter = 0;
             jQuery.each(json, function (tablevel1_key, tablevel1) {
                 tab_counter++;
-                admin_content += '<li class="' + tablevel1_key + '">';
+                admin_content += '<li class="' + tablevel1_key + ' dropdown">';
                 if (tablevel1.label == null && tablevel1.description) {
                     admin_content += tablevel1.description;
 
@@ -310,7 +310,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                         total_tablevel2 = tablevel2_ctr;
                         counter_tablevel2 = 0;
-
+                        /*
                         if (tablevel1.link) {
                             //admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
                             admin_content += '<a data-toggle="collapse" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">';
@@ -327,7 +327,14 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                             }
                             admin_content += tablevel1.label+'</a>';
                         }
-                        admin_content += '<ul class="collapse" id="subs' + tablevel1_key + '">';
+                        */
+                        //<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">
+                        admin_content += '<a href="#subs' + tablevel1_key + '" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">';
+                        if (tablevel1.class) {
+                            admin_content += '<i class="' + tablevel1.class + '"></i>';
+                        }
+                        admin_content += tablevel1.label+'</a>';
+                        admin_content += '<ul class="dropdown-menu" aria-labelledby="subs' + tablevel1_key + '">';
 
                         jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
                             counter_tablevel2++;
@@ -601,7 +608,6 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                 admin_content += '</ul></li>';
                             }
                         });
-
                         admin_content += '</ul>';
                     }
                 }
