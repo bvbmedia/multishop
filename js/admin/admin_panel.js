@@ -285,7 +285,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
             var tab_counter = 0;
             jQuery.each(json, function (tablevel1_key, tablevel1) {
                 tab_counter++;
-                admin_content += '<li role="presentation" class="' + tablevel1_key + ' dropdown">';
+                admin_content += '<li role="presentation" class="' + tablevel1_key + ' dropdown ms_admin_has_subs">';
                 if (tablevel1.label == null && tablevel1.description) {
                     admin_content += tablevel1.description;
 
