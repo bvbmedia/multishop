@@ -231,11 +231,22 @@ table#product_attributes_table table td.product_attribute_price .msAttributesFie
 table#product_attributes_table table td.product_attribute_price .input-group-addon:not(:first-child):not(:last-child),
 table#product_attributes_table table td.product_attribute_price .input-group-btn:not(:first-child):not(:last-child),
 table#product_attributes_table table td.product_attribute_price .input-group .form-control:not(:first-child):not(:last-child) { width:100px; }
+table#product_attributes_table table td.product_attribute_price .input-group-addon:last-child { width:88px; text-align:left; }
 @media (min-width: 768px) {
-  table#product_attributes_table table td.product_attribute_price .input-group .form-control { width:100px !important; }
+	table#product_attributes_table table td.product_attribute_price .input-group .form-control { width:100px !important; }
 }
 table#product_attributes_table table td.product_attribute_action .product_attribute_action_container { width:87px !important; white-space:nowrap; }
 table#product_attributes_table table td:last-child { padding-right:0; }
+
+.product_staffel_price .table > * > tr > td { border-bottom:none; }
+.product_staffel_price .table > * > tr > td:nth-child(1),
+.product_staffel_price .table > * > tr > td:nth-child(2) { width:40%; }
+.product_staffel_price .table > * > tr > td:nth-child(3) .msAttributesField:first-child { margin-bottom:10px; }
+.product_staffel_price .table > * > tr > td:nth-child(3) .input-group .form-control { width:100px; }
+.product_staffel_price .table > * > tr > td:nth-child(3) .input-group .form-control { }
+.product_staffel_price .table > * > tr > td:nth-child(3) .input-group-addon:last-child { width:88px; text-align:left; }
+
+#msEditProductInputPrice .input-group-addon:last-child { width:88px; text-align:left; }
 
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
@@ -291,18 +302,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .select2-container .select2-choice > .select2-chosen { line-height:32px; }
 #edit_customer .select2-container { width:100%; }
 
+.panel-heading-toggle { cursor:pointer; }
 
-.panel-heading-toggle {
-    cursor: pointer;
-}
-.panel-heading-toggle:after {
-    /* symbol for "opening" panels */
-    font-family:'FontAwesome';
-    content:"\f077";
-    float: right;
-    color: inherit;
-}
-.panel-heading-toggle.collapsed:after {
-    /* symbol for "collapsed" panels */
-    content:"\f078";
-}
+/* CSS Method for adding Font Awesome Chevron Icons */
+.panel-heading-toggle h3:after { float:right; font-family:"FontAwesome"; content:"\f077"; }
+.panel-heading-toggle.collapsed h3:after { content:"\f078"; }

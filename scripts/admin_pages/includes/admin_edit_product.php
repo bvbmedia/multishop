@@ -2263,17 +2263,17 @@ if ($this->post) {
 								counter_data = counter_data + 1;
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<span>'.addslashes($this->pi_getLL('admin_from')).'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_from')).'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<span>'.addslashes($this->pi_getLL('admin_till2')).'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_till2')).'</span> <input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name_excluding_vat" class="msStaffelPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name_including_vat" class="msStaffelPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'<td>\';
-								elem += \'<input type="button" value="x" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-success" />\';
+								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-success"></button>\';
 								elem += \'</td>\';
 								elem += \'</tr>\';
 								jQuery(\'#sp_end_row\').before(elem);
@@ -2288,14 +2288,14 @@ if ($this->post) {
 								}
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" value="\' + next_qty_col_1 + \'" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_from').'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" value="\' + next_qty_col_1 + \'" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="msStaffelPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name_including_vat" id="display_name_including_vat" class="msStaffelPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class=form-control "msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
@@ -2343,17 +2343,17 @@ if ($this->post) {
 						</div>';
 			} else {
 				$staffel_price_block.='
-					<div class="form-group" id="msEditProductInputStaffelPrice">
+					<div id="msEditProductInputStaffelPrice">
 						<label for="products_price"class="control-label col-md-2">'.$this->pi_getLL('admin_staffel_price').'</label>
-						<div class="product_staffel_price">
+						<div class="col-md-10 product_staffel_price ">
 							<table class="table">
 								<thead>
 								<tr>
-									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_from')).'</td>
-									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_till')).'</td>
-									<td align="center">'.mslib_befe::strtolower($this->pi_getLL('admin_price')).'</td>
-									<td>&nbsp;</td>
-								</tr></thead>';
+									<th>'.mslib_befe::strtolower($this->pi_getLL('admin_from')).'</th>
+									<th>'.mslib_befe::strtolower($this->pi_getLL('admin_till')).'</th>
+									<th>'.mslib_befe::strtolower($this->pi_getLL('admin_price')).'</th>
+									<th>&nbsp;</th>
+								</tr></thead><tbody>';
 				$sp_rows=explode(';', $product['staffel_price']);
 				foreach ($sp_rows as $sp_idx=>$sp_row) {
 					$sp_idx+=1;
@@ -2363,17 +2363,17 @@ if ($this->post) {
 					$sp_price_display=mslib_fe::taxDecimalCrop($sp_price, 2, false);
 					$staffel_price_display_incl=mslib_fe::taxDecimalCrop($sp_price+$staffel_tax, 2, false);
 					$staffel_price_block.='
-						<tbody><tr id="sp_'.$sp_idx.'">
-							<td><span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></td>
-							<td><span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></td>
+						<tr id="sp_'.$sp_idx.'">
+							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_from').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></span></td>
+							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></span></td>
 							<td>
 							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
 							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
-							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="btn btn-success"><i class="fa fa-remove"></i></button></td>
-						</tr></tbody>';
+							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
+						</tr>';
 				}
-				$staffel_price_block.='<tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><input type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input" /></td></tr></tfoot>
+				$staffel_price_block.='</tbody><tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><button class="btn btn-success" type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input"><i class="fa fa-plus"></i></button></td></tr></tfoot>
 								</table>
 							</div>
 					</div>';
