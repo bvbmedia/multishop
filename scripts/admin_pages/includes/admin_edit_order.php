@@ -571,11 +571,11 @@ if (is_numeric($this->get['orders_id'])) {
             $delivery_countries_sb='<div class="col-md-10"><select class="form-control" name="tx_multishop_pi1[delivery_country]" id="edit_delivery_country" required="required">'.implode("\n", $delivery_countries).'</select></div>';
             $editOrderFormFieldset=array();
             $tmpcontent.='
+        	<div class="row">
+			<div class="col-md-6">
         <div class="panel panel-default" id="address_details">
         <div class="panel-heading"><h3>'.$this->pi_getLL('address_details').'</h3></div>
         <div class="panel-body">
-        	<div class="row">
-			<div class="col-md-6">
 			<div class="row">
 			<div class="col-md-6">
 
@@ -841,6 +841,7 @@ if (is_numeric($this->get['orders_id'])) {
             $tmpcontent.='</div>';
             $tmpcontent.='
 </div></div>
+
             ';
             $headerData='
         <script type="text/javascript">
@@ -1081,6 +1082,9 @@ if (is_numeric($this->get['orders_id'])) {
         </script>';
             $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
             $headerData='';
+            $tmpcontent.='
+        </div>
+        </div>';
             $editOrderFormFieldset[]=$tmpcontent;
             $tmpcontent='';
             $orderDetails=array();
@@ -1183,14 +1187,13 @@ if (is_numeric($this->get['orders_id'])) {
             }
             $tmpcontent.='
             </div><div class="col-md-6">
-			<div class="panel panel-default" id="order_properties">
-				<div class="panel-heading"><h3>Details</h3></div>
-				<div class="panel-body">';
-						$tmpcontent.=implode("", $orderDetails);
-						$tmpcontent.='
-				</div>
-			</div>
-    </div></div>
+    <div class="panel panel-default" id="order_properties">
+	<div class="panel-heading"><h3>Details</h3></div>
+    <div class="panel-body">';
+            $tmpcontent.=implode("", $orderDetails);
+            $tmpcontent.='
+    </div>
+    </div>
     </div></div>
     ';
             // order products
