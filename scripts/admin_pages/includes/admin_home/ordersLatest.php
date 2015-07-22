@@ -329,7 +329,7 @@ if ($pageset['total_rows']>0) {
 			}
 		}
 		$data[]=array(
-			'<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading"  class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
+			'<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
 			mslib_fe::amount2Cents($order['grand_total'], 0),
 			strftime("%x %X", $order['crdate']),
 			$paid_status,

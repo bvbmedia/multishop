@@ -426,6 +426,57 @@ $head.='
 			showOtherMonths: true,
 			yearRange: "'.(date("Y")-100).':'.date("Y").'"
 		});
+		var originalLeave = $.fn.popover.Constructor.prototype.leave;
+		$.fn.popover.Constructor.prototype.leave = function(obj){
+		  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+		  var container, timeout;
+		  originalLeave.call(this, obj);
+		  if(obj.currentTarget) {
+			container = $(obj.currentTarget).siblings(\'.popover\')
+			timeout = self.timeout;
+			container.one(\'mouseenter\', function(){
+			  //We entered the actual popover – call off the dogs
+			  clearTimeout(timeout);
+			  //Let\'s monitor popover content instead
+			  container.one(\'mouseleave\', function(){
+				  $.fn.popover.Constructor.prototype.leave.call(self, self);
+				  $(".popover-link").popover("hide");
+			  });
+			})
+		  }
+		};
+		$(".popover-link").popover({
+			position: "down",
+			placement: \'bottom\',
+			html: true,
+			trigger:"hover",
+			delay: {show: 20, hide: 200}
+		});
+		var tooltip_is_shown=\'\';
+		$(\'.popover-link\').on(\'show.bs.popover, mouseover\', function () {
+			var that=$(this);
+			//$(".popover").remove();
+			//$(".popover-link").popover(\'hide\');
+			var orders_id=$(this).attr(\'rel\');
+			//if (tooltip_is_shown != orders_id) {
+				tooltip_is_shown=orders_id;
+				$.ajax({
+					type:   "POST",
+					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
+					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
+					dataType: "json",
+					success: function(data) {
+						if (data.content!="") {
+							that.next().html(\'<div class="arrow"></div>\' + data.title + data.content);
+							//that.next().popover("show");
+							//$(that).popover(\'show\');
+						} else {
+							$(".popover").remove();
+						}
+					}
+				});
+			//}
+		});
 	}); //end of first load
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$head;
@@ -841,7 +892,7 @@ switch ($_REQUEST['action']) {
 					$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 				}
 				$order_listing.='<tr class="'.$tr_type.'">
-							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
+							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
 							<td align="right" nowrap>'.strftime("%x %X", $order['crdate']).'</td>
 							<td align="right" nowrap>'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
 							<td align="center" nowrap>'.$order['shipping_method_label'].'</td>
