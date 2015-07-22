@@ -76,7 +76,7 @@ if (isset($this->get['tx_multishop_pi1']['status']) && count($this->get['tx_mult
 // usergroup
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
-$customer_groups_input.='<select id="groups" class="order_select2" name="usergroup" style="width:200px">'."\n";
+$customer_groups_input.='<select id="groups" class="order_select2" name="usergroup">'."\n";
 $customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 if (is_array($groups) and count($groups)) {
 	foreach ($groups as $group) {
@@ -101,7 +101,7 @@ if ($this->cookie['payment_status']=='unpaid_only') {
 $payment_status_select.='</select>';
 // payment status eol
 // order status
-$orders_status_list='<select name="orders_status_search" id="orders_status_search" class="order_select2" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
+$orders_status_list='<select name="orders_status_search" id="orders_status_search" class="order_select2"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
 	foreach ($all_orders_status as $row) {
@@ -131,7 +131,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$payment_methods[$row['payment_method']]=$row['payment_method_label'].($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
 }
 $payment_method_input='';
-$payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method" style="width:200px">'."\n";
+$payment_method_input.='<select id="payment_method" class="order_select2" name="payment_method">'."\n";
 $payment_method_input.='<option value="all">'.$this->pi_getLL('all_payment_methods').'</option>'."\n";
 if (is_array($payment_methods) and count($payment_methods)) {
 	foreach ($payment_methods as $payment_method_code=>$payment_method) {
@@ -158,7 +158,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'].($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
 }
 $shipping_method_input='';
-$shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method" style="width:200px">'."\n";
+$shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method">'."\n";
 $shipping_method_input.='<option value="all">'.$this->pi_getLL('all_shipping_methods').'</option>'."\n";
 if (is_array($shipping_methods) and count($shipping_methods)) {
 	foreach ($shipping_methods as $shipping_method_code=>$shipping_method) {

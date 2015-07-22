@@ -16,7 +16,9 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:before { position:absolute; right:10px; top:12px; border-left:5px solid #cdcdcd; border-top:5px solid transparent; border-bottom:5px solid transparent; content:""; transition:opacity .25s; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:hover:before { opacity:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span { display:block; font-size:14px; line-height:38px; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; padding:0 15px; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user > div > a { display:block; font-size:14px; line-height:38px; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; padding:0 15px; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user { border-left:1px solid rgba(255,255,255,.3); }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_catalog > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_catalog > span,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_orders_customers > a,
@@ -28,6 +30,10 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo > a { line-height:0; padding:1px 7px 1px 0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div { line-height:38px; color:#fff; padding:0 15px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div > span > span { font-weight:bold; padding-right:5px; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_search { float:right; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_search { border-right:none; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_search > * { float:left; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.open > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.open > span { background:#333; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul { width:250px; border:none; background:#333; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); }
@@ -51,6 +57,28 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:first-child:after { position:absolute; left:-10px; top:7px; border-right:10px solid #555; border-top:10px solid transparent; border-bottom:10px solid transparent; content:""; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > ul > li > ul > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
+
+#ms_admin_top_search .select2-container { float:left; }
+#ms_admin_top_search .select2-container .select2-choice { height:38px; border:none; background:#444; border-radius:0; box-shadow:none; }
+#ms_admin_top_search .select2-container .select2-choice .select2-arrow { border-radius:0; }
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop { width:250px !important; }
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop.select2-dropdown-open { width:500px !important; }
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop.select2-dropdown-open .select2-choice { background:#666; border-radius:0;}
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop .select2-choice .select2-chosen { background:none; line-height:38px; color:#cdcdcd; }
+#ms_admin_top_search #btn_search_admin_panel { border:none; background:#888; line-height:38px; padding-top:0; padding-bottom:0; border-radius:0; }
+#ms_admin_top_search .select2-container .select2-choice .select2-arrow { border:none; background:#666; }
+#ms_admin_top_search .select2-container .select2-choice .select2-arrow b { background-position:left 7px; }
+
+.select2-drop.adminpanel-search-bigdrop { width:250px !important; border:none; background:#666; border-radius:0; }
+#select2-drop.select2-drop.adminpanel-search-bigdrop { width:500px !important; z-index:10005; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-results { max-height:297px; font-size:13px; line-height:20px; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-results > li > .select2-result-label { background:#333; color:#fff; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a { color:#fff; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a:hover { text-decoration:none; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li.select2-highlighted { background:#444; }
+.select2-drop.adminpanel-search-bigdrop .select2-results .select2-no-results,
+.select2-drop.adminpanel-search-bigdrop .select2-results .select2-searching,
+.select2-drop.adminpanel-search-bigdrop .select2-results .select2-selection-limit { background:#333; color:#fff; padding:3px 7px; }
 
 ul#ms_admin_minimize { position:absolute; clear:left; float:left; width:102px; margin: 0; padding:0; list-style:none; }
 ul#ms_admin_minimize li { background:none; margin:0; padding:0; list-style:none; }
@@ -122,22 +150,7 @@ ul#ms_admin_maximize li a:focus { text-decoration:none; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul > li:hover > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul > li > ul > li > ul > li:hover > span { background:rgba(255,255,255,.03); color:#fff; }
 
-.admin_menu > a { color:#666; }
+.admin_menu > a { font-size:14px; line-height:14px; color:#666; }
 .admin_menu > a:hover,
 .admin_menu > a:focus { color:#000; transition:color .5s; }
 .admin_menu > a:first-child { padding-right:5px; }
-
-.panel-heading-toggle {
-    cursor: pointer;
-}
-.panel-heading-toggle:after {
-    /* symbol for "opening" panels */
-    font-family:'FontAwesome';
-    content:"\f077";
-    float: right;
-    color: inherit;
-}
-.panel-heading-toggle.collapsed:after {
-    /* symbol for "collapsed" panels */
-    content:"\f078";
-}

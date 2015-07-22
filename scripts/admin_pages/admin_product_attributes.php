@@ -517,7 +517,7 @@ if ($rows) {
 				li_class="even";
 			}
 			var new_li=\'<li class="\' + li_class + \' new_options_values" id="\' + new_values_input + \'">\';
-			new_li+=\'<span class="values_id">'.$this->pi_getLL('admin_label_option_value').': <input type="hidden" style="width:200px" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>\';
+			new_li+=\'<span class="values_id">'.$this->pi_getLL('admin_label_option_value').': <input type="hidden" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>\';
 			new_li+=\'<span class="values_edit">\';
 			new_li+=\'<a href="#" class="cancel_new_options_values btn btn-success">'.$this->pi_getLL('cancel').'</a>&nbsp;\';
 			new_li+=\'<a href="#" class="save_new_options_values btn btn-success" rel="\' + optid + \'">'.$this->pi_getLL('save').'</a>&nbsp;\';

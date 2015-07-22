@@ -39,7 +39,7 @@ foreach ($tmporders as $order) {
 		$customer_name=$order['billing_name'];
 	}
 	//<div class="orders_status_button_gray" title="'.htmlspecialchars($order['orders_status']).'">'.$order['orders_status'].'</div>
-	$order_status_selectbox='<select name="orders_status" class="change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'" style="width:200px">
+	$order_status_selectbox='<select name="orders_status" class="form-control change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'">
 		<option value="">'.$this->pi_getLL('choose').'</option>';
 	if (is_array($all_orders_status)) {
 		foreach ($all_orders_status as $item) {
@@ -163,14 +163,14 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $formFields=array();
 $formFields['orders_list_action']='
-<select name="tx_multishop_pi1[action]" id="selected_orders_action" style="width:350px">
+<select name="tx_multishop_pi1[action]" id="selected_orders_action" class="form-control">
 <option value="">'.$this->pi_getLL('choose_action').'</option>';
 foreach ($actions as $key=>$value) {
 	//$tmp.='<option value="'.$key.'"'. ($this->get['tx_multishop_pi1']['action']==$key?' selected':'').'>'.$value.'</option>';
 	$formFields['orders_list_action'].='<option value="'.$key.'">'.$value.'</option>';
 }
 $formFields['orders_list_action'].='</select>';
-$formFields['update_to_order_status']='<select name="tx_multishop_pi1[update_to_order_status]" id="msadmin_order_status_select" style="width:200px"><option value="">'.$this->pi_getLL('choose').'</option>';
+$formFields['update_to_order_status']='<select name="tx_multishop_pi1[update_to_order_status]" id="msadmin_order_status_select" class="form-control"><option value="">'.$this->pi_getLL('choose').'</option>';
 if (is_array($all_orders_status)) {
 	foreach ($all_orders_status as $row) {
 		$formFields['update_to_order_status'].='<option value="'.$row['id'].'" '.(($order['status']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
@@ -187,7 +187,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 $formFields['submit_button']='<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
 $form_fields_block='<div id="msAdminOrdersListingActionForm">';
 foreach ($formFields as $key=>$formField) {
-	$form_fields_block.='<div class="msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'">'.$formField.'</div>';
+	$form_fields_block.='<div class="form-group msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'">'.$formField.'</div>';
 }
 $form_fields_block.='</div>';
 $query_string=mslib_fe::tep_get_all_get_params(array(
