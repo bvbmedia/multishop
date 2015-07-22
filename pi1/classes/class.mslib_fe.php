@@ -6662,14 +6662,32 @@ class mslib_fe {
 		if ($this->post['tx_multishop_pi1']['type']=='2003') {
 			$key='newheader';
 		}
+		if ($this->ROOTADMIN_USER or $this->STORESADMIN_USER) {
+			// multishops
+			// now grab the active shops
+			$multishop_content_objects=mslib_fe::getActiveShop();
+			if (count($multishop_content_objects)>1) {
+				$counter=0;
+				$total=count($multishop_content_objects);
+				foreach ($multishop_content_objects as $pageinfo) {
+					$counter++;
+					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
+						$ms_menu['footer']['ms_admin_stores']['label']=mslib_befe::strtoupper($pageinfo['title']);
+						$ms_menu['footer']['ms_admin_stores']['class']='fa fa-shopping-cart';
+					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['label']=mslib_befe::strtoupper($pageinfo['title']);
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');
+					}
+				}
+			}
+			$this->ms_menu=$ms_menu;
+			// multishops eof
+		}
 		if ($this->ROOTADMIN_USER or $this->SEARCHADMIN_USER) {
-			$pageinfo=$GLOBALS['TSFE']->sys_page->getPage($this->shop_pid);
-			$ms_menu[$key]['ms_admin_search']['description']='<div id="ms_admin_user">
-				<a href="'.mslib_fe::typolink($this->shop_pid, '').'">
-				<i class="fa fa-user"></i>
-				'.$this->pi_getLL('admin_user').': <strong>'.mslib_befe::strtoupper(substr($GLOBALS['TSFE']->fe_user->user['username'], 0, 10)).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.mslib_befe::strtoupper(substr($pageinfo['title'], 0, 10)).'</strong></a>
-			</div>';
-			$ms_menu[$key]['ms_admin_search']['description'].='<form action="'.mslib_fe::typolink().'" method="get" id="ms_admin_top_search">
+			$ms_menu[$key]['ms_admin_search']['description']='
+			<div id="ms_admin_search">
+				<form action="'.mslib_fe::typolink().'" method="get" id="ms_admin_top_search">
 				<!-- <input class="admin_skeyword" id="ms_admin_skeyword" name="ms_admin_skeyword" type="text" placeholder="'.$this->pi_getLL('keyword').'" value="" />-->
 				<input type="hidden" class="adminpanel-search-bigdrop" id="ms_admin_skeyword" style="width: 200px" name="ms_admin_skeyword" value="" />
 				<input name="id" type="hidden" value="'.$this->shop_pid.'" />
@@ -6684,29 +6702,19 @@ class mslib_fe {
 				$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
 				return true;
 			});
-			</script>'."\n";
+			</script>
+			</div>
+			'."\n";
 		}
-		if ($this->ROOTADMIN_USER or $this->STORESADMIN_USER) {
-			// multishops
-			// now grab the active shops
-			$multishop_content_objects=mslib_fe::getActiveShop();
-			if (count($multishop_content_objects)>1) {
-				$counter=0;
-				$total=count($multishop_content_objects);
-				foreach ($multishop_content_objects as $pageinfo) {
-					$counter++;
-					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
-						$ms_menu[$key]['ms_admin_stores']['label']=mslib_befe::strtoupper($pageinfo['title']);
-					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
-						$ms_menu[$key]['ms_admin_stores']['subs']['shop_'.$counter]['label']=mslib_befe::strtoupper($pageinfo['title']);
-						$ms_menu[$key]['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
-						$ms_menu[$key]['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');
-					}
-				}
-			}
-			$this->ms_menu=$ms_menu;
-			// multishops eof
-		}
+		$pageinfo=$GLOBALS['TSFE']->sys_page->getPage($this->shop_pid);
+		$ms_menu[$key]['ms_admin_user']['description']='
+			<div id="ms_admin_user">
+			<a href="'.mslib_fe::typolink($this->shop_pid, '').'">
+			<i class="fa fa-user"></i>
+			'.$this->pi_getLL('admin_user').': <strong>'.mslib_befe::strtoupper(substr($GLOBALS['TSFE']->fe_user->user['username'], 0, 10)).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.mslib_befe::strtoupper(substr($pageinfo['title'], 0, 10)).'</strong></a>
+			</div>
+		';
+
 		// footer
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
 			$str=$GLOBALS['TYPO3_DB']->SELECTquery('session_id,ip_address,url,http_user_agent', // SELECT ...
