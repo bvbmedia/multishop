@@ -11,6 +11,9 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 }
 if (is_numeric($this->get['orders_id'])) {
 	$order=mslib_fe::getOrder($this->get['orders_id']);
+	if (!$order['orders_id']) {
+		die('Unknown or deleted order');
+	}
 	if (count($order)) {
         if ($order['customer_id']) {
             if (!$customer_address=mslib_fe::getAddressInfo('customer', $order['customer_id'])) {
@@ -1096,26 +1099,26 @@ if (is_numeric($this->get['orders_id'])) {
             $orderDetails=array();
             $orderDetails[]='
             	<div class="form-group">
-				<label class="control-label col-md-3">'.$this->pi_getLL('orders_id').'</label>
-				<div class="col-md-9">
-					<div class="row">
-						<div class="col-md-2">
-							<div class="row">
-								<div class="col-md-12"><p class="form-control-static">'.$orders['orders_id'].'</p></div>
+					<label class="control-label col-md-3">'.$this->pi_getLL('orders_id').'</label>
+					<div class="col-md-9">
+						<div class="row">
+							<div class="col-md-2">
+								<div class="row">
+									<div class="col-md-12"><p class="form-control-static">'.$orders['orders_id'].'</p></div>
+								</div>
 							</div>
-						</div>
-						<div class="col-md-5">
-							<div class="row">
-							<label class="control-label col-md-7">'.$this->pi_getLL('admin_customer_id').'</label><div class="col-md-5"><p class="form-control-static">'.$orders['customer_id'].'</p></div>
+							<div class="col-md-5">
+								<div class="row">
+								<label class="control-label col-md-7">'.$this->pi_getLL('admin_customer_id').'</label><div class="col-md-5"><p class="form-control-static">'.$orders['customer_id'].'</p></div>
+								</div>
 							</div>
-						</div>
-						<div class="col-md-5">
-							<div class="row">
-							<label class="control-label col-md-7">'.$this->pi_getLL('order_date').'</label><div class="col-md-5"><p class="form-control-static">'.$order_date.'</p></div>
+							<div class="col-md-5">
+								<div class="row">
+								<label class="control-label col-md-7">'.$this->pi_getLL('order_date').'</label><div class="col-md-5"><p class="form-control-static">'.$order_date.'</p></div>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 				</div>
             <hr>';
             $orderDetailsItem='<div class="form-group">';
@@ -1147,7 +1150,7 @@ if (is_numeric($this->get['orders_id'])) {
             } else {
                 $orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['shipping_method_label'] ? $orders['shipping_method_label'] : $orders['shipping_method']).'</p></div>';
             }
-            $orderDetailsItem.='</div><hr>';
+            $orderDetailsItem.='</div>';
             $orderDetails[]=$orderDetailsItem;
             $orderDetailsItem='';
             $orderDetailsItem='<div class="form-group">';
@@ -1177,7 +1180,7 @@ if (is_numeric($this->get['orders_id'])) {
             } else {
                 $orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</p></div>';
             }
-            $orderDetailsItem.='</div><hr>';
+            $orderDetailsItem.='</div>';
             $orderDetails[]=$orderDetailsItem;
             if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
                 $orderDetailsItem='';
