@@ -27,7 +27,7 @@ if (count($shopPids) && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES'])
 							$catpath[]=$cat['name'];
 						}
 						if (count($catpath)>0) {
-							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \\\\ ', $catpath), ENT_QUOTES).'"};';
+							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' > ', $catpath), ENT_QUOTES).'"};';
 						}
 					}
 				}
@@ -49,7 +49,7 @@ if (count($shopPids) && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES'])
 				$catpath[]=$cat['name'];
 			}
 			if (count($catpath)>0) {
-				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \\\\ ', $catpath), ENT_QUOTES).'"};';
+				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' > ', $catpath), ENT_QUOTES).'"};';
 			}
 		}
 	}

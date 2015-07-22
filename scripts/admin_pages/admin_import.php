@@ -3054,7 +3054,7 @@ if ($this->post['action']!='product-import-preview') {
 					$catpath[]=$cat['name'];
 				}
 				if (count($catpath)>0) {
-					$jsSelect2InitialValue[]='categoriesIdTerm['.$job['categories_id'].']={id:"'.$job['categories_id'].'", text:"'.implode(' \\\\ ', $catpath).'"};';
+					$jsSelect2InitialValue[]='categoriesIdTerm['.$job['categories_id'].']={id:"'.$job['categories_id'].'", text:"'.implode(' > ', $catpath).'"};';
 				}
 			}
 			$schedule_content.='</tbody>';
