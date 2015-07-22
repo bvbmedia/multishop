@@ -276,7 +276,7 @@ if ($this->ADMIN_USER) {
 				// }
 				$.ajax({
 					url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel&tx_multishop_pi1[categories_id]='.$this->get['categories_id'].'&tx_multishop_pi1[products_id]='.$this->get['products_id']).'\',
-					data: \'\',
+					data: \'tx_multishop_pi1[type]='.$this->get['type'].'\',
 					type: \'post\',
 					dataType: \'json\',
 					success: function (j){
@@ -293,6 +293,10 @@ if ($this->ADMIN_USER) {
 							admin_menu_header += \'<div id="ms_admin_minimaxi_wrapper"><ul id="ms_admin_minimize"><li><a href="#" class="ms_admin_minimize">'.$this->pi_getLL('minimize').'</a></li></ul></div>\';
 							admin_menu_header += \'</div>\';
 
+							var admin_menu_newheader=\'\';
+';
+if ($this->get['type']=='2003') {
+							$html.='
 							// new top admin menu
 							var admin_menu_newheader = \'<div id="tx_multishop_admin_newheader_wrapper">\';
 							admin_menu_newheader += \'<div id="tx_multishop_admin_newheader_bg">\';
@@ -300,7 +304,9 @@ if ($this->ADMIN_USER) {
 							admin_menu_newheader += admin_menu_newheader_html;
 							admin_menu_newheader += \'</div>\';
 							admin_menu_newheader += \'</div>\';
-
+							';
+}
+	$html.='
 							// bottom admin menu
 							var admin_menu_footer = \'<div id="tx_multishop_admin_footer_wrapper"><ul id="tx_multishop_admin_footer">\';
 							var admin_menu_footer_html = renderAdminMenu(json_data.footer, \'footer\', 1);
