@@ -1094,11 +1094,30 @@ if (is_numeric($this->get['orders_id'])) {
             $editOrderFormFieldset[]=$tmpcontent;
             $tmpcontent='';
             $orderDetails=array();
-            $orderDetails[]='<div class="form-group">
-                <label class="control-label col-md-3">'.$this->pi_getLL('orders_id').'</label><div class="col-md-9"><p class="form-control-static">'.$orders['orders_id'].'</p></div>
-                <label class="control-label col-md-3">'.$this->pi_getLL('admin_customer_id').'</label><div class="col-md-9"><p class="form-control-static">'.$orders['customer_id'].'</p></div>
-                <label class="control-label col-md-3">'.$this->pi_getLL('order_date').'</label><div class="col-md-9"><p class="form-control-static">'.$order_date.'</p></div>
-            </div><hr>';
+            $orderDetails[]='
+            	<div class="form-group">
+				<label class="control-label col-md-3">'.$this->pi_getLL('orders_id').'</label>
+				<div class="col-md-9">
+					<div class="row">
+						<div class="col-md-2">
+							<div class="row">
+								<div class="col-md-12"><p class="form-control-static">'.$orders['orders_id'].'</p></div>
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div class="row">
+							<label class="control-label col-md-7">'.$this->pi_getLL('admin_customer_id').'</label><div class="col-md-5"><p class="form-control-static">'.$orders['customer_id'].'</p></div>
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div class="row">
+							<label class="control-label col-md-7">'.$this->pi_getLL('order_date').'</label><div class="col-md-5"><p class="form-control-static">'.$order_date.'</p></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+            <hr>';
             $orderDetailsItem='<div class="form-group">';
             $orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('shipping_method').'</label>';
             if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
@@ -2910,16 +2929,19 @@ if (is_numeric($this->get['orders_id'])) {
         }
         if (count($order_status_history_items)>0) {
             $tmpcontent.='
-            <div class="tabs-fieldset" id="order_status_history">
-            <fieldset>
-            <legend>'.$this->pi_getLL('order_status_history').'</legend>
-            <table class="table table-striped table-bordered msadmin_border" width="100%">
+            <div class="panel panel-default" id="order_status_history">
+			<div class="panel-heading"><h3>'.$this->pi_getLL('order_status_history').'</h3></div>
+			<div class="panel-body">
+            <table class="table table-striped table-bordered msadmin_border">
+            <thead>
             <tr>
                 <th>'.$this->pi_getLL('status').'</th>
                 <th>'.$this->pi_getLL('old_status').'</th>
                 <th>'.$this->pi_getLL('date').'</th>
                 <th>'.$this->pi_getLL('customer_notified').'</th>
             </tr>
+            </thead>
+            <tbody>
             ';
             foreach ($order_status_history_items as $row) {
                 if (!$tr_type or $tr_type=='even') {
@@ -2950,9 +2972,10 @@ if (is_numeric($this->get['orders_id'])) {
                     ';
                 }
             }
-            $tmpcontent.='</table>
-            </fieldset>
-            </div>
+            $tmpcontent.='
+            </tbody>
+            </table>
+            </div></div>
             ';
         }
         // load the status history eof

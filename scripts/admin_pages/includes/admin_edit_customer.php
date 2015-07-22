@@ -769,6 +769,7 @@ switch ($_REQUEST['action']) {
 		if (!$markerArray['DETAILS_COMPANY_NAME']) {
 			$markerArray['DETAILS_COMPANY_NAME']=$fullname;
 		}
+		$markerArray['BILLING_COMPANY']='';
 		if ($company_name) {
 			$markerArray['BILLING_COMPANY']=$company_name.'<br/>';
 		}
