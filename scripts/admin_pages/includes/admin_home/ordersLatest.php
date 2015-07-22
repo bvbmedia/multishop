@@ -39,21 +39,56 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $headerData.='});
 		'.($this->get['tx_multishop_pi1']['action']!='change_order_status_for_selected_orders' ? '$("#msadmin_order_status_select").hide();' : '').'
-		$(".tooltip").tooltip({position: "bottom",
-			onBeforeShow: function() {
-				var that=this;
-				var orders_id=this.getTrigger().attr(\'rel\');
-				$.ajax({ 
-					type:   "POST", 
-					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails').'\',
-					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id, 
+		var originalLeave = $.fn.popover.Constructor.prototype.leave;
+		$.fn.popover.Constructor.prototype.leave = function(obj){
+		  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+		  var container, timeout;
+		  originalLeave.call(this, obj);
+		  if(obj.currentTarget) {
+			container = $(obj.currentTarget).siblings(\'.popover\')
+			timeout = self.timeout;
+			container.one(\'mouseenter\', function(){
+			  //We entered the actual popover – call off the dogs
+			  clearTimeout(timeout);
+			  //Let\'s monitor popover content instead
+			  container.one(\'mouseleave\', function(){
+				  $.fn.popover.Constructor.prototype.leave.call(self, self);
+				  $(".popover-link").popover("hide");
+			  });
+			})
+		  }
+		};
+		$(".popover-link").popover({
+			position: "down",
+			placement: \'bottom\',
+			html: true,
+			trigger:"hover",
+			delay: {show: 20, hide: 200}
+		});
+		var tooltip_is_shown=\'\';
+		$(\'.popover-link\').on(\'show.bs.popover, mouseover\', function () {
+			var that=$(this);
+			//$(".popover").remove();
+			//$(".popover-link").popover(\'hide\');
+			var orders_id=$(this).attr(\'rel\');
+			//if (tooltip_is_shown != orders_id) {
+				tooltip_is_shown=orders_id;
+				$.ajax({
+					type:   "POST",
+					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
+					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
 					dataType: "json",
-					success: function(data) { 
-						that.getTip().html(data.html);
-					} 
-				}); 				
-			
-			}
+					success: function(data) {
+            			if (data.content!="") {
+            				that.next().html(\'<div class="arrow"></div>\' + data.title + data.content);
+            				//that.next().popover("show");
+            				//$(that).popover(\'show\');
+            			} else {
+            				$(".popover").remove();
+            			}
+					}
+				});
+			//}
 		});
 		$(\'#check_all_1\').click(function(){			
 			checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
@@ -294,7 +329,7 @@ if ($pageset['total_rows']>0) {
 			}
 		}
 		$data[]=array(
-			'<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
+			'<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading"  class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
 			mslib_fe::amount2Cents($order['grand_total'], 0),
 			strftime("%x %X", $order['crdate']),
 			$paid_status,
