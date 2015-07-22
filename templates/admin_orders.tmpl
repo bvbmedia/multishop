@@ -70,8 +70,11 @@
                             </div>
                             </div>
                             <div class="form-group">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-8">
                             <label for="search_by_status_last_modified" class="control-label">###LABEL_FILTER_LAST_MODIFIED###</label>
-                            <input type="checkbox" class="PrettyInput" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1"###FILTER_BY_LAST_MODIFIED_CHECKED### >
+                            <input type="checkbox" class="PrettyInput" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1" ###FILTER_BY_LAST_MODIFIED_CHECKED### >
+                            </div>
                             </div>
                         </div>
                         <div class="col-sm-4 formfield-wrapper">
@@ -94,14 +97,16 @@
                             </div>
                             </div>
                             <div class="form-group">
-                            <label for="limit" class="control-label">###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+                            <label for="limit" class="control-label col-md-4">###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+                            <div class="col-md-8">
                             ###RESULTS_LIMIT_SELECTBOX###
+                            </div>
                             </div>
                         </div>
                     </div>
                     <div class="row formfield-container-wrapper">
                         <div class="col-sm-12 formfield-wrapper">
-                            <input type="submit" name="Search" value="###VALUE_SEARCH###" />
+                            <input type="submit" name="Search" value="###VALUE_SEARCH###" class="pull-right btn btn-success" />
                         </div>
                     </div>
                 </div>

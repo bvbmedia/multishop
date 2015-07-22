@@ -428,7 +428,7 @@ if (is_array($all_orders_status)) {
 	}
 }
 $orders_status_list.='</select>';
-$limit_selectbox='<select name="limit" id="limit">';
+$limit_selectbox='<select name="limit" id="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';

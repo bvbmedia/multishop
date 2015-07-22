@@ -229,21 +229,33 @@ foreach ($order_countries as $order_country) {
 }
 ksort($order_billing_country);
 $billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
-$form_orders_search='<div id="search-orders">
+$form_orders_search='<div id="search-orders" class="well">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
 	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 	<input name="type" type="hidden" value="2003" />
 	<div class="row formfield-container-wrapper">
 		<div class="col-sm-4 formfield-wrapper">
-			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
+			<div class="form-group">
+			<label class="control-label col-md-4">'.ucfirst($this->pi_getLL('keyword')).'</label>
+			<div class="col-md-8">
 			<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-			<label for="type_search">'.$this->pi_getLL('search_for').'</label>
+			</div>
+			</div>
+			<div class="form-group">
+			<label for="type_search" class="control-label col-md-4">'.$this->pi_getLL('search_for').'</label>
+			<div class="col-md-8">
 			<select name="type_search" class="invoice_select2"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 			</select>
-			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
+			</div>
+			</div>
+			<div class="form-group">
+			<label for="groups" class="control-label col-md-4 labelInbetween">'.$this->pi_getLL('usergroup').'</label>
+			<div class="col-md-8">
 			'.$customer_groups_input.'
+			</div>
+			</div>
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
