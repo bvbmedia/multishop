@@ -347,6 +347,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .fa-stack .fa { line-height:inherit; }
 .fa-li { top:0; }
 
+.checkbox label::after { line-height:16px; }
+
 .shipping_cost_input_field_wrapper > div > .form-group { margin-bottom:20px; }
 
 @media (min-width:992px) {
