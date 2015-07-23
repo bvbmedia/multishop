@@ -730,7 +730,6 @@ if ($this->ms['show_main']) {
 	$shipping_methods=mslib_fe::loadShippingMethods();
 	$zones=mslib_fe::loadAllCountriesZones();
 	if (count($zones['zone_id'])) {
-		$tmpcontent.='<h3>'.$this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings').'</h3>';
 		$colspan=4;
 		$tr_type='even';
 		if (count($shipping_methods)) {
@@ -801,7 +800,7 @@ if ($this->ms['show_main']) {
 	$tabs[]=array(
 		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings'))),
 		'id'=>'admin_shipping_method_zone_mappings',
-		'content'=>mslib_fe::returnBoxedHTML(ucfirst(mslib_befe::strtolower($this->pi_getLL('shipping_to_zone_mapping'))), $tmpcontent)
+		'content'=>mslib_fe::returnBoxedHTML($this->pi_getLL('shipping_to_zone_mapping', 'Shipping to Zone Mappings'), $tmpcontent)
 	);
 	// shipping to payment mappings
 	$tmpcontent='';
