@@ -293,6 +293,10 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 .msAttributesField:first-child { margin-bottom:10px; }
 .input-group-addon:last-child { width:88px; text-align:left; }
 
+ul#tx_multishop_countries_checkboxes.list-inline { margin-bottom:0; }
+ul#tx_multishop_countries_checkboxes.list-inline li { width:20%; vertical-align:top; }
+ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
+
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
 

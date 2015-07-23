@@ -27,16 +27,22 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$countries[]=$row;
 }
 $content.='
-<div class="main-heading"><h2>'.$this->pi_getLL('admin_label_enabled_countries').'</h2></div>
+<div class="panel panel-default">
+<div class="panel-heading"><h3>'.$this->pi_getLL('admin_label_enabled_countries').'</h3></div>
+<div class="panel-body">
 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
-<ul id="tx_multishop_countries_checkboxes">';
+<ul id="tx_multishop_countries_checkboxes" class="list-inline">';
 foreach ($countries as $country) {
-	$content.='<li><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['enabled']) ? 'checked' : '').' /> '.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</li>';
+	$content.='<li><div class="checkbox"><label><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['enabled']) ? 'checked' : '').' />'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
 }
 $content.='</ul>
-<input name="Submit" type="submit" value="Save" class="btn btn-success" />
+<div class="clearfix">
+<div class="pull-right">
+<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+</div>
+</div>
 </form>
 ';
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div></div>';
+$content=''.mslib_fe::shadowBox($content).'';
 ?>
