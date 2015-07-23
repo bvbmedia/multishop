@@ -4009,14 +4009,9 @@ class mslib_fe {
 	}
 	public function returnBoxedHTML($title='', $content='') {
 		$output='
-		 <div class="shaded_box">
-			<div class="shaded_box_lt">
-			<div class="shaded_box_rt">
-			<div class="shaded_box_lb">
-			<div class="shaded_box_rb">
-						<div class="title"><h2>'.$title.'</h2></div>
-					  <div class="content">'.$content.'</div>
-			</div></div></div></div>
+		 <div class="panel panel-default">
+			<div class="panel-heading"><h3>'.$title.'</h3></div>
+			<div class="panel-body">'.$content.'</div>
 		</div>';
 		return $output;
 	}
