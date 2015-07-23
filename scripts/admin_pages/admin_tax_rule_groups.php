@@ -92,24 +92,38 @@ if ($this->get['delete'] and is_numeric($this->get['rules_group_id'])) {
 	$this->post['status']=$tax_rules_group['status'];
 }
 $content.='
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+<div class="panel panel-default">
+<div class="panel-heading"><h3>ADD / UPDATE TAX RULES GROUP</h3></div>
+<div class="panel-body">
+<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
 	<fieldset>
-		<legend>ADD / UPDATE TAX RULES GROUP</legend>
-		<div class="account-field">
-				<label for="">Name</label>
-				<input type="text" name="name" id="name" value="'.$this->post['name'].'">
+		
+		<div class="form-group">
+				<label for="" class="control-label col-md-2">Name</label>
+				<div class="col-md-10">
+				<input class="form-control" type="text" name="name" id="name" value="'.$this->post['name'].'">
+				</div>
 		</div>
-		<div class="account-field">
-				<label for="">Status</label>
-				<input name="status" type="radio" value="1" '.((!isset($this->post['status']) or $this->post['status']==1) ? 'checked' : '').' /> on
-				<input name="status" type="radio" value="0" '.((isset($this->post['status']) and $this->post['status']==0) ? 'checked' : '').' /> off
+		<div class="form-group">
+				<label for="" class="control-label col-md-2">Status</label>
+				<div class="col-md-10">
+					<div class="radio-inline">
+					<input name="status" type="radio" value="1" '.((!isset($this->post['status']) or $this->post['status']==1) ? 'checked' : '').' /> on
+					</div>
+					<div class="radio-inline">
+					<input name="status" type="radio" value="0" '.((isset($this->post['status']) and $this->post['status']==0) ? 'checked' : '').' /> off
+					</div>
+				</div>
 		</div>
-		<div class="account-field">
-				<label for="">&nbsp;</label>
+		<div class="form-group">
+				<label for="" class="control-label col-md-2">&nbsp;</label>
+				<div class="col-md-10">
 				<input name="rules_group_id" type="hidden" value="'.$this->post['rules_group_id'].'" />
-				<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
+				<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+				</div>
 		</div>
 	</fieldset>
+	<hr>
 ';
 if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	$state_modus_array=array();
@@ -285,25 +299,25 @@ if (!$this->get['edit']) {
 		$tax_rules_groups[]=$row;
 	}
 	if (count($tax_rules_groups)) {
-		$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
-		<tr>
-			<th width="50">ID</th>
-			<th>'.$this->pi_getLL('name').'</th>
-			<th width="50">Status</th>
-			<th width="50">'.$this->pi_getLL('default', 'Default').'</th>
-			<th width="50">'.$this->pi_getLL('action').'</th>
-		</tr>
+		$content.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+		<thead><tr>
+			<th class="cellID">ID</th>
+			<th class="cellName">'.$this->pi_getLL('name').'</th>
+			<th class="cellStatus">Status</th>
+			<th class="cellStatus">'.$this->pi_getLL('default', 'Default').'</th>
+			<th class="cellAction">'.$this->pi_getLL('action').'</th>
+		</tr></thead>
 		';
 		foreach ($tax_rules_groups as $tax_rules_group) {
 			$content.='
 			<tr class="'.$tr_type.'">
-				<td>
+				<td class="cellID">
 					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['rules_group_id'].'</a>
 				</td>
-				<td>
+				<td class="cellName">
 					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['name'].'</a>
 				</td>
-				<td align="center">';
+				<td class="cellStatus">';
 			if (!$tax_rules_group['status']) {
 				$content.='';
 				$content.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
@@ -312,7 +326,7 @@ if (!$this->get['edit']) {
 				$content.='';
 			}
 			$content.='</td>
-				<td align="center">';
+				<td class="cellStatus">';
 			if (!$tax_rules_group['default_status']) {
 				$content.='';
 				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
@@ -322,8 +336,8 @@ if (!$this->get['edit']) {
 			}
 			$content.='
 				</td>
-				<td class="align_center">
-					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=delete&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id']).'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a>
+				<td class="cellAction">
+					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=delete&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id']).'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('delete').'"><i class="fa fa-trash-o"></i></a>
 				</td>
 			</tr>
 			';
@@ -331,6 +345,6 @@ if (!$this->get['edit']) {
 		$content.='</table>';
 	}
 }
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div></div>';
+$content=''.mslib_fe::shadowBox($content).'';
 ?>
