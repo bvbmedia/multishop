@@ -643,11 +643,11 @@ if ($this->ms['show_main']) {
 					$tmpcontent.='<td><strong>All</strong></td>';
 				}
 			}
-			$tmpcontent.='<td><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
+			$tmpcontent.='<td class="cellName"><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
 			</strong></td>
 			<td>'.$row['provider'].'</td>
-			<td>'.date("Y-m-d", $row['date']).'</td>
-			<td align="center">';
+			<td class="cellDate">'.date("Y-m-d", $row['date']).'</td>
+			<td class="cellStatus">';
 			if (!$row['status']) {
 				$tmpcontent.='<span class="admin_status_red" alt="Disable"></span>';
 				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
@@ -656,7 +656,7 @@ if ($this->ms['show_main']) {
 				$tmpcontent.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$tmpcontent.='</td>
-			<td align="center">
+			<td class="cellAction">
 			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o"></i></a>
 			</td>
 			<td align="center">

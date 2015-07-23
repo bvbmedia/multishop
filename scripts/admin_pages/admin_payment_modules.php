@@ -296,18 +296,18 @@ if ($this->get['edit']) {
 		<input name="sub" type="hidden" value="update_payment_method" />
 		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
-		$tmpcontent.='<div class="account-field">
+		$tmpcontent.='<div class="form-group">
 		<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
 		$tmpcontent.=$language['title'].'
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 			<label for="name">'.$this->pi_getLL('admin_name').'</label>
 			<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 			<label for="description">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
 			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 		</div>';
@@ -328,13 +328,13 @@ if ($this->get['edit']) {
 	$cost_tax=mslib_fe::taxDecimalCrop(($amount_handling_cost*$cost_tax_rate)/100);
 	$cost_excl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost, 2, false);
 	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost+$cost_tax, 2, false);
-	$tmpcontent.='<div class="account-field">
+	$tmpcontent.='<div class="form-group">
 		<label>'.$this->pi_getLL('code').'</label>
 		<input name="custom_code" id="custom_code" type="hidden" value="'.htmlspecialchars($row['code']).'" />
 		'.$row['code'].'
 	</div>';
 	if (count($active_shop)>1) {
-		$tmpcontent.='<div class="account-field">
+		$tmpcontent.='<div class="form-group">
 			<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 			<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
 		foreach ($active_shop as $pageinfo) {
@@ -349,7 +349,7 @@ if ($this->get['edit']) {
 		$percentage_cost=true;
 	}
 	$tmpcontent.='
-		<div class="account-field">
+		<div class="form-group">
 			<label>'.$this->pi_getLL('handling_costs_type').'</label>
 			<div class="msAttribute">
 				<select name="handling_costs_type" id="handling_cost_type">
@@ -358,13 +358,13 @@ if ($this->get['edit']) {
 				</select>
 			</div>
 		</div>
-		<div class="account-field" id="handling_cost_percentage_div"'.(!$percentage_cost ? ' style="display:none"' : '').'>
+		<div class="form-group" id="handling_cost_percentage_div"'.(!$percentage_cost ? ' style="display:none"' : '').'>
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
 				<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="'.$percentage_handling_cost.'"'.(!$percentage_cost ? ' disabled="disabled"' : '').' />
 			</div>
 		</div>
-		<div class="account-field" id="handling_cost_amount_div"'.($percentage_cost ? ' style="display:none"' : '').'>
+		<div class="form-group" id="handling_cost_amount_div"'.($percentage_cost ? ' style="display:none"' : '').'>
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
 				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
@@ -372,7 +372,7 @@ if ($this->get['edit']) {
 				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$amount_handling_cost.'" id="handling_cost_amount_input"'.($percentage_cost ? ' disabled="disabled"' : '').' /></div>
 			</div>
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
 		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
@@ -388,12 +388,12 @@ if ($this->get['edit']) {
 		</select>
 	</div>
 			'.$inner_content.'
-		<div class="account-field">
+		<div class="form-group">
 			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
 			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.($row['enable_on_default']>0 ? ' checked="checked"' : '').' /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
 			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.(!$row['enable_on_default'] ? ' checked="checked"' : '').' /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 			<label for="">&nbsp;</label>
 			<input name="Submit" type="submit" class="btn btn-success" value="'.$this->pi_getLL('save').'" />
 		</div>
@@ -426,30 +426,30 @@ if ($this->get['edit']) {
 		}
 		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
-			$tmpcontent.='<div class="account-field">
+			$tmpcontent.='<div class="form-group">
 				<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$tmpcontent.=''.$language['title'].'
 				</div>
-				<div class="account-field">
+				<div class="form-group">
 					<label for="name">'.$this->pi_getLL('admin_name').'</label>
 					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
 				</div>
-				<div class="account-field">
+				<div class="form-group">
 					<label for="description">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
 					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 				</div>';
 		}
 		$tmpcontent.='
-		<div class="account-field">
+		<div class="form-group">
 			<label for="custom_code">'.$this->pi_getLL('code').'</label>
 			<input name="custom_code" id="custom_code" type="text" value="'.htmlspecialchars($this->post['custom_code']).'" required="required" />
 		</div>';
 		if (count($active_shop)>1) {
 			$tmpcontent.='
-					<div class="account-field">
+					<div class="form-group">
 						<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 						<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked"/>&nbsp;'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</span>';
 			foreach ($active_shop as $pageinfo) {
@@ -461,7 +461,7 @@ if ($this->get['edit']) {
 			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
 		}
 		$tmpcontent.='
-		<div class="account-field">
+		<div class="form-group">
 			<label>'.$this->pi_getLL('handling_costs_type').'</label>
 			<div class="msAttribute">
 				<select name="handling_costs_type" id="handling_cost_type">
@@ -470,13 +470,13 @@ if ($this->get['edit']) {
 				</select>
 			</div>
 		</div>
-		<div class="account-field" id="handling_cost_percentage_div" style="display:none">
+		<div class="form-group" id="handling_cost_percentage_div" style="display:none">
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
 				<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="0%" disabled="disabled" />
 			</div>
 		</div>
-		<div class="account-field" id="handling_cost_amount_div">
+		<div class="form-group" id="handling_cost_amount_div">
 			<label>'.$this->pi_getLL('handling_costs').'</label>
 			<div class="msAttribute">
 				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
@@ -484,7 +484,7 @@ if ($this->get['edit']) {
 				<div class="msAttributesField hidden"><input name="handling_costs" id="handling_cost_amount_input" type="hidden" value="0" /></div>
 			</div>
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
 		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
@@ -502,12 +502,12 @@ if ($this->get['edit']) {
 		';
 		$tmpcontent.=mslib_fe::parsePaymentMethodEditForm($psp, $this->post);
 		$tmpcontent.='
-		<div class="account-field">
+		<div class="form-group">
 			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
 			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes" checked="checked" /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
 			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no" /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 			<label>&nbsp;</label>
 			<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($this->get['payment_method_code']).'" />
 			<input name="sub" type="hidden" value="add_payment_method" />
@@ -652,11 +652,11 @@ if ($this->ms['show_main']) {
 	$tr_type='even';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
 		$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
-		$tmpcontent.='<tr>';
+		$tmpcontent.='<thead><tr>';
 		if (count($active_shop)>1) {
 			$tmpcontent.='<th>'.$this->pi_getLL('shop', 'Shop').'</th>';
 		}
-		$tmpcontent.='<th>'.$this->pi_getLL('payment_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th><th width="30">'.ucfirst($this->pi_getLL('download')).'</th></tr>
+		$tmpcontent.='<th>'.$this->pi_getLL('payment_method').'</th><th width="60">'.$this->pi_getLL('template').'</th><th width="120">'.$this->pi_getLL('date_added').'</th><th width="60">'.$this->pi_getLL('status').'</th><th width="30">'.$this->pi_getLL('action').'</th><th width="30">'.ucfirst($this->pi_getLL('download')).'</th></tr></thead>
 		<tbody class="sortable_content">
 		';
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -674,11 +674,11 @@ if ($this->ms['show_main']) {
 					$tmpcontent.='<td><strong>All</strong></td>';
 				}
 			}
-			$tmpcontent.='<td><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
+			$tmpcontent.='<td class="cellName"><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
 			</strong></td>
 			<td>'.$row['provider'].'</td>
-			<td>'.date("Y-m-d", $row['date']).'</td>
-			<td align="center">';
+			<td class="cellDate">'.date("Y-m-d", $row['date']).'</td>
+			<td  class="cellStatus">';
 			if (!$row['status']) {
 				$tmpcontent.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
 				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
@@ -688,11 +688,11 @@ if ($this->ms['show_main']) {
 			}
 			$tmpcontent.='
 			</td>
-			<td align="center">
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"></a>
+			<td class="cellAction">
+			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><i class="fa fa-trash-o"></i></a>
 			</td>
 			<td align="center">
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=payment&payment_method_id='.$row['id']).'" class="btn btn-success"><i>'.ucfirst($this->pi_getLL('download_record')).'</i></a>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=payment&payment_method_id='.$row['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> '.ucfirst($this->pi_getLL('download_record')).'</a>
 			</td>
 			</tr>';
 		}
@@ -700,19 +700,28 @@ if ($this->ms['show_main']) {
 	} else {
 		$tmpcontent.=$this->pi_getLL('currently_there_are_no_payment_methods_defined').'.';
 	}
-	$tmpcontent.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_record').'</legend>
-			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=payment').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-				<div class="account-field">
-					<label for="new_code">'.$this->pi_getLL('code').'</label>
-					<input name="new_code" type="text" value="" />
+	$tmpcontent.='<fieldset id="scheduled_import_jobs_form"><h3 class="page-header">'.$this->pi_getLL('upload_record').'</h3>
+			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=payment').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+				<div class="form-group">
+					<label for="new_code" class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
+					<div class="col-md-10">
+					<input class="form-control" name="new_code" type="text" value="" />
+					</div>
 				</div>
-				<div class="account-field">
-					<label for="upload_payment_file">'.$this->pi_getLL('file').'</label>
-					<input type="file" name="payment_file">&nbsp;<input type="submit" name="upload_payment_file" class="submit btn btn-success" id="upload_payment_file" value="upload">
+				<div class="form-group">
+					<label for="upload_payment_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+					<div class="col-md-10">
+					<div class="input-group">
+					<input type="file" name="payment_file" class="form-control">
+					<span class="input-group-btn">
+					<input type="submit" name="upload_payment_file" class="submit btn btn-success" id="upload_payment_file" value="upload">
+					</span>
+					</div>
+					</div>
 				</div>
 			</form>
 		</fieldset>';
-	$tmpcontent.='<p class="float_right"><a href="#" id="add_payment_method" class="admin_menu_add label">'.$this->pi_getLL('add_payment_method').'</a></p>';
+	$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="add_payment_method" class="btn btn-primary admin_menu_add"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</a></div></div>';
 	$tmpcontent.='<div id="flexible_container"><ul id="admin_payment_methods_list" class="hide">';
 	$innercount=0;
 	$count=0;
@@ -763,15 +772,15 @@ if ($this->ms['show_main']) {
 		if (count($payment_methods)) {
 			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 			$tmpcontent.='<input type="hidden" name="payment_to_zone_mappings" value="1" />';
-			$tmpcontent.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
-			$tmpcontent.='<tr>';
+			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
+			$tmpcontent.='<thead><tr>';
 			// zone header
 			$zone_cols=array();
 			foreach ($zones['zone_id'] as $zone_idx=>$zone_id) {
 				$tmpcontent.='<th>'.$zones['zone_name'][$zone_idx].' ('.implode('<br/> ', $zones['countries'][$zone_id]).')</th>';
 				$zone_cols[]=$zone_id;
 			}
-			$tmpcontent.='</tr>';
+			$tmpcontent.='</tr></thead>';
 			$tmpcontent.='<tr>';
 			// shipping method rows
 			foreach ($zone_cols as $zone_id) {
@@ -803,10 +812,10 @@ if ($this->ms['show_main']) {
 					$vars=unserialize($payment_method['vars']);
 					if ($payment_method['checked']) {
 						$tmpcontent.='<tr id="payment_zone_['.$zone_id.']_'.$payment_method['id'].'" class="row_sortable">';
-						$tmpcontent.='<td><input type="checkbox" name="payment_zone['.$zone_id.']['.$payment_method['id'].']" id="payment_zone_'.$zone_id.'_'.$payment_method['id'].'" checked="checked" onclick="this.form.submit()"><label for="payment_zone_'.$zone_id.'_'.$payment_method['id'].'">'.$vars['name'][0].'</label></td>';
+						$tmpcontent.='<td><div class="checkbox"><label><input type="checkbox" name="payment_zone['.$zone_id.']['.$payment_method['id'].']" id="payment_zone_'.$zone_id.'_'.$payment_method['id'].'" checked="checked" onclick="this.form.submit()">'.$vars['name'][0].'</label></td>';
 					} else {
 						$tmpcontent.='<tr class="row_unsortable">';
-						$tmpcontent.='<td><input type="checkbox" name="payment_zone['.$zone_id.']['.$payment_method['id'].']" id="payment_zone_'.$zone_id.'_'.$payment_method['id'].'" onclick="this.form.submit()"><label for="payment_zone_'.$zone_id.'_'.$payment_method['id'].'">'.$vars['name'][0].'</label></td>';
+						$tmpcontent.='<td><div class="checkbox"><label><input type="checkbox" name="payment_zone['.$zone_id.']['.$payment_method['id'].']" id="payment_zone_'.$zone_id.'_'.$payment_method['id'].'" onclick="this.form.submit()">'.$vars['name'][0].'</label></td>';
 					}
 					$tmpcontent.='</tr>';
 				}
@@ -837,12 +846,12 @@ if ($this->ms['show_main']) {
 		$tr_type='even';
 		if (count($shipping_methods)) {
 			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
-			$tmpcontent.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
-			$tmpcontent.='<tr><th>&nbsp;</th>';
+			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
+			$tmpcontent.='<thead><tr><th>&nbsp;</th>';
 			foreach ($shipping_methods as $shipping_method) {
-				$tmpcontent.='<th>'.$shipping_method['name'].'</th>';
+				$tmpcontent.='<th class="cellName">'.$shipping_method['name'].'</th>';
 			}
-			$tmpcontent.='</tr>';
+			$tmpcontent.='</tr></thead>';
 			foreach ($payment_methods as $row) {
 				//		$content.='<h3>'.$cat['name'].'</h3>';
 				if (!$tr_type or $tr_type=='even') {
@@ -851,9 +860,9 @@ if ($this->ms['show_main']) {
 					$tr_type='even';
 				}
 				$tmpcontent.='<tr class="'.$tr_type.'">
-				<td><strong>'.$row['name'].'</strong></td>';
+				<td class="cellName"><strong>'.$row['name'].'</strong></td>';
 				foreach ($shipping_methods as $shipping_method) {
-					$tmpcontent.='<td>';
+					$tmpcontent.='<td align="center">';
 					$tmpcontent.='<input name="checkbox['.$shipping_method['id'].']['.$row['id'].']" type="checkbox" value="1" onclick="this.form.submit();" ';
 					$str2="SELECT * from tx_multishop_payment_shipping_mappings where payment_method='".$row['id']."' and shipping_method='".$shipping_method['id']."'";
 					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
@@ -881,16 +890,16 @@ if ($this->ms['show_main']) {
 	$tab_button='';
 	$tab_content='';
 	foreach ($tabs as $tab) {
-		$tab_button.='<li><a href="#'.$tab['id'].'">'.$tab['label'].'</a></li>';
-		$tab_content.='<div style="display: block;" id="'.$tab['id'].'" class="tab_content">';
+		$tab_button.='<li role="presentation"><a href="#'.$tab['id'].'" aria-controls="profile" role="tab" data-toggle="tab">'.$tab['label'].'</a></li>';
+		$tab_content.='<div id="'.$tab['id'].'" class="tab-pane">';
 		$tab_content.=$tab['content'];
 		$tab_content.='</div>';
 	}
-	$tabs_element='<div id="tab-container">';
-	$tabs_element.='<ul class="tabs" id="admin_orders">';
+	$tabs_element='<div class="panel panel-default"><div class="panel-body"><div id="tab-container">';
+	$tabs_element.='<ul class="nav nav-tabs" id="admin_orders" role="tablist">';
 	$tabs_element.=$tab_button;
 	$tabs_element.='</ul>';
-	$tabs_element.='<div class="tab_container">';
+	$tabs_element.='<div class="tab-content">';
 	$tabs_element.=$tab_content;
 	$tabs_element.='</div>';
 	$tabs_element.='</div>'; // parent #tab_container
@@ -898,8 +907,8 @@ if ($this->ms['show_main']) {
 	$content=$tabs_element;
 	// payment method admin system eof
 }
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div>';
+$content=''.mslib_fe::shadowBox($content).'';
 $GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods']='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
@@ -941,28 +950,17 @@ jQuery(document).ready(function($) {
 	});
 	// sortables eof
 	// tabs js
-	$(".tab_content").hide();
-    $("ul.tabs li:first").addClass("active").show();
-    $(".tab_content:first").show();
-    $("ul.tabs li").click(function () {
-        $("ul.tabs li").removeClass("active");
-        $(this).addClass("active");
-        $(".tab_content").hide();
-        var activeTab = $(this).find("a").attr("href");
-        $(activeTab).fadeIn(0);
-        return false;
-    });
-    // auto activate the tabs based on hash
-    var lochash=window.location.hash;
-	if (lochash!=\'\') {
-		var li_this = $("ul > li").find("a[href=\'" + lochash + "\']").parent();
-		if (li_this.length > 0) {
-			$("ul.tabs li").removeClass("active");
-			$(li_this).addClass("active");
-			$(".tab_content").hide();
-			$(lochash).fadeIn(0);
-		}
-	}
+var url = document.location.toString();
+if (url.match("#")) {
+    $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+} else {
+	$(".nav-tabs a:first").tab("show");
+}
+
+// Change hash for page-reload
+$(".nav-tabs a").on("shown.bs.tab", function (e) {
+	window.location.hash = e.target.hash;
+})
 });
 </script>
 ';
