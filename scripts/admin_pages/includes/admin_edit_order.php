@@ -2035,7 +2035,7 @@ if (is_numeric($this->get['orders_id'])) {
                     '' // LIMIT ...
                 );
                 $qry_tax_sb=$GLOBALS['TYPO3_DB']->sql_query($sql_tax_sb);
-                $vat_sb='<select name="manual_product_tax" id="manual_product_tax" class="form-control">';
+                $vat_sb='<select name="manual_product_tax" id="manual_product_tax" class="form-control" style="width:auto;">';
                 $vat_sb.='<option value="">'.$this->pi_getLL('admin_label_no_tax').'</option>';
                 while ($rs_tx_sb=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb)) {
                     $sb_tax_rate=($rs_tx_sb['rate']/100);
@@ -2052,8 +2052,8 @@ if (is_numeric($this->get['orders_id'])) {
                 // product normal price col
                 $order_products_body_data['products_normal_price']['valign']='top';
                 $order_products_body_data['products_normal_price']['class']='cellPrice';
-                $order_products_body_data['products_normal_price']['value']='<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="msManualOrderProductPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>';
-                $order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_manual_name_including_vat" class="msManualOrderProductPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>';
+                $order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
+                $order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
                 $order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="manual_product_price" id="manual_product_price" value="" /></div>';
                 /*if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
                     $order_products_body_data['products_normal_price']['value']='<input class="text" style="width:44px" type="text" id="display_product_price" value="" tabindex="3"/>';
@@ -2073,8 +2073,8 @@ if (is_numeric($this->get['orders_id'])) {
                 // product action col
                 $order_products_body_data['products_action']['align']='right';
                 $order_products_body_data['products_action']['class']='cellAction';
-                $order_products_body_data['products_action']['value']='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-success">&nbsp;';
-                $order_products_body_data['products_action']['value'].='<input type="submit" value="'.$this->pi_getLL('add').'" class="btn btn-success submit_button">';
+                $order_products_body_data['products_action']['value']='<button type="button" title="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button> ';
+                $order_products_body_data['products_action']['value'].='<button type="submit" title="'.$this->pi_getLL('add').'" class="btn btn-primary btn-sm submit_button"><i class="fa fa-plus"></i></button>';
                 $order_products_table['body']['manual_add_new_product']['rows'][]=array(
                     'class'=>'odd manual_add_new_product',
                     'style'=>'display:none',
@@ -2127,7 +2127,7 @@ if (is_numeric($this->get['orders_id'])) {
                 // products name col
                 $order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
                 $order_products_body_data['products_name']['style']='border:0px solid #fff';
-                $order_products_body_data['products_name']['value']='<input type="button" class="btn btn-success" value="add attribute" id="add_attributes" />';
+                $order_products_body_data['products_name']['value']='<button type="button" class="btn btn-primary btn-sm" id="add_attributes"><i class="fa fa-plus"></i> add attribute</button>';
                 if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
                     // products status col
                     $order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2336,14 +2336,18 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
+                    <p class="form-control-static">
                     <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total'], 0).'</span>
+                    </p>
                     </div>
                 </div>';
                 $content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('included_vat_amount').'</label>
                     <div class="col-md-2">
+                    <p class="form-control-static">
                     <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span>
+                    </p>
                     </div>
                 </div>';
             } else {
@@ -2351,14 +2355,18 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
+                    <p class="form-control-static">
                     <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat'], 0).'</span>
+                    </p>
                     </div>
                 </div>';
                 $content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('vat').'</label>
                     <div class="col-md-2">
+                    <p class="form-control-static">
                     <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span>
+                    </p>
                     </div>
                 </div>';
             }
@@ -2393,7 +2401,9 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('discount').$coupon_code.'</label>
                     <div class="col-md-2">
+                    <p class="form-control-static">
                     <span class="order_total_value">'.$discount_content.'</span>
+                    </p>
                     </div>
                 </div>';
             }
@@ -2401,7 +2411,9 @@ if (is_numeric($this->get['orders_id'])) {
             <div class="form-group">
                 <label class="control-label col-md-10">'.$this->pi_getLL('total').'</label>
                 <div class="col-md-2">
+                <p class="form-control-static">
                 <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</span>
+                </p>
                 </div>
             </div>';
             if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {

@@ -503,8 +503,7 @@ jQuery(document).ready(function($) {
 	  }
 	};
 	$(".popover-link").popover({
-		position: "down",
-		placement: \'bottom\',
+		placement: "bottom",
 		html: true,
 		trigger:"hover",
 		delay: {show: 20, hide: 200}

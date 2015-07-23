@@ -38,10 +38,10 @@ foreach ($products as $product) {
 	$final_price=mslib_fe::final_products_price($product);
 	if ($product['products_price']<>$product['final_price']) {
 		$old_price=$product['products_price']*(1+$product['tax_rate']);
-		$prod['Price']='<div class="ajax_old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$prod['Price']='<div class="ajax_products_price"><div class="ajax_old_price">'.mslib_fe::amount2Cents($old_price).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($final_price).'</div></div>';
 		$prod['PriceNum']=$final_price;
 	} else {
-		$prod['Price']='<div class="ajax_products_price">'.mslib_fe::amount2Cents($final_price).'</div>';
+		$prod['Price']='<div class="ajax_products_price"><div class="ajax_normal_price">'.mslib_fe::amount2Cents($final_price).'</div></div>';
 		$prod['PriceNum']=$final_price;
 	}
 	$prod['Name']=substr($product['products_name'], 0, 50);

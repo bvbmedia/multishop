@@ -501,9 +501,9 @@ if ($this->ADMIN_USER) {
 				$prod_name='<div class="ajax_products_name">'.substr($product['products_name'], 0, 50).'</div>';
 				$prod_desc='<div class="ajax_products_shortdescription">'.str_highlight(substr($product['products_shortdescription'], 0, 75), $this->get['q']).'</div>';
 				if ($product['products_price']<>$product['final_price']) {
-					$prod_price='<div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price'], 0).'</div>';
+					$prod_price='<div class="ajax_products_price"><div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price'], 0).'</div></div>';
 				} else {
-					$prod_price='<div class="ajax_products_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div>';
+					$prod_price='<div class="ajax_products_price"><div class="ajax_normal_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div></div>';
 				}
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
 					<a alt="test product" class="ui-corner-all" tabindex="-1" href="'.$prod_link.'">
