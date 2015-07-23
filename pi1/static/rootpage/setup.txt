@@ -247,6 +247,12 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			awesomeBootstrapCheckbox = EXT:multishop/templates/css/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css
+			awesomeBootstrapCheckbox {
+				media =
+				import = 0
+				compress = 1
+			}
 
 			jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
 			jqueryAutocomplete {
