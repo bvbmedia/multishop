@@ -123,7 +123,7 @@ $content.='
 				</div>
 		</div>
 	</fieldset>
-	<hr>
+	<br>
 ';
 if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	$state_modus_array=array();
