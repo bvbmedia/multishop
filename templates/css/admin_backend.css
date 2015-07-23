@@ -297,6 +297,9 @@ ul#tx_multishop_countries_checkboxes.list-inline { margin-bottom:0; }
 ul#tx_multishop_countries_checkboxes.list-inline li { width:20%; vertical-align:top; }
 ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 
+.form-horizontal .control-label > .checkbox {  padding-top:0; }
+.form-horizontal .control-label > .checkbox > label { font-weight:bold; }
+
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
 
@@ -340,6 +343,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 
 .fa { line-height:20px; }
 .fa-stack .fa { line-height:inherit; }
+
+.shipping_cost_input_field_wrapper > div > .form-group { margin-bottom:20px; }
 
 @media (min-width:992px) {
 	#Order_Details > .row,
