@@ -369,25 +369,33 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	$psp=$shipping_methods[$row['provider']];
 	$inner_content=mslib_fe::parseShippingMethodEditForm($psp, unserialize($row['vars']), 1);
 	$tmpcontent.='
-	<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+	<div class="panel panel-default">
+	<div class="panel-body">
+	<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 	<input name="sub" type="hidden" value="update_shipping_method" />
 	<input name="shipping_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
 			<div class="form-group">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
+			<div class="col-md-10">
+			<p class="form-control-static">';
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
 		$tmpcontent.=$language['title'].'
+			</p>
+			</div>
 			</div>
 			<div class="form-group">
-				<label for="name">'.$this->pi_getLL('admin_name').'</label>';
-		$tmpcontent.='<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">';
-		$tmpcontent.='</div>
+				<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>';
+		$tmpcontent.='<div class="col-md-10"><input type="text" class="form-control text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">';
+		$tmpcontent.='</div></div>
 			<div class="form-group">
-				<label for="description">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+				<label for="description" class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+				<div class="col-md-10">
 				<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
+				</div>
 			</div>';
 	}
 	$cost_tax_rate=0;
@@ -408,18 +416,23 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	$cost_incl_vat_display=mslib_fe::taxDecimalCrop($amount_handling_cost+$cost_tax, 2, false);
 	$tmpcontent.='
 	<div class="form-group">
-		<label>'.$this->pi_getLL('code').'</label>
+		<label class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
+		<div class="col-md-10">
+		<p class="form-control-static">
 		'.$row['code'].'
+		</p>
+		</div>
 	</div>';
 	if (count($active_shop)>1) {
 		$tmpcontent.='
 		<div class="form-group">
-		<label for="related_shop_pid">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
-		<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' />&nbsp'.$this->pi_getLL('relate_shipping_to_all_shop', 'All shop').'</span>';
+		<label for="related_shop_pid" class="control-label col-md-2">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
+		<div class="col-md-10">
+		<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' /><label>'.$this->pi_getLL('relate_shipping_to_all_shop', 'All shop').'</label></div>';
 		foreach ($active_shop as $pageinfo) {
-			$tmpcontent.='<span><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' />'.$pageinfo['title'].'</span>';
+			$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($row['page_uid']==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageinfo['title'].'</label></div>';
 		}
-		$tmpcontent.='</div>';
+		$tmpcontent.='</div></div>';
 	} else {
 		$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
 	}
@@ -429,31 +442,39 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	}
 	$tmpcontent.='
 	<div class="form-group">
-		<label>'.$this->pi_getLL('handling_costs_type').'</label>
+		<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs_type').'</label>
+		<div class="col-md-10">
 		<div class="msAttribute">
-			<select name="handling_costs_type" id="handling_cost_type">
+			<select name="handling_costs_type" id="handling_cost_type" class="form-control">
 				<option value="amount"'.(!$percentage_cost ? ' selected="selected"' : '').'>amount</option>
 				<option value="percentage"'.($percentage_cost ? ' selected="selected"' : '').'>percentage</option>
 			</select>
 		</div>
+		</div>
 	</div>
 	<div class="form-group" id="handling_cost_percentage_div"'.(!$percentage_cost ? ' style="display:none"' : '').'>
-		<label>'.$this->pi_getLL('handling_costs').'</label>
+		<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
+		<div class="col-md-10">
 		<div class="msAttribute">
-			<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="'.$percentage_handling_cost.'"'.(!$percentage_cost ? ' disabled="disabled"' : '').' />
+			<input name="handling_costs" id="handling_cost_percentage_input" type="text" class="form-control" value="'.$percentage_handling_cost.'"'.(!$percentage_cost ? ' disabled="disabled"' : '').' />
+		</div>
 		</div>
 	</div>
 	<div class="form-group" id="handling_cost_amount_div"'.($percentage_cost ? ' style="display:none"' : '').'>
-		<label>'.$this->pi_getLL('handling_costs').'</label>
+		<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
+		<div class="col-md-10">
 		<div class="msAttribute">
-			<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-			<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+			<div class="msAttributesField"><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+			<div class="msAttributesField"><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 			<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" id="handling_cost_amount_input" value="'.$amount_handling_cost.'"'.($percentage_cost ? ' disabled="disabled"' : '').'/></div>
+		</div>
 		</div>
 	</div>
 	<div class="form-group">
-	<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
-	<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
+	<label for="tax_id" class="control-label col-md-2">'.$this->pi_getLL('admin_vat_rate').'</label>
+	<div class="col-md-10">
+	<select name="tax_id" id="tax_id" class="form-control">
+	<option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -466,15 +487,20 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	$tmpcontent.='
 	</select>
 	</div>
+	</div>
 	'.$inner_content.'
 	<div class="form-group">
-			<label>'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
-			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.($row['enable_on_default']>0 ? ' checked="checked"' : '').' /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
-			<div class="input_label_wrapper"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.(!$row['enable_on_default'] ? ' checked="checked"' : '').' /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
+			<label class="control-label col-md-2">'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
+			<div class="col-md-10">
+			<div class="radio radio-success radio-inline"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes"'.($row['enable_on_default']>0 ? ' checked="checked"' : '').' /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
+			<div class="radio radio-success radio-inline"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no"'.(!$row['enable_on_default'] ? ' checked="checked"' : '').' /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
+			</div>
 		</div>
 	<div class="form-group">
-		<label for="">&nbsp;</label>
-		<input name="Submit" type="submit" class="btn btn-success" value="'.$this->pi_getLL('save').'" />
+		<label for="" class="control-label col-md-2">&nbsp;</label>
+		<div class="col-md-10">
+		<button name="Submit" type="submit" class="btn btn-success" value=""><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+		</div>
 	</div>
 	</form>';
 	$content.=$tmpcontent;
