@@ -141,13 +141,13 @@ if ($this->post) {
 		$category['parent_id']=$this->get['cid'];
 	}
 	$save_block='
+<hr>
 		<div class="clearfix">
 			<div class="pull-right">
 			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
 			<button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
 			</div>
 		</div>
-		<hr>
 	';
 	$content.='
 	<div class="panel panel-default">

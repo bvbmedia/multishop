@@ -175,25 +175,18 @@ jQuery(document).ready(function ($) {
     getSpecialsSections(###AJAX_PID###)
     ;
 
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+} else {
 	$('.nav-tabs a:first').tab('show');
+}
 
-    // re-activate images tab after delete
-    var getloc = window.location;
-    var hash_loc = "";
-    if (getloc.hash.indexOf('delete_image') > -1) {
-        hash_loc = "#product_images";
-    } else {
-        hash_loc = getloc.hash;
-    }
-    if (hash_loc!="") {
-        var li_this = $("ul > li").find("a[href='" + hash_loc + "']").parent();
-        if (li_this.length > 0) {
-            $("ul.tabs li").removeClass("active");
-            $(li_this).addClass("active");
-            $(".tab-pane").hide();
-            $(hash_loc).fadeIn(0);
-        }
-    }
+// Change hash for page-reload
+$('.nav-tabs a').on('shown.bs.tab', function (e) {
+	window.location.hash = e.target.hash;
+})
+
 	###AJAX_REQUEST_SPECIAL_PRICE###
 	$('#specials_new_products_price_excl_vat').keyup(function () {
         var value = this.value;

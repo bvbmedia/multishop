@@ -2273,7 +2273,7 @@ if ($this->post) {
 								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'<td>\';
-								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-success"></button>\';
+								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
 								elem += \'</td>\';
 								elem += \'</tr>\';
 								jQuery(\'#sp_end_row\').before(elem);
@@ -2299,7 +2299,7 @@ if ($this->post) {
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<input type="button" value="x" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-success" />\';
+								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
 								elem += \'</td>\';
 								elem += \'</tr>\';
 								jQuery(\'#sp_end_row\').before(elem);
@@ -2332,7 +2332,7 @@ if ($this->post) {
 						<div class="toggle_advanced_option" id="msEditProductInputStaffelPrice">
 							<label for="products_price" class="control-label col-md-2">'.$this->pi_getLL('admin_staffel_price').'</label>
 							<div class="col-md-10">
-							<input class="btn btn-success" type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
+							<input class="btn btn-success btn-sm" type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
 							<label>&nbsp;</label>
 							<div class="product_staffel_price">
 								<table class="table">
@@ -2370,10 +2370,10 @@ if ($this->post) {
 							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
 							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
-							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
+							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button></td>
 						</tr>';
 				}
-				$staffel_price_block.='</tbody><tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><button class="btn btn-success" type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input"><i class="fa fa-plus"></i></button></td></tr></tfoot>
+				$staffel_price_block.='</tbody><tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><button class="btn btn-success btn-sm" type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input"><i class="fa fa-plus"></i></button></td></tr></tfoot>
 								</table>
 							</div>
 					</div>';
@@ -2909,7 +2909,7 @@ if ($this->post) {
 					}
 					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id + " > div.items_wrapper";
 					if (selected_pa_option_id != "") {
-						var delete_button_html=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-success delete_product_attributes">\';
+						var delete_button_html=\'<button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button>\';
 						// add class for marker
 						$(pa_main_divwrapper).addClass("new_attributes");
 						// check for the main tr if it exists
@@ -3438,7 +3438,7 @@ if ($this->post) {
 									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
 								</td>';
 								$existing_product_attributes_block_columns['attribute_save_col']='<td class="product_attribute_action">
-								<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-success delete_product_attributes"><i class="fa fa-remove"></i></button></div>
+								<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button></div>
 								</td>';
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'])) {
 									$params=array(
