@@ -6773,9 +6773,9 @@ class mslib_fe {
 		$ms_menu['footer']['ms_admin_help']['class']='fa fa-question';
 		// if admin user and system panel is enabled for normal admins
 		if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER==1 or $this->conf['enableAdminPanelSystem'])) {
-			$ms_menu['footer']['ms_admin_system']['label']=$this->pi_getLL('admin_system');
+			$ms_menu['footer']['ms_admin_system']['label']=$this->pi_getLL('admin_multishop_settings');
 			$ms_menu['footer']['ms_admin_system']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
-			$ms_menu['footer']['ms_admin_system']['class']='fa fa-wrench';
+			$ms_menu['footer']['ms_admin_system']['class']='fa fa-cog';
 
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['label']=$this->pi_getLL('admin_tax_rule_groups', 'TAX RULE GROUPS');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_tax_rule_groups');
