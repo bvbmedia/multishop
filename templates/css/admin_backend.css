@@ -311,7 +311,9 @@ ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 #admin_shipping_methods .modal-body .col-md-3 > .panel > .panel-body > a img,
 #admin_payment_methods .modal-body .col-md-3 > .panel > .panel-body > a img { max-width:100%; height:auto; }
 #admin_shipping_methods .modal-body .col-md-3 > .panel > .panel-footer,
-#admin_payment_methods .modal-body .col-md-3 > .panel > .panel-footer { height:80px; padding:5px; }
+#admin_payment_methods .modal-body .col-md-3 > .panel > .panel-footer { padding:5px; }
+#admin_shipping_methods .modal-body .col-md-3 > .panel > .panel-footer { height:43px; }
+#admin_payment_methods .modal-body .col-md-3 > .panel > .panel-footer { height:80px; }
 #admin_shipping_methods .modal-body .col-md-3 > .panel > .panel-footer > .btn,
 #admin_payment_methods .modal-body .col-md-3 > .panel > .panel-footer > .btn { text-align:left; }
 

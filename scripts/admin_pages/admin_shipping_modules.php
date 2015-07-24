@@ -735,7 +735,7 @@ if ($this->ms['show_main']) {
 			$panelBody.=$item['name'];
 		}
 		$panelBody.='</a>';
-		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">'.$this->pi_getLL('add_shipping_method').'</a>';
+		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'" class="btn btn-block btn-success btn-sm"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</a>';
 
 		$modalContent.='
 		<div class="col-md-3">
