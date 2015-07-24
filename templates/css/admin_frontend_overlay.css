@@ -18,6 +18,7 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user > div > a { display:block; font-size:14px; line-height:38px; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase; padding:0 15px; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user > div > a { text-transform:none; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user { border-left:1px solid rgba(255,255,255,.3); }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_catalog > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_catalog > span,

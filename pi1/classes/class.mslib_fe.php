@@ -3940,13 +3940,15 @@ class mslib_fe {
 		}
 		if (count($psp['additional_info'])>0) {
 			$content.='
-			<div class="account-field">
-				<strong>Parameters that are needed for configuring this PSP</strong>
+			<div class="form-group">
+				<div class="col-md-10 col-md-offset-2">
+					<strong>Parameters that are needed for configuring this PSP</strong>
+				</div>
 			</div>
 			';
 			foreach ($psp['additional_info'] as $item) {
-				$content.='<div class="account-field">
-				<strong>'.$item['label'].'</strong><br />'.$item['value'].'</div>';
+				$content.='<div class="form-group">
+				<div class="col-md-10 col-md-offset-2"><strong>'.$item['label'].'</strong><br />'.$item['value'].'</div></div>';
 			}
 		}
 		return $content;
@@ -3986,7 +3988,7 @@ class mslib_fe {
 				case 'vars':
 					foreach ($value as $field_key=>$vars) {
 						$content.='
-						<div class="account-field" id="'.$field_key.'_divwrapper">
+						<div class="form-group" id="'.$field_key.'_divwrapper">
 							<label for="radio">'.$field_key.'</label>';
 						switch ($vars['type']) {
 							case 'input':
