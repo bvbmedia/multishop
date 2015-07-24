@@ -717,7 +717,7 @@ if ($this->ms['show_main']) {
 		</fieldset>';
 
 	$tmpcontent.='<div class="clearfix"><div class="pull-right">
-		<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#msAdminModalPopuAddShippingMethod"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</button>
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#msAdminModalPopuAddShippingMethod"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</button>
 	</div></div>';
 
 	$modalContent='<div class="row">';
@@ -738,17 +738,12 @@ if ($this->ms['show_main']) {
 		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">'.$this->pi_getLL('add_shipping_method').'</a>';
 
 		$modalContent.='
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div class="panel panel-default">
-				<div class="panel-heading text-center">
-					<h3>
-					'.$panelTitle.'
-					</h3>
-				</div>
-				<div class="panel-body text-center">
+				<div class="panel-body">
 					'.$panelBody.'
 				</div>
-				<div class="panel-footer text-center">
+				<div class="panel-footer">
 					'.$panelFooter.'
 				</div>
 			</div>
@@ -764,11 +759,11 @@ if ($this->ms['show_main']) {
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('add_payment_method').'</h4>
+				<h3 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('add_payment_method').'</h3>
 			  </div>
 			  <div class="modal-body">'.$modalContent.'</div>
 			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+				<button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
 			  </div>
 			</div>
 		  </div>
