@@ -6559,25 +6559,25 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['active']=1;
 			}
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-				$ms_menu['header']['admin_invoices']['label']=$this->pi_getLL('admin_invoices');
-				$ms_menu['header']['admin_invoices']['description']=$this->pi_getLL('admin_invoices_overview_description');
-				$ms_menu['header']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
-				$ms_menu['header']['admin_invoices']['class']='fa fa-file-o';
+				$ms_menu['header']['ms_admin_invoices']['label']=$this->pi_getLL('admin_invoices');
+				$ms_menu['header']['ms_admin_invoices']['description']=$this->pi_getLL('admin_invoices_overview_description');
+				$ms_menu['header']['ms_admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
+				$ms_menu['header']['ms_admin_invoices']['class']='fa fa-file-o';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_invoices') {
-					$ms_menu['header']['admin_invoices']['active']=1;
+					$ms_menu['header']['ms_admin_invoices']['active']=1;
 				}
-				$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices_overview');
-				$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
-				$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['class']='fa fa-wrench';
+				$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices_overview');
+				$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
+				$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices']['class']='fa fa-wrench';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_invoices') {
-					$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['active']=1;
+					$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices']['active']=1;
 				}
 				// invoices export wizard
-				$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['label']=$this->pi_getLL('admin_export_invoices');
-				$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_invoices');
-				$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['class']='fa fa-wrench';
+				$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices_export']['label']=$this->pi_getLL('admin_export_invoices');
+				$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_invoices');
+				$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices_export']['class']='fa fa-wrench';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_export_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_export_invoices') {
-					$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['active']=1;
+					$ms_menu['header']['ms_admin_invoices']['subs']['admin_invoices_export']['active']=1;
 				}
 			}
 		} // END IF $this->ORDERSADMIN_USER
