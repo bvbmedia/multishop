@@ -6479,7 +6479,7 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_customers']['label']=$this->pi_getLL('admin_customers');
 			$ms_menu['header']['ms_admin_customers']['description']=$this->pi_getLL('admin_customers_description', 'Customers').'.';
 			$ms_menu['header']['ms_admin_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
-			$ms_menu['header']['ms_admin_customers']['class']='fa fa-user';
+			$ms_menu['header']['ms_admin_customers']['class']='fa fa-users';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_customers' || $this->post['tx_multishop_pi1']['page_section']=='admin_customers') {
 				$ms_menu['header']['ms_admin_customers']['active']=1;
 			}
