@@ -87,11 +87,11 @@ $content='<div class="panel panel-default">
 	<div class="form-group">
 		<label class="control-label col-md-2">Enable usage of budget</label>
 		<div class="col-md-10">
-		<div class="radio-inline">
-		<input name="tx_multishop_pi1[budget_enabled]" type="radio" value="1" '.(($this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /> '.$this->pi_getLL('admin_yes').'
+		<div class="radio radio-success radio-inline">
+		<input name="tx_multishop_pi1[budget_enabled]" id="radio1" type="radio" value="1" '.(($this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /><label for="radio1">'.$this->pi_getLL('admin_yes').'</label>
 		</div>
-		<div class="radio-inline">
-		<input name="tx_multishop_pi1[budget_enabled]" type="radio" value="0" '.((!$this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /> '.$this->pi_getLL('admin_no').'
+		<div class="radio radio-success radio-inline">
+		<input name="tx_multishop_pi1[budget_enabled]" id="radio2" type="radio" value="0" '.((!$this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /><label for="radio2">'.$this->pi_getLL('admin_no').'</label>
 		</div>
 		</div>
 	</div>
@@ -106,7 +106,7 @@ $content='<div class="panel panel-default">
 		<div class="col-md-10">
 		<div class="input-group">
 		<input class="form-control" type="text" name="discount" size="2" maxlength="2" id="discount" value="'.htmlspecialchars($this->post['discount']).'" />
-		<span class="input-group-addon">%</span>
+		<span class="input-group-addon width-auto">%</span>
 		</div>
 		</div>
 	</div>

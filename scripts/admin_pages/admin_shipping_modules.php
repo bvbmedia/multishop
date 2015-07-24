@@ -260,7 +260,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			$content.='</div>';
 		}
 		$shipping_method=$shipping_methods[$this->get['shipping_method_code']];
-		$tmpcontent.='<form id="add_payment_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
+		$tmpcontent.='<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='
 				<div class="form-group">
@@ -304,31 +304,38 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		}
 		$tmpcontent.='
 		<div class="form-group">
-			<label>'.$this->pi_getLL('handling_costs_type').'</label>
+			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs_type').'</label>
+			<div class="col-md-10">
 			<div class="msAttribute">
-				<select name="handling_costs_type" id="handling_cost_type">
+				<select name="handling_costs_type" id="handling_cost_type" class="form-control">
 					<option value="amount"'.(!$percentage_cost ? ' selected="selected"' : '').'>amount</option>
 					<option value="percentage"'.($percentage_cost ? ' selected="selected"' : '').'>percentage</option>
 				</select>
 			</div>
+			</div>
 		</div>
 		<div class="form-group" id="handling_cost_percentage_div"'.(!$percentage_cost ? ' style="display:none"' : '').'>
-			<label>'.$this->pi_getLL('handling_costs').'</label>
+			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
+			<div class="col-md-10">
 			<div class="msAttribute">
 				<input name="handling_costs" id="handling_cost_percentage_input" type="text" value="'.str_replace('%', '', $this->post['handling_costs']).'%"'.(!$percentage_cost ? ' disabled="disabled"' : '').' />
 			</div>
+			</div>
 		</div>
 		<div class="form-group" id="handling_cost_amount_div"'.($percentage_cost ? ' style="display:none"' : '').'>
-			<label>'.$this->pi_getLL('handling_costs').'</label>
+			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
+			<div class="col-md-10">
 			<div class="msAttribute">
-				<div class="msAttributesField"><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.str_replace('%', '', $this->post['handling_costs']).'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-				<div class="msAttributesField"><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="0.00"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="msHandlingCostExcludingVat" value="'.str_replace('%', '', $this->post['handling_costs']).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" id="handling_cost_amount_input" type="hidden" value="'.str_replace('%', '', $this->post['handling_costs']).'" /></div>
+			</div>
 			</div>
 		</div>
 		<div class="form-group">
 		<label for="tax_id">'.$this->pi_getLL('admin_vat_rate').'</label>
-		<select name="tax_id" id="tax_id"><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
+		<div class="col-md-10">
+		<select name="tax_id" id="tax_id" class="form-control "><option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -340,6 +347,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		}
 		$tmpcontent.='
 		</select>
+		</div>
 		</div>';
 		$tmpcontent.=mslib_fe::parseShippingMethodEditForm($shipping_method, $this->post);
 		$tmpcontent.='
@@ -426,7 +434,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	if (count($active_shop)>1) {
 		$tmpcontent.='
 		<div class="form-group">
-		<label for="related_shop_pid" class="control-label col-md-2">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
+		<label for="related_shop_pid" class="control-label 23 col-md-2">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 		<div class="col-md-10">
 		<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0"'.(($row['page_uid']==0) ? ' checked="checked"' : '').' /><label>'.$this->pi_getLL('relate_shipping_to_all_shop', 'All shop').'</label></div>';
 		foreach ($active_shop as $pageinfo) {

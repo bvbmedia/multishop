@@ -100,24 +100,20 @@ $formfields=array();
 $formfields[]='<div class="form-group">
 				<label for="" class="control-label col-md-2">TAX name</label>
 				<div class="col-md-10">
-				<input class="form-control" type="text" name="tax_name" id="tax_name" value="'.$this->post['tax_name'].'"> (name that will be displayed on the invoice. Example: VAT)
+					<input class="form-control" type="text" name="tax_name" id="tax_name" value="'.$this->post['tax_name'].'"> (name that will be displayed on the invoice. Example: VAT)
 				</div>
 		</div>';
 $formfields[]='<div class="form-group">
 				<label for="" class="control-label col-md-2">TAX rate</label>
 				<div class="col-md-10">
-				<input class="form-control" type="text" name="tax_rate" id="tax_rate" value="'.$this->post['tax_rate'].'"> (example: 19 for 19%)
+					<input class="form-control" type="text" name="tax_rate" id="tax_rate" value="'.$this->post['tax_rate'].'"> (example: 19 for 19%)
 				</div>
 		</div>';
 $formfields[]='<div class="form-group">
 				<label for="" class="control-label col-md-2">Status</label>
 				<div class="col-md-10">
-				<div class="radio-inline">
-				<input name="tax_status" type="radio" value="1" '.((!isset($this->post['tax_status']) or $this->post['tax_status']==1) ? 'checked' : '').' /> on
-				</div>
-				<div class="radio-inline">
-				<input name="tax_status" type="radio" value="0" '.((isset($this->post['tax_status']) and $this->post['tax_status']==0) ? 'checked' : '').' /> off
-				</div>
+					<div class="radio radio-success radio-inline"><input name="tax_status" id="tax_status_0" type="radio" value="1" '.((!isset($this->post['tax_status']) or $this->post['tax_status']==1) ? 'checked' : '').' /><label for="tax_status_0">on</label></div>
+					<div class="radio radio-success radio-inline"><input name="tax_status" id="tax_status_1" type="radio" value="0" '.((isset($this->post['tax_status']) and $this->post['tax_status']==0) ? 'checked' : '').' /><label for="tax_status_0">off</label></div>
 				</div>
 		</div>';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['renderInsertEditTaxesFormPreProc'])) {
@@ -134,16 +130,14 @@ $content.='
 <div class="panel-heading"><h3>ADD / UPDATE TAX</h3></div>
 <div class="panel-body">
 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
-	<fieldset>
 		'.implode('', $formfields).'
 		<div class="form-group">
 				<label for="" class="control-label col-md-2">&nbsp;</label>
 				<div class="col-md-10">
-				<input name="tax_id" type="hidden" value="'.$this->post['tax_id'].'" />
-				<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+					<input name="tax_id" type="hidden" value="'.$this->post['tax_id'].'" />
+					<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
 				</div>
 		</div>
-	</fieldset>
 </form>
 <br>
 ';

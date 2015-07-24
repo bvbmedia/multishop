@@ -173,11 +173,11 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 						$tab_content.='</label>';
 						$tab_content.='	<ul class="category_listing_ul_'.$counter.'" id="msAdmin_category_listing_ul">';
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-							$tab_content.='<li class="item_'.$counter.'">';
+							$tab_content.='<li class="item_'.$counter.' form-inline">';
 							$tab_content.='<label class="tree_item_label">';
 							$tab_content.=$row['cn_short_en'];
-							$tab_content.='</label>';
-							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]"><option value="">No TAX</option>';
+							$tab_content.='</label> ';
+							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control"><option value="">No TAX</option>';
 							$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 								'tx_multishop_tax_rules', // FROM ...
 								"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='0' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -190,7 +190,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 							foreach ($taxes as $tax) {
 								$tab_content.='<option value="'.$tax['tax_id'].'"'.($tax['tax_id']==$row3['tax_id'] ? ' selected' : '').'>'.$tax['name'].'</option>'."\n";
 							}
-							$tab_content.='</select>';
+							$tab_content.='</select> ';
 							// now load the stated
 							$query2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 								'static_country_zones', // FROM ...
@@ -203,11 +203,11 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 							if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2)>0) {
 								$tab_content.='<div class="state_tax_sb_wrapper"><ul class="state_tax_sb">';
 								while ($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) {
-									$tab_content.='<li class="item_'.$counter.''.(!$row['status'] ? ' ' : '').'">';
+									$tab_content.='<li class="item_'.$counter.''.(!$row['status'] ? ' ' : '').' form-inline">';
 									$tab_content.='<label class="tree_item_label">';
 									$tab_content.=$row2['zn_name_local'];
-									$tab_content.='</label>';
-									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']"><option value="">No TAX</option>';
+									$tab_content.='</label> ';
+									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control"><option value="">No TAX</option>';
 									$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 										'tx_multishop_tax_rules', // FROM ...
 										"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='".$row2['uid']."' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -220,8 +220,8 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 									foreach ($taxes as $tax) {
 										$tab_content.='<option value="'.$tax['tax_id'].'"'.($tax['tax_id']==$row3['tax_id'] ? ' selected' : '').'>'.$tax['name'].'</option>'."\n";
 									}
-									$tab_content.='</select>';
-									$tab_content.='<select name="state_modus['.$row['cn_iso_nr'].']['.$row2['uid'].']">';
+									$tab_content.='</select> ';
+									$tab_content.='<select name="state_modus['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control">';
 									foreach ($state_modus_array as $state_modus=>$label) {
 										$tab_content.='<option value="'.$state_modus.'"'.($state_modus==$row3['state_modus'] ? ' selected' : '').'>'.htmlspecialchars($label).'</option>'."\n";
 									}
@@ -247,36 +247,26 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	$content.='
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
-		jQuery(".tab_content").hide();
-		jQuery("ul.tabs li:first").addClass("active").show();
-		jQuery(".tab_content:first").show();
-		jQuery("ul.tabs li").click(function() {
-			jQuery("ul.tabs li").removeClass("active");
-			jQuery(this).addClass("active");
-			jQuery(".tab_content").hide();
-			var activeTab = jQuery(this).find("a").attr("href");
-			jQuery(activeTab).show();
-			return false;
-		});
+		$(".nav-tabs a:first").tab("show");
 	});
 	</script>
-	<div id="tab-container">
-		<ul class="tabs">
+	<div id="tab-container" class="zone-tabs">
+		<ul class="nav nav-tabs" role="tablist">
 	';
 	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+		$content.='<li'.(($count==1) ? ' class="active"' : '').' role="presentation"><a href="#'.$key.'" aria-controls="profile" role="tab" data-toggle="tab">'.$value[0].'</a></li>';
 	}
 	$content.='
 		</ul>
-		<div class="tab_container">
+		<div class="tab-content">
 
 		';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
-			<div style="display: block;" id="'.$key.'" class="tab_content">
+			<div id="'.$key.'" class="tab-content">
 				'.$value[1].'
 			</div>
 		';
