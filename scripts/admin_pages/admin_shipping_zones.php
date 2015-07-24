@@ -68,14 +68,20 @@ foreach ($zones as $zone) {
 			$content.='
 			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" id="zone_edit_form">
 			<input name="zone_id" type="hidden" value="'.$this->get['zone_id'].'" />
-			<ul id="tx_multishop_countries_checkboxes" class="zone_items">';
+			<ul id="tx_multishop_countries_checkboxes" class="zone_items fa-ul">';
 			$counter=0;
 			foreach ($countries as $country) {
-				$content.='<li class="zone_item_country"><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></li>';
+				$content.='<li class="zone_item_country"><i class=" fa-li fa fa-square"></i> <div class="checkbox checkbox-success"><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
 				$counter++;
 			}
 			$content.='</ul>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="btn btn-success" /><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
+			<hr>
+			<div class="clearfix">
+			<div class="pull-right">
+			<button name="Submit" type="submit" value="" onclick="history.back();return false;" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i> '.$this->pi_getLL('cancel').'</button>
+			<button name="Submit" type="submit" value="" class="btn btn-success btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+			</div>
+			</div>
 			</form>
 			';
 		} else {

@@ -116,8 +116,10 @@
                         <thead>
                         <tr>
                             <th align="center" width="17">
+                                <div class="checkbox checkbox-success">
+                                <input type="checkbox" id="check_all_1">
                                 <label for="check_all_1"></label>
-                                <input type="checkbox" class="PrettyInput" id="check_all_1">
+                                </div>
                             </th>
                             <th width="50" class="cell_orders_id"><a href="###HEADER_SORTBY_LINK_ORDER_ID###">###LABEL_HEADER_ORDER_ID###</a></th>
                             ###HEADER_INVOICE_NUMBER###
@@ -136,7 +138,11 @@
                         <tbody>
                         <!-- ###ORDERS_LISTING### begin -->
                         <tr class="###ROW_TYPE###">
-                            <th nowrap><label for="checkbox_###ORDER_ID###"></label><input type="checkbox" name="selected_orders[]" class="PrettyInput" id="checkbox_###ORDER_ID###" value="###ORDER_ID###"></th>
+                            <th nowrap>
+                                <div class="checkbox checkbox-success">
+                                <input type="checkbox" name="selected_orders[]" id="checkbox_###ORDER_ID###" value="###ORDER_ID###">
+                                <label for="checkbox_###ORDER_ID###"></label>
+                            </th>
                             <td align="right" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_ID###</a></td>
                             ###INVOICE_NUMBER###
                             ###MASTER_SHOP###

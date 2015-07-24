@@ -39,8 +39,10 @@
 <thead>
 	<tr>
 		<th class="cellCheckbox">
-			<label for="check_all_1"></label>
-			<input type="checkbox" class="PrettyInput" id="check_all_1">
+			<div class="checkbox checkbox-success">
+				<input type="checkbox" id="check_all_1">
+				<label for="check_all_1"></label>
+			</div>
 		</th>
 		<th class="cellID">###LABEL_HEADER_CELL_NUMBER###</th>
 		<th class="cellName"><a href="###HEADER_SORTBY_PRODUCT_LINK###">###LABEL_HEADER_PRODUCT###</a></th>
@@ -58,8 +60,10 @@
     <tbody>
     <tr class="###ROW_TYPE###">
         <td class="cellCheckbox">
-			<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
-			<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" class="PrettyInput" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
+        	<div class="checkbox checkbox-success">
+				<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
+				<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
+			</div>
 		</td>
 		<td class="cellID">###CELL_NUMBER###</td>
 		<td class="cellName">
