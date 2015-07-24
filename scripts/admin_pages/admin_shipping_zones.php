@@ -68,10 +68,10 @@ foreach ($zones as $zone) {
 			$content.='
 			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" id="zone_edit_form">
 			<input name="zone_id" type="hidden" value="'.$this->get['zone_id'].'" />
-			<ul id="tx_multishop_countries_checkboxes" class="zone_items fa-ul">';
+			<ul id="tx_multishop_countries_checkboxes" class="zone_items">';
 			$counter=0;
 			foreach ($countries as $country) {
-				$content.='<li class="zone_item_country"><i class=" fa-li fa fa-square"></i> <div class="checkbox checkbox-success"><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
+				$content.='<li class="zone_item_country"><div class="checkbox checkbox-success"><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
 				$counter++;
 			}
 			$content.='</ul>
