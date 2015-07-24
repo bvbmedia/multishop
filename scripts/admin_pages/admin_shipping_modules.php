@@ -832,10 +832,10 @@ if ($this->ms['show_main']) {
 					$vars=unserialize($shipping_method['vars']);
 					if ($shipping_method['checked']) {
 						$tmpcontent.='<tr id="shipping_zone_['.$zone_id.']_'.$shipping_method['id'].'" class="row_sortable">';
-						$tmpcontent.='<td><div class="checkbox"><label><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" checked="checked" onclick="this.form.submit()">'.$vars['name'][0].'</label></div></td>';
+						$tmpcontent.='<td><div class="checkbox checkbox-success"><input type="checkbox" checked name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></div></td>';
 					} else {
 						$tmpcontent.='<tr class="row_unsortable">';
-						$tmpcontent.='<td><div class="checkbox"><label><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" onclick="this.form.submit()">'.$vars['name'][0].'</label></div></td>';
+						$tmpcontent.='<td><div class="checkbox checkbox-success"><input type="checkbox" name="shipping_zone['.$zone_id.']['.$shipping_method['id'].']" id="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'" onclick="this.form.submit()"><label for="shipping_zone_'.$zone_id.'_'.$shipping_method['id'].'">'.$vars['name'][0].'</label></div></td>';
 					}
 					$tmpcontent.='</tr>';
 				}
@@ -883,13 +883,13 @@ if ($this->ms['show_main']) {
 			<td class="cellName"><strong>'.$row['name'].'</strong></td>';
 				foreach ($payment_methods as $payment_method) {
 					$tmpcontent.='<td align="center">';
-					$tmpcontent.='<input name="checkbox['.$row['id'].']['.$payment_method['id'].']" type="checkbox" value="1" onclick="this.form.submit();" ';
+					$tmpcontent.='<div class="checkbox checkbox-success"><input name="checkbox['.$row['id'].']['.$payment_method['id'].']" type="checkbox" value="1" onclick="this.form.submit();" ';
 					$str2="SELECT * from tx_multishop_payment_shipping_mappings where payment_method='".$payment_method['id']."' and shipping_method='".$row['id']."'";
 					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 					if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2)>0) {
 						$tmpcontent.='checked';
 					}
-					$tmpcontent.=' /></td>';
+					$tmpcontent.=' /><label></label></div></td>';
 				}
 				$tmpcontent.='</tr>';
 			}
