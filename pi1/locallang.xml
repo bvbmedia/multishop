@@ -1223,6 +1223,7 @@
             <label index="create_account">Create account</label>
             <label index="not_required">Not required</label>
             <label index="order_not_found">Order not found</label>
+            <label index="file_number_of_downloads">Number of downloads</label>
         </languageKey>
         <languageKey index="af"></languageKey>
         <languageKey index="ar"></languageKey>
@@ -4904,6 +4905,8 @@
             <label index="attribute_radio_option_warning">Je dient een optie te selecteren uit onderstaande lijst:</label>
             <label index="create_account">Account aanmaken</label>
             <label index="not_required">niet verplicht</label>
+            <label index="order_not_found">Bestelling is niet gevonden</label>
+            <label index="file_number_of_downloads">Aantal downloads</label>
         </languageKey>
         <languageKey index="no"></languageKey>
         <languageKey index="pl"></languageKey>
