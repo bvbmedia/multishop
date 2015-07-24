@@ -743,6 +743,7 @@ $subpartArray['###LABEL_ORDER_STATUS###']=$this->pi_getLL('order_status');
 $subpartArray['###ORDERS_STATUS_LIST_SELECTBOX###']=$orders_status_list;
 $subpartArray['###VALUE_SEARCH###']=htmlspecialchars($this->pi_getLL('search'));
 $subpartArray['###LABEL_DATE_FROM###']=$this->pi_getLL('from');
+$subpartArray['###LABEL_DATE###']=$this->pi_getLL('date');
 $subpartArray['###VALUE_DATE_FORM###']=$this->post['order_date_from'];
 $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###']=$this->post['order_date_till'];
