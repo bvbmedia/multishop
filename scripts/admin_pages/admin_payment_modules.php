@@ -783,7 +783,7 @@ if ($this->ms['show_main']) {
 			$panelBody.='<span class="multishop_psp_name">'.$item['name'].'</span>';
 		}
 		$panelBody.='</a>';
-		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">'.$this->pi_getLL('add_shipping_method').'</a>';
+		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">'.$this->pi_getLL('add_payment_method').'</a>';
 		if ($item['more_info_link']) {
 			$panelFooter.='<div class="multishop_psp_register"><a href="'.$item['more_info_link'].'" target="_blank">register account</a></div>';
 		}
@@ -814,7 +814,7 @@ if ($this->ms['show_main']) {
 			<div class="modal-content">
 			  <div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('add_payment_method').'</h4>
+				<h4 class="modal-title" id="paymentCostModalTitle">'.$this->pi_getLL('add_payment_method').'</h4>
 			  </div>
 			  <div class="modal-body">'.$modalContent.'</div>
 			  <div class="modal-footer">
@@ -828,7 +828,7 @@ if ($this->ms['show_main']) {
 
 	//tabs array
 	$tabs=array();
-	// shipping methods tab
+	// payment methods tab
 	$tabs[]=array(
 		'label'=>ucfirst(mslib_befe::strtolower($this->pi_getLL('admin_payment_methods'))),
 		'id'=>'admin_payment_methods',
