@@ -99,8 +99,8 @@
             <label index="admin_delete_category">Delete category</label>
             <label index="admin_delete_category_description">Delete current category</label>
             <label index="admin_delete_disabled_products">Delete disabled products</label>
-            <label index="admin_delete_image">delete image</label>
-            <label index="admin_delete_product">delete product</label>
+            <label index="admin_delete_image">Delete image</label>
+            <label index="admin_delete_product">Delete product</label>
             <label index="admin_delete_product_description">Delete current product</label>
             <label index="admin_delivery_time">Delivery time</label>
             <label index="admin_details">Details</label>
