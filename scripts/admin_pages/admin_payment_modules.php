@@ -300,7 +300,7 @@ if ($this->get['edit']) {
 		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='<div class="form-group">
-		<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
+		<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 		}
@@ -453,7 +453,7 @@ if ($this->get['edit']) {
 		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='<div class="form-group">
-				<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label>';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}

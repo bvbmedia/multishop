@@ -264,7 +264,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='
 				<div class="form-group">
-				<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+				<label>'.$this->pi_getLL('language').'</label>';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
@@ -275,7 +275,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($this->post['name'][$language['uid']]).'" required="required">
 				</div>
 				<div class="form-group">
-					<label for="description">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+					<label for="description">'.$this->pi_getLL('admin_short_description').'</label>
 					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($this->post['description'][$language['uid']]).'</textarea>
 				</div>
 				';
@@ -377,7 +377,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
 			<div class="form-group">
-			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
+			<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label>
 			<div class="col-md-10">
 			<p class="form-control-static">';
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
@@ -392,7 +392,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 		$tmpcontent.='<div class="col-md-10"><input type="text" class="form-control text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">';
 		$tmpcontent.='</div></div>
 			<div class="form-group">
-				<label for="description" class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+				<label for="description" class="control-label col-md-2">'.$this->pi_getLL('admin_short_description').'</label>
 				<div class="col-md-10">
 				<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 				</div>

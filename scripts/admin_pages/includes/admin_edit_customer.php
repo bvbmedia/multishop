@@ -707,7 +707,7 @@ switch ($_REQUEST['action']) {
 				$total=count($multishop_content_objects);
 				$selectContent.='<select name="page_uid"><option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'."\n";
 				foreach ($multishop_content_objects as $pageinfo) {
-					$selectContent.='<option value="'.$pageinfo['uid'].'"'.($pageinfo['uid']==$this->post['page_uid'] ? ' selected' : '').'>'.htmlspecialchars(mslib_befe::strtoupper($pageinfo['title'])).'</option>';
+					$selectContent.='<option value="'.$pageinfo['uid'].'"'.($pageinfo['uid']==$this->post['page_uid'] ? ' selected' : '').'>'.htmlspecialchars($pageinfo['title']).'</option>';
 					$counter++;
 				}
 				$selectContent.='</select>'."\n";

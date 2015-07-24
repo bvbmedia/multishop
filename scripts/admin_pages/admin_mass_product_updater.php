@@ -104,7 +104,7 @@ if ($this->post) {
 	<form class="edit_form"  method="post" action="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" >
 		<div class="account-field">
 			<label for="percentage">'.$this->pi_getLL('admin_mass_updater_increase_decrease_product_price_by_percentage').'</label>
-			<input name="percentage" type="text" value="'.$this->post['percentage'].'" size="10" id="percentage" />%. '.$this->pi_getLL('admin_mass_updater_example_update').'<br/>- '.mslib_befe::strtoupper($this->pi_getLL('or')).' -<br/>
+			<input name="percentage" type="text" value="'.$this->post['percentage'].'" size="10" id="percentage" />%. '.$this->pi_getLL('admin_mass_updater_example_update').'<br/>- '.$this->pi_getLL('or').' -<br/>
 		</div>
 		<div class="account-field">
 			<label for="amount">'.$this->pi_getLL('admin_mass_updater_by_amount').'</label>

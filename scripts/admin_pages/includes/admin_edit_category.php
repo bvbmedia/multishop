@@ -667,7 +667,7 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$category_name_block.='
 			<div class="form-group" id="msEditCategoryInputName_'.$language['uid'].'">
-			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
+			<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$category_name_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
@@ -722,7 +722,7 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$categories_content_block.='
 			<div class="form-group" id="msEditCategoryInputContent_'.$language['uid'].'">
-			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
+			<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$categories_content_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
@@ -731,13 +731,13 @@ if ($this->post) {
 			</div>
 			</div>
 			<div class="form-group" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
-						<label class="control-label col-md-2" for="content">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('top')).'</label>
+						<label class="control-label col-md-2" for="content">'.$this->pi_getLL('content').' '.$this->pi_getLL('top').'</label>
 						<div class="col-md-10">
 						<textarea spellcheck="true" name="content['.$language['uid'].']" id="content['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content']).'</textarea>
 						</div>
 					</div>
 					<div class="form-group" id="msEditCategoryInputContentFooter_'.$language['uid'].'">
-						<label class="control-label col-md-2" for="content_footer">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('bottom')).'</label>
+						<label class="control-label col-md-2" for="content_footer">'.$this->pi_getLL('content').' '.$this->pi_getLL('bottom').'</label>
 						<div class="col-md-10">
 						<textarea spellcheck="true" name="content_footer['.$language['uid'].']" id="content_footer['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content_footer']).'</textarea>
 						</div>
@@ -747,7 +747,7 @@ if ($this->post) {
 		foreach ($this->languages as $key=>$language) {
 			$categories_meta_block.='
 			<div class="form-group" id="msEditCategoryInputMeta_'.$language['uid'].'">
-			<label class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label><div class="col-md-10"><p class="form-control-static">';
+			<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$categories_meta_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
@@ -796,7 +796,7 @@ if ($this->post) {
 						}
 						$tmpcontent.='<div class="msAttributes">
 						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$shop_checkbox.' />
-						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.mslib_befe::strtoupper($pageinfo['title']).'</label>
+						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.$pageinfo['title'].'</label>
 						<div class="msEditCategoriesInputMultipleShopCategory" id="msEditCategoriesInputMultipleShopCategory'.$pageinfo['uid'].'"'.$select2_block_visibility.'>
 							<input type="hidden" name="tx_multishop_pi1[categories_to_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$categories_to_categories.'" />
 						</div>

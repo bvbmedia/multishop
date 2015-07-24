@@ -84,7 +84,7 @@ foreach ($this->languages as $key=>$language) {
 	$language_lable.=''.$language['title'];
 	$tmpcontent.='
 			<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-				<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
+				<label>'.$this->pi_getLL('language').'</label>
 				<span><strong>'.$language_lable.'</strong></span>
 			</div>
 			<div class="account-field">
