@@ -105,9 +105,9 @@ foreach ($categories as $category) {
 	//
 	foreach ($tmp_return_data as $tree_id=>$tree_path) {
 		$tree_path=str_replace('\\', '>', $tree_path);
-		$content.='<li class="checkbox">';
-		$content.='<label><input type="checkbox" class="movecats" name="mergecats_source[]" value="'.$tree_id.'" id="tree_cats_'.$tree_id.'">&nbsp;';
-		$content.=''.$tree_path.' (ID: '.$tree_id.')'.'</label>';
+		$content.='<li class="checkbox checkbox-success">';
+		$content.='<input type="checkbox" class="movecats" name="mergecats_source[]" value="'.$tree_id.'" id="tree_cats_'.$tree_id.'">';
+		$content.='<label for="tree_cats_'.$tree_id.'">'.$tree_path.' (ID: '.$tree_id.')'.'</label>';
 		$content.='</li>'."\n";
 		//
 		$cat_selectbox.='<option value="'.$tree_id.'" id="sl-cat_'.$tree_id.'">'.$tree_path.' (ID: '.$tree_id.')'.'</option>';

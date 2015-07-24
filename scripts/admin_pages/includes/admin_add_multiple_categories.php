@@ -166,11 +166,11 @@ if ($this->post) {
 		<div class="form-group" id="msEditCategoriesInputVisibility">
 			<label for="status" class="control-label col-md-2">'.$this->pi_getLL('admin_visible').'</label>
 			<div class="col-md-10">
-			<div class="radio-inline">
-			<input name="status" type="radio" value="1" checked="checked" /> '.$this->pi_getLL('admin_yes').'
+			<div class="radio radio-success radio-inline">
+			<input name="status" type="radio" value="1" checked="checked" /><label>'.$this->pi_getLL('admin_yes').'</label>
 			</div>
-			<div class="radio-inline">
-			<input name="status" type="radio" value="0" /> '.$this->pi_getLL('admin_no').'
+			<div class="radio radio-success radio-inline">
+			<input name="status" type="radio" value="0" /><label>'.$this->pi_getLL('admin_no').'</label>
 			</div>
 			</div>
 		</div>
