@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$content.='<h1>'.strtoupper($this->pi_getLL('admin_sort_products')).'</h1>';
+$content.='<div class="panel-heading"><h3>'.strtoupper($this->pi_getLL('admin_sort_products')).'</h3></div>';
 //
 $query_c=$GLOBALS['TYPO3_DB']->SELECTquery('p2c.categories_id, cd.categories_name', // SELECT ...
     'tx_multishop_products_to_categories p2c, tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
@@ -40,13 +40,13 @@ if (count($categories_list)) {
     }
 }
 //
-$content.='<form name="sort_products_categories" id="sort_products_categories" method="get" action="">';
+$content.='<div class="panel-body"><form name="sort_products_categories" id="sort_products_categories" method="get" action="">';
 $content.='<input type="hidden" name="id" value="'.$this->shop_pid.'">';
 $content.='<input type="hidden" name="type" value="2003">';
 $content.='<input type="hidden" name="tx_multishop_pi1[page_section]" value="admin_sort_products">';
 $content.='<select name="tx_multishop_pi1[categories_id]" id="sort_categories_id" style="width:400px"><option value="">'.$this->pi_getLL('choose').'</option>'.implode("\n", $categories_option).'</select>';
-$content.='<div class="show_disabled_status_wrapper"><input type="checkbox" name="tx_multishop_pi1[show_disabled_product]" id="show_disabled_product" value="1"'.(isset($this->get['tx_multishop_pi1']['show_disabled_product']) ? ' checked="checked"' : '').'>'.$this->pi_getLL('show_disabled_product').'</div>';
-$content.='</form>';
+$content.='<div class="show_disabled_status_wrapper"><div class="checkbox checkbox-success"><input type="checkbox" name="tx_multishop_pi1[show_disabled_product]" id="show_disabled_product" value="1"'.(isset($this->get['tx_multishop_pi1']['show_disabled_product']) ? ' checked="checked"' : '').'><label for="show_disabled_product">'.$this->pi_getLL('show_disabled_product').'</label></div></div>';
+$content.='</form><hr>';
 if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->get['tx_multishop_pi1']['categories_id']) && $this->get['tx_multishop_pi1']['categories_id']>0) {
     $categories_id=(int)$this->get['tx_multishop_pi1']['categories_id'];
     $where_status='';
@@ -95,13 +95,13 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
         $tmp_product.='<strong><a href="'.$link.'" target="_blank">'.htmlspecialchars($row_p['products_name']).'</a> (ID: '.$row_p['products_id'].')</strong>';
         //
         if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
-            $tmp_product.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit">Edit</a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a></div>';
+            $tmp_product.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove btn btn-danger btn-sm" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
         }
         $tmp_product.='<div class="button_wrapper">
-           <button type="button" class="btnTop btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-up"></span>Top</button>
-           <button type="button" class="btnOneUp btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-circle-arrow-up"></span>Up</button>
-           <button type="button" class="btnOneDown btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-circle-arrow-down"></span>Down</button>
-           <button type="button" class="btnBottom btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><span class="glyphicon glyphicon-arrow-down"></span>Bottom</button>
+           <button type="button" class="btnTop btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><i class="fa fa-arrow-up"></i> Top</button>
+           <button type="button" class="btnOneUp btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><i class="fa fa-arrow-circle-up"></i> Up</button>
+           <button type="button" class="btnOneDown btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><i class="fa fa-arrow-circle-down"></i> Down</button>
+           <button type="button" class="btnBottom btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><i class="fa fa-arrow-down"></i> Bottom</button>
         </div>';
         $products_list[]='<li id="productlisting_'.$row_p['products_id'].'">'.$tmp_product.'</li>';
     }
@@ -169,6 +169,6 @@ jQuery(document).ready(function($) {
     });
 });
 </script>';
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>

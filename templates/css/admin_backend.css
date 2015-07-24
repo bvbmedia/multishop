@@ -319,6 +319,15 @@ ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 
 ul#tx_multishop_countries_checkboxes { padding-left:10px; list-style:none; }
 
+ul.admin_sort_product_listing { display:table; width:100%; padding-left:0; list-style:none; }
+ul.admin_sort_product_listing > li { display:table-row; }
+ul.admin_sort_product_listing > li:first-child > * { padding-top:0; }
+ul.admin_sort_product_listing > li:last-child > * { border-bottom:none; padding-bottom:0; }
+ul.admin_sort_product_listing > li > * { display:table-cell; border-bottom:1px solid #eee; vertical-align:top; padding-right:10px; padding-bottom:15px; padding-top:15px; }
+ul.admin_sort_product_listing > li > strong { width:90%; }
+ul.admin_sort_product_listing > li > .admin_menu { white-space:nowrap; }
+ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
+
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
 
