@@ -1003,7 +1003,7 @@
             <label index="referrer">Referrer</label>
             <label index="refurbished">refurbished</label>
             <label index="region">region</label>
-            <label index="register">Create Account</label>
+            <label index="register">Create cccount</label>
             <label index="relate_payment_to_all_shop">All shop</label>
             <label index="relate_shipping_to_shop">Relate this method to</label>
             <label index="remove_product_from_basket">remove product from cart</label>
@@ -4686,7 +4686,7 @@
             <label index="referrer">Verwijzer</label>
             <label index="refurbished">opgeknapt</label>
             <label index="region">regio</label>
-            <label index="register">Maak account aan</label>
+            <label index="register">Account aanmaken</label>
             <label index="relate_payment_to_all_shop">Alle webshops</label>
             <label index="relate_shipping_to_shop">Relateer deze methode aan</label>
             <label index="remove_product_from_basket">haal product uit winkelwagen</label>
