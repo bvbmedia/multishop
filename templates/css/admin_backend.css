@@ -108,7 +108,7 @@ body { background:#f5f5f5; font-size:14px; line-height:20px; font-family:"Open S
 
 #ms_admin_minimaxi_wrapper { display:none; }
 
-#tx_multishop_admin_footer_wrapper { position:fixed; left:220px; right:0; bottom:0; height:38px; background:#000; text-align:left; margin:0; padding:0; z-index:10004; }
+#tx_multishop_admin_footer_wrapper { position:fixed; left:220px; right:0; bottom:0; height:38px; background:#000; text-align:left; margin:0; padding:0; box-shadow:0 0 10px rgba(0,0,0,.8); z-index:10004; }
 #tx_multishop_admin_footer_wrapper ul { margin:0; padding:0; list-style:none; }
 #tx_multishop_admin_footer_wrapper ul li { background:none; margin:0; padding:0; }
 #tx_multishop_admin_footer_wrapper ul li a:hover,
@@ -123,12 +123,15 @@ body { background:#f5f5f5; font-size:14px; line-height:20px; font-family:"Open S
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer ul li.ms_admin_has_subs:hover:before { opacity:0; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > span { display:block; font-size:14px; line-height:38px; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; text-transform:uppercase; padding:0 15px; }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_scroller > a { text-transform:none; }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li > a > .fa,
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li > span > .fa { float:left; width:21px; line-height:18px; margin-bottom:2px; }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > a > .fa,
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > span > .fa { float:left; width:21px; line-height:38px; margin-bottom:0; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_online_users > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_online_users > span,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system > span { padding-right:25px; }
-#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li > a > .fa,
-#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer li > span > .fa { margin-right:5px; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_language,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_logout,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_help,

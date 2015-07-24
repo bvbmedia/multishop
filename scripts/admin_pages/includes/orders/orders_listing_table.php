@@ -187,7 +187,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 $formFields['submit_button']='<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
 $form_fields_block='<div id="msAdminOrdersListingActionForm">';
 foreach ($formFields as $key=>$formField) {
-	$form_fields_block.='<div class="form-group msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'"><div class="col-md-12">'.$formField.'</div></div>';
+	$form_fields_block.='<div class="form-group msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'">'.$formField.'</div>';
 }
 $form_fields_block.='</div>';
 $query_string=mslib_fe::tep_get_all_get_params(array(
