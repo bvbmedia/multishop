@@ -386,8 +386,8 @@ if ($this->get['edit']) {
 			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 			<div class="col-md-10">
 			<div class="msAttribute">
-				<div class="msAttributesField"><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-				<div class="msAttributesField"><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$amount_handling_cost.'" id="handling_cost_amount_input"'.($percentage_cost ? ' disabled="disabled"' : '').' /></div>
 			</div>
 			</div>
@@ -453,26 +453,30 @@ if ($this->get['edit']) {
 		$tmpcontent.='<form class="form-horizontal edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='<div class="form-group">
-				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label>';
+				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-2"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$tmpcontent.=''.$language['title'].'
+				</p></div></div>
+				<div class="form-group">
+					<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
+					<div class="col-md-10">
+						<input type="text" class="form-control text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
+					</div>
 				</div>
 				<div class="form-group">
-					<label for="name">'.$this->pi_getLL('admin_name').'</label>
-					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
-				</div>
-				<div class="form-group">
-					<label for="description">'.$this->pi_getLL('admin_short_description').'</label>
-					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
+					<label for="description" class="control-label col-md-2">'.$this->pi_getLL('admin_short_description').'</label>
+					<div class="col-md-10">
+						<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
+					</div>
 				</div>';
 		}
 		$tmpcontent.='
 		<div class="form-group">
 			<label for="custom_code" class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
 			<div class="col-md-10">
-			<input name="custom_code" id="custom_code" class="form-control" type="text" value="'.htmlspecialchars($this->post['custom_code']).'" required="required" />
+				<input name="custom_code" id="custom_code" class="form-control" type="text" value="'.htmlspecialchars($this->post['custom_code']).'" required="required" />
 			</div>
 		</div>';
 		if (count($active_shop)>1) {
@@ -485,15 +489,15 @@ if ($this->get['edit']) {
 				$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($this->shop_pid==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageinfo['title'].'</label></div>';
 			}
 			$tmpcontent.='
-					</div>';
+					</div></div>';
 		} else {
 			$tmpcontent.='<input type="hidden" name="related_shop_pid" value="'.$row['page_uid'].'">';
 		}
 		$tmpcontent.='
 		<div class="form-group">
 			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs_type').'</label>
-			<div class="msAttribute">
-				<select name="handling_costs_type" id="handling_cost_type">
+			<div class="col-md-10">
+				<select name="handling_costs_type" id="handling_cost_type" class="form-control">
 					<option value="amount" selected="selected">amount</option>
 					<option value="percentage">percentage</option>
 				</select>
@@ -502,26 +506,22 @@ if ($this->get['edit']) {
 		<div class="form-group" id="handling_cost_percentage_div" style="display:none">
 			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 			<div class="col-md-10">
-			<div class="msAttribute">
 				<input class="form-control" name="handling_costs" id="handling_cost_percentage_input" type="text" value="0%" disabled="disabled" />
-			</div>
 			</div>
 		</div>
 		<div class="form-group" id="handling_cost_amount_div">
 			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 			<div class="col-md-10">
-			<div class="msAttribute">
-				<div class="msAttributesField"><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-				<div class="msAttributesField"><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" id="handling_cost_amount_input" type="hidden" value="0" /></div>
-			</div>
 			</div>
 		</div>
 		<div class="form-group">
-		<label for="tax_id" class="control-label col-md-2">'.$this->pi_getLL('admin_vat_rate').'</label>
-		<div class="col-md-10">
-		<select name="tax_id" id="tax_id" class="form-control">
-		<option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
+			<label for="tax_id" class="control-label col-md-2">'.$this->pi_getLL('admin_vat_rate').'</label>
+			<div class="col-md-10">
+			<select name="tax_id" id="tax_id" class="form-control">
+			<option value="0">'.$this->pi_getLL('admin_label_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($tax_group=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -532,7 +532,7 @@ if ($this->get['edit']) {
 			}
 		}
 		$tmpcontent.='
-		</select>
+			</select>
 		</div>
 	</div>
 		';
@@ -541,16 +541,16 @@ if ($this->get['edit']) {
 		<div class="form-group">
 			<label class="control-label col-md-2">'.$this->pi_getLL('admin_label_method_is_enabled_on_default').'</label>
 			<div class="col-md-10">
-			<div class="radio radio-success radio-inline"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes" checked="checked" /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
-			<div class="radio radio-success radio-inline"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no" /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
+				<div class="radio radio-success radio-inline"><input type="radio" name="enable_on_default" value="1" id="enable_on_default_yes" checked="checked" /><label for="enable_on_default_yes">'.$this->pi_getLL('yes').'</label></div>
+				<div class="radio radio-success radio-inline"><input type="radio" name="enable_on_default" value="0" id="enable_on_default_no" /><label for="enable_on_default_no">'.$this->pi_getLL('no').'</label></div>
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-md-2">&nbsp;</label>
 			<div class="col-md-10">
-			<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($this->get['payment_method_code']).'" />
-			<input name="sub" type="hidden" value="add_payment_method" />
-			<button name="Submit" class="btn btn-success" type="submit" value=""><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+				<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($this->get['payment_method_code']).'" />
+				<input name="sub" type="hidden" value="add_payment_method" />
+				<button name="Submit" class="btn btn-success" type="submit" value=""><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
 			</div>
 		</div>
 		</form>';
