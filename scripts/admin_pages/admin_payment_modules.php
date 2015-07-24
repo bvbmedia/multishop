@@ -450,7 +450,7 @@ if ($this->get['edit']) {
 		if (!isset($psp['vars']['order_payment_reminder'])) {
 			$psp['vars']['order_payment_reminder']['type']='psp_mail_template_payment_reminder_email_templates';
 		}
-		$tmpcontent.='<form class="edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
+		$tmpcontent.='<form class="form-horizontal edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='<div class="form-group">
 				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label>';
@@ -550,7 +550,7 @@ if ($this->get['edit']) {
 			<div class="col-md-10">
 			<input name="payment_method_code" type="hidden" value="'.htmlspecialchars($this->get['payment_method_code']).'" />
 			<input name="sub" type="hidden" value="add_payment_method" />
-			<buton name="Submit" class="btn btn-success" type="submit" value="'.$this->pi_getLL('save').'"><i class="fa fa-save"></i></buton>
+			<button name="Submit" class="btn btn-success" type="submit" value=""><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
 			</div>
 		</div>
 		</form>';
