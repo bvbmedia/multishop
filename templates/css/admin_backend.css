@@ -317,6 +317,8 @@ ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 #admin_shipping_methods .modal-body .col-md-3 > .panel > .panel-footer > .btn,
 #admin_payment_methods .modal-body .col-md-3 > .panel > .panel-footer > .btn { text-align:left; }
 
+ul#tx_multishop_countries_checkboxes { padding-left:10px; list-style:none; }
+
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
 
