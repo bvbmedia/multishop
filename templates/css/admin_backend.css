@@ -302,6 +302,8 @@ ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 .form-horizontal .control-label > .checkbox {  padding-top:0; }
 .form-horizontal .control-label > .checkbox > label { font-weight:bold; }
 
+#admin_payment_methods_list { display:none; }
+
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
 

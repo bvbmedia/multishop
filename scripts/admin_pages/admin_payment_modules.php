@@ -764,7 +764,7 @@ if ($this->ms['show_main']) {
 	$tmpcontent.='
 	<div class="clearfix">
 		<div class="pull-right">
-			<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#msAdminModalPopuAddPaymentMethodp"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#msAdminModalPopuAddPaymentMethod"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</button>
 		</div>
 	</div>';
 
@@ -775,7 +775,7 @@ if ($this->ms['show_main']) {
 		$modalContent.='<div class="col-md-4">';
 		$innercount++;
 		$count++;
-		$modalContent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'">';
+		$modalContent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" class="pspListing" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'">';
 		if ($item['image']) {
 			$modalContent.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/psp/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
@@ -791,7 +791,7 @@ if ($this->ms['show_main']) {
 
 	// modal
 	$tmpcontent.='
-	<div class="modal" id="msAdminModalPopuAddPaymentMethodp" tabindex="-1" role="dialog" aria-labelledby="msAdminModalPopuAddPaymentMethod" aria-hidden="true">
+	<div class="modal" id="msAdminModalPopuAddPaymentMethod" tabindex="-1" role="dialog" aria-labelledby="msAdminModalPopuAddPaymentMethod" aria-hidden="true">
 		  <div class="modal-dialog">
 			<div class="modal-content">
 			  <div class="modal-header">
