@@ -6459,16 +6459,8 @@ class mslib_fe {
 				}
 			}
 		} // END IF CATALOGADMIN_USER
-		if ($this->ROOTADMIN_USER or $this->CMSADMIN_USER) {
-			$ms_menu['header']['ms_admin_cms']['label']=$this->pi_getLL('admin_cms');
-			//	$ms_menu['header']['ms_admin_cms']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_cms');
-			$ms_menu['header']['ms_admin_cms']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_cms');
-			$ms_menu['header']['ms_admin_cms']['class']='fa fa-file-text-o';
-			if ($this->get['tx_multishop_pi1']['page_section']=='admin_cms' || $this->post['tx_multishop_pi1']['page_section']=='admin_cms') {
-				$ms_menu['header']['ms_admin_cms']['active']=1;
-			}
-		}
 		if ($this->ROOTADMIN_USER or $this->CUSTOMERSADMIN_USER) {
+			/*
 			$ms_menu['header']['ms_admin_orders_customers']['label']=$this->pi_getLL('admin_orders_and_customers', 'KLANTEN EN BESTELLINGEN');
 			$ms_menu['header']['ms_admin_orders_customers']['class']='fa fa-user';
 			if ($this->ROOTADMIN_USER or $this->ORDERSADMIN_USER) {
@@ -6476,115 +6468,116 @@ class mslib_fe {
 			} elseif ($this->ROOTADMIN_USER or $this->CUSTOMERSADMIN_USER) {
 				$ms_menu['header']['ms_admin_orders_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
 			}
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['label']=$this->pi_getLL('admin_new_customer');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=add_customer');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['link_params']='';
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['class']='fa fa-wrench';
+			*/
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_manual_orders']['label']=$this->pi_getLL('admin_new_customer');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_manual_orders']['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=add_customer');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_manual_orders']['link_params']='';
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_manual_orders']['class']='fa fa-wrench';
 			if (($this->post['tx_multishop_pi1']['page_section']=='admin_ajax' || $this->post['tx_multishop_pi1']['page_section']=='admin_ajax') && ($this->post['action']=='add_customer' || $this->post['action']=='add_customer')) {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_manual_orders']['active']=1;
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_manual_orders']['active']=1;
 			}
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['label']=$this->pi_getLL('admin_customers');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['description']=$this->pi_getLL('admin_customers_description', 'Customers').'.';
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['class']='fa fa-wrench';
+			$ms_menu['header']['ms_admin_customers']['label']=$this->pi_getLL('admin_customers');
+			$ms_menu['header']['ms_admin_customers']['description']=$this->pi_getLL('admin_customers_description', 'Customers').'.';
+			$ms_menu['header']['ms_admin_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
+			$ms_menu['header']['ms_admin_customers']['class']='fa fa-user';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_customers' || $this->post['tx_multishop_pi1']['page_section']=='admin_customers') {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['active']=1;
+				$ms_menu['header']['ms_admin_customers']['active']=1;
 			}
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customers']['label']=$this->pi_getLL('admin_customers_overview');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customers']['class']='fa fa-wrench';
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_customers']['label']=$this->pi_getLL('admin_customers_overview');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_customers']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_customers' || $this->post['tx_multishop_pi1']['page_section']=='admin_customers') {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customers']['active']=1;
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_customers']['active']=1;
 			}
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customer_groups']['label']=$this->pi_getLL('admin_customer_groups');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customer_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customer_groups']['class']='fa fa-wrench';
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['label']=$this->pi_getLL('admin_customer_groups');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_customer_groups' || $this->post['tx_multishop_pi1']['page_section']=='admin_customer_groups') {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_customer_groups']['active']=1;
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['active']=1;
 			}
 			if ($this->ms['MODULES']['CUSTOMERS_DATA_EXPORT_IMPORT']) {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_import_customers']['label']=$this->pi_getLL('admin_import_customers');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_import_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_import');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_import_customers']['class']='fa fa-wrench';
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['label']=$this->pi_getLL('admin_import_customers');
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_import');
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['class']='fa fa-wrench';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_customer_import' || $this->post['tx_multishop_pi1']['page_section']=='admin_customer_import') {
-					$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_import_customers']['active']=1;
+					$ms_menu['header']['ms_admin_customers']['subs']['admin_import_customers']['active']=1;
 				}
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_export_customers']['label']=$this->pi_getLL('admin_export_customers');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_export_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_export');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_export_customers']['class']='fa fa-wrench';
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_export_customers']['label']=$this->pi_getLL('admin_export_customers');
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_export_customers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_export');
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_export_customers']['class']='fa fa-wrench';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_customer_export' || $this->post['tx_multishop_pi1']['page_section']=='admin_customer_export') {
-					$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_customers']['subs']['admin_export_customers']['active']=1;
+					$ms_menu['header']['ms_admin_customers']['subs']['admin_export_customers']['active']=1;
 				}
 			}
 		}
 		if ($this->ROOTADMIN_USER or ($this->CUSTOMERSADMIN_USER and $this->ORDERSADMIN_USER)) {
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['label']=$this->pi_getLL('admin_orders');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['description']=$this->pi_getLL('admin_orders_description', 'Orders').'.';
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['class']='fa fa-wrench';
+			$ms_menu['header']['ms_admin_orders']['label']=$this->pi_getLL('admin_orders');
+			$ms_menu['header']['ms_admin_orders']['description']=$this->pi_getLL('admin_orders_description', 'Orders').'.';
+			$ms_menu['header']['ms_admin_orders']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
+			$ms_menu['header']['ms_admin_orders']['class']='fa fa-book';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_orders' || $this->post['tx_multishop_pi1']['page_section']=='admin_orders') {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['active']=1;
+				$ms_menu['header']['ms_admin_orders']['active']=1;
 			}
 			if ($this->ms['MODULES']['MANUAL_ORDER']) {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_manual_orders']['label']=$this->pi_getLL('admin_new_order');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_manual_orders']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_manual_orders']['class']='fa fa-wrench';
+				$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['label']=$this->pi_getLL('admin_new_order');
+				$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order');
+				$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['class']='fa fa-wrench';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_new_order' || $this->post['tx_multishop_pi1']['page_section']=='admin_new_order') {
-					$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_manual_orders']['active']=1;
+					$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['active']=1;
 				}
 			}
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders']['label']=$this->pi_getLL('admin_orders_overview');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders']['class']='fa fa-wrench';
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['label']=$this->pi_getLL('admin_orders_overview');
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_orders' || $this->post['tx_multishop_pi1']['page_section']=='admin_orders') {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders']['active']=1;
+				$ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active']=1;
 			}
 			// orders export wizard
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['label']=$this->pi_getLL('admin_export_orders');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_orders');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['class']='fa fa-wrench';
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_export']['label']=$this->pi_getLL('admin_export_orders');
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_orders');
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_export']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_export_orders' || $this->post['tx_multishop_pi1']['page_section']=='admin_export_orders') {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_export']['active']=1;
+				$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_export']['active']=1;
 			}
 			/*
 			if ($this->ms['MODULES']['ADMIN_ORDER_PROPOSAL_MODULE']) {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['label']=$this->pi_getLL('admin_proposals');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['description']=$this->pi_getLL('admin_proposals_description').'.';
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[is_proposal]=1');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_new']['label']=$this->pi_getLL('admin_new_proposal');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_new']['description']=$this->pi_getLL('admin_new_proposal_description');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_new']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order&tx_multishop_pi1[is_proposal]=1');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_overview']['label']=$this->pi_getLL('admin_proposals_overview');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_overview']['description']=$this->pi_getLL('admin_proposals_overview_description');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_proposals']['subs']['admin_proposals_overview']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[is_proposal]=1');
+				$ms_menu['header']['admin_proposals']['label']=$this->pi_getLL('admin_proposals');
+				$ms_menu['header']['admin_proposals']['description']=$this->pi_getLL('admin_proposals_description').'.';
+				$ms_menu['header']['admin_proposals']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[is_proposal]=1');
+				$ms_menu['header']['admin_proposals']['subs']['admin_proposals_new']['label']=$this->pi_getLL('admin_new_proposal');
+				$ms_menu['header']['admin_proposals']['subs']['admin_proposals_new']['description']=$this->pi_getLL('admin_new_proposal_description');
+				$ms_menu['header']['admin_proposals']['subs']['admin_proposals_new']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order&tx_multishop_pi1[is_proposal]=1');
+				$ms_menu['header']['admin_proposals']['subs']['admin_proposals_overview']['label']=$this->pi_getLL('admin_proposals_overview');
+				$ms_menu['header']['admin_proposals']['subs']['admin_proposals_overview']['description']=$this->pi_getLL('admin_proposals_overview_description');
+				$ms_menu['header']['admin_proposals']['subs']['admin_proposals_overview']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&tx_multishop_pi1[is_proposal]=1');
 			}
 			*/
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['label']=$this->pi_getLL('admin_orders_status');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
-			$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['class']='fa fa-wrench';
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['label']=$this->pi_getLL('admin_orders_status');
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders_status');
+			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_orders_status' || $this->post['tx_multishop_pi1']['page_section']=='admin_orders_status') {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['ms_admin_orders']['subs']['admin_orders_status']['active']=1;
+				$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_status']['active']=1;
 			}
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['description']=$this->pi_getLL('admin_invoices_overview_description');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['class']='fa fa-wrench';
+				$ms_menu['header']['admin_invoices']['label']=$this->pi_getLL('admin_invoices');
+				$ms_menu['header']['admin_invoices']['description']=$this->pi_getLL('admin_invoices_overview_description');
+				$ms_menu['header']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
+				$ms_menu['header']['admin_invoices']['class']='fa fa-file-o';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_invoices') {
-					$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['active']=1;
+					$ms_menu['header']['admin_invoices']['active']=1;
 				}
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices_overview');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices']['class']='fa fa-wrench';
+				$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['label']=$this->pi_getLL('admin_invoices_overview');
+				$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
+				$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['class']='fa fa-wrench';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_invoices') {
-					$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices']['active']=1;
+					$ms_menu['header']['admin_invoices']['subs']['admin_invoices']['active']=1;
 				}
 				// invoices export wizard
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices_export']['label']=$this->pi_getLL('admin_export_invoices');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_invoices');
-				$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices_export']['class']='fa fa-wrench';
+				$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['label']=$this->pi_getLL('admin_export_invoices');
+				$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_export_invoices');
+				$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['class']='fa fa-wrench';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_export_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_export_invoices') {
-					$ms_menu['header']['ms_admin_orders_customers']['subs']['admin_invoices']['subs']['admin_invoices_export']['active']=1;
+					$ms_menu['header']['admin_invoices']['subs']['admin_invoices_export']['active']=1;
 				}
 			}
 		} // END IF $this->ORDERSADMIN_USER
@@ -6764,6 +6757,7 @@ class mslib_fe {
 			}
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['label']=$this->pi_getLL('total').': '.$guests_online;
 		}
+
 		$ms_menu['footer']['ms_admin_logout']['label']=$this->pi_getLL('admin_log_out');
 		$ms_menu['footer']['ms_admin_logout']['link']=mslib_fe::typolink($this->conf['logout_pid'], '&logintype=logout');
 		$ms_menu['footer']['ms_admin_logout']['class']='fa fa-sign-out';
@@ -6777,6 +6771,16 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
 			$ms_menu['footer']['ms_admin_system']['class']='fa fa-cog';
 
+			if ($this->ROOTADMIN_USER or $this->CMSADMIN_USER) {
+				$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_cms']['label']=$this->pi_getLL('admin_cms');
+				//	$ms_menu['header']['ms_admin_cms']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_cms');
+				$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_cms']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_cms');
+				$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_cms']['class']='fa fa-file-text-o';
+				if ($this->get['tx_multishop_pi1']['page_section']=='admin_cms' || $this->post['tx_multishop_pi1']['page_section']=='admin_cms') {
+					$ms_menu['footer']['ms_admin_system']['subs']['ms_admin_cms']['active']=1;
+				}
+			}
+			
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['label']=$this->pi_getLL('admin_tax_rule_groups', 'TAX RULE GROUPS');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_tax_rule_groups');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['class']='fa fa-wrench';
