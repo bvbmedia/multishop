@@ -33,7 +33,7 @@ $content.='
 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <ul id="tx_multishop_countries_checkboxes" class="list-inline">';
 foreach ($countries as $country) {
-	$content.='<li><div class="checkbox"><input id="countries['.$country['cn_iso_nr'].']" name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['enabled']) ? 'checked' : '').' /><label for="countries['.$country['cn_iso_nr'].']">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
+	$content.='<li><div class="checkbox checkbox-success"><input id="countries['.$country['uid'].']" name="countries['.$country['uid'].']" type="checkbox" value="1" '.(($country['enabled']) ? 'checked' : '').' /><label for="countries['.$country['uid'].']">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
 }
 $content.='</ul>
 <div class="clearfix">

@@ -3865,22 +3865,22 @@ class mslib_fe {
 								$lang_key='payment_reminder_email_templates';
 								break;
 						}
-						$content.='<div class="account-field" id="'.$field_key.'_divwrapper"><label for="radio">'.$this->pi_getLL($lang_key, $field_key).'</label>';
+						$content.='<div class="form-group" id="'.$field_key.'_divwrapper"><label for="radio" class="control-label col-md-2">'.$this->pi_getLL($lang_key, $field_key).'</label><div class="col-md-10">';
 						switch ($vars['type']) {
 							case 'input':
-								$content.='<input name="'.$field_key.'" id="'.$field_key.'" type="text" value="'.(isset($selected_values[$field_key]) ? htmlspecialchars($selected_values[$field_key]) : '').'" />';
+								$content.='<input name="'.$field_key.'" id="'.$field_key.'" type="text" class="form-control" value="'.(isset($selected_values[$field_key]) ? htmlspecialchars($selected_values[$field_key]) : '').'" />';
 								break;
 							case 'radio':
 								if (count($vars['options'])>0) {
 									foreach ($vars['options'] as $radio_option) {
-										$content.=' <input name="'.$field_key.'" id="'.$field_key.'_'.$radio_option.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><span>'.$radio_option.'</span>';
+										$content.='<div class="radio radio-success radio-inline"><input name="'.$field_key.'" id="'.$field_key.'_'.$radio_option.'" type="radio" value="'.$radio_option.'" '.(($selected_values[$field_key]==$radio_option) ? 'checked' : '').' /><label>'.$radio_option.'</label></div>';
 									}
 								}
 								break;
 							case 'order_status':
 								$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 								if (is_array($all_orders_status) and count($all_orders_status)) {
-									$content.='<select name="'.$field_key.'" id="'.$field_key.'">';
+									$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="form-control">';
 									$content.='<option value="0">-- order status --</option>'."\n";
 									foreach ($all_orders_status as $row) {
 										$content.='<option value="'.$row['id'].'" '.(($selected_values[$field_key]==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
@@ -3890,7 +3890,7 @@ class mslib_fe {
 								break;
 							case 'psp_mail_template_email_order_confirmation':
 								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('email_order_confirmation');
-								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2">';
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
@@ -3901,7 +3901,7 @@ class mslib_fe {
 								break;
 							case 'psp_mail_template_email_order_paid_letter':
 								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('email_order_paid_letter');
-								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2">';
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
@@ -3912,7 +3912,7 @@ class mslib_fe {
 								break;
 							case 'psp_mail_template_order_received_thank_you_page':
 								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('order_received_thank_you_page');
-								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2">';
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
@@ -3923,7 +3923,7 @@ class mslib_fe {
 								break;
 							case 'psp_mail_template_payment_reminder_email_templates':
 								$all_orders_psp_mail_template=mslib_fe::getOrderPSPMailTemplates('payment_reminder_email_templates');
-								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2" style="width:350px">';
+								$content.='<select name="'.$field_key.'" id="'.$field_key.'" class="pspSelect2">';
 								$content.='<option value="0">-- order mail templates --</option>'."\n";
 								if (is_array($all_orders_psp_mail_template) and count($all_orders_psp_mail_template)) {
 									foreach ($all_orders_psp_mail_template as $row) {
@@ -3933,7 +3933,7 @@ class mslib_fe {
 								$content.='</select>';
 								break;
 						}
-						$content.='</div>';
+						$content.='</div></div>';
 					}
 					break;
 			}

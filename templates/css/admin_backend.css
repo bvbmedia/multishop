@@ -347,6 +347,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .fa-stack .fa { line-height:inherit; }
 .fa-li { top:0; }
 
+.checkbox label::after { line-height:16px; }
+
 .shipping_cost_input_field_wrapper > div > .form-group { margin-bottom:20px; }
 
 @media (min-width:992px) {
@@ -381,7 +383,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 /* select2 overrule */
 .select2-container .select2-choice { height:34px; }
 .select2-container .select2-choice > .select2-chosen { line-height:32px; }
-#edit_customer .select2-container { width:100%; }
+#edit_customer .select2-container,
+.select2-container.pspSelect2 { width:100%; }
 .select2-results li h3 { font-size:14px; line-height:20px; margin-bottom:0; }
 
 .panel-heading-toggle { cursor:pointer; }
