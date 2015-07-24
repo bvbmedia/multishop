@@ -8,5 +8,5 @@ $mslib_dashboard->init($this);
 $mslib_dashboard->setSection('admin_home');
 $mslib_dashboard->renderWidgets();
 $content.=$mslib_dashboard->displayDashboard();
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 ?>

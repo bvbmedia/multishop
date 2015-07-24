@@ -315,7 +315,7 @@ if ($this->get['edit']) {
 			</div>
 		</div>
 		<div class="form-group">
-			<label for="description" class="control-label col-md-2">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+			<label for="description" class="control-label col-md-2">'.$this->pi_getLL('admin_short_description').'</label>
 			<div class="col-md-10">
 			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 			</div>
@@ -464,7 +464,7 @@ if ($this->get['edit']) {
 					<input type="text" class="text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
 				</div>
 				<div class="form-group">
-					<label for="description">'.mslib_befe::strtoupper($this->pi_getLL('admin_short_description')).'</label>
+					<label for="description">'.$this->pi_getLL('admin_short_description').'</label>
 					<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
 				</div>';
 		}
@@ -975,7 +975,7 @@ if ($this->ms['show_main']) {
 	$content=$tabs_element;
 	// payment method admin system eof
 }
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 $content=''.mslib_fe::shadowBox($content).'';
 $GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods']='
 <script type="text/javascript">

@@ -927,7 +927,7 @@ if ($this->ms['show_main']) {
 	$content=$tabs_element;
 	// shipping method admin system eof
 }
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div></div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
 $content=''.mslib_fe::shadowBox($content).'';
 // javascript for shipping methods
 $GLOBALS['TSFE']->additionalHeaderData['admin_shipping_methods']='

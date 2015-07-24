@@ -725,7 +725,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###PRODUCTS_PAGINATION###']=$pagination;
 	$subpartArray['###LABEL_UPLOAD_EXCEL_FILE###']=$this->pi_getLL('admin_upload_excel_file');
 	$subpartArray['###LABEL_ADMIN_UPLOAD###']=mslib_befe::strtoupper($this->pi_getLL('admin_upload'));
-	$subpartArray['###LABEL_BACK_TO_CATALOG###']=mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog'));
+	$subpartArray['###LABEL_BACK_TO_CATALOG###']=$this->pi_getLL('admin_close_and_go_back_to_catalog');
 	$subpartArray['###BACK_TO_CATALOG_LINK###']=mslib_fe::typolink();
 	$subpartArray['###LABEL_ADMIN_YES###']=$this->pi_getLL('admin_yes');
 	$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
@@ -740,7 +740,7 @@ if ($pageset['total_rows']>0) {
 	$tmp_content_results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 } else {
 	$subpartArray=array();
-	$subpartArray['###LABEL_BACK_TO_CATALOG###']=mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog'));
+	$subpartArray['###LABEL_BACK_TO_CATALOG###']=$this->pi_getLL('admin_close_and_go_back_to_catalog');
 	$subpartArray['###BACK_TO_CATALOG_LINK###']=mslib_fe::typolink();
 	$subpartArray['###LABEL_NO_RESULT###']=$this->pi_getLL('no_products_available');
 	$tmp_content_noresults=$this->cObj->substituteMarkerArrayCached($subparts['noresults'], array(), $subpartArray);

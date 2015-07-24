@@ -104,6 +104,6 @@ foreach ($tabs as $key=>$value) {
 $content.='
     </div>
 </div>';
-$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div></div>';
+$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>

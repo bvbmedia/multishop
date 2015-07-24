@@ -391,6 +391,6 @@ $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=mslib_fe::shadowBox($content);
 $content.='<hr><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
-$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></div></div></div></div>';
+$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
 
 ?>

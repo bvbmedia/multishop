@@ -512,7 +512,7 @@ if ($param_val_ctr>0) {
 }
 $content.='</div>';
 $content.='<p class="extra_padding_bottom">';
-$content.='<a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a>';
+$content.='<a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>';
 $content.='<span id="msAdminOrdersListingDownload">';
 $content.='<input type="button" name="download" class="link_block" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_download_as_excel_file')).'" onclick="'.$dlink.'" />';
 $content.='</span>';
