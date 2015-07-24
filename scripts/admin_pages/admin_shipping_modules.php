@@ -715,33 +715,67 @@ if ($this->ms['show_main']) {
 				</div>
 			</form>
 		</fieldset>';
-	$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="add_shipping_method" class="btn btn-primary admin_menu_add"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</a></div></div>';
-	$tmpcontent.='<div id="flexible_container"><ul id="admin_shipping_methods_list" style="display:none;">';
+
+	$tmpcontent.='<div class="clearfix"><div class="pull-right">
+		<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#msAdminModalPopuAddShippingMethod"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</button>
+	</div></div>';
+
+	$modalContent='<div class="row">';
 	$innercount=0;
 	$count=0;
 	foreach ($shipping_methods as $code=>$item) {
 		$innercount++;
 		$count++;
-		$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">';
+
+		$panelTitle='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">'.htmlspecialchars($item['name']).'</a>';
+		$panelBody='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">';
 		if ($item['image']) {
-			$tmpcontent.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/shipping/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'"></span></span>';
+			$panelBody.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/shipping/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
-			$tmpcontent.=$item['name'];
+			$panelBody.=$item['name'];
 		}
-		$tmpcontent.='</a></div></li>';
-		if ($innercount==3) {
-			$innercount=0;
-		}
+		$panelBody.='</a>';
+		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">'.$this->pi_getLL('add_shipping_method').'</a>';
+
+		$modalContent.='
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading text-center">
+					<h3>
+					'.$panelTitle.'
+					</h3>
+				</div>
+				<div class="panel-body text-center">
+					'.$panelBody.'
+				</div>
+				<div class="panel-footer text-center">
+					'.$panelFooter.'
+				</div>
+			</div>
+		</div>
+		';
+
 	}
-	if ($innercount>0) {
-		for ($i=3; $i>$innercount; $i--) {
-			$count++;
-			$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li">';
-			$tmpcontent.='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->conf['admin_development_company_logo_gray_path'].'" border="0"></span></span><span class="multishop_psp_add"></span></a>';
-			$tmpcontent.='</div></li>';
-		}
-	}
-	$tmpcontent.='</ul></div>';
+	$modalContent.='</div>';
+	// modal
+	$tmpcontent.='
+	<div class="modal" id="msAdminModalPopuAddShippingMethod" tabindex="-1" role="dialog" aria-labelledby="msAdminModalPopuAddShippingMethod" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('add_payment_method').'</h4>
+			  </div>
+			  <div class="modal-body">'.$modalContent.'</div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	';
+	// modal eol
+
 	//tabs array
 	$tabs=array();
 	// shipping methods tab
