@@ -721,38 +721,53 @@ if ($this->ms['show_main']) {
 				</div>
 			</form>
 		</fieldset>';
-	$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="add_payment_method" class="btn btn-primary admin_menu_add"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</a></div></div>';
-	$tmpcontent.='<div id="flexible_container"><ul id="admin_payment_methods_list" class="hide">';
+	$tmpcontent.='
+	<div class="clearfix">
+		<div class="pull-right">
+			<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#msAdminModalPopuAddPaymentMethodp"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</button>
+		</div>
+	</div>';
+
+	$modalContent='<div class="row">';
 	$innercount=0;
 	$count=0;
 	foreach ($payment_methods as $code=>$item) {
+		$modalContent.='<div class="col-md-4">';
 		$innercount++;
 		$count++;
-		$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'">';
+		$modalContent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'">';
 		if ($item['image']) {
-			$tmpcontent.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/psp/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'"></span></span>';
+			$modalContent.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/psp/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
-			$tmpcontent.='<span class="multishop_psp_name">'.$item['name'].'</span>';
+			$modalContent.='<span class="multishop_psp_name">'.$item['name'].'</span>';
 		}
-		$tmpcontent.='<span class="multishop_psp_add">add '.$item['name'].'</span></a>';
+		$modalContent.='<span class="multishop_psp_add">add '.$item['name'].'</span></a>';
 		if ($item['more_info_link']) {
-			$tmpcontent.='<span class="multishop_psp_register"><a href="'.$item['more_info_link'].'" target="_blank">register account</a></span>';
+			$modalContent.='<span class="multishop_psp_register"><a href="'.$item['more_info_link'].'" target="_blank">register account</a></span>';
 		}
-		$tmpcontent.='</div></li>';
-		if ($innercount==3) {
-			$innercount=0;
-		}
+		$modalContent.='</div>';
 	}
-	if ($innercount>0) {
-		for ($i=3; $i>$innercount; $i--) {
-			$count++;
-			$tmpcontent.='<li class="item'.$count.'"><div class="flexible_li">';
-			$tmpcontent.='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->conf['admin_development_company_logo_gray_path'].'" border="0"></span></span><span class="multishop_psp_add"></span></a>';
-			$tmpcontent.='';
-			$tmpcontent.='</div></li>';
-		}
-	}
-	$tmpcontent.='</ul></div>';
+	$modalContent.='</div>';
+
+	// modal
+	$tmpcontent.='
+	<div class="modal" id="msAdminModalPopuAddPaymentMethodp" tabindex="-1" role="dialog" aria-labelledby="msAdminModalPopuAddPaymentMethod" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="shippingCostModalTitle">'.$this->pi_getLL('add_payment_method').'</h4>
+			  </div>
+			  <div class="modal-body">'.$modalContent.'</div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	';
+	// modal eol
+
 	//tabs array
 	$tabs=array();
 	// shipping methods tab
