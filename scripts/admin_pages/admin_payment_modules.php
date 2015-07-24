@@ -745,18 +745,18 @@ if ($this->ms['show_main']) {
 				<div class="form-group">
 					<label for="new_code" class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
 					<div class="col-md-10">
-					<input class="form-control" name="new_code" type="text" value="" />
+						<input class="form-control" name="new_code" type="text" value="" />
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="upload_payment_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
 					<div class="col-md-10">
-					<div class="input-group">
-					<input type="file" name="payment_file" class="form-control">
-					<span class="input-group-btn">
-					<input type="submit" name="upload_payment_file" class="submit btn btn-success" id="upload_payment_file" value="upload">
-					</span>
-					</div>
+						<div class="input-group">
+							<input type="file" name="payment_file" class="form-control">
+							<span class="input-group-btn">
+								<input type="submit" name="upload_payment_file" class="submit btn btn-success" id="upload_payment_file" value="upload">
+							</span>
+						</div>
 					</div>
 				</div>
 			</form>

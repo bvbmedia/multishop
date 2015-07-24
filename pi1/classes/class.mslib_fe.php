@@ -8562,7 +8562,7 @@ class mslib_fe {
 				// cats
 				if (!$selectbox) {
 					$content.='<li class="sub_categories_sorting category'.(!$item['status'] ? ' disabled' : '').'" id="categories_id_'.$item['categories_id'].'">';
-					$content.='<input type="checkbox" class="movecats" name="movecats[]" value="'.$item['categories_id'].'" id="cb-cat_'.$parent_id.'_'.$item['categories_id'].'" rel="'.$parent_id.'_'.$item['categories_id'].'">&nbsp;';
+					$content.='<div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" class="movecats" name="movecats[]" value="'.$item['categories_id'].'" id="cb-cat_'.$parent_id.'_'.$item['categories_id'].'" rel="'.$parent_id.'_'.$item['categories_id'].'"><label for="cb-cat_'.$parent_id.'_'.$item['categories_id'].'"></label></label></div>';
 					if ($this->ADMIN_USER and $admin_mode) {
 						// get all cats to generate multilevel fake url
 						$level=0;

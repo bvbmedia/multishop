@@ -332,6 +332,31 @@ ul.admin_sort_product_listing > li > strong { width:90%; }
 ul.admin_sort_product_listing > li > .admin_menu { white-space:nowrap; }
 ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
 
+/* jquery tree overrule */
+.form-horizontal #sidetree .checkbox-inline { padding-top:0; }
+.form-horizontal #sidetree .checkbox-inline > label { padding-left:0; }
+
+.form-horizontal #msAdmin_category_listing_ul.treeview .checkbox { float:left; min-height:16px;}
+
+#msAdmin_category_listing_ul.treeview ul { margin-bototm:0; }
+#msAdmin_category_listing_ul.treeview li { padding-left:20px; }
+#msAdmin_category_listing_ul.treeview li.last { background-position:left -3766px; }
+
+#msAdmin_category_listing_ul_territories #msAdmin_category_listing_ul.treeview li { background:url(../images/treeview-default-line.gif) left -2px no-repeat; }
+#msAdmin_category_listing_ul_territories #msAdmin_category_listing_ul.treeview li.last { background-position:left -3768px; }
+
+#msAdmin_category_listing_ul.treeview .hitarea { background-color:#fff; background-position:-67px -23px; margin-left:-17px; }
+#msAdmin_category_listing_ul.treeview li.collapsable,
+#msAdmin_category_listing_ul.treeview li.expandable { background-position:left -187px; }
+#msAdmin_category_listing_ul.treeview .expandable-hitarea { background-position: -83px -1px; margin-left:-17px; }
+#msAdmin_category_listing_ul.treeview li.lastExpandable { background-position: -32px -67px; }
+#msAdmin_category_listing_ul.treeview div.lastCollapsable-hitarea,
+#msAdmin_category_listing_ul.treeview div.lastExpandable-hitarea { background-color:transparent; }
+#msAdmin_category_listing_ul.treeview div.lastCollapsable-hitarea { background-position:-3px -112px; }
+
+.zone-tabs ul#msAdmin_category_listing_ul_territories { padding-left:10px; list-style:none; }
+.zone-tabs label { width:10%; }
+
 /* bootstrap overrule */
 hr { margin-top:15px; margin-bottom:15px; }
 
