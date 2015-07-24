@@ -386,8 +386,8 @@ if ($this->get['edit']) {
 			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 			<div class="col-md-10">
 			<div class="msAttribute">
-				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="'.$cost_excl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="'.$cost_incl_vat_display.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" type="hidden" value="'.$amount_handling_cost.'" id="handling_cost_amount_input"'.($percentage_cost ? ' disabled="disabled"' : '').' /></div>
 			</div>
 			</div>
@@ -512,8 +512,8 @@ if ($this->get['edit']) {
 		<div class="form-group" id="handling_cost_amount_div">
 			<label class="control-label col-md-2">'.$this->pi_getLL('handling_costs').'</label>
 			<div class="col-md-10">
-				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
-				<div class="msAttributesField"><span class="input-group-addon">'.mslib_fe::currency().' </span><div class="input-group"><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().' </span><input type="text" id="display_name" name="display_name" class="form-control msHandlingCostExcludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+				<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().' </span><input type="text" name="display_name" id="display_name" class="form-control msHandlingCostIncludingVat" value="0.00"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 				<div class="msAttributesField hidden"><input name="handling_costs" id="handling_cost_amount_input" type="hidden" value="0" /></div>
 			</div>
 		</div>
