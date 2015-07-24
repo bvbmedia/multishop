@@ -72,8 +72,10 @@
                             <div class="form-group">
                             <div class="col-md-4"></div>
                             <div class="col-md-8">
-                            <label for="search_by_status_last_modified" class="control-label">###LABEL_FILTER_LAST_MODIFIED###</label>
-                            <input type="checkbox" class="PrettyInput" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1" ###FILTER_BY_LAST_MODIFIED_CHECKED### >
+                            <div class="checkbox checkbox-success">
+                                <input type="checkbox" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1" ###FILTER_BY_LAST_MODIFIED_CHECKED### >
+                                <label for="search_by_status_last_modified" class="control-label">###LABEL_FILTER_LAST_MODIFIED###</label>
+                            </div>
                             </div>
                             </div>
                         </div>
@@ -142,6 +144,7 @@
                                 <div class="checkbox checkbox-success">
                                 <input type="checkbox" name="selected_orders[]" id="checkbox_###ORDER_ID###" value="###ORDER_ID###">
                                 <label for="checkbox_###ORDER_ID###"></label>
+                                </div>
                             </th>
                             <td align="right" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_ID###</a></td>
                             ###INVOICE_NUMBER###
