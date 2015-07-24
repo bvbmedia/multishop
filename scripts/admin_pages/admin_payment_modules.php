@@ -764,7 +764,7 @@ if ($this->ms['show_main']) {
 	$tmpcontent.='
 	<div class="clearfix">
 		<div class="pull-right">
-			<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#msAdminModalPopuAddPaymentMethodp"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</button>
+			<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#msAdminModalPopuAddPaymentMethod"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</button>
 		</div>
 	</div>';
 
@@ -809,7 +809,7 @@ if ($this->ms['show_main']) {
 
 	// modal
 	$tmpcontent.='
-	<div class="modal" id="msAdminModalPopuAddPaymentMethodp" tabindex="-1" role="dialog" aria-labelledby="msAdminModalPopuAddPaymentMethod" aria-hidden="true">
+	<div class="modal" id="msAdminModalPopuAddPaymentMethod" tabindex="-1" role="dialog" aria-labelledby="msAdminModalPopuAddPaymentMethod" aria-hidden="true">
 		  <div class="modal-dialog">
 			<div class="modal-content">
 			  <div class="modal-header">
