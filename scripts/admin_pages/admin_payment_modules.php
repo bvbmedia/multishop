@@ -785,7 +785,7 @@ if ($this->ms['show_main']) {
 		$panelBody.='</a>';
 		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" class="btn btn-block btn-success btn-sm"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</a>';
 		if ($item['more_info_link']) {
-			$panelFooter.=' <a href="'.$item['more_info_link'].'" target="_blank" class="btn btn-block btn-info btn-sm"><i class="fa fa-user"></i> register account</a>';
+			$panelFooter.=' <a href="'.$item['more_info_link'].'" target="_blank" class="btn btn-block btn-info btn-sm"><i class="fa fa-user"></i> '.$this->pi_getLL('register').'</a>';
 		}
 		$modalContent.='
 		<div class="col-md-3">
