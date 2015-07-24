@@ -727,7 +727,7 @@ if ($this->ms['show_main']) {
 		$innercount++;
 		$count++;
 
-		$panelTitle='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'"><strong>'.htmlspecialchars($item['name']).'</strong></a>';
+		$panelTitle='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">'.htmlspecialchars($item['name']).'</a>';
 		$panelBody='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">';
 		if ($item['image']) {
 			$panelBody.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/shipping/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'"></span></span>';
