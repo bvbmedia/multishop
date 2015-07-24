@@ -9,8 +9,10 @@ $tmp='
 <thead>
 <tr>
 	<th align="center" width="17">
+		<div class="checkbox checkbox-success">
+		<input type="checkbox" id="check_all_1">
 		<label for="check_all_1"></label>
-		<input type="checkbox" class="PrettyInput" id="check_all_1">
+		</div>
 	</th>
 ';
 $headercol.='
@@ -47,8 +49,10 @@ foreach ($invoices as $invoice) {
 	}
 	$tmp.='<tr class="'.$tr_type.'">';
 	$tmp.='<th nowrap>
-	<label for="checkbox_'.$invoice['id'].'"></label>
-	<input type="checkbox" name="selected_invoices[]" class="PrettyInput" id="checkbox_'.$invoice['id'].'" value="'.$invoice['id'].'">
+	<div class="checkbox checkbox-success">
+		<input type="checkbox" name="selected_invoices[]" id="checkbox_'.$invoice['id'].'" value="'.$invoice['id'].'">
+		<label for="checkbox_'.$invoice['id'].'"></label>
+	</div>
 	</th>
 	<td align="right">'.$cb_ctr.'</td>
 	';

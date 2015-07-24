@@ -264,8 +264,10 @@ $form_orders_search='<div id="search-orders" class="well">
 			<input type="text" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
 			<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
+			<div class="checkbox checkbox-success">
+			<input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
 			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
-			<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
+			</div>
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>

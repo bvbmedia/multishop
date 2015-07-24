@@ -246,8 +246,10 @@ $formTopSearch.='
 				</select>
 			</div>
 			<div class="form-group">
+				<div class="checkbox checkbox-success">
+				<input type="checkbox" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
 				<label for="includeDeletedAccounts">'.$this->pi_getLL('show_deleted_accounts').'</label>
-				<input type="checkbox" class="PrettyInput" id="includeDeletedAccounts" name="tx_multishop_pi1[show_deleted_accounts]" value="1"'.($this->get['tx_multishop_pi1']['show_deleted_accounts'] ? ' checked="checked"' : '').' />
+				</div>
 			</div>
 		</div>
 	</div>
