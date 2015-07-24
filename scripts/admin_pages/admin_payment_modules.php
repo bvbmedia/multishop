@@ -777,7 +777,7 @@ if ($this->ms['show_main']) {
 
 		$panelTitle='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">'.htmlspecialchars($item['name']).'</a>';
 		$panelBody='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">';
-		if ($item['image']) {
+		if ($item['image'] && file_exists($this->DOCUMENT_ROOT_MS.'templates/images/psp/'.$item['image'])) {
 			$panelBody.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/psp/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
 			$panelBody.='<span class="multishop_psp_name">'.$item['name'].'</span>';
