@@ -46,8 +46,8 @@ if (count($data)==1) {
 		$compiledWidget['content'].='
 		<thead>
 			<tr>
-				<th>'.$item[0].'</th>
-				<th class="text-right">'.$item[1].'</th>
+				<th>'.$data[0][0].'</th>
+				<th class="text-right">'.$data[0][1].'</th>
 			</tr>
 		</thead>
 		';
