@@ -6789,19 +6789,19 @@ class mslib_fe {
 
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['label']=$this->pi_getLL('admin_countries');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_countries');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['class']='fa fa-wrench';
-
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['label']=$this->pi_getLL('admin_shipping_methods');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['class']='fa fa-wrench';
-
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['label']=$this->pi_getLL('admin_shipping_costs');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['class']='fa fa-money';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['class']='fa fa-globe';
 
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_zones']['label']=$this->pi_getLL('admin_zones');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_zones']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_zones');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_zones']['class']='fa fa-globe';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['label']=$this->pi_getLL('admin_shipping_methods');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['class']='fa fa-ship';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['label']=$this->pi_getLL('admin_shipping_costs');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['class']='fa fa-money';
 
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['label']=$this->pi_getLL('admin_payment');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['description']=$this->pi_getLL('admin_payment').'.';
@@ -6809,7 +6809,7 @@ class mslib_fe {
 
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['label']=$this->pi_getLL('admin_payment_methods');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['class']='fa fa-wrench';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['class']='fa fa-credit-card';
 			/*
 			 * removed from menu, merged into payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping');
