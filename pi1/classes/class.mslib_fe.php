@@ -6829,7 +6829,7 @@ class mslib_fe {
 
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['label']=$this->pi_getLL('admin_system');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['description']=$this->pi_getLL('admin_system').'.';
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['class']='fa fa-wrench';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['class']='fa fa-cogs';
 
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rule_groups']['label']=$this->pi_getLL('admin_tax_rule_groups', 'TAX RULE GROUPS');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rule_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_tax_rule_groups');
@@ -6992,7 +6992,7 @@ class mslib_fe {
 		if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label']=$this->pi_getLL('admin_multishop_settings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-wrench';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-cog';
 		}
 		// hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'])) {
