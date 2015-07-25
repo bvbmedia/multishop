@@ -6565,7 +6565,7 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_invoices']['label']=$this->pi_getLL('admin_invoices');
 				$ms_menu['header']['ms_admin_invoices']['description']=$this->pi_getLL('admin_invoices_overview_description');
 				$ms_menu['header']['ms_admin_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
-				$ms_menu['header']['ms_admin_invoices']['class']='fa fa-file-o';
+				$ms_menu['header']['ms_admin_invoices']['class']='fa fa-file';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_invoices') {
 					$ms_menu['header']['ms_admin_invoices']['active']=1;
 				}
