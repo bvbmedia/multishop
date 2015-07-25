@@ -197,7 +197,18 @@ multishop_ajax_server {
 			}
 			# not needed in Bootstrap
 			jqueryTab >
-
+			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
+			awesomeFontCss {
+				media =
+				import = 0
+				compress = 1
+			}
+			awesomeBootstrapCheckbox = EXT:multishop/templates/css/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css
+			awesomeBootstrapCheckbox {
+				media =
+				import = 0
+				compress = 1
+			}
 			jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
 			jqueryAutocomplete {
 				media =
@@ -215,13 +226,6 @@ multishop_ajax_server {
 			}
 			# not needed for Bootstrap
 			core >
-
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
-			prettycheckboxes {
-				media =
-				import = 0
-				compress = 1
-			}
 		}
 	}
 
@@ -253,7 +257,6 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
-
 			jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
 			jqueryAutocomplete {
 				media =
@@ -271,13 +274,6 @@ multishop_ajax_server {
 			}
 			# not needed for Bootstrap
 			core >
-
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
-			prettycheckboxes {
-				media =
-				import = 0
-				compress = 1
-			}
 		}
 	}
 [end]
@@ -317,8 +313,8 @@ multishop_ajax_server {
 			jqueryvalidate.compress = 1
 			#jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
 			#jqueryvalidatefunctions.compress=1
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
-			prettycheckboxes.compress = 1
+			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
+			#prettycheckboxes.compress = 1
 			#webshim for fallback html5 attributes support, bugged when including through compressor
 			#webshimsJs = EXT:multishop/js/js-webshim/extras/modernizr-custom.js
 			#webshimsJs.compress=0
@@ -341,8 +337,8 @@ multishop_ajax_server {
 			jqueryvalidate.compress = 1
 			#jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
 			#jqueryvalidatefunctions.compress=1
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
-			prettycheckboxes.compress = 1
+			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
+			#prettycheckboxes.compress = 1
 		}
 	}
 [end]
@@ -407,12 +403,6 @@ multishop_ajax_server {
 
 			select2 = EXT:multishop/js/select2/select2.css
 			select2 {
-				media =
-				import = 0
-				compress = 1
-			}
-			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
-			awesomeFontCss {
 				media =
 				import = 0
 				compress = 1
