@@ -1226,6 +1226,9 @@
             <label index="file_number_of_downloads">Number of downloads</label>
             <label index="admin_shipping">Shipping</label>
             <label index="admin_payment">Payment</label>
+            <label index="search_keywords_toplist">Searched keywords</label>
+            <label index="latest_orders">Latest orders</label>
+            <label index="referrer_toplist">Referring websites</label>
         </languageKey>
         <languageKey index="af"></languageKey>
         <languageKey index="ar"></languageKey>
@@ -4909,6 +4912,11 @@
             <label index="not_required">niet verplicht</label>
             <label index="order_not_found">Bestelling is niet gevonden</label>
             <label index="file_number_of_downloads">Aantal downloads</label>
+            <label index="admin_shipping">Verzending</label>
+            <label index="admin_payment">Betaling</label>
+            <label index="search_keywords_toplist">Toplijst zoekopdrachten</label>
+            <label index="latest_orders">Nieuwste bestellingen</label>
+            <label index="referrer_toplist">Verwijzende websites</label>
         </languageKey>
         <languageKey index="no"></languageKey>
         <languageKey index="pl"></languageKey>
