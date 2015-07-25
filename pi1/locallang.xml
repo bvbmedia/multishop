@@ -3040,7 +3040,7 @@
             <label index="admin_clear_multishop_cache">CLEAR MULTISHOP CACHE</label>
             <label index="admin_clear_whole_database">PUHDISTA KOKO TIETOKANTA</label>
             <label index="admin_close_and_go_back_to_catalog">Sulja ja palaa katalogiin</label>
-            <label index="admin_cms">CMS</label>
+            <label index="admin_cms">CMS templates</label>
             <label index="admin_company">Yritys</label>
             <label index="admin_consistency_checker">YHTENÄISYYSTARKISTUS</label>
             <label index="admin_copy_duplicate_product">KOPIOI / TUPLAA TUOTE</label>
