@@ -4077,7 +4077,7 @@
             <label index="admin_no">Nee</label>
             <label index="admin_no_tax">Geen BTW</label>
             <label index="admin_normal_price">Normale prijs</label>
-            <label index="admin_nr">nr.</label>
+            <label index="admin_nr">Nr.</label>
             <label index="admin_online_users">Bezoekers</label>
             <label index="admin_option">Optie</label>
             <label index="admin_options">Opties</label>
