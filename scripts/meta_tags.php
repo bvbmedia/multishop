@@ -142,9 +142,9 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('there_is_one_customer_registered'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('there_is_one_customer_registered'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			} else {
-				$string=sprintf($this->pi_getLL('there_are_s_customers_registered'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('there_are_s_customers_registered'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
 			$messages[]='"<a href=\"'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers').'\">'.$string.'</a>"';
 		}
@@ -160,9 +160,9 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('today_there_is_one_order_created'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('today_there_is_one_order_created'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			} else {
-				$string=sprintf($this->pi_getLL('today_there_are_s_orders_created'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('today_there_are_s_orders_created'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
 			$messages[]='"<a href=\"'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders').'\">'.$string.'</a>"';
 		}
@@ -179,7 +179,7 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), $this->pi_getLL('week'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), $this->pi_getLL('week'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			} else {
 				$string=sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), $this->pi_getLL('week'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
