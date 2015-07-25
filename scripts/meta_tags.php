@@ -179,7 +179,7 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), mslib_befe::strtoupper($this->pi_getLL('week')), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), $this->pi_getLL('week'), '<strong>'.$row['total'].'</strong>');
 			} else {
 				$string=sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), $this->pi_getLL('week'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
