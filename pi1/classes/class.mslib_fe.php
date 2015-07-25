@@ -6783,11 +6783,6 @@ class mslib_fe {
 				}
 			}
 
-			if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label']=$this->pi_getLL('admin_multishop_settings');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-wrench';
-			}
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['label']=$this->pi_getLL('admin_shipping');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['description']=$this->pi_getLL('admin_shipping').'.';
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['class']='fa fa-truck';
@@ -6994,6 +6989,11 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_repair_missing_multilanguages_attributes']['class']='fa fa-wrench';
 			// footer eof
 		} // end if enableAdminPanelSystem
+		if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label']=$this->pi_getLL('admin_multishop_settings');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-wrench';
+		}
 		// hook
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['adminPanel'])) {
 			$params=array(
