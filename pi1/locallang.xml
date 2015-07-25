@@ -1217,7 +1217,7 @@
             <label index="remove_incomplete_p2c_link">Remove incomplete products to categories link</label>
             <label index="admin_label_hide_in_details_page">hide in products detail page</label>
             <label index="attribute_radio_option_warning">You need to choose an option from the list below:</label>
-            <label index="admin_sort_products">sort products</label>
+            <label index="admin_sort_products">Sort products</label>
             <label index="admin_label_please_select_categories_to_display_products">Please select category to display products</label>
             <label index="show_disabled_product">Show disabled product</label>
             <label index="create_account">Create account</label>
@@ -4910,6 +4910,7 @@
             <label index="search_keywords_toplist">Toplijst zoekopdrachten</label>
             <label index="latest_orders">Nieuwste bestellingen</label>
             <label index="referrer_toplist">Verwijzende websites</label>
+            <label index="admin_sort_products">Sorteer producten</label>
         </languageKey>
         <languageKey index="no"></languageKey>
         <languageKey index="pl"></languageKey>
