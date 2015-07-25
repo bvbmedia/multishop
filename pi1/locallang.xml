@@ -2051,7 +2051,7 @@
             <label index="checkout_finished_page">Der Bezahlvorgang ist abgeschlossen (Seite)</label>
             <label index="checkout_review">Überprüfung der Bestellung</label>
             <label index="checkout_shipping_payment_method">Versand und Zahlungsmethode</label>
-            <label index="choose">auswählen</label>
+            <label index="choose">Auswählen</label>
             <label index="choose_action">Vorgang wählen</label>
             <label index="choose_country">Land wählen</label>
             <label index="choose_image">Bild wählen</label>
@@ -4229,7 +4229,7 @@
             <label index="checkout_finished_page">Afrekenen geslaagd pagina</label>
             <label index="checkout_review">Controleer bestelling</label>
             <label index="checkout_shipping_payment_method">Aflever en betaalmethode</label>
-            <label index="choose">kies</label>
+            <label index="choose">Selecteer</label>
             <label index="choose_action">Selecteer actie</label>
             <label index="choose_country">kies land</label>
             <label index="choose_image">Kies afbeelding</label>
