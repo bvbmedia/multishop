@@ -1224,6 +1224,8 @@
             <label index="not_required">Not required</label>
             <label index="order_not_found">Order not found</label>
             <label index="file_number_of_downloads">Number of downloads</label>
+            <label index="admin_shipping">Shipping</label>
+            <label index="admin_payment">Payment</label>
         </languageKey>
         <languageKey index="af"></languageKey>
         <languageKey index="ar"></languageKey>

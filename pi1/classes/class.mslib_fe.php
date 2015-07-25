@@ -6783,6 +6783,11 @@ class mslib_fe {
 				}
 			}
 
+			if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label']=$this->pi_getLL('admin_multishop_settings');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-wrench';
+			}
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['label']=$this->pi_getLL('admin_tax_rule_groups', 'TAX RULE GROUPS');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_tax_rule_groups');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['class']='fa fa-wrench';
@@ -6800,23 +6805,33 @@ class mslib_fe {
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_modules' || $this->post['tx_multishop_pi1']['page_section']=='admin_modules') {
 				$ms_menu['footer']['ms_admin_system']['active']=1;
 			}
-			if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label']=$this->pi_getLL('admin_multishop_settings');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-wrench';
-			}
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['label']=$this->pi_getLL('admin_shipping_and_payment');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['description']=$this->pi_getLL('admin_shipping_and_payment').'.';
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['class']='fa fa-wrench';
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_countries']['label']=$this->pi_getLL('admin_countries');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_countries']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_countries');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_countries']['class']='fa fa-wrench';
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_methods']['label']=$this->pi_getLL('admin_shipping_methods');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_methods']['class']='fa fa-wrench';
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['label']=$this->pi_getLL('admin_payment_methods');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_methods']['class']='fa fa-wrench';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['label']=$this->pi_getLL('admin_shipping');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['description']=$this->pi_getLL('admin_shipping').'.';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['class']='fa fa-truck';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['label']=$this->pi_getLL('admin_countries');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_countries');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_countries']['class']='fa fa-wrench';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['label']=$this->pi_getLL('admin_shipping_methods');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_modules');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_methods']['class']='fa fa-wrench';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['label']=$this->pi_getLL('admin_shipping_costs');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_shipping_costs']['class']='fa fa-money';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_zones']['label']=$this->pi_getLL('admin_zones');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_zones']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_zones');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping']['subs']['admin_zones']['class']='fa fa-globe';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['label']=$this->pi_getLL('admin_payment');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['description']=$this->pi_getLL('admin_payment').'.';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['class']='fa fa-credit-card';
+
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['label']=$this->pi_getLL('admin_payment_methods');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_payment_modules');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_payment']['subs']['admin_payment_methods']['class']='fa fa-wrench';
 			/*
 			 * removed from menu, merged into payment methods page
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_payment_zone_mapping']['label']=$this->pi_getLL('admin_payment_zone_mapping');
@@ -6832,12 +6847,8 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['label']=$this->pi_getLL('admin_mappings');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_mappings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_payment_mappings');
 			*/
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_costs']['label']=$this->pi_getLL('admin_shipping_costs');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_costs']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_shipping_costs']['class']='fa fa-wrench';
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_zones']['label']=$this->pi_getLL('admin_zones');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_zones']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_zones');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_zones']['class']='fa fa-wrench';
+
+
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['label']=$this->pi_getLL('admin_system');
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['description']=$this->pi_getLL('admin_system').'.';
 			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['class']='fa fa-wrench';
