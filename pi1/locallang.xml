@@ -1226,7 +1226,7 @@
             <label index="file_number_of_downloads">Number of downloads</label>
             <label index="admin_shipping">Shipping</label>
             <label index="admin_payment">Payment</label>
-            <label index="search_keywords_toplist">Searched keywords</label>
+            <label index="search_keywords_toplist">Toplist searched keywords</label>
             <label index="latest_orders">Latest orders</label>
             <label index="referrer_toplist">Referring websites</label>
         </languageKey>
