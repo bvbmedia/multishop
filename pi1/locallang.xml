@@ -497,7 +497,7 @@
             <label index="admin_visible">Visible</label>
             <label index="admin_visitors">Visitors</label>
             <label index="admin_weight">Weight</label>
-            <label index="admin_working_in">Working in</label>
+            <label index="admin_working_in">working in</label>
             <label index="admin_yes">Yes</label>
             <label index="admin_zip">ZIP</label>
             <label index="admin_zones">Zones</label>
