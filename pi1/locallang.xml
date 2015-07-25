@@ -4232,7 +4232,7 @@
             <label index="choose">Selecteer</label>
             <label index="choose_action">Selecteer actie</label>
             <label index="choose_country">kies land</label>
-            <label index="choose_image">Kies afbeelding</label>
+            <label index="choose_image">Selecteer afbeelding</label>
             <label index="choose_manufacturers">selecteer fabrikant</label>
             <label index="choose_payment_method">Kies Betaalmethode</label>
             <label index="choose_selection">Maak uw keuze</label>
