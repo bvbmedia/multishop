@@ -1894,7 +1894,7 @@
             <label index="admin_no">Nein</label>
             <label index="admin_no_tax">ohne MwSt.</label>
             <label index="admin_normal_price">Normalpreis</label>
-            <label index="admin_nr">nr.</label>
+            <label index="admin_nr">Nr.</label>
             <label index="admin_online_users">BENUTZER ONLINE</label>
             <label index="admin_option">Option</label>
             <label index="admin_options">OPTIONEN</label>
