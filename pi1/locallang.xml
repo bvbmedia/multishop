@@ -1219,7 +1219,7 @@
             <label index="attribute_radio_option_warning">You need to choose an option from the list below:</label>
             <label index="admin_sort_products">Sort products</label>
             <label index="admin_label_please_select_categories_to_display_products">Please select category to display products</label>
-            <label index="show_disabled_product">Show disabled product</label>
+            <label index="show_disabled_product">Show disabled products as well</label>
             <label index="create_account">Create account</label>
             <label index="not_required">Not required</label>
             <label index="order_not_found">Order not found</label>
@@ -4911,6 +4911,7 @@
             <label index="latest_orders">Nieuwste bestellingen</label>
             <label index="referrer_toplist">Verwijzende websites</label>
             <label index="admin_sort_products">Sorteer producten</label>
+            <label index="show_disabled_product">Toon ook uitgeschakelde producten</label>
         </languageKey>
         <languageKey index="no"></languageKey>
         <languageKey index="pl"></languageKey>
