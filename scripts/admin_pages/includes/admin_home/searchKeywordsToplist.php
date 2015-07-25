@@ -38,7 +38,6 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 if (count($data)==1) {
 	$compiledWidget['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 } else {
-	$compiledWidget['content']='<p>'.$this->pi_getLL('admin_label_orders_come_from_referer').'.</p>';
 	$counter=0;
 	$compiledWidget['content'].='<table class="table table-striped table-bordered tblWidget">';
 	if (count($data)) {
