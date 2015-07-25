@@ -6788,20 +6788,20 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-wrench';
 			}
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['label']=$this->pi_getLL('admin_tax_rule_groups', 'TAX RULE GROUPS');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_tax_rule_groups');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['class']='fa fa-wrench';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rule_groups']['label']=$this->pi_getLL('admin_tax_rule_groups', 'TAX RULE GROUPS');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rule_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_tax_rule_groups');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rule_groups']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_tax_rule_groups' || $this->post['tx_multishop_pi1']['page_section']=='admin_tax_rule_groups') {
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rule_groups']['active']=1;
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rule_groups']['active']=1;
 			}
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_taxes']['label']=$this->pi_getLL('admin_taxes', 'Taxes');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_taxes']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_taxes');
-			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_taxes']['class']='fa fa-wrench';
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_taxes']['label']=$this->pi_getLL('admin_taxes', 'Taxes');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_taxes']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_taxes');
+			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_taxes']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_taxes' || $this->post['tx_multishop_pi1']['page_section']=='admin_taxes') {
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_taxes']['active']=1;
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_taxes']['active']=1;
 			}
-//			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rules']['label']='TAX RULES';
-//			$ms_menu['footer']['ms_admin_system']['subs']['admin_shipping_and_payment']['subs']['admin_tax_rules']['link']=mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=admin_tax_rules');
+//			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rules']['label']='TAX RULES';
+//			$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_tax_rules']['link']=mslib_fe::typolink($this->shop_pid,'tx_multishop_pi1[page_section]=admin_tax_rules');
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_modules' || $this->post['tx_multishop_pi1']['page_section']=='admin_modules') {
 				$ms_menu['footer']['ms_admin_system']['active']=1;
 			}
