@@ -90,7 +90,7 @@ foreach ($this->languages as $key=>$language) {
 	$language_lable.=''.$language['title'];
 	$tmpcontent.='
 			<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-				<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
+				<label>'.$this->pi_getLL('language').'</label>
 				<span><strong>'.$language_lable.'</strong></span>
 			</div>			
 			<div class="account-field">
@@ -103,7 +103,7 @@ foreach ($this->languages as $key=>$language) {
 $content.=$tmpcontent.'
 <div class="account-field">
 	<label>&nbsp;</label>
-	<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+	<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
 </div>	
 </fieldset>';
 if ($this->get['tx_multishop_pi1']['action']=='edit') {
@@ -118,7 +118,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$statusses[]=$row;
 }
 if (count($statusses)) {
-	$content.='<table class="msZebraTable msadmin_border" width="100%">
+	$content.='<table class="table table-striped table-bordered msadmin_border" width="100%">
 		<th>&nbsp;</th>
 		<th>'.$this->pi_getLL('name').'</th>
 		<th>'.$this->pi_getLL('default', 'Default').'</th>
@@ -138,7 +138,7 @@ if (count($statusses)) {
 		<td width="60" align="center">';
 		if (!$status['default_status']) {
 			$content.='';
-			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
 			$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 			$content.='';
@@ -153,7 +153,7 @@ if (count($statusses)) {
 	}
 	$content.='</table>';
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>

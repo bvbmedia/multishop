@@ -156,7 +156,7 @@ if ($this->get['tx_multishop_pi1']['keyword']) {
 	$this->searchKeywords[]=$this->get['tx_multishop_pi1']['keyword'];
 	$this->searchMode='%keyword%';
 }
-$limit_search_result_selectbox='<label>'.$this->pi_getLL('limit_number_of_records_to').':</label><select name="limit">';
+$limit_search_result_selectbox='<div class="form-inline"><div class="form-group"><label>'.$this->pi_getLL('limit_number_of_records_to').':</label><select name="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -177,7 +177,7 @@ $limits[]='500';
 foreach ($limits as $limit) {
 	$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['cmsLimit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
-$limit_search_result_selectbox.='</select>';
+$limit_search_result_selectbox.='</select></div></div>';
 $queryData=array();
 $queryData['where']=array();
 if (count($this->searchKeywords)) {
@@ -261,9 +261,9 @@ if (!count($pageset['dataset'])) {
 		$status_html='';
 		if (!$row['status']) {
 			$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
-			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
-			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=0').'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+			$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 			$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 		}
 		$markerArray=array();
@@ -279,7 +279,7 @@ if (!count($pageset['dataset'])) {
 		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['type']).'</a>';
 		$markerArray['CMS_DATE_CREATED']=strftime("%x %X", $row['crdate']);
 		$markerArray['CMS_STATUS']=$status_html;
-		$markerArray['CMS_REMOVE_BUTTON']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&delete=1').'" onclick="return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')" class="admin_menu_remove" alt="Remove"></a>';
+		$markerArray['CMS_REMOVE_BUTTON']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&delete=1').'" onclick="return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')" class="text-danger admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-lg"></i></a>';
 		$contentItem.=$this->cObj->substituteMarkerArray($subparts['cms_list'], $markerArray, '###|###');
 	}
 	$subpartArray=array();
@@ -342,7 +342,7 @@ if (!count($pageset['dataset'])) {
 		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap><input type="checkbox" id="checkAllCMS"/></th>';
 		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap>&nbsp;</th>';
 		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<tr>
-				<td colspan="7"><input type="button" class="submit msadmin_button" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
+				<td colspan="7"><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
 			</tr>';
 	}
 	$results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
@@ -365,11 +365,18 @@ $subpartArray['###IMPORT_CMS_FILE###']='';
 if ($this->ROOTADMIN_USER) {
 	$subpartArray['###IMPORT_CMS_FILE###']='
 		<fieldset id="scheduled_import_jobs_form">
-                <legend>'.$this->pi_getLL('upload_cms').'</legend>
-                <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="blockSubmitForm">
-                    <div class="account-field">
-                        <label for="upload_cms_file">'.$this->pi_getLL('file').'</label>
-                        <input type="file" name="cms_file">&nbsp;<input type="submit" name="upload_cms_file" class="submit msadmin_button" id="upload_cms_file" value="upload">
+                <div class="page-header"><h4>'.$this->pi_getLL('upload_cms').'</h4></div>
+                <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="form-horizontal blockSubmitForm">
+                    <div class="form-group">
+                        <label for="upload_cms_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+                        <div class="col-md-10">
+                        	<div class="input-group">
+	                        	<input type="file" name="cms_file" class="form-control">
+	                        	<span class="input-group-btn">
+	                        		<input type="submit" name="upload_cms_file" class="submit btn btn-success" id="upload_cms_file" value="upload">
+	                        	</span>
+	                        </div>
+                        </div>
                     </div>
                 </form>
             </fieldset>
@@ -382,8 +389,8 @@ $subpartArray['###INPUT_LIMIT_RESULT_SELECTBOX###']=$limit_search_result_selectb
 $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<div class="float_right"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="admin_menu_add label">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a></div>';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content=mslib_fe::shadowBox($content);
+$content.='<hr><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
+$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
 
 ?>

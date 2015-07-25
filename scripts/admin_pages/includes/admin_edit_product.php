@@ -27,7 +27,7 @@ if (count($shopPids)) {
 							$catpath[]=$cat['name'];
 						}
 						if (count($catpath)>0) {
-							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.implode(' \\\\ ', $catpath).'"};';
+							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.implode(' > ', $catpath).'"};';
 						}
 					}
 				}
@@ -47,7 +47,7 @@ if (count($shopPids)) {
 				$catpath[]=$cat['name'];
 			}
 			if (count($catpath)>0) {
-				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.implode(' \\\\ ', $catpath).'"};';
+				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.implode(' > ', $catpath).'"};';
 			}
 		}
 	}
@@ -2071,7 +2071,7 @@ if ($this->post) {
 		$subparts['manufacturers_advice_price']=$this->cObj->getSubpart($subparts['template'], '###MANUFACTURERS_ADVICE_PRICE###');
 		$subparts['exclude_stock_from_feed']=$this->cObj->getSubpart($subparts['template'], '###EXCLUDE_STOCK_FROM_FEED_INPUT###');
 		if ($_REQUEST['action']=='add_product') {
-			$heading_page='<h1>'.$this->pi_getLL('admin_add_new_product').'</h1>';
+			$heading_page='<h3>'.$this->pi_getLL('admin_add_new_product').'</h3>';
 		} else {
 			$where='';
 			if ($product['categories_id']) {
@@ -2091,7 +2091,7 @@ if ($this->post) {
 				// get all cats to generate multilevel fake url eof
 			}
 			$details_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-			$heading_page='<h1>'.$this->pi_getLL('admin_edit_product').' (ID: '.$product['products_id'].')</h1><span class="viewfront"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_product', 'View in front').'</a></span>';
+			$heading_page='<h3>'.$this->pi_getLL('admin_edit_product').' (ID: '.$product['products_id'].') <span class="viewfront pull-right"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_product', 'View in front').'</a></span></h3>';
 		}
 		/*
 		 * js header
@@ -2143,11 +2143,11 @@ if ($this->post) {
 			if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
 				for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
 					$details_tab_content.='
-					<div class="account-field" id="msEditProductInputTabTitle_'.$i.'_'.$language['uid'].'">
+					<div class="form-group" id="msEditProductInputTabTitle_'.$i.'">
 						<label for="products_description_tab_title_'.$i.'">'.$this->pi_getLL('title').' (tab: '.$i.')</label>
 						<input type="text" class="text" name="products_description_tab_title_'.$i.'['.$language['uid'].']" id="products_description_tab_title_'.$i.'['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_title_'.$i.'']).'">
 					</div>
-					<div class="account-field" id="msEditProductInputTabContent_'.$i.'_'.$language['uid'].'">
+					<div class="form-group" id="msEditProductInputTabContent_'.$i.'">
 						<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
 						<textarea name="products_description_tab_content_'.$i.'['.$language['uid'].']" id="products_description_tab_content_'.$i.'['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
 					</div>';
@@ -2163,9 +2163,14 @@ if ($this->post) {
 			}
 			$language_label.=''.$language['title'];
 			$markerArray=array();
+			$markerArray['PANEL_COLLAPSE_CLASS']='panel-collapse collapse';
+			if ($language['uid']=='0') {
+				// Show unfolded panel
+				$markerArray['PANEL_COLLAPSE_CLASS']='panel-collapse collapse in';
+			}
 			$markerArray['LANGUAGE_UID']=$language['uid'];
 			$markerArray['PAGE_UID']=$this->shop_pid;
-			$markerArray['LABEL_LANGUAGE']=mslib_befe::strtoupper($this->pi_getLL('language'));
+			$markerArray['LABEL_LANGUAGE']=$this->pi_getLL('language');
 			$markerArray['LANGUAGE_LABEL']=$language_label;
 			if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 				$markerArray['LOCAL_PRIMARY_PRODUCTS_CATEGORIES']='<input type="hidden" name="local_primary_product_categories" id="local_primary_product_categories" value="'.$local_primary_product_categories.'">';
@@ -2179,7 +2184,7 @@ if ($this->post) {
 			if (!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP']) {
 				$markerArray['TEXTAREA_SHORT_DESCRIPTION_PARAMS']='onKeyDown="limitText(this,255);" onKeyUp="limitText(this,255);"';
 			}
-			$markerArray['TEXTAREA_SHORT_DESCRIPTION_CLASS']=($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="text expand20-100" ');
+			$markerArray['TEXTAREA_SHORT_DESCRIPTION_CLASS']=($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="form-control text expand20-100" ');
 			$markerArray['VALUE_SHORT_DESCRIPTION']=htmlspecialchars($lngproduct[$language['uid']]['products_shortdescription']);
 			$markerArray['LABEL_PRODUCT_DESCRIPTION']=$this->pi_getLL('admin_full_description');
 			$markerArray['VALUE_PRODUCT_DESCRIPTION']=htmlspecialchars($lngproduct[$language['uid']]['products_description']);
@@ -2195,7 +2200,7 @@ if ($this->post) {
 		/*
 		 * options tab
 		 */
-		$input_vat_rate='<select name="tax_id" id="tax_id"><option value="0">No TAX</option>';
+		$input_vat_rate='<select name="tax_id" id="tax_id" class="form-control"><option value="0">No TAX</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product_tax_rate=0;
@@ -2242,7 +2247,7 @@ if ($this->post) {
 		$staffel_price_block='';
 		if ($this->ms['MODULES']['STAFFEL_PRICE_MODULE']) {
 			$staffel_price_block.='
-				<div class="account-field">
+				<div class="form-group">
 				<script>
 				jQuery(document).ready(function($) {
 					jQuery("#add_staffel_input").click(function(event) {
@@ -2258,17 +2263,17 @@ if ($this->post) {
 								counter_data = counter_data + 1;
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<span>'.addslashes($this->pi_getLL('admin_from')).'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_from')).'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<span>'.addslashes($this->pi_getLL('admin_till2')).'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_till2')).'</span> <input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name_excluding_vat" class="msStaffelPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name_including_vat" class="msStaffelPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'<td>\';
-								elem += \'<input type="button" value="x" onclick="remStaffelInput(\' + counter_data + \')"  class="msadmin_button" />\';
+								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')"  class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
 								elem += \'</td>\';
 								elem += \'</tr>\';
 								jQuery(\'#sp_end_row\').before(elem);
@@ -2283,18 +2288,18 @@ if ($this->post) {
 								}
 								var elem = \'<tr id="sp_\' + counter_data + \'">\';
 								elem += \'<td>\';
-								elem += \'<span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" value="\' + next_qty_col_1 + \'" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_from').'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" value="\' + next_qty_col_1 + \'" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" />\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="msStaffelPriceExcludingVat" value=""><label for="display_name_excluding_vat">'.$this->pi_getLL('excluding_vat').'</label></div>\';
-								elem += \'<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name_including_vat" id="display_name_including_vat" class="msStaffelPriceIncludingVat" value=""><label for="display_name_including_vat">'.$this->pi_getLL('including_vat').'</label></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class=form-control "msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<input type="button" value="x" onclick="remStaffelInput(\' + counter_data + \')"  class="msadmin_button" />\';
+								elem += \'<button type="button" value="" onclick="remStaffelInput(\' + counter_data + \')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button>\';
 								elem += \'</td>\';
 								elem += \'</tr>\';
 								jQuery(\'#sp_end_row\').before(elem);
@@ -2324,28 +2329,31 @@ if ($this->post) {
 				</script>';
 			if (empty($product['staffel_price'])) {
 				$staffel_price_block.='
-						<div class="account-field toggle_advanced_option" id="msEditProductInputStaffelPrice">
-							<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
-							<input type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_add_staffel_price')).'" id="add_staffel_input" />
+						<div class="toggle_advanced_option" id="msEditProductInputStaffelPrice">
+							<label for="products_price" class="control-label col-md-2">'.$this->pi_getLL('admin_staffel_price').'</label>
+							<div class="col-md-10">
+							<input class="btn btn-success btn-sm" type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input" />
 							<label>&nbsp;</label>
 							<div class="product_staffel_price">
-								<table cellpadding="0" cellspacing="0">
-									<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="0" /></td></tr>
+								<table class="table">
+									<thead><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="0" /></td></tr></thead>
 								</table>
+							</div>
 							</div>
 						</div>';
 			} else {
 				$staffel_price_block.='
-					<div class="account-field" id="msEditProductInputStaffelPrice">
-						<label for="products_price">'.$this->pi_getLL('admin_staffel_price').'</label>
-						<div class="product_staffel_price">
-							<table cellpadding="0" cellspacing="0">
+					<div id="msEditProductInputStaffelPrice">
+						<label for="products_price"class="control-label col-md-2">'.$this->pi_getLL('admin_staffel_price').'</label>
+						<div class="col-md-10 product_staffel_price ">
+							<table class="table">
+								<thead>
 								<tr>
-									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_from')).'</td>
-									<td>'.mslib_befe::strtolower($this->pi_getLL('admin_till')).'</td>
-									<td align="center">'.mslib_befe::strtolower($this->pi_getLL('admin_price')).'</td>
-									<td>&nbsp;</td>
-								</tr>';
+									<th>'.mslib_befe::strtolower($this->pi_getLL('admin_from')).'</th>
+									<th>'.mslib_befe::strtolower($this->pi_getLL('admin_till')).'</th>
+									<th>'.mslib_befe::strtolower($this->pi_getLL('admin_price')).'</th>
+									<th>&nbsp;</th>
+								</tr></thead><tbody>';
 				$sp_rows=explode(';', $product['staffel_price']);
 				foreach ($sp_rows as $sp_idx=>$sp_row) {
 					$sp_idx+=1;
@@ -2356,30 +2364,30 @@ if ($this->post) {
 					$staffel_price_display_incl=mslib_fe::taxDecimalCrop($sp_price+$staffel_tax, 2, false);
 					$staffel_price_block.='
 						<tr id="sp_'.$sp_idx.'">
-							<td><span>'.$this->pi_getLL('admin_from').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></td>
-							<td><span>'.$this->pi_getLL('admin_till2').'</span> <input type="text" class="price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></td>
+							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_from').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_1" readonly="readonly" value="'.$sp_col_1.'" /></span></td>
+							<td><div class="input-group"><span class="input-group-addon">'.$this->pi_getLL('admin_till2').'</span><input type="text" class="form-control price small_input" name="sp['.$sp_idx.'][]" id="sp_'.$sp_idx.'_qty_2" value="'.$sp_col_2.'" /></span></td>
 							<td>
-							<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-							<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msStaffelPriceExcludingVat" value="'.htmlspecialchars($sp_price_display).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msStaffelPriceIncludingVat" value="'.htmlspecialchars($staffel_price_display_incl).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 							<div class="msAttributesField hidden"><input type="hidden" name="staffel_price['.$sp_idx.']" class="price small_input" id="staffel_price" value="'.htmlspecialchars($sp_price).'"></div>
-							<td><input type="button" value="X" onclick="remStaffelInput(\''.$sp_idx.'\')"  class="msadmin_button" /></td>
+							<td><button type="button" value="" onclick="remStaffelInput(\''.$sp_idx.'\')" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></button></td>
 						</tr>';
 				}
-				$staffel_price_block.='<tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><input type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input" /></td></tr>
+				$staffel_price_block.='</tbody><tfoot><tr id="sp_end_row"><td align="right" colspan=4"><input type="hidden" id="sp_row_counter" value="'.count($sp_rows).'" /><button class="btn btn-success btn-sm" type="button" value="'.$this->pi_getLL('admin_add_staffel_price').'" id="add_staffel_input"><i class="fa fa-plus"></i></button></td></tr></tfoot>
 								</table>
 							</div>
 					</div>';
 			}
 			$staffel_price_block.='</div>';
 		}
-		$manufacturer_input='<select name="manufacturers_id"><option value="">'.$this->pi_getLL('admin_choose_manufacturer').'</option>';
+		$manufacturer_input='<select name="manufacturers_id" class="form-control"><option value="">'.$this->pi_getLL('admin_choose_manufacturer').'</option>';
 		$str="SELECT * from tx_multishop_manufacturers where status=1 order by manufacturers_name";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$manufacturer_input.='<option value="'.$row['manufacturers_id'].'" '.(($row['manufacturers_id']==$product['manufacturers_id']) ? 'selected' : '').'>'.htmlspecialchars($row['manufacturers_name']).'</option>';
 		}
 		$manufacturer_input.='</select>';
-		$order_unit='<select name="order_unit_id"><option value="">'.$this->pi_getLL('default').'</option>';
+		$order_unit='<select name="order_unit_id" class="form-control"><option value="">'.$this->pi_getLL('default').'</option>';
 		$str="SELECT o.id, o.code, od.name from tx_multishop_order_units o, tx_multishop_order_units_description od where o.page_uid='".$this->shop_pid."' and o.id=od.order_unit_id and od.language_id='0' order by o.id desc";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -2398,22 +2406,27 @@ if ($this->post) {
 			}
 			$language_lable.=''.$language['title'];
 			$options_tab_virtual_product.='
-				<div class="account-field toggle_advanced_option msEditProductLanguageDivider" id="msEditProductInputLanguageDivider_'.$language['uid'].'">
-					<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
-					<strong>'.$language_lable.'</strong>
+				<div class="form-group toggle_advanced_option msEditProductLanguageDivider" id="msEditProductInputLanguageDivider_'.$language['uid'].'">
+					<label class="col-md-2 control-label">'.$this->pi_getLL('language').'</label>
+					<div class="col-md-10">
+					<p class="form-control-static">'.$language_lable.'</p>
+					</div>
 				</div>
-				<div class="account-field toggle_advanced_option" id="msEditProductInputVirtualProductFile_'.$language['uid'].'">
-					<label for="file_location">'.$this->pi_getLL('file').'</label>
-					<input name="file_location['.$language['uid'].']" type="file" />';
+				<div class="form-group toggle_advanced_option" id="msEditProductInputVirtualProductFile_'.$language['uid'].'">
+					<label for="file_location" class="col-md-2 control-label">'.$this->pi_getLL('file').'</label>
+					<div class="col-md-10">
+					<input name="file_location['.$language['uid'].']" type="file" class="form-control" />';
 			if ($lngproduct[$language['uid']]['file_label'] and $lngproduct[$language['uid']]['file_location']) {
 				$label='download '.htmlspecialchars($lngproduct[$language['uid']]['file_label']);
 				$options_tab_virtual_product.='<a href="'.mslib_fe::typolink(",2002", '&tx_multishop_pi1[page_section]=get_micro_download_by_admin&language_id='.$language['uid'].'&products_id='.$product['products_id']).'" alt="'.$label.'" title="'.$label.'">'.$label.'</a>
 				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&pid='.$_REQUEST['pid'].'&action=edit_product&delete_micro_download=1&language_id='.$language['uid']).'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete '.htmlspecialchars($lngproduct[$language['uid']]['file_label']).'"></a>';
 			}
-			$options_tab_virtual_product.='</div>
-				<div class="account-field toggle_advanced_option" id="msEditProductInputVirtualProductExternalUrl_'.$language['uid'].'">
-					<label for="file_remote_location">'.$this->pi_getLL('admin_external_url').'</label>
-					<input type="text" class="text" name="file_remote_location['.$language['uid'].']" id="file_remote_location['.$language['uid'].']"  value="'.htmlspecialchars($lngproduct[$language['uid']]['file_remote_location']).'">
+			$options_tab_virtual_product.='</div></div>
+				<div class="form-group toggle_advanced_option" id="msEditProductInputVirtualProductExternalUrl_'.$language['uid'].'">
+					<label for="file_remote_location" class="col-md-2 control-label">'.$this->pi_getLL('admin_external_url').'</label>
+					<div class="col-md-10">
+					<input type="text" class="form-control text" name="file_remote_location['.$language['uid'].']" id="file_remote_location['.$language['uid'].']"  value="'.htmlspecialchars($lngproduct[$language['uid']]['file_remote_location']).'">
+					</div>
 				</div>';
 		}
 		$shipping_payment_method='';
@@ -2425,7 +2438,7 @@ if ($this->post) {
 				// the value is are the negate value
 				// negate 1 mean the shipping/payment are excluded
 				$shipping_payment_method.='
-						<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
+						<div class="form-group div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
 							<label>'.$this->pi_getLL('admin_mapped_methods').'</label>
 							<div class="innerbox_methods">
 								<div class="innerbox_payment_methods">
@@ -2491,9 +2504,10 @@ if ($this->post) {
 				$i='';
 			}
 			$images_tab_block.='
-			<div class="account-field" id="msEditProductInputImage_'.$i.'">
-				<label for="products_image'.$i.'">'.$this->pi_getLL('admin_image').' '.($i+1).'</label>
-				<div id="products_image'.$i.'">
+			<div class="form-group" id="msEditProductInputImage_'.$i.'">
+				<label for="products_image'.$i.'" class="col-md-2 control-label">'.$this->pi_getLL('admin_image').' '.($i+1).'</label>
+				<div class="col-md-10">
+				<div id="products_image'.$i.'" class="products_image">
 					<noscript>
 						<input name="products_image'.$i.'" type="file" />
 					</noscript>
@@ -2504,13 +2518,13 @@ if ($this->post) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'" />';
 				$images_tab_block.='<div class="image_tools">';
 				if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
-					$images_tab_block.=' <a href="#" id="cropEditor" rel="'.$product['products_image'.$i].'"><span>crop</span></a>';
+					$images_tab_block.=' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="'.$product['products_image'.$i].'"><i class="fa fa-crop"></i></a>';
 				}
-				$images_tab_block.=' <a href="#" class="delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+				$images_tab_block.=' <a href="#" class="btn btn-danger btn-sm delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><i class="fa fa-trash-o"></i></a>';
 				$images_tab_block.='</div>';
 			}
 			$images_tab_block.='</div>';
-			$images_tab_block.='</div>';
+			$images_tab_block.='</div></div>';
 		}
 		$images_tab_block.='<script>
 		jQuery(document).ready(function($) {';
@@ -2531,7 +2545,7 @@ if ($this->post) {
 				},
 				template: \'<div class="qq-uploader">\' +
 						  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
-						  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+						  \'<div class="qq-upload-button btn btn-primary"><i class="fa fa-upload"></i> '.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 						  \'<ul class="qq-upload-list" id="qq-upload-list-ul'.$i.'"></ul>\' +
 						  \'</div>\',
 				onComplete: function(id, fileName, responseJSON){
@@ -2583,24 +2597,30 @@ if ($this->post) {
 		$meta_tags_block='';
 		foreach ($this->languages as $key=>$language) {
 			$meta_tags_block.='
-			<div class="account-field" id="msEditProductInputMeta_'.$language['uid'].'">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
+			<div class="form-group" id="msEditProductInputMeta_'.$language['uid'].'">
+			<label class="col-md-2 control-label">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 				$meta_tags_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
 			}
 			$meta_tags_block.=''.$language['title'].'
+			</p></div></div>
+			<div class="form-group" id="msEditProductInputMetaTitle_'.$language['uid'].'">
+				<label for="products_meta_title" class="col-md-2 control-label">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="products_meta_title['.$language['uid'].']" id="products_meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_meta_title']).'">
+				</div>
 			</div>
-			<div class="account-field" id="msEditProductInputMetaTitle_'.$language['uid'].'">
-				<label for="products_meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
-				<input type="text" class="text" name="products_meta_title['.$language['uid'].']" id="products_meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_meta_title']).'">
+			<div class="form-group" id="msEditProductInputMetaKeywords_'.$language['uid'].'">
+				<label for="products_meta_keywords" class="col-md-2 control-label">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="products_meta_keywords['.$language['uid'].']" id="products_meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_meta_keywords']).'">
+				</div>
 			</div>
-			<div class="account-field" id="msEditProductInputMetaKeywords_'.$language['uid'].'">
-				<label for="products_meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
-				<input type="text" class="text" name="products_meta_keywords['.$language['uid'].']" id="products_meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_meta_keywords']).'">
-			</div>
-			<div class="account-field" id="msEditProductInputMetaDesc_'.$language['uid'].'">
-				<label for="products_meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
-				<input type="text" class="text" name="products_meta_description['.$language['uid'].']" id="products_meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']).'">
+			<div class="form-group" id="msEditProductInputMetaDesc_'.$language['uid'].'">
+				<label for="products_meta_description" class="col-md-2 control-label">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="products_meta_description['.$language['uid'].']" id="products_meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']).'">
+				</div>
 			</div>
 			';
 		}
@@ -2617,20 +2637,20 @@ if ($this->post) {
 			// new attributes
 			$new_product_attributes_block_columns_js=array();
 			$new_product_attributes_block_columns_js['attribute_option_col']='new_attributes_html+=\'<td class="product_attribute_option">\';
-			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" style="width:200px" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[options][]" id="tmp_options_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" value="0" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="0" />\';
 			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_value_col']='new_attributes_html+=\'<td class="product_attribute_value">\';
-			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" style="width:200px" />\';
+			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[attributes][]" id="tmp_attributes_sb" />\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" value="0" />\';
 			new_attributes_html+=\'<br/><small class="information_select2_label">'.addslashes($this->pi_getLL('admin_label_select_value_or_type_new_value')).'</small>\';
 			new_attributes_html+=\'</td>\';';
 			if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
 				$element_id=time();
 				$new_product_attributes_block_columns_js['attribute_value_image_col']='new_attributes_html+=\'<td class="product_attribute_value_image">\';
-				new_attributes_html+=\'<div class="account-field" class="msEditAttributeValueImage">\';
+				new_attributes_html+=\'<div class="form-group" class="msEditAttributeValueImage">\';
 				new_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
 				new_attributes_html+=\'<div id="attribute_value_image'.$element_id.'">\';
 				new_attributes_html+=\'<noscript>\';
@@ -2643,27 +2663,27 @@ if ($this->post) {
 				new_attributes_html+=\'</td>\';';
 			}
 			$new_product_attributes_block_columns_js['attribute_price_prefix_col']='new_attributes_html+=\'<td class="product_attribute_prefix">\';
-			new_attributes_html+=\'<select name="tx_multishop_pi1[prefix][]">\';
+			new_attributes_html+=\'<select name="tx_multishop_pi1[prefix][]" class="form-control">\';
 			new_attributes_html+=\'<option value="">&nbsp;</option>\';
 			new_attributes_html+=\'<option value="+" selected="selected">+</option>\';
 			new_attributes_html+=\'<option value="-">-</option>\';
 			new_attributes_html+=\'</select>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
-			new_attributes_html+=\'<div class="msAttributesField">\';
-			new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceExcludingVat">\';
-			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('excluding_vat').'</label>\';
-			new_attributes_html+=\'</div>\';
-			new_attributes_html+=\'<div class="msAttributesField">\';
-			new_attributes_html+=\''.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat">\';
-			new_attributes_html+=\'<label for="display_name">'.$this->pi_getLL('including_vat').'</label>\';
-			new_attributes_html+=\'</div>\';
+			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">\';
+			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span>\';
+			new_attributes_html+=\'</div></div>\';
+			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">\';
+			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span>\';
+			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
 			new_attributes_html+=\'<input type="hidden" name="tx_multishop_pi1[price][]" />\';
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
-			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td>\';
-			new_attributes_html+=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="msadmin_button save_new_attributes">&nbsp;<input type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="msadmin_button delete_tmp_product_attributes">\';
+			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
+			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-primary save_new_attributes"><i class="fa fa-pencil"></i></button> <button type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-danger delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
@@ -2689,16 +2709,16 @@ if ($this->post) {
 					$(this).parent().parent().hide();
 					var new_attributes_html=\'\';
 					new_attributes_html+=\'<span class="new_product_attributes">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</span><div class="wrap-attributes-item" rel="new">\';
-					new_attributes_html+=\'<table>\';
-					new_attributes_html+=\'<tr class="option_row">\';
+					new_attributes_html+=\'<table class="table">\';
+					new_attributes_html+=\'<thead><tr class="option_row">\';
 					'.implode("\n", $new_product_attributes_block_columns_js).'
-					new_attributes_html+=\'</tr>\';
+					new_attributes_html+=\'</tr></thead>\';
 					new_attributes_html+=\'</table>\';
 					new_attributes_html+=\'</div>\';
 					$(\'#add_attributes_holder>td\').empty();
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
 					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
-					var cols_image_attributes_html=\'<div class="account-field" class="msEditAttributeValueImage">\';
+					var cols_image_attributes_html=\'<div class="form-group" class="msEditAttributeValueImage">\';
 					cols_image_attributes_html+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
 					cols_image_attributes_html+=\'<div id="attribute_value_image\' + n + \'">\';
 					cols_image_attributes_html+=\'<noscript>\';
@@ -2795,7 +2815,7 @@ if ($this->post) {
 					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 					$(element_cloned).find("td[class^=\'product_attribute_value_image\']").attr("class", function(i, c){
 						$(this).empty();
-						var attribute_value_image_block=\'<div class="account-field" class="msEditAttributeValueImage">\';
+						var attribute_value_image_block=\'<div class="form-group" class="msEditAttributeValueImage">\';
 						attribute_value_image_block+=\'<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>\';
 						attribute_value_image_block+=\'<div id="attribute_value_image\' + n + \'">\';
 						attribute_value_image_block+=\'<noscript>\';
@@ -2889,7 +2909,7 @@ if ($this->post) {
 					}
 					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id + " > div.items_wrapper";
 					if (selected_pa_option_id != "") {
-						var delete_button_html=\'<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes">\';
+						var delete_button_html=\'<button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button>\';
 						// add class for marker
 						$(pa_main_divwrapper).addClass("new_attributes");
 						// check for the main tr if it exists
@@ -2929,7 +2949,7 @@ if ($this->post) {
 								alt: selected_pa_option_text,
 								class: "products_attributes_item " + li_class
 							});
-							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \' <a href="#" class="items_wrapper_unfolded">fold</a></span><div class="items_wrapper"></div><div class="add_new_attributes"><input type="button" class="msadmin_button add_new_attributes_values" value="'.addslashes($this->pi_getLL('admin_add_new_value')).' [+]" rel="\' + selected_pa_option_id + \'" /></div>\');
+							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \' <a href="#" class="items_wrapper_unfolded">fold</a></span><div class="items_wrapper"></div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="'.addslashes($this->pi_getLL('admin_add_new_value')).' [+]" rel="\' + selected_pa_option_id + \'" /></div>\');
 							$(pa_main_divwrapper).addClass("odd_item_row");
 							// rewrite the button
 							$(this).parent().empty().html(delete_button_html);
@@ -3143,7 +3163,7 @@ if ($this->post) {
 				select2_sb(".product_attribute_options", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 			});
 			</script>
-			<h1>'.$this->pi_getLL('admin_product_attributes').'</h1>
+			<h3>'.$this->pi_getLL('admin_product_attributes').'</h3 >
 			';
 			if ($this->get['cid']) {
 				// optional predefined attributes menu
@@ -3175,7 +3195,7 @@ if ($this->post) {
 							}
 						</style>
 			<div class="wrap-attributes" id="msEditProductInputAttributes">
-			<table width="100%" cellpadding="2" cellspacing="2">
+			<table width="100%" cellpadding="0" cellspacing="0">
 				<tr class="option_row2" >
 				   <td>
 						<div id="predefined_attributes">
@@ -3280,7 +3300,7 @@ if ($this->post) {
 				'' // LIMIT ...
 			);
 			$qry_pa=$GLOBALS ['TYPO3_DB']->sql_query($sql_pa);
-			$attributes_tab_block.='<table width="100%" cellpadding="2" cellspacing="2" id="product_attributes_table">';
+			$attributes_tab_block.='<table class="table" id="product_attributes_table">';
 			$js_select2_cache='';
 			$js_select2_cache_options=array();
 			$js_select2_cache_values=array();
@@ -3305,7 +3325,7 @@ if ($this->post) {
 						$js_select2_cache_values[$row['options_values_id']]='attributesValues['.$row['options_values_id'].']={id:"'.$row['options_values_id'].'", text:"'.htmlentities($row['options_values_name'], ENT_QUOTES).'"}';
 					}
 					if (count($options_data)) {
-						$attributes_tab_block.='<tr id="product_attributes_content_row">';
+						$attributes_tab_block.='<thead><tr id="product_attributes_content_row">';
 						$attributes_tab_block.='<td colspan="5"><ul id="products_attributes_items">';
 						foreach ($options_data as $option_id=>$option_name) {
 							if (!isset($group_row_type) || $group_row_type=='even_group_row') {
@@ -3335,13 +3355,13 @@ if ($this->post) {
 								}
 								$existing_product_attributes_block_columns=array();
 								$existing_product_attributes_block_columns['attribute_option_col']='<td class="product_attribute_option">
-								<input type="hidden" name="tx_multishop_pi1[options][]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options" value="'.$option_id.'" style="width:200px" />
+								<input type="hidden" name="tx_multishop_pi1[options][]" id="option_'.$attribute_data['products_attributes_id'].'" class="product_attribute_options" value="'.$option_id.'" />
 								<input type="hidden" name="tx_multishop_pi1[is_manual_options][]" id="manual_option_'.$attribute_data['products_attributes_id'].'" value="0" />
 								<input type="hidden" name="tx_multishop_pi1[pa_id][]" value="'.$attribute_data['products_attributes_id'].'" />
 								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 								</td>';
 								$existing_product_attributes_block_columns['attribute_value_col']='<td class="product_attribute_value">
-								<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values_'.$option_id.'" value="'.$attribute_data['options_values_id'].'" style="width:200px" />
+								<input type="hidden" name="tx_multishop_pi1[attributes][]" id="attribute_'.$attribute_data['products_attributes_id'].'" class="product_attribute_values_'.$option_id.'" value="'.$attribute_data['options_values_id'].'" />
 								<input type="hidden" name="tx_multishop_pi1[is_manual_attributes][]" id="manual_attributes_'.$attribute_data['products_attributes_id'].'" value="0" />
 								<br/><small class="information_select2_label">'.$this->pi_getLL('admin_label_select_value_or_type_new_value').'</small>
 								</td>';
@@ -3349,7 +3369,7 @@ if ($this->post) {
 								if ($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES']) {
 									$element_id=$product['products_id'].'_'.$option_id.'_'.$attribute_data['options_values_id'];
 									$existing_product_attributes_block_columns['attribute_value_image_col']='<td class="product_attribute_value_image">
-									<div class="account-field" class="msEditAttributeValueImage">
+									<div class="form-group" class="msEditAttributeValueImage">
 										<label for="attribute_value_image">'.$this->pi_getLL('admin_image').'</label>
 										<div id="attribute_value_image'.$element_id.'">
 											<noscript>
@@ -3402,7 +3422,7 @@ if ($this->post) {
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='</td>';
 								}
 								$existing_product_attributes_block_columns['attribute_price_prefix_col']='<td class="product_attribute_prefix">
-								<select name="tx_multishop_pi1[prefix][]">
+								<select name="tx_multishop_pi1[prefix][]" class="form-control">
 								<option value="">&nbsp;</option>
 								<option value="+"'.($attribute_data['price_prefix']=='+' ? ' selected="selected"' : '').'>+</option>
 								<option value="-"'.($attribute_data['price_prefix']=='-' ? ' selected="selected"' : '').'>-</option>
@@ -3413,12 +3433,12 @@ if ($this->post) {
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
 								$existing_product_attributes_block_columns['attribute_price_col']='<td class="product_attribute_price">
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
 								</td>';
-								$existing_product_attributes_block_columns['attribute_save_col']='<td>
-								<input type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="msadmin_button delete_product_attributes">
+								$existing_product_attributes_block_columns['attribute_save_col']='<td class="product_attribute_action">
+								<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button></div>
 								</td>';
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'])) {
 									$params=array(
@@ -3431,18 +3451,18 @@ if ($this->post) {
 									}
 								}
 								$attributes_tab_block.='<div class="wrap-attributes-item '.$item_row_type.'" id="item_product_attribute_'.$attribute_data['products_attributes_id'].'" rel="'.$attribute_data['products_attributes_id'].'">';
-								$attributes_tab_block.='<table>';
-								$attributes_tab_block.='<tr class="option_row">';
+								$attributes_tab_block.='<table class="table">';
+								$attributes_tab_block.='<thead><tr class="option_row">';
 								$attributes_tab_block.=implode("\n", $existing_product_attributes_block_columns);
-								$attributes_tab_block.='</tr>';
+								$attributes_tab_block.='</tr></thead>';
 								$attributes_tab_block.='</table>';
 								$attributes_tab_block.='</div>';
 							}
-							$attributes_tab_block.='</div><div class="add_new_attributes"><input type="button" class="msadmin_button add_new_attributes_values" value="'.$this->pi_getLL('admin_add_new_value').' [+]" rel="'.$option_id.'" /></div>';
+							$attributes_tab_block.='</div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="'.$this->pi_getLL('admin_add_new_value').' [+]" rel="'.$option_id.'" /></div>';
 							$attributes_tab_block.='</li>';
 						}
 						$attributes_tab_block.='</ul></td>';
-						$attributes_tab_block.='</tr>';
+						$attributes_tab_block.='</tr></thead>';
 					}
 				}
 				$count_js_cache_options=count($js_select2_cache_options);
@@ -3461,9 +3481,9 @@ if ($this->post) {
 			if (!empty($js_select2_cache)) {
 				$GLOBALS['TSFE']->additionalHeaderData['js_select2_cache']=$js_select2_cache;
 			}
-			$attributes_tab_block.='<tr id="add_attributes_holder">
+			$attributes_tab_block.='<tbody><tr id="add_attributes_holder">
 					<td colspan="5">&nbsp;</td>
-			</tr>';
+			</tr></tbody>';
 			$attribute_values_sb_trigger='';
 			if (count($attribute_values_class_id)) {
 				$tmp_attribute_values_class_id=array_unique($attribute_values_class_id);
@@ -3471,9 +3491,9 @@ if ($this->post) {
 					$attribute_values_sb_trigger.='select2_values_sb("'.$value_sb_class_id.'", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");'."\n";
 				}
 			}
-			$attributes_tab_block.='<tr id="add_attributes_button">
-					<td colspan="5" align="right"><input id="addAttributes" type="button" class="msadmin_button" value="'.$this->pi_getLL('admin_add_new_attribute').' [+]"></td>
-			</tr>
+			$attributes_tab_block.='<tfoot><tr id="add_attributes_button">
+					<td colspan="5" align="right"><input id="addAttributes" type="button" class="btn btn-success" value="'.$this->pi_getLL('admin_add_new_attribute').' [+]"></td>
+			</tr></tfoot>
 			</table>
 			<script type="text/javascript">
 			var select2_values_sb = function(selector_str, placeholder, dropdowncss, ajax_url) {
@@ -3564,21 +3584,16 @@ if ($this->post) {
 		$product_relatives_block='';
 		if ($_REQUEST['action']=='edit_product') {
 			$form_category_search='
-			<table id="related_product_table">
-				<tr>
-					<td><label>'.$this->pi_getLL('admin_keyword').'</label></td>
-					<td>
-						<input type="text" name="keypas" id="key" value=""> </input>
-					</td>
-					<td><input type="hidden" name="rel_catid" id="rel_catid" /></td>
-					<td>
-						<input type="button" id="filter" value="'.$this->pi_getLL('admin_search').'" />
-					<td>
-
-				</tr>
-			</table>';
+			<div class="form-group">
+			<label class="col-md-2 control-label">'.$this->pi_getLL('admin_keyword').'</label>
+			<div class="col-md-10 form-inline">
+				<input type="text" name="keypas" id="key" value="" class="form-control" />
+				<input type="hidden" name="rel_catid" id="rel_catid" />
+				<input type="submit" id="filter" value="'.$this->pi_getLL('admin_search').'" class="btn btn-success" />
+			</div>
+			</div>';
 			// mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', ''))
-			$product_relatives_block='<h1>'.$this->pi_getLL('admin_related_products').'</h1>'.$form_category_search.'<div id="load"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/loading2.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
+			$product_relatives_block='<h3>'.$this->pi_getLL('admin_related_products').'</h3>'.$form_category_search.'<div id="load"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/loading2.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
 		}
 		/*
 		 * product copy tab
@@ -3586,14 +3601,17 @@ if ($this->post) {
 		$product_copy_block='';
 		if ($_REQUEST['action']=='edit_product') {
 			$product_copy_block.='
-				<h1>'.$this->pi_getLL('admin_copy_duplicate_product').'</h1>
-				<div class="account-field" id="msEditProductInputDuplicateProduct">
-				<label for="cid">'.$this->pi_getLL('admin_select_category').'</label>
+				<div class="form-group" id="msEditProductInputDuplicateProduct">
+				<label for="cid" class="col-md-2 control-label">'.$this->pi_getLL('admin_select_category').'</label>
+				<div class="col-md-10">
 				<input type="hidden" name="cid" id="cid" value="'.$this->get['cid'].'" />
 				</div>
-				<div id="cp_buttons">
-					<input type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_relate_product_to_category')).'" id="cp_product" />
-					<input type="button" value="'.mslib_befe::strtoupper($this->pi_getLL('admin_duplicate_product')).'" id="dp_product" />
+				</div>
+				<div class="form-group">
+				<div id="cp_buttons" class="col-md-10 col-md-offset-2">
+					<button type="button" value="" id="cp_product" class="btn btn-primary"><i class="fa fa-link"></i> '.$this->pi_getLL('admin_relate_product_to_category').'</button>
+					<button type="button" value="" id="dp_product" class="btn btn-primary"><i class="fa fa-files-o"></i> '.$this->pi_getLL('admin_duplicate_product').'</button>
+				</div>
 				</div>
 				<div id="has_cd">
 				</div>';
@@ -3623,8 +3641,8 @@ if ($this->post) {
 		$subpartArray['###FOOTER_LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LABEL_BUTTON_SAVE###']=$this->pi_getLL('admin_save');
 		if ($_REQUEST['action']=='edit_product' && is_numeric($this->get['pid'])) {
-			$subpartArray['###BUTTON_SAVE_AS_NEW###']='<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" /></span>';
-			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="save_as_new" type="submit" value="'.$this->pi_getLL('admin_save_as_new').'" class="submit save_as_new" /></span>';
+			$subpartArray['###BUTTON_SAVE_AS_NEW###']='<button name="save_as_new" type="submit" value="" class="btn btn-primary submit save_as_new"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-floppy-o fa-stack-1x"></i></span> '.$this->pi_getLL('admin_save_as_new').'</button>';
+			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='<button name="save_as_new" type="submit" value="" class="btn btn-primary submit save_as_new"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-floppy-o fa-stack-1x"></i></span> '.$this->pi_getLL('admin_save_as_new').'</button>';
 		} else {
 			$subpartArray['###BUTTON_SAVE_AS_NEW###']='';
 			$subpartArray['###FOOTER_BUTTON_SAVE_AS_NEW###']='';
@@ -3666,7 +3684,7 @@ if ($this->post) {
 		$shops_tabs_content=array();
 		$old_layered_categories_ids=array();
 		if (is_array($shopPids) && count($shopPids)) {
-			$tmpcontent.='<div class="account-field" class="msEditProductInputMultipleShopCategory">
+			$tmpcontent.='<div class="form-group" class="msEditProductInputMultipleShopCategory">
 				<label>'.$this->pi_getLL('link_to_categories_in_other_shops').'</label>
 				<div class="msAttributesWrapper">';
 			foreach ($shopPids as $shopPid) {
@@ -3688,7 +3706,7 @@ if ($this->post) {
 							if (!empty($old_products_to_shop_categories)) {
 								if ($this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
 									// build the shops tab if the link for categories in other shop exist
-									$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar_'.$pageinfo['uid'].'"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.mslib_befe::strtoupper($pageinfo['title']).'</a></li>';
+									$shops_tabs_bar[]='<li class="mshop_tab_'.$pageinfo['uid'].' shops_tab_bar_'.$pageinfo['uid'].'"><a href="#mshop_tab_'.$pageinfo['uid'].'">'.$this->pi_getLL('enable_custom_products_description_for').' '.$pageinfo['title'].'</a></li>';
 									$tmp_categories_id=explode(',', $old_products_to_shop_categories);
 									$tabs_content=array();
 									$tabs_array=array();
@@ -3702,11 +3720,11 @@ if ($this->post) {
 											if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
 												for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
 													$details_tab_content_multishops.='
-														<div class="account-field" id="msEditProductInputTabTitle_'.$i.'">
+														<div class="form-group" id="msEditProductInputTabTitle_'.$i.'">
 															<label for="products_description_tab_title_'.$i.'">'.$this->pi_getLL('title').' (tab: '.$i.')</label>
 															<input type="text" class="text" name="customProductsDescription_products_description_tab_title_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_title_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_title_'.$i.'']).'">
 														</div>
-														<div class="account-field" id="msEditProductInputTabContent_'.$i.'">
+														<div class="form-group" id="msEditProductInputTabContent_'.$i.'">
 															<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
 															<textarea name="customProductsDescription_products_description_tab_content_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_content_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
 														</div>';
@@ -3726,44 +3744,44 @@ if ($this->post) {
 												$textarea_short_description_params='onKeyDown="limitText(this,255);" onKeyUp="limitText(this,255);"';
 											}
 											$textarea_short_description_class=($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="text expand20-100" ');
-											$details_content_multishops.='<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-													<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>
+											$details_content_multishops.='<div class="form-group toggle_advanced_option msEditProductLanguageDivider">
+													<label>'.$this->pi_getLL('language').'</label>
 													<strong>'.$language_label.'</strong>
 												</div>
-												<div class="account-field" id="msEditProductInputName'.$language['uid'].'">
+												<div class="form-group" id="msEditProductInputName">
 													<label for="products_name">'.$this->pi_getLL('admin_name').'</label>
 													<input type="text" class="text" name="customProductsDescription_products_name['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_name_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_name']).'">
 												</div>
-												<div class="account-field" id="msEditProductInputShortDesc'.$language['uid'].'">
+												<div class="form-group" id="msEditProductInputShortDesc">
 													<label for="products_shortdescription">'.$this->pi_getLL('admin_short_description').'</label>
 													<textarea name="customProductsDescription_products_shortdescription['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" '.$textarea_short_description_params.' id="customProductsDescription_products_shortdescription_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" rows="4" '.$textarea_short_description_class.'>'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_shortdescription']).'</textarea>
 												</div>
-												<div class="account-field" id="msEditProductInputDesc'.$language['uid'].'">
+												<div class="form-group" id="msEditProductInputDesc">
 													<label for="products_description">'.$this->pi_getLL('admin_full_description').'</label>
 													<textarea name="customProductsDescription_products_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description']).'</textarea>
 												</div>
 												'.$details_tab_content_multishops.'
-												<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl'.$language['uid'].'">
+												<div class="form-group toggle_advanced_option" id="msEditProductInputExternalUrl">
 													<label for="products_url">'.$this->pi_getLL('admin_external_url').'</label>
 													<input type="text" class="text" name="customProductsDescription_products_url['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_url_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_url']).'">
 												</div>
-												<div class="account-field" id="msEditProductInputDeliveryTime'.$language['uid'].'">
+												<div class="form-group" id="msEditProductInputDeliveryTime">
 													<label for="delivery_time">'.$this->pi_getLL('admin_delivery_time').'</label>
 													<input type="text" class="text" name="customProductsDescription_delivery_time['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_delivery_time_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['delivery_time']).'">
 												</div>
-												<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords'.$language['uid'].'">
+												<div class="form-group toggle_advanced_option" id="msEditProductInputNegativeKeywords">
 													<label for="products_negative_keywords">Negative keywords</label>
 													<textarea name="customProductsDescription_products_negative_keywords['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_negative_keywords_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="expand20-100">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_negative_keywords']).'</textarea>
 												</div>
-												<div class="account-field" id="msEditProductInputMetaTitle_'.$pageinfo['uid'].'_'.$language['uid'].'">
+												<div class="form-group" id="msEditProductInputMetaTitle_'.$pageinfo['uid'].'_'.$language['uid'].'">
 													<label for="products_meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
 													<input type="text" class="text" name="customProductsDescription_products_meta_title['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_title_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_title']).'">
 												</div>
-												<div class="account-field" id="msEditProductInputMetaKeywords_'.$pageinfo['uid'].'_'.$language['uid'].'">
+												<div class="form-group" id="msEditProductInputMetaKeywords_'.$pageinfo['uid'].'_'.$language['uid'].'">
 													<label for="products_meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
 													<input type="text" class="text" name="customProductsDescription_products_meta_keywords['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_keywords_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_keywords']).'">
 												</div>
-												<div class="account-field" id="msEditProductInputMetaDesc_'.$pageinfo['uid'].'_'.$language['uid'].'">
+												<div class="form-group" id="msEditProductInputMetaDesc_'.$pageinfo['uid'].'_'.$language['uid'].'">
 													<label for="products_meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
 													<input type="text" class="text" name="customProductsDescription_products_meta_description['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_meta_description_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_meta_description']).'">
 												</div>';
@@ -3784,7 +3802,7 @@ if ($this->post) {
 										$tmpcontent2='<li id="products_info_shops'.$pageinfo['uid'].'_'.$tmp_category_id.'" alt="" class="products_info_shops odd_group_row">';
 										$tmpcontent2.='<span class="shop_name" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'">';
 										$tmpcontent2.='<input type="checkbox" class="enableMultipleShopsCustomProductInfoCheckbox" id="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'" name="tx_multishop_pi1[enableMultipleShopsCustomProductInfo]['.$pageinfo['uid'].']['.$tmp_category_id.']" value="1" rel="'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$shop_checkbox.' />&nbsp;';
-										$tmpcontent2.='<label for="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.mslib_befe::strtoupper($tmp_category_name).'</label><a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
+										$tmpcontent2.='<label for="enableMultipleShopsCustomProductInfo_'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$tmp_category_name.'</label><a href="#" class="'.$afoldwrapperState.'" id="afoldwrapper'.$pageinfo['uid'].'_'.$tmp_category_id.'">'.$afoldwrapperText.'</a>';
 										$tmpcontent2.='</span>';
 										$tmpcontent2.='<div class="custom_products_description" id="enableMultipleShopsCustomProductInfoCheckbox'.$pageinfo['uid'].'_'.$tmp_category_id.'"'.$custom_products_description_block.'>';
 										$tmpcontent2.=$details_content_multishops;
@@ -3814,7 +3832,7 @@ if ($this->post) {
 							}
 							$tmpcontent.='<div class="msAttributes">
 							<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$main_shop_checkbox.' />
-							<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.mslib_befe::strtoupper($pageinfo['title']).'</label>
+							<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.$pageinfo['title'].'</label>
 							<div class="msEditProductInputMultipleShopCategory" id="msEditProductInputMultipleShopCategory'.$pageinfo['uid'].'"'.$main_select2_block_visibility.'>
 								<input type="hidden" name="tx_multishop_pi1[products_to_shop_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$current_products_to_shop_categories.'" />
 								<input name="tx_multishop_pi1[old_products_to_shop_categories]['.$pageinfo['uid'].']" type="hidden" value="'.$old_products_to_shop_categories.'" />
@@ -3940,11 +3958,11 @@ if ($this->post) {
 						var details_tab_content=\'\';
 						if (product_details_number_of_tabs>0) {
 							for (var i=1; i<=product_details_number_of_tabs; i++) {
-								details_tab_content+=\'<div class="account-field" id="msEditProductInputTabTitle_\' + i + \'">\';
+								details_tab_content+=\'<div class="form-group" id="msEditProductInputTabTitle_\' + i + \'">\';
 								details_tab_content+=\'<label for="products_description_tab_title_\' + i + \'">'.$this->pi_getLL('title').' tab: \'+i+\') \' + i + \'</label>\';
 								details_tab_content+=\'<input type="text" class="text" name="customProductsDescription_products_description_tab_title_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_title_\'+ i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 								details_tab_content+=\'</div>\';
-								details_tab_content+=\'<div class="account-field" id="msEditProductInputTabContent_\'+ i + \'">\';
+								details_tab_content+=\'<div class="form-group" id="msEditProductInputTabContent_\'+ i + \'">\';
 								details_tab_content+=\'<label for="products_description_tab_content_\'+ i + \'">'.$this->pi_getLL('description').' tab: \'+i+\') \' + i + \'</label>\';
 								details_tab_content+=\'<textarea name="customProductsDescription_products_description_tab_content_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_content_\' + i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="mceEditor" rows="4"></textarea>\';
 								details_tab_content+=\'</div>\';
@@ -3955,44 +3973,44 @@ if ($this->post) {
 						var textarea_short_description_params=\'\';
 						'.(!$this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? 'textarea_short_description_params=\'onKeyDown="limitText(this,255);" onKeyUp="limitText(this,255);"\';'."\n" : '').'
 						var textarea_short_description_class=\''.($this->ms['MODULES']['PRODUCTS_SHORT_DESCRIPTION_CONTAINS_HTML_MARKUP'] ? ' class="mceEditor" ' : ' class="text expand20-100"').'\';
-						details_content+=\'<div class="account-field toggle_advanced_option msEditProductLanguageDivider">\';
-						details_content+=\'<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>\';
+						details_content+=\'<div class="form-group toggle_advanced_option msEditProductLanguageDivider">\';
+						details_content+=\'<label>'.$this->pi_getLL('language').'</label>\';
 						details_content+=\'<strong>\' + language_label + \'</strong>\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputName\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group" id="msEditProductInputName">\';
 						details_content+=\'<label for="products_name">'.$this->pi_getLL('admin_name').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_products_name[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_name_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputShortDesc\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group" id="msEditProductInputShortDesc">\';
 						details_content+=\'<label for="products_shortdescription">'.$this->pi_getLL('admin_short_description').'</label>\';
 						details_content+=\'<textarea name="customProductsDescription_products_shortdescription[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" \' + textarea_short_description_params + \' id="customProductsDescription_products_shortdescription_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" rows="4" \' + textarea_short_description_class + \'></textarea>\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputDesc\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group" id="msEditProductInputDesc">\';
 						details_content+=\'<label for="products_description">'.$this->pi_getLL('admin_full_description').'</label>\';
 						details_content+=\'<textarea name="customProductsDescription_products_description[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="mceEditor" rows="4"></textarea>\';
 						details_content+=\'</div>\';
 						details_content+=details_tab_content;
-						details_content+=\'<div class="account-field toggle_advanced_option" id="msEditProductInputExternalUr\' + lang.uid + \'l">\';
+						details_content+=\'<div class="form-group toggle_advanced_option" id="msEditProductInputExternalUrl">\';
 						details_content+=\'<label for="products_url">'.$this->pi_getLL('admin_external_url').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_products_url[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_url_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputDeliveryTime\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group" id="msEditProductInputDeliveryTime">\';
 						details_content+=\'<label for="delivery_time">'.$this->pi_getLL('admin_delivery_time').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_delivery_time[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_delivery_time_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group toggle_advanced_option" id="msEditProductInputNegativeKeywords">\';
 						details_content+=\'<label for="products_negative_keywords">Negative keywords</label>\';
 						details_content+=\'<textarea name="customProductsDescription_products_negative_keywords[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_negative_keywords_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="expand20-100"></textarea>\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputMetaTitle_\' + page_uid + \'_\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group" id="msEditProductInputMetaTitle_\' + page_uid + \'_\' + lang.uid + \'">\';
 						details_content+=\'<label for="products_meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_products_meta_title[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_meta_title\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputMetaKeywords_\' + page_uid + \'_\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group" id="msEditProductInputMetaKeywords_\' + page_uid + \'_\' + lang.uid + \'">\';
 						details_content+=\'<label for="products_meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_products_meta_keywords[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_meta_keywords[\' + page_uid + \'][\' + lang.uid + \']" value="">\';
 						details_content+=\'</div>\';
-						details_content+=\'<div class="account-field" id="msEditProductInputMetaDesc_\' + page_uid + \'_\' + lang.uid + \'">\';
+						details_content+=\'<div class="form-group" id="msEditProductInputMetaDesc_\' + page_uid + \'_\' + lang.uid + \'">\';
 						details_content+=\'<label for="products_meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>\';
 						details_content+=\'<input type="text" class="text" name="customProductsDescription_products_meta_description[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_meta_description[\' + page_uid + \'][\' + lang.uid + \']" value="">\';
 						details_content+=\'</div>\';
@@ -4128,13 +4146,13 @@ if ($this->post) {
 			$feed_stock_checkbox='';
 			$sql_feed='SELECT * from tx_multishop_product_feeds';
 			$qry_feed=$GLOBALS['TYPO3_DB']->sql_query($sql_feed);
-			$feed_checkbox='<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeeds">
+			$feed_checkbox='<div class="form-group div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeeds">
 								<label>Feed</label>
 								<div class="innerbox_methods">
 									<div class="innerbox_exclude_feeds">
 										<h4>Exclude feed</h4>
 										<ul>';
-			$feed_stock_checkbox='<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeedsStock">
+			$feed_stock_checkbox='<div class="form-group div_products_mappings toggle_advanced_option" id="msEditProductInputExcludeFeedsStock">
 								<label>Feed</label>
 								<div class="innerbox_methods">
 									<div class="innerbox_exclude_stock_feeds">
@@ -4218,8 +4236,8 @@ if ($this->post) {
 		$subpartArray['###LABEL_HEADING_TAB_OPTION###']=$this->pi_getLL('admin_product_options');
 		$subpartArray['###LABEL_VAT_RATE###']=$this->pi_getLL('admin_vat_rate');
 		$subpartArray['###INPUT_VATE_RATE###']=$input_vat_rate;
-		$subpartArray['###LABEL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_price'));
-		$subpartArray['###LABEL_NORMAL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_normal_price'));
+		$subpartArray['###LABEL_PRICE###']=$this->pi_getLL('admin_price');
+		$subpartArray['###LABEL_NORMAL_PRICE###']=$this->pi_getLL('admin_normal_price');
 		$subpartArray['###LABEL_CURRENCY0###']=mslib_fe::currency();
 		$subpartArray['###LABEL_CURRENCY1###']=mslib_fe::currency();
 		$subpartArray['###LABEL_CURRENCY2###']=mslib_fe::currency();
@@ -4235,14 +4253,14 @@ if ($this->post) {
 		$subpartArray['###VALUE_EXCL_VAT_PRICE###']=htmlspecialchars($price_excl_vat_display);
 		$subpartArray['###VALUE_INCL_VAT_PRICE###']=htmlspecialchars($price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_PRICE###']=htmlspecialchars($product['products_price']);
-		$subpartArray['###LABEL_SPECIAL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_specials_price'));
+		$subpartArray['###LABEL_SPECIAL_PRICE###']=$this->pi_getLL('admin_specials_price');
 		$subpartArray['###VALUE_EXCL_VAT_SPECIAL_PRICE###']=htmlspecialchars($special_price_excl_vat_display);
 		$subpartArray['###VALUE_INCL_VAT_SPECIAL_PRICE###']=htmlspecialchars($special_price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_SPECIAL_PRICE###']=htmlspecialchars($product['specials_new_products_price']);
-		$subpartArray['###LABEL_SPECIAL_PRICE_START###']=mslib_befe::strtoupper($this->pi_getLL('special_price_start'));
+		$subpartArray['###LABEL_SPECIAL_PRICE_START###']=$this->pi_getLL('special_price_start');
 		$subpartArray['###VALUE_SPECIAL_PRICE_START_VISUAL###']=$product['specials_start_date_visual'];
 		$subpartArray['###VALUE_SPECIAL_PRICE_START_SYS###']=$product['specials_start_date_sys'];
-		$subpartArray['###LABEL_SPECIAL_PRICE_EXPIRED###']=mslib_befe::strtoupper($this->pi_getLL('special_price_expired'));
+		$subpartArray['###LABEL_SPECIAL_PRICE_EXPIRED###']=$this->pi_getLL('special_price_expired');
 		$subpartArray['###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###']=$product['specials_expired_date_visual'];
 		$subpartArray['###VALUE_SPECIAL_PRICE_EXPIRED_SYS###']=$product['specials_expired_date_sys'];
 		$subpartArray['###LABEL_CAPITAL_PRICE###']=$this->pi_getLL('capital_price');
@@ -4252,11 +4270,11 @@ if ($this->post) {
 		$subpartArray['###CUSTOM_MARKER_ABOVE_PRICE_FORM_FIELD###']='';
 		$subpartArray['###CUSTOM_MARKER_ABOVE_VAT_RATE_FORM_FIELD###']='';
 		$subpartArray['###INPUT_STAFFEL_PRICE_BLOCK###']=$staffel_price_block;
-		$subpartArray['###LABEL_STOCK###']=mslib_befe::strtoupper($this->pi_getLL('admin_stock'));
+		$subpartArray['###LABEL_STOCK###']=$this->pi_getLL('admin_stock');
 		$subpartArray['###VALUE_STOCK###']=$product['products_quantity'];
-		$subpartArray['###LABEL_THRESHOLD_QTY###']=mslib_befe::strtoupper($this->pi_getLL('admin_alert_quantity_threshold', 'Alert stock threshold'));
+		$subpartArray['###LABEL_THRESHOLD_QTY###']=$this->pi_getLL('admin_alert_quantity_threshold', 'Alert stock threshold');
 		$subpartArray['###VALUE_THRESHOLD_QTY###']=$product['alert_quantity_threshold'];
-		$subpartArray['###LABEL_DATE_AVAILABLE###']=mslib_befe::strtoupper($this->pi_getLL('products_date_available'));
+		$subpartArray['###LABEL_DATE_AVAILABLE###']=$this->pi_getLL('products_date_available');
 		if ($product['products_date_available']==0 || empty($product['products_date_available'])) {
 			$product['products_date_available_sys']='';
 			$product['products_date_available_visual']='';
@@ -4293,7 +4311,7 @@ if ($this->post) {
 		$subpartArray['###VALUE_STARTTIME_SYS###']=$product['starttime_sys'];
 		$subpartArray['###VALUE_ENDTIME_VISUAL###']=$product['endtime_visual'];
 		$subpartArray['###VALUE_ENDTIME_SYS###']=$product['endtime_sys'];
-		$subpartArray['###LABEL_DATE_ADDED###']=mslib_befe::strtoupper($this->pi_getLL('date_added'));
+		$subpartArray['###LABEL_DATE_ADDED###']=$this->pi_getLL('date_added');
 		$subpartArray['###VALUE_DATE_ADDED_VISUAL###']=$product['products_date_added_visual'];
 		$subpartArray['###VALUE_DATE_ADDED_SYS###']=$product['products_date_added_sys'];
 		$subpartArray['###LABEL_PRODUCT_MODEL###']=$this->pi_getLL('admin_model');
@@ -4326,7 +4344,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_QTY_MULTIPLICATION###']=$this->pi_getLL('admin_quantity_multiplication');
 		$subpartArray['###VALUE_QTY_MULTIPLICATION###']=($product['products_multiplication']!='0.00' ? $product['products_multiplication'] : '');
 		$subpartArray['###LABEL_VIRTUAL_PRODUCT###']=$this->pi_getLL('admin_virtual_product', 'Virtual Product');
-		$subpartArray['###LABEL_FILE_NUMBER_OF_DOWNLOADS###']=$this->pi_getLL('file_number_of_downloads', 'NUMBER OF DOWNLOADS');
+		$subpartArray['###LABEL_FILE_NUMBER_OF_DOWNLOADS###']=$this->pi_getLL('file_number_of_downloads', 'Number of downloads');
 		$subpartArray['###VALUE_FILE_NUMBER_OF_DOWNLOADS###']=($product['file_number_of_downloads'] ? $product['file_number_of_downloads'] : '');
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		$subpartArray['###VALUE_PRODUCT_PID0###']=$product['products_id'];

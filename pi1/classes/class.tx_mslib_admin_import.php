@@ -952,7 +952,9 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (count($jobs)>0) {
 				$schedule_content.='
 		<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('import_tasks').'</legend>
-		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+		<table class="table table-striped table-bordered" id="msAdminImportTableInterface">
+		<thead>
+		<tr>
 		<th>'.$that->pi_getLL('source_name').'</th>
 		<th>'.$that->pi_getLL('name').'</th>
 		<th>'.$that->pi_getLL('last_run').'</th>
@@ -961,8 +963,12 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		<th>'.ucfirst($that->pi_getLL('delete')).'</th>
 		<th>'.$that->pi_getLL('file_exists').'</th>
 		<th>'.$that->pi_getLL('upload_file').'</th>
-		<th>'.$that->pi_getLL('download_import_task').'</th>';
+		<th>'.$that->pi_getLL('download_import_task').'</th>
+		</tr>
+		</thead>
+		';
 				$switch='';
+				$schedule_content.='<tbody>';
 				foreach ($jobs as $job) {
 					if ($switch=='odd') {
 						$switch='even';
@@ -979,16 +985,16 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 					$schedule_content.='<td nowrap align="right">'.$lastRun.'</td>';
 					if (!$job['period']) {
-						$schedule_content.='<td>manual<br /><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=run_job&limit=99999999" class="msadmin_button" onClick="return CONFIRM(\''.addslashes($that->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$that->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999" >/dev/null 2>&1').'" ><i>'.$that->pi_getLL('run_by_crontab').'</i></a></td>';
+						$schedule_content.='<td>manual<br /><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=run_job&limit=99999999" class="btn btn-success" onClick="return CONFIRM(\''.addslashes($that->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$that->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999" >/dev/null 2>&1').'" ><i>'.$that->pi_getLL('run_by_crontab').'</i></a></td>';
 					} else {
 						$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 					}
 					$schedule_content.='<td class="status_field" align="center">';
 					if (!$job['status']) {
 						$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
-						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=1"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=1"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 					} else {
-						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=0"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=0"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 						$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 					}
 					$schedule_content.='</td>
@@ -1011,7 +1017,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			<td>
 			 	<form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">
 					<input type="file" name="file" />
-					<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
+					<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
 					<input name="skip_import" type="hidden" value="1" />
 					<input name="preProcExistingTask" type="hidden" value="1" />
 					<input name="job_id" type="hidden" value="'.$job['id'].'" />
@@ -1019,11 +1025,12 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				</form>
 			</td>
 			<td>
-				<a href="'.$params['postForm']['actionUrl'].'&download=task&job_id='.$job['id'].'" class="msadmin_button"><i>'.$that->pi_getLL('download_import_task').'</i></a>
+				<a href="'.$params['postForm']['actionUrl'].'&download=task&job_id='.$job['id'].'" class="btn btn-success"><i>'.$that->pi_getLL('download_import_task').'</i></a>
 			</td>
 			';
 					$schedule_content.='</tr>';
 				}
+				$schedule_content.='</tbody>';
 				$schedule_content.='</table>
 		</fieldset>
 		<script type="text/javascript">
@@ -1046,25 +1053,27 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				//$tabs['tasks']=array($that->pi_getLL('import_tasks'),$schedule_content);
 			}
 			// load the jobs templates eof
-			$content.='
-			<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('upload_import_task').'</legend>
-				<form action="'.$params['postForm']['actionUrl'].'&upload=task" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-					<div class="account-field">
-						<label for="new_cron_name">'.$that->pi_getLL('name').'</label>
-						<input name="new_cron_name" type="text" value="" size="125">
-					</div>
-					<div class="account-field">
-						<label for="new_prefix_source_name">'.$that->pi_getLL('source_name').'</label>
-						<input name="new_prefix_source_name" type="text" value="" />
-					</div>
-					<div class="account-field">
-						<label for="upload_task_file">'.$that->pi_getLL('file').'</label>
-						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
-					</div>
-				</form>
-			</fieldset>';
+			if ($this->ROOTADMIN_USER) {
+				$content.='
+				<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('upload_import_task').'</legend>
+					<form action="'.$params['postForm']['actionUrl'].'&upload=task" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
+						<div class="account-field">
+							<label for="new_cron_name">'.$that->pi_getLL('name').'</label>
+							<input name="new_cron_name" type="text" value="" size="125">
+						</div>
+						<div class="account-field">
+							<label for="new_prefix_source_name">'.$that->pi_getLL('source_name').'</label>
+							<input name="new_prefix_source_name" type="text" value="" />
+						</div>
+						<div class="account-field">
+							<label for="upload_task_file">'.$that->pi_getLL('file').'</label>
+							<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
+						</div>
+					</form>
+				</fieldset>';
+			}
 		}
-		$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+		$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 		$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 		return $content;
 	}

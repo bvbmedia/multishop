@@ -228,10 +228,10 @@ table#product_import_table input[type="text"],
 
 /* --- buttons --- */
 #tx_multishop_pi1_core .admin_status_green { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/status_green.png) left top no-repeat; margin-right:5px; padding-top:16px; }
-#tx_multishop_pi1_core .admin_status_green_disable { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/status_green_light.png) left top no-repeat; margin-right:5px; padding-top:16px; }
+#tx_multishop_pi1_core .admin_status_green disabled { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/status_green_light.png) left top no-repeat; margin-right:5px; padding-top:16px; }
 #tx_multishop_pi1_core .admin_status_red { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/status_red.png) left top no-repeat; margin-right:5px; padding-top:16px; }
-#tx_multishop_pi1_core .admin_status_red_disable { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/status_red_light.png) left top no-repeat; margin-right:5px; padding-top:16px; }
-#tx_multishop_pi1_core #admin_modules_listing .admin_status_red_disable { margin-right:5px; }
+#tx_multishop_pi1_core .admin_status_red disabled { display:inline-block; overflow:hidden; width:16px; height:0; background:url(../images/status_red_light.png) left top no-repeat; margin-right:5px; padding-top:16px; }
+#tx_multishop_pi1_core #admin_modules_listing .admin_status_red disabled { margin-right:5px; }
 
 #tx_multishop_pi1_core .orders_status_button_1 { float:left; overflow:hidden; display:block; width:16px; height:0; background:url(../images/rec_16x16.png) left top no-repeat; padding-top:16px; margin:0 5px; }
 #tx_multishop_pi1_core .orders_status_button_red { overflow:hidden; display:block; width:100px; height:18px; background:url(../images/status_btn_red.png) left top no-repeat; font:bold 12px Arial,Helvetica,sans-serif; color:#fff; text-align:center; margin:0; padding:2px 0 0; cursor:pointer; }

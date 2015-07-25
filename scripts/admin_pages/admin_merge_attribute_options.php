@@ -19,8 +19,9 @@ if ($rows) {
 		$js_select2_cache_options[$row['products_options_id']]='attributesOptions['.$row['products_options_id'].']={id:"'.$row['products_options_id'].'", text:"'.htmlentities($row['products_options_name'], ENT_QUOTES).'"}';
 	}
 }
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_attribute_options').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options').'" method="post" class="merge_attribute_options_form">
+$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('merge_attribute_options').'</h3></div>
+<div class="panel-body">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options').'" method="post" class="merge_attribute_options_form">
 	<div class="account-field">
 			<ul>
 			';
@@ -42,11 +43,11 @@ foreach ($options_data as $option_val) {
 	$content.='<li>';
 	$content.='<div class="merge_attribute_options_wrapper">';
 	$content.='<div class="merge_attribute_options_source">';
-	$content.='<input name="tx_multishop_pi1[merge_attribute_options_src]['.$option_val['products_options_id'].']" id="merge_src_'.$option_val['products_options_id'].'" type="checkbox" value="'.$option_val['products_options_id'].'" class="merge_source" rel="merge_target_'.$option_val['products_options_id'].'" />';
-	$content.='<label for="merge_src_'.$option_val['products_options_id'].'" class="merge_source_label"><span>'.$option_val['products_options_name'].$item_count.'</span></label>';
-	$content.='</div>';
+	$content.='<div class="checkbox checkbox-success"><input name="tx_multishop_pi1[merge_attribute_options_src]['.$option_val['products_options_id'].']" id="merge_src_'.$option_val['products_options_id'].'" type="checkbox" value="'.$option_val['products_options_id'].'" class="merge_source" rel="merge_target_'.$option_val['products_options_id'].'" />';
+	$content.='<label for="merge_src_'.$option_val['products_options_id'].'" class="merge_source_label">'.$option_val['products_options_name'].$item_count.'</label>';
+	$content.='</div></div>';
 	$content.='<div class="merge_attribute_options_target" id="merge_target_'.$option_val['products_options_id'].'_wrapper" style="display:none">';
-	$content.='<label for="merge_target_'.$option_val['products_options_id'].'"><span>'.$this->pi_getLL('merge_to').'</span></label>';
+	$content.='<label for="merge_target_'.$option_val['products_options_id'].'">'.$this->pi_getLL('merge_to').'</label>&nbsp;&nbsp;';
 	$content.='<input type="hidden" id="merge_target_'.$option_val['products_options_id'].'" name="tx_multishop_pi1[merge_attribute_options_target]['.$option_val['products_options_id'].']" class="merge_attribute_target_selectbox" style="width:400px">';
 	/*$content.='<select id="merge_target_'.$target_option_val['products_options_id'].'" name="tx_multishop_pi1[merge_attribute_options_target]['.$option_val['products_options_id'].']" class="merge_attribute_target_selectbox" style="width:400px">';
 	$content.='<option value="0">'.$this->pi_getLL('choose').'...</option>';
@@ -63,11 +64,15 @@ foreach ($options_data as $option_val) {
 $content.='
 			</ul>
 	</div>
-	<div class="account-field">
-			<label></label>
-			<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('merge_selected').'" />
+	<hr>
+	<div class="clearfix">
+	<div class="pull-right">
+		<button type="submit" id="submit" class="btn btn-success" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-compress fa-stack-1x"></i></span> '.$this->pi_getLL('merge_selected').'</button>
+	</div>
 	</div>
 </form>
+</div>
+</div>
 <script type="text/javascript">
 var select2_sb = function(selector_str, exclude_id) {
 	jQuery(selector_str).select2({
@@ -269,6 +274,7 @@ if ($this->post && (is_array($this->post['tx_multishop_pi1']['merge_attribute_op
 		}
 	}
 	//
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options'));
+	exit();
 }
 ?>

@@ -70,7 +70,7 @@ if ($rows) {
 	}
 	$content.='</ul>
 	<br />
-	<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" /></span>
+	<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" /></span>
 	</form>';
 	// now load the sortables jQuery code
 	$content.='<script type="text/javascript">
@@ -117,6 +117,6 @@ if ($rows) {
 	$content.='<h1>'.$this->pi_getLL('admin_label_no_attributes_options_groups_defined').'</h1>';
 	$content.=$this->pi_getLL('admin_label_you_can_add_attributes_options_groups_below');
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

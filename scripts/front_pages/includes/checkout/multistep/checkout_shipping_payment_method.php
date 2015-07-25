@@ -46,7 +46,7 @@ if ($erno or $show_shipping_payment_method) {
 	$back_button_link=mslib_fe::typolink($this->conf['checkout_page_pid'], 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[previous_checkout_section]='.prev($stepCodes));
 	next($stepCodes);
 	if (is_array($erno) and count($erno)>0) {
-		$content.='<div class="error_msg">';
+		$content.='<div class="alert alert-danger">';
 		$content.=$this->pi_getLL('the_following_errors_occurred').': <ul>';
 		foreach ($erno as $item) {
 			$content.='<li>'.$item.'</li>';

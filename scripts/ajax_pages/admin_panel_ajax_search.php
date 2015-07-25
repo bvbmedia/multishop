@@ -635,9 +635,9 @@ if ($this->ADMIN_USER) {
 					$product['products_shortdescription']=strip_tags($product['products_shortdescription']);
 					$prod['Desc']='<div class="ajax_products_shortdescription">'.str_highlight(substr($product['products_shortdescription'], 0, 75), $this->get['q']).'</div>';
 					if ($product['products_price']<>$product['final_price']) {
-						$prod['Price']='<div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price'], 0).'</div>';
+						$prod['Price']='<div class="ajax_products_price"><div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price'], 0).'</div></div>';
 					} else {
-						$prod['Price']='<div class="ajax_products_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div>';
+						$prod['Price']='<div class="ajax_products_price"><div class="ajax_normal_price">'.mslib_fe::amount2Cents($product['products_price'], 0).'</div></div>';
 					}
 					$prod['Name']=substr($product['products_name'], 0, 50);
 					$prod['skeyword']=$this->get['q'];

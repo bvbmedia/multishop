@@ -33,7 +33,7 @@ $navItems['manufacturers']=$this->pi_getLL('manufacturers');
 $navItems['orders']=$this->pi_getLL('orders');
 $navItems['everything']=$this->pi_getLL('admin_label_everything');
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_label_clear_database').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=admin_system_clear_database').'" method="post">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_clear_database').'" method="post">
 	<div class="account-field">
 			<label>'.$this->pi_getLL('admin_label_items_to_delete').'</label>
 			<ul>
@@ -46,7 +46,7 @@ $content.='
 	</div>
 	<div class="account-field">
 			<label></label>
-			<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('delete').'" />
+			<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('delete').'" />
 	</div>
 </form>
 ';

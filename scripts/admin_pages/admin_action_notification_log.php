@@ -35,7 +35,7 @@ $formTopSearch='
 					<div class="formfield-container-wrapper">
 					<div class="formfield-wrapper">
 						<label>'.ucfirst($this->pi_getLL('keyword')).'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />					
-						<input type="submit" name="Search" class="msadmin_button" value="'.$this->pi_getLL('search').'" />
+						<input type="submit" name="Search" class="btn btn-success" value="'.$this->pi_getLL('search').'" />
 					</div>	
 					</div>
 			</td>
@@ -122,7 +122,7 @@ if (!count($pageset['dataset'])) {
 	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
 	<th>'.$this->pi_getLL('content').'</th>
 	';
-	$content.='<table class="msZebraTable msadmin_orders_listing" id="product_import_table"><tr>'.$headercol.'</tr>';
+	$content.='<table class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table"><tr>'.$headercol.'</tr>';
 	foreach ($pageset['dataset'] as $row) {
 		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
@@ -232,6 +232,6 @@ $content.='
     </div>
 </div>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 
 ?>

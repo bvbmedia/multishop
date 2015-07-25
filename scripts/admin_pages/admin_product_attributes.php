@@ -2,19 +2,6 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$GLOBALS['TSFE']->additionalHeaderData[]='<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/valums-file-uploader/client/fileuploader.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/css/style.css">
-<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.css" />
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/redactor/redactor.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/table.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontcolor.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fontsize.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/filemanager.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/imagemanager.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/video.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/textexpander.js"></script>
-<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/redactor/plugins/fullscreen.js"></script>
-';
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
 $selects=array();
 $selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
@@ -150,8 +137,8 @@ if ($rows) {
 		$content.='<h2>';
 		$content.='<span class="option_id">'.$this->pi_getLL('admin_label_option_name').': '.$row['products_options_name'].' (ID: '.$row['products_options_id'].')</span>';
 		$content.='<span class="option_edit">';
-		$content.='<a href="#" class="edit_options msadmin_button" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('edit').'</a>&nbsp;';
-		$content.='<a href="#" class="delete_options msadmin_button" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
+		$content.='<a href="#" class="edit_options btn btn-success" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('edit').'</a>&nbsp;';
+		$content.='<a href="#" class="delete_options btn btn-success" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('delete').'</a>&nbsp;';
 		$content.='</span>';
 		$content.='</h2>';
 		$options_group='';
@@ -184,10 +171,10 @@ if ($rows) {
 		</span>';
 		$content.='</div>';
 		$content.='<div class="option_values">';
-		$content.='<a href="#" class="msadmin_button add_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button fetch_attributes_values" id="button_label_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>&nbsp;';
-		//$content.='<a href="#" class="msadmin_button fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
+		$content.='<a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>&nbsp;';
+		//$content.='<a href="#" class="btn btn-success fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
 		$content.='<ul class="attribute_option_values_sortable" rel="'.$row['products_options_id'].'" id="vc_'.$row['products_options_id'].'" style="display:none">';
-		$content.='<li id="last_line_'.$row['products_options_id'].'"><a href="#" class="msadmin_button add_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>';
+		$content.='<li id="last_line_'.$row['products_options_id'].'"><a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;<a href="#" class="btn btn-success hide_attributes_values" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>';
 		$content.='</ul>';
 		$content.='<input type="hidden" name="values_fetched_'.$row['products_options_id'].'" id="values_fetched_'.$row['products_options_id'].'" value="0" />';
 		$content.='</div>';
@@ -457,8 +444,8 @@ if ($rows) {
 							new_option_html+=\'<h2>\';
 							new_option_html+=\'<span class="option_id">'.addslashes($this->pi_getLL('admin_label_option_name')).': \' + s.option_name + \' (ID: \' + s.option_id + \')</span>\';
 							new_option_html+=\'<span class="option_edit">\';
-							new_option_html+=\'<a href="#" class="edit_options msadmin_button" rel="\' + s.option_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
-							new_option_html+=\'<a href="#" class="delete_options msadmin_button" rel="\' + s.option_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
+							new_option_html+=\'<a href="#" class="edit_options btn btn-success" rel="\' + s.option_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
+							new_option_html+=\'<a href="#" class="delete_options btn btn-success" rel="\' + s.option_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
 							new_option_html+=\'</span>\';
 							new_option_html+=\'</h2>\';
 							// settings related to options
@@ -491,9 +478,9 @@ if ($rows) {
 							new_option_html+=\'</span>\';
 							new_option_html+=\'</div>\';
 							new_option_html+=\'<div class="option_values">\';
-							new_option_html+=\'<a href="#" class="msadmin_button fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'">'.addslashes($this->pi_getLL('show_attributes_values', 'SHOW VALUES')).'</a>&nbsp;\';
+							new_option_html+=\'<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'">'.addslashes($this->pi_getLL('show_attributes_values', 'SHOW VALUES')).'</a>&nbsp;\';
 							new_option_html+=\'<ul class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
-							new_option_html+=\'<li id="last_line_\' + s.option_id + \'"><a href="#" class="msadmin_button add_attributes_values" rel="\' + s.option_id + \'">'.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + s.option_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
+							new_option_html+=\'<li id="last_line_\' + s.option_id + \'"><a href="#" class="btn btn-success add_attributes_values" rel="\' + s.option_id + \'">'.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;<a href="#" class="btn btn-success hide_attributes_values" rel="\' + s.option_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
 							new_option_html+=\'</ul>\';
 							new_option_html+=\'<input type="hidden" name="values_fetched_\' + s.option_id + \'" id="values_fetched_\' + s.option_id + \'" value="0" />\';
 							new_option_html+=\'</div>\';
@@ -530,10 +517,10 @@ if ($rows) {
 				li_class="even";
 			}
 			var new_li=\'<li class="\' + li_class + \' new_options_values" id="\' + new_values_input + \'">\';
-			new_li+=\'<span class="values_id">'.$this->pi_getLL('admin_label_option_value').': <input type="hidden" style="width:200px" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>\';
+			new_li+=\'<span class="values_id">'.$this->pi_getLL('admin_label_option_value').': <input type="hidden" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>\';
 			new_li+=\'<span class="values_edit">\';
-			new_li+=\'<a href="#" class="cancel_new_options_values msadmin_button">'.$this->pi_getLL('cancel').'</a>&nbsp;\';
-			new_li+=\'<a href="#" class="save_new_options_values msadmin_button" rel="\' + optid + \'">'.$this->pi_getLL('save').'</a>&nbsp;\';
+			new_li+=\'<a href="#" class="cancel_new_options_values btn btn-success">'.$this->pi_getLL('cancel').'</a>&nbsp;\';
+			new_li+=\'<a href="#" class="save_new_options_values btn btn-success" rel="\' + optid + \'">'.$this->pi_getLL('save').'</a>&nbsp;\';
 			new_li+=\'</span>\';
 			new_li+="</li>";
 			$(new_li).insertBefore(last_line_id);
@@ -583,8 +570,8 @@ if ($rows) {
 					//values_data+=s.values_image_display;
 					values_data+=\'</span>\';
 					values_data+=\'<span class="values_edit">\';
-					values_data += \'<a href="#" class="edit_options_values msadmin_button" rel="\' + s.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
-					values_data += \'<a href="#" class="delete_options_values msadmin_button" rel="\' + optid + \':\' + s.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
+					values_data += \'<a href="#" class="edit_options_values btn btn-success" rel="\' + s.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
+					values_data += \'<a href="#" class="delete_options_values btn btn-success" rel="\' + optid + \':\' + s.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
 					values_data+=\'</span>\';
 					values_data += \'</li>\';
 					$("#" + $(parent_li).attr("id")).replaceWith(values_data);
@@ -663,8 +650,8 @@ if ($rows) {
 									values_data+=\'</span>\';
 								}
 								values_data+=\'<span class="values_edit">\';
-								values_data += \'<a href="#" class="edit_options_values msadmin_button" rel="\' + v.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
-								values_data += \'<a href="#" class="delete_options_values msadmin_button" rel="\' + opt_id + \':\' + v.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
+								values_data += \'<a href="#" class="edit_options_values btn btn-success" rel="\' + v.pov2po_id + \'">'.$this->pi_getLL('edit').'</a>&nbsp;\';
+								values_data += \'<a href="#" class="delete_options_values btn btn-success" rel="\' + opt_id + \':\' + v.values_id + \'">'.$this->pi_getLL('delete').'</a>&nbsp;\';
 								values_data+=\'</span>\';
 								values_data += \'</li>\';
 								$(container_id).append(values_data);
@@ -699,7 +686,7 @@ if ($rows) {
 								}
 
 							});
-							var values_data= \'<li id="last_line_\' + opt_id + \'"><a href="#" class="msadmin_button add_attributes_values" rel="\' + opt_id + \'">'.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;<a href="#" class="msadmin_button hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
+							var values_data= \'<li id="last_line_\' + opt_id + \'"><a href="#" class="btn btn-success add_attributes_values" rel="\' + opt_id + \'">'.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;<a href="#" class="btn btn-success hide_attributes_values" rel="\' + opt_id + \'">'.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
 							$(container_id).append(values_data);
 
 							$(fetched_id).val("1");
@@ -941,6 +928,6 @@ if ($rows) {
 	$content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
 	$content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

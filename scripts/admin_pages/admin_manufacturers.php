@@ -69,7 +69,7 @@ if ($this->get['tx_multishop_pi1']['searchByChar']) {
 	$this->searchKeywords[]=$this->get['tx_multishop_pi1']['keyword'];
 	$this->searchMode='%keyword%';
 }
-$searchCharNav='<div id="msAdminSearchByCharNav"><ul>';
+$searchCharNav='<div id="msAdminSearchByCharNav"><div class="btn-group">';
 $chars=array();
 $chars=array(
 	'0-9',
@@ -103,11 +103,11 @@ $chars=array(
 	'all'
 );
 foreach ($chars as $char) {
-	$searchCharNav.='<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[searchByChar]='.$char.'&tx_multishop_pi1[page_section]=admin_manufacturers').'">'.mslib_befe::strtoupper($char).'</a></li>';
+	$searchCharNav.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[searchByChar]='.$char.'&tx_multishop_pi1[page_section]=admin_manufacturers').'" class="btn btn-default">'.mslib_befe::strtoupper($char).'</a>';
 }
-$searchCharNav.='</ul></div>';
-$limit_search_result_selectbox='<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>';
-$limit_search_result_selectbox.='<select name="limit">';
+$searchCharNav.='</div></div>';
+$limit_search_result_selectbox='<div class="form-inline"><div class="form-group"><label>'.$this->pi_getLL('limit_number_of_records_to').':</label>';
+$limit_search_result_selectbox.='<select name="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -128,7 +128,7 @@ $limits[]='500';
 foreach ($limits as $limit) {
 	$limit_search_result_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
-$limit_search_result_selectbox.='</select>';
+$limit_search_result_selectbox.='</select></div></div>';
 $queryData=array();
 $queryData['where']=array();
 if (count($this->searchKeywords)) {
@@ -216,9 +216,9 @@ if (!count($pageset['dataset'])) {
 			}
 			if (!$row['status']) {
 				$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
-				$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+				$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 			} else {
-				$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=0').'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+				$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 				$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 			}
 			$markerArray=array();
@@ -293,7 +293,7 @@ $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$noresults;
 $subpartArray['###ADMIN_LABEL_TABS_MANUFACTURERS###']=$this->pi_getLL('admin_label_tabs_manufacturers');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<div class="float_right"><div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id'].'&action=add_manufacturer', 1).'" class="admin_menu_add label">'.mslib_befe::strtoupper($this->pi_getLL('add_manufacturer')).'</a></div></div>';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content);
+$content.='<div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id'].'&action=add_manufacturer', 1).'" class="btn btn-success admin_menu_add">'.$this->pi_getLL('add_manufacturer').'</a></div>';
+$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
 ?>

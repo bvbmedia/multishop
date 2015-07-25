@@ -40,7 +40,7 @@ if (count($data)==1) {
 } else {
 //	$compiledWidget['content']='<p>Websites waarvandaan bestellingen tot stand zijn gekomen.</p>';
 	$counter=0;
-	$compiledWidget['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
+	$compiledWidget['content'].='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" >';
 	foreach ($data as $host=>$item) {
 		$counter++;
 		$compiledWidget['content'].='<tr>';

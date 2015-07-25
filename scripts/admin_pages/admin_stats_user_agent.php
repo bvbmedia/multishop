@@ -112,7 +112,7 @@ if ($pageset['total_rows']>0) {
 	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/user-agent_listing_table.php');
 } else {
 	$subpartArray=array();
-	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_orders_found').'.';
+	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_records_found').'.';
 	$no_results=$this->cObj->substituteMarkerArrayCached($subparts['useragents_noresults'], array(), $subpartArray);
 }
 $subpartArray=array();
@@ -127,6 +127,6 @@ $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###HEADING_TAB1###']=$this->pi_getLL('admin_user_agent_statistics');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.$content.'</div>';
 ?>

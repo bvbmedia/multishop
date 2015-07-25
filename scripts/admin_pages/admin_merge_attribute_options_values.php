@@ -20,7 +20,7 @@ if ($rows) {
 	}
 }
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_attribute_values').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values').'" method="post" class="merge_attribute_values_form">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options_values').'" method="post" class="merge_attribute_values_form">
 	<div class="account-field">
 			<ul>
 			';
@@ -69,7 +69,7 @@ $content.='
 	</div>
 	<div class="account-field">
 			<label></label>
-			<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('merge_selected').'" />
+			<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('merge_selected').'" />
 	</div>
 </form>
 <script type="text/javascript">
@@ -315,6 +315,7 @@ if ($this->post) {
 		$GLOBALS['TYPO3_DB']->sql_query($delete_qry);
 	}
 	//
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
+	exit();
 }
 ?>

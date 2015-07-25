@@ -41,7 +41,7 @@ if (count($data)==1) {
 } else {
 	$compiledWidget['content']='<p>'.$this->pi_getLL('admin_label_orders_come_from_referer').'.</p>';
 	$counter=0;
-	$compiledWidget['content'].='<table width="100%" class="msZebraTable tblWidget" cellspacing="0" cellpadding="0" border="0" >';
+	$compiledWidget['content'].='<table width="100%" class="table table-striped table-bordered tblWidget" cellspacing="0" cellpadding="0" border="0" >';
 	foreach ($data as $host=>$item) {
 		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';

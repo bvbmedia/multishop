@@ -54,7 +54,7 @@ if ($this->post) {
 	}
 }
 if (is_array($erno) and count($erno)>0) {
-	$content.='<div class="error_msg">';
+	$content.='<div class="alert alert-danger">';
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 	foreach ($erno as $item) {
 		$content.='<li>'.$item.'</li>';
@@ -92,36 +92,40 @@ if ($this->get['delete'] and is_numeric($this->get['rules_group_id'])) {
 	$this->post['status']=$tax_rules_group['status'];
 }
 $content.='
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+<div class="panel panel-default">
+<div class="panel-heading"><h3>ADD / UPDATE TAX RULES GROUP</h3></div>
+<div class="panel-body">
+<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
 	<fieldset>
-		<legend>ADD / UPDATE TAX RULES GROUP</legend>
-		<div class="account-field">
-				<label for="">Name</label>
-				<input type="text" name="name" id="name" value="'.$this->post['name'].'">
+		
+		<div class="form-group">
+				<label for="" class="control-label col-md-2">Name</label>
+				<div class="col-md-10">
+				<input class="form-control" type="text" name="name" id="name" value="'.$this->post['name'].'">
+				</div>
 		</div>
-		<div class="account-field">
-				<label for="">Status</label>
-				<input name="status" type="radio" value="1" '.((!isset($this->post['status']) or $this->post['status']==1) ? 'checked' : '').' /> on
-				<input name="status" type="radio" value="0" '.((isset($this->post['status']) and $this->post['status']==0) ? 'checked' : '').' /> off
+		<div class="form-group">
+				<label for="" class="control-label col-md-2">Status</label>
+				<div class="col-md-10">
+					<div class="radio-inline">
+					<input name="status" type="radio" value="1" '.((!isset($this->post['status']) or $this->post['status']==1) ? 'checked' : '').' /> on
+					</div>
+					<div class="radio-inline">
+					<input name="status" type="radio" value="0" '.((isset($this->post['status']) and $this->post['status']==0) ? 'checked' : '').' /> off
+					</div>
+				</div>
 		</div>
-		<div class="account-field">
-				<label for="">&nbsp;</label>
+		<div class="form-group">
+				<label for="" class="control-label col-md-2">&nbsp;</label>
+				<div class="col-md-10">
 				<input name="rules_group_id" type="hidden" value="'.$this->post['rules_group_id'].'" />
-				<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+				<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+				</div>
 		</div>
 	</fieldset>
+	<br>
 ';
 if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
-	$GLOBALS['TSFE']->additionalHeaderData['msTreeLevelJs']='
-	<script src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'js/jquery.treeview/jquery.treeview.css" />
-	<style>
-		.tree_item_label
-		{
-			display:block;
-		}
-	</style>
-	';
 	$state_modus_array=array();
 	$state_modus_array[0]='Apply country tax only';
 	$state_modus_array[1]='Apply state tax only';
@@ -169,11 +173,11 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 						$tab_content.='</label>';
 						$tab_content.='	<ul class="category_listing_ul_'.$counter.'" id="msAdmin_category_listing_ul">';
 						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-							$tab_content.='<li class="item_'.$counter.'">';
+							$tab_content.='<li class="item_'.$counter.' form-inline">';
 							$tab_content.='<label class="tree_item_label">';
 							$tab_content.=$row['cn_short_en'];
-							$tab_content.='</label>';
-							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]"><option value="">No TAX</option>';
+							$tab_content.='</label> ';
+							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control"><option value="">No TAX</option>';
 							$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 								'tx_multishop_tax_rules', // FROM ...
 								"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='0' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -186,7 +190,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 							foreach ($taxes as $tax) {
 								$tab_content.='<option value="'.$tax['tax_id'].'"'.($tax['tax_id']==$row3['tax_id'] ? ' selected' : '').'>'.$tax['name'].'</option>'."\n";
 							}
-							$tab_content.='</select>';
+							$tab_content.='</select> ';
 							// now load the stated
 							$query2=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 								'static_country_zones', // FROM ...
@@ -199,11 +203,11 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 							if ($GLOBALS['TYPO3_DB']->sql_num_rows($res2)>0) {
 								$tab_content.='<div class="state_tax_sb_wrapper"><ul class="state_tax_sb">';
 								while ($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res2)) {
-									$tab_content.='<li class="item_'.$counter.''.(!$row['status'] ? ' ' : '').'">';
+									$tab_content.='<li class="item_'.$counter.''.(!$row['status'] ? ' ' : '').' form-inline">';
 									$tab_content.='<label class="tree_item_label">';
 									$tab_content.=$row2['zn_name_local'];
-									$tab_content.='</label>';
-									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']"><option value="">No TAX</option>';
+									$tab_content.='</label> ';
+									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control"><option value="">No TAX</option>';
 									$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 										'tx_multishop_tax_rules', // FROM ...
 										"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='".$row2['uid']."' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -216,8 +220,8 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 									foreach ($taxes as $tax) {
 										$tab_content.='<option value="'.$tax['tax_id'].'"'.($tax['tax_id']==$row3['tax_id'] ? ' selected' : '').'>'.$tax['name'].'</option>'."\n";
 									}
-									$tab_content.='</select>';
-									$tab_content.='<select name="state_modus['.$row['cn_iso_nr'].']['.$row2['uid'].']">';
+									$tab_content.='</select> ';
+									$tab_content.='<select name="state_modus['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control">';
 									foreach ($state_modus_array as $state_modus=>$label) {
 										$tab_content.='<option value="'.$state_modus.'"'.($state_modus==$row3['state_modus'] ? ' selected' : '').'>'.htmlspecialchars($label).'</option>'."\n";
 									}
@@ -243,36 +247,26 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	$content.='
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
-		jQuery(".tab_content").hide();
-		jQuery("ul.tabs li:first").addClass("active").show();
-		jQuery(".tab_content:first").show();
-		jQuery("ul.tabs li").click(function() {
-			jQuery("ul.tabs li").removeClass("active");
-			jQuery(this).addClass("active");
-			jQuery(".tab_content").hide();
-			var activeTab = jQuery(this).find("a").attr("href");
-			jQuery(activeTab).show();
-			return false;
-		});
+		$(".nav-tabs a:first").tab("show");
 	});
 	</script>
-	<div id="tab-container">
-		<ul class="tabs">
+	<div id="tab-container" class="zone-tabs">
+		<ul class="nav nav-tabs" role="tablist">
 	';
 	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+		$content.='<li'.(($count==1) ? ' class="active"' : '').' role="presentation"><a href="#'.$key.'" aria-controls="profile" role="tab" data-toggle="tab">'.$value[0].'</a></li>';
 	}
 	$content.='
 		</ul>
-		<div class="tab_container">
+		<div class="tab-content">
 
 		';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
-			<div style="display: block;" id="'.$key.'" class="tab_content">
+			<div id="'.$key.'" class="tab-content">
 				'.$value[1].'
 			</div>
 		';
@@ -295,25 +289,25 @@ if (!$this->get['edit']) {
 		$tax_rules_groups[]=$row;
 	}
 	if (count($tax_rules_groups)) {
-		$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
-		<tr>
-			<th width="50">ID</th>
-			<th>'.$this->pi_getLL('name').'</th>
-			<th width="50">Status</th>
-			<th width="50">'.$this->pi_getLL('default', 'Default').'</th>
-			<th width="50">'.$this->pi_getLL('action').'</th>
-		</tr>
+		$content.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+		<thead><tr>
+			<th class="cellID">ID</th>
+			<th class="cellName">'.$this->pi_getLL('name').'</th>
+			<th class="cellStatus">Status</th>
+			<th class="cellStatus">'.$this->pi_getLL('default', 'Default').'</th>
+			<th class="cellAction">'.$this->pi_getLL('action').'</th>
+		</tr></thead>
 		';
 		foreach ($tax_rules_groups as $tax_rules_group) {
 			$content.='
 			<tr class="'.$tr_type.'">
-				<td>
+				<td class="cellID">
 					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['rules_group_id'].'</a>
 				</td>
-				<td>
+				<td class="cellName">
 					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['name'].'</a>
 				</td>
-				<td align="center">';
+				<td class="cellStatus">';
 			if (!$tax_rules_group['status']) {
 				$content.='';
 				$content.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
@@ -322,18 +316,18 @@ if (!$this->get['edit']) {
 				$content.='';
 			}
 			$content.='</td>
-				<td align="center">';
+				<td class="cellStatus">';
 			if (!$tax_rules_group['default_status']) {
 				$content.='';
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 			} else {
 				$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 				$content.='';
 			}
 			$content.='
 				</td>
-				<td class="align_center">
-					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=delete&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id']).'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a>
+				<td class="cellAction">
+					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=delete&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id']).'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('delete').'"><i class="fa fa-trash-o"></i></a>
 				</td>
 			</tr>
 			';
@@ -341,6 +335,6 @@ if (!$this->get['edit']) {
 		$content.='</table>';
 	}
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content=''.mslib_fe::shadowBox($content).'';
 ?>

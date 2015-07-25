@@ -175,34 +175,18 @@ jQuery(document).ready(function ($) {
     getSpecialsSections(###AJAX_PID###)
     ;
 
-    $(".tab_content").hide();
-    $("ul.tabs li:first").addClass("active").show();
-    $(".tab_content:first").show();
-    $(document).on("click", "ul.tabs li", function () {
-        $("ul.tabs li").removeClass("active");
-        $(this).addClass("active");
-        $(".tab_content").hide();
-        var activeTab = $(this).find("a").attr("href");
-        $(activeTab).show();
-        return false;
-    });
-    // re-activate images tab after delete
-    var getloc = window.location;
-    var hash_loc = "";
-    if (getloc.hash.indexOf('delete_image') > -1) {
-        hash_loc = "#product_images";
-    } else {
-        hash_loc = getloc.hash;
-    }
-    if (hash_loc!="") {
-        var li_this = $("ul > li").find("a[href='" + hash_loc + "']").parent();
-        if (li_this.length > 0) {
-            $("ul.tabs li").removeClass("active");
-            $(li_this).addClass("active");
-            $(".tab_content").hide();
-            $(hash_loc).fadeIn(0);
-        }
-    }
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+} else {
+	$('.nav-tabs a:first').tab('show');
+}
+
+// Change hash for page-reload
+$('.nav-tabs a').on('shown.bs.tab', function (e) {
+	window.location.hash = e.target.hash;
+})
+
 	###AJAX_REQUEST_SPECIAL_PRICE###
 	$('#specials_new_products_price_excl_vat').keyup(function () {
         var value = this.value;
@@ -387,265 +371,332 @@ jQuery(document).ready(function ($) {
 });
 </script>
 <!-- ###JS_HEADER### end -->
-<div class="main-heading">###LABEL_HEADING_EDIT_PRODUCT###</div>
-<div id="tab-container" class="msadminVerticalTabs">
-<ul class="tabs">
-    <li class="active"><a href="#product_details">###LABEL_TABS_PRODUCTS_DETAILS###</a></li>
-    <li><a href="#product_options">###LABEL_TABS_PRODUCT_OPTIONS###</a></li>
-    <li><a href="#product_images">###LABEL_TABS_PRODUCT_IMAGES###</a></li>
-    <li><a href="#meta_tags">###LABEL_TABS_META_TAGS###</a></li>
-    <li><a href="#product_attributes">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
-    <li><a href="#product_relatives">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
-    <li><a href="#product_copy">###LABEL_TABS_PRODUCT_COPY###</a></li>
+<div class="panel panel-default">
+<div class="panel-heading">###LABEL_HEADING_EDIT_PRODUCT###</div>
+<div class="panel-body">
+<div id="tab-container">
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation"><a href="#product_details" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCTS_DETAILS###</a></li>
+    <li role="presentation"><a href="#product_options" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_OPTIONS###</a></li>
+    <li role="presentation"><a href="#product_images" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_IMAGES###</a></li>
+    <li role="presentation"><a href="#meta_tags" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_META_TAGS###</a></li>
+    <li role="presentation"><a href="#product_attributes" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
+    <li role="presentation"><a href="#product_relatives" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
+    <li role="presentation"><a href="#product_copy" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_COPY###</a></li>
     ###LABEL_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###
     ###LABEL_EXTRA_PLUGIN_TABS###
 </ul>
-<div class="tab_container">
-<form class="admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit_###PRODUCT_PID###" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
+<div class="tab-content">
+<form class="form-horizontal admin_product_edit" name="admin_product_edit_###PRODUCT_PID###" id="admin_product_edit_###PRODUCT_PID###" method="post" action="###FORM_ACTION_URL###" enctype="multipart/form-data">
 <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
 ###INPUT_OLD_LAYERED_CATEGORY_INPUT###
-<div style="display: block;" id="product_details" class="tab_content">
-    <div style="float:right;">
-        <div class="save_block">
-            <a href="###LINK_BUTTON_CANCEL###" class="msBackendButton backState arrowLeft arrowPosLeft"><span>###LABEL_BUTTON_CANCEL###</span></a>
-            ###BUTTON_SAVE_AS_NEW###
-            <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="###LABEL_BUTTON_SAVE###" /></span>
+<div role="tabpanel" id="product_details" class="tab-pane">
+    <div class="form-group" id="msEditProductInputStatus">
+        <label for="products_status" class="col-md-2 control-label">###LABEL_PRODUCT_STATUS###</label>
+        <div class="col-md-10">
+        <div class="radio-inline">
+        <input name="products_status" type="radio" value="1" ###LABEL_PRODUCT_STATUS_ON_CHECKED### /> ###LABEL_ADMIN_YES###
+        </div>
+        <div class="radio-inline">
+        <input name="products_status" type="radio" value="0" ###LABEL_PRODUCT_STATUS_OFF_CHECKED### /> ###LABEL_ADMIN_NO###
+        </div>
         </div>
     </div>
-    <div class="account-field" id="msEditProductInputStatus">
-        <label for="products_status">###LABEL_PRODUCT_STATUS###</label>
-        <input name="products_status" type="radio" value="1" ###LABEL_PRODUCT_STATUS_ON_CHECKED### /> ###LABEL_ADMIN_YES### <input name="products_status" type="radio" value="0" ###LABEL_PRODUCT_STATUS_OFF_CHECKED### /> ###LABEL_ADMIN_NO###
+    <div class="form-group" id="msEditProductInputSearchEngineIndexing">
+        <label for="search_engines_allow_indexing" class="col-md-2 control-label">###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###</label>
+        <div class="col-md-10">
+        <div class="radio-inline">
+        <input name="search_engines_allow_indexing" type="radio" value="1" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED### /> ###LABEL_ADMIN_YES_INDEXING###
+        </div>
+        <div class="radio-inline">
+        <input name="search_engines_allow_indexing" type="radio" value="0" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /> ###LABEL_ADMIN_NO_INDEXING###
+        </div>
+        </div>
     </div>
-    <div class="account-field" id="msEditProductInputSearchEngineIndexing">
-        <label for="search_engines_allow_indexing">###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###</label>
-        <input name="search_engines_allow_indexing" type="radio" value="1" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED### /> ###LABEL_ADMIN_YES_INDEXING### <input name="search_engines_allow_indexing" type="radio" value="0" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /> ###LABEL_ADMIN_NO_INDEXING###
-    </div>
-    <div class="account-field" id="msEditProductInputCategory">
-        <label for="categories_id">###LABEL_PRODUCT_CATEGORY###</label>
+    <div class="form-group" id="msEditProductInputCategory">
+        <label for="categories_id" class="col-md-2 control-label">###LABEL_PRODUCT_CATEGORY###</label>
+        <div class="col-md-10">
         <input name="old_categories_id" type="hidden" value="###VALUE_OLD_CATEGORY_ID###" />
         ###INPUT_CATEGORY_TREE###
+        </div>
     </div>
     ###INPUT_MULTIPLE_SHOPS_CATEGORY_TREE###
     <!-- ###DETAILS_CONTENT### begin -->
     <div class="productInfoItem">
-        <div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-            <label>###LABEL_LANGUAGE###</label>
-            <strong>###LANGUAGE_LABEL###</strong>
-        </div>
-        <div class="account-field" id="msEditProductInputName###LANGUAGE_UID###">
-            <label for="products_name">###LABEL_PRODUCT_NAME###</label>
-            <input type="text" class="text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
-            ###LOCAL_PRIMARY_PRODUCTS_CATEGORIES###
-        </div>
-        <div class="account-field" id="msEditProductInputShortDesc###LANGUAGE_UID###">
-            <label for="products_shortdescription">###LABEL_SHORT_DESCRIPTION###</label>
-            <textarea name="products_shortdescription[###LANGUAGE_UID###]" ###TEXTAREA_SHORT_DESCRIPTION_PARAMS### id="products_shortdescription" rows="4" ###TEXTAREA_SHORT_DESCRIPTION_CLASS###>###VALUE_SHORT_DESCRIPTION###</textarea>
-        </div>
-        <div class="account-field" id="msEditProductInputDesc###LANGUAGE_UID###">
-            <label for="products_description">###LABEL_PRODUCT_DESCRIPTION###</label>
-            <textarea name="products_description[###LANGUAGE_UID###]" id="products_description[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_PRODUCT_DESCRIPTION###</textarea>
-        </div>
-        ###DETAILS_TAB_CONTENT###
-        <div class="account-field toggle_advanced_option" id="msEditProductInputExternalUrl###LANGUAGE_UID###">
-            <label for="products_url">###LABEL_PRODUCT_URL###</label>
-            <input type="text" class="text" name="products_url[###LANGUAGE_UID###]" id="products_url[###LANGUAGE_UID###]" value="###VALUE_PRODUCT_URL###">
-        </div>
-        <div class="account-field" id="msEditProductInputDeliveryTime###LANGUAGE_UID###">
-            <label for="delivery_time">###LABEL_DELIVERY_TIME###</label>
-            <input type="text" class="text" name="delivery_time[###LANGUAGE_UID###]" id="delivery_time[###LANGUAGE_UID###]" value="###VALUE_DELIVERY_TIME###">
-        </div>
-        <div class="account-field toggle_advanced_option" id="msEditProductInputNegativeKeywords###LANGUAGE_UID###">
-            <label for="products_negative_keywords">###LABEL_NEGATIVE_KEYWORDS###</label>
-            <textarea name="products_negative_keywords[###LANGUAGE_UID###]" id="products_negative_keywords" class="expand20-100">###VALUE_NEGATIVE_KEYWORDS###</textarea>
+        <div class="panel panel-default">
+            <div class="panel-heading panel-heading-toggle" data-toggle="collapse" data-target="#msAdminTabLanguage###LANGUAGE_UID###">
+                <h3 class="panel-title">
+                    <a role="button" data-toggle="collapse" href="#msAdminTabLanguage###LANGUAGE_UID###"><i class="fa fa-file-text-o"></i> ###LANGUAGE_LABEL###</a>
+                </h3>
+            </div>
+            <div id="msAdminTabLanguage###LANGUAGE_UID###" class="###PANEL_COLLAPSE_CLASS###">
+                <div class="panel-body">
+                    <div class="form-group" id="msEditProductInputName">
+                        <label for="products_name" class="col-md-2 control-label">###LABEL_PRODUCT_NAME###</label>
+                        <div class="col-md-10">
+                        <input type="text" class="form-control text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
+                        ###LOCAL_PRIMARY_PRODUCTS_CATEGORIES###
+                        </div>
+                    </div>
+                    <div class="form-group" id="msEditProductInputShortDesc">
+                        <label for="products_shortdescription" class="col-md-2 control-label">###LABEL_SHORT_DESCRIPTION###</label>
+                        <div class="col-md-10">
+                        <textarea name="products_shortdescription[###LANGUAGE_UID###]" ###TEXTAREA_SHORT_DESCRIPTION_PARAMS### id="products_shortdescription" rows="4" ###TEXTAREA_SHORT_DESCRIPTION_CLASS###>###VALUE_SHORT_DESCRIPTION###</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group" id="msEditProductInputDesc">
+                        <label for="products_description" class="col-md-2 control-label">###LABEL_PRODUCT_DESCRIPTION###</label>
+                        <div class="col-md-10">
+                        <textarea name="products_description[###LANGUAGE_UID###]" id="products_description[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_PRODUCT_DESCRIPTION###</textarea>
+                        </div>
+                    </div>
+                    ###DETAILS_TAB_CONTENT###
+                    <div class="form-group toggle_advanced_option" id="msEditProductInputExternalUrl">
+                        <label for="products_url" class="col-md-2 control-label">###LABEL_PRODUCT_URL###</label>
+                        <div class="col-md-10">
+                        <input type="text" class="form-control text" name="products_url[###LANGUAGE_UID###]" id="products_url[###LANGUAGE_UID###]" value="###VALUE_PRODUCT_URL###">
+                        </div>
+                    </div>
+                    <div class="form-group" id="msEditProductInputDeliveryTime">
+                        <label for="delivery_time" class="col-md-2 control-label">###LABEL_DELIVERY_TIME###</label>
+                        <div class="col-md-10">
+                        <input type="text" class="form-control text" name="delivery_time[###LANGUAGE_UID###]" id="delivery_time[###LANGUAGE_UID###]" value="###VALUE_DELIVERY_TIME###">
+                        </div>
+                    </div>
+                    <div class="form-group toggle_advanced_option" id="msEditProductInputNegativeKeywords">
+                        <label for="products_negative_keywords" class="col-md-2 control-label">###LABEL_NEGATIVE_KEYWORDS###</label>
+                        <div class="col-md-10">
+                        <textarea name="products_negative_keywords[###LANGUAGE_UID###]" id="products_negative_keywords" class="form-control expand20-100">###VALUE_NEGATIVE_KEYWORDS###</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- ###DETAILS_CONTENT### end -->
 </div>
-<div style="display: block;" id="product_options" class="tab_content">
-    <h1>###LABEL_HEADING_TAB_OPTION###</h1>
+<div role="tabpanel" id="product_options" class="tab-pane">
+    <h3>###LABEL_HEADING_TAB_OPTION###</h3>
     ###CUSTOM_MARKER_ABOVE_VAT_RATE_FORM_FIELD###
-    <div class="account-field">
-        <label for="tax_id">###LABEL_VAT_RATE###</label>
+    <div class="form-group">
+        <label for="tax_id" class="col-md-2 control-label">###LABEL_VAT_RATE###</label>
+        <div class="col-md-10 form-inline">
         ###INPUT_VATE_RATE###
+        </div>
     </div>
     ###CUSTOM_MARKER_ABOVE_PRICE_FORM_FIELD###
-    <div class="account-field" id="msEditProductInputPrice">
-        <label>###LABEL_PRICE###</label>
-        <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputNormalPrice">
-            <label for="products_price">###LABEL_NORMAL_PRICE###</label>
-            <div class="msAttributesField">###LABEL_CURRENCY0### <input type="text" name="products_price_excl_vat" class="price small_input msPriceExcludingVat" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###"><label for="products_price_excl_vat">###LABEL_EXCLUDING_VAT0###</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY1### <input type="text" name="products_price_incl_vat" class="price small_input msPriceIncludingVat" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###"><label for="products_price_incl_vat">###LABEL_INCLUDING_VAT0###</label></div>
-            <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="products_price" value="###VALUE_ORIGINAL_PRICE###" /></div>
-        </div>
-        <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputSpecialPrice">
-            <label for="products_price">###LABEL_SPECIAL_PRICE###</label>
-            <div class="msAttributesField">###LABEL_CURRENCY2### <input type="text" name="specials_new_products_price_excl_vat" class="price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_excl_vat">###LABEL_EXCLUDING_VAT1###</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY3### <input type="text" name="specials_new_products_price_incl_vat" class="price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><label for="specials_new_products_price_incl_vat">###LABEL_INCLUDING_VAT1###</label></div>
-            <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
-            <div class="special_price_percentage">
-                <label for="special_price_percentage">###LABEL_PERCENTAGE_SELECTBOX###</label>
-                ###PERCENTAGE_SELECTBOX###
+    <div class="form-group" id="msEditProductInputPrice">
+        <label class="col-md-2 control-label">###LABEL_PRICE###</label>
+        <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputNormalPrice">
+                <label for="products_price">###LABEL_NORMAL_PRICE###</label>
+                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY0###</span><input type="text" name="products_price_excl_vat" class="form-control price small_input msPriceExcludingVat" id="products_price_excl_vat" value="###VALUE_EXCL_VAT_PRICE###"><span class="input-group-addon">###LABEL_EXCLUDING_VAT0###</span></div></div></div>
+                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY1###</span><input type="text" name="products_price_incl_vat" class="form-control price small_input msPriceIncludingVat" id="products_price_incl_vat" value="###VALUE_INCL_VAT_PRICE###"><span class="input-group-addon">###LABEL_INCLUDING_VAT0###</span></div></div></div>
+                <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="products_price" value="###VALUE_ORIGINAL_PRICE###" /></div>
             </div>
-            <div class="special_price_timer">
-                <label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
-                <input type="text" name="specials_price_start_visitor" class="price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###">
-                <input type="hidden" name="specials_price_start" class="price small_input" id="specials_price_start" value="###VALUE_SPECIAL_PRICE_START_SYS###">
-                <label for="specials_price_expired">###LABEL_SPECIAL_PRICE_EXPIRED###</label>
-                <input type="text" name="specials_price_expired_visitor" class="price small_input" id="specials_price_expired_visitor" value="###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###">
-                <input type="hidden" name="specials_price_expired" class="price small_input" id="specials_price_expired" value="###VALUE_SPECIAL_PRICE_EXPIRED_SYS###">
+            <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputSpecialPrice">
+                <label for="products_price">###LABEL_SPECIAL_PRICE###</label>
+                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY2###</span><input type="text" name="specials_new_products_price_excl_vat" class="form-control price small_input msPriceExcludingVat" id="specials_new_products_price_excl_vat" value="###VALUE_EXCL_VAT_SPECIAL_PRICE###"><span class="input-group-addon">###LABEL_EXCLUDING_VAT1###</span></div></div></div>
+                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY3###</span><input type="text" name="specials_new_products_price_incl_vat" class="form-control price small_input msPriceIncludingVat" id="specials_new_products_price_incl_vat" value="###VALUE_INCL_VAT_SPECIAL_PRICE###"><span class="input-group-addon">###LABEL_INCLUDING_VAT1###</span></div></div></div>
+                <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="specials_new_products_price" id="specials_new_products_price" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" /></div>
+                <div class="form-group form-inline special_price_percentage">
+                <div class="col-md-12">
+                    <label for="special_price_percentage">###LABEL_PERCENTAGE_SELECTBOX###</label>
+                    ###PERCENTAGE_SELECTBOX###
+                    </div>
+                </div>
+                <div class="form-group special_price_timer">
+                <div class="col-md-12">
+                    <label for="specials_price_start">###LABEL_SPECIAL_PRICE_START###</label>
+                    <input type="text" name="specials_price_start_visitor" class="form-control price small_input" id="specials_price_start_visitor" value="###VALUE_SPECIAL_PRICE_START_VISUAL###">
+                    <input type="hidden" name="specials_price_start" class="price small_input" id="specials_price_start" value="###VALUE_SPECIAL_PRICE_START_SYS###">
+                    <label for="specials_price_expired">###LABEL_SPECIAL_PRICE_EXPIRED###</label>
+                    <input type="text" name="specials_price_expired_visitor" class="form-control price small_input" id="specials_price_expired_visitor" value="###VALUE_SPECIAL_PRICE_EXPIRED_VISUAL###">
+                    <input type="hidden" name="specials_price_expired" class="price small_input" id="specials_price_expired" value="###VALUE_SPECIAL_PRICE_EXPIRED_SYS###">
+                    </div>
+                </div>
             </div>
+            <div class="col-md-4 msAdminFormFieldValueFloatContainer" id="msEditProductInputCapitalPrice">
+                <label for="product_capital_price">###LABEL_CAPITAL_PRICE###</label>
+                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY4###</span><input type="text" name="product_capital_price_excl_vat" class="form-control price small_input msPriceExcludingVat" id="product_capital_price_excl_vat" value="###VALUE_EXCL_VAT_CAPITAL_PRICE###"><span class="input-group-addon">###LABEL_EXCLUDING_VAT2###</span></div></div></div>
+                <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY5###</span><input type="text" name="product_capital_price_incl_vat" class="form-control price small_input msPriceIncludingVat" id="product_capital_price_incl_vat" value="###VALUE_INCL_VAT_CAPITAL_PRICE###"><span class="input-group-addon">###LABEL_INCLUDING_VAT2###</span></div></div></div>
+                <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="product_capital_price" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" /></div>
+            </div>
+            <div class="form-group" id="specials_sections"></div>
         </div>
-        <div class="msAdminFormFieldValueFloatContainer" id="msEditProductInputCapitalPrice">
-            <label for="product_capital_price">###LABEL_CAPITAL_PRICE###</label>
-            <div class="msAttributesField">###LABEL_CURRENCY4### <input type="text" name="product_capital_price_excl_vat" class="price small_input msPriceExcludingVat" id="product_capital_price_excl_vat" value="###VALUE_EXCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_excl_vat">###LABEL_EXCLUDING_VAT2###</label></div>
-            <div class="msAttributesField">###LABEL_CURRENCY5### <input type="text" name="product_capital_price_incl_vat" class="price small_input msPriceIncludingVat" id="product_capital_price_incl_vat" value="###VALUE_INCL_VAT_CAPITAL_PRICE###"><label for="product_capital_price_incl_vat">###LABEL_INCLUDING_VAT2###</label></div>
-            <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="product_capital_price" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" /></div>
         </div>
-        <div class="account-field" id="specials_sections"></div>
     </div>
     ###INPUT_STAFFEL_PRICE_BLOCK###
     <!-- ###MANUFACTURERS_ADVICE_PRICE### begin -->
-    <div class="account-field" id="msEditProductInputManufacturersPrice">
-        <label for="msEditProductInputManufacturersPriceInput">###LABEL_MANUFACTURERS_ADVIES_PRICE###</label>
-        <div class="account-field" id="msEditProductInputManufacturersPriceInput">
+    <div class="form-group" id="msEditProductInputManufacturersPrice">
+        <label for="msEditProductInputManufacturersPriceInput" class="col-md-2 control-label">###LABEL_MANUFACTURERS_ADVIES_PRICE###</label>
+        <div class="form-group" id="msEditProductInputManufacturersPriceInput">
             <div class="msAttributesField">###LABEL_CURRENCY6### <input type="text" name="manufacturers_advice_price_excl_vat" class="price small_input msPriceExcludingVat" id="manufacturers_advice_price_excl_vat" value="###VALUE_EXCL_VAT_MANUFACTURERS_ADVICE_PRICE###"><label for="manufacturers_advice_price_excl_vat">###LABEL_EXCLUDING_VAT3###</label></div>
             <div class="msAttributesField">###LABEL_CURRENCY7### <input type="text" name="manufacturers_advice_price_incl_vat" class="price small_input msPriceIncludingVat" id="manufacturers_advice_price_incl_vat" value="###VALUE_INCL_VAT_MANUFACTURERS_ADVICE_PRICE###"><label for="manufacturers_advice_price_incl_vat">###LABEL_INCLUDING_VAT3###</label></div>
             <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="manufacturers_advice_price" value="###VALUE_ORIGINAL_MANUFACTURERS_ADVICE_PRICE###" /></div>
         </div>
     </div>
     <!-- ###MANUFACTURERS_ADVICE_PRICE### end -->
-    <div class="account-field" id="msEditProductInputQuantity">
-        <label for="products_quantity">###LABEL_STOCK###</label>
-        <input type="text" name="products_quantity" class="products_quantity" id="products_quantity" value="###VALUE_STOCK###">
-        ###LABEL_THRESHOLD_QTY###
-        <input type="text" name="alert_quantity_threshold" class="alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
+    <div class="form-group" id="msEditProductInputQuantity">
+        <label for="products_quantity" class="col-md-2 control-label">###LABEL_STOCK###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" name="products_quantity" class="form-control products_quantity" id="products_quantity" value="###VALUE_STOCK###"> <p class="form-control-static"><strong>###LABEL_THRESHOLD_QTY###</strong></p> <input type="text" name="alert_quantity_threshold" class="form-control alert_quantity_threshold" id="alert_quantity_threshold" value="###VALUE_THRESHOLD_QTY###">
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputStartEndTime">
-        <label for="starttime" class="starttime">###LABEL_STARTTIME###</label>
-        <input type="text" name="starttime_visitor" class="starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
-        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">
-        ###LABEL_ENDTIME###&nbsp;
-        <input type="text" name="endtime_visitor" class="endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputStartEndTime">
+        <label for="starttime" class="starttime col-md-2 control-label">###LABEL_STARTTIME###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" name="starttime_visitor" class="form-control starttime" id="starttime_visitor" value="###VALUE_STARTTIME_VISUAL###">
+        <input type="hidden" name="starttime" class="starttime" id="starttime" value="###VALUE_STARTTIME_SYS###">  <p class="form-control-static"><strong>###LABEL_ENDTIME###</strong></p> <input type="text" name="endtime_visitor" class="form-control endtime" id="endtime_visitor" value="###VALUE_ENDTIME_VISUAL###">
         <input type="hidden" name="endtime" class="endtime" id="endtime" value="###VALUE_ENDTIME_SYS###">
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputDateAvailable">
-        <label for="products_date_available">###LABEL_DATE_AVAILABLE###</label>
-        <input type="text" name="products_date_available_visitor" class="products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
-        <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###">
-        ###LABEL_DATE_ADDED###
-        <input type="text" name="products_date_added_visitor" class="products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputDateAvailable">
+        <label for="products_date_available" class="col-md-2 control-label">###LABEL_DATE_AVAILABLE###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
+        <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###"> <p class="form-control-static"><strong>###LABEL_DATE_ADDED###</strong></p> <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
         <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
+        </div>
     </div>
-    <div class="account-field" id="msEditProductInputModel">
-        <label for="products_model">###LABEL_PRODUCT_MODEL###</label>
-        <input type="text" class="text" name="products_model" id="products_model" value="###VALUE_PRODUCT_MODEL###">
+    <div class="form-group" id="msEditProductInputModel">
+        <label for="products_model" class="col-md-2 control-label">###LABEL_PRODUCT_MODEL###</label>
+        <div class="col-md-10 form-inline">
+        <input type="form-control text" class="form-control text" name="products_model" id="products_model" value="###VALUE_PRODUCT_MODEL###">
+        </div>
     </div>
-    <div class="account-field" id="msEditProductInputManufacturerName">
-        <label for="manufacturers_id">###LABEL_PRODUCT_MANUFACTURER###</label>
-        ###INPUT_MANUFACTURER###
-        ###LABEL_ADD_NEW_MANUFACTURER### <input name="manufacturers_name" type="text" value="" />
+    <div class="form-group" id="msEditProductInputManufacturerName">
+        <label for="manufacturers_id" class="col-md-2 control-label">###LABEL_PRODUCT_MANUFACTURER###</label>
+        <div class="col-md-10 form-inline">
+        ###INPUT_MANUFACTURER### <p class="form-control-static"><strong>###LABEL_ADD_NEW_MANUFACTURER###</strong></p> <input name="manufacturers_name" type="text" value="" class="form-control" />
+        </div>
     </div>
-    <div class="account-field" id="msEditProductInputWeight">
-        <label for="products_weight">###LABEL_PRODUCT_WEIGHT###</label>
-        <input type="text" class="text" name="products_weight" id="products_weight" value="###VALUE_PRODUCT_WEIGHT###">
+    <div class="form-group" id="msEditProductInputWeight">
+        <label for="products_weight" class="col-md-2 control-label">###LABEL_PRODUCT_WEIGHT###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" class="form-control text" name="products_weight" id="products_weight" value="###VALUE_PRODUCT_WEIGHT###">
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputCondition">
-        <label for="products_condition">###LABEL_PRODUCT_CONDITION###</label>
-        <select name="products_condition">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputCondition">
+        <label for="products_condition" class="col-md-2 control-label">###LABEL_PRODUCT_CONDITION###</label>
+        <div class="col-md-10 form-inline">
+        <select name="products_condition" class="form-control">
             <option value="new" ###CONDITION_NEW_SELECTED###>###LABEL_CONDITION_NEW###</option>
             <option value="used" ###CONDITION_USED_SELECTED###>###LABEL_CONDITION_USED###</option>
             <option value="refurbished" ###CONDITION_REFURBISHED_SELECTED###>###LABEL_CONDITION_REFURBISHED###</option>
         </select>
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputEANCode">
-        <label for="ean_code">###LABEL_EAN_CODE###</label>
-        <input type="text" class="text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputEANCode">
+        <label for="ean_code" class="col-md-2 control-label">###LABEL_EAN_CODE###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputSKUCode">
-        <label for="sku_code">###LABEL_SKU_CODE###</label>
-        <input type="text" class="text" name="sku_code" id="sku_code" maxlength="13" value="###VALUE_SKU_CODE###">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
+        <label for="sku_code" class="col-md-2 control-label">###LABEL_SKU_CODE###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="13" value="###VALUE_SKU_CODE###">
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputManufacturerCode">
-        <label for="manufacturers_products_id">###LABEL_MANUFACTURER_CODE###</label>
-        <input type="text" class="text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
+        <label for="manufacturers_products_id" class="col-md-2 control-label">###LABEL_MANUFACTURER_CODE###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" class="form-control text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
+        </div>
     </div>
     <!-- ###EXCLUDE_FROM_FEED_INPUT### begin -->
-    <div class="account-field" id="msEditProductInputExcludeStockFromFeeds">
-        <label>###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
+    <div class="form-group" id="msEditProductInputExcludeStockFromFeeds">
+        <label class="col-md-2 control-label">###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
+        <div class="col-md-10 form-inline">
         ###STOCK_FEEDS_LIST###
+        </div>
     </div>
-    <div class="account-field" id="msEditProductInputExcludeFromFeeds">
-        <label>###LABEL_EXCLUDE_FROM_FEED###</label>
+    <div class="form-group" id="msEditProductInputExcludeFromFeeds">
+        <label class="col-md-2 control-label">###LABEL_EXCLUDE_FROM_FEED###</label>
+        <div class="col-md-10 form-inline">
         ###FEEDS_LIST###
+        </div>
     </div>
     <!-- ###EXCLUDE_FROM_FEED_INPUT### end -->
-    <div class="account-field toggle_advanced_option" id="msEditProductInputUnit">
-        <strong>###LABEL_PRODUCT_UNIT###</strong>
-        &nbsp;
+    <div class="toggle_advanced_option" id="msEditProductInputUnit">
+        <h3 class="page-header">###LABEL_PRODUCT_UNIT###</h3>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputOrderUnit">
-        <label for="order_unit_id">###LABEL_ORDER_UNIT###</label>
+    <div class="form-group toggle_advanced_option" id="msEditProductInputOrderUnit">
+        <label for="order_unit_id" class="col-md-2 control-label">###LABEL_ORDER_UNIT###</label>
+        <div class="col-md-10 form-inline">
         ###INPUT_PRODUCT_UNIT###
+        </div>
     </div>
-    <div class="account-field" id="msEditProductInputMinimumQuantity">
-        <label for="minimum_quantity">###LABEL_MINIMUM_QTY###</label>
-        <input type="text" name="minimum_quantity" class="minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###">
-        ###LABEL_MAXIMUM_QTY###
-        <input type="text" name="maximum_quantity" class="maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
+    <div class="form-group" id="msEditProductInputMinimumQuantity">
+        <label for="minimum_quantity" class="col-md-2 control-label">###LABEL_MINIMUM_QTY###</label>
+        <div class="col-md-10 form-inline">
+        <input type="text" name="minimum_quantity" class="form-control minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###"> <p class="form-control-static">###LABEL_MAXIMUM_QTY###</p> <input type="text" name="maximum_quantity" class="form-control maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputMultiplication">
-        <label for="products_multiplication">###LABEL_QTY_MULTIPLICATION###</label>
-        <input type="text" class="text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputMultiplication">
+        <label for="products_multiplication" class="col-md-2 control-label">###LABEL_QTY_MULTIPLICATION###</label>
+        <div class="col-md-10">
+        <input type="text" class="form-control text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
+        </div>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputVirtualProduct">
-        <strong>###LABEL_VIRTUAL_PRODUCT###</strong>
-        &nbsp;
+    <div class="toggle_advanced_option" id="msEditProductInputVirtualProduct">
+        <h3 class="page-header">###LABEL_VIRTUAL_PRODUCT###</h3>
     </div>
     ###OPTIONS_TAB_VIRTUAL_PRODUCT###
-    <div class="account-field toggle_advanced_option" id="msEditProductInputNumberDownload">
-        <label for="file_number_of_downloads">###LABEL_FILE_NUMBER_OF_DOWNLOADS###</label>
-        <input type="text" class="text" name="file_number_of_downloads" id="file_number_of_downloads" value="###VALUE_FILE_NUMBER_OF_DOWNLOADS###">
+    <div class="form-group toggle_advanced_option" id="msEditProductInputNumberDownload">
+        <label for="file_number_of_downloads" class="col-md-2 control-label">###LABEL_FILE_NUMBER_OF_DOWNLOADS###</label>
+        <div class="col-md-10">
+        <input type="text" class="form-control text" name="file_number_of_downloads" id="file_number_of_downloads" value="###VALUE_FILE_NUMBER_OF_DOWNLOADS###">
+        </div>
     </div>
     ###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###
     <input name="pid" type="hidden" value="###VALUE_PRODUCT_PID0###" />
     <input name="action" type="hidden" value="###VALUE_HIDDEN_FORM_ACTION###" />
 
     <div id="ajax_message_###VALUE_PRODUCT_PID1###" class="ajax_message"></div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputAdvancedSettings">
-        <strong>###LABEL_ADVANCED_SETTINGS###</strong>
-        &nbsp;
+    <div class="toggle_advanced_option" id="msEditProductInputAdvancedSettings">
+        <h3 class="page-header">###LABEL_ADVANCED_SETTINGS###</h3>
     </div>
-    <div class="account-field toggle_advanced_option" id="msEditProductInputCustomConfig">
-        <label for="custom_settings">###LABEL_CUSTOM_CONFIGURATION###</label>
-        <textarea name="custom_settings" class="expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+    <div class="form-group toggle_advanced_option" id="msEditProductInputCustomConfig">
+        <label for="custom_settings" class="col-md-2 control-label">###LABEL_CUSTOM_CONFIGURATION###</label>
+        <div class="col-md-10">
+        <textarea name="custom_settings" class="form-control expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+        </div>
     </div>
 </div>
-<div style="display: block;" id="product_images" class="tab_content">
-    <h1>###LABEL_HEADING_TAB_IMAGES###</h1>
+<div role="tabpanel" id="product_images" class="tab-pane">
+    <h3>###LABEL_HEADING_TAB_IMAGES###</h3>
     ###INPUT_IMAGES_BLOCK###
 </div>
-<div style="display: block;" id="meta_tags" class="tab_content">
-    <h1>###LABEL_HEADING_TAB_META_TAGS###</h1>
+<div role="tabpanel" id="meta_tags" class="tab-pane">
+    <h3>###LABEL_HEADING_TAB_META_TAGS###</h3>
     ###INPUT_META_TAGS_BLOCK###
 </div>
-<div style="display: block;" id="product_attributes" class="tab_content">
+<div role="tabpanel" id="product_attributes" class="tab-pane">
     ###INPUT_ATTRIBUTES_BLOCK###
 </div>
-<div style="display: block;" id="product_relatives" class="tab_content">
+<div role="tabpanel" id="product_relatives" class="tab-pane">
     ###INPUT_PRODUCT_RELATIVES_BLOCK###
 </div>
-<div style="display: block;" id="product_copy" class="tab_content">
+<div role="tabpanel" id="product_copy" class="tab-pane">
     ###INPUT_PRODUCT_COPY_BLOCK###
 </div>
 ###CONTENT_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###
 ###CONTENT_EXTRA_PLUGIN_TABS###
-<div class="save_block">
-    <input name="advanced" type="button" value="###FOOTER_VALUE_ADVANCED_OPTION###" class="toggle_advanced_options msadmin_button" />
-    <a href="###FOOTER_LINK_BUTTON_CANCEL###" class="msBackendButton backState arrowLeft arrowPosLeft"><span>###FOOTER_LABEL_BUTTON_CANCEL###</span></a>
+<hr>
+<div class="clearfix">
+<div class="pull-right">
+    <button name="advanced" type="button" value="" class="toggle_advanced_options btn btn-warning"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-minus fa-stack-1x"></i></span> ###FOOTER_VALUE_ADVANCED_OPTION###</button>
+    <a href="###FOOTER_LINK_BUTTON_CANCEL###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_CANCEL###</a>
     ###FOOTER_BUTTON_SAVE_AS_NEW###
-    <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="###FOOTER_LABEL_BUTTON_SAVE###" /></span>
+    <button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###FOOTER_LABEL_BUTTON_SAVE###</button>
+</div>
 </div>
 </form>
+</div>
+</div>
 </div>
 </div>
 <script type="text/javascript">
@@ -667,7 +718,7 @@ jQuery(document).ready(function ($) {
             }
         });
         if ($("#products_name_0").val() == "") {
-            $(".qq-uploader").before('<span class="file-upload-hidden">###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###</span>');
+            $(".qq-uploader").before('<p class="form-control-static file-upload-hidden">###ADMIN_LABEL_JS_DEFINE_PRODUCT_NAME_FIRST_IN_DETAILS_TABS###</p>');
             $(".qq-uploader").hide();
         }
         $(document).on("change", "#products_name_0", function () {

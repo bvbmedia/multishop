@@ -32,7 +32,7 @@ if (count($cart['products'])<1) {
 			$content.='<div class="noitems_message">'.$this->pi_getLL('there_are_no_products_in_your_cart').'</div>';
 		} else {
 			if (is_array($erno) and count($erno)>0) {
-				$content.='<div class="error_msg">';
+				$content.='<div class="alert alert-danger">';
 				$content.=$this->pi_getLL('the_following_errors_occurred').': <ul>';
 				foreach ($erno as $item) {
 					$content.='<li>'.$item.'</li>';

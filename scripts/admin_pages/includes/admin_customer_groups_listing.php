@@ -32,7 +32,7 @@ foreach ($groups as $group) {
 				'disable',
 				'clearcache'
 			)));
-		$status_html.='<a href="'.$link.'"><span class="admin_status_red_disable"  alt="disable group" title="disable group"></span></a>';
+		$status_html.='<a href="'.$link.'"><span class="admin_status_red disabled"  alt="disable group" title="disable group"></span></a>';
 		$status_html.='<span class="admin_status_green" alt="group is enabled" title="group is enabled"></span>';
 	} else {
 		$link=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&disable=0&'.mslib_fe::tep_get_all_get_params(array(
@@ -41,7 +41,7 @@ foreach ($groups as $group) {
 				'clearcache'
 			)));
 		$status_html.='<span class="admin_status_red"  alt="group is disabled" title="group is disabled"></span>';
-		$status_html.='<a href="'.$link.'"><span class="admin_status_green_disable" alt="enable group" title="enable group"></span></a>';
+		$status_html.='<a href="'.$link.'"><span class="admin_status_green disabled" alt="enable group" title="enable group"></span></a>';
 	}
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;

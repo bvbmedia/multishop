@@ -76,7 +76,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$that->searchKeywords[]=$that->get['tx_multishop_pi1']['keyword'];
 			$that->searchMode='%keyword%';
 		}
-		$limit_search_result_selectbox='<label>'.$that->pi_getLL('limit_number_of_records_to').':</label><select name="limit">';
+		$limit_search_result_selectbox='<select name="limit" class="form-control">';
 		$limits=array();
 		$limits[]='10';
 		$limits[]='15';
@@ -214,15 +214,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';
 			}
-			$tableContent.='
-			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">';
-			$tableContent.='<tr>';
+			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
+			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
 			}
-			//<th>'.$that->pi_getLL('admin_action').'</th>
-			$tableContent.='
-			</tr>';
+			$tableContent.='</thead></tr><tbody>';
 			$summarize=array();
 			$recordCounter=0;
 			foreach ($pageset['dataset'] as $row) {
@@ -305,14 +302,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 									foreach ($row as $tmpCol=>$tmpVal) {
 										$valArray['hrefEnable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefEnable']);
 									}
-									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 								}
 							} else {
 								if ($valArray['hrefDisable']) {
 									foreach ($row as $tmpCol=>$tmpVal) {
 										$valArray['hrefDisable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefDisable']);
 									}
-									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 								}
 								$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 							}
@@ -349,8 +346,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				*/
 				$tableContent.='</tr>';
 			}
+			$tableContent.='</tbody>';
 			// SUMMARIZE
-			$tableContent.='<tr>';
+			$tableContent.='<tfoot><tr>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				switch ($valArray['valueType']) {
 					case 'currency':
@@ -362,7 +360,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 			}
-			$tableContent.='</tr>';
+			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
 			$tableContent.='</table>';
 			if (!$params['settings']['disableForm']) {
@@ -488,28 +486,27 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		if ($params['settings']['enableKeywordSearch']) {
 			$searchForm='
 			<form id="form1" name="form1" method="get" action="index.php">
-				<div id="search-orders">
-					<table width="100%">
-						<tr>
-							<td nowrap valign="top">';
+				<div class="well">
+					<div class="row formfield-container-wrapper">
+						';
 			foreach ($params['searchForm']['hiddenFields'] as $key=>$val) {
 				$searchForm.='<input name="'.$key.'" type="hidden" value="'.htmlspecialchars($val).'" />'."\n";
 			}
 			$searchForm.='
-								<div class="formfield-container-wrapper">
-									<div class="formfield-wrapper">
-										<label>'.$that->pi_getLL('keyword').'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
-										<input type="submit" name="Search" class="msadmin_button" value="'.$that->pi_getLL('search').'" />
-									</div>
-								</div>
-							</td>
-							<td nowrap valign="top" align="right" class="searchLimit">
-								<div style="float:right;">
-									'.$limit_search_result_selectbox.'
-								</div>
-							</td>
-						</tr>
-					</table>
+						<div class="col-sm-8 formfield-wrapper">
+							<div class="form-group">
+								<label class="control-label">'.$that->pi_getLL('keyword').'</label>
+								<input type="text" name="tx_multishop_pi1[keyword]" class="form-control" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
+								<input type="submit" name="Search" class="btn btn-success" value="'.$that->pi_getLL('search').'" />
+							</div>
+						</div>
+						<div class="col-sm-4 formfield-wrapper">
+							<div class="form-group pull-right">
+								<label class="control-label">'.$that->pi_getLL('limit_number_of_records_to').'</label>
+								'.$limit_search_result_selectbox.'
+							</div>
+						</div>
+					</div>
 				</div>
 			</form>
 			';
@@ -540,7 +537,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-			$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+			$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
 		}
 		return $content;
 	}

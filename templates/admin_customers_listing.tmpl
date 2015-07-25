@@ -1,11 +1,14 @@
 <!-- ###TEMPLATE### begin -->
 <form action="###FORM_ACTION_URL_CUSTOMERS_BULK_ACTION###" name="customers_listing" id="customers_listing" method="post">
 <div class="msHorizontalOverflowWrapper">
-        <table width="100%" border="0" align="center" class="msZebraTable msadmin_orders_listing" id="product_import_table">
+        <table width="100%" border="0" class="table table-striped table-bordered" id="msAdminCustomersListing">
+            <thead>
             <tr>
                 <th align="center" width="17">
+                    <div class="checkbox checkbox-success">
+                    <input type="checkbox" id="check_all_1">
                     <label for="check_all_1"></label>
-                    <input type="checkbox" class="PrettyInput" id="check_all_1">
+                    </div>
                 </th>
                 <th width="60" class="cell_orders_id" nowrap>###LABEL_CUSTOMER_ID###</th>
                 ###HEADER_MASTER_SHOP###
@@ -20,9 +23,16 @@
                 <th width="50" nowrap>###LABEL_CUSTOMER_STATUS###</th>
                 <th width="50" nowrap>###LABEL_CUSTOMER_DELETE###</th>
             </tr>
+            </thead>
+            <tbody>
             <!-- ###CUSTOMERS### begin -->
             <tr class="###ROW_TYPE###">
-                <th nowrap><label for="checkbox_###CUSTOMERS_UID###"></label><input type="checkbox" name="selected_customers[]" class="PrettyInput selected_customers_cb" id="checkbox_###CUSTOMERS_UID###" value="###CUSTOMERS_UID###"></th>
+                <th nowrap>
+                    <div class="checkbox checkbox-success">
+                    <input type="checkbox" name="selected_customers[]" class="selected_customers_cb" id="checkbox_###CUSTOMERS_UID###" value="###CUSTOMERS_UID###">
+                    <label for="checkbox_###CUSTOMERS_UID###"></label>
+                    </div>
+                </th>
                 <td align="right">###CUSTOMERS_UID###</td>
                 ###MASTER_SHOP###
                 <td nowrap><a href="###CUSTOMERS_EDIT_LINK###" class="popover-link" title="###LABEL_LOADING###" rel="###CUSTOMERS_UID###">###CUSTOMERS_NAME###</a></td>
@@ -34,9 +44,11 @@
                 <td align="right" nowrap>###CUSTOMERS_TURN_OVER_THIS_YEAR###</td>
                 <td align="center" nowrap><a href="###CUSTOMERS_LOGINAS_LINK###">###CUSTOMERS_LOGINAS###</a></td>
                 <td align="center" nowrap>###CUSTOMERS_STATUS###</td>
-                <td align="center" nowrap><a href="###CUSTOMERS_DELETE_LINK###" onclick="###CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS###" class="admin_menu_remove" alt="###ADMIN_LABEL_ALT_REMOVE###"></a></td>
+                <td align="center" nowrap><a href="###CUSTOMERS_DELETE_LINK###" onclick="###CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS###" class="text-danger admin_menu_remove" alt="###ADMIN_LABEL_ALT_REMOVE###"><i class="fa fa-trash-o fa-lg"></i></a></td>
             </tr>
             <!-- ###CUSTOMERS### end -->
+            </tbody>
+            <tfoot>
             <tr>
                 <th align="center" width="17">&nbsp;</th>
                 <th width="60" class="cell_orders_id" nowrap>###LABEL_FOOTER_CUSTOMER_ID###</th>
@@ -52,6 +64,7 @@
                 <th width="50" nowrap>###LABEL_FOOTER_CUSTOMER_STATUS###</th>
                 <th width="50" nowrap>###LABEL_FOOTER_CUSTOMER_DELETE###</th>
             </tr>
+            </tfoot>
         </table>
 </div>
 <div id="msAdminCustomersListingActionForm">

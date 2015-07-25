@@ -200,13 +200,13 @@ $fields['products_quantity']=$this->pi_getLL('admin_stock');
 $fields['products_weight']=$this->pi_getLL('admin_weight');
 $fields['manufacturers_name']=$this->pi_getLL('manufacturer');
 //asort($fields);
-$searchby_selectbox='<select name="tx_multishop_pi1[search_by]">';
+$searchby_selectbox='<select name="tx_multishop_pi1[search_by]" class="form-control">';
 foreach ($fields as $key=>$label) {
 	$searchby_selectbox.='<option value="'.$key.'"'.($this->get['tx_multishop_pi1']['search_by']==$key ? ' selected="selected"' : '').'>'.$label.'</option>'."\n";
 }
 $searchby_selectbox.='</select>';
-$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid']);
-$search_limit='<select name="tx_multishop_pi1[limit]">';
+$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
+$search_limit='<select name="tx_multishop_pi1[limit]" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -519,26 +519,26 @@ if ($pageset['total_rows']>0) {
 	}
 	$subpartArray['###FOOTER_SORTBY_WEIGHT_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###HEADER_SORTBY_WEIGHT_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###LABEL_HEADER_CELL_NUMBER###']=mslib_befe::strtoupper($this->pi_getLL('admin_nr'));
-	$subpartArray['###LABEL_HEADER_PRODUCT###']=mslib_befe::strtoupper($this->pi_getLL('admin_product'));
-	$subpartArray['###LABEL_HEADER_MODEL###']=mslib_befe::strtoupper($this->pi_getLL('admin_model'));
-	$subpartArray['###LABEL_HEADER_VISIBLE###']=mslib_befe::strtoupper($this->pi_getLL('admin_visible'));
-	$subpartArray['###LABEL_HEADER_CATEGORY###']=mslib_befe::strtoupper($this->pi_getLL('admin_category'));
-	$subpartArray['###LABEL_HEADER_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_price'));
-	$subpartArray['###LABEL_HEADER_SPECIAL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_specials_price'));
-	$subpartArray['###LABEL_HEADER_STOCK###']=mslib_befe::strtoupper($this->pi_getLL('admin_stock'));
-	$subpartArray['###LABEL_HEADER_WEIGHT###']=mslib_befe::strtoupper($this->pi_getLL('admin_weight'));
-	$subpartArray['###LABEL_HEADER_ACTION###']=mslib_befe::strtoupper($this->pi_getLL('admin_action'));
-	$subpartArray['###LABEL_FOOTER_CELL_NUMBER###']=mslib_befe::strtoupper($this->pi_getLL('admin_nr'));
-	$subpartArray['###LABEL_FOOTER_PRODUCT###']=mslib_befe::strtoupper($this->pi_getLL('admin_product'));
-	$subpartArray['###LABEL_FOOTER_MODEL###']=mslib_befe::strtoupper($this->pi_getLL('admin_model'));
-	$subpartArray['###LABEL_FOOTER_VISIBLE###']=mslib_befe::strtoupper($this->pi_getLL('admin_visible'));
-	$subpartArray['###LABEL_FOOTER_CATEGORY###']=mslib_befe::strtoupper($this->pi_getLL('admin_category'));
-	$subpartArray['###LABEL_FOOTER_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_price'));
-	$subpartArray['###LABEL_FOOTER_SPECIAL_PRICE###']=mslib_befe::strtoupper($this->pi_getLL('admin_specials_price'));
-	$subpartArray['###LABEL_FOOTER_STOCK###']=mslib_befe::strtoupper($this->pi_getLL('admin_stock'));
-	$subpartArray['###LABEL_FOOTER_WEIGHT###']=mslib_befe::strtoupper($this->pi_getLL('admin_weight'));
-	$subpartArray['###LABEL_FOOTER_ACTION###']=mslib_befe::strtoupper($this->pi_getLL('admin_action'));
+	$subpartArray['###LABEL_HEADER_CELL_NUMBER###']=$this->pi_getLL('admin_nr');
+	$subpartArray['###LABEL_HEADER_PRODUCT###']=$this->pi_getLL('admin_product');
+	$subpartArray['###LABEL_HEADER_MODEL###']=$this->pi_getLL('admin_model');
+	$subpartArray['###LABEL_HEADER_VISIBLE###']=$this->pi_getLL('admin_visible');
+	$subpartArray['###LABEL_HEADER_CATEGORY###']=$this->pi_getLL('admin_category');
+	$subpartArray['###LABEL_HEADER_PRICE###']=$this->pi_getLL('admin_price');
+	$subpartArray['###LABEL_HEADER_SPECIAL_PRICE###']=$this->pi_getLL('admin_specials_price');
+	$subpartArray['###LABEL_HEADER_STOCK###']=$this->pi_getLL('admin_stock');
+	$subpartArray['###LABEL_HEADER_WEIGHT###']=$this->pi_getLL('admin_weight');
+	$subpartArray['###LABEL_HEADER_ACTION###']=$this->pi_getLL('admin_action');
+	$subpartArray['###LABEL_FOOTER_CELL_NUMBER###']=$this->pi_getLL('admin_nr');
+	$subpartArray['###LABEL_FOOTER_PRODUCT###']=$this->pi_getLL('admin_product');
+	$subpartArray['###LABEL_FOOTER_MODEL###']=$this->pi_getLL('admin_model');
+	$subpartArray['###LABEL_FOOTER_VISIBLE###']=$this->pi_getLL('admin_visible');
+	$subpartArray['###LABEL_FOOTER_CATEGORY###']=$this->pi_getLL('admin_category');
+	$subpartArray['###LABEL_FOOTER_PRICE###']=$this->pi_getLL('admin_price');
+	$subpartArray['###LABEL_FOOTER_SPECIAL_PRICE###']=$this->pi_getLL('admin_specials_price');
+	$subpartArray['###LABEL_FOOTER_STOCK###']=$this->pi_getLL('admin_stock');
+	$subpartArray['###LABEL_FOOTER_WEIGHT###']=$this->pi_getLL('admin_weight');
+	$subpartArray['###LABEL_FOOTER_ACTION###']=$this->pi_getLL('admin_action');
 	// custom page hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_products_search_and_edit.php']['adminProductsSearchAndEditTmplPreProc'])) {
 		$params=array(
@@ -587,7 +587,7 @@ if ($pageset['total_rows']>0) {
 		$product_categories=explode(',', $tmp_product_categories);
 		$cat_crumbar='';
 		foreach ($product_categories as $product_category) {
-			$cat_crumbar.='<ul class="msAdminCategoriesTree">';
+			$cat_crumbar.='<ul class="msAdminCategoriesCrum list-inline">';
 			$cats=mslib_fe::Crumbar($product_category);
 			$teller=0;
 			$total=count($cats);
@@ -608,13 +608,13 @@ if ($pageset['total_rows']>0) {
 		if (isset($rs['products_status'])) {
 			if (!$rs['products_status']) {
 				$status.='<span class="admin_status_red" alt="Disable"></span>';
-				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$status.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 		} else {
-			$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+			$status.='<a href="#" class="update_product_status" rel="'.$rs['products_id'].'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 			$status.='<span class="admin_status_green" alt="Enable"></span>';
 		}
 		$product_tax_rate=0;
@@ -692,12 +692,12 @@ if ($pageset['total_rows']>0) {
 		}
 	}
 	// custom page hook that can be controlled by third-party plugin eof
-	$action_selectbox.='<select name="tx_multishop_pi1[action]" id="products_search_action"><option value="">'.$this->pi_getLL('choose_action').'</option>';
+	$action_selectbox.='<select name="tx_multishop_pi1[action]" id="products_search_action" class="form-control"><option value="">'.$this->pi_getLL('choose_action').'</option>';
 	foreach ($actions as $key=>$value) {
 		$action_selectbox.='<option value="'.$key.'">'.$value.'</option>';
 	}
 	$action_selectbox.='</select>';
-	$input_categories_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('tx_multishop_pi1[target_categories_id]', mslib_fe::tx_multishop_get_category_tree('', '', ''), '', 'id="target_categories_id"');
+	$input_categories_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('tx_multishop_pi1[target_categories_id]', mslib_fe::tx_multishop_get_category_tree('', '', ''), '', 'class="form-control" id="target_categories_id"');
 	$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls')."'";
 	if (isset($this->get['cid']) && $this->get['cid']>0) {
 		$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls&cid='.$this->get['cid'])."'";
@@ -717,15 +717,15 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###INPUT_ACTION_SELECTBOX###']=$action_selectbox;
 	$subpartArray['###INPUT_CATEGORIES_SELECTBOX###']=$input_categories_selectbox;
 	$subpartArray['###LABEL_ADMIN_SUBMIT###']=$this->pi_getLL('submit');
-	$subpartArray['###LABEL_DOWNLOAD_AS_EXCEL_FILE###']=mslib_befe::strtoupper($this->pi_getLL('admin_download_as_excel_file'));
+	$subpartArray['###LABEL_DOWNLOAD_AS_EXCEL_FILE###']=$this->pi_getLL('admin_download_as_excel_file');
 	$subpartArray['###DOWNLOAD_AS_EXCEL_URL###']=$dlink;
-	$subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###']=mslib_befe::strtoupper($this->pi_getLL('update_modified_products'));
+	$subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###']=$this->pi_getLL('update_modified_products');
 	$subpartArray['###FORM_UPLOAD_ACTION_URL###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_price_update_up_xls');
 	$subpartArray['###CATEGORY_ID2###']=$this->get['cid'];
 	$subpartArray['###PRODUCTS_PAGINATION###']=$pagination;
 	$subpartArray['###LABEL_UPLOAD_EXCEL_FILE###']=$this->pi_getLL('admin_upload_excel_file');
-	$subpartArray['###LABEL_ADMIN_UPLOAD###']=mslib_befe::strtoupper($this->pi_getLL('admin_upload'));
-	$subpartArray['###LABEL_BACK_TO_CATALOG###']=mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog'));
+	$subpartArray['###LABEL_ADMIN_UPLOAD###']=$this->pi_getLL('admin_upload');
+	$subpartArray['###LABEL_BACK_TO_CATALOG###']=$this->pi_getLL('admin_close_and_go_back_to_catalog');
 	$subpartArray['###BACK_TO_CATALOG_LINK###']=mslib_fe::typolink();
 	$subpartArray['###LABEL_ADMIN_YES###']=$this->pi_getLL('admin_yes');
 	$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
@@ -740,7 +740,7 @@ if ($pageset['total_rows']>0) {
 	$tmp_content_results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 } else {
 	$subpartArray=array();
-	$subpartArray['###LABEL_BACK_TO_CATALOG###']=mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog'));
+	$subpartArray['###LABEL_BACK_TO_CATALOG###']=$this->pi_getLL('admin_close_and_go_back_to_catalog');
 	$subpartArray['###BACK_TO_CATALOG_LINK###']=mslib_fe::typolink();
 	$subpartArray['###LABEL_NO_RESULT###']=$this->pi_getLL('no_products_available');
 	$tmp_content_noresults=$this->cObj->substituteMarkerArrayCached($subparts['noresults'], array(), $subpartArray);
@@ -757,15 +757,15 @@ if ($postMessageArray) {
 }
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 $subpartArray['###PAGE_HEADER###']=$this->pi_getLL('products');
-$subpartArray['###LABEL_SEARCH_KEYWORD###']=mslib_befe::strtoupper($this->pi_getLL('admin_search_for'));
+$subpartArray['###LABEL_SEARCH_KEYWORD###']=$this->pi_getLL('admin_search_for');
 $subpartArray['###VALUE_SEARCH_KEYWORD###']=((isset($this->get['keyword'])) ? htmlspecialchars($this->get['keyword']) : '');
-$subpartArray['###LABEL_SEARCH_BY###']=mslib_befe::strtoupper($this->pi_getLL('by'));
+$subpartArray['###LABEL_SEARCH_BY###']=$this->pi_getLL('by');
 $subpartArray['###SEARCH_BY_SELECTBOX###']=$searchby_selectbox;
-$subpartArray['###LABEL_SEARCH_IN###']=mslib_befe::strtoupper($this->pi_getLL('in'));
+$subpartArray['###LABEL_SEARCH_IN###']=$this->pi_getLL('in');
 $subpartArray['###SEACRH_IN_CATEGORY_TREE_SELECTBOX###']=$search_category_selectbox;
-$subpartArray['###LABEL_SEARCH_LIMIT###']=mslib_befe::strtoupper($this->pi_getLL('limit_number_of_records_to'));
+$subpartArray['###LABEL_SEARCH_LIMIT###']=$this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###SEARCH_LIMIT###']=$search_limit;
-$subpartArray['###LABEL_SEARCH###']=mslib_befe::strtoupper($this->pi_getLL('search'));
+$subpartArray['###LABEL_SEARCH###']=$this->pi_getLL('search');
 $subpartArray['###RESULTS###']=$tmp_content_results;
 $subpartArray['###NORESULTS###']=$tmp_content_noresults;
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);

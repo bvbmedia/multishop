@@ -25,7 +25,7 @@ if ($this->post) {
 	}
 }
 if (is_array($erno) and count($erno)>0) {
-	$content.='<div class="error_msg">';
+	$content.='<div class="alert alert-danger">';
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 	foreach ($erno as $item) {
 		$content.='<li>'.$item.'</li>';
@@ -58,7 +58,7 @@ $content.='
 		<div class="account-field">
 				<label for="">&nbsp;</label>
 				<input name="rule_id" type="hidden" value="'.$this->post['rule_id'].'" />
-				<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+				<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
 		</div>
 	</fieldset>
 </form>
@@ -71,7 +71,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$tax_rules[]=$row;
 }
 if (count($tax_rules)) {
-	$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+	$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
 	<tr>
 		<th>ID</th>
 		<th>Name</th>
@@ -99,6 +99,6 @@ if (count($tax_rules)) {
 	}
 	$content.='</table>';
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

@@ -109,7 +109,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$this->post['customers_date_till']='';
 		}
 		if (is_array($erno) and count($erno)>0) {
-			$content.='<div class="error_msg">';
+			$content.='<div class="alert alert-danger">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';
@@ -159,9 +159,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$first_order_rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($first_order_qry);
 		$first_year=date('Y', $first_order_rs['crdate']);
 		$content.='
-		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_customers_export_wizard').'</h2></div>
+		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_customers_export_wizard').'</h3></div>
+		<div class="panel-body">
 		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="customers_export_form">
-			<div class="account-field">
+			<div class="form-group">
 				<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
 			</div>';
 		// delimeter type selectbox
@@ -172,7 +173,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			<option value="|"'.($post_data['order_type']=='|' ? ' selected="selected"' : '').'>pipe (|)</option>
 		</select>';
 		$content.='
-		<div class="account-field">
+		<div class="form-group">
 			<label>'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
 			<div class="input_label_wrapper">
 				<label for="visual_customers_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>
@@ -185,35 +186,35 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				<input name="customers_date_till" id="customers_date_till" type="hidden" value="'.$post_data['customers_date_till'].'" />
 			</div>
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 			<label>'.htmlspecialchars($this->pi_getLL('delimited_by')).'</label>
 			'.$delimeter_type_sb.'
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 			<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
 			<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
 			<input name="status" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('enabled')).'
 		</div>
-		<div class="account-field hide_pf">
+		<div class="form-group hide_pf">
 			<div class="hr"></div>
 		</div>
-		<div class="account-field hide_pf">
+		<div class="form-group hide_pf">
 				<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
-				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="msadmin_button" />
+				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success" />
 		</div>
 		<div id="admin_customers_exports_fields">';
 		$counter=0;
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
 			foreach ($this->post['fields'] as $field) {
 				$counter++;
-				$content.='<div><div class="account-field"><label>'.htmlspecialchars($this->pi_getLL('type')).'</label><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminCustomersExportSelectField">';
+				$content.='<div><div class="form-group"><label>'.htmlspecialchars($this->pi_getLL('type')).'</label><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminCustomersExportSelectField">';
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
+				$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
 				// custom field
 				if ($field=='custom_field') {
-					$content.='<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
+					$content.='<div class="form-group"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
 				}
 				$content.='
 				</div>';
@@ -221,16 +222,17 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 		$content.='
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 			<div class="hr"></div>
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 				<label>&nbsp;</label>
-				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="msadmin_button" /></span>
+				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success" /></span>
 		</div>
 		<input name="customers_export_id" type="hidden" value="'.$this->get['customers_export_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
 		</form>
+		</div>
 		<script type="text/javascript">
 		 $("#visual_customers_date_from").datepicker({
 			dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'yy/mm/dd').'",
@@ -270,11 +272,11 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			});
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
-				var item=\'<div><div class="account-field"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminCustomersExportSelectField">';
+				var item=\'<div><div class="form-group"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminCustomersExportSelectField">';
 		foreach ($array as $key=>$option) {
 			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
 		}
-		$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
+		$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
 				$(\'#admin_customers_exports_fields\').append(item);
 				$(\'select.msAdminCustomersExportSelectField\').select2({
 					width:\'650px\'
@@ -291,7 +293,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				var counter=$(this).attr("rel");
 				if(selected==\'custom_field\') {
 					$(this).next().remove();
-					$(this).parent().append(\'<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers[\'+counter+\']" type="text" /><span class="value">Value</span><input name="fields_values[\'+counter+\']" type="text" /></div>\');
+					$(this).parent().append(\'<div class="form-group"><label></label><span class="key">Key</span><input name="fields_headers[\'+counter+\']" type="text" /><span class="value">Value</span><input name="fields_values[\'+counter+\']" type="text" /></div>\');
 				}
 			});
 		});
@@ -319,8 +321,8 @@ if ($this->ms['show_main']) {
 		$orders[]=$row;
 	}
 	if (is_array($orders) and count($orders)) {
-		$content.='<div class="main-heading"><h2>'.htmlspecialchars($this->pi_getLL('admin_export_customers')).'</h2></div>
-		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+		$content.='<div class="panel-heading"><h3>'.htmlspecialchars($this->pi_getLL('admin_export_customers')).'</h3></div>
+		<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
 		<tr>
 			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
 			<th>'.htmlspecialchars($this->pi_getLL('name')).'</th>
@@ -353,9 +355,9 @@ if ($this->ms['show_main']) {
 				';
 			if (!$order['status']) {
 				$content.='<span class="admin_status_red" alt="Disable"></span>';
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customers_export_id='.$order['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customers_export_id='.$order['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customers_export_id='.$order['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customers_export_id='.$order['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$content.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$content.='</td>
@@ -369,27 +371,39 @@ if ($this->ms['show_main']) {
 			$content.='
 			</td>
 			<td>
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=export_customers_task&customers_export_id='.$order['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_export_record').'</i></a>
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=export_customers_task&customers_export_id='.$order['id']).'" class="btn btn-success"><i>'.$this->pi_getLL('download_export_record').'</i></a>
 			</td>
 			</tr>
 			';
 		}
 		$content.='</table>';
 	} else {
-		$content.='<h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_customers_export_created')).'</h3>';
+		$content.='<div class="alert alert-warning"><h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_customers_export_created')).'</h3></div>';
 	}
-	$content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_export_record').'</legend>
-		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_customer_export&upload=export_customers_task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-			<div class="account-field">
-				<label for="new_name">'.$this->pi_getLL('name').'</label>
-				<input name="new_name" type="text" value="" />
+	$content.='<div class="panel panel-default">
+	<div class="panel-heading"><h3>'.$this->pi_getLL('import_export_record').'</h3></div>
+	<div class="panel-body">
+	<fieldset id="scheduled_import_jobs_form">
+		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_customer_export&upload=export_customers_task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+			<div class="form-group">
+				<label for="new_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+				<div class="col-md-10">
+				<input class="form-control" name="new_name" type="text" value="" />
+				</div>
 			</div>
-			<div class="account-field">
-				<label for="upload_export_customers_file">'.$this->pi_getLL('file').'</label>
-				<input type="file" name="export_customers_record_file">&nbsp;<input type="submit" name="upload_export_customers_file" class="submit msadmin_button" id="upload_export_customers_file" value="upload">
+			<div class="form-group">
+				<label for="upload_export_customers_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+				<div class="col-md-10">
+				<div class="input-group">
+				<input type="file" name="export_customers_record_file" class="form-control">
+				<span class="input-group-btn">
+				<input type="submit" name="upload_export_customers_file" class="submit btn btn-success" id="upload_export_customers_file" value="upload">
+				</span>
+				</div>
+				</div>
 			</div>
 		</form>
 	</fieldset>';
-	$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="msBackendButton continueState arrowRight arrowPosLeft float_right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a>';
+	$content.='<hr><div class="clearfix"><div class="pull-right"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div></div></div>';
 }
 ?>

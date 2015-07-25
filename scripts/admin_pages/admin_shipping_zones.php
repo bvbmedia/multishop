@@ -40,8 +40,8 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$zones[]=$row;
 }
 foreach ($zones as $zone) {
-	$content.='<fieldset class="multishop_fieldset">';
-	$content.='<legend>Zone: '.$zone['name'].'</legend>';
+	$content.='<div class="panel panel-default multishop_fieldset">';
+	$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'].'</h3></div><div class="panel-body">';
 	$str="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
@@ -71,21 +71,27 @@ foreach ($zones as $zone) {
 			<ul id="tx_multishop_countries_checkboxes" class="zone_items">';
 			$counter=0;
 			foreach ($countries as $country) {
-				$content.='<li class="zone_item_country"><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></li>';
+				$content.='<li class="zone_item_country"><div class="checkbox checkbox-success"><input name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['current']) ? 'checked' : '').' id="zone_country_'.$counter.'" /><label for="zone_country_'.$counter.'">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
 				$counter++;
 			}
 			$content.='</ul>
-			<input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="msadmin_button" /><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+			<hr>
+			<div class="clearfix">
+			<div class="pull-right">
+			<button name="Submit" type="submit" value="" onclick="history.back();return false;" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i> '.$this->pi_getLL('cancel').'</button>
+			<button name="Submit" type="submit" value="" class="btn btn-success btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+			</div>
+			</div>
 			</form>
 			';
 		} else {
-			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="msadmin_button" />';
+			$content.='Currently all active countries are in use. <input name="Submit" type="submit" value="'.$this->pi_getLL('cancel').'" onclick="history.back();return false;" class="btn btn-success" />';
 		}
 	} else {
 		if ($rows>0) {
-			$content.='<ul class="zone_items">';
+			$content.='<ul class="zone_items fa-ul">';
 			while (($country=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-				$content.='<li class="zone_item_country">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</li>';
+				$content.='<li class="zone_item_country"><i class=" fa-li fa fa-square"></i>'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</li>';
 			}
 			$content.='</ul>';
 		} else {
@@ -93,24 +99,36 @@ foreach ($zones as $zone) {
 		}
 	}
 	if ($this->get['zone_id']!=$zone['id']) {
-		$content.='<br />
-		<ul class="zone_item_buttons">
-			<li><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&edit=1&zone_id='.$zone['id']).'">'.$this->pi_getLL('add_countries').'</a></li>
-			<li><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&delete=1&zone_id='.$zone['id']).'">'.$this->pi_getLL('delete_zone').'</a></li>
-		</ul>';
+		$content.='<hr>
+		<div class="clearfix">
+		<div class="pull-right">
+			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&edit=1&zone_id='.$zone['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> '.$this->pi_getLL('add_countries').'</a>
+			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&delete=1&zone_id='.$zone['id']).'" class="btn btn-danger btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('delete_zone').'</a>
+			</div>
+		</div>';
 	}
-	$content.='</fieldset>';
+	$content.='</div></div>';
 }
 $content.='
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
-<fieldset><legend>'.$this->pi_getLL('add_new_zone').'</legend>
-<div class="account-field">
-		<label for="">'.$this->pi_getLL('name').'</label>
-		<input type="text" name="zone_name" id="zone_name" value=""> <input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+<div class="panel panel-default">
+<div class="panel-heading"><h3>'.$this->pi_getLL('add_new_zone').'</h3></div>
+<div class="panel-body">
+<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
+<div class="form-group">
+		<label for="" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+		<div class="col-md-10">
+			<div class="input-group">
+			<input class="form-control" type="text" name="zone_name" id="zone_name" value="">
+			<span class="input-group-btn">
+			<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
+			</span>
+			</div>
+		</div>
 </div>
-</fieldset>
 </form>
+</div>
+</div>
 ';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content='<div class="panel panel-default"><div class="panel-body">'.mslib_fe::shadowBox($content).'';
 ?>

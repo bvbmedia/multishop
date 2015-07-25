@@ -64,7 +64,7 @@ foreach ($customers as $customer) {
 				'disable',
 				'clearcache'
 			)));
-		$status_html.='<a href="'.$link.'"><span class="admin_status_red_disable" alt="'.htmlspecialchars($this->pi_getLL('disabled')).'"></span></a>';
+		$status_html.='<a href="'.$link.'"><span class="admin_status_red disabled" alt="'.htmlspecialchars($this->pi_getLL('disabled')).'"></span></a>';
 		$status_html.='<span class="admin_status_green" alt="'.htmlspecialchars($this->pi_getLL('enable')).'"></span>';
 	} else {
 		$link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_id='.$customer['uid'].'&disable=0&'.mslib_fe::tep_get_all_get_params(array(
@@ -73,7 +73,7 @@ foreach ($customers as $customer) {
 				'clearcache'
 			)));
 		$status_html.='<span class="admin_status_red" alt="'.htmlspecialchars($this->pi_getLL('disable')).'"></span>';
-		$status_html.='<a href="'.$link.'"><span class="admin_status_green_disable" alt="'.htmlspecialchars($this->pi_getLL('enabled')).'"></span></a>';
+		$status_html.='<a href="'.$link.'"><span class="admin_status_green disabled" alt="'.htmlspecialchars($this->pi_getLL('enabled')).'"></span></a>';
 	}
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
@@ -124,8 +124,8 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 	}
 }
 $formFields=array();
-$formFields['customers_list_action']='
-<select name="tx_multishop_pi1[action]" id="selected_customers_action" style="width:250px">
+$formFields['customers_list_action']='<div class="input-group">
+<select name="tx_multishop_pi1[action]" id="selected_customers_action" class="form-control">
 <option value="">'.$this->pi_getLL('choose_action').'</option>';
 foreach ($actions as $key=>$value) {
 	//$tmp.='<option value="'.$key.'"'. ($this->get['tx_multishop_pi1']['action']==$key?' selected':'').'>'.$value.'</option>';
@@ -139,12 +139,12 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
-$formFields['submit_button']='<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
-$form_fields_block='<div id="msAdminCustomersListingActionForm">';
+$formFields['submit_button']='<span class="input-group-btn"><input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" /></span></div>';
+$form_fields_block='';
 foreach ($formFields as $key=>$formField) {
-	$form_fields_block.='<div class="msAdminCustomersFormField" id="msAdminCustomersFormField'.$key.'">'.$formField.'</div>';
+	$form_fields_block.=''.$formField.'';
 }
-$form_fields_block.='</div>';
+$form_fields_block.='';
 $subpartArray['###FORM_FIELDS_LISTING_ACTION_BLOCK###']=$form_fields_block;
 $subpartArray['###FORM_ACTION_URL_CUSTOMERS_BULK_ACTION###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers');
 $query_string=mslib_fe::tep_get_all_get_params(array(

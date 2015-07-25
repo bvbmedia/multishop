@@ -2,17 +2,8 @@
 <script type="text/javascript">
 ###JS_FUNCTIONS_EXTRA###
 jQuery(document).ready(function ($) {
-    $(".tab_content").hide();
-    $("ul.tabs li:first").addClass("active").show();
-    $(".tab_content:first").show();
-    $("ul.tabs li").click(function () {
-        $("ul.tabs li").removeClass("active");
-        $(this).addClass("active");
-        $(".tab_content").hide();
-        var activeTab = $(this).find("a").attr("href");
-        $(activeTab).fadeIn(0);
-        return false;
-    });
+	$('.nav-tabs a:first').tab('show');
+
     $(document).on('click', ".delete_categories_images", function (e) {
         e.preventDefault();
         var img_filename = $(this).attr("rel");
@@ -36,51 +27,63 @@ jQuery(document).ready(function ($) {
     ###JS_TRIGGERS_EXTRA###
 });
 </script>
+<div class="panel panel-default">
 ###HEADING_PAGE###
-<form class="admin_category_edit blockSubmitForm" name="admin_categories_edit_###CATEGORIES_ID0###" id="admin_categories_edit_###CATEGORIES_ID1###" method="post" action="###FORM_POST_URL###" enctype="multipart/form-data">
+<div class="panel-body">
+<form class="form-horizontal admin_category_edit blockSubmitForm" name="admin_categories_edit_###CATEGORIES_ID0###" id="admin_categories_edit_###CATEGORIES_ID1###" method="post" action="###FORM_POST_URL###" enctype="multipart/form-data">
     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
-    <div id="tab-container" class="msadminVerticalTabs">
-        <ul class="tabs" id="admin_orders">
-            <li class="active" style=""><a href="#category_main">###ADMIN_LABEL_TABS_DETAILS###</a></li>
-            <li class=""><a href="#category_content">###ADMIN_LABEL_TABS_CONTENT###</a></li>
-            <li class=""><a href="#category_meta">###ADMIN_LABEL_TABS_META###</a></li>
+    <div id="tab-container">
+        <ul class="nav nav-tabs" role="tablist" id="admin_orders">
+            <li role="presentation"><a href="#category_main" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_DETAILS###</a></li>
+            <li role="presentation"><a href="#category_content" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_CONTENT###</a></li>
+            <li role="presentation"><a href="#category_meta" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_META###</a></li>
             <!-- ###ADVANCED_SETTINGS_TAB_BUTTON### start -->
-            <li class=""><a href="#category_advanced">###ADMIN_LABEL_TABS_ADVANCED###</a></li>
+            <li role="presentation"><a href="#category_advanced" aria-controls="profile" role="tab" data-toggle="tab">###ADMIN_LABEL_TABS_ADVANCED###</a></li>
             <!-- ###ADVANCED_SETTINGS_TAB_BUTTON### end -->
             ###LABEL_EXTRA_PLUGIN_TABS###
         </ul>
-        <div class="tab_container">
-            <div style="display: block;" id="category_main" class="tab_content">
-                <div style="float:right;">
-                    <div class="save_block">
-                        <a href="###LINK_BUTTON_CANCEL###" class="msBackendButton backState arrowLeft arrowPosLeft"><span>###LABEL_BUTTON_CANCEL###</span></a>
-                        <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="###LABEL_BUTTON_SAVE###" /></span>
-                    </div>
-                </div>
+        <div class="tab-content">
+            <div id="category_main" class="tab-pane">
                 ###INPUT_CATEGORY_NAME_BLOCK###
                 ###SELECTBOX_CATEGORY_TREE###
                 ###LINK_INPUT_CATEGORY_TREE###
                 ###LINK_TO_CATEGORIES###
-                <div class="account-field" id="msEditCategoryInputVisibility">
-                    <label for="status">###LABEL_VISIBILITY###</label>
-                    <input name="status" type="radio" value="1" ###CATEGORY_STATUS_YES### /> ###LABEL_STATUS_YES### <input name="status" type="radio" value="0" ###CATEGORY_STATUS_NO### /> ###LABEL_STATUS_NO###
+                <div class="form-group" id="msEditCategoryInputVisibility">
+                    <label class="control-label col-md-2" for="status">###LABEL_VISIBILITY###</label>
+                    <div class="col-md-10">
+                    <div class="radio radio-success radio-inline">
+                    <input name="status" id="status1" type="radio" value="1" ###CATEGORY_STATUS_YES### /><label for="status1">###LABEL_STATUS_YES###</label>
+                    </div>
+                    <div class="radio radio-success radio-inline">
+                    <input name="status" id="status2" type="radio" value="0" ###CATEGORY_STATUS_NO### /><label for="status2">###LABEL_STATUS_NO###</label>
+                    </div>
+                    </div>
                 </div>
-                <div class="account-field" id="msEditCategoryInputHideInMenu">
-                    <label for="hide_in_menu">###LABEL_HIDE_IN_MENU###</label>
-                    <input name="hide_in_menu" id="hide_in_menu" type="checkbox" value="1" ###CATEGORY_HIDE_IN_MENU_CHECKED### />
+                <div class="form-group" id="msEditCategoryInputHideInMenu">
+                    <label class="control-label col-md-2" for="hide_in_menu">###LABEL_HIDE_IN_MENU###</label>
+                    <div class="col-md-10">
+                    <div class="checkbox checkbox-success checkbox-inline">
+                    <input name="hide_in_menu" id="hide_in_menu" type="checkbox" value="1" ###CATEGORY_HIDE_IN_MENU_CHECKED### /><label></label>
+                    </div>
+                    </div>
                 </div>
                 <!-- ###EXCLUDE_FROM_FEED_INPUT### begin -->
-                <div class="account-field" id="msEditCategoryInputExcludeFromFeeds">
-                    <label>###LABEL_EXCLUDE_FROM_FEED###</label>
+                <div class="form-group" id="msEditCategoryInputExcludeFromFeeds">
+                    <label class="control-label col-md-2">###LABEL_EXCLUDE_FROM_FEED###</label>
+                    <div class="col-md-10">
                     ###FEEDS_LIST###
+                    </div>
                 </div>
-                <div class="account-field" id="msEditCategoryInputExcludeStockFromFeeds">
-                    <label>###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
+                <div class="form-group" id="msEditCategoryInputExcludeStockFromFeeds">
+                    <label class="control-label col-md-2">###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
+                    <div class="col-md-10">
                     ###STOCK_FEEDS_LIST###
+                    </div>
                 </div>
                 <!-- ###EXCLUDE_FROM_FEED_INPUT### end -->
-                <div class="account-field" id="msEditCategoryInputImage">
-                    <label for="categories_image">###LABEL_IMAGE###</label>
+                <div class="form-group" id="msEditCategoryInputImage">
+                    <label class="control-label col-md-2" for="categories_image">###LABEL_IMAGE###</label>
+                    <div class="col-md-10">
                     <div id="categories_image">
                         <noscript>
                             <input name="categories_image" type="file" />
@@ -88,6 +91,7 @@ jQuery(document).ready(function ($) {
                     </div>
                     <input name="ajax_categories_image" id="ajax_categories_image" type="hidden" value="" />
                     ###CATEGORIES_IMAGE###
+                    </div>
                 </div>
                 <script type="text/javascript">
                     jQuery(document).ready(function ($) {
@@ -101,7 +105,7 @@ jQuery(document).ready(function ($) {
                             },
                             template: '<div class="qq-uploader">' +
                                     '<div class="qq-upload-drop-area"><span>###ADMIN_LABEL_DROP_FILES_HERE_TO_UPLOAD###</span></div>' +
-                                    '<div class="qq-upload-button">###LABEL_CHOOSE_IMAGE###</div>' +
+                                    '<div class="btn btn-primary btn-sm qq-upload-button">###LABEL_CHOOSE_IMAGE###</div>' +
                                     '<ul class="qq-upload-list" id="qq-upload-list-ul"></ul>' +
                                     '</div>',
                             onComplete: function (id, fileName, responseJSON) {
@@ -120,30 +124,37 @@ jQuery(document).ready(function ($) {
                         });
                     });
                 </script>
-                <div class="account-field" id="msEditCategoryInputExternalUrl">
-                    <label for="categories_url">###LABEL_CATEGORIES_EXTERNAL_URL###</label>
-                    <input type="text" class="text" name="categories_url" id="categories_url" value="###VALUE_CATEGORIES_EXTERNAL_URL###">
+                <div class="form-group" id="msEditCategoryInputExternalUrl">
+                    <label class="control-label col-md-2" for="categories_url">###LABEL_CATEGORIES_EXTERNAL_URL###</label>
+                    <div class="col-md-10">
+                    <input type="text" class="form-control text" name="categories_url" id="categories_url" value="###VALUE_CATEGORIES_EXTERNAL_URL###">
+                    </div>
                 </div>
                 ###EXTRA_DETAILS_FIELDS###
             </div>
-            <div style="display: block;" id="category_content" class="tab_content">
+            <div id="category_content" class="tab-pane">
                 ###CATEGORIES_CONTENT_BLOCK###
             </div>
-            <div style="display: block;" id="category_meta" class="tab_content">
+            <div id="category_meta" class="tab-pane">
                 ###CATEGORIES_META_BLOCK###
             </div>
-            <!-- ###ADVANCED_SETTINGS_TAB_CONTENT### start -->
-            <div style="display: block;" id="category_advanced" class="tab_content">
-                <div class="account-field" id="msEditCategoryInputCustomSettings">
-                    <label for="custom_settings">###LABEL_ADVANCED_SETTINGS###</label>
-                    <textarea name="custom_settings" class="expand20-200" cols="" rows="15">###VALUE_ADVANCED_SETTINGS###</textarea>
+            <!-- ###ADVANCED_SETTINGS_tab-pane### start -->
+            <div id="category_advanced" class="tab-pane">
+                <div class="form-group" id="msEditCategoryInputCustomSettings">
+                    <label class="control-label col-md-2" for="custom_settings">###LABEL_ADVANCED_SETTINGS###</label>
+                    <div class="col-md-10">
+                    <textarea name="custom_settings" class="form-control expand20-200" cols="" rows="15">###VALUE_ADVANCED_SETTINGS###</textarea>
+                    </div>
                 </div>
             </div>
-            <!-- ###ADVANCED_SETTINGS_TAB_CONTENT### end -->
+            <!-- ###ADVANCED_SETTINGS_tab-pane### end -->
             ###CONTENT_EXTRA_PLUGIN_TABS###
-            <div class="save_block">
-                <a href="###LINK_BUTTON_CANCEL_FOOTER###" class="msBackendButton backState arrowLeft arrowPosLeft"><span>###LABEL_BUTTON_CANCEL_FOOTER###</span></a>
-                <span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="###LABEL_BUTTON_SAVE_FOOTER###" /></span>
+            <hr>
+            <div class="cleafix">
+            <div class="pull-right">
+                <a href="###LINK_BUTTON_CANCEL_FOOTER###" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> ###LABEL_BUTTON_CANCEL_FOOTER###</a>
+                <button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_SAVE_FOOTER###</button>
+            </div>
             </div>
         </div>
     </div>
@@ -151,4 +162,6 @@ jQuery(document).ready(function ($) {
     <input name="action" type="hidden" value="###PAGE_ACTION###" />
 </form>
 <div id="ajax_message_###CATEGORIES_ID_FOOTER1###" class="ajax_message"></div>
+</div>
+</div>
 <!-- ###TEMPLATE### end -->

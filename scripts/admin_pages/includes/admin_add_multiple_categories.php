@@ -141,16 +141,21 @@ if ($this->post) {
 		$category['parent_id']=$this->get['cid'];
 	}
 	$save_block='
-		<div class="save_block">
-			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
-			<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>
+<hr>
+		<div class="clearfix">
+			<div class="pull-right">
+			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
+			<button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
+			</div>
 		</div>
 	';
 	$content.='
-	<form class="admin_add_multiple_categories blockSubmitForm" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
+	<div class="panel panel-default">
+	<div class="panel-heading"><h3>'.$this->pi_getLL('admin_new_multiple_category').'</h3></div>
+	<div class="panel-body">
+	<form class="form-horizontal admin_add_multiple_categories blockSubmitForm" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
-	$tmpcontent.='<div style="float:right;">'.$save_block.'</div>';
 	//$tmpcontent.='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
 	if (isset($this->get['cid']) && $this->get['cid']>0) {
 		$category['parent_id']=$this->get['cid'];
@@ -158,39 +163,46 @@ if ($this->post) {
 		$category['parent_id']=0;
 	}
 	$tmpcontent.='
-		<div class="account-field" id="msEditCategoriesInputVisibility">
-			<label for="status">'.$this->pi_getLL('admin_visible').'</label>
-			<input name="status" type="radio" value="1" checked="checked" /> '.$this->pi_getLL('admin_yes').' <input name="status" type="radio" value="0" /> '.$this->pi_getLL('admin_no').'
+		<div class="form-group" id="msEditCategoriesInputVisibility">
+			<label for="status" class="control-label col-md-2">'.$this->pi_getLL('admin_visible').'</label>
+			<div class="col-md-10">
+			<div class="radio radio-success radio-inline">
+			<input name="status" type="radio" value="1" checked="checked" /><label>'.$this->pi_getLL('admin_yes').'</label>
+			</div>
+			<div class="radio radio-success radio-inline">
+			<input name="status" type="radio" value="0" /><label>'.$this->pi_getLL('admin_no').'</label>
+			</div>
+			</div>
 		</div>
-		<div class="account-field" id="msEditCategoriesInputParent">
-			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>
+		<div class="form-group" id="msEditCategoriesInputParent">
+			<label for="parent_id" class="control-label col-md-2">'.$this->pi_getLL('admin_parent').'</label>
+			<div class="col-md-10">
 			<input type="hidden" name="parent_id" id="parent_id" class="categoriesIdSelect2BigDropWider" value="'.$category['parent_id'].'" />
+			</div>
 		</div>';
 	//'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
 	$tmpcontent.='
-	<div class="account-field" id="msEditCategoriesInputName">
-		<label for="categories_name">'.$this->pi_getLL('admin_multiple_categories', 'CATEGORIES NAME').'</label>
-		<textarea name="categories_name" id="categories_name" style="width:250px;height:500px;" class="expand100-200"></textarea>
+	<div class="form-group" id="msEditCategoriesInputName">
+		<label for="categories_name" class="control-label col-md-2">'.$this->pi_getLL('admin_multiple_categories', 'CATEGORIES NAME').'</label>
+		<div class="col-md-10">
+		<textarea name="categories_name" id="categories_name" rows="5" class="form-control expand100-200"></textarea>
+		</div>
 	</div>';
 	$tabs['category_main']=array(
 		'DETAILS',
 		$tmpcontent
 	);
 	// tabber
-	$content.='<h1>'.$this->pi_getLL('admin_new_multiple_category').'</h1>
-';
+	$content.='';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
-		$content.='
-
-			'.$value[1].'
-
-	';
+		$content.=$value[1];
 	}
 	// tabber eof
+	$content.=$save_block;
 	$content.='<input name="action" type="hidden" value="'.$_REQUEST['action'].'" />
-	</form>';
+	</form></div></div>';
 	$content.='';
 }
 ?>

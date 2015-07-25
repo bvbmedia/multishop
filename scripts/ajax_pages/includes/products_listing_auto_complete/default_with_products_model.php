@@ -36,9 +36,9 @@ foreach ($products as $product) {
 	$prod['Title']=$prod['Title'];
 	$prod['Desc']='<div class="ajax_products_shortdescription">'.addslashes(mslib_befe::str_highlight(substr($product['products_shortdescription'], 0, 75), $this->get['q'])).'</div>';
 	if ($product['products_price']<>$product['final_price']) {
-		$prod['Price']='<div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price']).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price']).'</div>';
+		$prod['Price']='<div class="ajax_products_price"><div class="ajax_old_price">'.mslib_fe::amount2Cents($product['products_price']).'</div><div class="ajax_specials_price">'.mslib_fe::amount2Cents($product['final_price']).'</div></div>';
 	} else {
-		$prod['Price']='<div class="ajax_products_price">'.mslib_fe::amount2Cents($product['products_price']).'</div>';
+		$prod['Price']='<div class="ajax_products_price"><div class="ajax_normal_price">'.mslib_fe::amount2Cents($product['products_price']).'</div></div>';
 	}
 	$prod['Name']=substr($product['products_name'], 0, 50);
 	$prod['skeyword']=$this->get['q'];

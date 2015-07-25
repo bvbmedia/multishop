@@ -5,11 +5,14 @@ if (!defined('TYPO3_MODE')) {
 $counter=0;
 $tr_type='even';
 $tmp='
-<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_invoices_listing">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminInvoicesListing" class="table table-striped table-bordered">
+<thead>
 <tr>
 	<th align="center" width="17">
+		<div class="checkbox checkbox-success">
+		<input type="checkbox" id="check_all_1">
 		<label for="check_all_1"></label>
-		<input type="checkbox" class="PrettyInput" id="check_all_1">
+		</div>
 	</th>
 ';
 $headercol.='
@@ -30,7 +33,10 @@ $headercol.='
 <th width="50">'.$this->pi_getLL('admin_paid').'</th>
 ';
 $headercol.='
-</tr>';
+</tr>
+</thead>
+<tbody>
+';
 $cb_ctr=0;
 $tmp.=$headercol;
 $totalAmount=0;
@@ -43,8 +49,10 @@ foreach ($invoices as $invoice) {
 	}
 	$tmp.='<tr class="'.$tr_type.'">';
 	$tmp.='<th nowrap>
-	<label for="checkbox_'.$invoice['id'].'"></label>
-	<input type="checkbox" name="selected_invoices[]" class="PrettyInput" id="checkbox_'.$invoice['id'].'" value="'.$invoice['id'].'">
+	<div class="checkbox checkbox-success">
+		<input type="checkbox" name="selected_invoices[]" id="checkbox_'.$invoice['id'].'" value="'.$invoice['id'].'">
+		<label for="checkbox_'.$invoice['id'].'"></label>
+	</div>
 	</th>
 	<td align="right">'.$cb_ctr.'</td>
 	';
@@ -71,15 +79,16 @@ foreach ($invoices as $invoice) {
 	$tmp.='<td align="right" nowrap>'.($invoice['date_mail_last_sent']>0 ? strftime("%x", $invoice['date_mail_last_sent']) : '').'</td>';
 	$tmp.='<td align="center" nowrap>';
 	if (!$invoice['paid']) {
-		$tmp.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
-		$tmp.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_invoices_to_paid&selected_invoices[]='.$invoice['id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $invoice['invoice_id']).'\')"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
+		$tmp.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
+		$tmp.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_invoices_to_paid&selected_invoices[]='.$invoice['id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $invoice['invoice_id']).'\')"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
-		$tmp.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_invoices_to_not_paid&selected_invoices[]='.$invoice['id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $invoice['invoice_id']).'\')"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>&nbsp;';
+		$tmp.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_invoices_to_not_paid&selected_invoices[]='.$invoice['id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $invoice['invoice_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>';
 		$tmp.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	$tmp.='</td>';
 	$tmp.='</tr>';
 }
+$tmp.='</tbody>';
 $footercol.='
 <th width="50" align="right"></th>
 <th width="50" align="right">'.$this->pi_getLL('invoice_number').'</th>
@@ -100,12 +109,14 @@ $footercol.='
 $footercol.='
 </tr>';
 $tmp.='
+<tfoot>
 <tr>
 	<th>
 		&nbsp;
 	</th>
 '.$footercol;
 $tmp.='
+</tfoot>
 </table>
 ';
 $actions=array();
@@ -121,7 +132,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 	}
 }
 $tmp.='
-<select name="tx_multishop_pi1[action]" id="selected_invoices_action">
+<div class="form-group"><div class="input-group"><select name="tx_multishop_pi1[action]" id="selected_invoices_action" class="form-control">
 <option value="">'.$this->pi_getLL('choose_action').'</option>
 ';
 foreach ($actions as $key=>$value) {
@@ -129,8 +140,12 @@ foreach ($actions as $key=>$value) {
 }
 $tmp.='
 	</select>
+	<span class="input-group-btn">
 	<input name="tx_multishop_pi1[mailto]" type="text" value="'.$this->ms['MODULES']['STORE_EMAIL'].'" id="msadmin_invoices_mailto" />
-	<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" ></input>
+	<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" ></input>
+	</span>
+	</div>
+	</div>
 	<script>
 		jQuery(document).ready(function($) {
 			$(\'#selected_invoices_action\').change(function() {

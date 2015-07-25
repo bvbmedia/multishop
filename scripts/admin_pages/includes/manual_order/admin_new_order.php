@@ -18,7 +18,7 @@ if (count($products)<0) {
 	}
 	$customers=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'company, name, email');
 	if (is_array($customers) and count($customers)) {
-		$content.='<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[page_section]=admin_processed_manual_order').'" method="post" name="checkout" class="AdvancedForm" id="ms_checkout_direct">';
+		$content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[page_section]=admin_processed_manual_order').'" method="post" name="checkout" class="AdvancedForm" id="ms_checkout_direct">';
 		if ($this->get['tx_multishop_pi1']['is_proposal']) {
 			$content.='<input name="tx_multishop_pi1[is_proposal]" type="hidden" value="'.$this->get['tx_multishop_pi1']['is_proposal'].'" />';
 		}
@@ -72,7 +72,7 @@ if (count($products)<0) {
 			}); //end of first load
 		</script>';
 		if (is_array($erno) and count($erno)>0) {
-			$content_.='<div class="error_msg">';
+			$content_.='<div class="alert alert-danger">';
 			$content_.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 			foreach ($erno as $item) {
 				$content_.='<li>'.$item.'</li>';
@@ -80,12 +80,12 @@ if (count($products)<0) {
 			$content_.='</ul>';
 			$content_.='</div>';
 		}
-		$content.='<div class="error_msg" style="display:none">';
+		$content.='<div class="alert alert-danger" style="display:none">';
 		$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul class="ul-display-error">';
 		$content.='<li class="item-error" style="display:none"></li>';
 		$content.='</ul></div>';
 		$content.='<div id="live-validation">
-		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[page_section]=admin_processed_manual_order').'" method="post" name="checkout" class="AdvancedForm" id="ms_checkout">';
+		<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[page_section]=admin_processed_manual_order').'" method="post" name="checkout" class="AdvancedForm" id="ms_checkout">';
 		$content.='<div id="customer_details_form">
 		<div class="step">
 			<div class="account-field">
@@ -497,6 +497,6 @@ if (count($products)<0) {
 				</div>';
 	}
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

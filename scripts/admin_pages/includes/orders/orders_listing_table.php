@@ -39,7 +39,7 @@ foreach ($tmporders as $order) {
 		$customer_name=$order['billing_name'];
 	}
 	//<div class="orders_status_button_gray" title="'.htmlspecialchars($order['orders_status']).'">'.$order['orders_status'].'</div>
-	$order_status_selectbox='<select name="orders_status" class="change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'" style="width:200px">
+	$order_status_selectbox='<select name="orders_status" class="form-control change_orders_status" rel="'.$order['orders_id'].'" id="orders_'.$order['orders_id'].'">
 		<option value="">'.$this->pi_getLL('choose').'</option>';
 	if (is_array($all_orders_status)) {
 		foreach ($all_orders_status as $item) {
@@ -50,27 +50,27 @@ foreach ($tmporders as $order) {
 	$paid_status='';
 	if (!$order['paid']) {
 		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
-		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $order['orders_id']).'\')"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
+		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $order['orders_id']).'\')"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
-		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>&nbsp;';
+		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>&nbsp;';
 		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	$orderlist_buttons=array();
 	switch ($page_type) {
 		case 'proposals':
-			$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
-			$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
+			$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
+			$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
 			break;
 		case 'orders':
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 				if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="msadmin_button"'.($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] ? ' target="_blank"' : '').'>'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
+					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="btn btn-primary btn-sm"'.($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] ? ' target="_blank"' : '').'>'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
 				}
 				if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
 					if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
-						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']).'" class="msadmin_button" target="_blank">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
+						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']).'" class="btn btn-primary btn-sm" target="_blank">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 					} else {
-						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
+						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 					}
 				}
 			}
@@ -163,14 +163,14 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $formFields=array();
 $formFields['orders_list_action']='
-<select name="tx_multishop_pi1[action]" id="selected_orders_action" style="width:350px">
+<select name="tx_multishop_pi1[action]" id="selected_orders_action" class="form-control">
 <option value="">'.$this->pi_getLL('choose_action').'</option>';
 foreach ($actions as $key=>$value) {
 	//$tmp.='<option value="'.$key.'"'. ($this->get['tx_multishop_pi1']['action']==$key?' selected':'').'>'.$value.'</option>';
 	$formFields['orders_list_action'].='<option value="'.$key.'">'.$value.'</option>';
 }
 $formFields['orders_list_action'].='</select>';
-$formFields['update_to_order_status']='<select name="tx_multishop_pi1[update_to_order_status]" id="msadmin_order_status_select" style="width:200px"><option value="">'.$this->pi_getLL('choose').'</option>';
+$formFields['update_to_order_status']='<select name="tx_multishop_pi1[update_to_order_status]" id="msadmin_order_status_select" class="form-control"><option value="">'.$this->pi_getLL('choose').'</option>';
 if (is_array($all_orders_status)) {
 	foreach ($all_orders_status as $row) {
 		$formFields['update_to_order_status'].='<option value="'.$row['id'].'" '.(($order['status']==$row['id']) ? 'selected' : '').'>'.$row['name'].'</option>'."\n";
@@ -184,10 +184,10 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 	}
 }
-$formFields['submit_button']='<input class="msadmin_button" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
+$formFields['submit_button']='<input class="btn btn-success" type="submit" name="submit" value="'.$this->pi_getLL('submit').'" />';
 $form_fields_block='<div id="msAdminOrdersListingActionForm">';
 foreach ($formFields as $key=>$formField) {
-	$form_fields_block.='<div class="msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'">'.$formField.'</div>';
+	$form_fields_block.='<div class="form-group msAdminOrdersFormField" id="msAdminOrdersFormField_'.$key.'">'.$formField.'</div>';
 }
 $form_fields_block.='</div>';
 $query_string=mslib_fe::tep_get_all_get_params(array(

@@ -23,13 +23,14 @@ if ($this->post) {
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_manufacturers'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_manufacturers'));
+	exit();
 }
 //
 $manufacturers=mslib_fe::getManufacturers();
 //
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_manufacturers').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_manufacturers').'" method="post" id="merge_attribute_options_form" class="merge_attribute_options_form">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_manufacturers').'" method="post" id="merge_attribute_options_form" class="merge_attribute_options_form">
 	<div class="account-field">
 			<ul>
 			';
@@ -64,7 +65,7 @@ $content.='
 	</div>
 	<div class="account-field">
 			<label>Merge selected manufacturers to: </label>
-			'.$cat_selectbox.'<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('merge_selected').'" />
+			'.$cat_selectbox.'<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('merge_selected').'" />
 	</div>
 </form>
 ';

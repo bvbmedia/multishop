@@ -171,7 +171,7 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 if (count($coupons_options)>0) {
 	$content.='<fieldset class="multishop_fieldset">';
 	$content.='<legend>'.$this->pi_getLL('coupon_codes').'</legend>';
-	$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_orders_listing" id="product_import_table">';
+	$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table">';
 	$content.='<tr>
 				<th nowrap>'.$this->pi_getLL('coupon_code').'</th>
 				<th width="60" nowrap>'.$this->pi_getLL('discount').'</th>
@@ -213,9 +213,9 @@ if (count($coupons_options)>0) {
 		<td align="center">';
 		if (!$option['status']) {
 			$content.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
-			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=1').'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
-			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=0').'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 			$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 		}
 		$content.='
@@ -230,7 +230,7 @@ if (count($coupons_options)>0) {
 	$content.='</table>';
 	$content.='</fieldset>';
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>

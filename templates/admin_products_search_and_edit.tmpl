@@ -1,117 +1,121 @@
 <!-- ###TEMPLATE### begin -->
 ###POST_MESSAGE###
-<table width="100%" cellpadding="2" cellspacing="2" id="msAdminSearchAndEditProductsForm">
+<div class="panel panel-default">
+<div class="panel-heading"><h3>###PAGE_HEADER###</h3></div>
+<div class="panel-body">
+<div class="well">
 <form name="search" method="get" action="index.php">
     <input name="id" type="hidden" value="###SHOP_PID###" />
 	<input name="type" type="hidden" value="2003" />
     <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit"/>
-    <input type="hidden" name="search" class="msadmin_button" value="1" />
-	<tr>
-		<td><div class="main-heading"><h1>###PAGE_HEADER###</h1></div></td>
-		<td colspan="8" align="right">
-            <div id="pricelist_search_form">
-                <div class="form-field">
+    <input type="hidden" name="search" class="btn btn-success" value="1" />
+            <div id="pricelist_search_form" class="form-inline">
+                <div class="form-group">
 				<label>###LABEL_SEARCH_KEYWORD###</label>
-				<input type="text" class="skeyword" name="keyword" value="###VALUE_SEARCH_KEYWORD###" />
+				<input type="text" class="form-control skeyword" name="keyword" value="###VALUE_SEARCH_KEYWORD###" />
 			</div>
-			<div class="form-field">
+			<div class="form-group">
                 <label>###LABEL_SEARCH_BY###</label>
                 ###SEARCH_BY_SELECTBOX###
 			</div>
-			<div class="form-field">
+			<div class="form-group">
                 <label>###LABEL_SEARCH_IN###</label>
                 ###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
 			</div>
-			<div class="form-field">
+			<div class="form-group">
 				<label>###LABEL_SEARCH_LIMIT###</label>
 				###SEARCH_LIMIT###
 			</div>
-			<div class="form-field">
-				<input type="submit" name="submit" class="msadmin_button" value="###LABEL_SEARCH###" />
+			<input type="submit" name="submit" class="btn btn-success" value="###LABEL_SEARCH###" />
 			</div>
-            </div>
-        </td>
-    </tr>
 </form>
+</div>
+
 <!-- ###RESULTS### begin -->
 <form action="###FORM_ACTION_PRICE_UPDATE_URL###" method="post" name="price_update" class="blockSubmitForm">
-<tr>
-<td colspan="8">
-<div class="msHorizontalOverflowWrapper">
-<table width="100%" cellpadding="2" cellspacing="2" id="product_import_table" class="msZebraTable msadmin_orders_listing">
-	<tr>
-		<td align="center" width="17">
-			<label for="check_all_1"></label>
-			<input type="checkbox" class="PrettyInput" id="check_all_1">
-		</td>
-		<th>###LABEL_HEADER_CELL_NUMBER###</th>
-		<th><a href="###HEADER_SORTBY_PRODUCT_LINK###">###LABEL_HEADER_PRODUCT###</a></th>
-        <th><a href="###HEADER_SORTBY_MODEL_LINK###">###LABEL_HEADER_MODEL###</a></th>
-        <th><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
-		<th><a href="###HEADER_SORTBY_CATEGORY_LINK###">###LABEL_HEADER_CATEGORY###</a></th>
-		<th><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
-		<th><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
-		<th><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
-		<th><a href="###HEADER_SORTBY_WEIGHT_LINK###">###LABEL_HEADER_WEIGHT###</a></th>
-		<th width="60">###LABEL_HEADER_ACTION###</th>
-    </tr>
 
+<div class="msHorizontalOverflowWrapper">
+<table width="100%" cellpadding="0" cellspacing="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
+<thead>
+	<tr>
+		<th class="cellCheckbox">
+			<div class="checkbox checkbox-success">
+				<input type="checkbox" id="check_all_1">
+				<label for="check_all_1"></label>
+			</div>
+		</th>
+		<th class="cellID">###LABEL_HEADER_CELL_NUMBER###</th>
+		<th class="cellName"><a href="###HEADER_SORTBY_PRODUCT_LINK###">###LABEL_HEADER_PRODUCT###</a></th>
+        <th class="cellModel"><a href="###HEADER_SORTBY_MODEL_LINK###">###LABEL_HEADER_MODEL###</a></th>
+        <th class="cellStatus"><a href="###HEADER_SORTBY_VISIBLE_LINK###">###LABEL_HEADER_VISIBLE###</a></th>
+		<th class="cellCategory"><a href="###HEADER_SORTBY_CATEGORY_LINK###">###LABEL_HEADER_CATEGORY###</a></th>
+		<th class="cellPrice"><a href="###HEADER_SORTBY_PRICE_LINK###">###LABEL_HEADER_PRICE###</a></th>
+		<th class="cellSpecialPrice"><a href="###HEADER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_HEADER_SPECIAL_PRICE###</a></th>
+		<th class="cellStock"><a href="###HEADER_SORTBY_STOCK_LINK###">###LABEL_HEADER_STOCK###</a></th>
+		<th class="cellWeight"><a href="###HEADER_SORTBY_WEIGHT_LINK###">###LABEL_HEADER_WEIGHT###</a></th>
+		<th class="cellAction">###LABEL_HEADER_ACTION###</th>
+    </tr>
+</thead>
     <!-- ###PRODUCTS_ITEM### begin -->
+    <tbody>
     <tr class="###ROW_TYPE###">
-        <td nowrap class="msAdminProductsSearchCellCheckbox">
-			<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
-			<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" class="PrettyInput" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
+        <td class="cellCheckbox">
+        	<div class="checkbox checkbox-success">
+				<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
+				<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
+			</div>
 		</td>
-		<td class="column_name msAdminProductsSearchCellNumber" align="right" nowrap>###CELL_NUMBER###</td>
-		<td nowrap class="msAdminProductsSearchCellProductsName">
+		<td class="cellID">###CELL_NUMBER###</td>
+		<td class="cellName">
 			<a href="###EDIT_PRODUCT_LINK0###">###PRODUCT_NAME###</a>
 			###PRODUCT_CATEGORIES_CRUMBAR###
 		</td>
-		<td nowrap class="msAdminProductsSearchCellProductsModel">###PRODUCT_MODEL###</td>
-		<td class="msAdminProductsSearchCellStatus" align="center">
+		<td class="cellModel">###PRODUCT_MODEL###</td>
+		<td class="cellStatus">
 			###PRODUCT_STATUS###
 		</td>
-		<td nowrap class="msAdminProductsSearchCellCategory">
+		<td class="cellCategory">
 			<a href="###LINK_EDIT_CAT###">###CATEGORY_NAME###</a>
 		</td>
 
-        <td nowrap class="msAdminProductsSearchCellProductsPrice">
+        <td class="cellPrice">
 			<input type="hidden" id="product_tax_id_###PID1###" value="###VALUE_TAX_ID###" />
-			<div class="msAttributesField">###CURRENCY0### <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><label for="display_name">Excl. VAT</label></div>
-			<div class="msAttributesField">###CURRENCY1### <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><label for="display_name">Incl. VAT</label></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY0###</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="###VALUE_PRICE_EXCL_VAT###" rel="###PID2###"><span class="input-group-addon">Excl. VAT</span></div></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY1###</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="###VALUE_PRICE_INCL_VAT###" rel="###PID3###"><span class="input-group-addon">Incl. VAT</span></div></div>
 			<div class="msAttributesField hidden"><input type="hidden" name="up[regular_price][###PID5###]" value="###VALUE_ORIGINAL_PRICE###" size="10px" style="text-align:right;" /></div>
 		</td>
 
-        <td nowrap class="msAdminProductsSearchCellProductsSpecialsPrice">
-			<div class="msAttributesField">###CURRENCY2### <input type="text" id="display_name" name="display_name" class="msSpecialsPriceExcludingVat" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><label for="display_name">Excl. VAT</label></div>
-			<div class="msAttributesField">###CURRENCY3### <input type="text" name="display_name" id="display_name" class="msSpecialsPriceIncludingVat" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><label for="display_name">Incl. VAT</label></div>
+        <td class="cellSpecialPrice">
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY2###</span><input type="text" id="display_name" name="display_name" class="form-control msSpecialsPriceExcludingVat" value="###VALUE_SPECIAL_PRICE_EXCL_VAT###" rel="###PID4###"><span class="input-group-addon">Excl. VAT</span></div></div>
+			<div class="form-group msAttributesField"><div class="input-group"><span class="input-group-addon">###CURRENCY3###</span><input type="text" name="display_name" id="display_name" class="form-control msSpecialsPriceIncludingVat" value="###VALUE_SPECIAL_PRICE_INCL_VAT###" rel="###PID5###"><span class="input-group-addon">Incl. VAT</span></div></div>
 			<div class="msAttributesField hidden"><input type="hidden" name="up[special_price][###PID6###]" value="###VALUE_ORIGINAL_SPECIAL_PRICE###" style="text-align:right;" size="10px" /></div>
 		</td>
 
-        <td align="right" class="msAdminProductsSearchCellQuantity" nowrap><input type="text" name="up[stock][###PID7###]" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" size="10px" /></td>
-		<td align="right" class="msAdminProductsSearchCellWeight" nowrap><input type="text" name="up[weight][###PID8###]" value="###VALUE_PRODUCT_WEIGHT###" style="text-align:right;" size="4px" /></td>
-		<td nowrap align="center" class="msAdminProductsSearchCellActionIcons">
-			<ul>
-				<li><a href="###EDIT_PRODUCT_LINK1###" class="admin_menu_edit" alt="Edit">edit</a></li>
-				<li><a href="###PRODUCT_DETAIL_LINK###" class="admin_menu_view" target="_blank">view</a></li>
-				<li><a href="###DELETE_PRODUCT_LINK###" class="admin_menu_remove" alt="Remove"></a></li>
-			</ul>
+        <td class="cellStock"><input type="text" name="up[stock][###PID7###]" class="form-control" value="###VALUE_PRODUCT_QUANTITY###" style="text-align:right;" size="10px" /></td>
+		<td class="cellWeight"><input type="text" name="up[weight][###PID8###]" class="form-control" value="###VALUE_PRODUCT_WEIGHT###" style="text-align:right;" size="4px" /></td>
+		<td class="cellAction">
+				<a href="###EDIT_PRODUCT_LINK1###" class="btn btn-primary btn-sm admin_menu_edit" alt="Edit"><i class="fa fa-pencil"></i></a>
+				<a href="###PRODUCT_DETAIL_LINK###" class="btn btn-primary btn-sm admin_menu_view" target="_blank"><i class="fa fa-eye"></i></a>
+				<a href="###DELETE_PRODUCT_LINK###" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-remove"></i></a>
         </td>
     </tr>
+    </tbody>
 	<!-- ###PRODUCTS_ITEM### end -->
+	<tfoot>
 	<tr>
-		<th>&nbsp;</th>
-		<th>###LABEL_FOOTER_CELL_NUMBER###</th>
-		<th><a href="###FOOTER_SORTBY_PRODUCT_LINK###">###LABEL_FOOTER_PRODUCT###</a></th>
-        <th><a href="###FOOTER_SORTBY_MODEL_LINK###">###LABEL_FOOTER_MODEL###</a></th>
-        <th><a href="###FOOTER_SORTBY_VISIBLE_LINK###">###LABEL_FOOTER_VISIBLE###</a></th>
-		<th><a href="###FOOTER_SORTBY_CATEGORY_LINK###">###LABEL_FOOTER_CATEGORY###</a></th>
-		<th><a href="###FOOTER_SORTBY_PRICE_LINK###">###LABEL_FOOTER_PRICE###</a></th>
-		<th><a href="###FOOTER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_FOOTER_SPECIAL_PRICE###</a></th>
-		<th><a href="###FOOTER_SORTBY_STOCK_LINK###">###LABEL_FOOTER_STOCK###</a></th>
-		<th><a href="###FOOTER_SORTBY_WEIGHT_LINK###">###LABEL_FOOTER_WEIGHT###</a></th>
-		<th width="60">###LABEL_FOOTER_ACTION###</th>
+		<th class="cellCheckbox">&nbsp;</th>
+		<th class="cellID">###LABEL_FOOTER_CELL_NUMBER###</th>
+		<th class="cellName"><a href="###FOOTER_SORTBY_PRODUCT_LINK###">###LABEL_FOOTER_PRODUCT###</a></th>
+        <th class="cellModel"><a href="###FOOTER_SORTBY_MODEL_LINK###">###LABEL_FOOTER_MODEL###</a></th>
+        <th class="cellStatus"><a href="###FOOTER_SORTBY_VISIBLE_LINK###">###LABEL_FOOTER_VISIBLE###</a></th>
+		<th class="cellCategory"><a href="###FOOTER_SORTBY_CATEGORY_LINK###">###LABEL_FOOTER_CATEGORY###</a></th>
+		<th class="cellPrice"><a href="###FOOTER_SORTBY_PRICE_LINK###">###LABEL_FOOTER_PRICE###</a></th>
+		<th class="cellSpecialPrice"><a href="###FOOTER_SORTBY_SPECIAL_PRICE_LINK###">###LABEL_FOOTER_SPECIAL_PRICE###</a></th>
+		<th class="cellStock"><a href="###FOOTER_SORTBY_STOCK_LINK###">###LABEL_FOOTER_STOCK###</a></th>
+		<th class="cellWeight"><a href="###FOOTER_SORTBY_WEIGHT_LINK###">###LABEL_FOOTER_WEIGHT###</a></th>
+		<th class="cellAction">###LABEL_FOOTER_ACTION###</th>
 	</tr>
+	</tfoot>
 	</table>
 </div>
 	<script type="text/javascript">
@@ -121,19 +125,19 @@
         });
     });
     </script>
-</tr>
+
 	<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
-	<tr>
-	<td>
-		<div class="form-field">
+<hr>
+		<div class="form-group">
 		###INPUT_ACTION_SELECTBOX###
 		</div>
-		<div class="form-field">
-		###INPUT_CATEGORIES_SELECTBOX###
+		<div class="form-group">
+			###INPUT_CATEGORIES_SELECTBOX###
+			</div>
+			<div class="form-group">
+			<input class="btn btn-success" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" />
 		</div>
-		<div class="form-field">
-			<input class="msadmin_button" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" ></input>
-		</div>
+
 		<script type="text/javascript">
             jQuery(document).ready(function ($) {
                 $('#products_search_action').change(function() {
@@ -148,31 +152,31 @@
 			$("#target_categories_id").hide();
 		});
         </script>
-    </td>
-		<td align="right">
-			<input type="button" name="download" class="link_block" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" />
-			<input type="submit" class="msadmin_button" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" />
-		</td>
-	</tr>
+
+			<input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" />
+			<input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" />
+
 </form>
 
-<form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload" class="blockSubmitForm">
+<form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload" class="form-horizontal blockSubmitForm">
 	<input type="hidden" name="cid" value="###CATEGORY_ID2###" />
-	<tr>
-		<td colspan="9">
-				<br />
 				###PRODUCTS_PAGINATION###
-				<div class="hr">
+				<hr>
+			<div class="form-group">
+				<label class="col-md-2 control-label">###LABEL_UPLOAD_EXCEL_FILE###</label>
+				<div class="col-md-10">
+					<div class="input-group">
+						<input type="file" name="datafile" class="form-control"/>
+						<span class="input-group-btn">
+							<input type="submit" name="Submit" class="btn btn-success" value="###LABEL_ADMIN_UPLOAD###" />
+						</span>
+					</div>
+				</div>
 			</div>
-			###LABEL_UPLOAD_EXCEL_FILE### <input type="file" name="datafile" />
-			<input type="submit" name="Submit" class="msadmin_button" value="###LABEL_ADMIN_UPLOAD###" />
-			<br />
-			<br />
-			<p class="extra_padding_bottom align_center">
-				<a class="msadmin_button" href="###BACK_TO_CATALOG_LINK###">###LABEL_BACK_TO_CATALOG###</a>
-			</p>
-		</td>
-	</tr>
+			<hr>
+			<div class="clearfix">
+				<a class="btn btn-success" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
+			</div>
 </form>
 
 <script type="text/javascript">
@@ -190,9 +194,9 @@ jQuery(document).ready(function($) {
 			data:   "products_id="+products_id,
 			success: function(msg) {
                 if (msg.html == '0') {
-                    var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green_disable" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
+                    var return_string = '<span class="admin_status_red" alt="###ADMIN_LABEL_DISABLE0###"></span><a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_green disabled" alt="###ADMIN_LABEL_ENABLE0###"></span></a>';
                 } else if (msg.html==1) {
-                    var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red_disable" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
+                    var return_string = '<a href="#" class="update_product_status" rel="' + products_id + '"><span class="admin_status_red disabled" alt="###ADMIN_LABEL_DISABLE1###"></span></a><span class="admin_status_green" alt="###ADMIN_LABEL_ENABLE1###"></span>';
                 }
 				tthis.html(return_string);
 			}
@@ -289,16 +293,13 @@ jQuery(document).ready(function($) {
 </script>
 <!-- ###RESULTS### end -->
 <!-- ###NORESULTS### begin -->
-	<tr>
-		<td colspan="8">###LABEL_NO_RESULT###</td>
-	</tr>
-	<tr>
-		<td colspan="8">
-			<p class="extra_padding_bottom align_center">
-				<a class="msadmin_button" href="###BACK_TO_CATALOG_LINK###">###LABEL_BACK_TO_CATALOG###</a>
-			</p>
-		</td>
-	</tr>
+
+###LABEL_NO_RESULT###
+
+			<div class="clearfix">
+				<a class="btn btn-success" href="###BACK_TO_CATALOG_LINK###"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> ###LABEL_BACK_TO_CATALOG###</a>
+			</div>
+
 <!-- ###NORESULTS### end -->
-</table>
+</div></div>
 <!-- ###TEMPLATE### end -->

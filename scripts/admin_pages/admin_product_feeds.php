@@ -160,7 +160,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			}
 		}
 		if (is_array($erno) and count($erno)>0) {
-			$content.='<div class="error_msg">';
+			$content.='<div class="alert alert-danger">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';
@@ -218,26 +218,45 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 	}
 	if (!$this->ms['show_main']) {
-		$content.='
-		<div class="main-heading"><h2>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h2></div>
-		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form">
-			<div class="account-field">
-					<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+		$content.='<div class="panel panel-default">
+		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h3></div>
+		<div class="panel-body">
+		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form" class="form-horizontal">
+			<div class="form-group">
+					<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
+					<div class="col-md-10">
+					<input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" class="form-control" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_source</label><input type="text" name="utm_source" value="'.htmlspecialchars($this->post['utm_source']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_source</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_source" value="'.htmlspecialchars($this->post['utm_source']).'" class="form-control" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_medium</label><input type="text" name="utm_medium" value="'.htmlspecialchars($this->post['utm_medium']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_medium</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_medium" value="'.htmlspecialchars($this->post['utm_medium']).'" class="form-control" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_term</label><input type="text" name="utm_term" value="'.htmlspecialchars($this->post['utm_term']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_term</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_term" value="'.htmlspecialchars($this->post['utm_term']).'" class="form-control" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_content</label><input type="text" name="utm_content" value="'.htmlspecialchars($this->post['utm_content']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_content</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_content" value="'.htmlspecialchars($this->post['utm_content']).'" class="form-control" />
+					</div>
 			</div>
-			<div class="account-field">
-					<label>Google utm_campaign</label><input type="text" name="utm_campaign" value="'.htmlspecialchars($this->post['utm_campaign']).'" />
+			<div class="form-group">
+					<label class="control-label col-md-2">Google utm_campaign</label>
+					<div class="col-md-10">
+					<input type="text" name="utm_campaign" value="'.htmlspecialchars($this->post['utm_campaign']).'" class="form-control" />
+					</div>
 			</div>';
 		$feed_types=array();
 		// custom page hook that can be controlled by third-party plugin
@@ -252,9 +271,10 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		// custom page hook that can be controlled by third-party plugin eof
 		if (count($feed_types)) {
 			$content.='
-				<div class="account-field">
-						<label>Feed Type</label>
-						<select name="feed_type" id="feed_type">
+				<div class="form-group">
+						<label class="control-label col-md-2">Feed Type</label>
+						<div class="col-md-10">
+						<select name="feed_type" id="feed_type" class="form-control">
 						<option value="">'.htmlspecialchars('Custom').'</option>
 				';
 			natsort($feed_types);
@@ -264,61 +284,76 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			$content.='
 				</select>
 				</div>
+				</div>
 				';
 		}
 		$content.='
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('delimiter')).'</label>
-				<select name="delimiter">
+		<div class="form-group hide_pf">
+				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('delimiter')).'</label>
+				<div class="col-md-10">
+				<select name="delimiter" class="form-control">
 					<option value="">'.htmlspecialchars($this->pi_getLL('choose')).'</option>
 					<option value="dash"'.(($this->post['delimiter']=='dash') ? ' selected' : '').'>dash</option>
 					<option value="dotcomma"'.(($this->post['delimiter']=='dotcomma') ? ' selected' : '').'>dotcomma</option>
 					<option value="tab"'.(($this->post['delimiter']=='tab') ? ' selected' : '').'>tab</option>
 				</select>
+				</div>
 		</div>
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('include_header')).'</label>
-				<select name="include_header">
+		<div class="form-group hide_pf">
+				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('include_header')).'</label>
+				<div class="col-md-10">
+				<select name="include_header" class="form-control">
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 					<option value="1"'.(($this->post['include_header']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 				</select>
+				</div>
 		</div>
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('include_disabled_products', 'Include disabled products')).'</label>
-				<select name="include_disabled">
+		<div class="form-group hide_pf">
+				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('include_disabled_products', 'Include disabled products')).'</label>
+				<div class="col-md-10">
+				<select name="include_disabled" class="form-control">
 					<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 					<option value="1"'.(($this->post['include_disabled']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 				</select>
+				</div>
 		</div>
-		<div class="account-field">
-				<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
+		<div class="form-group">
+				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('status')).'</label>
+				<div class="col-md-10">
+				<label class="radio-inline">
 				<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
+				</label>
+				<label class="radio-inline">
 				<input name="status" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('enabled')).'
+				</label>
+				</div>
 		</div>
-		<div class="account-field hide_pf">
-			<label>'.htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')).'</label>
-			<select name="plain_text">
+		<div class="form-group hide_pf">
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('plain_text', 'Plain text')).'</label>
+			<div class="col-md-10">
+			<select name="plain_text" class="form-control">
 				<option value="">'.htmlspecialchars($this->pi_getLL('no')).'</option>
 				<option value="1"'.(($this->post['plain_text']=='1') ? ' selected' : '').'>'.htmlspecialchars($this->pi_getLL('yes')).'</option>
 			</select>
+			</div>
 		</div>
-		<div class="account-field hide_pf">
-			<div class="hr"></div>
-		</div>
-		<div class="account-field hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
-				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="msadmin_button" />
+		<hr class="hide_pf">
+		<div class="form-group hide_pf">
+				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+				<div class="col-md-10">
+				<button id="add_field" name="add_field" type="button" class="btn btn-success"><i class="fa fa-plus"></i> '.htmlspecialchars($this->pi_getLL('add_field')).'</button>
+				</div>
 		</div>
 		<div id="product_feed_fields">';
 		$counter=0;
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
 			foreach ($this->post['fields'] as $field) {
 				$counter++;
-				$content.='<div><div class="account-field"><label>'.htmlspecialchars($this->pi_getLL('type')).'</label><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
+				$content.='<div class="form-group"><label class="control-label control-label-select2 col-md-2">'.htmlspecialchars($this->pi_getLL('type')).'</label><div class="col-md-10"><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminProductsFeedSelectField">';
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
+				$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button></div>';
 				// custom field
 				if ($field=='custom_field') {
 					$content.='<div class="account-field"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
@@ -329,13 +364,13 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		}
 		$content.='
 		</div>
-		<div class="account-field">
-			<div class="hr"></div>
+		<hr>
+		<div class="cleafix">
+		<div class="pull-right">
+		<button name="Submit" type="submit" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('save')).'</button>
 		</div>
-		<div class="account-field">
-				<label>&nbsp;</label>
-				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="msadmin_button" /></span>
 		</div>
+    	</div>
 		<input name="feed_id" type="hidden" value="'.$this->get['feed_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
 		</form>
@@ -360,11 +395,11 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			});
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
-				var item=\'<div><div class="account-field"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
+				var item=\'<div class="form-group"><label class="control-label control-label-select2 col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminProductsFeedSelectField">';
 		foreach ($array as $key=>$option) {
 			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
 		}
-		$content.='</select><input class="delete_field msadmin_button" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
+		$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value=""><i class="fa fa-remove"></i> '.htmlspecialchars($this->pi_getLL('delete')).'</button></div></div>\';
 				$(\'#product_feed_fields\').append(item);
 				$(\'select.msAdminProductsFeedSelectField\').select2({
 					width:\'650px\'
@@ -385,7 +420,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				}
 			});
 		});
-		</script>';
+		</script></div></div>';
 	}
 } else {
 	$this->ms['show_main']=1;
@@ -409,17 +444,20 @@ if ($this->ms['show_main']) {
 		$feeds[]=$row;
 	}
 	if (is_array($feeds) and count($feeds)) {
-		$content.='<div class="main-heading"><h2>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h2></div>
-		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+		$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.htmlspecialchars($this->pi_getLL('product_feeds')).'</h3></div>
+		<div class="panel-body">
+		<table width="100%" border="0" align="center" class="table table-striped table-bordered" id="admin_modules_listing">
+		<thead>
 		<tr>
-			<th width="25">'.htmlspecialchars($this->pi_getLL('id')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('name')).'</th>
-			<th width="100" nowrap>'.htmlspecialchars($this->pi_getLL('created')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('status')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('download')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('action')).'</th>
-			<th>'.htmlspecialchars($this->pi_getLL('download_feed_record')).'</th>
-		</tr>';
+			<th class="cellID">'.htmlspecialchars($this->pi_getLL('id')).'</th>
+			<th class="cellName">'.htmlspecialchars($this->pi_getLL('name')).'</th>
+			<th class="cellDate">'.htmlspecialchars($this->pi_getLL('created')).'</th>
+			<th class="cellStatus">'.htmlspecialchars($this->pi_getLL('status')).'</th>
+			<th class="cellDownload">'.htmlspecialchars($this->pi_getLL('download')).'</th>
+			<th class="cellAction">'.htmlspecialchars($this->pi_getLL('action')).'</th>
+			<th class="cellBackup">'.htmlspecialchars($this->pi_getLL('download_feed_record')).'</th>
+		</tr>
+		</thead>';
 		foreach ($feeds as $feed) {
 			$feed['feed_link']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'];
 			$feed['feed_link_excel']=$this->FULL_HTTP_URL.'index.php?id='.$this->shop_pid.'&type=2002&tx_multishop_pi1[page_section]=download_product_feed&feed_hash='.$feed['code'].'&format=excel';
@@ -435,49 +473,60 @@ if ($this->ms['show_main']) {
 			// custom page hook that can be controlled by third-party plugin eof
 			$content.='
 			<tr>
-				<td align="right" width="25" nowrap><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['id']).'</a></td>
-				<td><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['name']).'</a></td>
-				<td width="100" align="center" nowrap>'.date("Y-m-d", $feed['crdate']).'</td>
-				<td width="50">
+				<td class="cellID"><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['id']).'</a></td>
+				<td class="cellName"><a href="'.$feed['feed_link'].'" target="_blank">'.htmlspecialchars($feed['name']).'</a></td>
+				<td class="cellDate">'.date("Y-m-d", $feed['crdate']).'</td>
+				<td class="cellStatus">
 				';
 			if (!$feed['status']) {
 				$content.='<span class="admin_status_red" alt="Disable"></span>';
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=1').'"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=0').'"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$content.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$content.='</td>
-			<td width="150">
-				<a href="'.$feed['feed_link'].'" class="admin_menu">Download feed</a><br />
-				<a href="'.$feed['feed_link_excel'].'" class="admin_menu">Download Excel feed</a>
+			<td class="cellDownload">
+				<a href="'.$feed['feed_link'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download feed</a>
+				<a href="'.$feed['feed_link_excel'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel feed</a>
 			</td>
-			<td width="50">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="admin_menu_edit">edit</a>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="admin_menu_remove" alt="Remove"></a>';
+			<td class="cellAction">
+				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
+				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-fw"></i></a>';
 			$content.='
 			</td>
-			<td>
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="msadmin_button"><i>'.$this->pi_getLL('download_feed_record').'</i></a>
+			<td class="cellBackup">
+				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="btn btn-success btn-sm">'.$this->pi_getLL('download_feed_record').'</a>
 			</td>
 			</tr>';
 		}
-		$content.='</table>';
+		$content.='</table></div></div>';
 	} else {
-		$content.='<h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')).'</h3>';
+		$content.='<h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_product_feeds_created')).'</h3></div></div>';
 	}
-	$content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_feed_record').'</legend>
-		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-			<div class="account-field">
-				<label for="new_name">'.$this->pi_getLL('name').'</label>
-				<input name="new_name" type="text" value="" />
+	$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('import_feed_record').'</h3></div>
+	<div class="panel-body">
+	<fieldset id="scheduled_import_jobs_form">
+		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+			<div class="form-group">
+				<label for="new_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+				<div class="col-md-10">
+				    <input name="new_name" type="text" value="" class="form-control" />
+				</div>
 			</div>
-			<div class="account-field">
-				<label for="upload_feed_file">'.$this->pi_getLL('file').'</label>
-				<input type="file" name="feed_record_file">&nbsp;<input type="submit" name="upload_feed_file" class="submit msadmin_button" id="upload_feed_file" value="upload">
+			<div class="form-group">
+				<label for="upload_feed_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+				<div class="col-md-10">
+				    <div class="input-group">
+				    <input type="file" name="feed_record_file" class="form-control">
+				    <span class="input-group-btn">
+				        <input type="submit" name="upload_feed_file" class="submit btn btn-success" id="upload_feed_file" value="upload">
+                    </span>
+				    </div>
+				</div>
 			</div>
 		</form>
 	</fieldset>';
-	$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="msBackendButton continueState arrowRight arrowPosLeft float_right"><span>'.htmlspecialchars($this->pi_getLL('add')).'</span></a>';
+	$content.='<hr><div class="clearfix"><div class="pull-right"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div></div></div>';
 }
 ?>

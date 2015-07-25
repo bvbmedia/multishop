@@ -19,8 +19,8 @@ if ($this->ADMIN_USER) {
 	}
 	if ($based=='flat' && $basedold=='flat') {
 		foreach ($zones as $zone) {
-			$content.='<fieldset>';
-			$content.='<legend>Zone: '.$zone['name'];
+			$content.='<div class="panel panel-default">';
+			$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 			$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 			$content.=' (';
@@ -30,7 +30,7 @@ if ($this->ADMIN_USER) {
 			}
 			$tmpcontent=substr($tmpcontent, 0, strlen($tmpcontent)-1);
 			$content.=$tmpcontent.')';
-			$content.='</legend>';
+			$content.='</h3></div>';
 			$str3="SELECT * from tx_multishop_shipping_methods_costs where shipping_method_id='".$shipping_id."' and zone_id='".$zone['id']."'";
 			$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 			$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
@@ -53,38 +53,31 @@ if ($this->ADMIN_USER) {
 				$fsc_price_display_incl=mslib_fe::taxDecimalCrop($free_shippingcosts+$fsc_tax, 2, false);
 			}
 			$content.='
-				<table>
-					<tr>
-						<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><b> Level 1 :</b></div></td>
-						<td width="100" align="right">
-							<div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value="'.$row3['price'].'"></div>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">&nbsp;</td>
-					</tr>
-					<tr>
-						<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</b></div></td>
-						<td width="100" align="right">
-							<div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
-							</div>
-						</td>
-					</tr>
-				</table>';
-			$content.='</fieldset>';
+				<div class="panel-body">
+				<div class="form-group">
+					<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4">Level 1 :</label>
+					<div class="col-md-8">
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Excl. VAT</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Incl. VAT</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value="'.$row3['price'].'"></div>
+					</div>
+				</div>
+				<hr>
+				<div class="form-group">
+					<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4"><div class="checkbox"><input type="checkbox" id="freeshippingcostsabove['.$zone_pid.']" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</label></div></label>
+					<div class="col-md-8">
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
+					</div>
+				</div>';
+			$content.='</div></div>';
 		}
 	} else {
 		if ($based=="weight" && $basedold=="weight") {
 			foreach ($zones as $zone) { // start for weight based
-				$content.='<fieldset>';
-				$content.='<legend>Zone: '.$zone['name'];
+				$content.='<div class="panel panel-default">';
+				$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 				$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$content.=' (';
@@ -94,7 +87,7 @@ if ($this->ADMIN_USER) {
 				}
 				$tmpcontent=substr($tmpcontent, 0, strlen($tmpcontent)-1);
 				$content.=$tmpcontent.')';
-				$content.='</legend>';
+				$content.='</h3></div>';
 				$str3="SELECT * from tx_multishop_shipping_methods_costs where shipping_method_id='".$shipping_id."' and zone_id='".$zone['id']."'";
 				$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 				$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
@@ -220,7 +213,7 @@ if ($this->ADMIN_USER) {
 				';
 				$content.='</table>';
 				$content.='<script type="text/javascript"></script>';
-				$content.='</fieldset>';
+				$content.='</div>';
 				//break;
 			} //end for weight base
 		}
@@ -228,8 +221,8 @@ if ($this->ADMIN_USER) {
 	// new for weight
 	if ($based=="weight" && ($basedold=="flat" || $basedold=="" || $basedold!="weight")) {
 		foreach ($zones as $zone) { // start for weight based
-			$content.='<fieldset>';
-			$content.='<legend>Zone: '.$zone['name'];
+			$content.='<div class="panel panel-default">';
+			$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 			$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 			$content.=' (';
@@ -239,40 +232,41 @@ if ($this->ADMIN_USER) {
 			}
 			$tmpcontent=substr($tmpcontent, 0, strlen($tmpcontent)-1);
 			$content.=$tmpcontent.')';
-			$content.='</legend>';
-			$content.='<table border="0" cellpadding="0" cellspacing="0" height="100%">';
+			$content.='</h3></div>';
+			$content.='<div class="panel-body">';
 			$zone_pid=$shipping_id.$zone['id'];
 			$row_counter=1;
 			for ($i=1; $i<=10; $i++) {
 				$nextVal=$i+1;
 				if ($row_counter==1) {
-					$content.='<tr id="'.$zone_pid.'_Row_'.$i.'">';
+					$content.='<div id="'.$zone_pid.'_Row_'.$i.'" class="form-group">';
 				} else {
-					$content.='<tr id="'.$zone_pid.'_Row_'.$i.'" style="display:none">';
+					$content.='<div id="'.$zone_pid.'_Row_'.$i.'" class="form-group" style="display:none">';
 				}
 				$content.='
-						<td><div id="'.$zone_pid.'_Label_'.$i.'"><b> Level '.$i.':</b></div></td>
-						<td width="70" align="right"><div id="'.$zone_pid.'_BeginWeightLevel'.$i.'" >0 '.$this->pi_getLL('admin_shipping_kg').'</div></td>
-						<td width="70" align="center"><div id="'.$zone_pid.'_TotLevel'.$i.'" > '.$this->pi_getLL('up_to_and_including').' </div></td>
-						<td>';
+						<label id="'.$zone_pid.'_Label_'.$i.'" class="form-inline control-label col-md-4 firstLabel">Level '.$i.':
+						<span id="'.$zone_pid.'_BeginWeightLevel'.$i.'" >0 '.$this->pi_getLL('admin_shipping_kg').'</span>
+						<span id="'.$zone_pid.'_TotLevel'.$i.'" > '.$this->pi_getLL('up_to_and_including').' </span>
+						';
 				$disabled='';
 				if ($row_counter==1) {
-					$content.='<select name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
+					$content.='<select class="form-control" name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); ">
 								'.mslib_befe::createSelectboxWeightsList().'
 								</select>';
 				} else {
 					$disabled=' disabled="disabled"';
-					$content.='<select name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
+					$content.='<select class="form-control" name="'.$shipping_id.":".$zone['id'].'[]" id="'.$zone_pid.'_EndWeightLevel'.$i.'" onchange="UpdateWeightPrice('.$nextVal.', '.$zone_pid.', this.value); "></select>';
 				}
-				$content.='</td>
-						<td width="100" align="right">
-							<div id="'.$zone_pid.'_PriceLevel'.$i.'">
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><label for="display_name">Excl. VAT</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><label for="display_name">Incl. VAT</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></di>
+				$content.='</label>
+							<div class="col-md-8">
+								<div id="'.$zone_pid.'_PriceLevel'.$i.'">
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><span class="input-group-addon">Excl. VAT</span></div></div>
+									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row_tid['tax_id'].'"'.$disabled.'><span class="input-group-addon">Incl. VAT</span></div></div>
+									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.' /></di>
+								</div>
 							</div>
-						</td>
-					</tr>';
+						</div>
+					</div>';
 				$row_counter++;
 			}
 			$data=mslib_fe::getTaxRuleSet($row_tid['tax_id'], 0);
@@ -288,24 +282,19 @@ if ($this->ADMIN_USER) {
 				$fsc_price_display=mslib_fe::taxDecimalCrop($free_shippingcosts, 2, false);
 				$fsc_price_display_incl=mslib_fe::taxDecimalCrop($free_shippingcosts+$fsc_tax, 2, false);
 			}
-			$content.='
-				<tr>
-						<td colspan="2">&nbsp;</td>
-					</tr>
-					<tr>
-						<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</b></div></td>
-						<td width="100" align="right">
-							<div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
-							</div>
-						</td>
-					</tr>
+			$content.='<hr>
+					<div class="form-group">
+						<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4 secondLabel"><div class="checkbox checkbox-success"><input type="checkbox" id="freeshippingcostsabove['.$zone_pid.']" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</label></div></label>
+						<div class="col-md-8">
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
+						</div>
+					</div>
 				';
-			$content.='</table>';
+			$content.='</div>';
 			$content.='<script type="text/javascript"></script>';
-			$content.='</fieldset>';
+			$content.='</div>';
 			//break;
 		} //end for weight base
 	} else {
