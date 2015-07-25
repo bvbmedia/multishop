@@ -6769,7 +6769,7 @@ class mslib_fe {
 		$ms_menu['footer']['ms_admin_help']['class']='fa fa-question';
 		// if admin user and system panel is enabled for normal admins
 		if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER==1 or $this->conf['enableAdminPanelSystem'])) {
-			$ms_menu['footer']['ms_admin_system']['label']=$this->pi_getLL('admin_multishop_settings');
+			$ms_menu['footer']['ms_admin_system']['label']='';
 			$ms_menu['footer']['ms_admin_system']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
 			$ms_menu['footer']['ms_admin_system']['class']='fa fa-cog';
 
@@ -6784,7 +6784,7 @@ class mslib_fe {
 			}
 
 			if ($this->ROOTADMIN_USER or $this->conf['enableAdminPanelSettings']) {
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label']='';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['label']=$this->pi_getLL('admin_multishop_settings');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_modules');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_settings']['class']='fa fa-wrench';
 			}
