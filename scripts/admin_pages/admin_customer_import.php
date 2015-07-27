@@ -344,7 +344,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 			// try the generic way eof
 		}
 		$tmpcontent='';
-		$tmpcontent.='<form id="product_import_form" class="" name="form1" method="post" action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'">
+		$tmpcontent.='<div class="panel-body"><form id="product_import_form" class="form-horizontal" name="form1" method="post" action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'">
 		<input name="consolidate" type="hidden" value="'.$this->post['consolidate'].'" />
 		<input name="os" type="hidden" value="'.$this->post['os'].'" />
 		<input name="escape_first_line" type="hidden" value="'.$this->post['escape_first_line'].'" />
@@ -363,7 +363,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 		if (!$rows) {
 			$tmpcontent.='<h1>No customers available.</h1>';
 		} else {
-			$tmpcontent.='<table id="product_import_table" class="table table-striped table-bordered" cellpadding="0" cellspacing="0" border="0">';
+			$tmpcontent.='<table id="product_import_table" class="table table-striped table-bordered">';
 			$header='<tr><th>'.$this->pi_getLL('target_column').'</th><th>'.$this->pi_getLL('source_column').'</th>';
 			for ($x=1; $x<6; $x++) {
 				$header.='<th>'.$this->pi_getLL('row').' '.$x.'</th>';
@@ -388,8 +388,8 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					$tmpcontent.='<option value="'.$key.'" '.($this->post['select'][$i]!='' && $this->post['select'][$i]==$key ? 'selected' : '').'>'.htmlspecialchars($value).'</option>';
 				}
 				$tmpcontent.='
-					</select>
-					<input name="advanced_settings" class="importer_advanced_settings" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
+					</select>&nbsp;
+					<input name="advanced_settings" class="btn btn-primary importer_advanced_settings" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
 					<fieldset class="advanced_settings_container hide">
 						<div class="form-field">
 							aux
@@ -473,51 +473,61 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 		</table>';
 		}
 		$tmpcontent.='
-				<fieldset>
-					<legend>'.$this->pi_getLL('save_import_task').'</legend>
-					<div class="account-field">
-						<label for="cron_name">'.$this->pi_getLL('name').'</label>
-						<input name="cron_name" type="text" value="'.htmlspecialchars($this->post['cron_name']).'" />
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3>'.$this->pi_getLL('save_import_task').'</h3></div>
+					<div class="panel-body">
+					<div class="form-group">
+						<label for="cron_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+						<div class="col-md-10">
+							<input name="cron_name" type="text" value="'.htmlspecialchars($this->post['cron_name']).'" class="form-control" />
+						</div>
 					</div>
 ';
 		if ($this->get['action']=='edit_job') {
 			$tmpcontent.='
-							<div class="account-field">
-								<label for="duplicate">'.$this->pi_getLL('duplicate').'</label>
-								<input name="duplicate" type="checkbox" value="1" />
-								<input name="skip_import" type="hidden" value="1" />
-								<input name="job_id" type="hidden" value="'.$this->get['job_id'].'" />
-								<input name="file_url" type="hidden" value="'.$this->post['file_url'].'" />
+							<div class="form-group">
+								<label for="duplicate" class="control-label col-md-2">'.$this->pi_getLL('duplicate').'</label>
+								<div class="col-md-10">
+									<div class="checkbox checkbox-success checkbox-inline">
+										<input name="duplicate" type="checkbox" value="1" />
+										<label></label>
+										<input name="skip_import" type="hidden" value="1" />
+										<input name="job_id" type="hidden" value="'.$this->get['job_id'].'" />
+										<input name="file_url" type="hidden" value="'.$this->post['file_url'].'" />
+									</div>
+								</div>
 							</div>
 			';
 		}
 		$tmpcontent.='
-		<div class="account-field">
-		<label for="cron_period">'.$this->pi_getLL('schedule').'</label>
-		<select name="cron_period" id="cron_period">
-		<option value="" '.(!$this->post['cron_period'] ? 'selected' : '').'>'.$this->pi_getLL('manual').'</option>
-		<option value="'.(3600*24).'" '.($this->post['cron_period']==(3600*24) ? 'selected' : '').'>'.$this->pi_getLL('daily').'</option>
-		<option value="'.(3600*24*7).'" '.($this->post['cron_period']==(3600*24*7) ? 'selected' : '').'>'.$this->pi_getLL('weekly').'</option>
-		<option value="'.(3600*24*30).'" '.($this->post['cron_period']==(3600*24*30) ? 'selected' : '').'>'.$this->pi_getLL('monthly').'</option>
-		</select>
+		<div class="form-group">
+			<label for="cron_period" class="control-label col-md-2">'.$this->pi_getLL('schedule').'</label>
+			<div class="col-md-10">
+				<select name="cron_period" id="cron_period" class="form-control">
+				<option value="" '.(!$this->post['cron_period'] ? 'selected' : '').'>'.$this->pi_getLL('manual').'</option>
+				<option value="'.(3600*24).'" '.($this->post['cron_period']==(3600*24) ? 'selected' : '').'>'.$this->pi_getLL('daily').'</option>
+				<option value="'.(3600*24*7).'" '.($this->post['cron_period']==(3600*24*7) ? 'selected' : '').'>'.$this->pi_getLL('weekly').'</option>
+				<option value="'.(3600*24*30).'" '.($this->post['cron_period']==(3600*24*30) ? 'selected' : '').'>'.$this->pi_getLL('monthly').'</option>
+				</select>
+			</div>
 		</div>
-		<div class="account-field">
-		<label for="prefix_source_name">'.$this->pi_getLL('source_name').'</label>
-		<input name="prefix_source_name" type="text" value="'.htmlspecialchars($this->post['prefix_source_name']).'" />
+		<div class="form-group">
+			<label for="prefix_source_name" class="control-label col-md-2">'.$this->pi_getLL('source_name').'</label>
+			<div class="col-md-10">
+				<input name="prefix_source_name" type="text" value="'.htmlspecialchars($this->post['prefix_source_name']).'" class="form-control" />
+				<input name="database_name" type="hidden" value="'.$this->post['database_name'].'" />
+				<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($this->post)).'" />
+			</div>
 		</div>
-		<input name="database_name" type="hidden" value="'.$this->post['database_name'].'" />
-		<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($this->post)).'" />
-		</fieldset>
-		<table cellspacing="0" id="nositenav" width="100%">
-		<tr>
-		<td align="right" ><input type="submit" class="submit_block" id="cl_submit" name="AdSubmit" value="'.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'"></td>
-		</tr>
-		</table>
-		<p class="extra_padding_bottom"></p>
-		</form>
+		<div class="form-group">
+			<div class="col-md-10 col-md-offset-2">
+				<button type="submit" class="btn btn-success submit_block" id="cl_submit" name="AdSubmit" value=""><i class="fa fa-save"></i> '.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'</button>
+			</div>
+		</div>
 
+		</form>
 		';
-		$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($tmpcontent).'</div>';
+		$content=''.mslib_fe::shadowBox($tmpcontent).'';
 		// $content='<div
 		// class="fullwidth_div">'.mslib_fe::shadowBox($tmpcontent).'</div>';
 	}
@@ -1314,22 +1324,35 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 if ($this->ms['show_default_form']) {
 	$this->ms['upload_customerfeed_form']='<div id="upload_customerfeed_form">';
 	$this->ms['upload_customerfeed_form'].='
-	<fieldset>
-	<legend>'.$this->pi_getLL('source').'</legend>
-	<fieldset style="margin-top:5px;"><legend>'.$this->pi_getLL('file').'</legend>
-	<ul>
-	<li><input type="file" name="file" /></li>
-	<li>URL <input name="file_url" type="text" /></li>
-	<li>'.$this->pi_getLL('database_table').' <input name="database_name" type="text" /></li>
-	</ul>
-	</fieldset>
+	<div class="panel panel-default">
+	<div class="panel-heading"><h3>'.$this->pi_getLL('source').'</h3></div>
+	<div class="panel-body">
+			<div class="form-group">
+				<label class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+				<div class="col-md-10">
+				<input type="file" name="file" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">URL</label>
+				<div class="col-md-10">
+				<input name="file_url" type="text" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">'.$this->pi_getLL('database_table').'</label>
+				<div class="col-md-10">
+					<input name="database_name" type="text" class="form-control" />
+				</div>
+			</div>
+
 	';
 	/*
 	 * <li>URL <input name="file_url" type="text" /></li> <li>Database table
 	 * <input name="database_name" type="text" /></li>
 	 */
 	$this->ms['upload_customerfeed_form'].='
-	<fieldset><legend>'.ucfirst($this->pi_getLL('format')).'</legend>
+	<hr>
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(document).on("click", ".hide_advanced_import_radio", function() {
@@ -1340,28 +1363,37 @@ if ($this->ms['show_default_form']) {
 		});
 	});
 	</script>
-  <input name="format" type="radio" value="excel" checked class="hide_advanced_import_radio" /> Excel
-  <input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML
-  <input name="format" type="radio" value="txt" class="advanced_import_radio" /> TXT/CSV
-<div class="hide">
-	'.$this->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
-	  <option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
-	  <option value="comma">'.$this->pi_getLL('comma').'</option>
-	  <option value="tab">'.$this->pi_getLL('tab').'</option>
-	  <option value="dash">'.$this->pi_getLL('dash').'</option>
-	</select>
-	<BR /><input name="backquotes" type="checkbox" value="1" /> '.$this->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
-	<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$this->pi_getLL('ignore_first_line').'
-	<input type="checkbox" name="os" id="os" value="linux" /> '.$this->pi_getLL('unix_file').'
-	<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$this->pi_getLL('consolidate').'
-</div>
-	<input type="submit" name="Submit" class="submit submit_block" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
-	<input name="action" type="hidden" value="customer-import-preview" />
-	</fieldset>
+	<div class="form-group">
+	<label class="control-label col-md-2">'.ucfirst($this->pi_getLL('format')).'</label>
+	<div class="col-md-10">
+		<div class="radio radio-success radio-inline"><input name="format" type="radio" value="excel" checked id="hide_advanced_import_radio1" class="hide_advanced_import_radio" /><label for="hide_advanced_import_radio1">Excel</label></div>
+  		<div class="radio radio-success radio-inline"><input name="format" type="radio" value="xml" id="hide_advanced_import_radio2" class="hide_advanced_import_radio" /><label for="hide_advanced_import_radio2">XML</label></div>
+  		<div class="radio radio-success radio-inline"><input name="format" type="radio" value="txt" id="advanced_import_radio" class="advanced_import_radio" /><label for="advanced_import_radio">TXT/CSV</label></div>
+		<div class="hide">
+			'.$this->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
+			  <option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
+			  <option value="comma">'.$this->pi_getLL('comma').'</option>
+			  <option value="tab">'.$this->pi_getLL('tab').'</option>
+			  <option value="dash">'.$this->pi_getLL('dash').'</option>
+			</select>
+			<BR /><input name="backquotes" type="checkbox" value="1" /> '.$this->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
+			<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$this->pi_getLL('ignore_first_line').'
+			<input type="checkbox" name="os" id="os" value="linux" /> '.$this->pi_getLL('unix_file').'
+			<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$this->pi_getLL('consolidate').'
+		</div>
+	</div>
+	</div>
+	<div class="form-group">
+		<div class="col-md-10 col-md-offset-2">
+			<input type="submit" name="Submit" class="btn btn-success submit submit_block" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+			<input name="action" type="hidden" value="customer-import-preview" />
+		</div>
+	</div>
+	</div>
 	</div>
 	';
-	$content.='
-	 <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1">
+	$content.='<div class="panel-heading"><h3>Admin customer import - need translate</h3></div><div class="panel-body">
+	 <form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="form-horizontal">
 	 '.$this->ms['upload_customerfeed_form'].'
 	</form>';
 // load the jobs templates
@@ -1373,19 +1405,23 @@ if ($this->ms['show_default_form']) {
 	}
 	if (count($jobs)>0) {
 		$schedule_content.='
-		<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('import_tasks').'</legend>
-		<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+		<div class="panel panel-default" id="scheduled_import_jobs_form">
+		<div class="panel-heading"><h3>'.$this->pi_getLL('import_tasks').'</h3></div>
+		<div class="panel-body">
+		<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+		<thead>
 		<th>'.$this->pi_getLL('source_name').'</th>
-		<th>'.$this->pi_getLL('name').'</th>
-		<th>'.$this->pi_getLL('last_run').'</th>
+		<th class="cellName">'.$this->pi_getLL('name').'</th>
+		<th class="cellDate">'.$this->pi_getLL('last_run').'</th>
 		<th>'.$this->pi_getLL('action').'</th>
-		<th>'.ucfirst($this->pi_getLL('status')).'</th>
-		<th>'.ucfirst($this->pi_getLL('delete')).'</th>
+		<th class="cellStatus">'.ucfirst($this->pi_getLL('status')).'</th>
+		<th class="cellAction">'.ucfirst($this->pi_getLL('delete')).'</th>
 		<th>'.$this->pi_getLL('file_exists').'</th>
 		<th>'.$this->pi_getLL('upload_file').'</th>';
 		if ($this->ROOTADMIN_USER) {
 			$schedule_content.='<th>'.$this->pi_getLL('download_import_task').'</th>';
 		}
+		$schedule_content.='</thead>';
 		$switch='';
 		foreach ($jobs as $job) {
 			if ($switch=='odd') {
@@ -1397,9 +1433,9 @@ if ($this->ms['show_default_form']) {
 			$schedule_content.='<td>'.$job['prefix_source_name'].'</td>
 			<td><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id']).'&action=edit_job">'.$job['name'].'</a></td>
 			';
-			$schedule_content.='<td nowrap align="right">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
+			$schedule_content.='<td class="cellDate">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
 			if (!$job['period']) {
-				$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success" onClick="return CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$this->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" ><i>'.$this->pi_getLL('run_by_crontab').'</i></a></td>';
+				$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success" onClick="return CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" ><i>'.$this->pi_getLL('run_by_crontab').'</i></a></td>';
 			} else {
 				$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 			}
@@ -1412,10 +1448,10 @@ if ($this->ms['show_default_form']) {
 				$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$schedule_content.='</td>
-			<td align="center">
-			<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&delete=1&job_id='.$job['id']).'&action=delete_category" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"></a>
+			<td class="cellAction">
+			<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&delete=1&job_id='.$job['id']).'&action=delete_category" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="btn btn-danger btn-sm admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"><i class="fa fa-trash-o"></i></a>
 			</td>
-			<td align="center">
+			<td class="cellStatus">
 				';
 			$data=unserialize($job['data']);
 			if ($data[1]['filename']) {
@@ -1430,23 +1466,28 @@ if ($this->ms['show_default_form']) {
 			</td>
 			<td>
 			 	<form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1">
-					<input type="file" name="file" />
-					<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+			 		<div class="input-group">
+					<input type="file" name="file" class="form-control" style="width:300px;" />
 					<input name="skip_import" type="hidden" value="1" />
 					<input name="preProcExistingTask" type="hidden" value="1" />
 					<input name="job_id" type="hidden" value="'.$job['id'].'" />
 					<input name="action" type="hidden" value="edit_job" />
+					<span class="input-group-btn">
+						<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+					</span>
+					</div>
 				</form>
 			</td>';
 			if ($this->ROOTADMIN_USER) {
 				$schedule_content.='<td>
-					<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&download=task&job_id='.$job['id']).'" class="btn btn-success"><i>'.$this->pi_getLL('download_import_task').'</i></a>
+					<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_import&download=task&job_id='.$job['id']).'" class="btn btn-success"><i class="fa fa-download"></i> '.$this->pi_getLL('download_import_task').'</a>
 				</td>';
 			}
 			$schedule_content.='</tr>';
 		}
 		$schedule_content.='</table>
-		</fieldset>
+		</div>
+		</div>
 		<script type="text/javascript">
 		jQuery(document).ready(function($)
 		{
@@ -1470,24 +1511,37 @@ if ($this->ms['show_default_form']) {
 	}
 	// load the jobs templates eof
 	if ($this->ROOTADMIN_USER) {
-		$content.='<fieldset id="scheduled_import_jobs_form"><legend>'.$this->pi_getLL('upload_import_task').'</legend>
-			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_customer_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-				<div class="account-field">
-					<label for="new_cron_name">'.$this->pi_getLL('name').'</label>
-					<input name="new_cron_name" type="text" value="" size="125">
+		$content.='<div class="panel panel-default" id="scheduled_import_jobs_form">
+		<div class="panel-heading"><h3>'.$this->pi_getLL('upload_import_task').'</h3></div>
+		<div class="panel-body">
+			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_customer_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+				<div class="form-group">
+					<label for="new_cron_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+					<div class="col-md-10">
+					<input name="new_cron_name" type="text" value="" class="form-control" >
+					</div>
 				</div>
-				<div class="account-field">
-					<label for="new_prefix_source_name">'.$this->pi_getLL('source_name').'</label>
-					<input name="new_prefix_source_name" type="text" value="" />
+				<div class="form-group">
+					<label for="new_prefix_source_name" class="control-label col-md-2">'.$this->pi_getLL('source_name').'</label>
+					<div class="col-md-10">
+					<input name="new_prefix_source_name" type="text" value="" class="form-control" />
+					</div>
 				</div>
-				<div class="account-field">
-					<label for="upload_task_file">'.$this->pi_getLL('file').'</label>
-					<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
+				<div class="form-group">
+					<label for="upload_task_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+					<div class="col-md-10">
+					<input type="file" name="task_file" class="form-control">
+					</div>
 				</div>
+				<div class="form-group">
+					<div class="col-md-10 col-md-offset-2">
+					<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
+					</div>
 			</form>
-		</fieldset>';
+			</div>
+		</div></div>';
 	}
 }
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>
