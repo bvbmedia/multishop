@@ -456,7 +456,8 @@ jQuery(document).ready(function($) {
 		timeFormat: \'HH:mm:ss\'
     });
 	jQuery(\'#check_all_1\').click(function() {
-		checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
+		//checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
+		$(\'th > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 	});
 	/*$(".tooltip").tooltip({
 		position: "down",
