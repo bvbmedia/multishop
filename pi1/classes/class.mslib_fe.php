@@ -2513,10 +2513,7 @@ class mslib_fe {
 										case 'radio':
 											$items.="\n".'
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
-											'.$attribute_value_image.'
-											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].$value_desc.'</span>
-										</label>
+										<div class="radio radio-success radio-inline">
 										<input name="attributes['.$options['products_options_id'].']" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="radio" value="'.$products_options_values['products_options_values_id'].'"';
 											if (count($sessionData['attributes'][$options['products_options_id']])) {
 												foreach ($sessionData['attributes'] as $options_id=>$item) {
@@ -2532,19 +2529,20 @@ class mslib_fe {
 												}
 											}
 											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
+																					<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
+											'.$attribute_value_image.'
+											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].$value_desc.'</span>
+										</label>
 										<div class="attribute_item_price">';
 											if ($products_options_values['options_values_price']!='0') {
 												$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
 											}
-											$items.='</div></div>';
+											$items.='</div></div></div>';
 											break;
 										case 'checkbox':
 											$items.="\n".'
 										<div class="attribute_item" id="attribute_item_wrapper_'.$options['products_options_id'].'_'.$products_options_values['products_options_values_id'].'">
-										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
-										'.$attribute_value_image.'
-										<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span>
-										</label>
+										<div class="checkbox checkbox-success checkbox-inline">
 										<input name="attributes['.$options['products_options_id'].'][]" id="attributes'.$options['products_options_id'].'_'.$option_value_counter.'" type="checkbox" value="'.$products_options_values['products_options_values_id'].'"';
 											if (count($sessionData['attributes'][$options['products_options_id']])) {
 												foreach ($sessionData['attributes'][$options['products_options_id']] as $item) {
@@ -2554,11 +2552,15 @@ class mslib_fe {
 												}
 											}
 											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-checkbox" rel="attributes'.$options['products_options_id'].'" />
+										<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
+										'.$attribute_value_image.'
+										<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].'</span>
+										</label>
 										<div class="attribute_item_price">';
 											if ($products_options_values['options_values_price']!='0') {
 												$items.=$products_options_values['price_prefix'].' '.mslib_fe::currency().mslib_fe::amount2Cents2($products_options_values['options_values_price']);
 											}
-											$items.='</div></div>';
+											$items.='</div></div></div>';
 											break;
 										default:
 											$items.="\n".'<option value="'.$products_options_values['products_options_values_id'].'" ';

@@ -408,11 +408,14 @@ hr { margin-top:15px; margin-bottom:15px; }
 }
 
 .nav.nav-tabs { margin-bottom:20px; }
+.tab-pane { overflow:hidden; }
 .tab-content > form > .tab-pane { display:none; }
 .tab-content > form > .tab-pane.active { display:block; }
 
 #product_options .form-inline .form-control { min-width:196px; }
 #product_options .form-inline .form-control-static { padding-left:10px; padding-right:10px;  }
+
+.hidden { display:none; }
 
 .tooltip { text-align:left; }
 .tooltip .tooltip-inner { max-width:250px; font-size:12px; color:#cdcdcd; text-align:left; padding:10px; }
