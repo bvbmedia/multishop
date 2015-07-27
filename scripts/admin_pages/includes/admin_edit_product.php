@@ -2321,10 +2321,10 @@ if ($this->post) {
 					document.getElementById(\'sp_row_counter\').value = counter_data - 1;
 				}
 				$(document).on("keyup", ".msStaffelPriceExcludingVat", function() {
-					productPrice(true, $(this));
+					productPrice(true, this);
 				});
 				$(document).on("keyup", ".msStaffelPriceIncludingVat", function() {
-					productPrice(false, $(this));
+					productPrice(false, this);
 				});
 				</script>';
 			if (empty($product['staffel_price'])) {
@@ -3567,10 +3567,10 @@ if ($this->post) {
 			jQuery(document).ready(function(){
 				'.$attribute_values_sb_trigger.'
 				$(document).on("keyup", ".msAttributesPriceExcludingVat", function() {
-					productPrice(true, $(this));
+					productPrice(true, this);
 				});
 				$(document).on("keyup", ".msAttributesPriceIncludingVat", function() {
-					productPrice(false, $(this));
+					productPrice(false, this);
 				});
 			});
 			</script>
