@@ -2,277 +2,190 @@ function renderAdminMenu(json, type, includeDescinFooter) {
     var footerDesc = includeDescinFooter;
     var admin_content = '';
 
-    if (type!='newheader') {
+    if (type != 'newheader') {
         if (json != undefined && json.label) {
-            var tablevel1 = json;
+            /*
+             var tablevel1 = json;
 
-            admin_content += '<li>';
+             admin_content += '<li>';
+             if (tablevel1.label == null && tablevel1.description) {
+             admin_content += tablevel1.description;
+             } else {
+             if (tablevel1.subs == null) {
+             if (tablevel1.link != null) {
+             admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
+             } else {
+             admin_content += tablevel1.label;
+             }
 
-            if (tablevel1.label == null && tablevel1.description) {
-                admin_content += tablevel1.description;
+             } else {
+             var tablevel2_ctr = 0;
+             jQuery.each(tablevel1.subs, function (_tablevel2_key, _tablevel2) {
+             if (_tablevel2_key != '') {
+             tablevel2_ctr++;
+             }
+             });
 
-            } else {
-                if (tablevel1.subs == null) {
-                    if (tablevel1.link != null) {
-                        admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
-                    } else {
-                        admin_content += tablevel1.label;
-                    }
+             total_tablevel2 = tablevel2_ctr;
+             counter_tablevel2 = 0;
+             if (tablevel1.link) {
+             admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
 
-                } else {
-                    var tablevel2_ctr = 0;
-                    jQuery.each(tablevel1.subs, function (_tablevel2_key, _tablevel2) {
-                        if (_tablevel2_key != '') {
-                            tablevel2_ctr++;
-                        }
-                    });
+             } else {
+             admin_content += '<span>' + tablevel1.label + '</span>';
+             }
 
-                    total_tablevel2 = tablevel2_ctr;
-                    counter_tablevel2 = 0;
+             admin_content += '<ul>';
 
-                    if (tablevel1.link) {
-                        admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
+             jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
+             counter_tablevel2++;
 
-                    } else {
-                        admin_content += '<span>' + tablevel1.label + '</span>';
-                    }
+             if (counter_tablevel2 == total_tablevel2) {
+             var last_class = ' last';
+             } else {
+             var last_class = '';
+             }
 
-                    admin_content += '<ul>';
+             if (type == 'header' && (counter_tablevel2 == total_tablevel2)) {
+             tablevel2_params = 'dropdown_bottom';
 
-                    jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
-                        counter_tablevel2++;
+             } else if (type == 'footer' && (counter_tablevel2 == 1)) {
+             tablevel2_params = 'dropdown_top';
 
-                        if (counter_tablevel2 == total_tablevel2) {
-                            var last_class = ' last';
-                        } else {
-                            var last_class = '';
-                        }
+             } else {
+             tablevel2_params = '';
+             }
 
-                        if (type == 'header' && (counter_tablevel2 == total_tablevel2)) {
-                            tablevel2_params = 'dropdown_bottom';
+             if (tablevel2.divider) {
+             admin_content += '<li class="ms_admin_divider"></li>';
+             return true; // continue;
+             }
+             if (tablevel2.subs == null) {
+             if (tablevel2.link) {
+             admin_content += '<li class="' + tablevel2_params + last_class + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>';
+             if (tablevel2.class) {
+             admin_content += '<i class="' + tablevel2.class + '"></i>';
+             }
+             admin_content += tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
+             } else {
+             admin_content += '<li class="' + tablevel2_params + last_class + '"><span>';
+             if (tablevel2.class) {
+             admin_content += '<i class="' + tablevel2.class + '"></i>';
+             }
+             admin_content += tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
+             }
 
-                        } else if (type == 'footer' && (counter_tablevel2 == 1)) {
-                            tablevel2_params = 'dropdown_top';
+             } else {
+             admin_content += '<li class="' + (tablevel2_params != '' ? tablevel2_params + ' ' : '') + (last_class != '' ? last_class + ' ' : '') + ' ms_admin_has_subs">';
+             if (tablevel2.link) {
+             admin_content += '<span><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
+             } else {
+             admin_content += '<span>' + tablevel2.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
+             }
+             admin_content += '<ul>';
 
-                        } else {
-                            tablevel2_params = '';
-                        }
+             var tablevel3_ctr = 0;
+             jQuery.each(tablevel2.subs, function (_tablevel3_key, _tablevel3) {
+             if (_tablevel3_key != '') {
+             tablevel3_ctr++;
+             }
+             });
 
-                        if (tablevel2.divider) {
-                            admin_content += '<li class="ms_admin_divider"></li>';
-                            return true; // continue;
-                        }
+             total_tablevel3 = tablevel3_ctr;
+             counter_tablevel3 = 0;
 
-                        if (tablevel2.subs == null) {
-                            if (tablevel2.link) {
-                                /*
-                                if (tablevel2.description != null && footerDesc > 0) {
-                                    admin_content += '<li class="' + tablevel2_params + last_class + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></a></li>';
-                                } else {
-                                    admin_content += '<li class="' + tablevel2_params + last_class + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
-                                }
-                                */
-                                admin_content += '<li class="' + tablevel2_params + last_class + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
-                            } else {
-                                /*
-                                if (tablevel2.description != null && footerDesc > 0) {
-                                    admin_content += '<li class="' + tablevel2_params + last_class + '"><span>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></span></li>';
-                                } else {
-                                    admin_content += '<li class="' + tablevel2_params + last_class + '"><span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
-                                }
-                                */
-                                admin_content += '<li class="' + tablevel2_params + last_class + '"><span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
-                            }
+             jQuery.each(tablevel2.subs, function (tablevel3_key, tablevel3) {
+             counter_tablevel3++;
 
-                        } else {
-                            admin_content += '<li class="' + (tablevel2_params != '' ? tablevel2_params + ' ' : '') + (last_class != '' ? last_class + ' ' : '') + ' ms_admin_has_subs">';
-                            if (tablevel2.link) {
-                                /*
-                                if (tablevel2.description != null && footerDesc > 0) {
-                                    admin_content += '<span><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '</a><span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></span>';
-                                } else {
-                                    admin_content += '<span><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                                }
-                                */
-                                admin_content += '<span><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                            } else {
-                                /*
-                                if (tablevel2.description != null && footerDesc > 0) {
-                                    admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></span>';
-                                } else {
-                                    admin_content += '<span>' + tablevel2.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                                }
-                                */
-                                admin_content += '<span>' + tablevel2.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                            }
-                            admin_content += '<ul>';
+             if (counter_tablevel3 == total_tablevel3) {
+             var last_class = ' last';
+             } else {
+             var last_class = '';
+             }
 
-                            var tablevel3_ctr = 0;
-                            jQuery.each(tablevel2.subs, function (_tablevel3_key, _tablevel3) {
-                                if (_tablevel3_key != '') {
-                                    tablevel3_ctr++;
-                                }
-                            });
+             if (type == 'header' && (counter_tablevel3 == total_tablevel3)) {
+             tablevel3_params = 'dropdown_bottom';
 
-                            total_tablevel3 = tablevel3_ctr;
-                            counter_tablevel3 = 0;
+             } else if (type == 'footer' && (counter_tablevel3 == 1)) {
+             tablevel3_params = 'dropdown_top';
 
-                            jQuery.each(tablevel2.subs, function (tablevel3_key, tablevel3) {
-                                counter_tablevel3++;
+             } else {
+             tablevel3_params = '';
+             }
 
-                                if (counter_tablevel3 == total_tablevel3) {
-                                    var last_class = ' last';
-                                } else {
-                                    var last_class = '';
-                                }
+             if (tablevel3.divider) {
+             admin_content += '<li class="ms_admin_divider"></li>';
+             return true; // continue;
+             }
 
-                                if (type == 'header' && (counter_tablevel3 == total_tablevel3)) {
-                                    tablevel3_params = 'dropdown_bottom';
+             if (tablevel3.subs == null) {
+             if (tablevel3.link) {
+             admin_content += '<li class="' + tablevel3_params + last_class + '"><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
+             } else {
+             admin_content += '<li class="' + tablevel3_params + last_class + '"><span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
+             }
+             } else {
+             admin_content += '<li class="' + (tablevel3_params != '' ? tablevel3_params + ' ' : '') + (last_class != '' ? last_class + ' ' : '') + ' ms_admin_has_subs">';
+             if (tablevel3.link) {
+             admin_content += '<span><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
+             } else {
+             admin_content += '<span>' + tablevel3.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
+             }
+             admin_content += '<ul>';
 
-                                } else if (type == 'footer' && (counter_tablevel3 == 1)) {
-                                    tablevel3_params = 'dropdown_top';
+             var tablevel4_ctr = 0;
+             jQuery.each(tablevel3.subs, function (_tablevel4_key, _tablevel4) {
+             if (_tablevel4_key != '') {
+             tablevel4_ctr++;
+             }
+             });
 
-                                } else {
-                                    tablevel3_params = '';
-                                }
+             total_tablevel4 = tablevel4_ctr;
+             counter_tablevel4 = 0;
 
-                                if (tablevel3.divider) {
-                                    admin_content += '<li class="ms_admin_divider"></li>';
-                                    return true; // continue;
-                                }
+             jQuery.each(tablevel3.subs, function (tablevel4_key, tablevel4) {
+             counter_tablevel4++;
 
-                                if (tablevel3.subs == null) {
-                                    if (tablevel3.link) {
-                                        /*
-                                        if (tablevel3.description != null && footerDesc > 0) {
-                                            admin_content += '<li class="' + tablevel3_params + last_class + '"><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></a></li>';
-                                        } else {
-                                            admin_content += '<li class="' + tablevel3_params + last_class + '"><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
-                                        }
-                                        */
-                                        admin_content += '<li class="' + tablevel3_params + last_class + '"><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
-                                    } else {
-                                        /*
-                                        if (tablevel3.description != null && footerDesc > 0) {
-                                            admin_content += '<li class="' + tablevel3_params + last_class + '"><span>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></span></li>';
-                                        } else {
-                                            admin_content += '<li class="' + tablevel3_params + last_class + '"><span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
-                                        }
-                                        */
-                                        admin_content += '<li class="' + tablevel3_params + last_class + '"><span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
-                                    }
-                                } else {
-                                    admin_content += '<li class="' + (tablevel3_params != '' ? tablevel3_params + ' ' : '') + (last_class != '' ? last_class + ' ' : '') + ' ms_admin_has_subs">';
-                                    if (tablevel3.link) {
-                                        /*
-                                        if (tablevel3.description != null && footerDesc > 0) {
-                                            admin_content += '<span><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '</a><span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></span>';
-                                        } else {
-                                            admin_content += '<span><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                                        }
-                                        */
-                                        admin_content += '<span><a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                                    } else {
-                                        /*
-                                        if (tablevel3.description != null && footerDesc > 0) {
-                                            admin_content += '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></span>';
-                                        } else {
-                                            admin_content += '<span>' + tablevel3.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                                        }
-                                        */
-                                        admin_content += '<span>' + tablevel3.label + '</a><span class="ms_admin_menu_item_description"></span></span>';
-                                    }
-                                    admin_content += '<ul>';
+             if (type == 'header' && (counter_tablevel4 == total_tablevel4)) {
+             tablevel4_params = 'dropdown_bottom';
 
-                                    var tablevel4_ctr = 0;
-                                    jQuery.each(tablevel3.subs, function (_tablevel4_key, _tablevel4) {
-                                        if (_tablevel4_key != '') {
-                                            tablevel4_ctr++;
-                                        }
-                                    });
+             } else if (type == 'footer' && (counter_tablevel4 == 1)) {
+             tablevel4_params = 'dropdown_top';
 
-                                    total_tablevel4 = tablevel4_ctr;
-                                    counter_tablevel4 = 0;
+             } else {
+             tablevel4_params = '';
+             }
 
-                                    jQuery.each(tablevel3.subs, function (tablevel4_key, tablevel4) {
-                                        counter_tablevel4++;
+             if (counter_tablevel4 == total_tablevel4) {
+             admin_content += '<li class="' + (tablevel4_key != '' ? tablevel4_key + ' ' : '') + 'last">';
+             } else {
+             admin_content += '<li class="' + tablevel4_key + '">';
+             }
 
-                                        if (type == 'header' && (counter_tablevel4 == total_tablevel4)) {
-                                            tablevel4_params = 'dropdown_bottom';
+             if (tablevel4.link) {
+             admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
+             } else {
+             admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
+             }
 
-                                        } else if (type == 'footer' && (counter_tablevel4 == 1)) {
-                                            tablevel4_params = 'dropdown_top';
+             admin_content += '</li>';
 
-                                        } else {
-                                            tablevel4_params = '';
-                                        }
+             });
 
-                                        if (counter_tablevel4 == total_tablevel4) {
-                                            admin_content += '<li class="' + (tablevel4_key != '' ? tablevel4_key + ' ' : '') + 'last">';
-                                        } else {
-                                            admin_content += '<li class="' + tablevel4_key + '">';
-                                        }
+             admin_content += '</ul></li>';
+             }
+             });
 
-                                        if (tablevel4.link) {
-                                            /*
-                                            if (tablevel4.description != null && footerDesc > 0) {
-                                                admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description">' + tablevel4.description + '</span></a>';
-                                            } else {
-                                                admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                            }
-                                            */
-                                            admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                        } else {
-                                            /*
-                                            if (tablevel4.description != null && footerDesc > 0) {
-                                                admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description">' + tablevel4.description + '</span></span>';
-                                            } else {
-                                                admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
-                                            }
-                                            */
-                                            admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
-                                        }
+             admin_content += '</ul></li>';
+             }
+             });
 
-                                        admin_content += '</li>';
+             admin_content += '</ul>';
+             }
+             }
 
-                                    });
-
-                                    admin_content += '</ul></li>';
-                                }
-                                /*if (counter_tablevel3 == total_tablevel3) {
-                                 admin_content += '<li class="' + (tablevel3_key!='' ? tablevel3_key + ' ' : '') + 'last">';
-                                 } else {
-                                 admin_content += '<li class="' + tablevel3_key + '">';
-                                 }
-
-                                 if (tablevel3.link) {
-                                 if (tablevel3.description != null && footerDesc > 0) {
-                                 admin_content 	+= '<a href="' + tablevel3.link + '"' + (tablevel3.link_params!=undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></a>';
-                                 } else {
-                                 admin_content 	+= '<a href="' + tablevel3.link + '"' + (tablevel3.link_params!=undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                 }
-
-                                 } else {
-                                 if (tablevel3.description != null && footerDesc > 0) {
-                                 admin_content 	+= '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></span>';
-                                 } else {
-                                 admin_content 	+= '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span>';
-                                 }
-                                 }
-
-                                 admin_content += '</li>';*/
-                            });
-
-                            admin_content += '</ul></li>';
-                        }
-                    });
-
-                    admin_content += '</ul>';
-                }
-            }
-
-            admin_content += '</li>';
-
+             admin_content += '</li>';
+             */
         } else {
 
             var total_tabs = 0;
@@ -293,15 +206,17 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                     if (tablevel1.subs == null) {
                         if (tablevel1.link != null) {
                             admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>';
-                            if (tablevel1.class) {
-                                admin_content += '<i class="' + tablevel1.class + '"></i>';
-                            }
-                            admin_content += tablevel1.label + '</a>';
                         } else {
-                            if (tablevel1.class) {
-                                admin_content += '<i class="' + tablevel1.class + '"></i>';
-                            }
-                            admin_content += tablevel1.label;
+                            admin_content += '<span>';
+                        }
+                        if (tablevel1.class) {
+                            admin_content += '<i class="' + tablevel1.class + '"></i>';
+                        }
+                        admin_content += tablevel1.label;
+                        if (tablevel1.link != null) {
+                            admin_content += '</a>';
+                        } else {
+                            admin_content += '</span>';
                         }
                     } else {
                         var tablevel2_ctr = 0;
@@ -313,30 +228,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                         total_tablevel2 = tablevel2_ctr;
                         counter_tablevel2 = 0;
-                        /*
-                        if (tablevel1.link) {
-                            //admin_content += '<a href="' + tablevel1.link + '"' + (tablevel1.link_params != undefined ? tablevel1.link_params : '') + '>' + tablevel1.label + '</a>';
-                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">';
-                            if (tablevel1.class) {
-                                admin_content += '<i class="' + tablevel1.class + '"></i>';
-                            }
-                            admin_content += tablevel1.label+'</a>';
-
-                        } else {
-                            //admin_content += '<span>' + tablevel1.label + '</span>';
-                            admin_content += '<a data-toggle="collapse" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">';
-                            if (tablevel1.class) {
-                                admin_content += '<i class="' + tablevel1.class + '"></i>';
-                            }
-                            admin_content += tablevel1.label+'</a>';
-                        }
-                        */
-                        //<a data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" href="#subs' + tablevel1_key + '" aria-expanded="false" aria-controls="subs' + tablevel2_ctr + '">
-                        admin_content += '<a href="#" role="button" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                        admin_content += '<a href="' + (tablevel1.link != undefined ? tablevel1.link : '#') + '" role="button" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                         if (tablevel1.class) {
                             admin_content += '<i class="' + tablevel1.class + '"></i>';
                         }
-                        admin_content += tablevel1.label+'</a>';
+                        admin_content += tablevel1.label + '</a>';
                         admin_content += '<ul class="dropdown-menu">';
 
                         jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
@@ -354,66 +250,31 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                             if (tablevel2.divider) {
                                 admin_content += '<li class="ms_admin_divider"></li>';
-                                return true; // continue;
+                                return true;
                             }
 
                             if (tablevel2.subs == null) {
                                 if (tablevel2.link) {
-                                    /*
-                                    if (tablevel2.description != null) {
-                                        admin_content += '<li class="' + tablevel2_params + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></a></li>';
-                                    } else {
-                                        admin_content += '<li class="' + tablevel2_params + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
-                                    }
-                                    */
                                     admin_content += '<li class="' + tablevel2_params + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>';
                                     if (tablevel2.class) {
                                         admin_content += '<i class="' + tablevel2.class + '"></i>';
                                     }
-                                    admin_content += tablevel2.label+'<span class="ms_admin_menu_item_description"></span></a></li>';
+                                    admin_content += tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
                                 } else {
-                                    /*
-                                    if (tablevel2.description != null) {
-                                        admin_content += '<li class="' + tablevel2_params + '"><span>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></span></li>';
-                                    } else {
-                                        admin_content += '<li class="' + tablevel2_params + '"><span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
+                                    admin_content += '<li class="' + tablevel2_params + '"><span>';
+                                    if (tablevel2.class) {
+                                        admin_content += '<i class="' + tablevel2.class + '"></i>';
                                     }
-                                    */
-                                    admin_content += '<li class="' + tablevel2_params + '"><span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
+                                    admin_content += tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span></li>';
                                 }
 
                             } else {
-
-                                //admin_content += '<li class="' + (tablevel2_params != '' ? tablevel2_params + ' ' : '') + 'ms_admin_has_subs">';
-                                /*
-                                if (tablevel2.link) {
-                                    *//*
-                                    if (tablevel2.description != null) {
-                                        admin_content += '<a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></a>';
-                                    } else {
-                                        admin_content += '<a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                    }
-                                    *//*
-                                    admin_content += '<a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                } else {
-                                    *//*
-                                    if (tablevel2.description != null) {
-                                        admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description">' + tablevel2.description + '</span></span>';
-                                    } else {
-                                        admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span>';
-                                    }
-                                    *//*
-                                    admin_content += '<span>' + tablevel2.label + '<span class="ms_admin_menu_item_description"></span></span>';
-                                }*/
-                                admin_content += '<li class="ms_admin_has_subs"><a href="#">';
+                                admin_content += '<li class="ms_admin_has_subs"><a href="' + (tablevel2.link != undefined ? tablevel2.link : '#') + '">';
                                 if (tablevel2.class) {
                                     admin_content += '<i class="' + tablevel2.class + '"></i>';
                                 }
-                                admin_content += tablevel2.label+'</a>';
+                                admin_content += tablevel2.label + '</a>';
                                 admin_content += '<ul class="dropdown-menu">';
-
-                                //admin_content += '<ul>';
-
                                 var tablevel3_ctr = 0;
                                 jQuery.each(tablevel2.subs, function (_tablevel3_key, _tablevel3) {
                                     if (_tablevel3_key != '') {
@@ -441,26 +302,23 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                         admin_content += '<li class="' + tablevel3_key + '">';
                                         if (tablevel3.link) {
                                             /*
-                                            if (tablevel3.description != null) {
-                                                admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></a>';
-                                            } else {
-                                                admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                            }
-                                            */
+                                             if (tablevel3.description != null) {
+                                             admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></a>';
+                                             } else {
+                                             admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
+                                             }
+                                             */
                                             admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>';
                                             if (tablevel3.class) {
                                                 admin_content += '<i class="' + tablevel3.class + '"></i>';
                                             }
-                                            admin_content += tablevel3.label+'<span class="ms_admin_menu_item_description"></span></a>';
+                                            admin_content += tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                         } else {
-                                            /*
-                                            if (tablevel3.description != null) {
-                                                admin_content += '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></span>';
-                                            } else {
-                                                admin_content += '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                            admin_content += '<span>';
+                                            if (tablevel3.class) {
+                                                admin_content += '<i class="' + tablevel3.class + '"></i>';
                                             }
-                                            */
-                                            admin_content += '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                            admin_content += tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                         }
                                         admin_content += '</li>';
 
@@ -468,13 +326,6 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                         admin_content += '<li class="' + (tablevel3_key != '' ? tablevel3_key + ' ' : '') + 'ms_admin_has_subs">';
 
                                         if (tablevel3.link) {
-                                            /*
-                                            if (tablevel3.description != null) {
-                                                admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></a>';
-                                            } else {
-                                                admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                            }
-                                            */
                                             admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>';
                                             if (tablevel3.class) {
                                                 admin_content += '<i class="' + tablevel3.class + '"></i>';
@@ -482,14 +333,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                             admin_content += tablevel3.label + '<span class="ms_admin_menu_item_description"></span></a>';
 
                                         } else {
-                                            /*
-                                            if (tablevel3.description != null) {
-                                                admin_content += '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description">' + tablevel3.description + '</span></span>';
-                                            } else {
-                                                admin_content += '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                            admin_content += '<span>';
+                                            if (tablevel3.class) {
+                                                admin_content += '<i class="' + tablevel3.class + '"></i>';
                                             }
-                                            */
-                                            admin_content += '<span>' + tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                            admin_content += tablevel3.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                         }
 
                                         admin_content += '<ul>';
@@ -521,28 +369,17 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                 admin_content += '<li class="' + tablevel4_key + '">';
 
                                                 if (tablevel4.link) {
-                                                    /*
-                                                    if (tablevel4.description != null) {
-                                                        admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description">' + tablevel4.description + '</span></a>';
-                                                    } else {
-                                                        admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                                    }
-                                                    */
-
                                                     admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>';
                                                     if (tablevel4.class) {
                                                         admin_content += '<i class="' + tablevel4.class + '"></i>';
                                                     }
                                                     admin_content += tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
                                                 } else {
-                                                    /*
-                                                    if (tablevel4.description != null) {
-                                                        admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description">' + tablevel4.description + '</span></span>';
-                                                    } else {
-                                                        admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                                    admin_content += '<span>';
+                                                    if (tablevel4.class) {
+                                                        admin_content += '<i class="' + tablevel4.class + '"></i>';
                                                     }
-                                                    */
-                                                    admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                                    admin_content += tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                                 }
 
                                                 admin_content += '</li>';
@@ -551,28 +388,17 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                 admin_content += '<li class="' + tablevel4_key + '">';
 
                                                 if (tablevel4.link) {
-                                                    /*
-                                                    if (tablevel4.description != null) {
-                                                        admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description">' + tablevel4.description + '</span></a>';
-                                                    } else {
-                                                        admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                                    }
-                                                    */
                                                     admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>';
                                                     if (tablevel4.class) {
                                                         admin_content += '<i class="' + tablevel4.class + '"></i>';
                                                     }
                                                     admin_content += tablevel4.label + '<span class="ms_admin_menu_item_description"></span></a>';
-
                                                 } else {
-                                                    /*
-                                                    if (tablevel4.description != null) {
-                                                        admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description">' + tablevel4.description + '</span></span>';
-                                                    } else {
-                                                        admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                                    admin_content += '<span>';
+                                                    if (tablevel4.class) {
+                                                        admin_content += '<i class="' + tablevel4.class + '"></i>';
                                                     }
-                                                    */
-                                                    admin_content += '<span>' + tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                                    admin_content += tablevel4.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                                 }
 
                                                 admin_content += '<ul>';
@@ -603,13 +429,6 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                     admin_content += '<li class="' + tablevel5_key + '">';
 
                                                     if (tablevel5.link) {
-                                                        /*
-                                                        if (tablevel5.description != null) {
-                                                            admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>' + tablevel5.label + '<span class="ms_admin_menu_item_description">' + tablevel5.description + '</span></a>';
-                                                        } else {
-                                                            admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>' + tablevel5.label + '<span class="ms_admin_menu_item_description"></span></a>';
-                                                        }
-                                                        */
                                                         admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>';
                                                         if (tablevel5.class) {
                                                             admin_content += '<i class="' + tablevel5.class + '"></i>';
@@ -617,14 +436,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                         admin_content += tablevel5.label + '<span class="ms_admin_menu_item_description"></span></a>';
 
                                                     } else {
-                                                        /*(
-                                                        if (tablevel5.description != null) {
-                                                            admin_content += '<span>' + tablevel5.label + '<span class="ms_admin_menu_item_description">' + tablevel5.description + '</span></span>';
-                                                        } else {
-                                                            admin_content += '<span>' + tablevel5.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                                        admin_content += '<span>';
+                                                        if (tablevel5.class) {
+                                                            admin_content += '<i class="' + tablevel5.class + '"></i>';
                                                         }
-                                                        */
-                                                        admin_content += '<span>' + tablevel5.label + '<span class="ms_admin_menu_item_description"></span></span>';
+                                                        admin_content += tablevel5.label + '<span class="ms_admin_menu_item_description"></span></span>';
                                                     }
 
                                                     admin_content += '</li>';
