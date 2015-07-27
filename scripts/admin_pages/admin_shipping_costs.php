@@ -459,71 +459,57 @@ if (count($shipping_methods)>0) {
 	}
 	$content.='
 	function productPrice(to_include_vat, o, type) {
-		var original_val	= o.val();
-		var current_value 	= parseFloat(o.val());
-		var tax_id 			= o.attr("rel");
+		var original_val = jQuery(o).val();
+		var current_value = parseFloat(jQuery(o).val());
+		var tax_id 			= jQuery(o).attr("rel");
 
 		var have_comma = original_val.indexOf(",");
 		var have_colon = original_val.indexOf(":");
-
-		/*
-		if ((have_comma > 0 || have_colon > 0) || (have_comma > 0 && have_colon > 0)) {
-			if (to_include_vat) {
-				// update the incl. vat
-				o.parent().next().first().children().val(original_val);
-
-				// update the hidden excl vat
-				o.parent().next().next().first().children().val(original_val);
-
-			} else {
-				// update the excl. vat
-				o.parent().prev().first().children().val(original_val);
-
-				// update the hidden excl vat
-				o.parent().next().first().children().val(original_val);
-			}
-		} else*/
 
 		if (current_value > 0) {
 			if (to_include_vat) {
 				jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: tax_id }, function(json) {
     				if (json && json.price_including_tax) {
 						if ((have_comma > 0 || have_colon > 0) || (have_comma > 0 && have_colon > 0)) {
-							o.parent().next().first().children().val(json.price_including_tax);
+							//o.parent().next().first().children().val(json.price_including_tax);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(json.price_including_tax);
 						} else {
 							var incl_tax_crop = decimalCrop(json.price_including_tax);
-							o.parent().next().first().children().val(incl_tax_crop);
+							//o.parent().next().first().children().val(incl_tax_crop);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(incl_tax_crop);
 						}
 
 					} else {
-						o.parent().next().first().children().val(original_val);
+						//o.parent().next().first().children().val(original_val);
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(original_val);
 					}
     			});
 
 				// update the hidden excl vat
-				o.parent().next().next().first().children().val(original_val);
+				jQuery(o).parentsUntil(\'msAttributesField\').next().next().first().children().val(original_val);
 
 			} else {
 				jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: tax_id }, function(json) {
     				if (json && json.price_excluding_tax) {
 						if ((have_comma > 0 || have_colon > 0) || (have_comma > 0 && have_colon > 0)) {
-							o.parent().prev().first().children().val(json.price_excluding_tax);
+							//o.parent().prev().first().children().val(json.price_excluding_tax);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(json.price_excluding_tax);
 						} else {
 							var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-
 							// update the excl. vat
-							o.parent().prev().first().children().val(excl_tax_crop);
+							//o.parent().prev().first().children().val(excl_tax_crop);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(excl_tax_crop);
 						}
 
 						// update the hidden excl vat
-						o.parent().next().first().children().val(json.price_excluding_tax);
+						//o.parent().next().first().children().val(json.price_excluding_tax);
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(json.price_excluding_tax);
 
 					} else {
 						// update the excl. vat
-						o.parent().prev().first().children().val(original_val);
-
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(original_val);
 						// update the hidden excl vat
-						o.parent().next().first().children().val(original_val);
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(original_val);
 					}
     			});
 			}
@@ -531,17 +517,14 @@ if (count($shipping_methods)>0) {
 		} else {
 			if (to_include_vat) {
 				// update the incl. vat
-				o.parent().next().first().children().val(0);
-
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(0);
 				// update the hidden excl vat
-				o.parent().next().next().first().children().val(0);
-
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
 			} else {
 				// update the excl. vat
-				o.parent().prev().first().children().val(0);
-
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
 				// update the hidden excl vat
-				o.parent().next().first().children().val(0);
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
 			}
 		}
 	}
@@ -557,10 +540,10 @@ if (count($shipping_methods)>0) {
 		return number;
 	}
 	$(document).on("change", ".msProductsPriceExcludingVat", function() {
-		productPrice(true, jQuery(this));
+		productPrice(true, this);
 	});
 	$(document).on("change", ".msProductsPriceIncludingVat", function() {
-		productPrice(false, $(this));
+		productPrice(false, this);
 	});
 });
 </script>';
