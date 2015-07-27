@@ -7061,11 +7061,11 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_language']['description']='
 			<form action="'.mslib_fe::typolink().'" method="post" id="multishop_admin_language_form">
 				<select name="multishop_admin_language" id="ms_admin_simulate_language">
-				<option value="default"'.($this->cookie['multishop_admin_language']=='' ? ' selected' : '').'>'.mslib_befe::strtoupper($this->pi_getLL('default_language')).'</option>
+				<option value="default"'.($this->cookie['multishop_admin_language']=='' ? ' selected' : '').'>'.$this->pi_getLL('default_language').'</option>
 				';
 			foreach ($languagesLabels as $key=>$language) {
 				if ($language['key']) {
-					$ms_menu['footer']['ms_admin_language']['description'].='<option value="'.$language['flag'].'"'.($this->cookie['multishop_admin_language']==$language['flag'] ? ' selected' : '').'>'.mslib_befe::strtoupper($language['value']).'</option>'."\n";
+					$ms_menu['footer']['ms_admin_language']['description'].='<option value="'.$language['flag'].'"'.($this->cookie['multishop_admin_language']==$language['flag'] ? ' selected' : '').'>'.$language['value'].'</option>'."\n";
 				}
 			}
 			$ms_menu['footer']['ms_admin_language']['description'].='
