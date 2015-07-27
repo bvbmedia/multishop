@@ -16,6 +16,14 @@ if ($this->ADMIN_USER) {
 				$actionLink='callto:'.$customer['telephone'];
 				$actionButtons['call']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.$this->pi_getLL('call').'</a>';
 			}
+			$address=array();
+			$address[]=rawurlencode($customer['address']);
+			$address[]=rawurlencode($customer['zip']);
+			$address[]=rawurlencode($customer['city']);
+			$address[]=rawurlencode($customer['country']);
+			$actionLink='http://maps.google.com/maps?daddr='.implode('+',$address);
+			$actionButtons['route']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('route').'</a>';
+
 			$jsonData['html']='';
 			if ($customer['company']) {
 				$jsonData['html'].='<h1>'.$customer['company'].'</h1>';

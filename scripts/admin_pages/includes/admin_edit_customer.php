@@ -838,6 +838,14 @@ switch ($_REQUEST['action']) {
 			$actionLink='mailto:'.$email_address;
 			$actionButtons['email']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-envelope-o"></i> '.$this->pi_getLL('email').'</a>';
 		}
+		$address=array();
+		$address[]=rawurlencode($user['address']);
+		$address[]=rawurlencode($user['zip']);
+		$address[]=rawurlencode($user['city']);
+		$address[]=rawurlencode($user['country']);
+		$actionLink='http://maps.google.com/maps?daddr='.implode('+',$address);
+		$actionButtons['route']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('route').'</a>';
+
 		$markerArray['BILLING_COMPANY_ACTION_NAV']='';
 		if (count($actionButtons)) {
 			$markerArray['BILLING_COMPANY_ACTION_NAV']='<div class="btn-group">';
