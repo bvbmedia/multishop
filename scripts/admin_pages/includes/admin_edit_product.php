@@ -3589,7 +3589,7 @@ if ($this->post) {
 			<div class="col-md-10 form-inline">
 				<input type="text" name="keypas" id="key" value="" class="form-control" />
 				<input type="hidden" name="rel_catid" id="rel_catid" />
-				<input type="submit" id="filter" value="'.$this->pi_getLL('admin_search').'" class="btn btn-success" />
+				<input type="button" id="filter" value="'.$this->pi_getLL('admin_search').'" class="btn btn-success" />
 			</div>
 			</div>';
 			// mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', ''))
