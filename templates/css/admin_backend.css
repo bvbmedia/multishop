@@ -264,7 +264,8 @@ table#product_attributes_table > tbody > tr > td .new_product_attributes { font-
 .msadminVerticalTabs > .nav-tabs .active > a:focus { border-color: #ddd transparent #ddd #ddd; font-weight:bold; }
 
 .msadminVerticalTabs > .tab-content { padding:0 0 0 15%; }
-.msadminVerticalTabs > .tab-content > .tab-pane { min-height:698px; border:1px solid #ddd; padding:10px; border-radius:6px; }
+.msadminVerticalTabs > .tab-content > .tab-pane,
+.msadminVerticalTabs > .tab-content > form > .tab-pane { min-height:698px; border:1px solid #ddd; padding:10px; border-radius:6px; }
 .msadminVerticalTabs > .tab-content > .tab-pane table#admin_modules_listing td:first-child { width:60%; }
 
 .merge_attribute_options_form ul { margin:0; padding:0; list-style:none; }
@@ -325,6 +326,8 @@ ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 
 .form-horizontal .control-label > .checkbox {  padding-top:0; }
 .form-horizontal .control-label > .checkbox > label { font-weight:bold; }
+
+.form-horizontal .control-label.col-md-4 .checkbox > label { text-align:left; }
 
 #admin_shipping_methods .modal-body .col-md-3 > .panel,
 #admin_payment_methods .modal-body .col-md-3 > .panel { text-align:center; }
