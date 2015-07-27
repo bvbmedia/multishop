@@ -326,6 +326,8 @@ ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
 .form-horizontal .control-label > .checkbox {  padding-top:0; }
 .form-horizontal .control-label > .checkbox > label { font-weight:bold; }
 
+.form-horizontal .control-label.col-md-4 .checkbox > label { text-align:left; }
+
 #admin_shipping_methods .modal-body .col-md-3 > .panel,
 #admin_payment_methods .modal-body .col-md-3 > .panel { text-align:center; }
 #admin_shipping_methods .modal-body .col-md-3 > .panel > .panel-body,
