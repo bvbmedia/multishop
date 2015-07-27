@@ -6774,6 +6774,7 @@ class mslib_fe {
 		$ms_menu['footer']['ms_admin_help']['label']='';
 		$ms_menu['footer']['ms_admin_help']['link']=$this->conf['admin_help_url'];
 		$ms_menu['footer']['ms_admin_help']['class']='fa fa-question';
+		$ms_menu['footer']['ms_admin_help']['link_params']='target="_blank"';
 
 		// if admin user and system panel is enabled for normal admins
 		if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER==1 or $this->conf['enableAdminPanelSystem'])) {
