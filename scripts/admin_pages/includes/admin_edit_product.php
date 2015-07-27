@@ -2295,7 +2295,7 @@ if ($this->post) {
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name_excluding_vat" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
-								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class=form-control "msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
+								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name_including_vat" id="display_name_including_vat" class="form-control msStaffelPriceIncludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
 								elem += \'<div class="msAttributesField hidden"><input type="hidden" name="staffel_price[\' + counter_data + \']" class="price small_input" id="staffel_price" value=""></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
@@ -2321,10 +2321,10 @@ if ($this->post) {
 					document.getElementById(\'sp_row_counter\').value = counter_data - 1;
 				}
 				$(document).on("keyup", ".msStaffelPriceExcludingVat", function() {
-					productPrice(true, $(this));
+					productPrice(true, this);
 				});
 				$(document).on("keyup", ".msStaffelPriceIncludingVat", function() {
-					productPrice(false, $(this));
+					productPrice(false, this);
 				});
 				</script>';
 			if (empty($product['staffel_price'])) {
@@ -3567,10 +3567,10 @@ if ($this->post) {
 			jQuery(document).ready(function(){
 				'.$attribute_values_sb_trigger.'
 				$(document).on("keyup", ".msAttributesPriceExcludingVat", function() {
-					productPrice(true, $(this));
+					productPrice(true, this);
 				});
 				$(document).on("keyup", ".msAttributesPriceIncludingVat", function() {
-					productPrice(false, $(this));
+					productPrice(false, this);
 				});
 			});
 			</script>
