@@ -22,7 +22,7 @@ if ($this->ADMIN_USER) {
 			$address[]=rawurlencode($customer['city']);
 			$address[]=rawurlencode($customer['country']);
 			$actionLink='http://maps.google.com/maps?daddr='.implode('+',$address);
-			$actionButtons['route']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('route').'</a>';
+			$actionButtons['travel_guide']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('travel_guide').'</a>';
 
 			$jsonData['html']='';
 			if ($customer['company']) {
