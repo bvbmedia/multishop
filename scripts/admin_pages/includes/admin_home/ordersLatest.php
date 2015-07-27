@@ -14,11 +14,11 @@ $headerData.='
 			var orders_status_id=$("option:selected", this).val();
 			var orders_status_label=$("option:selected", this).text();
 			if (confirm("Do you want to change orders id: "+orders_id+" to status: "+orders_status_label)) {
-				$.ajax({ 
-						type:   "POST", 
+				$.ajax({
+						type:   "POST",
 						url:    "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
 						dataType: \'json\',
-						data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id, 
+						data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
 						success: function(msg) {
 						}
 				});
@@ -90,10 +90,11 @@ $headerData.='});
 				});
 			//}
 		});
-		$(\'#check_all_1\').click(function(){			
-			checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
-		});	
-	});	
+		$(\'#check_all_1\').click(function(){
+			//checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
+			$(\'input:checkbox\').prop(\'checked\', this.checked);
+		});
+	});
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 $headerData='';
@@ -182,7 +183,7 @@ if ($this->cookie['paid_orders_only']) {
 if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
-//$orderby[]='orders_id desc';	
+//$orderby[]='orders_id desc';
 $select[]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
 switch ($this->get['tx_multishop_pi1']['order_by']) {

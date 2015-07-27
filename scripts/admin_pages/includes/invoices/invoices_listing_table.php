@@ -164,7 +164,8 @@ $tmp.='
 	jQuery(".tooltip").tooltip({position: "bottom"});
 	jQuery(function($){
 		$(\'#check_all_1\').click(function(){
-			checkAllPrettyCheckboxes(this,$(\'.msadmin_invoices_listing\'));
+			//checkAllPrettyCheckboxes(this,$(\'.msadmin_invoices_listing\'));
+			$(\'input:checkbox\').prop(\'checked\', this.checked);
 		});
 	});
 </script>
