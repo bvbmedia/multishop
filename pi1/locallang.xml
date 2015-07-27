@@ -1223,6 +1223,7 @@
             <label index="search_keywords_toplist">Toplist searched keywords</label>
             <label index="latest_orders">Latest orders</label>
             <label index="referrer_toplist">Referring websites</label>
+            <label index="call">Call</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2439,6 +2440,7 @@
             <label index="referrer_toplist">Verwijzende websites</label>
             <label index="admin_sort_products">Sorteer producten</label>
             <label index="show_disabled_product">Toon ook uitgeschakelde producten</label>
+            <label index="call">Bel</label>
         </languageKey>
     </data>
 </T3locallang>

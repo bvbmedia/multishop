@@ -817,6 +817,7 @@ switch ($_REQUEST['action']) {
 			$delivery_country=ucwords(mslib_befe::strtolower($user['country']));
 		}
 		$markerArray['DETAILS_COMPANY_NAME']=$company_name;
+		$actionButtons=array();
 		if (!$markerArray['DETAILS_COMPANY_NAME']) {
 			$markerArray['DETAILS_COMPANY_NAME']=$fullname;
 		}
@@ -825,8 +826,26 @@ switch ($_REQUEST['action']) {
 			$markerArray['BILLING_COMPANY']=$company_name.'<br/>';
 		}
 		$markerArray['BILLING_FULLNAME']=$fullname.'<br/>';
-		$markerArray['BILLING_TELEPHONE']=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
-		$markerArray['BILLING_EMAIL']=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
+		$markerArray['BILLING_TELEPHONE']='';
+		if ($telephone) {
+			$markerArray['BILLING_TELEPHONE'].=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
+			$actionLink='callto:'.$telephone;
+			$actionButtons['call']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.$this->pi_getLL('call').'</a>';
+		}
+		$markerArray['BILLING_EMAIL']='';
+		if ($email_address) {
+			$markerArray['BILLING_EMAIL'].=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
+			$actionLink='mailto:'.$email_address;
+			$actionButtons['email']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-envelope-o"></i> '.$this->pi_getLL('email').'</a>';
+		}
+		$markerArray['BILLING_COMPANY_ACTION_NAV']='';
+		if (count($actionButtons)) {
+			$markerArray['BILLING_COMPANY_ACTION_NAV']='<div class="btn-group">';
+			foreach ($actionButtons as $actionButton) {
+				$markerArray['BILLING_COMPANY_ACTION_NAV'].=$actionButton;
+			}
+			$markerArray['BILLING_COMPANY_ACTION_NAV'].='</div>';
+		}
 		$markerArray['CUSTOMER_ID']=$this->pi_getLL('admin_customer_id').': '.$user['uid'].'<br/>';
 		if ($user['crdate']>0) {
 			$user['crdate']=strftime("%x %X", $user['crdate']);
