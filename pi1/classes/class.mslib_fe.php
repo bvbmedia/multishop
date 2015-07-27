@@ -6765,9 +6765,11 @@ class mslib_fe {
 		$ms_menu['footer']['ms_admin_logout']['link']=mslib_fe::typolink($this->conf['logout_pid'], '&logintype=logout');
 		$ms_menu['footer']['ms_admin_logout']['class']='fa fa-sign-out';
 		$ms_menu['footer']['ms_admin_scroller']['label']='';
-		$ms_menu['footer']['ms_admin_help']['label']=$this->pi_getLL('admin_help');
+
+		$ms_menu['footer']['ms_admin_help']['label']='V'.$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION'];
 		$ms_menu['footer']['ms_admin_help']['link']=$this->conf['admin_help_url'];
 		$ms_menu['footer']['ms_admin_help']['class']='fa fa-question';
+
 		// if admin user and system panel is enabled for normal admins
 		if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER==1 or $this->conf['enableAdminPanelSystem'])) {
 			$ms_menu['footer']['ms_admin_system']['label']='';
