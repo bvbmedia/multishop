@@ -6663,12 +6663,14 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_online_users']['label']=$this->pi_getLL('admin_online_users').': '.$total_members.'/'.$guests_online;
 			$ms_menu['footer']['ms_admin_online_users']['class']='fa fa-users';
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['label']=$this->pi_getLL('admin_members').': '.$total_members;
+			$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['class']='fa fa-list';
 			if ($total_members) {
 				$counter=0;
 				foreach ($members as $member) {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['label']=$member['username'];
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['description']='Logged in at '.strftime("%x %X", $member['lastlogin']);
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$member['uid'].'&action=edit_customer', 1);
+					$ms_menu['footer']['ms_admin_online_users']['subs']['total_members']['subs']['admin_member_'.$member['uid']]['class']='fa fa-user';
 					$counter++;
 					if ($counter==15) {
 						break;
@@ -6687,11 +6689,13 @@ class mslib_fe {
 				$guestsNumber=$GLOBALS['TYPO3_DB']->sql_num_rows($res);
 				if ($guestsNumber>0) {
 					$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['label']=$this->pi_getLL('admin_guests').': '.$guestsNumber;
+					$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['class']='fa fa-list-ul';
 					$counter=0;
 					while ($record=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['label']=htmlspecialchars($record['ip_address']);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['description']=htmlspecialchars($record['http_user_agent']);
 						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['link']=$record['url'];
+						$ms_menu['footer']['ms_admin_online_users']['subs']['total_guests']['subs']['admin_guest_'.$record['session_id']]['class']='fa fa-user';
 						$counter++;
 						if ($counter==15) {
 							break;
@@ -6700,6 +6704,7 @@ class mslib_fe {
 				}
 			}
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['label']=$this->pi_getLL('total').': '.$guests_online;
+			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['class']='fa fa-list-ul';
 		}
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
 			$ms_menu['footer']['ms_admin_statistics']['label']=$this->pi_getLL('admin_statistics');
