@@ -1195,7 +1195,6 @@ class mslib_fe {
 		} else {
 			$final_price=($product[$priceColumn]);
 		}
-        //echo $quantity;
 		if ($sum and $product[$priceColumn]>0) {
 			$final_price=($product[$priceColumn]*$quantity);
 		}
