@@ -6590,6 +6590,9 @@ class mslib_fe {
 		if ($this->post['tx_multishop_pi1']['type']=='2003') {
 			$key='newheader';
 		}
+		$ms_menu['footer']['ms_version']['label']='V'.$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION'];
+		$ms_menu['footer']['ms_version']['link']='';
+		$ms_menu['footer']['ms_version']['class']='';
 		if ($this->ROOTADMIN_USER or $this->STORESADMIN_USER) {
 			// multishops
 			// now grab the active shops
@@ -6612,6 +6615,7 @@ class mslib_fe {
 			$this->ms_menu=$ms_menu;
 			// multishops eof
 		}
+
 		if ($this->ROOTADMIN_USER or $this->SEARCHADMIN_USER) {
 			$ms_menu[$key]['ms_admin_search']['description']='
 			<div id="ms_admin_search">
@@ -6766,7 +6770,8 @@ class mslib_fe {
 		$ms_menu['footer']['ms_admin_logout']['class']='fa fa-sign-out';
 		$ms_menu['footer']['ms_admin_scroller']['label']='';
 
-		$ms_menu['footer']['ms_admin_help']['label']='V'.$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION'];
+
+		$ms_menu['footer']['ms_admin_help']['label']='';
 		$ms_menu['footer']['ms_admin_help']['link']=$this->conf['admin_help_url'];
 		$ms_menu['footer']['ms_admin_help']['class']='fa fa-question';
 
