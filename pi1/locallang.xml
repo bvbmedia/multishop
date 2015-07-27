@@ -104,7 +104,7 @@
             <label index="admin_delivery_time">Delivery time</label>
             <label index="admin_details">Details</label>
             <label index="admin_download_as_excel_file">Download as Excel file</label>
-            <label index="admin_duplicate_product">Duplicate Product</label>
+            <label index="admin_duplicate_product">Duplicate product</label>
             <label index="admin_ean_code">EAN code</label>
             <label index="admin_edit_category">Edit category</label>
             <label index="admin_edit_category_description">Edit current category</label>
