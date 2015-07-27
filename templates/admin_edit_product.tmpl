@@ -79,7 +79,6 @@ function productPrice(to_include_vat, o, type) {
     if (current_value > 0) {
         if (to_include_vat) {
             $.getJSON("###AJAX_URL_GET_TAX_RULESET###", { current_price: original_val, to_tax_include: true, tax_group_id: $("#tax_id").val() }, function (json) {
-				console.log($(o).parentsUntil('.msAttributesField').parent().next());
 				if (json && json.price_including_tax) {
                     var incl_tax_crop = decimalCrop(json.price_including_tax);
                     //console.log(o.parent().parent().parent().next().children().children().children('input'));//.next().first().children());

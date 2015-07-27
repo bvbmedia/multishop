@@ -1191,9 +1191,11 @@ class mslib_fe {
 		// hook eof
 		if ($product['staffel_price']) {
 			$final_price=(mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity)/$quantity);
+            $product[$priceColumn]=$final_price;
 		} else {
 			$final_price=($product[$priceColumn]);
 		}
+        //echo $quantity;
 		if ($sum and $product[$priceColumn]>0) {
 			$final_price=($product[$priceColumn]*$quantity);
 		}
