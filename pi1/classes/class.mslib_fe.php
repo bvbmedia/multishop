@@ -6590,6 +6590,9 @@ class mslib_fe {
 		if ($this->post['tx_multishop_pi1']['type']=='2003') {
 			$key='newheader';
 		}
+		$ms_menu['footer']['ms_version']['label']='V'.$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION'];
+		$ms_menu['footer']['ms_version']['link']='';
+		$ms_menu['footer']['ms_version']['class']='';
 		if ($this->ROOTADMIN_USER or $this->STORESADMIN_USER) {
 			// multishops
 			// now grab the active shops
@@ -6600,10 +6603,10 @@ class mslib_fe {
 				foreach ($multishop_content_objects as $pageinfo) {
 					$counter++;
 					if (is_numeric($pageinfo['uid']) and $pageinfo['uid']==$this->shop_pid) {
-						$ms_menu['footer']['ms_admin_stores']['label']=mslib_befe::strtoupper($pageinfo['title']);
+						$ms_menu['footer']['ms_admin_stores']['label']=$pageinfo['title'];
 						$ms_menu['footer']['ms_admin_stores']['class']='fa fa-shopping-cart';
 					} elseif (is_numeric($pageinfo['uid']) and $pageinfo['uid']!=$this->shop_pid) {
-						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['label']=mslib_befe::strtoupper($pageinfo['title']);
+						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['label']=$pageinfo['title'];
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['description']=$this->pi_getLL('switch_to').' '.$pageinfo['title'].' '.$this->pi_getLL('web_shop');
 						$ms_menu['footer']['ms_admin_stores']['subs']['shop_'.$counter]['link']=mslib_fe::typolink($pageinfo["uid"], '');
 					}
@@ -6612,6 +6615,7 @@ class mslib_fe {
 			$this->ms_menu=$ms_menu;
 			// multishops eof
 		}
+
 		if ($this->ROOTADMIN_USER or $this->SEARCHADMIN_USER) {
 			$ms_menu[$key]['ms_admin_search']['description']='
 			<div id="ms_admin_search">
@@ -6766,9 +6770,11 @@ class mslib_fe {
 		$ms_menu['footer']['ms_admin_logout']['class']='fa fa-sign-out';
 		$ms_menu['footer']['ms_admin_scroller']['label']='';
 
-		$ms_menu['footer']['ms_admin_help']['label']='V'.$this->ms['MODULES']['GLOBAL_MODULES']['MULTISHOP_VERSION'];
+
+		$ms_menu['footer']['ms_admin_help']['label']='';
 		$ms_menu['footer']['ms_admin_help']['link']=$this->conf['admin_help_url'];
 		$ms_menu['footer']['ms_admin_help']['class']='fa fa-question';
+		$ms_menu['footer']['ms_admin_help']['link_params']='target="_blank"';
 
 		// if admin user and system panel is enabled for normal admins
 		if ($this->ROOTADMIN_USER or ($this->SYSTEMADMIN_USER==1 or $this->conf['enableAdminPanelSystem'])) {
@@ -7056,11 +7062,11 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_language']['description']='
 			<form action="'.mslib_fe::typolink().'" method="post" id="multishop_admin_language_form">
 				<select name="multishop_admin_language" id="ms_admin_simulate_language">
-				<option value="default"'.($this->cookie['multishop_admin_language']=='' ? ' selected' : '').'>'.mslib_befe::strtoupper($this->pi_getLL('default_language')).'</option>
+				<option value="default"'.($this->cookie['multishop_admin_language']=='' ? ' selected' : '').'>'.$this->pi_getLL('default_language').'</option>
 				';
 			foreach ($languagesLabels as $key=>$language) {
 				if ($language['key']) {
-					$ms_menu['footer']['ms_admin_language']['description'].='<option value="'.$language['flag'].'"'.($this->cookie['multishop_admin_language']==$language['flag'] ? ' selected' : '').'>'.mslib_befe::strtoupper($language['value']).'</option>'."\n";
+					$ms_menu['footer']['ms_admin_language']['description'].='<option value="'.$language['flag'].'"'.($this->cookie['multishop_admin_language']==$language['flag'] ? ' selected' : '').'>'.$language['value'].'</option>'."\n";
 				}
 			}
 			$ms_menu['footer']['ms_admin_language']['description'].='
