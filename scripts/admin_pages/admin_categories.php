@@ -138,9 +138,9 @@ foreach ($categories as $category) {
 	$link=mslib_fe::typolink($this->conf['products_listing_page_pid'], '&'.$where.'&tx_multishop_pi1[page_section]=products_listing');
 	$cat_selectbox.='<option value="'.$category['categories_id'].'" id="sl-cat_'.$category['categories_id'].'">+ '.$category['categories_name'].' (ID: '.$category['categories_id'].')</option>';
 	$category_action_icon='<div class="action_icons">
-	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category" class="msadmin_edit_icon"><span>'.$this->pi_getLL('admin_label_link_edit').'</span></a>
-	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category').'" class="msadmin_delete_icon" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><span>delete</span></a>
-	<a href="'.$link.'" target="_blank" class="msadmin_view"><span>view</span></a>
+	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id']).'&action=edit_category" class="text-success msadmin_edit_icon"><i class="fa fa-pencil"></i></a>
+	<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$category['categories_id'].'&action=delete_category').'" class="text-danger msadmin_delete_icon" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><i class="fa fa-trash-o"></i></a>
+	<a href="'.$link.'" target="_blank" class="text-primary msadmin_view"><i class="fa fa-eye"></i></a>
 	</div>';
 	$subcat_list='';
 	$dataArray=mslib_fe::getSitemap($category['categories_id'], array(), 1, 0);
