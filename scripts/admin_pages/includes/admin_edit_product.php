@@ -3622,7 +3622,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_TABS_PRODUCTS_DETAILS###']=$this->pi_getLL('admin_details');
 		$subpartArray['###LABEL_TABS_PRODUCT_OPTIONS###']=$this->pi_getLL('admin_options');
 		$subpartArray['###LABEL_TABS_PRODUCT_IMAGES###']=$this->pi_getLL('admin_images');
-		$subpartArray['###LABEL_TABS_META_TAGS###']='META';
+		$subpartArray['###LABEL_TABS_META_TAGS###']=$this->pi_getLL('meta_tags');
 		$subpartArray['###LABEL_TABS_PRODUCT_ATTRIBUTES###']=$this->pi_getLL('admin_attributes');
 		$subpartArray['###LABEL_TABS_PRODUCT_RELATIVES###']=$this->pi_getLL('admin_related_products');
 		$subpartArray['###LABEL_TABS_PRODUCT_COPY###']=$this->pi_getLL('admin_copy_duplicate_product');
