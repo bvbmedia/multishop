@@ -847,6 +847,17 @@ switch ($_REQUEST['action']) {
 		$actionButtons['travel_guide']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('travel_guide').'</a>';
 
 		$markerArray['BILLING_COMPANY_ACTION_NAV']='';
+		// custom page hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'])) {
+			$params=array(
+				'actionButtons'=>&$actionButtons,
+				'customer'=>&$user
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom page hook that can be controlled by third-party plugin eol
 		if (count($actionButtons)) {
 			$markerArray['BILLING_COMPANY_ACTION_NAV']='<div class="btn-group">';
 			foreach ($actionButtons as $actionButton) {

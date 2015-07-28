@@ -47,6 +47,17 @@ if ($this->ADMIN_USER) {
 			if ($customer['fax']) {
 				$jsonData['html'].=$this->pi_getLL('fax').': '.$customer['fax'].'<br />';
 			}
+			// custom page hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_customers_listing_details.php']['actionButtonsAdminCustomersTooltipPreProc'])) {
+				$params=array(
+					'actionButtons'=>&$actionButtons,
+					'customer'=>&$customer
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_customers_listing_details.php']['actionButtonsAdminCustomersTooltipPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom page hook that can be controlled by third-party plugin eol
 			if (count($actionButtons)) {
 				$jsonData['html'].='<div class="btn-group">';
 				foreach ($actionButtons as $actionButton) {
