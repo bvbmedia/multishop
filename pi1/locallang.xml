@@ -520,7 +520,7 @@
             <label index="buy">Buy</label>
             <label index="buy_now">Buy Now</label>
             <label index="by">by</label>
-            <label index="cancel">cancel</label>
+            <label index="cancel">Cancel</label>
             <label index="capital_price">Capital price</label>
             <label index="captcha_code_is_invalid">Security code is invalid</label>
             <label index="captcha_code_placeholder">type here the code</label>
@@ -1013,7 +1013,7 @@
             <label index="sales_volume_by_day">Daily sales volume</label>
             <label index="sales_volume_by_month">Monthly sales volume</label>
             <label index="sales_volume_by_year">Sales volume by year</label>
-            <label index="save">save</label>
+            <label index="save">Save</label>
             <label index="save_import_task">Save Import Task</label>
             <label index="schedule">Schedule</label>
             <label index="search">Search</label>
@@ -1742,7 +1742,7 @@
             <label index="buy">Kopen</label>
             <label index="buy_now">Bestel Nu</label>
             <label index="by">op</label>
-            <label index="cancel">annuleren</label>
+            <label index="cancel">Annuleren</label>
             <label index="capital_price">Inkoopprijs</label>
             <label index="captcha_code_is_invalid">Beveiligingscode is onjuist</label>
             <label index="captcha_code_placeholder">type hier de code over</label>
@@ -2235,7 +2235,7 @@
             <label index="sales_volume_by_day">Dagomzet</label>
             <label index="sales_volume_by_month">Maandomzet</label>
             <label index="sales_volume_by_year">Omzet per jaar</label>
-            <label index="save">opslaan</label>
+            <label index="save">Opslaan</label>
             <label index="save_import_task">Importeer taak opslaan</label>
             <label index="schedule">Planning</label>
             <label index="search">Zoeken</label>
