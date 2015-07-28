@@ -86,7 +86,7 @@ if (is_array($groups) and count($groups)) {
 $customer_groups_input.='</select>'."\n";
 // usergroup eol
 // payment status
-$payment_status_select='<select name="payment_status" id="payment_status" class="order_select2" style="width:250px">
+$payment_status_select='<select name="payment_status" id="payment_status" class="order_select2">
 <option value="">'.$this->pi_getLL('select_orders_payment_status').'</option>';
 if ($this->cookie['payment_status']=='paid_only') {
 	$payment_status_select.='<option value="paid_only" selected="selected">'.$this->pi_getLL('show_paid_orders_only').'</option>';
@@ -168,13 +168,13 @@ if (is_array($shipping_methods) and count($shipping_methods)) {
 $shipping_method_input.='</select>'."\n";
 // shipping method eol
 $content.='<div class="order_stats_mode_wrapper">
-<ul class="horizontal_list">
-	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
-	<li><strong class="btn btn-success">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</strong></li>
+<ul class="pagination horizontal_list">
+	<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_orders&tx_multishop_pi1[stats_section]=turnoverPerYear').'">'.htmlspecialchars($this->pi_getLL('stats_turnover_per_year', 'Turnover per year')).'</a></li>
+	<li class="active"><span>'.htmlspecialchars($this->pi_getLL('stats_turnover_per_month', 'Turnover per month')).'</span></li>
 </ul>
 </div>';
 $content.='
-<form method="get" id="orders_stats_form" class="float_right">
+<form method="get" id="orders_stats_form">
 <!--
 <input name="id" type="hidden" value="'.$this->get['id'].'" />
 <div class="stat-years float_right">'.$temp_year.'</div>
@@ -185,7 +185,7 @@ $content.='
 <div class="paid-orders"><input id="checkbox_paid_orders_only" name="paid_orders_only" type="checkbox" value="1" '.($this->cookie['paid_orders_only'] ? 'checked' : '').' /><label for="checkbox_paid_orders_only">'.$this->pi_getLL('show_paid_orders_only').'</label></div>
 -->
 
-<div id="search-orders">
+<div id="search-orders" class="well">
 	<input name="id" type="hidden" value="'.$this->get['id'].'" />
 	<!-- <div class="stat-years float_right">'.$temp_year.'</div> -->
 	<input name="type" type="hidden" value="2003" />
@@ -193,30 +193,44 @@ $content.='
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_orders" />
 	<input name="tx_multishop_pi1[stats_section]" type="hidden" value="turnoverPerMonth" />
 	<div class="row formfield-container-wrapper">
-		<div class="col-sm-4 formfield-wrapper">
+		<div class="col-md-4 formfield-wrapper">
+			<div class="form-group">
 			<label for="groups">'.$this->pi_getLL('usergroup').'</label>
 			'.$customer_groups_input.'
+			</div>
+
+			<label>Date</label>
+			<div class="form-group form-inline">
 			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
-			<input type="text" name="order_date_from" id="order_date_from" value="'.$this->get['order_date_from'].'">
+			<input type="text" class="form-control" name="order_date_from" id="order_date_from" value="'.$this->get['order_date_from'].'">
 			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
-			<input type="text" name="order_date_till" id="order_date_till" value="'.$this->get['order_date_till'].'">
+			<input type="text" class="form-control" name="order_date_till" id="order_date_till" value="'.$this->get['order_date_till'].'">
+			</div>
 		</div>
-		<div class="col-sm-4 formfield-wrapper">
+		<div class="col-md-4 formfield-wrapper">
+			<div class="form-group">
 			<label for="payment_status">'.$this->pi_getLL('order_payment_status').'</label>
 			'.$payment_status_select.'
+			</div>
+			<div class="form-group">
 			<label for="orders_status_search" class="labelInbetween">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
+			</div>
 		</div>
-		<div class="col-sm-4 formfield-wrapper">
+		<div class="col-md-4 formfield-wrapper">
+			<div class="form-group">
 			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
 			'.$payment_method_input.'
+			</div>
+			<div class="form-group">
 			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
 			'.$shipping_method_input.'
+			</div>
 		</div>
 	</div>
 	<div class="row formfield-container-wrapper">
 		<div class="col-sm-12 formfield-wrapper">
-			<input type="submit" name="Search" value="'.htmlspecialchars($this->pi_getLL('search')).'" />
+			<input type="submit" name="Search" class="btn btn-success pull-right" value="'.htmlspecialchars($this->pi_getLL('search')).'" />
 		</div>
 	</div>
 </div>
@@ -279,20 +293,20 @@ if (!$this->masterShop) {
 }
 // search processor eol
 $dates=array();
-$content.='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h2>';
+$content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_month')).'</h3>';
 for ($i=1; $i<13; $i++) {
 	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
 }
-$content.='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
-$content.='<tr class="odd">';
+$content.='<table class="table table-striped table-bordered" id="product_import_table">';
+$content.='<thead><tr>';
 foreach ($dates as $key=>$value) {
-	$content.='<td align="right">'.ucfirst($key).'</td>';
+	$content.='<th align="right">'.ucfirst($key).'</th>';
 }
-$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</td>';
-$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
-$content.='</tr>';
-$content.='<tr class="even">';
+$content.='<th align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</th>';
+$content.='<th align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</th>';
+$content.='</tr></thead><tbody>';
+$content.='<tr>';
 $total_amount=0;
 foreach ($dates as $key=>$value) {
 	$total_price=0;
@@ -343,22 +357,22 @@ if (!$tr_type or $tr_type=='even') {
 	$tr_type='even';
 }
 $content.='
-</table>';
+</tbody></table>';
 // LAST MONTHS EOF
 $dates=array();
-$content.='<h2>'.htmlspecialchars($this->pi_getLL('average_order_amount_per_month', 'Average order amount per month')).'</h2>';
+$content.='<h3>'.htmlspecialchars($this->pi_getLL('average_order_amount_per_month', 'Average order amount per month')).'</h3>';
 for ($i=1; $i<13; $i++) {
 	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
 }
-$content.='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
-$content.='<tr class="odd">';
+$content.='<table class="table table-striped table-bordered" id="product_import_table">';
+$content.='<thead><tr>';
 foreach ($dates as $key=>$value) {
-	$content.='<td align="right">'.ucfirst($key).'</td>';
+	$content.='<th align="right">'.ucfirst($key).'</th>';
 }
-$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</td>';
-$content.='</tr>';
-$content.='<tr class="even">';
+$content.='<th align="right" nowrap>'.htmlspecialchars($this->pi_getLL('total')).'</th>';
+$content.='</tr></thead><tbody>';
+$content.='<tr>';
 $total_amount_avg=0;
 $total_orders_avg=0;
 foreach ($dates as $key=>$value) {
@@ -422,11 +436,11 @@ if (!$tr_type or $tr_type=='even') {
 	$tr_type='even';
 }
 $content.='
-</table>';
+</tbody></table>';
 // LAST MONTHS EOF
 $tr_type='even';
 $dates=array();
-$content.='<h2>'.htmlspecialchars($this->pi_getLL('sales_volume_by_day')).'</h2>';
+$content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_day')).'</h3>';
 if ($currentMonth) {
 	$endDay=date("d");
 } else {
@@ -436,13 +450,13 @@ for ($i=0; $i<$endDay; $i++) {
 	$time=strtotime("-".$i." day", strtotime(date($currentDay.'-'.$month.'-'.$this->cookie['stats_year_sb'])));
 	$dates[strftime("%x", $time)]=$time;
 }
-$content.='<table width="100%" class="table table-striped table-bordered" cellpadding="0" cellspacing="0" border="0" id="product_import_table">
-<tr>
+$content.='<table class="table table-striped table-bordered" id="product_import_table">
+<thead><tr>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('amount')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('average', 'average')).'</th>
 	<th>'.htmlspecialchars($this->pi_getLL('orders_id')).'</th>
-</tr>';
+</tr></thead><tbody>';
 foreach ($dates as $key=>$value) {
 	$total_daily_orders=0;
 	if (!$tr_type or $tr_type=='even') {
@@ -450,7 +464,7 @@ foreach ($dates as $key=>$value) {
 	} else {
 		$tr_type='even';
 	}
-	$content.='<tr class="'.$tr_type.'">';
+	$content.='<tr>';
 	$content.='<td align="right">'.$key.'</td>';
 	$total_price=0;
 	$system_date=date($selected_year."m-d", $value);
@@ -492,7 +506,7 @@ foreach ($dates as $key=>$value) {
 	}
 	$content.='</tr>';
 }
-$content.='</table>';
+$content.='</tbody></table>';
 // LAST MONTHS EOF
 $content.='<div class="msAdminOrdersStatsButtonWrapper">';
 $dlink_param['stats_year_sb']=$this->get['stats_year_sb'];
@@ -511,13 +525,11 @@ if ($param_val_ctr>0) {
 	$dlink="downloadOrdersExcelParam();";
 }
 $content.='</div>';
-$content.='<p class="extra_padding_bottom">';
-$content.='<a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>';
-$content.='<span id="msAdminOrdersListingDownload">';
-$content.='<input type="button" name="download" class="link_block" value="'.$this->pi_getLL('admin_download_as_excel_file').'" onclick="'.$dlink.'" />';
-$content.='</span>';
+$content.='<hr><div class="clearfix">';
+$content.='<a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>';
+$content.='<button type="button" name="download" class="pull-right btn btn-success link_block" value="'.$this->pi_getLL('admin_download_as_excel_file').'" onclick="'.$dlink.'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-download fa-stack-1x"></i></span> '.$this->pi_getLL('admin_download_as_excel_file').'</button>';
 $content.='
-</p>';
+</div>';
 $headerData='';
 $headerData.='
 <script type="text/javascript">
@@ -553,5 +565,5 @@ jQuery(document).ready(function ($) {
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 $headerData='';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content='<div class="panel panel-default"><div class="panel-body">'.mslib_fe::shadowBox($content).'</div></div>';
 ?>

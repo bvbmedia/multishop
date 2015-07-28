@@ -4358,7 +4358,7 @@ if ($this->post) {
 		/*
 		 * meta tags tab marker
 		*/
-		$subpartArray['###LABEL_HEADING_TAB_META_TAGS###']='META TAGS';
+		$subpartArray['###LABEL_HEADING_TAB_META_TAGS###']=$this->pi_getLL('meta_tags');
 		$subpartArray['###INPUT_META_TAGS_BLOCK###']=$meta_tags_block;
 		/*
 		 * attributes tab marker

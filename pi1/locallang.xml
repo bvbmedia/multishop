@@ -1225,6 +1225,7 @@
             <label index="referrer_toplist">Referring websites</label>
             <label index="call">Call</label>
             <label index="travel_guide">Travel guide</label>
+            <label index="meta_tags">Meta tags</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2443,6 +2444,7 @@
             <label index="show_disabled_product">Toon ook uitgeschakelde producten</label>
             <label index="call">Bel</label>
             <label index="travel_guide">Routebeschrijving</label>
+            <label index="meta_tags">Meta tags</label>
         </languageKey>
     </data>
 </T3locallang>
