@@ -50,7 +50,7 @@ if ($this->ADMIN_USER) {
 			// custom page hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_customers_listing_details.php']['actionButtonsAdminCustomersTooltipPreProc'])) {
 				$params=array(
-					'actionLink'=>&$actionLink,
+					'actionButtons'=>&$actionButtons,
 					'customer'=>&$customer
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/get_admin_customers_listing_details.php']['actionButtonsAdminCustomersTooltipPreProc'] as $funcRef) {

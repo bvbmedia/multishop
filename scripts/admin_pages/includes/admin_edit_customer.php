@@ -850,7 +850,7 @@ switch ($_REQUEST['action']) {
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'])) {
 			$params=array(
-				'actionLink'=>&$actionLink,
+				'actionButtons'=>&$actionButtons,
 				'customer'=>&$user
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'] as $funcRef) {
