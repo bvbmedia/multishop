@@ -157,7 +157,7 @@ jQuery(document).ready(function($) {
 	});
 	$(\'#categories_id\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
-		width:\'500px\',
+		width:\'100%\',
 		minimumInputLength: 0,
 		multiple: true,
 		//allowClear: true,
