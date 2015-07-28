@@ -2708,7 +2708,7 @@ if ($this->post) {
 					var n = d.getTime();
 					$(this).parent().parent().hide();
 					var new_attributes_html=\'\';
-					new_attributes_html+=\'<span class="new_product_attributes">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</span><div class="wrap-attributes-item" rel="new">\';
+					new_attributes_html+=\'<div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</h3></div><div class="panel-body wrap-attributes-item" rel="new">\';
 					new_attributes_html+=\'<table class="table">\';
 					new_attributes_html+=\'<thead><tr class="option_row">\';
 					'.implode("\n", $new_product_attributes_block_columns_js).'
@@ -2914,7 +2914,7 @@ if ($this->post) {
 						$(pa_main_divwrapper).addClass("new_attributes");
 						// check for the main tr if it exists
 						if ($("#product_attributes_content_row").length===0) {
-							var new_tr=\'<tr id="product_attributes_content_row"><td colspan="5"><ul id="products_attributes_items"></ul></td></tr>\';
+							var new_tr=\'<tr id="product_attributes_content_row"><td colspan="5" id="products_attributes_items"></td></tr>\';
 							$(new_tr).insertBefore("#add_attributes_holder");
 							// activate sortable on ul > li
 							sort_li();
@@ -2980,22 +2980,7 @@ if ($this->post) {
 				$(document).on("click", "#manual_button", function(event) {
 					jQuery("#attributes_header").show();
 				});
-				$(document).on("click", "span.option_name", function(e){
-					e.preventDefault();
-					var self = $(this).children("a");
-					var li_this=$(self).parent().parent();
-					if($(self).hasClass("items_wrapper_unfolded")) {
-						$(li_this).children("div.items_wrapper").hide();
-						$(li_this).children("div.add_new_attributes").hide();
-						$(self).removeClass("items_wrapper_unfolded");
-						$(self).addClass("items_wrapper_folded").html("unfold");
-					} else {
-						$(li_this).children("div.items_wrapper").show();
-						$(li_this).children("div.add_new_attributes").show();
-						$(self).removeClass("items_wrapper_folded");
-						$(self).addClass("items_wrapper_unfolded").html("fold");
-					}
-				});
+
 				$(document).on("click", "span.shop_name", function(e){
 					e.preventDefault();
 					var page_uid=$(this).attr("rel");
@@ -3115,7 +3100,7 @@ if ($this->post) {
 					});
 				}
 				var sort_li = function () {
-					jQuery("#products_attributes_items").sortable({
+					jQuery("td#products_attributes_items").sortable({
 						'.($product['products_id'] ? '
 						update: function(e, ui) {
 							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_option&pid='.$product['products_id']).'";
@@ -3132,7 +3117,7 @@ if ($this->post) {
 						},
 						' : '').'
 						cursor:"move",
-						items:">li.products_attributes_item"
+						items:">div.products_attributes_item"
 					});
 				}
 				var sort_li_children = function () {
@@ -3158,8 +3143,6 @@ if ($this->post) {
 				}
 				sort_li();
 				sort_li_children();
-				$(".items_wrapper").hide();
-				$(".add_new_attributes").hide();
 				select2_sb(".product_attribute_options", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 			});
 			</script>
@@ -3326,16 +3309,22 @@ if ($this->post) {
 					}
 					if (count($options_data)) {
 						$attributes_tab_block.='<thead><tr id="product_attributes_content_row">';
-						$attributes_tab_block.='<td colspan="5"><ul id="products_attributes_items">';
+						$attributes_tab_block.='<td colspan="5" id="products_attributes_item">';
 						foreach ($options_data as $option_id=>$option_name) {
 							if (!isset($group_row_type) || $group_row_type=='even_group_row') {
 								$group_row_type='odd_group_row';
 							} else {
 								$group_row_type='even_group_row';
 							}
-							$attributes_tab_block.='<li id="products_attributes_item_'.$option_id.'" alt="'.$option_name.'" class="products_attributes_item '.$group_row_type.'">
-							<span class="option_name">'.$option_name.' <a href="#" class="items_wrapper_folded">unfold</a></span>
-							<div class="items_wrapper">
+                            $attributes_tab_block.='
+                            <div class="panel panel-default products_attributes_item '.$group_row_type.'" id="products_attributes_item_'.$option_id.'" alt="'.$option_name.'">
+                                <div class="panel-heading panel-heading-toggle" data-toggle="collapse" data-target="#bodyproducts_attributes_item_'.$option_id.'" aria-expanded="false" aria-controls="bodyproducts_attributes_item_'.$option_id.'">
+                                    <h3 class="panel-title"><i class="fa fa-bars"></i> '.$option_name.'</h3>
+                                </div>
+                                <div class="collapse" id="bodyproducts_attributes_item_'.$option_id.'">
+                                <div class="panel-body">
+                                <div class="items_wrapper">
+
 							';
 							foreach ($attributes_data[$option_id] as $attribute_data) {
 								// custom hook that can be controlled by third-party plugin
@@ -3458,10 +3447,10 @@ if ($this->post) {
 								$attributes_tab_block.='</table>';
 								$attributes_tab_block.='</div>';
 							}
-							$attributes_tab_block.='</div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="'.$this->pi_getLL('admin_add_new_value').' [+]" rel="'.$option_id.'" /></div>';
-							$attributes_tab_block.='</li>';
+							$attributes_tab_block.='</div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="'.$this->pi_getLL('admin_add_new_value').' [+]" rel="'.$option_id.'" /></div></div></div>';
+							$attributes_tab_block.='</div>';
 						}
-						$attributes_tab_block.='</ul></td>';
+						$attributes_tab_block.='</td>';
 						$attributes_tab_block.='</tr></thead>';
 					}
 				}
