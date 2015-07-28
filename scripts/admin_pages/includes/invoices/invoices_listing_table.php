@@ -166,8 +166,6 @@ $tmp.='
 				e.preventDefault();
 				var linkTarget=$(this).attr("href");
 				ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
-					$(this).dialog("close");
-					$(this).hide();
 					msAdminBlockUi();
 					window.location.href=linkTarget;
 				});
