@@ -197,6 +197,12 @@ multishop_ajax_server {
 			}
 			# not needed in Bootstrap
 			jqueryTab >
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/css/jquery-confirm.css
+			jqueryConfirm {
+				media =
+				import = 0
+				compress = 1
+			}
 			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
 			awesomeFontCss {
 				media =
@@ -245,6 +251,12 @@ multishop_ajax_server {
 			}
 			# not needed in Bootstrap
 			jqueryTab >
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/css/jquery-confirm.css
+			jqueryConfirm {
+				media =
+				import = 0
+				compress = 1
+			}
 			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
 			awesomeFontCss {
 				media =
@@ -311,6 +323,8 @@ multishop_ajax_server {
 			#jquerymigrate.compress=1
 			jqueryvalidate = EXT:multishop/js/jquery.h5validate.js
 			jqueryvalidate.compress = 1
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/js/jquery-confirm.js
+			jqueryConfirm.compress = 1
 			#jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
 			#jqueryvalidatefunctions.compress=1
 			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js

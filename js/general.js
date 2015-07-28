@@ -15,39 +15,11 @@ function isMobile() {
     }
 }
 function ifConfirm(textTitle, textBody, yesFn, noFn) {
-    var dialog = $('<div/>', {
-        id: 'dialog',
-        title: textTitle
-    });
-    // if there is no form function defined create a default one
-    if (typeof yesFn == 'function' && typeof noFn != 'function') {
-        noFn=function() {
-            $(this).dialog("close");
-            $(this).hide();
-        }
-    }
-    dialog.append(textBody);
-    dialog.dialog({
-        width: 900,
-        modal: true,
-        body: "",
-        resizable: false,
-        open: function () {
-            // right button (save button) must be the default button when user presses enter key
-            $(this).siblings('.ui-dialog-buttonpane').find('.continueState').focus();
-        },
-        buttons: {
-            "no": {
-                text: "No",
-                class: 'msCancelButton msBackendButton prevState arrowLeft arrowPosLeft',
-                click: noFn
-            },
-            "yes": {
-                text: "Yes",
-                class: 'msOkButton msBackendButton continueState arrowRight arrowPosLeft',
-                click: yesFn
-            }
-        }
+    $.confirm({
+        title: textTitle,
+        content: textBody,
+        confirm: yesFn,
+        cancel: noFn
     });
 }
 function msDialog(textTitle, textBody, width,opacity) {
