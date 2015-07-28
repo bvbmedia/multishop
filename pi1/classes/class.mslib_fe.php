@@ -1112,6 +1112,9 @@ class mslib_fe {
 		$numbers=explode('.', $float);
 		$prime=$numbers[0];
 		$decimal=substr($numbers[1], 0, $precision);
+        if (strlen($decimal)==1) {
+            $decimal.='0';
+        }
 		if (!$prime && !$decimal) {
 			return '0.00';
 		}
