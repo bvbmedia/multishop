@@ -3317,10 +3317,10 @@ if ($this->post) {
 							}
                             $attributes_tab_block.='
                             <div class="panel panel-default products_attributes_item '.$group_row_type.'" id="products_attributes_item_'.$option_id.'" alt="'.$option_name.'">
-                                <div class="panel-heading panel-heading-toggle" data-toggle="collapse" data-target="#bodyproducts_attributes_item_'.$option_id.'" aria-expanded="false" aria-controls="bodyproducts_attributes_item_'.$option_id.'">
+                                <div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_'.$option_id.'" aria-expanded="false" aria-controls="bodyproducts_attributes_item_'.$option_id.'">
                                     <h3 class="panel-title"><i class="fa fa-bars"></i> '.$option_name.'</h3>
                                 </div>
-                                <div class="collapse" id="bodyproducts_attributes_item_'.$option_id.'">
+                                <div class="panel-collapse collapse" id="bodyproducts_attributes_item_'.$option_id.'">
                                 <div class="panel-body">
                                 <div class="items_wrapper">
 
