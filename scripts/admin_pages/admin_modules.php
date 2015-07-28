@@ -5,9 +5,30 @@ if (!defined('TYPO3_MODE')) {
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$(".msadminTooltip").tooltip({
-		placement: \'auto\',
-		html: true
+	var originalLeave = $.fn.popover.Constructor.prototype.leave;
+	$.fn.popover.Constructor.prototype.leave = function(obj){
+	  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+	  var container, timeout;
+	  originalLeave.call(this, obj);
+	  if(obj.currentTarget) {
+		container = $(obj.currentTarget).siblings(\'.popover\')
+		timeout = self.timeout;
+		container.one(\'mouseenter\', function(){
+		  //We entered the actual popover – call off the dogs
+		  clearTimeout(timeout);
+		  //Let\'s monitor popover content instead
+		  container.one(\'mouseleave\', function(){
+			  $.fn.popover.Constructor.prototype.leave.call(self, self);
+			  $(".popover-link").popover("hide");
+		  });
+		})
+	  }
+	};
+	$(".msadminTooltip").popover({
+		placement: "right",
+		html: true,
+		trigger:"hover",
+		delay: {show: 20, hide: 200}
 	});
 
 	$(".nav-tabs a:first").tab("show");
@@ -62,7 +83,7 @@ foreach ($categories as $cat) {
 		$editLink=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[gid]='.$cat['gid'].'&module_id='.$row['id'].'&action=edit_module', 1);
 //		$row['description']='';
 		$innerContent.='<tr class="'.$tr_type.'">
-		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_key'].'</h3>'.$row['description']).'" class="msadminTooltip">'.$row['configuration_title'].'</a></strong></td>
+		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_title'].'</h3><p>'.$row['description']).'</p>Key: '.$row['configuration_key'].'" class="msadminTooltip">'.$row['configuration_title'].'</a></strong></td>
 		<td><a href="'.$editLink.'">'.$this->ms['MODULES'][$row['configuration_key']].'</a></td>
 		</tr>';
 		//<td><a href="'.$editLink.'">'.$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']].'</a></td>
