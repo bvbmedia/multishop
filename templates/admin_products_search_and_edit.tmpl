@@ -205,7 +205,7 @@ jQuery(document).ready(function($) {
 	function productPrice(to_include_vat, o, type) {
 		var original_val = $(o).val();
 		var current_value = parseFloat($(o).val());
-		var tax_id_holder = "#product_tax_id_" + o.attr("rel");
+		var tax_id_holder = "#product_tax_id_" + $(o).attr("rel");
 		var tax_id = $(tax_id_holder).val();
 
 		if (current_value > 0) {

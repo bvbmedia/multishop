@@ -386,11 +386,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			</script>
 			';
 			$content='
+			<div class="panel-body">
 			<div id="tab-container">
-			<ul class="tabs" id="admin_orders">
-				<li class="active"><a href="#CmsListing">'.$params['title'].'</a></li>
+			<ul class="nav nav-tabs" id="admin_orders" role="tablist">
+				<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.$params['title'].'</a></li>
 			</ul>
-			<div class="tab_container">
+			<div class="tab-content">
 			';
 		}
 		$searchForm='';
@@ -405,14 +406,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			$searchForm.='
 						<div class="col-sm-8 formfield-wrapper">
-							<div class="form-group">
+							<div class="form-inline">
 								<label class="control-label">'.$that->pi_getLL('keyword').'</label>
 								<input type="text" name="tx_multishop_pi1[keyword]" class="form-control" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
 								<input type="submit" name="Search" class="btn btn-success" value="'.$that->pi_getLL('search').'" />
 							</div>
 						</div>
 						<div class="col-sm-4 formfield-wrapper">
-							<div class="form-group pull-right">
+							<div class="pull-right form-inline">
 								<label class="control-label">'.$that->pi_getLL('limit_number_of_records_to').'</label>
 								'.$limit_search_result_selectbox.'
 							</div>
@@ -424,12 +425,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (!$params['settings']['skipTabMarkup']) {
 			$content.='
-					<div style="display: block;" id="CmsListing" class="tab_content">
+					<div role="tabpanel" id="CmsListing" class="tab-pane">
 						'.$searchForm.'
 						'.$tableContent.'
 					</div>
 				</div>
-			</div>
+
 			';
 		} else {
 			$content.=$searchForm.$tableContent;
@@ -441,14 +442,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$skipTotalCount=1;
 		}
 		if (!$skipRecordCount) {
-			$content.='<p><center>Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></center></p>';
+			$content.='<hr><p class="text-center">Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
 		}
 		if (!$skipTotalCount) {
-			$content.='<p><center>Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></center></p>';
+			$content.='<p class="text-center">Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
-			$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-			$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
+			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
+			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 		}
 		return $content;
 	}
