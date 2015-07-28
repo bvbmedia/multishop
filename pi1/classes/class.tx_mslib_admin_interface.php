@@ -379,6 +379,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			// pagination eof
 		}
 		if (!$params['settings']['skipTabMarkup']) {
+			$GLOBALS['TSFE']->additionalHeaderData['msAdminTabJs']='<script type="text/javascript">
+			jQuery(document).ready(function ($) {
+				$(\'.nav-tabs a:first\').tab(\'show\');
+			});
+			</script>
+			';
 			$content='
 			<div id="tab-container">
 			<ul class="tabs" id="admin_orders">
