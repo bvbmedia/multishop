@@ -3237,7 +3237,7 @@ if (is_numeric($this->get['orders_id'])) {
         </script>
         <div class="panel panel-default">
         <div class="panel-body">
-        <div id="tab-container">
+        <div id="tab-container" class="msadminVerticalTabs">
             <ul class="nav nav-tabs" role="tablist">';
 		foreach ($tabs as $key=>$value) {
 			$count++;
