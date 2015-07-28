@@ -355,6 +355,8 @@ ul.admin_sort_product_listing > li > strong { width:90%; }
 ul.admin_sort_product_listing > li > .admin_menu { white-space:nowrap; }
 ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; padding-right:0; }
 
+#ui-datepicker-div { display:none; }
+
 /* jquery tree overrule */
 .form-horizontal #sidetree .checkbox-inline { padding-top:0; }
 .form-horizontal #sidetree .checkbox-inline > label { padding-left:0; }
