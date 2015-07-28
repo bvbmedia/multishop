@@ -2708,12 +2708,13 @@ if ($this->post) {
 					var n = d.getTime();
 					$(this).parent().parent().hide();
 					var new_attributes_html=\'\';
-					new_attributes_html+=\'<div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</h3></div><div class="panel-body wrap-attributes-item" rel="new">\';
+					new_attributes_html+=\'<div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</h3></div><div class="panel-body"><div class="wrap-attributes-item" rel="new">\';
 					new_attributes_html+=\'<table class="table">\';
 					new_attributes_html+=\'<thead><tr class="option_row">\';
 					'.implode("\n", $new_product_attributes_block_columns_js).'
 					new_attributes_html+=\'</tr></thead>\';
 					new_attributes_html+=\'</table>\';
+					new_attributes_html+=\'</div>\';
 					new_attributes_html+=\'</div>\';
 					$(\'#add_attributes_holder>td\').empty();
 					$(\'#add_attributes_holder>td\').html(new_attributes_html);
@@ -2897,7 +2898,7 @@ if ($this->post) {
 				jQuery(document).on("click", ".save_new_attributes", function(){
 					var d = new Date();
 					var n = d.getTime();
-					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
+					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent().parent();
 					var pa_option_sb=$("#tmp_options_sb").select2("data");
 					var pa_attributes_sb=$("#tmp_attributes_sb").select2("data");
 					if (pa_option_sb !== null && pa_attributes_sb !== null) {
@@ -2907,7 +2908,7 @@ if ($this->post) {
 						var selected_pa_option_id="";
 						var selected_pa_option_text="";
 					}
-					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id + " > div.items_wrapper";
+					var target_liwrapper_id="#products_attributes_item_" + selected_pa_option_id + " > div > div > div.items_wrapper";
 					if (selected_pa_option_id != "") {
 						var delete_button_html=\'<button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button>\';
 						// add class for marker
@@ -2934,27 +2935,26 @@ if ($this->post) {
 							$(this).parent().empty().html(delete_button_html);
 							// flush it to existing li
 							$(target_liwrapper_id).append(pa_main_divwrapper);
-							if ($(target_liwrapper_id).is(":hidden")) {
-								$(target_liwrapper_id).prev().children().removeClass("items_wrapper_folded").addClass("items_wrapper_unfolded").html("fold");
-								$(target_liwrapper_id).show();
-							}
-							$(target_liwrapper_id).parent().find(".add_new_attributes").show();
+							//if (!$(target_liwrapper_id).parent().parent().hasClass("in")) {
+							//    $(target_liwrapper_id).parent().parent().addClass("in");
+							//}
 						} else {
+						    selected_pa_option_id=selected_pa_option_id.replace(" ", "");
 							var li_class="odd_group_row";
 							if ($(".products_attributes_items").children().last().hasClass("odd_group_row")) {
 								li_class="even_group_row";
 							}
-							var new_li = $("<li/>", {
+							var new_li = $("<div/>", {
 								id: "products_attributes_item_" + selected_pa_option_id,
 								alt: selected_pa_option_text,
-								class: "products_attributes_item " + li_class
+								class: "panel panel-default products_attributes_item " + li_class
 							});
-							$(new_li).append(\'<span class="option_name">\' + selected_pa_option_text + \' <a href="#" class="items_wrapper_unfolded">fold</a></span><div class="items_wrapper"></div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="'.addslashes($this->pi_getLL('admin_add_new_value')).' [+]" rel="\' + selected_pa_option_id + \'" /></div>\');
+							$(new_li).append(\'<div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#bodyproducts_attributes_item_\' + selected_pa_option_id + \'" aria-expanded="false" aria-controls="bodyproducts_attributes_item_\' + selected_pa_option_id + \'"><h3 class="panel-title"><i class="fa fa-bars"></i> \' + selected_pa_option_text + \'</h3></div><div class="collapse in" id="bodyproducts_attributes_item_\' + selected_pa_option_id + \'"><div class="panel-body"><div class="items_wrapper"></div><div class="add_new_attributes"><input type="button" class="btn btn-success add_new_attributes_values" value="'.addslashes($this->pi_getLL('admin_add_new_value')).' [+]" rel="\' + selected_pa_option_id + \'" /></div></div></div>\');
 							$(pa_main_divwrapper).addClass("odd_item_row");
 							// rewrite the button
 							$(this).parent().empty().html(delete_button_html);
 							// flush it to existing li
-							$(new_li).children("div.items_wrapper").append(pa_main_divwrapper);
+							$(new_li).children().children().children("div.items_wrapper").append(pa_main_divwrapper);
 							// flush new li to the newly created tr > ul
 							$("#products_attributes_items").append(new_li);
 							// activate sorting for li children
@@ -2980,7 +2980,6 @@ if ($this->post) {
 				$(document).on("click", "#manual_button", function(event) {
 					jQuery("#attributes_header").show();
 				});
-
 				$(document).on("click", "span.shop_name", function(e){
 					e.preventDefault();
 					var page_uid=$(this).attr("rel");
@@ -3004,9 +3003,9 @@ if ($this->post) {
 					}
 				});
 				jQuery(document).on("click", ".delete_product_attributes", function(){
-					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
-					var pa_main_liwrapper=$(pa_main_divwrapper).parent();
-					var product_attribute_id=$(pa_main_divwrapper).attr("rel");
+					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent().parent();
+					var pa_main_liwrapper=$(pa_main_divwrapper).parent().parent().parent();
+                    var product_attribute_id=$(pa_main_divwrapper).attr("rel");
 					if (product_attribute_id != "new") {
 						href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=delete_product_attributes&pid='.$product['products_id']).'";
 						jQuery.ajax({
@@ -3019,12 +3018,12 @@ if ($this->post) {
 						});
 					}
 					$(pa_main_divwrapper).remove();
-					if ($(pa_main_liwrapper).children().length === 0) {
+					if ($(pa_main_liwrapper).children().children().children().length === 1) {
 						$(pa_main_liwrapper).parent().remove();
 					}
 				});
 				jQuery(document).on("click", ".delete_tmp_product_attributes", function(){
-					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent();
+					var pa_main_divwrapper=$(this).parent().parent().parent().parent().parent().parent();
 					$(pa_main_divwrapper).remove();
 
 					$("tr#add_attributes_holder > td").html("&nbsp;");
@@ -3309,7 +3308,7 @@ if ($this->post) {
 					}
 					if (count($options_data)) {
 						$attributes_tab_block.='<thead><tr id="product_attributes_content_row">';
-						$attributes_tab_block.='<td colspan="5" id="products_attributes_item">';
+						$attributes_tab_block.='<td colspan="5" id="products_attributes_items">';
 						foreach ($options_data as $option_id=>$option_name) {
 							if (!isset($group_row_type) || $group_row_type=='even_group_row') {
 								$group_row_type='odd_group_row';
