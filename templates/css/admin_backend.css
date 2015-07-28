@@ -469,6 +469,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 #msAdmin_category_listing_ul.treeview,
 #msAdmin_category_listing_ul.treeview ul { padding:0; list-style:none; }
 
+.blockUI ul.multishop_block_message { margin-bottom:0; padding-left:0; list-style:none; }
+
 /* redactor overrule */
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
 
