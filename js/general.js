@@ -15,7 +15,7 @@ function isMobile() {
     }
 }
 function ifConfirm(textTitle, textBody, yesFn, noFn) {
-    $.confirm({
+    return $.confirm({
         title: textTitle,
         content: textBody,
         confirm: yesFn,

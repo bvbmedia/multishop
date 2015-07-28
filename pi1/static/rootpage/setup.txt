@@ -317,14 +317,14 @@ multishop_ajax_server {
 [globalVar = LIT:1 = {$plugin.multishop.includeJS}]
 	page {
 		includeJS {
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/js/jquery-confirm.js
+			jqueryConfirm.compress = 1
 			msGeneral = EXT:multishop/js/general.js
 			msGeneral.compress = 1
 			#jquerymigrate = EXT:multishop/js/jquery-migrate-1.2.1.js
 			#jquerymigrate.compress=1
 			jqueryvalidate = EXT:multishop/js/jquery.h5validate.js
 			jqueryvalidate.compress = 1
-			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/js/jquery-confirm.js
-			jqueryConfirm.compress = 1
 			#jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
 			#jqueryvalidatefunctions.compress=1
 			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
@@ -345,6 +345,8 @@ multishop_ajax_server {
 
 	multishop_admin_page {
 		includeJS {
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/js/jquery-confirm.js
+			jqueryConfirm.compress = 1
 			msGeneral = EXT:multishop/js/general.js
 			msGeneral.compress = 1
 			jqueryvalidate = EXT:multishop/js/jquery.h5validate.js
