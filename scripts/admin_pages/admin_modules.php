@@ -40,7 +40,7 @@ foreach ($categories as $cat) {
 	$innerContent.='<table width="100%" border="0" align="center" class="msadmin_border table table-striped table-bordered" id="admin_modules_listing">';
 	$innerContent.='<thead><tr><th colspan="'.$colspan.'" class="module_heading">'.$cat['gtitle'].' (ID: '.$cat['gid'].')</th></tr></thead>';
 	$innerContent.='<thead><tr>
-	<th>'.$this->pi_getLL('name').'</th>
+	<th>'.$this->pi_getLL('title').'</th>
 	<th>'.$this->pi_getLL('current_value').'</th>
 	</tr></thead>';
 	$str="SELECT * from tx_multishop_configuration where group_id='".addslashes($cat['group_id'])."' order by configuration_key";
@@ -62,7 +62,7 @@ foreach ($categories as $cat) {
 		$editLink=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[gid]='.$cat['gid'].'&module_id='.$row['id'].'&action=edit_module', 1);
 //		$row['description']='';
 		$innerContent.='<tr class="'.$tr_type.'">
-		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_title'].'</h3>'.$row['description']).'" class="msadminTooltip">'.$row['configuration_key'].'</a></strong></td>
+		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_key'].'</h3>'.$row['description']).'" class="msadminTooltip">'.$row['configuration_title'].'</a></strong></td>
 		<td><a href="'.$editLink.'">'.$this->ms['MODULES'][$row['configuration_key']].'</a></td>
 		</tr>';
 		//<td><a href="'.$editLink.'">'.$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']].'</a></td>
