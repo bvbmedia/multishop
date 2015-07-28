@@ -31,6 +31,7 @@ $headercol.='
 <th width="50" align="right">'.$this->pi_getLL('amount').'</th>
 <th width="200" align="right">'.$this->pi_getLL('date_last_sent').'</th>
 <th width="50">'.$this->pi_getLL('admin_paid').'</th>
+<th>'.$this->pi_getLL('action').'</th>
 ';
 $headercol.='
 </tr>
@@ -86,6 +87,18 @@ foreach ($invoices as $invoice) {
 		$tmp.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	$tmp.='</td>';
+	$tmp.='<td class="text-center" nowrap>';
+	$actionButtons=array();
+	$actionButtons['email']='<a href="#" data-dialog-title="Are you sure?" data-dialog-body="Are you sure?" class="msAdminNeedsConfirm btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.ucfirst($this->pi_getLL('','e-mail')).'</a>';
+	$actionButtons['credit']='<a href="#" data-dialog-title="Are you sure?" data-dialog-body="Are you sure?" class="msAdminNeedsConfirm btn btn-xs btn-default'.($invoice['reversal_invoice']?' disabled':'').'"><i class="fa fa fa-refresh"></i> '.$this->pi_getLL('','Credit').'</a>';
+	if (count($actionButtons)) {
+		$tmp.='<div class="btn-group">';
+		foreach ($actionButtons as $actionButton) {
+			$tmp.=$actionButton;
+		}
+		$tmp.='</div>';
+	}
+	$tmp.='</td>';
 	$tmp.='</tr>';
 }
 $tmp.='</tbody>';
@@ -105,6 +118,7 @@ $footercol.='
 <th width="50" align="right">'.mslib_fe::amount2Cents($totalAmount, 0).'</th>
 <th width="200" align="right">'.$this->pi_getLL('date_last_sent').'</th>
 <th width="50">'.$this->pi_getLL('admin_paid').'</th>
+<th>'.$this->pi_getLL('action').'</th>
 ';
 $footercol.='
 </tr>';
@@ -148,6 +162,16 @@ $tmp.='
 	</div>
 	<script>
 		jQuery(document).ready(function($) {
+			$(\'.msAdminNeedsConfirm\').click(function(e) {
+				e.preventDefault();
+				var linkTarget=$(this).attr("href");
+				ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
+					$(this).dialog("close");
+					$(this).hide();
+					msAdminBlockUi();
+					window.location.href=linkTarget;
+				});
+			});
 			$(\'#selected_invoices_action\').change(function() {
 				if ($(this).val()==\'mail_invoices\') {
 					$("#msadmin_invoices_mailto").show();
