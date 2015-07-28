@@ -2144,12 +2144,16 @@ if ($this->post) {
 				for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
 					$details_tab_content.='
 					<div class="form-group" id="msEditProductInputTabTitle_'.$i.'">
-						<label for="products_description_tab_title_'.$i.'">'.$this->pi_getLL('title').' (tab: '.$i.')</label>
-						<input type="text" class="text" name="products_description_tab_title_'.$i.'['.$language['uid'].']" id="products_description_tab_title_'.$i.'['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_title_'.$i.'']).'">
+						<label for="products_description_tab_title_'.$i.'" class="control-label col-md-2">'.$this->pi_getLL('title').' (tab: '.$i.')</label>
+						<div class="col-md-10">
+						<input type="text" class="form-control text" name="products_description_tab_title_'.$i.'['.$language['uid'].']" id="products_description_tab_title_'.$i.'['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_title_'.$i.'']).'">
+						</div>
 					</div>
 					<div class="form-group" id="msEditProductInputTabContent_'.$i.'">
-						<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
+						<label for="products_description_tab_content_'.$i.'" class="control-label col-md-2">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
+						<div class="col-md-10">
 						<textarea name="products_description_tab_content_'.$i.'['.$language['uid'].']" id="products_description_tab_content_'.$i.'['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
+						</div>
 					</div>';
 				}
 			}
@@ -3709,12 +3713,16 @@ if ($this->post) {
 												for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
 													$details_tab_content_multishops.='
 														<div class="form-group" id="msEditProductInputTabTitle_'.$i.'">
-															<label for="products_description_tab_title_'.$i.'">'.$this->pi_getLL('title').' (tab: '.$i.')</label>
-															<input type="text" class="text" name="customProductsDescription_products_description_tab_title_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_title_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_title_'.$i.'']).'">
+															<label for="products_description_tab_title_'.$i.'" class="control-label col-md-2">'.$this->pi_getLL('title').' (tab: '.$i.')</label>
+															<div class="col-md-10">
+															<input type="text" class="form-control text" name="customProductsDescription_products_description_tab_title_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_title_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" value="'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_title_'.$i.'']).'">
+															</div>
 														</div>
 														<div class="form-group" id="msEditProductInputTabContent_'.$i.'">
-															<label for="products_description_tab_content_'.$i.'">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
+															<label for="products_description_tab_content_'.$i.'" class="control-label col-md-2">'.$this->pi_getLL('description').' (tab: '.$i.')</label>
+															<div class="col-md-10">
 															<textarea name="customProductsDescription_products_description_tab_content_'.$i.'['.$pageinfo['uid'].']['.$tmp_category_id.']['.$language['uid'].']" id="customProductsDescription_products_description_tab_content_'.$i.'_'.$pageinfo['uid'].'_'.$tmp_category_id.'_'.$language['uid'].'" class="mceEditor" rows="4">'.htmlspecialchars($other_shops_product_info[$tmp_category_id][$language['uid']]['products_description_tab_content_'.$i]).'</textarea>
+															</div>
 														</div>';
 												}
 											}
@@ -3947,13 +3955,13 @@ if ($this->post) {
 						if (product_details_number_of_tabs>0) {
 							for (var i=1; i<=product_details_number_of_tabs; i++) {
 								details_tab_content+=\'<div class="form-group" id="msEditProductInputTabTitle_\' + i + \'">\';
-								details_tab_content+=\'<label for="products_description_tab_title_\' + i + \'">'.$this->pi_getLL('title').' tab: \'+i+\') \' + i + \'</label>\';
-								details_tab_content+=\'<input type="text" class="text" name="customProductsDescription_products_description_tab_title_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_title_\'+ i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
-								details_tab_content+=\'</div>\';
-								details_tab_content+=\'<div class="form-group" id="msEditProductInputTabContent_\'+ i + \'">\';
-								details_tab_content+=\'<label for="products_description_tab_content_\'+ i + \'">'.$this->pi_getLL('description').' tab: \'+i+\') \' + i + \'</label>\';
-								details_tab_content+=\'<textarea name="customProductsDescription_products_description_tab_content_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_content_\' + i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="mceEditor" rows="4"></textarea>\';
-								details_tab_content+=\'</div>\';
+								details_tab_content+=\'<label for="products_description_tab_title_\' + i + \'" class="control-label col-md-2">'.$this->pi_getLL('title').' tab: \'+i+\') \' + i + \'</label>\';
+								details_tab_content+=\'<div class="col-md-10"><input type="text" class="form-control text" name="customProductsDescription_products_description_tab_title_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_title_\'+ i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" value="">\';
+								details_tab_content+=\'</div></div>\';
+								details_tab_content+=\'<div class="form-group" id="msEditProductInputTabContent_\'+ i + \'" class="control-label col-md-2">\';
+								details_tab_content+=\'<label for="products_description_tab_content_\'+ i + \'" class="control-label col-md-2">'.$this->pi_getLL('description').' tab: \'+i+\') \' + i + \'</label>\';
+								details_tab_content+=\'<div class="col-md-10"><textarea name="customProductsDescription_products_description_tab_content_\' + i + \'[\' + page_uid + \'][\' + category_id + \'][\' + lang.uid + \']" id="customProductsDescription_products_description_tab_content_\' + i + \'_\' + page_uid + \'_\' + category_id + \'_\' + lang.uid + \'" class="mceEditor" rows="4"></textarea>\';
+								details_tab_content+=\'</div></div>\';
 							}
 						}
 						var language_label=\'\';
