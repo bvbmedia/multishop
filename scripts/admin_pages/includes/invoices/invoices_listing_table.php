@@ -89,8 +89,8 @@ foreach ($invoices as $invoice) {
 	$tmp.='</td>';
 	$tmp.='<td class="text-center" nowrap>';
 	$actionButtons=array();
-	$actionButtons['email']='<a href="#" data-dialog-title="Are you sure?" data-dialog-body="Are you sure?" class="msAdminNeedsConfirm btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.ucfirst($this->pi_getLL('','e-mail')).'</a>';
-	$actionButtons['credit']='<a href="#" data-dialog-title="Are you sure?" data-dialog-body="Are you sure?" class="msAdminNeedsConfirm btn btn-xs btn-default'.($invoice['reversal_invoice']?' disabled':'').'"><i class="fa fa fa-refresh"></i> '.$this->pi_getLL('','Credit').'</a>';
+	$actionButtons['email']='<a href="#" data-dialog-title="Are you sure?" data-dialog-body="Are you sure?" class="msBtnConfirm btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.ucfirst($this->pi_getLL('','e-mail')).'</a>';
+	$actionButtons['credit']='<a href="#" data-dialog-title="Are you sure?" data-dialog-body="Are you sure?" class="msBtnConfirm btn btn-xs btn-default'.($invoice['reversal_invoice']?' disabled':'').'"><i class="fa fa fa-refresh"></i> '.$this->pi_getLL('','Credit').'</a>';
 	if (count($actionButtons)) {
 		$tmp.='<div class="btn-group">';
 		foreach ($actionButtons as $actionButton) {
@@ -162,14 +162,6 @@ $tmp.='
 	</div>
 	<script>
 		jQuery(document).ready(function($) {
-			$(\'.msAdminNeedsConfirm\').click(function(e) {
-				e.preventDefault();
-				var linkTarget=$(this).attr("href");
-				ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
-					msAdminBlockUi();
-					window.location.href=linkTarget;
-				});
-			});
 			$(\'#selected_invoices_action\').change(function() {
 				if ($(this).val()==\'mail_invoices\') {
 					$("#msadmin_invoices_mailto").show();

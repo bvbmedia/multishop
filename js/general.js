@@ -45,6 +45,13 @@ function msAdminBlockUi(onBlock) {
     });
 }
 jQuery(document).ready(function ($) {
+    $('.msBtnConfirm').click(function(e) {
+        e.preventDefault();
+        var linkTarget=$(this).attr("href");
+        ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
+            window.location.href=linkTarget;
+        });
+    });
     $('.blockSubmitForm').submit(function(e) {
         msAdminBlockUi();
     });
