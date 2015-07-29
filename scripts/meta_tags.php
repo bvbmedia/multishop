@@ -276,7 +276,7 @@ if ($this->ADMIN_USER) {
 				// }
 				$.ajax({
 					url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel&tx_multishop_pi1[categories_id]='.$this->get['categories_id'].'&tx_multishop_pi1[products_id]='.$this->get['products_id']).'\',
-					data: \'tx_multishop_pi1[page_section]='.$this->get['tx_multishop_pi1']['page_section'].'\',
+					data: \'tx_multishop_pi1[type]='.$this->get['type'].'&tx_multishop_pi1[page_section]='.$this->get['tx_multishop_pi1']['page_section'].'\',
 					type: \'post\',
 					dataType: \'json\',
 					success: function (j){

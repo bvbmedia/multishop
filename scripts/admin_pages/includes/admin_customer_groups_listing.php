@@ -46,7 +46,7 @@ foreach ($groups as $group) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['VALUE_GROUP_ID']=$group['uid'];
-	$markerArray['VALUE_GROUP_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&customer_group_id='.$group['uid']).'&action=edit_customer_group';
+	$markerArray['VALUE_GROUP_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer_group&customer_group_id='.$group['uid']).'&action=edit_customer_group';
 	$markerArray['VALUE_GROUP_NAME']=$group['title'];
 	$markerArray['VALUE_GROUP_DISCOUNT']=$group['tx_multishop_discount'];
 	$markerArray['VALUE_GROUP_STATUS']=$status_html;

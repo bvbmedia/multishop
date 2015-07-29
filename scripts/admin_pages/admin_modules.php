@@ -80,7 +80,7 @@ foreach ($categories as $cat) {
 		if (strlen($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']])>$maxchars) {
 			$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']]=substr($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']], 0, $maxchars).'...';
 		}
-		$editLink=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[gid]='.$cat['gid'].'&module_id='.$row['id'].'&action=edit_module', 1);
+		$editLink=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_module&tx_multishop_pi1[gid]='.$cat['gid'].'&module_id='.$row['id'].'&action=edit_module', 1);
 //		$row['description']='';
 		$innerContent.='<tr class="'.$tr_type.'">
 		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_title'].'</h3><p>'.$row['description']).'</p>Key: '.$row['configuration_key'].'" class="msadminTooltip">'.$row['configuration_title'].'</a></strong></td>

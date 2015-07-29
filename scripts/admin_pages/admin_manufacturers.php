@@ -224,7 +224,7 @@ if (!count($pageset['dataset'])) {
 			$markerArray=array();
 			$markerArray['ROW_TYPE']=$tr_type;
 			$markerArray['MANUFACTURER_ID']=$row['manufacturers_id'];
-			$markerArray['MANUFACTURER_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=edit_manufacturer';
+			$markerArray['MANUFACTURER_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_manufacturer&manufacturers_id='.$row['manufacturers_id']).'&action=edit_manufacturer';
 			$markerArray['MANUFACTURER_NAME']=$row['manufacturers_name'];
 			$markerArray['MANUFACTURER_DATE_ADDED']=strftime("%x %X", strtotime($row['date_added']));
 			$markerArray['MANUFACTURER_STATUS']=$status_html;
@@ -294,6 +294,6 @@ $subpartArray['###NORESULTS###']=$noresults;
 $subpartArray['###ADMIN_LABEL_TABS_MANUFACTURERS###']=$this->pi_getLL('admin_label_tabs_manufacturers');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content);
-$content.='<div class="add_manufacturer"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=add_manufacturer', 1).'" class="btn btn-success admin_menu_add">'.$this->pi_getLL('add_manufacturer').'</a></div>';
+$content.='<div class="add_manufacturer"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=add_manufacturer&action=add_manufacturer', 1).'" class="btn btn-success admin_menu_add">'.$this->pi_getLL('add_manufacturer').'</a></div>';
 $content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
 ?>

@@ -284,18 +284,18 @@ if ($pageset['total_rows']>0) {
 		$print_order_list_button=false;
 		switch ($page_type) {
 			case 'proposals':
-				$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
+				$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=mail_order&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
 				$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
 				$print_order_list_button=true;
 				break;
 			case 'orders':
 				if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 					if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-						$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
+						$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
 						$print_order_list_button=true;
 					}
 					if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
-						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
+						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 						$print_order_list_button=true;
 					}
 				}
@@ -330,7 +330,7 @@ if ($pageset['total_rows']>0) {
 			}
 		}
 		$data[]=array(
-			'<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
+			'<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
 			mslib_fe::amount2Cents($order['grand_total'], 0),
 			strftime("%x %X", $order['crdate']),
 			$paid_status,

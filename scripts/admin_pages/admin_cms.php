@@ -274,9 +274,9 @@ if (!count($pageset['dataset'])) {
             	<input type="checkbox" name="downloadCMS[]" class="download_cms_cb" value="'.$row['id'].'"/>
             </td>';
 		}
-		$markerArray['CMS_ID']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.$row['id'].'</a>';
-		$markerArray['CMS_TITLE']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['name']).'</a>';
-		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['type']).'</a>';
+		$markerArray['CMS_ID']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.$row['id'].'</a>';
+		$markerArray['CMS_TITLE']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['name']).'</a>';
+		$markerArray['CMS_TYPE']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.htmlspecialchars($row['type']).'</a>';
 		$markerArray['CMS_DATE_CREATED']=strftime("%x %X", $row['crdate']);
 		$markerArray['CMS_STATUS']=$status_html;
 		$markerArray['CMS_REMOVE_BUTTON']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&cms_id='.$row['id'].'&delete=1').'" onclick="return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')" class="text-danger admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-lg"></i></a>';
@@ -390,7 +390,7 @@ $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=mslib_fe::shadowBox($content);
-$content.='<hr><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
+$content.='<hr><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
 $content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
 
 ?>

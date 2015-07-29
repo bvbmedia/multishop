@@ -43,14 +43,14 @@ foreach ($customers as $customer) {
 	} else {
 		$customer['crdate']='';
 	}
-	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer', 1);
+	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer', 1);
 	$latest_order='';
 	$str="select orders_id from tx_multishop_orders where customer_id='".$customer['uid']."' and deleted=0 order by orders_id desc limit 2";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	if ($rows>0) {
 		$order=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		$latest_order.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'">'.$order['orders_id'].'</a>'."\n";
+		$latest_order.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order', 1).'">'.$order['orders_id'].'</a>'."\n";
 		if ($rows>1) {
 			$latest_order.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&type_search=customer_id&skeyword='.$customer['uid']).'">('.htmlspecialchars($this->pi_getLL('show_all')).')</a>';
 		}

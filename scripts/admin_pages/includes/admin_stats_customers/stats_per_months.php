@@ -115,7 +115,7 @@ foreach ($dates as $key=>$value) {
 			} else {
 				$name=$customer['billing_name'];
 			}
-			$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['customer_id'].'&action=edit_customer', 1);
+			$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$customer['customer_id'].'&action=edit_customer', 1);
 			$total_amount+=$customer['total'];
 			$content.='
 			<tr class="'.$tr_type.'">

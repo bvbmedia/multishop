@@ -629,7 +629,7 @@ $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
 $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
-$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
+$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
 // customer to shipping/payment method mapping
 $shipping_payment_method='';
 if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
@@ -926,9 +926,9 @@ switch ($_REQUEST['action']) {
 					$tr_type='odd';
 				}
 				if ($order['is_proposal']>0) {
-					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
+					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
 				} else {
-					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order');
 				}
 				if (!$order['paid']) {
 					$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';

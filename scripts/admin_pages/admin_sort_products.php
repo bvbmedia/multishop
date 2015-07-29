@@ -95,7 +95,7 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
         $tmp_product.='<strong><a href="'.$link.'" target="_blank">'.htmlspecialchars($row_p['products_name']).'</a> (ID: '.$row_p['products_id'].')</strong>';
         //
         if ($this->ROOTADMIN_USER || ($this->ADMIN_USER && $this->CATALOGADMIN_USER)) {
-            $tmp_product.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove btn btn-danger btn-sm" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
+            $tmp_product.='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_product&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit btn btn-primary btn-sm"><i class="fa fa-pencil"></i></a> <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=delete_product&cid='.$categories_id.'&pid='.$row_p['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove btn btn-danger btn-sm" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
         }
         $tmp_product.='<div class="button_wrapper">
            <button type="button" class="btnTop btn btn-default btn-sm" rel="#productlisting_'.$row_p['products_id'].'"><i class="fa fa-arrow-up"></i> Top</button>
