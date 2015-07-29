@@ -711,6 +711,12 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+    case 'getProductsList':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/ajax_pages/get_products_list.php');
+        }
+        exit();
+        break;
 	case 'retrieveAdminNotificationMessage':
 		if ($this->ADMIN_USER) {
 			$startTime=(time()-(60));
