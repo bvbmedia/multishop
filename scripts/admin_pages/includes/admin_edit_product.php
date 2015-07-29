@@ -114,34 +114,16 @@ function updateCoords(c) {
 	$(\'#jCropH\').val(c.h);
 }
 function cropEditorDialog(textTitle, textBody) {
-    maxwidth = typeof maxwidth !== \'undefined\' ? maxwidth : 1100;
-    var dialog = $(\'<div/>\', {
-        id: \'dialog\',
-        title: textTitle
-    });
-    dialog.append(textBody);
-    dialog.dialog({
-        width: 670,
-        modal: true,
-        body: "",
-        resizable: false,
-        open: function () {
-            // right button (OK button) must be the default button when user presses enter key
-            $(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').focus();
+    $.confirm({
+        title: textTitle,
+        content: textBody,
+        columnClass: "col-md-12",
+        closeIcon: true,
+        confirmButton:"'.$this->pi_getLL('close').'",
+        confirm: function(){
         },
-        close: function() {
-        	$(this).dialog("close");
-			$(this).remove();
-        },
-        buttons: {
-            "ok": {
-                text: "Close",
-                class: \'msOkButton msBackendButton backState arrowRight arrowPosLeft\',
-                click: function () {
-                    $(this).dialog("close");
-                    $(this).remove();
-                }
-            }
+        cancelButton: "'.$this->pi_getLL('cancel').'",
+        cancel: function(){
         }
     });
 }
@@ -355,7 +337,6 @@ jQuery(document).ready(function($) {
 		var tmp=$(this).attr("rel").split("::");
 		var current_obj=$(this);
 		var cropall=0;
-		console.log($("#onecrop_for_all").prop("checked"));
 		if ($("#onecrop_for_all").prop("checked")) {
 			cropall=1;
 		}
