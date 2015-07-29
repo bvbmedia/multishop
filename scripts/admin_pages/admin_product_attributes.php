@@ -16,7 +16,7 @@ $selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
 // new options
 $options_group='';
 if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-    $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="add_new_attributes_options"');
+    $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="form-control row add_new_attributes_options"');
     if (!empty($options_group)) {
         $options_group='<div class="form-group"><label class="col-md-2 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$options_group.'</div></div>';
     } else {
@@ -157,7 +157,7 @@ if ($rows) {
         $content.='<div class="panel-body">';
         $options_group='';
         if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-            $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id']);
+            $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'class="form-control row');
             if (!empty($options_group)) {
                 $options_group='<div class="form-group"><label class="col-md-2 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$options_group.'</div></div>';
             } else {
@@ -417,21 +417,29 @@ if ($rows) {
 						var ul_option_listings=$("#attribute_listings");
 						var new_option_html=\'\';
 						if (s.status=="OK") {
-							new_option_html+=\'<li id="options_\' + s.option_id + \'">\';
-							new_option_html+=\'<h2>\';
-							new_option_html+=\'<span class="option_id">'.addslashes($this->pi_getLL('admin_label_option_name')).': \' + s.option_name + \' (ID: \' + s.option_id + \')</span>\';
+							new_option_html+=\'<div class="panel panel-default" id="options_\' + s.option_id + \'">\';
+							new_option_html+=\'<div class="panel-heading">\';
+							new_option_html+=\'<h3>'.addslashes($this->pi_getLL('admin_label_option_name')).': \' + s.option_name + \' (ID: \' + s.option_id + \') \';
 							new_option_html+=\'<span class="option_edit">\';
 							new_option_html+=\'&nbsp;<a href="#" class="edit_options btn btn-primary btn-xs" rel="\' + s.option_id + \'"><i class="fa fa-pencil"></i></a>\';
 							new_option_html+=\'&nbsp;<a href="#" class="delete_options btn btn-danger btn-xs" rel="\' + s.option_id + \'"><i class="fa fa-remove"></i></a>&nbsp;\';
 							new_option_html+=\'</span>\';
-							new_option_html+=\'</h2>\';
+							new_option_html+=\'<h3>\';
+							new_option_html+=\'</div>\';
+
+                            new_option_html+=\'<div class="panel-body">\';
+
 							// settings related to options
 							new_option_html+=\'<div class="option_settings">\';
-							new_option_html+=s.options_groups
+
+
 							new_option_html+=\'<span class="listing_type">\';
 							new_option_html+=\''.addslashes($this->pi_getLL('admin_label_listing_type')).': \';
 							new_option_html+=s.listtype;
 							new_option_html+=\'</span>\';
+
+                            new_option_html+=s.options_groups
+
 							new_option_html+=\'<span class="required">\';
 							if (s.required=="1") {
 								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.$this->pi_getLL('required').'\';
@@ -454,16 +462,21 @@ if ($rows) {
 							}
 							new_option_html+=\'</span>\';
 							new_option_html+=\'</div>\';
+
 							new_option_html+=\'<div class="option_values">\';
+							new_option_html+=\'<a href="#" class="btn btn-success add_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-edit"></i> '.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;\';
 							new_option_html+=\'<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'"><i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('show_attributes_values', 'SHOW VALUES')).'</a>&nbsp;\';
 							new_option_html+=\'<div class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
 							new_option_html+=\'<div id="last_line_\' + s.option_id + \'">\';
 							new_option_html+=\'<a href="#" class="btn btn-success add_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-edit"></i> '.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;\';
-							new_option_html+=\'<a href="#" class="btn btn-success hide_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_label_hide_values').'</a></li>\';
+							new_option_html+=\'<a href="#" class="btn btn-success hide_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_label_hide_values').'</a>\';
 							new_option_html+=\'</div>\';
 							new_option_html+=\'<input type="hidden" name="values_fetched_\' + s.option_id + \'" id="values_fetched_\' + s.option_id + \'" value="0" />\';
 							new_option_html+=\'</div>\';
 							new_option_html+=\'</div>\';
+
+							new_option_html+=\'</div>\'; // .panel-body
+							new_option_html+=\'</div>\'; // .panel .panel-default
 							$(ul_option_listings).append(new_option_html);
 						} else {
 							msDialog("ERROR", s.reason);
