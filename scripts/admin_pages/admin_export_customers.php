@@ -231,7 +231,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>';
+				$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'"><i class="fa fa-trash-o"></i></button></div></div>';
 				// custom field
 				if ($field=='custom_field') {
 					$content.='<div class="form-group"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
@@ -301,7 +301,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 				});
 			});
 			$(document).on("click", ".delete_field", function() {
-				jQuery(this).parent().remove();
+				jQuery(this).parent().parent().remove();
 			});
 			$(\'.msAdminCustomersExportSelectField\').select2({
 					width:\'650px\'
@@ -395,8 +395,6 @@ if ($this->ms['show_main']) {
 			';
 		}
 		$content.='</table>';
-	} else {
-		$content.='<div class="alert alert-warning"><h3>'.htmlspecialchars($this->pi_getLL('currently_there_are_no_customers_export_created')).'</h3></div>';
 	}
 	$content.='<div class="panel panel-default">
 	<div class="panel-heading"><h3>'.$this->pi_getLL('import_export_record').'</h3></div>
