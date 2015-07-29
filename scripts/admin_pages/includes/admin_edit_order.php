@@ -2305,7 +2305,7 @@ if (is_numeric($this->get['orders_id'])) {
 			//die();
 			//		$tmpcontent.='<tr><td colspan="'.$colspan.'"><hr class="hr"></td></tr>';
 			$orders_tax_data=unserialize($orders['orders_tax_data']);
-			$tmpcontent.='<tr><td align="right" colspan="'.$colspan.'" class="">';
+			$tmpcontent.='<tfoot><tr><td colspan="'.$colspan.'" class="order_total_data text-right">';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				$payment_method=mslib_fe::getPaymentMethod($orders['payment_method'], 'p.code');
 				$shipping_method=mslib_fe::getShippingMethod($orders['shipping_method'], 's.code');
@@ -2341,18 +2341,14 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static">
-                    <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total'], 0).'</span>
-                    </p>
+                    <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total'], 0).'</p>
                     </div>
                 </div>';
 				$content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('included_vat_amount').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static">
-                    <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span>
-                    </p>
+                    <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
                     </div>
                 </div>';
 			} else {
@@ -2360,18 +2356,14 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static">
-                    <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat'], 0).'</span>
-                    </p>
+                    <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['sub_total_excluding_vat'], 0).'</p>
                     </div>
                 </div>';
 				$content_subtotal_tax='
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('vat').'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static">
-                    <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span>
-                    </p>
+                    <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
                     </div>
                 </div>';
 			}
@@ -2379,14 +2371,14 @@ if (is_numeric($this->get['orders_id'])) {
             <div class="form-group" id="shipping_cost_input_wrapper" style="display:none">
                 <label class="control-label col-md-10">'.$this->pi_getLL('shipping_costs').'</label>
                 <div class="col-md-2">
-                <span class="order_total_value">'.$shipping_costs.'</span>
+                <p class="form-control-static order_total_value">'.$shipping_costs.'</p>
                 </div>
             </div>';
 			$content_payment_costs='
             <div class="form-group" id="payment_cost_input_wrapper" style="display:none">
                 <label class="control-label col-md-10">'.$this->pi_getLL('payment_costs').'</label>
                 <div class="col-md-2">
-                <span class="order_total_value">'.$payment_costs.'</span>
+                <p class="form-control-static order_total_value">'.$payment_costs.'</p>
                 </div>
             </div>';
 			$discount_content='';
@@ -2406,9 +2398,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('discount').$coupon_code.'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static">
-                    <span class="order_total_value">'.$discount_content.'</span>
-                    </p>
+                    <p class="form-control-static order_total_value">'.$discount_content.'</p>
                     </div>
                 </div>';
 			}
@@ -2416,9 +2406,7 @@ if (is_numeric($this->get['orders_id'])) {
             <div class="form-group">
                 <label class="control-label col-md-10">'.$this->pi_getLL('total').'</label>
                 <div class="col-md-2">
-                <p class="form-control-static">
-                <span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</span>
-                </p>
+                <p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</p>
                 </div>
             </div>';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -2443,7 +2431,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			}
 			$tmpcontent.='</div>';
-			$tmpcontent.='</td></tr></table>';
+			$tmpcontent.='</td></tr></tfoot></table>';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				$tmpcontent.='<script type="text/javascript">';
 				$tmpcontent.='

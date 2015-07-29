@@ -11,11 +11,11 @@ if (is_numeric($this->get['orders_id'])) {
 	$order=mslib_fe::getOrder($this->get['orders_id']);
 	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
-		$tmpcontent.='
-		<div class="float_right" id="msadmin_tools_nav">
-			<ul>
+		$tmpcontent.='<div class="panel panel-default">
+			<div class="panel-body">
+			<ul id="msadmin_tools_nav" class="pagination">
 				<li>
-					<a href="#" class="multishop_print_icon"><span>Print</span></a>
+					<a href="#" class="multishop_print_icon"><i class="fa fa-print"></i> Print</a>
 					<script>
 					jQuery(document).ready(function($) {
 						$("#barkode_image").hide();
@@ -41,17 +41,16 @@ if (is_numeric($this->get['orders_id'])) {
 				</li>';
 		if ($this->get['print']=='invoice') {
 			$tmpcontent.='<li>
-					<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank" class="multishop_pdf_icon"><span>PDF</span></a>
+					<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'" target="_blank" class="multishop_pdf_icon"><i class="fa fa-file-pdf-o"></i> PDF</a>
 				</li>';
 		}
 		if ($this->get['print']=='packing') {
 			$tmpcontent.='<li>
-					<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$this->get['orders_id']).'" target="_blank" class="multishop_pdf_icon"><span>PDF</span></a>
+					<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$this->get['orders_id']).'" target="_blank" class="multishop_pdf_icon"><i class="fa fa-file-pdf-o"></i> PDF</a>
 				</li>';
 		}
 		$tmpcontent.='
 			</ul>
-		</div>
 		<img id="barkode_image" src="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=generateBarkode&tx_multishop_pi1[orders_id]='.$order['orders_id'].'&tx_multishop_pi1[string]='.$order['orders_id']).'" alt="'.$order['orders_id'].'" title="'.$order['orders_id'].'">
 		';
 		//		<div class="barkode">*'.$order['orders_id'].'*</div>
@@ -88,9 +87,11 @@ if (is_numeric($this->get['orders_id'])) {
 				<div style="display: block;" id="Order_Details" class="tab_content"><h1>'.$invheader.'</h1>';
 		}
 		$tmpcontent.='
-		<fieldset class="tabs-fieldset">
-		<legend>'.$this->pi_getLL('address_details').'</legend>
-		<table width="100%">
+		<div class="panel panel-default tabs-fieldset">
+		<div class="panel-heading"><h3>'.$this->pi_getLL('address_details').'</h3></div>
+		<div class="panel-body">
+		<table class="table no-mb">
+		<thead>
 			<tr>
 				<td width="50%" valign="top">
 					<table>
@@ -129,8 +130,9 @@ if (is_numeric($this->get['orders_id'])) {
 					</table>
 				</td>
 			</tr>
+		</thead>
 		</table>
-		<table>
+		<table class="table table-striped no-mb">
 		'.$invnumber.'
 		<tr>
 			<td width="" align="right">'.$this->pi_getLL('order_number').':</td>
@@ -145,33 +147,34 @@ if (is_numeric($this->get['orders_id'])) {
 			<td>'.$order['payment_method_label'].'</td>
 		</tr>
 		</table>
-		</fieldset>
-		<fieldset class="tabs-fieldset">
-		<legend>'.$this->pi_getLL('product_details').'</legend>';
+		</div>
+		</div>
+		<div class="panel panel-default tabs-fieldset">
+		<div class="panel-heading"><h3>'.$this->pi_getLL('product_details').'</h3></div><div class="panel-body">';
 		//print_r($order); die();
 		$tr_type='even';
-		$tmpcontent.='<table class="msadmin_border" width="100%" border="1" cellspacing="0" cellpadding="2">';
+		$tmpcontent.='<table class="table table-striped table-bordered msadmin_border no-mb">';
 		if ($this->get['print']=='invoice') {
-			$tmpcontent.='<tr><th class="cell_qty align_right">'.ucfirst($this->pi_getLL('qty')).'</th>
-						  <th class="cell_products_id align_left">'.$this->pi_getLL('products_id').'</th>
-						  <th class="cell_products_model align_left">'.$this->pi_getLL('products_model').'</th>
-						  <th class="cell_products_name align_left">'.$this->pi_getLL('products_name').'</th>';
+			$tmpcontent.='<thead><tr><th class="cellQty">'.ucfirst($this->pi_getLL('qty')).'</th>
+						  <th class="cellID">'.$this->pi_getLL('products_id').'</th>
+						  <th class="cellModel">'.$this->pi_getLL('products_model').'</th>
+						  <th class="cellName">'.$this->pi_getLL('products_name').'</th>';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$tmpcontent.='<th class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</th>
-							  <th class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</th>
-						  	  <th class="cell_products_final_price align_right">'.$this->pi_getLL('final_price_inc_vat').'</th>';
+				$tmpcontent.='<th class="cellVat">'.$this->pi_getLL('vat').'</th>
+							  <th class="cellPrice">'.$this->pi_getLL('normal_price').'</th>
+						  	  <th class="cellSpecialPrice">'.$this->pi_getLL('final_price_inc_vat').'</th>';
 			} else {
-				$tmpcontent.='<th class="cell_products_normal_price align_right">'.$this->pi_getLL('normal_price').'</th>
-							  <th class="cell_products_vat align_right">'.$this->pi_getLL('vat').'</th>
-						  	  <th class="cell_products_final_price align_right">'.$this->pi_getLL('final_price_ex_vat').'</th>';
+				$tmpcontent.='<th class="cellPrice">'.$this->pi_getLL('normal_price').'</th>
+							  <th class="cellVat">'.$this->pi_getLL('vat').'</th>
+						  	  <th class="cellSpecialPrice">'.$this->pi_getLL('final_price_ex_vat').'</th>';
 			}
-			$tmpcontent.='</tr>';
+			$tmpcontent.='</tr></thead>';
 		} else {
-			$tmpcontent.='<tr><th class="cell_qty align_right">'.$this->pi_getLL('qty').'</th>
-						  <th class="cell_products_id align_left">'.$this->pi_getLL('products_id').'</th>
-						  <th class="cell_products_model align_left">'.$this->pi_getLL('products_model').'</th>
-						  <th class="cell_products_name align_left">'.$this->pi_getLL('products_name').'</th>
-						  </tr>';
+			$tmpcontent.='<thead><tr><th class="cellQty">'.$this->pi_getLL('qty').'</th>
+						  <th class="cellID">'.$this->pi_getLL('products_id').'</th>
+						  <th class="cellModel">'.$this->pi_getLL('products_model').'</th>
+						  <th class="cellName">'.$this->pi_getLL('products_name').'</th>
+						  </tr></thead>';
 		}
 		$total_tax=0;
 		foreach ($order['products'] as $product) {
@@ -181,16 +184,16 @@ if (is_numeric($this->get['orders_id'])) {
 				$tr_type='even';
 			}
 			$tmpcontent.='<tr class="'.$tr_type.'">';
-			$tmpcontent.='<td align="right" class="cell_products_qty">'.number_format($product['qty']).'</td>';
-			$tmpcontent.='<td align="right" class="cell_products_id">'.$product['products_id'].'</td>';
-			$tmpcontent.='<td align="left" class="cell_products_model">'.$product['products_model'].'</td>';
+			$tmpcontent.='<td class="cellQty">'.number_format($product['qty']).'</td>';
+			$tmpcontent.='<td class="cellID">'.$product['products_id'].'</td>';
+			$tmpcontent.='<td class="cellModel">'.$product['products_model'].'</td>';
 			$product_tmp=mslib_fe::getProduct($product['products_id']);
 			if ($this->ms['MODULES']['DISPLAY_PRODUCT_IMAGE_IN_ADMIN_PACKING_SLIP'] and $product_tmp['products_image']) {
-				$tmpcontent.='<td align="left" class="cell_products_name"><strong>';
+				$tmpcontent.='<td class="cellName"><strong>';
 				$tmpcontent.='<img src="'.mslib_befe::getImagePath($product_tmp['products_image'], 'products', '50').'"> ';
 				$tmpcontent.=$product['products_name'];
 			} else {
-				$tmpcontent.='<td align="left" class="cell_products_name"><strong>'.$product['products_name'];
+				$tmpcontent.='<td class="cellName"><strong>'.$product['products_name'];
 			}
 			if ($product['products_article_number']) {
 				$tmpcontent.=' ('.$product['products_article_number'].')';
@@ -208,13 +211,13 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='</td>';
 			if ($this->get['print']=='invoice') {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$tmpcontent.='<td align="right" class="cell_products_vat">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-					$tmpcontent.='<td align="right" class="cell_products_normal_price">'.mslib_fe::amount2Cents($product['final_price']+$product['products_tax_data']['total_tax'], 0).'</td>';
-					$tmpcontent.='<td align="right" class="cell_products_final_price">'.mslib_fe::amount2Cents(($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0).'</td>';
+					$tmpcontent.='<td class="cellVat">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
+					$tmpcontent.='<td class="cellPrice">'.mslib_fe::amount2Cents($product['final_price']+$product['products_tax_data']['total_tax'], 0).'</td>';
+					$tmpcontent.='<td class="cellSpecialPrice">'.mslib_fe::amount2Cents(($product['qty']*($product['final_price']+$product['products_tax_data']['total_tax'])), 0).'</td>';
 				} else {
-					$tmpcontent.='<td align="right" class="cell_products_normal_price">'.mslib_fe::amount2Cents($product['final_price'], 0).'</td>';
-					$tmpcontent.='<td align="right" class="cell_products_vat">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
-					$tmpcontent.='<td align="right" class="cell_products_final_price">'.mslib_fe::amount2Cents(($product['qty']*$product['final_price']), 0).'</td>';
+					$tmpcontent.='<td class="cellPrice">'.mslib_fe::amount2Cents($product['final_price'], 0).'</td>';
+					$tmpcontent.='<td class="cellVat">'.str_replace('.00', '', number_format($product['products_tax'], 2)).'%</td>';
+					$tmpcontent.='<td class="cellSpecialPrice">'.mslib_fe::amount2Cents(($product['qty']*$product['final_price']), 0).'</td>';
 				}
 			}
 			$tmpcontent.='</tr>';
@@ -239,13 +242,13 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 							}
 							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
+								$tmpcontent.='<td class="cellVat">'.$cell_products_vat.'</td>';
+								$tmpcontent.='<td class="cellPrice">'.$cell_products_normal_price.'</td>';
+								$tmpcontent.='<td class="cellSpecialPrice">'.$cell_products_final_price.'</td>';
 							} else {
-								$tmpcontent.='<td align="right" class="cell_products_normal_price">'.$cell_products_normal_price.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_vat">'.$cell_products_vat.'</td>';
-								$tmpcontent.='<td align="right" class="cell_products_final_price">'.$cell_products_final_price.'</td>';
+								$tmpcontent.='<td class="cellPrice">'.$cell_products_normal_price.'</td>';
+								$tmpcontent.='<td class="cellVat">'.$cell_products_vat.'</td>';
+								$tmpcontent.='<td class="cellSpecialPrice">'.$cell_products_final_price.'</td>';
 							}
 						}
 					}
@@ -260,53 +263,69 @@ if (is_numeric($this->get['orders_id'])) {
 		}
 		$colspan=7;
 		if ($this->get['print']=='invoice') {
-			$tmpcontent.='<tr><td align="right" colspan="'.$colspan.'">';
-			$tmpcontent.='<div class="order_total">';
+			$tmpcontent.='<tfoot><tr><td class="order_total_data text-right" colspan="'.$colspan.'">';
+			$tmpcontent.='<div class="order_total form-horizontal">';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-				$tmpcontent.='<div class="account-field">
-						<label>'.$this->pi_getLL('sub_total').'</label>
-						<span class="order_total_value">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0).'</span>
+				$tmpcontent.='<div class="form-group">
+						<label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
+						<div class="col-md-2">
+						<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['orders_tax_data']['sub_total'], 0).'</p>
+						</div>
 					</div>';
-				$content_vat='<div class="account-field">
-						<label>'.$this->pi_getLL('included_vat_amount').'</label>
-						<span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span>
+				$content_vat='<div class="form-group">
+						<label class="control-label col-md-10">'.$this->pi_getLL('included_vat_amount').'</label>
+						<div class="col-md-2">
+						<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+						</div>
 					</div>';
 				if ($order['shipping_method_costs']>0) {
 					$content_shipping_costs='
-						<div class="account-field">
-							<label>'.$this->pi_getLL('shipping_costs').'</label>
-							<span class="order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0).'</span>
+						<div class="form-group">
+							<label class="control-label col-md-10">'.$this->pi_getLL('shipping_costs').'</label>
+							<div class="col-md-2">
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'], 0).'</p>
+							</div>
 						</div>';
 				}
 				if ($order['payment_method_costs']>0) {
 					$content_payment_costs='
-						<div class="account-field">
-							<label>'.$this->pi_getLL('payment_costs').'</label>
-							<span class="order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0).'</span>
+						<div class="form-group">
+							<label class="control-label col-md-10">'.$this->pi_getLL('payment_costs').'</label>
+							<div class="col-md-2">
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs']+$order['orders_tax_data']['payment_tax'], 0).'</p>
+							</div>
 						</div>
 				';
 				}
 			} else {
-				$tmpcontent.='<div class="account-field">
-						<label>'.$this->pi_getLL('sub_total').'</label>
-						<span class="order_total_value">'.mslib_fe::amount2Cents($order['subtotal_amount'], 0).'</span>
+				$tmpcontent.='<div class="form-group">
+						<label class="control-label col-md-10">'.$this->pi_getLL('sub_total').'</label>
+						<div class="col-md-2">
+						<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['subtotal_amount'], 0).'</p>
+						</div>
 					</div>';
-				$content_vat='<div class="account-field">
-						<label>'.$this->pi_getLL('vat').'</label>
-						<span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</span>
+				$content_vat='<div class="form-group">
+						<label class="control-label col-md-10">'.$this->pi_getLL('vat').'</label>
+						<div class="col-md-2">
+						<span class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['total_orders_tax'], 0).'</p>
+						</span>
 					</div>';
 				if ($order['shipping_method_costs']>0) {
 					$content_shipping_costs='
-						<div class="account-field">
-							<label>'.$this->pi_getLL('shipping_costs').'</label>
-							<span class="order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs'], 0).'</span>
+						<div class="form-group">
+							<label class="control-label col-md-10">'.$this->pi_getLL('shipping_costs').'</label>
+							<div class="col-md-2">
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['shipping_method_costs'], 0).'</p>
+							</div>
 						</div>';
 				}
 				if ($order['payment_method_costs']>0) {
 					$content_payment_costs='
-						<div class="account-field">
-							<label>'.$this->pi_getLL('payment_costs').'</label>
-							<span class="order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs'], 0).'</span>
+						<div class="form-group">
+							<label class="control-label col-md-10">'.$this->pi_getLL('payment_costs').'</label>
+							<div class="col-md-2">
+							<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['payment_method_costs'], 0).'</p>
+							</div>
 						</div>
 				';
 				}
@@ -327,33 +346,37 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			if ($order['discount']>0) {
 				$tmpcontent.='
-				<div class="account-field">
-					<label>'.$this->pi_getLL('discount').'</label>
-					<span class="order_total_value">'.mslib_fe::amount2Cents($order['discount'], 0).'</span>
+				<div class="form-group">
+					<label class="control-label col-md-10">'.$this->pi_getLL('discount').'</label>
+					<div class="col-md-2">
+					<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($order['discount'], 0).'</p>
+					</div>
 				</div>
 				';
 			}
 			$tmpcontent.='
-			<div class="account-field">
-				<label>'.$this->pi_getLL('total').'</label>
-				<span class="order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</span>
+			<div class="form-group">
+				<label class="control-label col-md-10">'.$this->pi_getLL('total').'</label>
+				<div class="col-md-2">
+				<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders_tax_data['grand_total'], 0).'</p>
+				</div>
 			</div>';
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$tmpcontent.=$content_vat;
 			}
 			$tmpcontent.='</div>';
-			$tmpcontent.='</td></tr></table>';
+			$tmpcontent.='</td></tr></tfoot></table>';
 		}
 		$tmpcontent.='</table>';
 		$tmpcontent.='
-		</fieldset>
+		</div></div>
 		'.($order['customer_comments'] ? '
 		<fieldset>
 					<legend>'.$this->pi_getLL('comments').'</legend>
 					'.$order['customer_comments'].'
 				</fieldset>
 		' : '').'
-		</div></form>';
+		</div></form></div></div>';
 	}
 	$content.=$tmpcontent;
 }
