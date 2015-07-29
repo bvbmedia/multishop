@@ -324,6 +324,9 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 .input-group-addon:last-child { width:88px; text-align:left; }
 .input-group-addon.width-auto:last-child { width:auto; }
 
+#msEditProductInputUnit .input-group { width:100%; }
+#msEditProductInputUnit .input-group-addon:last-child { width:50px; }
+
 ul#tx_multishop_countries_checkboxes.list-inline { margin-bottom:0; }
 ul#tx_multishop_countries_checkboxes.list-inline li { width:20%; vertical-align:top; }
 ul#tx_multishop_countries_checkboxes.list-inline li .checkbox { margin-top:0; }
