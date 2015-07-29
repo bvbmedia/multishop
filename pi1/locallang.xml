@@ -1037,7 +1037,7 @@
             <label index="show_paid_invoices_only">Show paid invoices only</label>
             <label index="show_paid_orders_only">Show paid orders only</label>
             <label index="show_unpaid_orders_only">Show unpaid orders only</label>
-            <label index="skip">skip</label>
+            <label index="skip">Skip</label>
             <label index="sort_by">Sort by</label>
             <label index="sort_direction">Sort direction</label>
             <label index="sort_direction_asc">Ascending</label>
@@ -2259,7 +2259,7 @@
             <label index="show_paid_invoices_only">Toon enkel betaalde facturen</label>
             <label index="show_paid_orders_only">Toon alleen betaalde bestellingen</label>
             <label index="show_unpaid_orders_only">Toon alleen onbetaalde bestellingen</label>
-            <label index="skip">overslaan</label>
+            <label index="skip">Overslaan</label>
             <label index="sort_by">Sorteer op</label>
             <label index="sort_direction">Sorteervolgorde</label>
             <label index="sort_direction_asc">Oplopend</label>
