@@ -2,7 +2,18 @@
 <script type="text/javascript">
 ###JS_FUNCTIONS_EXTRA###
 jQuery(document).ready(function ($) {
-	$('.nav-tabs a:first').tab('show');
+    var url = document.location.toString();
+    if (url.match('#')) {
+        $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+    } else {
+    	$('.nav-tabs a:first').tab('show');
+    }
+
+    // Change hash for page-reload
+    $('.nav-tabs a').on('shown.bs.tab', function (e) {
+    	window.location.hash = e.target.hash;
+    	$("body,html,document").scrollTop(0);
+    });
 
     $(document).on('click', ".delete_categories_images", function (e) {
         e.preventDefault();
