@@ -186,8 +186,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$tmpcontent.='</select></div>
 		</div>
 		<div class="form-group custom_type">
-			<label class="col-md-2 control-label">custom type</label>
-			<div class="col-md-10"><input name="tx_multishop_pi1[custom_type]" type="text" value="'.htmlspecialchars($cms[0]['type']).'" class="text form-control" /></div>
+			<div class="col-md-offset-2 col-md-10"><input name="tx_multishop_pi1[custom_type]" type="text" value="'.htmlspecialchars($cms[0]['type']).'" class="text form-control" /></div>
 		</div>
 		<script type="text/javascript">
 			function updateForm() {
