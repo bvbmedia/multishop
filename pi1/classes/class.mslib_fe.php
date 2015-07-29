@@ -5659,11 +5659,13 @@ class mslib_fe {
 		$string='';
 		for ($i=0; $i<sizeof($select_array); $i++) {
 			$name=(($key) ? 'configuration['.$key.']' : 'configuration_value');
-			$string.=' <div class="radio radio-success radio-inline"><input type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
+			//$string.='<div class="form-group form-group-item-'.$i.'">';
+			$string.=' <div class="radio radio-success radio-inline"><input type="radio" name="'.$name.'" id="'.$name.'_'.$select_array[$i].'" value="'.$select_array[$i].'"';
 			if ($key_value==$select_array[$i]) {
 				$string.=' CHECKED';
 			}
-			$string.='><label for="'.$name.'">'.$select_array[$i].'</label></div>';
+			$string.='><label for="'.$name.'_'.$select_array[$i].'">'.$select_array[$i].'</label></div>';
+			//$string.='</div>';
 		}
 		return $string;
 	}
