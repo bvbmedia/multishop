@@ -8729,7 +8729,8 @@ class mslib_fe {
 								toastr["info"](val.title, val.message);
 							});
 					  }
-					  // testing
+					  /*
+						  // testing
 						  	toastr.options = {
 							  "closeButton": true,
 							  "debug": false,
@@ -8753,6 +8754,7 @@ class mslib_fe {
 							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
 							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
 							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
+						*/
 				  }
 				});
 				setTimeout("displayAdminNotificationMessage()", 45000);
