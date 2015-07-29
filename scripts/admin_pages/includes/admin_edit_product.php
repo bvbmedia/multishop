@@ -3585,7 +3585,7 @@ if ($this->post) {
 			</div>
 			</div>';
 			// mslib_fe::tx_multishop_draw_pull_down_menu('rel_catid" id="rel_catid', mslib_fe::tx_multishop_get_category_tree('', '', ''))
-			$product_relatives_block='<h3>'.$this->pi_getLL('admin_related_products').'</h3>'.$form_category_search.'<div id="load"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/loading2.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
+			$product_relatives_block='<h3>'.$this->pi_getLL('admin_related_products').'</h3>'.$form_category_search.'<hr><div id="load"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/loading2.gif"><strong>Loading....</strong></div><div id="related_product_placeholder"></div>';
 		}
 		/*
 		 * product copy tab

@@ -2020,7 +2020,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['align']='left';
 				$order_products_body_data['products_name']['valign']='top';
 				$order_products_body_data['products_name']['id']='manual_add_product';
-				$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:400px" tabindex="2" /></div>';
+				$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:100%;" tabindex="2" /></div>';
 				if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
 					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
 				}
@@ -2891,25 +2891,25 @@ if (is_numeric($this->get['orders_id'])) {
         <div class="form-group">
             <label for="expected_delivery_date" class="control-label col-md-2">'.$this->pi_getLL('expected_delivery_date').'</label>
             <div class="col-md-10">
-            <input type="text" name="expected_delivery_date_local" readonly class="form-control" id="expected_delivery_date_local" value="'.date("d-m-Y", $orders['expected_delivery_date']).'" >
-            <input name="expected_delivery_date" id="expected_delivery_date" type="hidden" value="'.date("Y-m-d", $orders['expected_delivery_date']).'" />
+	            <input type="text" name="expected_delivery_date_local" readonly class="form-control" id="expected_delivery_date_local" value="'.date("d-m-Y", $orders['expected_delivery_date']).'" >
+	            <input name="expected_delivery_date" id="expected_delivery_date" type="hidden" value="'.date("Y-m-d", $orders['expected_delivery_date']).'" />
             </div>
         </div>
         <div class="form-group">
             <label for="order_memo" class="control-label col-md-2">'.$this->pi_getLL('track_and_trace_code').'</label>
             <div class="col-md-10">
-            <input class="form-control" name="track_and_trace_code" type="text" value="'.htmlspecialchars($orders['track_and_trace_code']).'" />
+            	<input class="form-control" name="track_and_trace_code" type="text" value="'.htmlspecialchars($orders['track_and_trace_code']).'" />
             </div>
         </div>
         <div class="form-group">
             <label for="customer_notified" class="control-label col-md-2">'.$this->pi_getLL('send_email_to_customer').'</label>
             <div class="col-md-10">
-            <div class="radio-inline">
-            <input name="customer_notified" type="radio" value="0" /> '.$this->pi_getLL('no').'
-            <div class="radio-inline">
-            </div>
-            <input name="customer_notified" id="customer_notified" type="radio" value="1" checked /> '.$this->pi_getLL('yes').'
-            </div>
+	            <div class="radio radio-success radio-inline">
+	            	<input name="customer_notified" type="radio" id="value0" value="0" /><label for="value0">'.$this->pi_getLL('no').'</label>
+	            </div>
+	            <div class="radio radio-success radio-inline">
+		            <input name="customer_notified" id="customer_notified" type="radio" value="1" checked /><label for="customer_notified">'.$this->pi_getLL('yes').'</label>
+	            </div>
             </div>
         </div>
         <div class="form-group">
@@ -3173,7 +3173,19 @@ if (is_numeric($this->get['orders_id'])) {
             });
             ' : '').'
             var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
-            $(".nav-tabs a:first").tab("show");
+
+var url = document.location.toString();
+if (url.match("#")) {
+    $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+} else {
+		$(".nav-tabs a:first").tab("show");
+	}
+
+// Change hash for page-reload
+	$(".nav-tabs a").on("shown.bs.tab", function (e) {
+		window.location.hash = e.target.hash;
+		$("body,html,document").scrollTop(0);
+	});
 
             $("#load").hide();
             $().ajaxStart(function() {

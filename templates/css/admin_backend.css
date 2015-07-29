@@ -384,9 +384,13 @@ ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; paddi
 .zone-tabs ul#msAdmin_category_listing_ul_territories { padding-left:10px; list-style:none; }
 .zone-tabs label { width:10%; }
 
-.merge_attribute_values_listing ul { margin:0; padding:0; list-style:none; }
-.merge_attribute_values_listing > ul > li { overflow:hidden; border-bottom:1px solid #eee; margin:0 0 15px; padding:0 0 15px; }
-.merge_attribute_values_listing > ul > li:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.merge_attribute_values_listing ul,
+.related_data_categories_name_listing > ul { margin:0; padding:0; list-style:none; }
+.merge_attribute_values_listing > ul > li,
+.related_data_categories_name_listing { overflow:hidden; border-bottom:1px solid #eee; margin:0 0 15px; padding:0 0 15px; }
+.merge_attribute_values_listing > ul > li:last-child,
+.related_data_categories_name_listing:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.related_data_categories_name_listing:last-child { margin-bottom:15px;}
 .merge_attribute_values_listing > ul > li > ul > li { display:inline-block; width:25%; vertical-align:top; }
 .merge_attribute_values_listing > ul > li > ul > li .checkbox { margin-bottom:0; }
 .merge_attribute_values_target { margin-top:20px; }
