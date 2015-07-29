@@ -8708,19 +8708,26 @@ class mslib_fe {
 				  type: \'post\',
 				  success: function (j) {
 					  if (j.length > 0) {
-							if (jQuery(\'.msadmin_balloon_wrapper\').length != 0) jQuery(\'.msadmin_balloon_wrapper\').remove();
-						    var content=\'\';
-							content+=\'<div class="msadmin_balloon_wrapper">\';
+						  toastr.options = {
+							  "closeButton": true,
+							  "debug": false,
+							  "newestOnTop": true,
+							  "progressBar": true,
+							  "positionClass": "toast-bottom-left",
+							  "preventDuplicates": false,
+							  "onclick": null,
+							  "showDuration": "300",
+							  "hideDuration": "1000",
+							  "timeOut": "5000",
+							  "extendedTimeOut": "1000",
+							  "showEasing": "swing",
+							  "hideEasing": "linear",
+							  "showMethod": "fadeIn",
+							  "hideMethod": "fadeOut"
+							}
 							jQuery.each(j, function(i, val) {
-								var title=\'\';
-								var message=\'\';
-								if (val.title) title=\'<h2>\'+val.title+\'</h2><i class="crdate">\'+val.crdate+\'</i>\';
-								if (val.message) message=\'<p>\'+val.message+\'</p>\';
-								content+=\'<div class="msadmin_balloon_item"><div class="msadmin_balloon">\'+title+message+\'<em></em></div></div>\';
+								toastr["info"](val.title, val.message);
 							});
-							content+=\'</div>\';
-							jQuery("body").append(content);
-							jQuery(\'.msadmin_balloon_wrapper\').hide().delay(500).slideDown(\'slow\').delay(8000).slideUp();
 					  }
 				  }
 				});
