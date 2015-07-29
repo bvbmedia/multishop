@@ -58,7 +58,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='export_orders_task' &&
 			@unlink($target);
 		}
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_export_orders'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_export_orders'));
 }
 // defining the types
 $array=array();
@@ -181,7 +181,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		<div class="panel panel-default">
 		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_orders_export_wizard').'</h3></div>
 		<div class="panel-body">
-		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="orders_export_form" class="form-horizontal">
+		<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="orders_export_form" class="form-horizontal">
 			<div class="form-group">
 				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 				<div class="col-md-10">
@@ -463,9 +463,9 @@ if ($this->ms['show_main']) {
 				';
 			if (!$order['status']) {
 				$content.='<span class="admin_status_red" alt="Disable"></span>';
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$content.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$content.='</td>
@@ -474,12 +474,12 @@ if ($this->ms['show_main']) {
 				<a href="'.$order['orders_export_link_excel'].'" class="admin_menu">'.$this->pi_getLL('admin_label_link_download_as_excel').'</a>
 			</td>
 			<td width="50">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&section=edit').'" class="admin_menu_edit">edit</a>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&delete=1').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="Remove"></a>';
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&section=edit').'" class="admin_menu_edit">edit</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_export_id='.$order['id'].'&delete=1').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="Remove"></a>';
 			$content.='
 			</td>
 			<td>
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=export_orders_task&orders_export_id='.$order['id']).'" class="btn btn-suc"><i>'.$this->pi_getLL('download_export_record').'</i></a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=export_orders_task&orders_export_id='.$order['id']).'" class="btn btn-suc"><i>'.$this->pi_getLL('download_export_record').'</i></a>
 			</td>
 			</tr>';
 		}
@@ -490,7 +490,7 @@ if ($this->ms['show_main']) {
 	$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('import_export_record').'</h3></div>
 	<div class="panel-body">
 <fieldset id="scheduled_import_jobs_form">
-		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_export_orders&upload=export_orders_task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+		<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_export_orders&upload=export_orders_task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 			<div class="form-group">
 				<label for="new_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
 				<div class="col-md-10">
@@ -510,6 +510,6 @@ if ($this->ms['show_main']) {
 			</div>
 		</form>
 	</fieldset>';
-	$content.='<hr><div class="clearfix"><div class="pull-right"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div></div></div>';
+	$content.='<hr><div class="clearfix"><div class="pull-right"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div></div></div>';
 }
 ?>

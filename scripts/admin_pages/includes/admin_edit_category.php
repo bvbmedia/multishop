@@ -916,7 +916,7 @@ if ($this->post) {
 		}
 		$subpartArray['###CATEGORIES_ID0###']=$category['categories_id'];
 		$subpartArray['###CATEGORIES_ID1###']=$category['categories_id'];
-		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
+		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
 		$subpartArray['###LABEL_BUTTON_CANCEL###']=$this->pi_getLL('cancel');
 		$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LINK_BUTTON_CANCEL_FOOTER###']=$subpartArray['###VALUE_REFERRER###'];

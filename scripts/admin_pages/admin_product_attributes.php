@@ -118,7 +118,7 @@ if ($this->post) {
             }
         }
         // redirect to current page after done saving an option settings
-        header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes'));
+        header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes'));
     }
 }
 // select2 cache
@@ -140,7 +140,7 @@ $str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
-    $content.='<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
+    $content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes').'" method="post" class="msadminFromFancybox" name="admin_product_attributes">';
 //	$content.='<span class="msBackendButton float_right continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>';
     //$content.='<form role="form" class="msadminFromFancybox" name="admin_product_attributes">';
     $content.='<div class="attribute_options_sortable" id="attribute_listings">';

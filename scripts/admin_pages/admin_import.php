@@ -157,7 +157,7 @@ if ($this->get['delete'] and is_numeric($this->get['job_id'])) {
 	// delete job
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_import_jobs', 'id='.$this->get['job_id']);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 }
 if (isset($this->get['download']) && $this->get['download']=='task' && is_numeric($this->get['job_id'])) {
 	$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
@@ -215,7 +215,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 			@unlink($target);
 		}
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 }
 $this->ms['show_default_form']=1;
 if ($this->post) {
@@ -319,7 +319,7 @@ if ($this->get['update_category_for_job']) {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// update the target category of a job eof
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 }
 if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	// update the status of a job
@@ -328,7 +328,7 @@ if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_import_jobs', 'id=\''.$this->get['job_id'].'\'', $updateArray);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	// update the status of a job eof
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 }
 $tabs=array();
 /*
@@ -728,7 +728,7 @@ if ($this->post['action']=='category-insert') {
 		$tmpcontent.='<strong>Products cannot be retrieved.</strong>';
 	}
 	// print form
-	$combinedContent='<form id="product_import_form" class="form-horizontal blockSubmitForm" name="form1" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'">
+	$combinedContent='<form id="product_import_form" class="form-horizontal blockSubmitForm" name="form1" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'">
 	<input name="consolidate" type="hidden" value="'.$this->post['consolidate'].'" />
 	<input name="os" type="hidden" value="'.$this->post['os'].'" />
 	<input name="escape_first_line" type="hidden" value="'.$this->post['escape_first_line'].'" />
@@ -893,7 +893,7 @@ if ($this->post['action']=='category-insert') {
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		// we have to update the import job eof
 		$this->ms['show_default_form']=1;
-		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
 	}
 	if (!$this->post['skip_import']) {
 		$stats=array();
@@ -2976,7 +2976,7 @@ if ($this->post['action']=='category-insert') {
 }
 if ($this->post['action']!='product-import-preview') {
 	$tmptab='
-	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="form-horizontal blockSubmitForm">
+	<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="form-horizontal blockSubmitForm">
 	'.$this->ms['upload_productfeed_form'].'
 				<!-- <input name="cid" type="hidden" value="0" /> -->
 	</form>';
@@ -3027,7 +3027,7 @@ if ($this->post['action']!='product-import-preview') {
 				}
 				$schedule_content.='<tr class="'.$switch.'">';
 				$schedule_content.='<td>'.$job['prefix_source_name'].'</td>
-				<td class="cellName"><a class="blockAhrefLink" href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id']).'&action=edit_job">'.$job['name'].'</a></td>';
+				<td class="cellName"><a class="blockAhrefLink" href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id']).'&action=edit_job">'.$job['name'].'</a></td>';
 				$category_name='
 				<form method="get" action="index.php" id="updateCatForm'.$job['id'].'">
 					<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
@@ -3039,21 +3039,21 @@ if ($this->post['action']!='product-import-preview') {
 				$schedule_content.='<td>'.$category_name.'</td>';
 				$schedule_content.='<td class="cellDate">'.date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']).'</td>';
 				if (!$job['period']) {
-					$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success msadminRunImporter" data-dialog-title=\'Warning\' data-dialog-body="'.addslashes(htmlspecialchars($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job').': '.$job['name'].'?')).'">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" >'.$this->pi_getLL('run_by_crontab').'</a></td>';
+					$schedule_content.='<td>manual<br /><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&action=run_job&limit=99999999').'" class="btn btn-success msadminRunImporter" data-dialog-title=\'Warning\' data-dialog-body="'.addslashes(htmlspecialchars($this->pi_getLL('are_you_sure_you_want_to_run_the_import_job').': '.$job['name'].'?')).'">'.$this->pi_getLL('run_now').'</a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=86400 -q "'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999', 1).'" >/dev/null 2>&1').'" >'.$this->pi_getLL('run_by_crontab').'</a></td>';
 				} else {
 					$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 				}
 				$schedule_content.='<td class="status_field" align="center">';
 				if (!$job['status']) {
 					$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
-					$schedule_content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
+					$schedule_content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 				} else {
-					$schedule_content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
+					$schedule_content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&job_id='.$job['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 					$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 				}
 				$schedule_content.='</td>
 				<td align="center">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&delete=1&job_id='.$job['id']).'&action=delete_job" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="btn btn-danger btn-sm admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"><i class="fa fa-trash-o"></i></a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import&delete=1&job_id='.$job['id']).'&action=delete_job" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="btn btn-danger btn-sm admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"><i class="fa fa-trash-o"></i></a>
 				</td>
 				<td align="center">
 					';
@@ -3069,7 +3069,7 @@ if ($this->post['action']!='product-import-preview') {
 				$schedule_content.='
 				</td>
 				<td>
-					 <form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="blockSubmitForm">
+					 <form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="blockSubmitForm">
 					 <div class="input-group">
 						<input type="file" name="file" class="form-control" style="width:300px" />
 						<input name="skip_import" type="hidden" value="1" />
@@ -3084,7 +3084,7 @@ if ($this->post['action']!='product-import-preview') {
 				</td>';
 				if ($this->ROOTADMIN_USER) {
 					$schedule_content.='<td>
-						<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_import&download=task&job_id='.$job['id']).'" class="btn btn-success"><i class="fa fa-download"></i> '.$this->pi_getLL('download_import_task').'</a>
+						<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_import&download=task&job_id='.$job['id']).'" class="btn btn-success"><i class="fa fa-download"></i> '.$this->pi_getLL('download_import_task').'</a>
 					</td>';
 				}
 				$schedule_content.='</tr>';
@@ -3189,7 +3189,7 @@ if ($this->post['action']!='product-import-preview') {
 			$schedule_content.='<div id="scheduled_import_jobs_form" class="panel panel-default">
 			<div class="panel-heading"><h3>'.$this->pi_getLL('upload_import_task').'</h3></div>
 			<div class="panel-body">
-				<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+				<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 					<div class="form-group">
 						<label for="new_cron_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
 						<div class="col-md-10">

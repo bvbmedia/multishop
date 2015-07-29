@@ -269,7 +269,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 			$content.='</div>';
 		}
 		$shipping_method=$shipping_methods[$this->get['shipping_method_code']];
-		$tmpcontent.='<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
+		$tmpcontent.='<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='
 				<div class="form-group">
@@ -388,7 +388,7 @@ if (($this->get['sub']=='add_shipping_method' && $this->get['shipping_method_cod
 	$tmpcontent.='
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+	<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 	<input name="sub" type="hidden" value="update_shipping_method" />
 	<input name="shipping_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
@@ -650,7 +650,7 @@ if ($this->ms['show_main']) {
 				@unlink($target);
 			}
 		}
-		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
 	}
 	// shipping method admin system
 	$colspan=4;
@@ -686,24 +686,24 @@ if ($this->ms['show_main']) {
 					$tmpcontent.='<td><strong>All</strong></td>';
 				}
 			}
-			$tmpcontent.='<td class="cellName"><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
+			$tmpcontent.='<td class="cellName"><strong><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
 			</strong></td>
 			<td>'.$row['provider'].'</td>
 			<td class="cellDate">'.date("Y-m-d", $row['date']).'</td>
 			<td class="cellStatus">';
 			if (!$row['status']) {
 				$tmpcontent.='<span class="admin_status_red" alt="Disable"></span>';
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$tmpcontent.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$tmpcontent.='</td>
 			<td class="cellAction">
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o"></i></a>
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&shipping_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o"></i></a>
 			</td>
 			<td align="center">
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=shipping&shipping_method_id='.$row['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> '.ucfirst($this->pi_getLL('download_record')).'</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=shipping&shipping_method_id='.$row['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> '.ucfirst($this->pi_getLL('download_record')).'</a>
 			</td>
 			</tr>';
 		}
@@ -712,7 +712,7 @@ if ($this->ms['show_main']) {
 		$tmpcontent.=$this->pi_getLL('currently_there_are_no_shipping_methods_defined').'.';
 	}
 	$tmpcontent.='<fieldset id="scheduled_import_jobs_form"><h3 class="page-header">'.$this->pi_getLL('upload_record').'</h3>
-			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=shipping').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+			<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=shipping').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 				<div class="form-group">
 					<label for="new_code" class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
 					<div class="col-md-10">
@@ -744,15 +744,15 @@ if ($this->ms['show_main']) {
 		$innercount++;
 		$count++;
 
-		$panelTitle='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">'.htmlspecialchars($item['name']).'</a>';
-		$panelBody='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">';
+		$panelTitle='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">'.htmlspecialchars($item['name']).'</a>';
+		$panelBody='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'">';
 		if ($item['image'] && file_exists($this->DOCUMENT_ROOT_MS.'templates/images/shipping/'.$item['image'])) {
 			$panelBody.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/shipping/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
 			$panelBody.=$item['name'];
 		}
 		$panelBody.='</a>';
-		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'" class="btn btn-block btn-success btn-sm"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</a>';
+		$panelFooter='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_shipping_method&shipping_method_code='.$code).'" class="btn btn-block btn-success btn-sm"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</a>';
 
 		$modalContent.='
 		<div class="col-md-3">
@@ -805,7 +805,7 @@ if ($this->ms['show_main']) {
 		$colspan=4;
 		$tr_type='even';
 		if (count($shipping_methods)) {
-			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<thead><tr>';
 			// zone header
@@ -882,7 +882,7 @@ if ($this->ms['show_main']) {
 		$colspan=4;
 		$tr_type='even';
 		if (count($shipping_methods)) {
-			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<thead><tr><th>&nbsp;</th>';
 			foreach ($payment_methods as $payment_method) {

@@ -43,14 +43,14 @@ foreach ($customers as $customer) {
 	} else {
 		$customer['crdate']='';
 	}
-	$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer', 1);
+	$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer', 1);
 	$latest_order='';
 	$str="select orders_id from tx_multishop_orders where customer_id='".$customer['uid']."' and deleted=0 order by orders_id desc limit 2";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	if ($rows>0) {
 		$order=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-		$latest_order.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'">'.$order['orders_id'].'</a>'."\n";
+		$latest_order.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'">'.$order['orders_id'].'</a>'."\n";
 		if ($rows>1) {
 			$latest_order.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders&type_search=customer_id&skeyword='.$customer['uid']).'">('.htmlspecialchars($this->pi_getLL('show_all')).')</a>';
 		}
@@ -59,7 +59,7 @@ foreach ($customers as $customer) {
 	}
 	$status_html='';
 	if (!$customer['disable']) {
-		$link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_id='.$customer['uid'].'&disable=1&'.mslib_fe::tep_get_all_get_params(array(
+		$link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_id='.$customer['uid'].'&disable=1&'.mslib_fe::tep_get_all_get_params(array(
 				'customer_id',
 				'disable',
 				'clearcache'
@@ -67,7 +67,7 @@ foreach ($customers as $customer) {
 		$status_html.='<a href="'.$link.'"><span class="admin_status_red disabled" alt="'.htmlspecialchars($this->pi_getLL('disabled')).'"></span></a>';
 		$status_html.='<span class="admin_status_green" alt="'.htmlspecialchars($this->pi_getLL('enable')).'"></span>';
 	} else {
-		$link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_id='.$customer['uid'].'&disable=0&'.mslib_fe::tep_get_all_get_params(array(
+		$link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_id='.$customer['uid'].'&disable=0&'.mslib_fe::tep_get_all_get_params(array(
 				'customer_id',
 				'disable',
 				'clearcache'
@@ -91,7 +91,7 @@ foreach ($customers as $customer) {
 	$markerArray['CUSTOMERS_LOGINAS_LINK']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$customer['uid']);
 	$markerArray['CUSTOMERS_LOGINAS']=htmlspecialchars($this->pi_getLL('login'));
 	$markerArray['CUSTOMERS_STATUS']=$status_html;
-	$markerArray['CUSTOMERS_DELETE_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_id='.$customer['uid'].'&delete=1&'.mslib_fe::tep_get_all_get_params(array(
+	$markerArray['CUSTOMERS_DELETE_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_id='.$customer['uid'].'&delete=1&'.mslib_fe::tep_get_all_get_params(array(
 			'customer_id',
 			'delete',
 			'disable',
@@ -162,56 +162,56 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_ID###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('admin_customer_id')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_ID###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('admin_customer_id')).'</a>';
 $key='username';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_USERNAME###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('username')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_USERNAME###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('username')).'</a>';
 $key='company';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_COMPANY###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('company')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_COMPANY###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('company')).'</a>';
 $key='crdate';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_CREATED###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('created')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_CREATED###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('created')).'</a>';
 $key='lastlogin';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_LATEST_LOGIN###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('latest_login')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_LATEST_LOGIN###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('latest_login')).'</a>';
 $key='disable';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_STATUS###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('status')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_STATUS###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('status')).'</a>';
 $key='grand_total';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_TURN_OVER###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('turn_over', 'Turn over')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_TURN_OVER###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('turn_over', 'Turn over')).'</a>';
 $key='grand_total_this_year';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_CUSTOMER_TURN_OVER_THIS_YEAR###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('turn_over_this_year', 'Turn over (this year)')).'</a>';
+$subpartArray['###LABEL_CUSTOMER_TURN_OVER_THIS_YEAR###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.ucfirst($this->pi_getLL('turn_over_this_year', 'Turn over (this year)')).'</a>';
 $subpartArray['###LABEL_CUSTOMER_NAME###']=ucfirst($this->pi_getLL('name'));
 $subpartArray['###LABEL_CUSTOMER_LATEST_ORDER###']=ucfirst($this->pi_getLL('latest_order'));
 $subpartArray['###LABEL_CUSTOMER_LOGIN_AS_USER###']=ucfirst($this->pi_getLL('login_as_user'));

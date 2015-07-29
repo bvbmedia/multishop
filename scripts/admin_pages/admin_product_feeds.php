@@ -58,7 +58,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='feed' && $_FILES) {
 			@unlink($target);
 		}
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds'));
 }
 // defining the types
 $array=array();
@@ -221,7 +221,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$content.='<div class="panel panel-default">
 		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_product_feed_generator').'</h3></div>
 		<div class="panel-body">
-		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form" class="form-horizontal">
+		<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="products_feed_form" class="form-horizontal">
 			<div class="form-group">
 					<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 					<div class="col-md-10">
@@ -480,9 +480,9 @@ if ($this->ms['show_main']) {
 				';
 			if (!$feed['status']) {
 				$content.='<span class="admin_status_red" alt="Disable"></span>';
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=1').'"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 			} else {
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&status=0').'"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 				$content.='<span class="admin_status_green" alt="Enable"></span>';
 			}
 			$content.='</td>
@@ -491,12 +491,12 @@ if ($this->ms['show_main']) {
 				<a href="'.$feed['feed_link_excel'].'" class="btn btn-success btn-sm"><i class="fa fa-download"></i> Download Excel feed</a>
 			</td>
 			<td class="cellAction">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-fw"></i></a>';
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&section=edit').'" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&feed_id='.$feed['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-trash-o fa-fw"></i></a>';
 			$content.='
 			</td>
 			<td class="cellBackup">
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="btn btn-success btn-sm">'.$this->pi_getLL('download_feed_record').'</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_product_feeds&download=feed&feed_id='.$feed['id']).'" class="btn btn-success btn-sm">'.$this->pi_getLL('download_feed_record').'</a>
 			</td>
 			</tr>';
 		}
@@ -507,7 +507,7 @@ if ($this->ms['show_main']) {
 	$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('import_feed_record').'</h3></div>
 	<div class="panel-body">
 	<fieldset id="scheduled_import_jobs_form">
-		<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+		<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_feeds&upload=feed').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 			<div class="form-group">
 				<label for="new_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
 				<div class="col-md-10">
@@ -527,6 +527,6 @@ if ($this->ms['show_main']) {
 			</div>
 		</form>
 	</fieldset>';
-	$content.='<hr><div class="clearfix"><div class="pull-right"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div></div></div>';
+	$content.='<hr><div class="clearfix"><div class="pull-right"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&section=add').'" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-plus fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('add')).'</a></div></div></div></div>';
 }
 ?>

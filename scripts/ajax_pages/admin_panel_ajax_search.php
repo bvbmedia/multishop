@@ -433,7 +433,7 @@ if ($this->ADMIN_USER) {
 					$prod['id']=md5($customer['name']);
 					$prod['text']=$customer['name'];
 					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
-					$prod['Link']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer');
+					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer');
 					$prod['Image']='';
 					$prod['Desc']='';
 					$prod['Price']='';

@@ -95,7 +95,7 @@ $content.='
 <div class="panel panel-default">
 <div class="panel-heading"><h3>ADD / UPDATE TAX RULES GROUP</h3></div>
 <div class="panel-body">
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
 	<fieldset>
 		
 		<div class="form-group">
@@ -302,10 +302,10 @@ if (!$this->get['edit']) {
 			$content.='
 			<tr class="'.$tr_type.'">
 				<td class="cellID">
-					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['rules_group_id'].'</a>
+					<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['rules_group_id'].'</a>
 				</td>
 				<td class="cellName">
-					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['name'].'</a>
+					<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rules_group_id='.$tax_rules_group['rules_group_id'].'&edit=1').'">'.$tax_rules_group['name'].'</a>
 				</td>
 				<td class="cellStatus">';
 			if (!$tax_rules_group['status']) {
@@ -319,7 +319,7 @@ if (!$this->get['edit']) {
 				<td class="cellStatus">';
 			if (!$tax_rules_group['default_status']) {
 				$content.='';
-				$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+				$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 			} else {
 				$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 				$content.='';
@@ -327,7 +327,7 @@ if (!$this->get['edit']) {
 			$content.='
 				</td>
 				<td class="cellAction">
-					<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=delete&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id']).'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('delete').'"><i class="fa fa-trash-o"></i></a>
+					<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=delete&tx_multishop_pi1[rules_group_id]='.$tax_rules_group['rules_group_id']).'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('delete').'"><i class="fa fa-trash-o"></i></a>
 				</td>
 			</tr>
 			';

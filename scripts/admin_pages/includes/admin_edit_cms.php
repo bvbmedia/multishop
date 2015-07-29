@@ -349,7 +349,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	<div class="panel panel-default">
 	    <div class="panel-heading"><h3>INSERT PAGE TITLE HERE</div>
 	    <div class="panel-body">
-	<form class="form-horizontal admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
+	<form class="form-horizontal admin_cms_edit" name="admin_categories_edit_'.$cms['id'].'" id="admin_categories_edit_'.$cms['id'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
 	$count=0;

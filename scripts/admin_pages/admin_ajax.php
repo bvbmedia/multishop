@@ -110,7 +110,7 @@ switch ($_REQUEST['action']) {
 				if ($order['orders_id']) {
 					$content.='
 			<div id="mini-form-field">
-				<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order').'">
+				<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order').'">
 					<div class="mini-account-field">
 						<label>E-mail address</label>
 						<input name="tx_multishop_pi1[email]" type="text" value="'.htmlspecialchars($order['billing_email']).'" />

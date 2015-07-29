@@ -69,7 +69,7 @@ if ($this->get['tx_multishop_pi1']['action']=='edit') {
 }
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_order_unit').'</h1></div>';
 $content.='
-<form action="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <fieldset><legend>'.$this->pi_getLL('add').'</legend>
 ';
 foreach ($this->languages as $key=>$language) {
@@ -139,8 +139,8 @@ if (count($order_units)) {
 
 		<td width="30" align="center" class="msAdminProductsSearchCellActionIcons">
 			<ul>
-				<li><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[order_unit_id]='.$status['id'].'&tx_multishop_pi1[action]=edit').'" class="admin_menu_edit" alt="'.$this->pi_getLL('edit').'"></a></li>
-				<li><a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[order_unit_id]='.$status['id'].'&tx_multishop_pi1[action]=delete').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a></li>
+				<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[order_unit_id]='.$status['id'].'&tx_multishop_pi1[action]=edit').'" class="admin_menu_edit" alt="'.$this->pi_getLL('edit').'"></a></li>
+				<li><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[order_unit_id]='.$status['id'].'&tx_multishop_pi1[action]=delete').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a></li>
 			</ul>
 		</td>';
 		$content.='</tr>';

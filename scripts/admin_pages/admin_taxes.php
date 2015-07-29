@@ -129,7 +129,7 @@ $content.='
 <div class="panel panel-default">
 <div class="panel-heading"><h3>ADD / UPDATE TAX</h3></div>
 <div class="panel-body">
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
 		'.implode('', $formfields).'
 		<div class="form-group">
 				<label for="" class="control-label col-md-2">&nbsp;</label>
@@ -162,10 +162,10 @@ if (count($taxes)) {
 		$content.='
 		<tr class="'.$tr_type.'">
 			<td class="cellID">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['tax_id'].'</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['tax_id'].'</a>
 			</td>
 			<td class="cellName">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['name'].'</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['name'].'</a>
 			</td>
 			<td class="cellTax">
 				'.round($tax['rate'], 4).'%
@@ -174,7 +174,7 @@ if (count($taxes)) {
 				'.$tax['status'].'
 			</td>			
 			<td class="cellAction">
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&delete=1').'" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&delete=1').'" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a>
 			</td>
 		</tr>
 		';

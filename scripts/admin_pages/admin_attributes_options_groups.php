@@ -14,7 +14,7 @@ if (isset($this->post['new_options_groups_name']) && !empty($this->post['new_opt
 		$sql_ins="insert into tx_multishop_attributes_options_groups (attributes_options_groups_id, language_id, attributes_options_groups_name, sort_order) values ('".$max_optid."', '0', '".addslashes($this->post['new_options_groups_name'])."', '".$max_optid."')";
 		$GLOBALS['TYPO3_DB']->sql_query($sql_ins);
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
 }
 if (is_array($this->post['option_groups_names']) and count($this->post['option_groups_names'])) {
 	foreach ($this->post['option_groups_names'] as $attributes_options_groups_id=>$array) {
@@ -34,12 +34,12 @@ if (is_array($this->post['option_groups_names']) and count($this->post['option_g
 			}
 		}
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
 }
 $content.='
 <div class="panel-heading"><h3>'.$this->pi_getLL('admin_attributes_options_groups').'</h3></div>
 <div class="panel-body">
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups').'" method="post" name="new_attributes_options_groups" id="add_new_options_groups" class="form-horizontal">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups').'" method="post" name="new_attributes_options_groups" id="add_new_options_groups" class="form-horizontal">
 	<div class="form-group new_options_groups_name_input">
 		<label for="new_options_groups_name" class="control-label col-md-2">'.$this->pi_getLL('name').':</label>
 		<div class="col-md-10">
@@ -58,7 +58,7 @@ $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 if ($rows) {
 	$content.='
-	<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups').'" method="post" name="admin_attributes_options_groups" class="form-horizontal">
+	<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups').'" method="post" name="admin_attributes_options_groups" class="form-horizontal">
 	<div class="attribute_options_groups_sortable">';
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 		$content.='<div class="form-group" id="options_groups_'.$row['attributes_options_groups_id'].'">

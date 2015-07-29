@@ -216,19 +216,19 @@ if (!count($pageset['dataset'])) {
 			}
 			if (!$row['status']) {
 				$status_html.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
-				$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+				$status_html.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 			} else {
-				$status_html.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+				$status_html.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 				$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 			}
 			$markerArray=array();
 			$markerArray['ROW_TYPE']=$tr_type;
 			$markerArray['MANUFACTURER_ID']=$row['manufacturers_id'];
-			$markerArray['MANUFACTURER_EDIT_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=edit_manufacturer';
+			$markerArray['MANUFACTURER_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$row['manufacturers_id']).'&action=edit_manufacturer';
 			$markerArray['MANUFACTURER_NAME']=$row['manufacturers_name'];
 			$markerArray['MANUFACTURER_DATE_ADDED']=strftime("%x %X", strtotime($row['date_added']));
 			$markerArray['MANUFACTURER_STATUS']=$status_html;
-			$markerArray['MANUFACTURER_DELETE_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&delete=1');
+			$markerArray['MANUFACTURER_DELETE_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&manufacturers_id='.$row['manufacturers_id'].'&delete=1');
 			$markerArray['ADMIN_LABEL_ALT_REMOVE']=$this->pi_getLL('admin_label_alt_remove');
 			$markerArray['ADMIN_LABEL_LINK_EDIT']=$this->pi_getLL('admin_label_link_edit');
 			$contentItem.=$this->cObj->substituteMarkerArray($subparts['manufacturers'], $markerArray, '###|###');
@@ -249,24 +249,24 @@ if (!count($pageset['dataset'])) {
 		} else {
 			$final_order_link='a';
 		}
-		$subpartArray['###LABEL_MANUFACTURER_ID###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('id').'</a>';
-		$subpartArray['###LABEL_FOOTER_MANUFACTURER_ID###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('id').'</a>';
+		$subpartArray['###LABEL_MANUFACTURER_ID###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('id').'</a>';
+		$subpartArray['###LABEL_FOOTER_MANUFACTURER_ID###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('id').'</a>';
 		$key='name';
 		if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 			$final_order_link=$order_link;
 		} else {
 			$final_order_link='a';
 		}
-		$subpartArray['###LABEL_MANUFACTURER_NAME###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('manufacturer').'</a>';
-		$subpartArray['###LABEL_FOOTER_MANUFACTURER_NAME###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('manufacturer').'</a>';
+		$subpartArray['###LABEL_MANUFACTURER_NAME###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('manufacturer').'</a>';
+		$subpartArray['###LABEL_FOOTER_MANUFACTURER_NAME###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('manufacturer').'</a>';
 		$key='date_added';
 		if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 			$final_order_link=$order_link;
 		} else {
 			$final_order_link='a';
 		}
-		$subpartArray['###LABEL_MANUFACTURER_DATE_ADDED###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('date_added').'</a>';
-		$subpartArray['###LABEL_FOOTER_MANUFACTURER_DATE_ADDED###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('date_added').'</a>';
+		$subpartArray['###LABEL_MANUFACTURER_DATE_ADDED###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('date_added').'</a>';
+		$subpartArray['###LABEL_FOOTER_MANUFACTURER_DATE_ADDED###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('date_added').'</a>';
 		$subpartArray['###LABEL_MANUFACTURER_STATUS###']=$this->pi_getLL('status');
 		$subpartArray['###LABEL_MANUFACTURER_ACTION###']=$this->pi_getLL('action');
 		$subpartArray['###LABEL_FOOTER_MANUFACTURER_STATUS###']=$this->pi_getLL('status');
@@ -294,6 +294,6 @@ $subpartArray['###NORESULTS###']=$noresults;
 $subpartArray['###ADMIN_LABEL_TABS_MANUFACTURERS###']=$this->pi_getLL('admin_label_tabs_manufacturers');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content);
-$content.='<div class="add_manufacturer"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=add_manufacturer', 1).'" class="btn btn-success admin_menu_add">'.$this->pi_getLL('add_manufacturer').'</a></div>';
+$content.='<div class="add_manufacturer"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=add_manufacturer', 1).'" class="btn btn-success admin_menu_add">'.$this->pi_getLL('add_manufacturer').'</a></div>';
 $content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-right fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
 ?>

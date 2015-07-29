@@ -66,7 +66,7 @@ foreach ($zones as $zone) {
 		}
 		if (count($countries)>0) {
 			$content.='
-			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" id="zone_edit_form">
+			<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" id="zone_edit_form">
 			<input name="zone_id" type="hidden" value="'.$this->get['zone_id'].'" />
 			<ul id="tx_multishop_countries_checkboxes" class="zone_items">';
 			$counter=0;
@@ -102,8 +102,8 @@ foreach ($zones as $zone) {
 		$content.='<hr>
 		<div class="clearfix">
 		<div class="pull-right">
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&edit=1&zone_id='.$zone['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> '.$this->pi_getLL('add_countries').'</a>
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&delete=1&zone_id='.$zone['id']).'" class="btn btn-danger btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('delete_zone').'</a>
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&edit=1&zone_id='.$zone['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> '.$this->pi_getLL('add_countries').'</a>
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&delete=1&zone_id='.$zone['id']).'" class="btn btn-danger btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('delete_zone').'</a>
 			</div>
 		</div>';
 	}
@@ -113,7 +113,7 @@ $content.='
 <div class="panel panel-default">
 <div class="panel-heading"><h3>'.$this->pi_getLL('add_new_zone').'</h3></div>
 <div class="panel-body">
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
 <div class="form-group">
 		<label for="" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
 		<div class="col-md-10">

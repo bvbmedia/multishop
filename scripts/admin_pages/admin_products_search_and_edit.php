@@ -439,7 +439,7 @@ $pageset=mslib_fe::getProductsPageSet($filter, $offset, $this->ms['MODULES']['PR
 $products=$pageset['products'];
 if ($pageset['total_rows']>0) {
 	$subpartArray=array();
-	$subpartArray['###FORM_ACTION_PRICE_UPDATE_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_products_search_and_edit&'.mslib_fe::tep_get_all_get_params(array(
+	$subpartArray['###FORM_ACTION_PRICE_UPDATE_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_products_search_and_edit&'.mslib_fe::tep_get_all_get_params(array(
 			'tx_multishop_pi1[action]',
 			'p',
 			'Submit',
@@ -461,8 +461,8 @@ if ($pageset['total_rows']>0) {
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_PRODUCT_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_PRODUCT_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_PRODUCT_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_PRODUCT_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	//
 	$key='products_model';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
@@ -470,56 +470,56 @@ if ($pageset['total_rows']>0) {
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_MODEL_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_MODEL_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_MODEL_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_MODEL_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='products_status';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_VISIBLE_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_VISIBLE_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_VISIBLE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_VISIBLE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='categories_name';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_CATEGORY_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_CATEGORY_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_CATEGORY_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_CATEGORY_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='products_price';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_PRICE_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_PRICE_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='specials_price';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_SPECIAL_PRICE_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_SPECIAL_PRICE_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_SPECIAL_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_SPECIAL_PRICE_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='products_quantity';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_STOCK_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_STOCK_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_STOCK_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_STOCK_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$key='products_weight';
 	if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 		$final_order_link=$order_link;
 	} else {
 		$final_order_link='a';
 	}
-	$subpartArray['###FOOTER_SORTBY_WEIGHT_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
-	$subpartArray['###HEADER_SORTBY_WEIGHT_LINK###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###FOOTER_SORTBY_WEIGHT_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+	$subpartArray['###HEADER_SORTBY_WEIGHT_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 	$subpartArray['###LABEL_HEADER_CELL_NUMBER###']=$this->pi_getLL('admin_nr');
 	$subpartArray['###LABEL_HEADER_PRODUCT###']=$this->pi_getLL('admin_product');
 	$subpartArray['###LABEL_HEADER_MODEL###']=$this->pi_getLL('admin_model');
@@ -722,7 +722,7 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###LABEL_DOWNLOAD_AS_EXCEL_FILE###']=$this->pi_getLL('admin_download_as_excel_file');
 	$subpartArray['###DOWNLOAD_AS_EXCEL_URL###']=$dlink;
 	$subpartArray['###LABEL_UPDATE_MODIFIED_PRODUCTS###']=$this->pi_getLL('update_modified_products');
-	$subpartArray['###FORM_UPLOAD_ACTION_URL###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_price_update_up_xls');
+	$subpartArray['###FORM_UPLOAD_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_price_update_up_xls');
 	$subpartArray['###CATEGORY_ID2###']=$this->get['cid'];
 	$subpartArray['###PRODUCTS_PAGINATION###']=$pagination;
 	$subpartArray['###LABEL_UPLOAD_EXCEL_FILE###']=$this->pi_getLL('admin_upload_excel_file');

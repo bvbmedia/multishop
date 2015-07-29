@@ -27,7 +27,7 @@ foreach ($groups as $group) {
 	$link='';
 	$status_html='';
 	if (!$group['hidden']) {
-		$link=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&disable=1&'.mslib_fe::tep_get_all_get_params(array(
+		$link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&disable=1&'.mslib_fe::tep_get_all_get_params(array(
 				'customer_group_id',
 				'disable',
 				'clearcache'
@@ -35,7 +35,7 @@ foreach ($groups as $group) {
 		$status_html.='<a href="'.$link.'"><span class="admin_status_red disabled"  alt="disable group" title="disable group"></span></a>';
 		$status_html.='<span class="admin_status_green" alt="group is enabled" title="group is enabled"></span>';
 	} else {
-		$link=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&disable=0&'.mslib_fe::tep_get_all_get_params(array(
+		$link=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&disable=0&'.mslib_fe::tep_get_all_get_params(array(
 				'customer_group_id',
 				'disable',
 				'clearcache'
@@ -46,12 +46,12 @@ foreach ($groups as $group) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['VALUE_GROUP_ID']=$group['uid'];
-	$markerArray['VALUE_GROUP_EDIT_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&customer_group_id='.$group['uid']).'&action=edit_customer_group';
+	$markerArray['VALUE_GROUP_EDIT_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&customer_group_id='.$group['uid']).'&action=edit_customer_group';
 	$markerArray['VALUE_GROUP_NAME']=$group['title'];
 	$markerArray['VALUE_GROUP_DISCOUNT']=$group['tx_multishop_discount'];
 	$markerArray['VALUE_GROUP_STATUS']=$status_html;
 	$markerArray['ADMIN_LABEL_ALT_REMOVE']=ucfirst($this->pi_getLL('admin_label_alt_remove'));
-	$markerArray['VALUE_GROUP_DELETE_LINK']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&delete=1&'.mslib_fe::tep_get_all_get_params(array(
+	$markerArray['VALUE_GROUP_DELETE_LINK']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&customer_group_id='.$group['uid'].'&delete=1&'.mslib_fe::tep_get_all_get_params(array(
 			'customer_group_id',
 			'delete',
 			'disable',
@@ -86,14 +86,14 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_HEADER_ID###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('id').'</a>';
+$subpartArray['###LABEL_HEADER_ID###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('id').'</a>';
 $key='name';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_HEADER_NAME###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('name').'</a>';
+$subpartArray['###LABEL_HEADER_NAME###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('name').'</a>';
 $subpartArray['###LABEL_HEADER_BUDGET_USAGE###']='Budget usage';
 $key='discount';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
@@ -101,7 +101,7 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###LABEL_HEADER_DISCOUNT###']='<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('discount').'</a>';
+$subpartArray['###LABEL_HEADER_DISCOUNT###']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string).'">'.$this->pi_getLL('discount').'</a>';
 $subpartArray['###LABEL_HEADER_STATUS###']=$this->pi_getLL('status');
 $subpartArray['###LABEL_HEADER_DELETE###']=ucfirst($this->pi_getLL('delete'));
 $subpartArray['###GROUPS###']=$contentItem;

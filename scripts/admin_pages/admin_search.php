@@ -479,7 +479,7 @@ if ($this->ADMIN_USER) {
 					$customer['name']=$customer['username'];
 				}
 				$tmp_listing.='<li class="ui-menu-item ui-menu-item-alternate" role="menuitem">
-					<a alt="'.substr($customer['name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer', 1).'">
+					<a alt="'.substr($customer['name'], 0, 50).'" class="ui-corner-all" tabindex="-1" href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['uid'].'&action=edit_customer', 1).'">
 						<div class="single_row">'.substr($customer['name'], 0, 50).'</div>
 					</a>
 				</li>';

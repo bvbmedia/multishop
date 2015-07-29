@@ -105,7 +105,7 @@ $title=ucfirst($title);
 $content.='
 <div class="panel-heading"><h3>'.$title.'</h3></div>
 <div class="panel-body">
-<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" class="form-horizontal ms_admin_form">
+<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" class="form-horizontal ms_admin_form">
 <div class="form-group">
 	<label class="control-label col-md-2">'.$this->pi_getLL('coupon_code').'</label>
 	<div class="col-md-10">
@@ -209,7 +209,7 @@ if (count($coupons_options)>0) {
 		}
 		$content.='<tr class="'.$tr_type.'">
 		<td class="cellName">
-		<strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&edit=1').'">'.$option['code'].'</a></strong>
+		<strong><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&edit=1').'">'.$option['code'].'</a></strong>
 		</td>
 		<td align="right">';
 		switch ($option['discount_type']) {
@@ -229,16 +229,16 @@ if (count($coupons_options)>0) {
 		<td class="cellStatus">';
 		if (!$option['status']) {
 			$content.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
-			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+			$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
-			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+			$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 			$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 		}
 		$content.='
 		</td>
 		<td class="cellAction">';
-		$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&edit=1').'" " class="btn btn-primary btn-sm admin_menu_edit" alt="'.$this->pi_getLL('edit').'"><i class="fa fa-pencil"></i></a> ';
-		$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><i class="fa fa-trash-o"></i></a>';
+		$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&edit=1').'" " class="btn btn-primary btn-sm admin_menu_edit" alt="'.$this->pi_getLL('edit').'"><i class="fa fa-pencil"></i></a> ';
+		$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&coupons_id='.$option['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><i class="fa fa-trash-o"></i></a>';
 		$content.='</td>
 		</tr>
 		';

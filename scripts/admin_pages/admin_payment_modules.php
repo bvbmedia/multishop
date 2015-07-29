@@ -26,12 +26,12 @@ if ($this->post) {
 					}
 				}
 			}
-			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
 		} else {
 			// delete mapping
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id>0');
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
 		}
 	}
 	if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
@@ -53,7 +53,7 @@ if ($this->post) {
 				}
 			}
 		}
-		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#admin_shipping_payment_mappings');
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#admin_shipping_payment_mappings');
 	}
 	if ($this->post['sub']=='add_payment_method' && $this->post['payment_method_code']) {
 		$erno=array();
@@ -102,7 +102,7 @@ if ($this->post) {
 					}
 				}
 				$this->ms['show_main']=1;
-				header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+				header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
 			}
 		}
 	} else if ($this->post['sub']=='update_payment_method' && $this->post['payment_method_id']) {
@@ -139,7 +139,7 @@ if ($this->post) {
 				}
 			}
 			$this->ms['show_main']=1;
-			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
 		}
 	}
 }
@@ -300,7 +300,7 @@ if ($this->get['edit']) {
 	$tmpcontent.='
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+	<form id="add_payment_form" class="form-horizontal" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 		<input name="sub" type="hidden" value="update_payment_method" />
 		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
@@ -455,7 +455,7 @@ if ($this->get['edit']) {
 		if (!isset($psp['vars']['order_payment_reminder'])) {
 			$psp['vars']['order_payment_reminder']['type']='psp_mail_template_payment_reminder_email_templates';
 		}
-		$tmpcontent.='<form class="form-horizontal edit_form" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
+		$tmpcontent.='<form class="form-horizontal edit_form" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
 			$tmpcontent.='<div class="form-group">
 				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-2"><p class="form-control-static">';
@@ -688,7 +688,7 @@ if ($this->ms['show_main']) {
 				@unlink($target);
 			}
 		}
-		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
 	}
 	// payment method admin system
 	$colspan=4;
@@ -719,25 +719,25 @@ if ($this->ms['show_main']) {
 					$tmpcontent.='<td><strong>All</strong></td>';
 				}
 			}
-			$tmpcontent.='<td class="cellName"><strong><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
+			$tmpcontent.='<td class="cellName"><strong><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&edit=1').'">'.$row['name'].'</a>
 			</strong></td>
 			<td>'.$row['provider'].'</td>
 			<td class="cellDate">'.date("Y-m-d", $row['date']).'</td>
 			<td  class="cellStatus">';
 			if (!$row['status']) {
 				$tmpcontent.='<span class="admin_status_red" alt="'.$this->pi_getLL('disable').'"></span>';
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 			} else {
-				$tmpcontent.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+				$tmpcontent.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&status=0').'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 				$tmpcontent.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 			}
 			$tmpcontent.='
 			</td>
 			<td class="cellAction">
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><i class="fa fa-trash-o"></i></a>
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&payment_method_id='.$row['id'].'&delete=1').'" onclick="return confirm(\'Are you sure?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('admin_label_alt_remove').'"><i class="fa fa-trash-o"></i></a>
 			</td>
 			<td align="center">
-				<a href="'.mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=payment&payment_method_id='.$row['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> '.ucfirst($this->pi_getLL('download_record')).'</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'].'&download=payment&payment_method_id='.$row['id']).'" class="btn btn-primary btn-sm"><i class="fa fa-download"></i> '.ucfirst($this->pi_getLL('download_record')).'</a>
 			</td>
 			</tr>';
 		}
@@ -746,7 +746,7 @@ if ($this->ms['show_main']) {
 		$tmpcontent.=$this->pi_getLL('currently_there_are_no_payment_methods_defined').'.';
 	}
 	$tmpcontent.='<fieldset id="scheduled_import_jobs_form"><h3 class="page-header">'.$this->pi_getLL('upload_record').'</h3>
-			<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=payment').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+			<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=payment').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 				<div class="form-group">
 					<label for="new_code" class="control-label col-md-2">'.$this->pi_getLL('code').'</label>
 					<div class="col-md-10">
@@ -780,15 +780,15 @@ if ($this->ms['show_main']) {
 		$innercount++;
 		$count++;
 
-		$panelTitle='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">'.htmlspecialchars($item['name']).'</a>';
-		$panelBody='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">';
+		$panelTitle='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">'.htmlspecialchars($item['name']).'</a>';
+		$panelBody='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'">';
 		if ($item['image'] && file_exists($this->DOCUMENT_ROOT_MS.'templates/images/psp/'.$item['image'])) {
 			$panelBody.='<span class="multishop_psp_image_wrapper"><span class="multishop_psp_image"><img src="'.\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/psp/'.$item['image'].'" alt="Add '.htmlspecialchars($item['name']).'" title="Add '.htmlspecialchars($item['name']).'"></span></span>';
 		} else {
 			$panelBody.='<span class="multishop_psp_name">'.$item['name'].'</span>';
 		}
 		$panelBody.='</a>';
-		$panelFooter='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" class="btn btn-block btn-success btn-sm"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</a>';
+		$panelFooter='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&sub=add_payment_method&payment_method_code='.$code).'" class="btn btn-block btn-success btn-sm"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_payment_method').'</a>';
 		if ($item['more_info_link']) {
 			$panelFooter.=' <a href="'.$item['more_info_link'].'" target="_blank" class="btn btn-block btn-info btn-sm"><i class="fa fa-user"></i> '.$this->pi_getLL('register').'</a>';
 		}
@@ -843,7 +843,7 @@ if ($this->ms['show_main']) {
 		$colspan=4;
 		$tr_type='even';
 		if (count($payment_methods)) {
-			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 			$tmpcontent.='<input type="hidden" name="payment_to_zone_mappings" value="1" />';
 			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<thead><tr>';
@@ -918,7 +918,7 @@ if ($this->ms['show_main']) {
 		$colspan=4;
 		$tr_type='even';
 		if (count($shipping_methods)) {
-			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+			$tmpcontent.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 			$tmpcontent.='<thead><tr><th>&nbsp;</th>';
 			foreach ($shipping_methods as $shipping_method) {

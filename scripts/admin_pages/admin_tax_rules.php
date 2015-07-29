@@ -43,7 +43,7 @@ if ($this->get['delete'] and is_numeric($this->get['rule_id'])) {
 	$this->post['status']=$tax_rule['status'];
 }
 $content.='
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 	<fieldset>
 		<legend>ADD / UPDATE TAX RULE</legend>
 		<div class="account-field">
@@ -83,16 +83,16 @@ if (count($tax_rules)) {
 		$content.='
 		<tr class="'.$tr_type.'">
 			<td>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rule_id='.$tax_rule['rule_id'].'&edit=1').'">'.$tax_rule['rule_id'].'</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rule_id='.$tax_rule['rule_id'].'&edit=1').'">'.$tax_rule['rule_id'].'</a>
 			</td>
 			<td>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rule_id='.$tax_rule['rule_id'].'&edit=1').'">'.$tax_rule['name'].'</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rule_id='.$tax_rule['rule_id'].'&edit=1').'">'.$tax_rule['name'].'</a>
 			</td>
 			<td>
 				'.$tax_rule['status'].'
 			</td>			
 			<td>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rule_id='.$tax_rule['rule_id'].'&delete=1').'">delete</a>
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&rule_id='.$tax_rule['rule_id'].'&delete=1').'">delete</a>
 			</td>
 		</tr>
 		';

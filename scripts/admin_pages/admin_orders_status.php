@@ -75,7 +75,7 @@ if ($this->get['tx_multishop_pi1']['action']=='edit') {
 }
 $content.='<div class="main-heading"><h1>'.$this->pi_getLL('order_status').'</h1></div>';
 $content.='
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <fieldset><legend>'.$this->pi_getLL('add_order_status').'</legend>
 ';
 foreach ($this->languages as $key=>$language) {
@@ -138,7 +138,7 @@ if (count($statusses)) {
 		<td width="60" align="center">';
 		if (!$status['default_status']) {
 			$content.='';
-			$content.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+			$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 		} else {
 			$content.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 			$content.='';
@@ -146,8 +146,8 @@ if (count($statusses)) {
 		$content.='
 		</td>
 		<td width="50" class="align_center">
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=edit').'" class="admin_menu_edit" alt="'.$this->pi_getLL('edit').'"></a>
-			<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=delete').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a>
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=edit').'" class="admin_menu_edit" alt="'.$this->pi_getLL('edit').'"></a>
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=delete').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a>
 		</td>';
 		$content.='</tr>';
 	}

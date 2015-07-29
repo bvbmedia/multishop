@@ -50,27 +50,27 @@ foreach ($tmporders as $order) {
 	$paid_status='';
 	if (!$order['paid']) {
 		$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
-		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $order['orders_id']).'\')"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
+		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_been_paid'), $order['orders_id']).'\')"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('change_to_paid').'" title="'.$this->pi_getLL('change_to_paid').'"></span></a>';
 	} else {
-		$paid_status.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>&nbsp;';
+		$paid_status.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_selected_orders_to_not_paid&selected_orders[]='.$order['orders_id']).'" onclick="return confirm(\''.sprintf($this->pi_getLL('admin_label_are_you_sure_that_invoice_x_has_not_been_paid'), $order['orders_id']).'\')"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('change_to_not_paid').'" title="'.$this->pi_getLL('change_to_not_paid').'"></span></a>&nbsp;';
 		$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 	}
 	$orderlist_buttons=array();
 	switch ($page_type) {
 		case 'proposals':
-			$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
-			$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
+			$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
+			$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
 			break;
 		case 'orders':
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 				if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="btn btn-primary btn-sm"'.($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] ? ' target="_blank"' : '').'>'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
+					$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="btn btn-primary btn-sm"'.($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING'] ? ' target="_blank"' : '').'>'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
 				}
 				if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
 					if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
 						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']).'" class="btn btn-primary btn-sm" target="_blank">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 					} else {
-						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
+						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="btn btn-primary btn-sm">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 					}
 				}
 			}
@@ -114,9 +114,9 @@ foreach ($tmporders as $order) {
 		$markerArray['INVOICE_NUMBER'].='</td>';
 	}
 	if (isset($this->get['tx_multishop_pi1']['is_proposal'])) {
-		$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
+		$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
 	} else {
-		$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+		$markerArray['ORDER_EDIT_URL']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
 	}
 	$markerArray['EDIT_ORDER_POPUP_WIDTH']=$edit_order_popup_width;
 	$markerArray['LABEL_LOADING']=htmlspecialchars($this->pi_getLL('loading'));
@@ -206,9 +206,9 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_ORDER_ID###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###HEADER_SORTBY_LINK_ORDER_ID###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_HEADER_ORDER_ID###']=$this->pi_getLL('orders_id');
-$subpartArray['###FOOTER_SORTBY_LINK_ORDER_ID###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_ORDER_ID###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_ORDER_ID###']=$this->pi_getLL('orders_id');
 $master_shop_header='';
 if ($this->masterShop) {
@@ -230,9 +230,9 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_ORDER_DATE###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###HEADER_SORTBY_LINK_ORDER_DATE###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_HEADER_ORDER_DATE###']=$this->pi_getLL('order_date');
-$subpartArray['###FOOTER_SORTBY_LINK_ORDER_DATE###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_ORDER_DATE###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_ORDER_DATE###']=$this->pi_getLL('order_date');
 $key='grand_total';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
@@ -240,9 +240,9 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_AMOUNT###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###HEADER_SORTBY_LINK_AMOUNT###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_HEADER_AMOUNT###']=$this->pi_getLL('amount');
-$subpartArray['###FOOTER_SORTBY_LINK_AMOUNT###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_AMOUNT###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_AMOUNT###']=$this->pi_getLL('amount');
 $key='shipping_method_label';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
@@ -250,9 +250,9 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_SHIPPING_METHOD###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###HEADER_SORTBY_LINK_SHIPPING_METHOD###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_HEADER_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
-$subpartArray['###FOOTER_SORTBY_LINK_SHIPPING_METHOD###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_SHIPPING_METHOD###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
 $key='payment_method_label';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
@@ -260,9 +260,9 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_PAYMENT_METHOD###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###HEADER_SORTBY_LINK_PAYMENT_METHOD###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_HEADER_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
-$subpartArray['###FOOTER_SORTBY_LINK_PAYMENT_METHOD###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_PAYMENT_METHOD###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
 $subpartArray['###LABEL_HEADER_STATUS###']=$this->pi_getLL('order_status');
 $subpartArray['###LABEL_FOOTER_STATUS###']=$this->pi_getLL('order_status');
@@ -272,9 +272,9 @@ if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 } else {
 	$final_order_link='a';
 }
-$subpartArray['###HEADER_SORTBY_LINK_MODIFIED###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###HEADER_SORTBY_LINK_MODIFIED###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_HEADER_MODIFIED###']=$this->pi_getLL('modified_on', 'Modified on');
-$subpartArray['###FOOTER_SORTBY_LINK_MODIFIED###']=mslib_fe::typolink(',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
+$subpartArray['###FOOTER_SORTBY_LINK_MODIFIED###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&tx_multishop_pi1[order_by]='.$key.'&tx_multishop_pi1[order]='.$final_order_link.'&'.$query_string);
 $subpartArray['###LABEL_FOOTER_MODIFIED###']=$this->pi_getLL('modified_on', 'Modified on');
 $subpartArray['###LABEL_HEADER_PAID###']=$this->pi_getLL('admin_paid');
 $subpartArray['###LABEL_FOOTER_PAID###']=$this->pi_getLL('admin_paid');

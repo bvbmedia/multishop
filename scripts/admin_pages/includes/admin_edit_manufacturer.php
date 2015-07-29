@@ -168,10 +168,10 @@ $manufacturersMeta='';
 if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer') {
 	if ($_REQUEST['action']=='edit_manufacturer' and $manufacturer['manufacturers_image']) {
 		$tmpcontent.='<img src="'.mslib_befe::getImagePath($manufacturer['manufacturers_image'], 'manufacturers', 'normal').'">';
-		$tmpcontent.=' <a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image').'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+		$tmpcontent.=' <a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image').'" onclick="return confirm(\'Are you sure?\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
 		$markerArray=array();
 		$markerArray['MANUFACTURER_IMAGES_SRC']=mslib_befe::getImagePath($manufacturer['manufacturers_image'], 'manufacturers', 'normal');
-		$markerArray['MANUFACTURER_IMAGES_DELETE_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image');
+		$markerArray['MANUFACTURER_IMAGES_DELETE_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id'].'&action=edit_manufacturer&delete_image=manufacturers_image');
 		$markerArray['FULL_HTTP_URL']=$this->FULL_HTTP_URL_MS;
 		$markerArray['ADMIN_LABEL_JS_ARE_YOU_SURE']=$this->pi_getLL('admin_label_js_are_you_sure');
 		$markerArray['MANUFACTURER_IMAGES_FILENAME']=$manufacturer['manufacturers_image'];
@@ -240,7 +240,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$subpartArray['###MANUFACTURER_NOT_VISIBLE_CHECKED###']='';
 	}
 	$subpartArray['###MANUFACTURER_ID###']=$manufacturer['manufacturers_id'];
-	$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id']);
+	$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&manufacturers_id='.$_REQUEST['manufacturers_id']);
 	$subpartArray['###LABEL_MANUFACTURER_NAME###']=$this->pi_getLL('admin_name');
 	$subpartArray['###VALUE_MANUFACTURER_NAME###']=htmlspecialchars($manufacturer['manufacturers_name']);
 	$subpartArray['###LABEL_MANUFACTURER_IMAGE###']=$this->pi_getLL('admin_image');

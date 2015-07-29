@@ -28,7 +28,7 @@ if (count($zones['zone_id'])) {
 	$colspan=4;
 	$tr_type='even';
 	if (count($shipping_methods)) {
-		$content.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+		$content.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
 		$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 		$content.='<tr>';
 		$content.='<th width="100px">Zones</th>';

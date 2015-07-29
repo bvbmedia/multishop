@@ -40,7 +40,7 @@ foreach ($tmporders as $order) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['CUSTOMER_NAME']=$customer_name;
-	$markerArray['CUSTOMER_NAME_LINK']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$order['customer_id'].'&action=edit_customer', 1);
+	$markerArray['CUSTOMER_NAME_LINK']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$order['customer_id'].'&action=edit_customer', 1);
 	$markerArray['IP_ADDRESS']=$order['ip_address'];
 	$markerArray['ORDERS_ID']=$order['orders_id'];
 	$markerArray['USER_AGENT']=$order['user_agent'];
