@@ -118,14 +118,6 @@
 	</tfoot>
 	</table>
 </div>
-	<script type="text/javascript">
-    jQuery(document).ready(function ($) {
-        $('#check_all_1').click(function () {
-			$('input:checkbox').prop('checked', this.checked);
-        });
-    });
-    </script>
-
 	<input type="hidden" name="p" value="###PAGE_NUMBER###" /><input type="hidden" name="cid" value="###CATEGORY_ID1###" />
 <hr>
 		<div class="form-group">
@@ -137,25 +129,8 @@
 			<div class="form-group">
 			<input class="btn btn-success" type="submit" name="submit" value="###LABEL_ADMIN_SUBMIT###" />
 		</div>
-
-		<script type="text/javascript">
-            jQuery(document).ready(function ($) {
-                $('#products_search_action').change(function() {
-				if ($(this).val()=='move') {
-					$("#target_categories_id").show();
-				} else if ($(this).val()=='duplicate') {
-					$("#target_categories_id").show();
-				} else {
-					$("#target_categories_id").hide();
-				}
-			});
-			$("#target_categories_id").hide();
-		});
-        </script>
-
-			<input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" />
-			<input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" />
-
+		<input type="button" name="download" class="btn btn-primary" value="###LABEL_DOWNLOAD_AS_EXCEL_FILE###" onclick="###DOWNLOAD_AS_EXCEL_URL###" />
+		<input type="submit" class="btn btn-primary" name="submit" value="###LABEL_UPDATE_MODIFIED_PRODUCTS###" />
 </form>
 
 <form action="###FORM_UPLOAD_ACTION_URL###" method="post" enctype="multipart/form-data" name="upload" id="upload" class="form-horizontal blockSubmitForm">
@@ -181,6 +156,70 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+	$('.categories_select2').select2({
+		dropdownCssClass: "", // apply css that makes the dropdown taller
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function (query) {
+		   $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL###', {
+			   data: {
+				   q: query.term
+			   },
+			   dataType: "json"
+		   }).done(function (data) {
+			   //categoriesIdSearchTerm[query.term]=data;
+			   query.callback({results: data});
+		   });
+		},
+		initSelection: function (element, callback) {
+		   var id = $(element).val();
+		   if (id !== "") {
+			   $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE###', {
+				   data: {
+					   preselected_id: id
+				   },
+				   dataType: "json"
+			   }).done(function (data) {
+				   categoriesIdTerm[data.id] = {id: data.id, text: data.text};
+				   callback(data);
+			   });
+		   }
+		},
+		formatResult: function (data) {
+		   if (data.text === undefined) {
+			   $.each(data, function (i, val) {
+				   return val.text;
+			   });
+		   } else {
+			   return data.text;
+		   }
+		},
+		formatSelection: function (data) {
+		   if (data.text === undefined) {
+			   return data[0].text;
+		   } else {
+			   return data.text;
+		   }
+		},
+		escapeMarkup: function (m) {
+		   return m;
+		}
+	});
+	$('#check_all_1').click(function () {
+		$('input:checkbox').prop('checked', this.checked);
+	});
+	$('#products_search_action').change(function() {
+		if ($(this).val()=='move') {
+			$("#target_categories_id").show();
+		} else if ($(this).val()=='duplicate') {
+			$("#target_categories_id").show();
+		} else {
+			$("#target_categories_id").hide();
+		}
+	});
+	$("#target_categories_id").hide();
+	//
 	$(document).on("click", ".update_product_status", function(e) {
 		e.preventDefault();
 		var products_id=$(this).attr("rel");

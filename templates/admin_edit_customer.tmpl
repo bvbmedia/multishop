@@ -3,7 +3,7 @@
 ###JS_FUNCTIONS_EXTRA###
 jQuery(document).ready(function ($) {
 	$('.nav-tabs a:first').tab('show');
-	
+
     var lochash=window.location.hash;
     if ($(".alert alert-danger ul.ul-display-error li").length > 0) {
         lochash = '#edit_customer';
@@ -240,7 +240,15 @@ jQuery(document).ready(function ($) {
                             </div>
                         </div>
                     </div>
-                    ###CUSTOMER_GROUPS_INPUT###
+					<div class="form-group">
+						<div class="row">
+							<div class="col-md-6">
+								<label for="language" id="account-language">###LABEL_LANGUAGE###</label>
+								###LANGUAGE_SELECTBOX###
+							</div>
+						</div>
+					</div>
+					###CUSTOMER_GROUPS_INPUT###
                     <div class="form-group">
                         <label class="account-imge" for="middle_name">###LABEL_IMAGE###</label>
                         ###VALUE_IMAGE###

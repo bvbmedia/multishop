@@ -56,6 +56,9 @@ if ($this->post && $this->post['email']) {
 	}
 	if ($continue) {
 		$updateArray=array();
+        if (isset($this->post['tx_multishop_language'])) {
+            $updateArray['tx_multishop_language']=$this->post['tx_multishop_language'];
+        }
 		$updateArray['username']=$this->post['username'];
 		if ($this->post['birthday']) {
 			$updateArray['date_of_birth']=strtotime($this->post['birthday']);
@@ -247,6 +250,9 @@ if ($this->post && $this->post['email']) {
 			}
 		} else {
 			// insert mode
+            if (isset($this->post['tx_multishop_language'])) {
+                $updateArray['tx_multishop_language']=$this->post['tx_multishop_language'];
+            }
 			if (count($this->post['tx_multishop_pi1']['groups'])) {
 				$this->post['tx_multishop_pi1']['groups'][]=$this->conf['fe_customer_usergroup'];
 				$updateArray['usergroup']=implode(",", $this->post['tx_multishop_pi1']['groups']);
@@ -1042,6 +1048,26 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : 14);
 		break;
 }
+// language input
+$language_selectbox='';
+foreach ($this->languages as $key=>$language) {
+    $language['lg_iso_2']=strtolower($language['lg_iso_2']);
+    if (empty($user['tx_multishop_language']) && $language['uid']===0) {
+        $language_selectbox.='<option value="'.$language['lg_iso_2'].'" selected="selected">'.$language['title'].'</option>';
+    } else {
+        if (strtolower($user['tx_multishop_language'])==$language['lg_iso_2']) {
+            $language_selectbox.='<option value="'.$language['lg_iso_2'].'" selected="selected">'.$language['title'].'</option>';
+        } else {
+            $language_selectbox.='<option value="'.$language['lg_iso_2'].'">'.$language['title'].'</option>';
+        }
+    }
+}
+if (!empty($language_selectbox)) {
+    $language_selectbox='<select name="tx_multishop_language">'.$language_selectbox.'</select>';
+}
+$subpartArray['###LABEL_LANGUAGE###']=$this->pi_getLL('language');
+$subpartArray['###LANGUAGE_SELECTBOX###']=$language_selectbox;
+// language eol
 // h5validate message
 $subpartArray['###INVALID_FIRSTNAME_MESSAGE###']=$this->pi_getLL('first_name_required');
 $subpartArray['###INVALID_LASTNAME_MESSAGE###']=$this->pi_getLL('surname_is_required');

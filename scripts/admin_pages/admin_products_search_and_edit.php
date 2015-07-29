@@ -205,7 +205,8 @@ foreach ($fields as $key=>$label) {
 	$searchby_selectbox.='<option value="'.$key.'"'.($this->get['tx_multishop_pi1']['search_by']==$key ? ' selected="selected"' : '').'>'.$label.'</option>'."\n";
 }
 $searchby_selectbox.='</select>';
-$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
+//$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
+$search_category_selectbox='<div class="categories_tree"><input type="hidden" name="cid" class="categories_select2" style="width:400px"></div>';
 $search_limit='<select name="tx_multishop_pi1[limit]" class="form-control">';
 $limits=array();
 $limits[]='10';
@@ -697,7 +698,8 @@ if ($pageset['total_rows']>0) {
 		$action_selectbox.='<option value="'.$key.'">'.$value.'</option>';
 	}
 	$action_selectbox.='</select>';
-	$input_categories_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('tx_multishop_pi1[target_categories_id]', mslib_fe::tx_multishop_get_category_tree('', '', ''), '', 'class="form-control" id="target_categories_id"');
+	//$input_categories_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('tx_multishop_pi1[target_categories_id]', mslib_fe::tx_multishop_get_category_tree('', '', ''), '', 'class="form-control" id="target_categories_id"');
+    $input_categories_selectbox='<div id="target_categories_id"><input type="hidden" name="tx_multishop_pi1[target_categories_id]" class="categories_select2"></div>';
 	$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls')."'";
 	if (isset($this->get['cid']) && $this->get['cid']>0) {
 		$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls&cid='.$this->get['cid'])."'";
@@ -730,6 +732,8 @@ if ($pageset['total_rows']>0) {
 	$subpartArray['###LABEL_ADMIN_YES###']=$this->pi_getLL('admin_yes');
 	$subpartArray['###LABEL_ADMIN_NO###']=$this->pi_getLL('admin_no');
 	$subpartArray['###AJAX_UPDATE_PRODUCT_STATUS_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=update_products_status');
+    $subpartArray['###AJAX_PRODUCT_CATEGORIES_FULL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree');
+    $subpartArray['###AJAX_PRODUCT_CATEGORIES_GET_VALUE###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues');
 	$subpartArray['###AJAX_GET_TAX_RULESET_URL0###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
 	$subpartArray['###AJAX_GET_TAX_RULESET_URL1###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
 	$subpartArray['###ADMIN_LABEL_ENABLE0###']=$this->pi_getLL('admin_label_enable');
