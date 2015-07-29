@@ -193,6 +193,7 @@ switch ($_REQUEST['action']) {
 			}
 		}
 		// custom page hook that can be controlled by third-party plugin eof
+        $content.=$params['content'];
 		break;
 }
 $content.='</div>';
