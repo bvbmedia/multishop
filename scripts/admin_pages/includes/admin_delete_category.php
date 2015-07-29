@@ -24,7 +24,7 @@ if (is_numeric($_REQUEST['cid'])) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if (is_numeric($row['categories_id'])) {
-			$content.='<form class="admin_categories_edit" name="admin_categories_edit_'.$_REQUEST['cid'].'" id="admin_categories_edit_'.$_REQUEST['cid'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&categories_id='.$_REQUEST['cid'], 1).'">
+			$content.='<form class="admin_categories_edit" name="admin_categories_edit_'.$_REQUEST['cid'].'" id="admin_categories_edit_'.$_REQUEST['cid'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&categories_id='.$_REQUEST['cid'], 1).'">
 			<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 			';
 			$content.='
