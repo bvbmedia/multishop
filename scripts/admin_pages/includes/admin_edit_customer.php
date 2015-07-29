@@ -468,7 +468,7 @@ $head.='
 				tooltip_is_shown=orders_id;
 				$.ajax({
 					type:   "POST",
-					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
+					url:    \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
 					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
 					dataType: "json",
 					success: function(data) {
@@ -562,7 +562,7 @@ $images_tab_block.='
 	<input name="tx_multishop_pi1[image]" id="ajax_fe_user_image" type="hidden" value="" />';
 if ($_REQUEST['action']=='edit_product' and $this->post['image']) {
 	$images_tab_block.='<img src="'.mslib_befe::getImagePath($this->post['image'], 'products', '50').'">';
-	$images_tab_block.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+	$images_tab_block.=' <a href="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 }
 $images_tab_block.='</div>';
 $images_tab_block.='
@@ -570,7 +570,7 @@ $images_tab_block.='
 jQuery(document).ready(function($) {
 	var uploader = new qq.FileUploader({
 		element: document.getElementById(\'fe_user_image'.'\'),
-		action: \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_upload&tx_multishop_pi1[uid]='.$user['uid']).'\',
+		action: \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_upload&tx_multishop_pi1[uid]='.$user['uid']).'\',
 		params: {
 			file_type: \'fe_user_image'.'\'
 		},

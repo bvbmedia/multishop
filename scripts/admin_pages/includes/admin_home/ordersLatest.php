@@ -16,7 +16,7 @@ $headerData.='
 			if (confirm("Do you want to change orders id: "+orders_id+" to status: "+orders_status_label)) {
 				$.ajax({
 						type:   "POST",
-						url:    "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
+						url:    "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
 						dataType: \'json\',
 						data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
 						success: function(msg) {
@@ -75,7 +75,7 @@ $headerData.='});
 				tooltip_is_shown=orders_id;
 				$.ajax({
 					type:   "POST",
-					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
+					url:    \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
 					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
 					dataType: "json",
 					success: function(data) {

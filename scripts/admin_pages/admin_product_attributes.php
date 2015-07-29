@@ -245,7 +245,7 @@ if ($rows) {
         });
 	}
 	function getOptionData(optid) {
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_option_data').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_option_data').'";
 		$.ajax({
 			type:"POST",
 			url:href,
@@ -278,7 +278,7 @@ if ($rows) {
 		});
 	}
 	function getOptionValuesData(relation_id) {
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_option_values_data').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_option_values_data').'";
 		$.ajax({
 			type:"POST",
 			url:href,
@@ -312,9 +312,9 @@ if ($rows) {
 	}
 	function saveOptionsData(serial_value, mode) {
 		if (mode=="options") {
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_options_data').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_options_data').'";
 		} else if (mode=="options_values") {
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_options_values_data').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_options_values_data').'";
 		}
 		$.ajax({
 			type:"POST",
@@ -407,7 +407,7 @@ if ($rows) {
 				var serial_value=$(".add_new_attributes_options").serialize();
 
 				// save new option
-				href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=add_new_options').'";
+				href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=add_new_options').'";
 				$.ajax({
 					type:"POST",
 					url:href,
@@ -522,7 +522,7 @@ if ($rows) {
 			if ($(ul_parent_id).is(":hidden")) {
 				$(ul_parent_id).show();
 			}
-			select2_options_value("." + new_values_input, "new options values", "new_values_input_drop", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_attributes_values').'");
+			select2_options_value("." + new_values_input, "new options values", "new_values_input_drop", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=get_attributes_values').'");
 	  	});
 	  	$(document).on("click", ".cancel_new_options_values", function() {
 	  		$(this).parent().parent().parent().remove();
@@ -536,7 +536,7 @@ if ($rows) {
 	  		var hidden_input=$(this).parent().parent().children("span.values_id").children("input.new_input_values_hidden");
 	  		var serial_value="optid=" + optid + "&" + $(hidden_input).serialize();
 			// save new values
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=save_options_values_data').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=save_options_values_data').'";
 			$.ajax({
 				type:"POST",
 				url:href,
@@ -579,7 +579,7 @@ if ($rows) {
 					var attribute_values_name=\'attribute_values_image_\' + s.pov2po_id;
 					attributeImageUploader[s.pov2po_id] = new qq.FileUploader({
 						element: document.getElementById(\'attribute_values_image\' + s.pov2po_id),
-						action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=upload_attribute_values_image').'\',
+						action: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=upload_attribute_values_image').'\',
 						params: {
 							attribute_values_name: attribute_values_name,
 							pov2po_id: s.pov2po_id,
@@ -612,7 +612,7 @@ if ($rows) {
 			var fetched_id = "#values_fetched_" + opt_id;
 			var button_label_id = "#button_label_" + opt_id;
 			if ($(fetched_id).val() == "0") {
-				href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=fetch_attributes').'";
+				href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=fetch_attributes').'";
 				$.ajax({
 					type:   "POST",
 					url:    href,
@@ -662,7 +662,7 @@ if ($rows) {
 									var attribute_values_name=\'attribute_values_image_\' + v.pov2po_id;
 									attributeImageUploader[v.pov2po_id] = new qq.FileUploader({
 										element: document.getElementById(\'attribute_values_image\' + v.pov2po_id),
-										action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=upload_attribute_values_image').'\',
+										action: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=upload_attribute_values_image').'\',
 										params: {
 											attribute_values_name: attribute_values_name,
 											pov2po_id: v.pov2po_id,
@@ -716,7 +716,7 @@ if ($rows) {
 		});
 		$(document).on("click", "#delete_attribute_values_image", function(e) {
 			e.preventDefault();
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_values_image').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_values_image').'";
 			var pov2po_id=$(this).attr("rel");
 			ifConfirm("'.$this->pi_getLL('delete').'","'.$this->pi_getLL('are_you_sure').'",function() {
 				$.ajax({
@@ -748,7 +748,7 @@ if ($rows) {
 		$(document).on("click", ".delete_options", function(e) {
 			e.preventDefault();
 			var opt_id = $(this).attr("rel");
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_attributes').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_attributes').'";
 			$.ajax({
 				type:   "POST",
 				url:    href,
@@ -768,7 +768,7 @@ if ($rows) {
                             columnClass: \'col-md-8\',
                             confirmButton: "'.$this->pi_getLL('delete').'",
                             confirm: function(){
-                                href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_attributes&force_delete=1').'";
+                                href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_attributes&force_delete=1').'";
                                     $.ajax({
                                         type:   "POST",
                                         url:    href,
@@ -811,7 +811,7 @@ if ($rows) {
 		$(document).on("click", ".delete_options_values", function(e) {
 			e.preventDefault();
 			var opt_id = $(this).attr("rel");
-			href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_options_values').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_options_values').'";
 			$.ajax({
 				type:   "POST",
 				url:    href,
@@ -832,7 +832,7 @@ if ($rows) {
                             columnClass: \'col-md-8\',
                             confirmButton: "'.$this->pi_getLL('delete').'",
                             confirm: function(){
-                                href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_options_values&force_delete=1').'";
+                                href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_options_values&force_delete=1').'";
                                 $.ajax({
                                     type:   "POST",
                                     url:    href,
@@ -876,7 +876,7 @@ if ($rows) {
 			cursor:"move",
 			//axis:"y",
 			update:function(e, ui) {
-				href="'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_attributes_sortable&tx_multishop_pi1[type]=options').'";
+				href="'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_attributes_sortable&tx_multishop_pi1[type]=options').'";
 				$(this).sortable("refresh");
 				sorted=$(this).sortable("serialize","id");
 				$.ajax({
@@ -891,7 +891,7 @@ if ($rows) {
 			cursor:"move",
 			//axis:"y",
 			update:function(e, ui) {
-				href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_attributes_sortable&tx_multishop_pi1[type]=option_values').'";
+				href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=update_attributes_sortable&tx_multishop_pi1[type]=option_values').'";
 				$(this).sortable("refresh");
 				sorted = $(this).sortable("serialize","id");
 				var products_options_id=$(this).attr("rel");

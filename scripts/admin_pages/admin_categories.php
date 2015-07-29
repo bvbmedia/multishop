@@ -19,7 +19,7 @@ jQuery(document).ready(function($) {
 		cursor:"move",
 		items:">li.categories_sorting",
 		update: function(e, ui) {
-			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_categories_sorting').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_categories_sorting').'";
 			jQuery(this).sortable("refresh");
 			sorted = jQuery(this).sortable("serialize", "id");
 			jQuery.ajax({
@@ -36,7 +36,7 @@ jQuery(document).ready(function($) {
 		cursor:"move",
 		items:">li.sub_categories_sorting",
 		update: function(e, ui) {
-			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_categories_sorting').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_categories_sorting').'";
 			jQuery(this).sortable("refresh");
 			sorted = jQuery(this).sortable("serialize", "id");
 			jQuery.ajax({

@@ -472,7 +472,7 @@ jQuery(document).ready(function($) {
 			tooltip_is_shown=customer_id;
 			$.ajax({
 				type:   "POST",
-				url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminCustomersListingDetails&').'\',
+				url:    \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminCustomersListingDetails&').'\',
 				data:   \'tx_multishop_pi1[customer_id]=\'+customer_id,
 				dataType: "json",
 				success: function(data) {
@@ -519,7 +519,7 @@ jQuery(document).ready(function($) {
 			tooltip_is_shown=customer_id;
 			$.ajax({
 				type:   "POST",
-				url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminCustomersListingDetails&').'\',
+				url:    \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminCustomersListingDetails&').'\',
 				data:   \'tx_multishop_pi1[customer_id]=\'+customer_id,
 				dataType: "json",
 				success: function(data) {

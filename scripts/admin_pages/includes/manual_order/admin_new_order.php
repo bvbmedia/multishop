@@ -254,7 +254,7 @@ if (count($products)<0) {
 					width:\'100%\',
 					minimumInputLength: 0,
 					query: function(query) {
-						$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getExistingCustomers&').'\', {
+						$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getExistingCustomers&').'\', {
 							data: {
 								q: query.term
 							},
@@ -266,7 +266,7 @@ if (count($products)<0) {
 					initSelection: function(element, callback) {
 						var id=$(element).val();
 						if (id!=="") {
-							$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getExistingCustomers&').'\', {
+							$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getExistingCustomers&').'\', {
 								data: {
 									preselected_id: id
 								},

@@ -865,7 +865,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$headerData='
         <script type="text/javascript">
         function updateCustomerOrderDetails(type, data_serial) {
-            href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=update_customer_order_details', 1).'&details_type=" + type + "&orders_id='.$this->get['orders_id'].'";
+            href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=update_customer_order_details', 1).'&details_type=" + type + "&orders_id='.$this->get['orders_id'].'";
             jQuery.ajax({
                     type:   "POST",
                     url:    href,
@@ -2755,9 +2755,9 @@ if (is_numeric($this->get['orders_id'])) {
                 }
                 // eof autocomplete for option
                 '.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
-                select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
-                select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-                select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+                select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+                select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 ' : '').'
                 var add_new_attributes = function(optid_value, optvalid_value, price_data) {
                     var d = new Date();
@@ -2810,8 +2810,8 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                     $(\'#last_edit_product_row\').before(cloned_row);
 
-                    select2_sb(".edit_product_manual_option" + n, "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-                    select2_values_sb(".edit_product_manual_values" + n, "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                    select2_sb(".edit_product_manual_option" + n, "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+                    select2_values_sb(".edit_product_manual_values" + n, "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 }
                 // manual function for removing the manual attributes
                 jQuery(document).ready(function($) {';
@@ -3037,7 +3037,7 @@ if (is_numeric($this->get['orders_id'])) {
                     $(".manual_add_new_product").hide();
                 }
                 $(".order_product_action").hide();
-                select2_pn(".product_name", "product", "product_name", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+                select2_pn(".product_name", "product", "product_name", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
             });';
 		}
 		$content.='
@@ -3145,7 +3145,7 @@ if (is_numeric($this->get['orders_id'])) {
                 if (confirm("Do you want to change orders product id: " + order_pid + " to status: " + orders_status_label)) {
                     $.ajax({
                         type: "POST",
-                        url: "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_order_product_status').'",
+                        url: "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_update_order_product_status').'",
                         dataType: \'json\',
                         data: "tx_multishop_pi1[orders_id]='.$order['orders_id'].'&tx_multishop_pi1[order_product_id]=" + order_pid + "&tx_multishop_pi1[orders_status_id]=" + orders_status_id,
                         success: function(msg) {}
@@ -3158,7 +3158,7 @@ if (is_numeric($this->get['orders_id'])) {
                 items: "tbody.sortbody",
                 //axis:       "y",
                 update: function(e, ui) {
-                    href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=sort_orders_products').'";
+                    href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=sort_orders_products').'";
                     jQuery(this).sortable("refresh");
                     sorted = jQuery(this).sortable("serialize", "id");
                     jQuery.ajax({
@@ -3172,7 +3172,7 @@ if (is_numeric($this->get['orders_id'])) {
                 }
             });
             ' : '').'
-            var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
+            var url_relatives = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
 
 var url = document.location.toString();
 if (url.match("#")) {

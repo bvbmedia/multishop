@@ -87,7 +87,7 @@ var select2_sb = function(selector_str, option_id, exclude_id) {
 		},
 		minimumInputLength: 0,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
 				data: {
 					q: query.term
 				},
@@ -99,7 +99,7 @@ var select2_sb = function(selector_str, option_id, exclude_id) {
 		initSelection: function(element, callback) {
 			var id=$(element).val();
 			if (id!=="") {
-				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
 					data: {
 						preselected_id: id
 					},

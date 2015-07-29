@@ -144,7 +144,7 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
 				data: {
 					q: query.term
 				},
@@ -167,7 +167,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -242,10 +242,10 @@ jQuery(document).ready(function($) {
 			$(target_ul_id).append(tabs_content_li);
 			$(\'.mceEditor\').redactor({
 				focus: false,
-				clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
-				imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
-				fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
-				imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+				clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+				imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+				fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+				imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
 				minHeight:\'400\',
 				plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 			});
@@ -260,7 +260,7 @@ jQuery(document).ready(function($) {
 			cropall=1;
 		}
 		var image_name=$(this).attr("rel");
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
 		jQuery.ajax({
 			type:"POST",
 			url:href,
@@ -340,7 +340,7 @@ jQuery(document).ready(function($) {
 		if ($("#onecrop_for_all").prop("checked")) {
 			cropall=1;
 		}
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
 		jQuery.ajax({
 			type:"POST",
 			url:href,
@@ -389,7 +389,7 @@ jQuery(document).ready(function($) {
 	});
 	$(document).on(\'click\', "#crop_save", function(e) {
 		e.preventDefault();
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=crop_product_image').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=crop_product_image').'";
 		var cropall=0;
 		if ($("#onecrop_for_all").prop("checked")) {
 			cropall=1;
@@ -447,7 +447,7 @@ jQuery(document).ready(function($) {
 	});
 	$(document).on(\'click\',"#crop_restore",function(e) {
 		e.preventDefault();
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=restore_crop_image').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=restore_crop_image').'";
 		var cropall=0;
 		if ($("#onecrop_for_all").prop("checked")) {
 			cropall=1;
@@ -532,7 +532,7 @@ jQuery(document).ready(function($) {
 		var tmp_img_attr=$(this).attr("rel").split(":");
 		var img_ctr=tmp_img_attr[0];
 		var img_filename=tmp_img_attr[1];
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=delete_products_images').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=delete_products_images').'";
 		if (confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'?\')) {
 			jQuery.ajax({
 				type:"POST",
@@ -557,7 +557,7 @@ jQuery(document).ready(function($) {
 		//multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
 				data: {
 					q: query.term
 				},
@@ -580,7 +580,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -618,7 +618,7 @@ jQuery(document).ready(function($) {
 		//multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
 				data: {
 					q: query.term
 				},
@@ -641,7 +641,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -2080,9 +2080,9 @@ if ($this->post) {
 		$js_header='';
 		$markerArray=array();
 		$markerArray['AJAX_PID']=(isset($this->get['pid']) ? $this->get['pid'] : 0);
-		$markerArray['AJAX_URL_COPY_PRODUCT']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=copy_duplicate_product');
+		$markerArray['AJAX_URL_COPY_PRODUCT']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=copy_duplicate_product');
 		$markerArray['AJAX_URL_GET_TAX_RULESET']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset');
-		$markerArray['AJAX_URL_GET_SPECIAL_SECTIONS']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getSpecialSections');
+		$markerArray['AJAX_URL_GET_SPECIAL_SECTIONS']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getSpecialSections');
 		if ($product['specials_new_products_price']) {
 			$markerArray['AJAX_REQUEST_SPECIAL_PRICE']='getSpecialsSections('.$_REQUEST['pid'].');';
 		} else {
@@ -2090,7 +2090,7 @@ if ($this->post) {
 		}
 		$markerArray['DATE_FORMAT']=$this->pi_getLL('locale_date_format_js', 'yy/mm/dd');
 		$markerArray['YEAR_RANGE']=date("Y").':'.(date("Y")+2);
-		$markerArray['AJAX_URL_PRODUCT_RELATIVE']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives&relation_types=cross-sell');
+		$markerArray['AJAX_URL_PRODUCT_RELATIVE']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives&relation_types=cross-sell');
 		$js_extra=array();
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['adminEditProductJsExtra'])) {
@@ -2523,7 +2523,7 @@ if ($this->post) {
 			var products_name=$("#products_name_0").val();
 			var uploader'.$i.' = new qq.FileUploader({
 				element: document.getElementById(\'products_image'.$i.'\'),
-				action: \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images').'\',
+				action: \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images').'\',
 				params: {
 					products_name: products_name,
 					file_type: \'products_image'.$i.'\',
@@ -2720,13 +2720,13 @@ if ($this->post) {
 					$(image_col).append(cols_image_attributes_html);
 					' : '').'
 					// init select2
-					select2_sb("#tmp_options_sb", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
-					select2_values_sb("#tmp_attributes_sb", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+					select2_sb("#tmp_options_sb", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+					select2_values_sb("#tmp_attributes_sb", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 					var products_attribute_value_image=n;
 					var uploader_attribute_value_image = new qq.FileUploader({
 						element: document.getElementById(\'attribute_value_image\' + n + \'\'),
-						action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
+						action: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
 						params: {
 							attribute_value_image: n,
 							file_type: \'attribute_value_image\' + n
@@ -2821,13 +2821,13 @@ if ($this->post) {
 					// add new shiny cloned attributes row
 					$($(this).parent().prev()).append(element_cloned);
 					// init select2
-					select2_sb(".product_attribute_options" + n, "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
-					select2_values_sb(".product_attribute_values" + n, "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+					select2_sb(".product_attribute_options" + n, "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "new_product_attribute_options_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+					select2_values_sb(".product_attribute_values" + n, "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "new_product_attribute_values_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 					'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 					var products_attribute_value_image=n;
 					var uploader_attribute_value_image = new qq.FileUploader({
 						element: document.getElementById(\'attribute_value_image\' + n + \'\'),
-						action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
+						action: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
 						params: {
 							attribute_value_image: products_attribute_value_image,
 							file_type: \'attribute_value_image\' + n
@@ -2858,7 +2858,7 @@ if ($this->post) {
 				'.($this->ms['MODULES']['ENABLE_ATTRIBUTE_VALUE_IMAGES'] ? '
 				$(document).on("click", ".delete_product_attribute_value_images", function(e) {
 					e.preventDefault();
-					href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_product_attribute_value_images').'";
+					href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=delete_product_attribute_value_images').'";
 					var image_data=$(this).attr("rel");
 					if (confirm(\''.$this->pi_getLL('are_you_sure').'?\')) {
 						$.ajax({
@@ -2954,8 +2954,8 @@ if ($this->post) {
 						$("#tmp_options_sb").removeAttr("id");
 						$("#tmp_attributes_sb").removeAttr("id");
 						// init the select2 for new product attributes
-						select2_sb(".product_attribute_options" + n, "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
-						select2_values_sb(".product_attribute_values" + n, "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
+						select2_sb(".product_attribute_options" + n, "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+						select2_values_sb(".product_attribute_values" + n, "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");
 						// clear the temp holder
 						$("tr#add_attributes_holder > td").html("&nbsp;");
 						$("#add_attributes_button").show();
@@ -2993,7 +2993,7 @@ if ($this->post) {
 					var pa_main_liwrapper=$(pa_main_divwrapper).parent().parent().parent();
                     var product_attribute_id=$(pa_main_divwrapper).attr("rel");
 					if (product_attribute_id != "new") {
-						href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=delete_product_attributes&pid='.$product['products_id']).'";
+						href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=delete_product_attributes&pid='.$product['products_id']).'";
 						jQuery.ajax({
 							type:"POST",
 							url:href,
@@ -3088,7 +3088,7 @@ if ($this->post) {
 					jQuery("td#products_attributes_items").sortable({
 						'.($product['products_id'] ? '
 						update: function(e, ui) {
-							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_option&pid='.$product['products_id']).'";
+							href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_option&pid='.$product['products_id']).'";
 							jQuery(this).sortable("refresh");
 							sorted = jQuery(this).sortable("serialize", "id");
 							jQuery.ajax({
@@ -3109,7 +3109,7 @@ if ($this->post) {
 					jQuery(".items_wrapper").sortable({
 						'.($product['products_id'] ? '
 						update: function(e, ui) {
-							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_value&pid='.$product['products_id']).'";
+							href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=sort_product_attributes_value&pid='.$product['products_id']).'";
 							jQuery(this).sortable("refresh");
 							sorted = jQuery(this).sortable("serialize", "id");
 							jQuery.ajax({
@@ -3128,7 +3128,7 @@ if ($this->post) {
 				}
 				sort_li();
 				sort_li_children();
-				select2_sb(".product_attribute_options", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
+				select2_sb(".product_attribute_options", "'.addslashes($this->pi_getLL('admin_label_choose_option')).'", "product_attribute_options_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_options').'");
 			});
 			</script>
 			<h3>'.$this->pi_getLL('admin_product_attributes').'</h3 >
@@ -3366,7 +3366,7 @@ if ($this->post) {
 										var products_attribute_value_image=\''.$element_id.'\';
 										var uploader_attribute_value_image'.$element_id.' = new qq.FileUploader({
 											element: document.getElementById(\'attribute_value_image'.$element_id.'\'),
-											action: \''.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
+											action: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_attributes_options_values&tx_multishop_pi1[admin_ajax_attributes_options_values]=admin_upload_product_attribute_value_images').'\',
 											params: {
 												attribute_value_image: products_attribute_value_image,
 												file_type: \'attribute_value_image'.$element_id.'\'
@@ -3462,7 +3462,7 @@ if ($this->post) {
 			if (count($attribute_values_class_id)) {
 				$tmp_attribute_values_class_id=array_unique($attribute_values_class_id);
 				foreach ($tmp_attribute_values_class_id as $value_sb_class_id) {
-					$attribute_values_sb_trigger.='select2_values_sb("'.$value_sb_class_id.'", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");'."\n";
+					$attribute_values_sb_trigger.='select2_values_sb("'.$value_sb_class_id.'", "'.addslashes($this->pi_getLL('admin_label_choose_attribute')).'", "product_attribute_values_dropdown", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'");'."\n";
 				}
 			}
 			$attributes_tab_block.='<tfoot><tr id="add_attributes_button">
@@ -3828,7 +3828,7 @@ if ($this->post) {
 									multiple: true,
 									//allowClear: true,
 									query: function(query) {
-										$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+										$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
 											data: {
 												q: query.term
 											},
@@ -3851,7 +3851,7 @@ if ($this->post) {
 											if (callback_data.length) {
 												callback(callback_data);
 											} else {
-												$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+												$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
 													data: {
 														preselected_id: id
 													},
@@ -3909,10 +3909,10 @@ if ($this->post) {
 									$(target_ul_id).append(tabs_content_li);
 									$(\'.mceEditor\').redactor({
 										focus: false,
-										clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
-										imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
-										fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
-										imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+										clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+										imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+										fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+										imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
 										minHeight:\'400\',
 										plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 									});
@@ -4068,10 +4068,10 @@ if ($this->post) {
 								}
 								$(\'.mceEditor\').redactor({
 									focus: false,
-									clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
-									imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
-									fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
-									imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+									clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+									imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+									fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+									imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
 									minHeight:\'400\',
 									plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 								});

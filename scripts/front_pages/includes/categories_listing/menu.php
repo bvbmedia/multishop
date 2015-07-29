@@ -114,7 +114,7 @@ foreach ($categories as $category) {
 					cursor:     "move", 
 					//axis:       "y", 
 					update: function(e, ui) { 
-						href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=product&catid='.$item['categories_id']).'";
+						href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=product&catid='.$item['categories_id']).'";
 						jQuery(this).sortable("refresh"); 
 						sorted = jQuery(this).sortable("serialize", "id"); 
 						jQuery.ajax({ 

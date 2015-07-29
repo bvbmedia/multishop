@@ -144,7 +144,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or !$output_array=$Cache_Lite->get(
 					 cursor:     "move",
 						//axis:       "y",
 						update: function(e, ui) {
-							href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=subcatlisting').'";
+							href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=subcatlisting').'";
 							jQuery(this).sortable("refresh");
 							sorted = jQuery(this).sortable("serialize", "id");
 							jQuery.ajax({

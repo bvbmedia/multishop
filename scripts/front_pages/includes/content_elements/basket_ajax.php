@@ -52,7 +52,7 @@ $(document).on("click", ".ajax_add_to_cart", function(e) {
 		}
 		$.ajax({ 
 				type:   "POST", 
-				url:    "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=products_to_basket').'",
+				url:    "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=products_to_basket').'",
 				data:   "products_id="+products_id+"&quantity="+quantity, 
 				dataType: "json",
 				success: function(data) {

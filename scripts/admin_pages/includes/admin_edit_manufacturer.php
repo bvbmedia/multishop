@@ -244,7 +244,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	$subpartArray['###LABEL_MANUFACTURER_NAME###']=$this->pi_getLL('admin_name');
 	$subpartArray['###VALUE_MANUFACTURER_NAME###']=htmlspecialchars($manufacturer['manufacturers_name']);
 	$subpartArray['###LABEL_MANUFACTURER_IMAGE###']=$this->pi_getLL('admin_image');
-	$subpartArray['###MANUFACTURER_IMAGES_UPLOAD_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images');
+	$subpartArray['###MANUFACTURER_IMAGES_UPLOAD_URL###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images');
 	$subpartArray['###MANUFACTURER_IMAGES_LABEL_CHOOSE_IMAGE###']=addslashes(htmlspecialchars($this->pi_getLL('choose_image')));
 	$subpartArray['###LABEL_MANUFACTURER_VISIBLE###']=$this->pi_getLL('admin_visible');
 	$subpartArray['###LABEL_MANUFACTURER_ADMIN_YES###']=$this->pi_getLL('admin_yes');
@@ -254,7 +254,7 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 	$subpartArray['###VALUE_FORM_MANUFACTURER_ACTION_URL###']=$_REQUEST['action'];
 	$subpartArray['###DELETE_IMAGES_MANUFACTURERS_ID###']=$_REQUEST['manufacturers_id'];
-	$subpartArray['###AJAX_URL_DELETE_MANUFACTURERS_IMAGE###']=mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=delete_manufacturers_images');
+	$subpartArray['###AJAX_URL_DELETE_MANUFACTURERS_IMAGE###']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=delete_manufacturers_images');
 	$subpartArray['###MANUFACTURERS_IMAGE_CROP_JS###']='';
 	if ($this->ms['MODULES']['ADMIN_CROP_MANUFACTURERS_IMAGES']) {
 		$subpartArray['###MANUFACTURERS_IMAGE_CROP_JS###']='
@@ -346,7 +346,7 @@ jQuery(document).ready(function ($) {
 	$(document).on(\'click\', "#cropEditor", function(e) {
 		e.preventDefault();
 		var image_name=$(this).attr("rel");
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop&tx_multishop_pi1[crop_section]=manufacturers').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop&tx_multishop_pi1[crop_section]=manufacturers').'";
 		jQuery.ajax({
 			type:"POST",
 			url:href,
@@ -394,7 +394,7 @@ jQuery(document).ready(function ($) {
 	});
 	$(document).on(\'click\', "#crop_save", function(e) {
 		e.preventDefault();
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=crop_product_image&tx_multishop_pi1[crop_section]=manufacturers').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=crop_product_image&tx_multishop_pi1[crop_section]=manufacturers').'";
 		jQuery.ajax({
 			type:"POST",
 			url:href,
@@ -430,7 +430,7 @@ jQuery(document).ready(function ($) {
 	});
 	$(document).on(\'click\',"#crop_restore",function(e) {
 		e.preventDefault();
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=restore_crop_image&tx_multishop_pi1[crop_section]=manufacturers').'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=restore_crop_image&tx_multishop_pi1[crop_section]=manufacturers').'";
 		jQuery.ajax({
 			type:"POST",
 			url:href,

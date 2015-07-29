@@ -93,7 +93,7 @@ if ($rows) {
 			cursor:     "move",
 			//axis:       "y",
 			update: function(e, ui) {
-				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=update_attributes_options_groups_sortable&tx_multishop_pi1[type]=options_groups').'";
+				href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_attributes_options_groups_sortable&tx_multishop_pi1[type]=options_groups').'";
 				jQuery(this).sortable("refresh");
 				sorted = jQuery(this).sortable("serialize","id");
 				jQuery.ajax({
@@ -112,7 +112,7 @@ if ($rows) {
 					e.preventDefault();
 					var li_obj=$(this).parent().parent();
 					var group_id=$(this).attr("rel");
-					href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=delete_options_group').'";
+					href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=delete_options_group').'";
 					jQuery.ajax({
 						type: "POST",
 						url: href,

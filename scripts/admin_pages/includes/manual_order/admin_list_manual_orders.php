@@ -65,7 +65,7 @@ if ($this->ms['MODULES']['INVOICE_PRINT'] || $this->ms['MODULES']['PACKING_LIST_
 $tmp.='<th>'.$this->pi_getLL('admin_order_id').'</th><th>'.$this->pi_getLL('admin_customer_name').'</th><th>'.$this->pi_getLL('total_price').'</th><th>'.$this->pi_getLL('paid').'</th><th>'.$this->pi_getLL('status').'</th>';
 if ($this->ms['MODULES']['INVOICE_PRINT'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 	$tmp.='<th>&nbsp;</th>';
-	$tmp.='<form action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'?action=edit_order&print=invoice&all=1" method="post" target="_blank">';
+	$tmp.='<form action="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'?action=edit_order&print=invoice&all=1" method="post" target="_blank">';
 }
 $cb_ctr=0;
 foreach ($orders as $order) {

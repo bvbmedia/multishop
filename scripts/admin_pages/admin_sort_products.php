@@ -114,7 +114,7 @@ if (isset($this->get['tx_multishop_pi1']['categories_id']) && is_numeric($this->
 function AJAXSortProducts() {
     jQuery(".admin_sort_product_listing").sortable("refresh");
     sorted = jQuery(".admin_sort_product_listing").sortable("serialize", "id");
-    href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=product&catid='.$this->get['tx_multishop_pi1']['categories_id']).'";
+    href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=product&catid='.$this->get['tx_multishop_pi1']['categories_id']).'";
     jQuery.ajax({
         type:   "POST",
         url:    href,

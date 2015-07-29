@@ -313,7 +313,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	// tabs
 	$content.='<script type="text/javascript">
 	jQuery(document).ready(function($) {
-	 	var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
+	 	var url_relatives = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
 		jQuery(".tab_content").hide();
 		jQuery("ul.tabs li:first").addClass("active").show();
 		jQuery(".tab_content:first").show();

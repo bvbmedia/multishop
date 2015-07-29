@@ -376,7 +376,7 @@ $(document).on("click", "#multishop_update_button", function(e) {
 				message:  \'<ul class="multishop_block_message"><li>'.$this->pi_getLL('handling_in_progress_one_moment_please').'</li></ul>\',
 				onBlock: function() {
 					$.ajax({
-					  url: \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=update_multishop').'\',
+					  url: \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_multishop').'\',
 					  data: \'\',
 					  type: \'post\',
 					  dataType: \'json\',

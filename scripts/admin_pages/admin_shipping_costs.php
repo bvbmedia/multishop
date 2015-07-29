@@ -433,7 +433,7 @@ if (count($shipping_methods)>0) {
 	$content.='
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
-			var url_relatives = "'.mslib_fe::typolink(',2002', $url_relative).'";
+			var url_relatives = "'.mslib_fe::typolink($this->shop_pid.',2002', $url_relative).'";
 			jQuery("#load").hide();
 			jQuery().ajaxStart(function() {
 				jQuery("#load").show();

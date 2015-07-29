@@ -171,7 +171,7 @@ if ($erno or $show_shipping_payment_method) {
 					cursor:     "move",
 			    //axis:       "y",
 			    update: function(e, ui) {
-			        href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
+			        href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
 			        jQuery(this).sortable("refresh");
 			        sorted = jQuery(this).sortable("serialize", "id");
 			        jQuery.ajax({
@@ -188,7 +188,7 @@ if ($erno or $show_shipping_payment_method) {
 					cursor:     "move",
 			    //axis:       "y",
 			    update: function(e, ui) {
-			        href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
+			        href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
 			        jQuery(this).sortable("refresh");
 			        sorted = jQuery(this).sortable("serialize", "id");
 			        jQuery.ajax({

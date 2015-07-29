@@ -206,10 +206,10 @@ function mathRound(float) {
 jQuery(document).ready(function($) {
 	$(\'.mceEditor\').redactor({
 		focus: false,
-		clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
-		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
-		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
-		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+		clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
 		minHeight:\'400\'
 	});
 	$(document).on("click", "#add_shipping_method", function(e){
@@ -955,7 +955,7 @@ jQuery(document).ready(function($) {
 		cursor: "move",
 		//axis: "y",
 		update: function(e, ui) {
-			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=method_sortables').'";
 			jQuery(this).sortable("refresh");
 			sorted = jQuery(this).sortable("serialize", "id");
 			jQuery.ajax({
@@ -973,7 +973,7 @@ jQuery(document).ready(function($) {
 		//axis: "y",
 		items: "tr.row_sortable",
 		update: function(e, ui) {
-			href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=zone_method_sortables').'";
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=zone_method_sortables').'";
 			jQuery(this).sortable("refresh");
 			sorted = jQuery(this).sortable("serialize", "id");
 			jQuery.ajax({

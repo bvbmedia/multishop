@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
 		multiple: false,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
 				data: {
 					q: query.term,
 					skip_ids: \''.implode(',', $skip_ids).'\'
@@ -30,7 +30,7 @@ jQuery(document).ready(function($) {
 		initSelection: function(element, callback) {
 			var id=$(element).val();
 			if (id!=="") {
-				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 					data: {
 						preselected_id: id,
 						skip_ids: \''.implode(',', $skip_ids).'\'
@@ -153,7 +153,7 @@ if ($this->post) {
 	<div class="panel panel-default">
 	<div class="panel-heading"><h3>'.$this->pi_getLL('admin_new_multiple_category').'</h3></div>
 	<div class="panel-body">
-	<form class="form-horizontal admin_add_multiple_categories blockSubmitForm" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
+	<form class="form-horizontal admin_add_multiple_categories blockSubmitForm" name="admin_add_multiple_categories" id="admin_add_multiple_categories" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'" enctype="multipart/form-data">
 	<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >
 	';
 	//$tmpcontent.='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
