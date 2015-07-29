@@ -159,14 +159,18 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		$first_order_rs=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($first_order_qry);
 		$first_year=date('Y', $first_order_rs['crdate']);
 		$content.='
+		<div class="panel panel-default">
 		<div class="panel-heading"><h3>'.$this->pi_getLL('feed_exporter_label_customers_export_wizard').'</h3></div>
 		<div class="panel-body">
-		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="customers_export_form">
+		<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="customers_export_form" class="form-horizontal">
 			<div class="form-group">
-				<label>'.htmlspecialchars($this->pi_getLL('name')).'</label><input type="text" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+				<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
+				<div class="col-md-10">
+					<input type="text" class="form-control" name="name" value="'.htmlspecialchars($this->post['name']).'" />
+				</div>
 			</div>';
 		// delimeter type selectbox
-		$delimeter_type_sb='<select name="delimeter_type">
+		$delimeter_type_sb='<select name="delimeter_type" class="form-control">
 			<option value=";"'.($post_data['order_type']==';' ? ' selected="selected"' : '').'>semicolon (;)</option>
 			<option value=","'.($post_data['order_type']==',' ? ' selected="selected"' : '').'>comma (,)</option>
 			<option value="\t"'.($post_data['order_type']=='\t' ? ' selected="selected"' : '').'>tabs (\t)</option>
@@ -174,64 +178,78 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 		</select>';
 		$content.='
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
-			<div class="input_label_wrapper">
-				<label for="visual_customers_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>
-				<input name="visual_customers_date_from" id="visual_customers_date_from" type="text" value="'.$post_data['visual_customers_date_from'].'" />
-				<input name="customers_date_from" id="customers_date_from" type="hidden" value="'.$post_data['customers_date_from'].'" />
-			</div>
-			<div class="input_label_wrapper">
-				<label for="visual_customers_date_till">'.htmlspecialchars($this->pi_getLL('admin_till')).'</label>
-				<input name="visual_customers_date_till" id="visual_customers_date_till" type="text" value="'.$post_data['visual_customers_date_till'].'" />
-				<input name="customers_date_till" id="customers_date_till" type="hidden" value="'.$post_data['customers_date_till'].'" />
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('order_date')).'</label>
+			<div class="col-md-10">
+				<div class="form-inline">
+					<div class="form-group input_label_wrapper">
+						<div class="col-md-12">
+						<label for="visual_customers_date_from">'.htmlspecialchars($this->pi_getLL('admin_from')).'</label>
+						<input name="visual_customers_date_from" id="visual_customers_date_from" class="form-control" type="text" value="'.$post_data['visual_customers_date_from'].'" />
+						<input name="customers_date_from" id="customers_date_from" type="hidden" value="'.$post_data['customers_date_from'].'" />
+						</div>
+					</div>
+					<div class="form-group input_label_wrapper">
+						<div class="col-md-12">
+						<label for="visual_customers_date_till">'.htmlspecialchars($this->pi_getLL('admin_till')).'</label>
+						<input name="visual_customers_date_till" id="visual_customers_date_till" class="form-control" type="text" value="'.$post_data['visual_customers_date_till'].'" />
+						<input name="customers_date_till" id="customers_date_till" type="hidden" value="'.$post_data['customers_date_till'].'" />
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('delimited_by')).'</label>
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('delimited_by')).'</label>
+			<div class="col-md-10">
 			'.$delimeter_type_sb.'
+			</div>
 		</div>
 		<div class="form-group">
-			<label>'.htmlspecialchars($this->pi_getLL('status')).'</label>
-			<input name="status" type="radio" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('disabled')).'
-			<input name="status" type="radio" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /> '.htmlspecialchars($this->pi_getLL('enabled')).'
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('status')).'</label>
+			<div class="col-md-10">
+				<div class="radio radio-success radio-inline">
+					<input name="status" type="radio" id="value0" value="0"'.((isset($this->post['status']) and !$this->post['status']) ? ' checked' : '').' /><label for="value0">'.htmlspecialchars($this->pi_getLL('disabled')).'</label>
+				</div>
+				<div class="radio radio-success radio-inline">
+					<input name="status" type="radio" id="value1" value="1"'.((!isset($this->post['status']) or $this->post['status']) ? ' checked' : '').' /><label for="value1">'.htmlspecialchars($this->pi_getLL('enabled')).'</label>
+				</div>
+			</div>
 		</div>
+		<hr class="hide_pf">
 		<div class="form-group hide_pf">
-			<div class="hr"></div>
-		</div>
-		<div class="form-group hide_pf">
-				<label>'.htmlspecialchars($this->pi_getLL('fields')).'</label>
-				<input id="add_field" name="add_field" type="button" value="'.htmlspecialchars($this->pi_getLL('add_field')).'" class="btn btn-success" />
+			<label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('fields')).'</label>
+			<div class="col-md-10">
+				<button id="add_field" name="add_field" type="button" value="" class="btn btn-success"><i class="fa fa-plus"></i> '.htmlspecialchars($this->pi_getLL('add_field')).'</button>
+			</div>
 		</div>
 		<div id="admin_customers_exports_fields">';
 		$counter=0;
 		if (is_array($this->post['fields']) and count($this->post['fields'])) {
 			foreach ($this->post['fields'] as $field) {
 				$counter++;
-				$content.='<div><div class="form-group"><label>'.htmlspecialchars($this->pi_getLL('type')).'</label><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminCustomersExportSelectField">';
+				$content.='<div class="form-group"><label class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('type')).'</label><div class="col-md-10"><select name="fields['.$counter.']" rel="'.$counter.'" class="msAdminCustomersExportSelectField">';
 				foreach ($array as $key=>$option) {
 					$content.='<option value="'.$key.'"'.($field==$key ? ' selected' : '').'>'.htmlspecialchars($option).'</option>';
 				}
-				$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div>';
+				$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>';
 				// custom field
 				if ($field=='custom_field') {
 					$content.='<div class="form-group"><label></label><span class="key">Key</span><input name="fields_headers['.$counter.']" type="text" value="'.$this->post['fields_headers'][$counter].'" /><span class="value">Value</span><input name="fields_values['.$counter.']" type="text" value="'.$this->post['fields_values'][$counter].'" /></div>';
 				}
-				$content.='
-				</div>';
 			}
 		}
 		$content.='
 		</div>
-		<div class="form-group">
-			<div class="hr"></div>
-		</div>
-		<div class="form-group">
-				<label>&nbsp;</label>
-				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.htmlspecialchars($this->pi_getLL('save')).'" class="btn btn-success" /></span>
+		<hr>
+		<div class="clearfix">
+			<div class="pull-right">
+				<button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> '.htmlspecialchars($this->pi_getLL('save')).'</button>
+			</div>
 		</div>
 		<input name="customers_export_id" type="hidden" value="'.$this->get['customers_export_id'].'" />
 		<input name="section" type="hidden" value="'.$_REQUEST['section'].'" />
 		</form>
+		</div>
 		</div>
 		<script type="text/javascript">
 		 $("#visual_customers_date_from").datepicker({
@@ -272,11 +290,11 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			});
 			$(document).on("click", "#add_field", function(event) {
 				counter++;
-				var item=\'<div><div class="form-group"><label>Type</label><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminCustomersExportSelectField">';
+				var item=\'<div class="form-group"><label class="control-label col-md-2">Type</label><div class="col-md-10"><select name="fields[\'+counter+\']" rel="\'+counter+\'" class="msAdminCustomersExportSelectField">';
 		foreach ($array as $key=>$option) {
 			$content.='<option value="'.$key.'">'.htmlspecialchars($option).'</option>';
 		}
-		$content.='</select><input class="delete_field btn btn-success" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" /></div></div>\';
+		$content.='</select><button class="delete_field btn btn-danger" name="delete_field" type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'"><i class="fa fa-trash-o"></i></button></div></div>\';
 				$(\'#admin_customers_exports_fields\').append(item);
 				$(\'select.msAdminCustomersExportSelectField\').select2({
 					width:\'650px\'
