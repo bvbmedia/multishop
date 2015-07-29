@@ -123,8 +123,23 @@ function AJAXSortProducts() {
             //do something with the sorted data
         }
     });
+    // enable all
+    $(".admin_sort_product_listing").children().children().find("button").prop("disabled", false);
+    // disable Top and oneTop button for first entry
+    $(".admin_sort_product_listing").children(":first").children().find("button.btnTop").prop("disabled", true);
+    $(".admin_sort_product_listing").children(":first").children().find("button.btnOneUp").prop("disabled", true);
+    // disable Down and oneDown button for last entry
+    $(".admin_sort_product_listing").children(":last").children().find("button.btnOneDown").prop("disabled", true);
+    $(".admin_sort_product_listing").children(":last").children().find("button.btnBottom").prop("disabled", true);
 }
 jQuery(document).ready(function($) {
+    // disable Top and oneTop button for first entry
+    $(".admin_sort_product_listing").children(":first").children().find("button.btnTop").prop("disabled", true);
+    $(".admin_sort_product_listing").children(":first").children().find("button.btnOneUp").prop("disabled", true);
+    // disable Down and oneDown button for last entry
+    $(".admin_sort_product_listing").children(":last").children().find("button.btnOneDown").prop("disabled", true);
+    $(".admin_sort_product_listing").children(":last").children().find("button.btnBottom").prop("disabled", true);
+    //
     jQuery(".admin_sort_product_listing").sortable({
         cursor:     "move",
         //axis:       "y",
