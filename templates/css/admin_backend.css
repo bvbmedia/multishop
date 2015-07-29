@@ -411,6 +411,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .form-group { margin-bottom:10px; }
 .form-horizontal .form-group { margin-left:-10px; margin-right:-10px; }
 .form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline { padding-top:8px; }
+.radio label,
+.checkbox label { line-height:20px; }
 .form-horizontal .well .checkbox.checkbox-success { padding-top:0; }
 .form-horizontal .well .checkbox.checkbox-success > label { padding-top:0; }
 @media (min-width:768px) {
