@@ -150,19 +150,19 @@ if (count($products)<0) {
 		</div>
 		<div class="form-group">
 			<div class="row">
-			<div class="col-md-6">
-				<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
-				<input type="text" name="street_name" id="address" class="form-control address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
+				<div class="col-md-4">
+					<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
+					<input type="text" name="street_name" id="address" class="form-control address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
+				</div>
+				<div class="col-md-4">
+					<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+					<input type="text" name="address_number" id="address_number" class="form-control address-number" value="'.htmlspecialchars($user['address_number']).'" required="required" data-h5-errorid="invalid-address_number" title="'.$this->pi_getLL('street_number_is_required').'"><div id="invalid-address_number" class="error-space" style="display:none"></div>
+				</div>
+				<div class="col-md-4">
+					<label class="account-address_address_ext" for="address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+					<input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="'.htmlspecialchars($user['address_ext']).'" >
+        		</div>
 			</div>
-			<div class="col-md-6">
-				<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
-				<input type="text" name="address_number" id="address_number" class="form-control address-number" value="'.htmlspecialchars($user['address_number']).'" required="required" data-h5-errorid="invalid-address_number" title="'.$this->pi_getLL('street_number_is_required').'"><div id="invalid-address_number" class="error-space" style="display:none"></div>
-			</div>
-			</div>
-        </div>
-		<div class="form-group">
-			<label class="account-address_address_ext" for="address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-			<input type="text" name="address_ext" id="address_ext" class="form-control address_ext" value="'.htmlspecialchars($user['address_ext']).'" >
         </div>
 		<div class="form-group">
 			<div class="row">
@@ -223,22 +223,22 @@ if (count($products)<0) {
 		</div>
 		<div class="form-group">
 			<div class="row">
-			<div class="col-md-6">
-				<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).'</label>
-				<input type="text" name="tx_multishop_pi1[telephone]" id="telephone" class="form-control telephone" value="'.htmlspecialchars($user['telephone']).'"'.$telephone_validation.'>
-			<div id="invalid-telephone" class="error-space" style="display:none"></div>
-			</div>
-			<div class="col-md-6">
-				<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
-				<input type="text" name="mobile" id="mobile" class="form-control mobile" value="'.htmlspecialchars($user['mobile']).'">
-			<div id="invalid-mobile" class="error-space" style="display:none"></div>
-			</div>
+				<div class="col-md-6">
+					<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).'</label>
+					<input type="text" name="tx_multishop_pi1[telephone]" id="telephone" class="form-control telephone" value="'.htmlspecialchars($user['telephone']).'"'.$telephone_validation.'>
+					<div id="invalid-telephone" class="error-space" style="display:none"></div>
+				</div>
+				<div class="col-md-6">
+					<label for="mobile" id="account-mobile">'.ucfirst($this->pi_getLL('mobile')).'</label>
+					<input type="text" name="mobile" id="mobile" class="form-control mobile" value="'.htmlspecialchars($user['mobile']).'">
+					<div id="invalid-mobile" class="error-space" style="display:none"></div>
+				</div>
 			</div>
 		</div>
 		<div class="form-group">
-		<div class="checkbox checkbox-success checkbox">
-		<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" '.(($this->post['different_delivery_address']) ? 'checked' : '').' /><label for="checkboxdifferent_delivery_address">'.$this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address').'.</label>
-		</div>
+			<div class="checkbox checkbox-success checkbox">
+				<input type="checkbox" name="different_delivery_address" id="checkboxdifferent_delivery_address" '.(($this->post['different_delivery_address']) ? 'checked' : '').' /><label for="checkboxdifferent_delivery_address">'.$this->pi_getLL('click_here_if_your_delivery_address_is_different_from_your_billing_address').'.</label>
+			</div>
 		</div>
 		<hr>';
 		$tmpcontent='';
@@ -505,42 +505,47 @@ if (count($products)<0) {
 		    </div>
 			<div class="form-group">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
 						<input type="text" name="delivery_street_name" id="delivery_address" class="form-control delivery_address left-this" value="'.htmlspecialchars($user['delivery_street_name']).'"><div id="invalid-delivery_address" class="error-space" style="display:none"></div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
 						<input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control delivery_address-number" value="'.htmlspecialchars($user['delivery_address_number']).'" ><div id="invalid-delivery_address_number" class="error-space" style="display:none"></div>
 					</div>
+					<div class="col-md-4">
+						<label class="account-address_delivery_address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
+						<input type="text" name="delivery_address_ext" id="delivery_address_ext" class="form-control delivery_address_ext" value="'.htmlspecialchars($user['delivery_address_ext']).'" >
+					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="account-address_delivery_address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
-				<input type="text" name="delivery_address_ext" id="delivery_address_ext" class="form-control delivery_address_ext" value="'.htmlspecialchars($user['delivery_address_ext']).'" >
-			</div>
+
 			<div class="form-group">
 				<div class="row">
-				<div class="col-md-4">
-				<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'*:</label>
-				<input type="text" name="delivery_zip" id="delivery_zip" class="form-control delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'">
-				<div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
+					<div class="col-md-6">
+						<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'*:</label>
+						<input type="text" name="delivery_zip" id="delivery_zip" class="form-control delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'">
+						<div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
+					</div>
+					<div class="col-md-6">
+						<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'*</label>
+						<input type="text" name="delivery_city" id="delivery_city" class="form-control delivery_city" value="'.htmlspecialchars($user['delivery_city']).'" >
+						<div id="invalid-delivery_city" class="error-space" style="display:none"></div>
+					</div>
 				</div>
-				<div class="col-md-4">
-				<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'*</label>
-				<input type="text" name="delivery_city" id="delivery_city" class="form-control delivery_city" value="'.htmlspecialchars($user['delivery_city']).'" >
-				<div id="invalid-delivery_city" class="error-space" style="display:none"></div>
-				</div>
+			</div>
 				';
 		if ($tmpcontent_con) {
-			$tmpcontent.='<div class="col-md-4"><label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
-			<select name="delivery_country" id="delivery_country" class="form-control delivery_country">
-			<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
-			'.$tmpcontent_con_delivery.'
-			</select>
-			<div id="invalid-delivery_country" class="error-space" style="display:none"></div></div>';
+			$tmpcontent.='<div class="form-group">
+				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
+				<select name="delivery_country" id="delivery_country" class="form-control delivery_country">
+					<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
+					'.$tmpcontent_con_delivery.'
+				</select>
+				<div id="invalid-delivery_country" class="error-space" style="display:none"></div>
+			</div>';
 		}
-		$tmpcontent.='</div></div>
+		$tmpcontent.='
 			<div class="form-group">
 				<label for="delivery_email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'</label>
 				<input type="text" name="delivery_email" id="delivery_email" class="form-control delivery_email" value="'.htmlspecialchars($user['delivery_email']).'"/>
