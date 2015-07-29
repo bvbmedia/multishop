@@ -946,7 +946,7 @@ if ($this->post) {
 			$(".image_action").empty();
 			var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
 			new_image+=\'<div class="image_tools">\';
-			new_image+=\'<a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="\' + filenameServer + \'"><i class="fa fa-crop"></i></a>\';
+			new_image+=\'<a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="\' + filenameServer + \'"><i class="fa fa-crop"></i></a> \';
 			new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_categories_images" rel="\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
 			new_image+=\'</div>\';
 			$(".image_action").html(new_image);';

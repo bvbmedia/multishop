@@ -280,6 +280,8 @@ table#product_attributes_table > tbody > tr > td .new_product_attributes { font-
 .image_action > img { margin-right:10px; }
 .image_action > img,
 .image_action > .image_tools { float:left; }
+.form-horizontal #categories_image,
+.form-horizontal .image_action { margin-top:4px; }
 
 #cat-selectbox1 { margin-bottom:0; }
 
