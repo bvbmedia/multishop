@@ -6452,7 +6452,7 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['class']='fa fa-wrench';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_manufacturers' || $this->post['tx_multishop_pi1']['page_section']=='admin_manufacturers') {
-				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['ms_admin_manufacturers']['active']=1;
+				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['active']=1;
 			}
 			// merge manufacturers
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['subs']['admin_merge_manufacturers']['label']=$this->pi_getLL('merge_manufacturers');
