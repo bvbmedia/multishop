@@ -378,16 +378,12 @@ multishop_ajax_server {
 			1438243370.value (
 				<script type="text/javascript" data-ignore="1">
 				jQuery(document).ready(function($) {
-				  if ($('#contentLeft .tmenuNav').length > 0 && $('#content').height() > 200) {
-					  var offsetTop=799;
-					  var offsetBottom=328;
-					  $('#contentLeft .tmenuNav').affix({
+					$('ul#tx_multishop_admin_header').affix({
 						offset: {
-						  top:offsetTop,
-						  bottom:offsetBottom
+							top:0,
+							bottom:0
 						}
-					  })
-				  }
+					})
 				});
 				</script>
 			)
