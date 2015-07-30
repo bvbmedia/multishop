@@ -1,7 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700);
 
 html, body { height:100%; }
-body { background:#f5f5f5; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
+body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
 
 #tx_multishop_admin_newheader_wrapper { position:fixed; top:0; left:220px; right:0; height:38px; background:#000; padding:0; z-index:10004; }
 #tx_multishop_admin_newheader_wrapper #ms_admin_user { float:left; padding:8px 0 0 20px; }
@@ -107,6 +107,7 @@ body { background:#f5f5f5; font-size:14px; line-height:20px; font-family:"Open S
 .select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_price > .ajax_old_price { color:#222; text-decoration:line-through; padding-right:10px; }
 
 #ms_admin_minimaxi_wrapper { display:none; }
+#tx_multishop_admin_header.affix { position:fixed !important; top:0; width:220px; }
 
 #tx_multishop_admin_footer_wrapper { position:fixed; left:220px; right:0; bottom:0; height:38px; background:#000; text-align:left; margin:0; padding:0; box-shadow:0 0 10px rgba(0,0,0,.8); z-index:10004; }
 #tx_multishop_admin_footer_wrapper ul { margin:0; padding:0; list-style:none; }
