@@ -95,7 +95,7 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 		<hr>
 	';
 	$content.='
-	<form class="form-horizontal admin_configuration_edit" name="admin_categories_edit_'.$configuration['categories_id'].'" id="admin_categories_edit_'.$configuration['categories_id'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax&module_id='.$configuration['id']).'" enctype="multipart/form-data">';
+	<form class="form-horizontal admin_configuration_edit" name="admin_categories_edit_'.$configuration['categories_id'].'" id="admin_categories_edit_'.$configuration['categories_id'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&module_id='.$configuration['id']).'" enctype="multipart/form-data">';
 	$content.=$save_block;
 	$content.='
 		<div class="form-group">
