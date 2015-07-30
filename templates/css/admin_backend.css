@@ -13,7 +13,7 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 
 .dropdown-backdrop { display:none !important; }
 
-#tx_multishop_admin_header_wrapper { position:absolute; left:0; top:0; display:block; width:220px; min-height:100%; background:#222; }
+#tx_multishop_admin_header_wrapper { position:absolute; left:0; top:0; display:block; width:220px; min-height:100%; background:#222; z-index:10005; }
 #tx_multishop_admin_header_wrapper ul { margin:0; padding:0; list-style:none; }
 #tx_multishop_admin_header_wrapper ul li a,
 #tx_multishop_admin_header_wrapper ul li span { white-space:normal; }
@@ -235,7 +235,12 @@ td.cellSpecialPrice .msAttributesField .form-control { width:90px}
 
 #msAdminSearchByCharNav { text-align:center; margin-bottom:20px; }
 
-ul.qq-upload-list { margin-bottom:0; }
+.qq-upload-button { vertical-align:top; }
+ul.qq-upload-list { display:inline-block; margin-bottom:0; padding-left:0; list-style:none; }
+ul.qq-upload-list li { padding-left:10px; }
+ul.qq-upload-list li > span { display:inline-block; font-size:13px; padding-right:10px; }
+ul.qq-upload-list li > span.qq-upload-failed-text { display:none; color:#a94442; }
+ul.qq-upload-list li.qq-upload-fail > span.qq-upload-failed-text { display:inline-block; }
 
 .well .form-inline label,
 .well .form-inline .form-control { margin-right:5px; }
@@ -281,6 +286,7 @@ table#product_attributes_table > tbody > tr > td .new_product_attributes { font-
 .image_action > img { margin-right:10px; }
 .image_action > img,
 .image_action > .image_tools { float:left; }
+.form-horizontal .products_image,
 .form-horizontal #categories_image,
 .form-horizontal .image_action { margin-top:4px; }
 

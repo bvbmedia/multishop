@@ -206,7 +206,7 @@ foreach ($fields as $key=>$label) {
 }
 $searchby_selectbox.='</select>';
 //$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
-$search_category_selectbox='<div class="categories_tree"><input type="hidden" name="cid" class="categories_select2" style="width:400px"></div>';
+$search_category_selectbox='<input type="hidden" name="cid" class="categories_select2" style="width:400px">';
 $search_limit='<select name="tx_multishop_pi1[limit]" class="form-control">';
 $limits=array();
 $limits[]='10';

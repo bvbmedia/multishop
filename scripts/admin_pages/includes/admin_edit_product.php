@@ -2504,7 +2504,7 @@ if ($this->post) {
 				$images_tab_block.='<img src="'.mslib_befe::getImagePath($product['products_image'.$i], 'products', '50').'" />';
 				$images_tab_block.='<div class="image_tools">';
 				if ($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES']) {
-					$images_tab_block.=' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="'.$product['products_image'.$i].'"><i class="fa fa-crop"></i></a>';
+					$images_tab_block.=' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="'.$product['products_image'.$i].'"><i class="fa fa-crop"></i></a> ';
 				}
 				$images_tab_block.=' <a href="#" class="btn btn-danger btn-sm delete_product_images" rel="'.$i.':'.$product['products_image'.$i].'"><i class="fa fa-trash-o"></i></a>';
 				$images_tab_block.='</div>';
@@ -2531,7 +2531,7 @@ if ($this->post) {
 				},
 				template: \'<div class="qq-uploader">\' +
 						  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
-						  \'<div class="qq-upload-button btn btn-primary"><i class="fa fa-upload"></i> '.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+						  \'<div class="qq-upload-button btn btn-primary btn-sm"><i class="fa fa-upload"></i> '.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 						  \'<ul class="qq-upload-list" id="qq-upload-list-ul'.$i.'"></ul>\' +
 						  \'</div>\',
 				onComplete: function(id, fileName, responseJSON){
@@ -2550,8 +2550,8 @@ if ($this->post) {
 					$("#image_action'.$i.'").empty();
 					var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
 					new_image+=\'<div class="image_tools">\';
-					new_image+=\'<a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
-					new_image+=\'<a href="#" class="delete_product_images" rel="'.$i.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+					new_image+=\'<a href="#" id="cropEditor" class="btn btn-primary btn-sm " rel="\' + filenameServer + \'"><i class="fa fa-crop"></i></a> \';
+					new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_product_images" rel="'.$i.':\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
 					new_image+=\'</div>\';
 					$("#image_action'.$i.'").html(new_image);
 					' : '').'
