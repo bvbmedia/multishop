@@ -306,7 +306,7 @@ if ($this->get['type']=='2003') {
 							admin_menu_newheader += \'</div>\';
 							';
 }
-	$html.='
+$html.='
 							// bottom admin menu
 							var admin_menu_footer = \'<div id="tx_multishop_admin_footer_wrapper"><ul id="tx_multishop_admin_footer">\';
 							var admin_menu_footer_html = renderAdminMenu(json_data.footer, \'footer\', 1);
@@ -315,7 +315,18 @@ if ($this->get['type']=='2003') {
 
 							var admin_menu= admin_menu_newheader + admin_menu_header + admin_menu_footer;
 							'.(!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] ? '$("body").prepend(admin_menu);' : '').'
-
+';
+if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') {
+	$html.='
+		$(\'ul#tx_multishop_admin_header\').affix({
+			offset: {
+				top:0,
+				bottom:0
+			}
+		});
+	';
+}
+$html.='
 							// load partial menu items and add them to the footer
 							if ($(".footer_content").length > 0) {
 								$("#footer_content_cols").hide();
@@ -354,9 +365,9 @@ if ($this->get['type']=='2003') {
 									$("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_maximize"><li><a href="#" class="ms_admin_maximize">'.$this->pi_getLL('maximize').'</a></li></ul>\');
 								';
 	}
-	$html.='}
-					}
-				});
+	$html.='		}
+				}
+			});
 
 				';
 	$html.='
