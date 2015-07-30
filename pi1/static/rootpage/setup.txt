@@ -376,7 +376,7 @@ multishop_ajax_server {
 			# Sticky colleft
 			1438243370 = TEXT
 			1438243370.value (
-				<script type="text/javascript" data-ignore="1">
+				<script type="text/javascript">
 				jQuery(document).ready(function($) {
 				  if ($('#contentLeft .tmenuNav').length > 0 && $('#content').height() > 200) {
 					  var offsetTop=799;
