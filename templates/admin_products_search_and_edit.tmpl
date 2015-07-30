@@ -39,7 +39,7 @@
 <thead>
 	<tr>
 		<th class="cellCheckbox">
-			<div class="checkbox checkbox-success">
+			<div class="checkbox checkbox-success checkbox-inline">
 				<input type="checkbox" id="check_all_1">
 				<label for="check_all_1"></label>
 			</div>
@@ -56,11 +56,11 @@
 		<th class="cellAction">###LABEL_HEADER_ACTION###</th>
     </tr>
 </thead>
+<tbody>
     <!-- ###PRODUCTS_ITEM### begin -->
-    <tbody>
     <tr class="###ROW_TYPE###">
         <td class="cellCheckbox">
-        	<div class="checkbox checkbox-success">
+        	<div class="checkbox checkbox-success checkbox-inline">
 				<input type="checkbox" name="selectedProducts[###CATEGORY_ID0###][]" id="checkbox_###CHECKBOX_COUNTER1###" value="###PID0###">
 				<label for="checkbox_###CHECKBOX_COUNTER0###"></label>
 			</div>
@@ -99,8 +99,8 @@
 				<a href="###DELETE_PRODUCT_LINK###" class="btn btn-danger btn-sm admin_menu_remove" alt="Remove"><i class="fa fa-remove"></i></a>
         </td>
     </tr>
-    </tbody>
 	<!-- ###PRODUCTS_ITEM### end -->
+    </tbody>
 	<tfoot>
 	<tr>
 		<th class="cellCheckbox">&nbsp;</th>

@@ -270,8 +270,10 @@ if (!count($pageset['dataset'])) {
 		$markerArray['ROW_TYPE']=$tr_type;
 		$markerArray['DOWNLOAD_CMS_CHECKBOX']='';
 		if ($this->ROOTADMIN_USER) {
-			$markerArray['DOWNLOAD_CMS_CHECKBOX']='<td align="center" nowrap>
-            	<input type="checkbox" name="downloadCMS[]" class="download_cms_cb" value="'.$row['id'].'"/>
+			$markerArray['DOWNLOAD_CMS_CHECKBOX']='<td class="cellCheckbox">
+				<div class="checkbox checkbox-success checkbox-inline">
+            	<input type="checkbox" name="downloadCMS[]" class="download_cms_cb" id="value_'.$row['id'].'" value="'.$row['id'].'"/><label for="value_'.$row['id'].'"></label>
+            	</div>
             </td>';
 		}
 		$markerArray['CMS_ID']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&cms_id='.$row['id'].'&action=edit_cms', 1).'">'.$row['id'].'</a>';
@@ -339,8 +341,8 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###FOOTER_CHECKALL_COLUMN###']='';
 	$subpartArray['###DOWNLOAD_CMS_BUTTON###']='';
 	if ($this->ROOTADMIN_USER) {
-		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap><input type="checkbox" id="checkAllCMS"/></th>';
-		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th width="10" align="center" nowrap>&nbsp;</th>';
+		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th class="cellCheckbox"><div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" id="checkAllCMS"/><label for="checkAllCMS"></label></th>';
+		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th class="cellCheckbox">&nbsp;</th>';
 		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<tr>
 				<td colspan="7"><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
 			</tr>';
