@@ -607,7 +607,7 @@ if ($this->get['feed_hash']) {
 							$row2=mslib_befe::getRecord($row['categories_crum'][($level-1)]['id'], 'tx_multishop_categories_description', 'categories_id', $filter);
 							if ($row2['categories_name']) {
 								$string=$row2['categories_name'];
-								if (!$this->get['format']=='excel') {
+								if ($this->get['format']!='excel') {
 									$string=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $string);
 								}
 								$tmpcontent.=$string;
