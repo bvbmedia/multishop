@@ -240,7 +240,6 @@ multishop_ajax_server {
 			core >
 		}
 	}
-
 	multishop_admin_page {
 		includeCSS {
 			bootstrapCss = EXT:multishop/templates/css/bootstrap/css/bootstrap.css
@@ -248,6 +247,7 @@ multishop_ajax_server {
 				media =
 				import = 0
 				compress = 1
+				forceOnTop= 1
 			}
 			jqueryTab = EXT:multishop/templates/global/css/tab.css
 			jqueryTab {
