@@ -349,14 +349,14 @@ multishop_ajax_server {
 			#pollyfillerJs = EXT:multishop/js/js-webshim/polyfiller.js
 			#pollyfillerJs.compress=0
 		}
+		headerData {
+			# load manually cause the TYPO3 js compressor is not aware of the additional loadCSS and loadJS lines
+			1438243305 = TEXT
+			1438243305.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/extras/modernizr-custom.js" data-ignore="1"></script>
+			1438243323 = TEXT
+			1438243323.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/polyfiller.js" data-ignore="1"></script>
+		}
 	}
-
-	# load manually cause the TYPO3 js compressor is not aware of the additional loadCSS and loadJS lines
-	page.headerData.2482824 = TEXT
-	page.headerData.2482824.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/extras/modernizr-custom.js" data-ignore="1"></script>
-	page.headerData.2482825 = TEXT
-	page.headerData.2482825.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/polyfiller.js" data-ignore="1"></script>
-
 	multishop_admin_page {
 		includeJS {
 			jqueryToastr = EXT:multishop/js/toastr/toastr.min.js
@@ -371,6 +371,26 @@ multishop_ajax_server {
 			#jqueryvalidatefunctions.compress=1
 			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
 			#prettycheckboxes.compress = 1
+		}
+		headerData {
+			# Sticky colleft
+			1438243370 = TEXT
+			1438243370.value (
+				<script type="text/javascript" data-ignore="1">
+				jQuery(document).ready(function($) {
+				  if ($('#contentLeft .tmenuNav').length > 0 && $('#content').height() > 200) {
+					  var offsetTop=799;
+					  var offsetBottom=328;
+					  $('#contentLeft .tmenuNav').affix({
+						offset: {
+						  top:offsetTop,
+						  bottom:offsetBottom
+						}
+					  })
+				  }
+				});
+				</script>
+			)
 		}
 	}
 [end]
