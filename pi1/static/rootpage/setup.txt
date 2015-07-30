@@ -373,7 +373,7 @@ multishop_ajax_server {
 			#prettycheckboxes.compress = 1
 		}
 		headerData {
-			
+
 		}
 	}
 [end]

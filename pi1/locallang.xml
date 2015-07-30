@@ -1227,6 +1227,8 @@
             <label index="travel_guide">Travel guide</label>
             <label index="meta_tags">Meta tags</label>
             <label index="close">Close</label>
+            <label index="found_records">Found records</label>
+            <label index="total_records_in_database">Total records in database</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2446,6 +2448,9 @@
             <label index="call">Bel</label>
             <label index="travel_guide">Routebeschrijving</label>
             <label index="meta_tags">Meta tags</label>
+            <label index="close">Sluiten</label>
+            <label index="found_records">Gevonden records</label>
+            <label index="total_records_in_database">Totaal aantal records in database</label>
         </languageKey>
     </data>
 </T3locallang>

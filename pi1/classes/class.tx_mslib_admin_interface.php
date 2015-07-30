@@ -442,10 +442,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$skipTotalCount=1;
 		}
 		if (!$skipRecordCount) {
-			$content.='<hr><p class="text-center">Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
+			$content.='<hr><p class="text-center">'.$this->pi_getLL('found_records').': <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
 		}
 		if (!$skipTotalCount) {
-			$content.='<p class="text-center">Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
+			$content.='<p class="text-center">'.$this->pi_getLL('total_records_in_database').': <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
