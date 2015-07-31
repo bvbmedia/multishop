@@ -110,61 +110,70 @@
 
                     <div role="tabpanel" class="tab-pane" id="manufacturer_content">
 	                    <!-- ###MANUFACTURERS_CONTENT### begin -->
-                        <div class="form-group" id="msEditManufacturerInputDesc_###LANGUAGE_UID###">
-                            <label class="control-label col-md-2">###LABEL_MANUFACTURER_LANGUAGE###</label>
-                            <div class="col-md-10"><p class="form-control-static">
-                                ###MANUFACTURER_CONTENT_FLAG###
-                                ###MANUFACTURER_CONTENT_TITLE###</p>
-                            </div>
-                        </div>
-                        <div class="form-group" id="msEditManufacturerInputShortDesc_###LANGUAGE_UID###">
-                            <label for="content" class="control-label col-md-2">###LABEL_MANUFACTURER_SHORT_DESCRIPTION###</label>
-                            <div class="col-md-10">
-                                <textarea spellcheck="true" name="shortdescription[###LANGUAGE_UID###]" id="shortdescription[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_SHORT_DESCRIPTION###</textarea>
-                            </div>
-                        </div>
-                        <div class="form-group" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
-                            <label for="content" class="control-label col-md-2">###LABEL_MANUFACTURER_CONTENT###</label>
-                            <div class="col-md-10">
-                                <textarea spellcheck="true" name="content[###LANGUAGE_UID###]" id="content[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_CONTENT###</textarea>
-                            </div>
-                        </div>
-                        <div class="form-group" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
-                            <label for="content_footer" class="control-label col-md-2">###LABEL_MANUFACTURER_CONTENT_FOOTER###</label>
-                            <div class="col-md-10">
-                                <textarea spellcheck="true" name="content_footer[###LANGUAGE_UID###]" id="content_footer[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_CONTENT_FOOTER###</textarea>
-                            </div>
-                        </div>
+						<div class="panel panel-default toggle_advanced_option">
+							<div class="panel-heading panel-heading-toggle###IS_COLLAPSED###" data-toggle="collapse" data-target="#msEditManufacturerInputDescPanel_###LANGUAGE_UID###">
+								<h3 class="panel-title">
+									<a role="button" data-toggle="collapse" href="#msEditManufacturerInputDescPanel_###LANGUAGE_UID###"><i class="fa fa-file-text-o"></i> ###MANUFACTURER_CONTENT_TITLE###</a>
+								</h3>
+							</div>
+							<div id="msEditManufacturerInputDescPanel_###LANGUAGE_UID###" class="panel-collapse collapse###IS_UNFOLD###">
+								<div class="panel-body">
+									<div class="form-group" id="msEditManufacturerInputShortDesc_###LANGUAGE_UID###">
+										<label for="content" class="control-label col-md-2">###LABEL_MANUFACTURER_SHORT_DESCRIPTION###</label>
+										<div class="col-md-10">
+											<textarea spellcheck="true" name="shortdescription[###LANGUAGE_UID###]" id="shortdescription[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_SHORT_DESCRIPTION###</textarea>
+										</div>
+									</div>
+									<div class="form-group" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
+										<label for="content" class="control-label col-md-2">###LABEL_MANUFACTURER_CONTENT###</label>
+										<div class="col-md-10">
+											<textarea spellcheck="true" name="content[###LANGUAGE_UID###]" id="content[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_CONTENT###</textarea>
+										</div>
+									</div>
+									<div class="form-group" id="msEditManufacturerInputContent_###LANGUAGE_UID###">
+										<label for="content_footer" class="control-label col-md-2">###LABEL_MANUFACTURER_CONTENT_FOOTER###</label>
+										<div class="col-md-10">
+											<textarea spellcheck="true" name="content_footer[###LANGUAGE_UID###]" id="content_footer[###LANGUAGE_UID###]" class="mceEditor" rows="4">###VALUE_MANUFACTURER_CONTENT_FOOTER###</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
                     <!-- ###MANUFACTURERS_CONTENT### end -->
                     </div>
 
                     <div role="tabpanel" class="tab-pane" id="manufacturer_meta">
                         <!-- ###MANUFACTURERS_META### begin -->
-                        <div class="form-group" id="msEditManufacturerInputMeta_###LANGUAGE_UID###">
-	                        <label class="control-label col-md-2">###LABEL_MANUFACTURER_META_LANGUAGE###</label>
-	                        <div class="col-md-10"><p class="form-control-static">
-		                        ###MANUFACTURER_META_FLAG###
-		                        ###MANUFACTURER_META_TITLE###</p>
-	                        </div>
-                        </div>
-                        <div class="form-group" id="msEditManufacturerInputMetaTitle_###LANGUAGE_UID###">
-	                        <label for="meta_title" class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_TITLE###</label>
-	                        <div class="col-md-10">
-		                        <input type="text" class="text form-control" name="meta_title[###LANGUAGE_UID###]" id="meta_title[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_TITLE###">
-	                        </div>
-                        </div>
-                        <div class="form-group" id="msEditManufacturerInputMetaKeywords_###LANGUAGE_UID###">
-	                        <label for="meta_keywords"class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_KEYWORDS###</label>
-	                        <div class="col-md-10">
-		                        <input type="text" class="text form-control" name="meta_keywords[###LANGUAGE_UID###]" id="meta_keywords[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_KEYWORDS###">
-	                        </div>
-                        </div>
-                        <div class="form-group" id="msEditManufacturerInputMetaDesc_###LANGUAGE_UID###">
-	                        <label for="meta_description"class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_DESCRIPTION###</label>
-	                        <div class="col-md-10">
-		                        <input type="text" class="text form-control" name="meta_description[###LANGUAGE_UID###]" id="meta_description[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_DESCRIPTION###">
-	                        </div>
-                        </div>
+						<div class="panel panel-default toggle_advanced_option">
+							<div class="panel-heading panel-heading-toggle###IS_COLLAPSED###" data-toggle="collapse" data-target="#msEditManufacturerInputMetaPanel_###LANGUAGE_UID###">
+								<h3 class="panel-title">
+									<a role="button" data-toggle="collapse" href="#msEditManufacturerInputMetaPanel_###LANGUAGE_UID###"><i class="fa fa-file-text-o"></i> ###MANUFACTURER_META_TITLE###</a>
+								</h3>
+							</div>
+							<div id="msEditManufacturerInputMetaPanel_###LANGUAGE_UID###" class="panel-collapse collapse###IS_UNFOLD###">
+								<div class="panel-body">
+
+									<div class="form-group" id="msEditManufacturerInputMetaTitle_###LANGUAGE_UID###">
+										<label for="meta_title" class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_TITLE###</label>
+										<div class="col-md-10">
+											<input type="text" class="text form-control" name="meta_title[###LANGUAGE_UID###]" id="meta_title[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_TITLE###">
+										</div>
+									</div>
+									<div class="form-group" id="msEditManufacturerInputMetaKeywords_###LANGUAGE_UID###">
+										<label for="meta_keywords"class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_KEYWORDS###</label>
+										<div class="col-md-10">
+											<input type="text" class="text form-control" name="meta_keywords[###LANGUAGE_UID###]" id="meta_keywords[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_KEYWORDS###">
+										</div>
+									</div>
+									<div class="form-group" id="msEditManufacturerInputMetaDesc_###LANGUAGE_UID###">
+										<label for="meta_description"class="control-label col-md-2">###ADMIN_LABEL_INPUT_META_DESCRIPTION###</label>
+										<div class="col-md-10">
+											<input type="text" class="text form-control" name="meta_description[###LANGUAGE_UID###]" id="meta_description[###LANGUAGE_UID###]" value="###VALUE_MANUFACTURER_META_DESCRIPTION###">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
                         <!-- ###MANUFACTURERS_META### end -->
                     </div>
 				</div>

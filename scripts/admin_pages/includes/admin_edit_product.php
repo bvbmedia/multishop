@@ -2385,18 +2385,20 @@ if ($this->post) {
 			if ($language['flag']) {
 				$flag_path='sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif';
 			}
-			$language_lable='';
+			$language_label='';
 			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.$flag_path)) {
-				$language_lable.='<img src="'.$this->FULL_HTTP_URL_TYPO3.$flag_path.'"> ';
+                $language_label.='<img src="'.$this->FULL_HTTP_URL_TYPO3.$flag_path.'"> ';
 			}
-			$language_lable.=''.$language['title'];
+            $language_label.=''.$language['title'];
 			$options_tab_virtual_product.='
-				<div class="form-group toggle_advanced_option msEditProductLanguageDivider" id="msEditProductInputLanguageDivider_'.$language['uid'].'">
-					<label class="col-md-2 control-label">'.$this->pi_getLL('language').'</label>
-					<div class="col-md-10">
-					<p class="form-control-static">'.$language_lable.'</p>
-					</div>
-				</div>
+                <div class="panel panel-default toggle_advanced_option">
+                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditProductInputVirtualProductFilePanel_'.$language['uid'].'">
+                    <h3 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#msEditProductInputVirtualProductFilePanel_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language_label.'</a>
+                    </h3>
+                </div>
+                <div id="msEditProductInputVirtualProductFilePanel_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div class="panel-body">
 				<div class="form-group toggle_advanced_option" id="msEditProductInputVirtualProductFile_'.$language['uid'].'">
 					<label for="file_location" class="col-md-2 control-label">'.$this->pi_getLL('file').'</label>
 					<div class="col-md-10">
@@ -2413,6 +2415,7 @@ if ($this->post) {
 					<input type="text" class="form-control text" name="file_remote_location['.$language['uid'].']" id="file_remote_location['.$language['uid'].']"  value="'.htmlspecialchars($lngproduct[$language['uid']]['file_remote_location']).'">
 					</div>
 				</div>';
+            $options_tab_virtual_product.='</div></div></div>';
 		}
 		$shipping_payment_method='';
 		if ($this->ms['MODULES']['PRODUCT_EDIT_METHOD_FILTER']) {
@@ -2583,13 +2586,14 @@ if ($this->post) {
 		$meta_tags_block='';
 		foreach ($this->languages as $key=>$language) {
 			$meta_tags_block.='
-			<div class="form-group" id="msEditProductInputMeta_'.$language['uid'].'">
-			<label class="col-md-2 control-label">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$meta_tags_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$meta_tags_block.=''.$language['title'].'
-			</p></div></div>
+			<div class="panel panel-default">
+			<div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditProductInputMetaPanel_'.$language['uid'].'">
+			<h3 class="panel-title">
+                <a role="button" data-toggle="collapse" href="#msEditProductInputMetaPanel_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+			</h3>
+            </div>
+            <div id="msEditProductInputMetaPanel_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+            <div class="panel-body">
 			<div class="form-group" id="msEditProductInputMetaTitle_'.$language['uid'].'">
 				<label for="products_meta_title" class="col-md-2 control-label">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
 				<div class="col-md-10">
@@ -2607,6 +2611,9 @@ if ($this->post) {
 				<div class="col-md-10">
 				<input type="text" class="form-control text" name="products_meta_description['.$language['uid'].']" id="products_meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngproduct[$language['uid']]['products_meta_description']).'">
 				</div>
+			</div>
+			</div>
+            </div>
 			</div>
 			';
 		}

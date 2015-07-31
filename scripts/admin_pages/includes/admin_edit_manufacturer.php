@@ -183,7 +183,9 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 	}
 	foreach ($this->languages as $key=>$language) {
 		$markerArray=array();
-		$markerArray['LANGUAGE_UID']=$language['uid'];
+        $markerArray['IS_COLLAPSED']=$language['uid']>0 ? ' collapsed' : '';
+        $markerArray['IS_UNFOLD']=$language['uid']===0 ? ' in' : '';
+        $markerArray['LANGUAGE_UID']=$language['uid'];
 		$markerArray['LABEL_MANUFACTURER_LANGUAGE']=$this->pi_getLL('language');
 		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
 			$markerArray['MANUFACTURER_CONTENT_FLAG']='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
@@ -200,6 +202,8 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$manufacturersContent.=$this->cObj->substituteMarkerArray($subparts['manufacturers_content'], $markerArray, '###|###');
 		// manufacturers meta
 		$markerArray=array();
+        $markerArray['IS_COLLAPSED']=$language['uid']>0 ? ' collapsed' : '';
+        $markerArray['IS_UNFOLD']=$language['uid']===0 ? ' in' : '';
 		$markerArray['LANGUAGE_UID']=$language['uid'];
 		$markerArray['LABEL_MANUFACTURER_META_LANGUAGE']=$this->pi_getLL('language');
 		$markerArray['MANUFACTURER_META_TITLE']=$language['title'];
