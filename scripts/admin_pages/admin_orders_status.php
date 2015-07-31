@@ -73,10 +73,10 @@ if ($this->get['tx_multishop_pi1']['action']=='edit') {
 		$lngstatus[$row['language_id']]=$row;
 	}
 }
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('order_status').'</h1></div>';
+$content.='<div class="panel-heading"><h3>'.$this->pi_getLL('order_status').'</h3></div>';
 $content.='
-<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
-<fieldset><legend>'.$this->pi_getLL('add_order_status').'</legend>
+<div class="panel-body"><form class="form-horizontal" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
+<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('add_order_status').'</h3></div><div class="panel-body">
 ';
 foreach ($this->languages as $key=>$language) {
 	$flag_path='';
@@ -89,23 +89,28 @@ foreach ($this->languages as $key=>$language) {
 	}
 	$language_lable.=''.$language['title'];
 	$tmpcontent.='
-			<div class="account-field toggle_advanced_option msEditProductLanguageDivider">
-				<label>'.$this->pi_getLL('language').'</label>
-				<span><strong>'.$language_lable.'</strong></span>
+			<div class="form-group toggle_advanced_option msEditProductLanguageDivider">
+				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label>
+				<div class="col-md-10">
+					<p class="form-control-static"><strong>'.$language_lable.'</strong></p>
+				</div>
 			</div>			
-			<div class="account-field">
-				<label for="products_name">'.$this->pi_getLL('admin_name').'</label>
-						
-				<input type="text" class="text" name="tx_multishop_pi1[order_status_name]['.$language['uid'].']" id="order_status_name_'.$language['uid'].'" value="'.htmlspecialchars($lngstatus[$language['uid']]['name']).'">
+			<div class="form-group">
+				<label for="products_name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
+				<div class="col-md-10">
+				<input type="text" class="text form-control" name="tx_multishop_pi1[order_status_name]['.$language['uid'].']" id="order_status_name_'.$language['uid'].'" value="'.htmlspecialchars($lngstatus[$language['uid']]['name']).'">
+				</div>
 			</div>		
 		';
 }
 $content.=$tmpcontent.'
-<div class="account-field">
-	<label>&nbsp;</label>
-	<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
-</div>	
-</fieldset>';
+	<div class="form-group">
+		<div class="col-md-10 col-md-offset-2">
+		<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+		</div>
+	</div>
+</div>
+</div>';
 if ($this->get['tx_multishop_pi1']['action']=='edit') {
 	$content.='<input type="hidden" name="tx_multishop_pi1[orders_status_id]" value="'.$this->get['tx_multishop_pi1']['orders_status_id'].'" />';
 	$content.='<input type="hidden" name="tx_multishop_pi1[action]" value="update_status" />';
@@ -118,11 +123,11 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$statusses[]=$row;
 }
 if (count($statusses)) {
-	$content.='<table class="table table-striped table-bordered msadmin_border" width="100%">
-		<th>&nbsp;</th>
-		<th>'.$this->pi_getLL('name').'</th>
-		<th>'.$this->pi_getLL('default', 'Default').'</th>
-		<th>'.$this->pi_getLL('action').'</th>';
+	$content.='<table class="table table-striped table-bordered msadmin_border">
+		<thead><th class="cellID">'.$this->pi_getLL('id').'</th>
+		<th class="cellName">'.$this->pi_getLL('name').'</th>
+		<th class="cellStatus">'.$this->pi_getLL('default', 'Default').'</th>
+		<th class="cellAction">'.$this->pi_getLL('action').'</th></thead><tbody>';
 	foreach ($statusses as $status) {
 		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
@@ -130,12 +135,12 @@ if (count($statusses)) {
 			$tr_type='even';
 		}
 		$content.='<tr class="'.$tr_type.'">
-		<td width="50" align="right">
+		<td class="cellID">
 			'.$status['id'].'
 		</td>				
 		';
-		$content.='<td>'.$status['name'].'</td>
-		<td width="60" align="center">';
+		$content.='<td class="cellName">'.$status['name'].'</td>
+		<td class="cellStatus">';
 		if (!$status['default_status']) {
 			$content.='';
 			$content.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[action]=update_default_status&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[status]=1').'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
@@ -145,15 +150,15 @@ if (count($statusses)) {
 		}
 		$content.='
 		</td>
-		<td width="50" class="align_center">
-			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=edit').'" class="admin_menu_edit" alt="'.$this->pi_getLL('edit').'"></a>
-			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=delete').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="admin_menu_remove" alt="'.$this->pi_getLL('delete').'"></a>
+		<td class="cellAction">
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=edit').'" class="btn btn-primary btn-sm admin_menu_edit" alt="'.$this->pi_getLL('edit').'"><i class="fa fa-pencil"></i></a>
+			<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[orders_status_id]='.$status['id'].'&tx_multishop_pi1[action]=delete').'" onclick="return confirm(\''.$this->pi_getLL('are_you_sure').'?\')" class="btn btn-danger btn-sm admin_menu_remove" alt="'.$this->pi_getLL('delete').'"><i class="fa fa-trash-o"></i></a>
 		</td>';
 		$content.='</tr>';
 	}
-	$content.='</table>';
+	$content.='</tbody></table>';
 }
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-floppy-o fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>
