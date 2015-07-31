@@ -231,6 +231,7 @@ td.cellAction { white-space:nowrap; }
 .cellStatus,
 .cellAction { text-align:center; }
 .cellBackup > .btn { width:100%; }
+.cellWeight .form-control { width: 69px; }
 
 table#address_details { margin-bottom:0; }
 
@@ -486,7 +487,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 	#address_details > .panel-body > .row,
 	#view_customer > .topfieldset > .row,
 	#proposals_panels.row,
-	#address_details_panels.row {
+	#address_details_panels.row,
+	#address_details.row {
 		display: -webkit-box;
 		display: -moz-box;
 		display: -ms-flexbox;
@@ -496,7 +498,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 	#address_details > .panel-body > .row > div,
 	#view_customer > .topfieldset > .row > div,
 	#proposals_panels.row > div,
-	#address_details_panels.row > div {
+	#address_details_panels.row > div,
+	#address_details.row > div {
 		display: -webkit-box;
 		display: -moz-box;
 		display: -ms-flexbox;
@@ -506,7 +509,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 	#address_details > .panel-body > .row > div > div,
 	#view_customer > .topfieldset > .row > div > div,
 	#proposals_panels.row > div > div,
-	#address_details_panels.row > div > div { width:100%; }
+	#address_details_panels.row > div > div,
+	#address_details.row > div > div { width:100%; }
 	#address_details > .panel-body > .row > div > div { margin-bottom:0; }
 }
 
