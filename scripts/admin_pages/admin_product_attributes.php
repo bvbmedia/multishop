@@ -424,48 +424,50 @@ if ($rows) {
 							new_option_html+=\'&nbsp;<a href="#" class="edit_options btn btn-primary btn-xs" rel="\' + s.option_id + \'"><i class="fa fa-pencil"></i></a>\';
 							new_option_html+=\'&nbsp;<a href="#" class="delete_options btn btn-danger btn-xs" rel="\' + s.option_id + \'"><i class="fa fa-remove"></i></a>&nbsp;\';
 							new_option_html+=\'</span>\';
-							new_option_html+=\'<h3>\';
+							new_option_html+=\'</h3>\';
 							new_option_html+=\'</div>\';
 
                             new_option_html+=\'<div class="panel-body">\';
 
-							// settings related to options
-							new_option_html+=\'<div class="option_settings">\';
-
-
-							new_option_html+=\'<span class="listing_type">\';
-							new_option_html+=\''.addslashes($this->pi_getLL('admin_label_listing_type')).': \';
-							new_option_html+=s.listtype;
-							new_option_html+=\'</span>\';
+							new_option_html+=\'<div class="form-group row">\';
+							new_option_html+=\'<label class="control-label col-md-2">'.addslashes($this->pi_getLL('admin_label_listing_type')).': </label>\';
+							new_option_html+=\'<div class="col-md-4">\' + s.listtype + \'</div>\';
+							new_option_html+=\'</div>\';
 
                             new_option_html+=s.options_groups
 
-							new_option_html+=\'<span class="required">\';
+                            new_option_html+=\'<div class="form-group row">\';
+                            new_option_html+=\'<div class="col-md-2">&nbsp;</div>\';
+							new_option_html+=\'<div class="col-md-8">\';
+							new_option_html+=\'<label class="checkbox-inline">\';
 							if (s.required=="1") {
 								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.$this->pi_getLL('required').'\';
 							} else {
 								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" /> '.$this->pi_getLL('required').'\';
 							}
-							new_option_html+=\'</span>\';
-							new_option_html+=\'<span class="hide_in_details_page">\';
+							new_option_html+=\'</label>\';
+							new_option_html+=\'<label class="checkbox-inline">\';
 							if (s.hide_in_details_page=="1") {
 								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'\';
 							} else {
 								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" /> '.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'\';
 							}
-							new_option_html+=\'</span>\';
-							new_option_html+=\'<span class="hide_in_cart">\';
+							new_option_html+=\'</label>\';
+							new_option_html+=\'<label class="checkbox-inline">\';
 							if (s.hide_in_cart=="1") {
 								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'\';
 							} else {
 								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" /> '.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'\';
 							}
-							new_option_html+=\'</span>\';
+							new_option_html+=\'</label>\';
+							new_option_html+=\'</div>\';
 							new_option_html+=\'</div>\';
 
-							new_option_html+=\'<div class="option_values">\';
+							new_option_html+=\'<div class="form-group">\';
 							new_option_html+=\'<a href="#" class="btn btn-success add_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-edit"></i> '.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;\';
 							new_option_html+=\'<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'"><i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('show_attributes_values', 'SHOW VALUES')).'</a>&nbsp;\';
+							new_option_html+=\'</div>\';
+
 							new_option_html+=\'<div class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
 							new_option_html+=\'<div id="last_line_\' + s.option_id + \'">\';
 							new_option_html+=\'<a href="#" class="btn btn-success add_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-edit"></i> '.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;\';
@@ -473,11 +475,18 @@ if ($rows) {
 							new_option_html+=\'</div>\';
 							new_option_html+=\'<input type="hidden" name="values_fetched_\' + s.option_id + \'" id="values_fetched_\' + s.option_id + \'" value="0" />\';
 							new_option_html+=\'</div>\';
-							new_option_html+=\'</div>\';
 
 							new_option_html+=\'</div>\'; // .panel-body
 							new_option_html+=\'</div>\'; // .panel .panel-default
 							$(ul_option_listings).append(new_option_html);
+							//
+							$("#new_option_name").val("");
+							$("#new_listtype").val("select");
+							$(".add_new_attributes_options").prop("checked", false);
+							//
+							$(\'html, body\').animate({
+                                scrollTop: $(\'#options_\' + s.option_id).offset().top
+                            }, 2000);
 						} else {
 							msDialog("ERROR", s.reason);
 						}

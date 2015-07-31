@@ -101,18 +101,18 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 				$selects['hidden_field']=$this->pi_getLL('admin_label_option_type_hidden_field');
 				$selects['file']=$this->pi_getLL('admin_label_option_type_file_input');
 				$selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
-				$list_type='<select name="listtype['.$max_optid.']">';
+				$list_type='<select name="listtype['.$max_optid.']" class="form-control">';
 				foreach ($selects as $key=>$value) {
 					$list_type.='<option value="'.$key.'"'.($key==$listtype ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
 				}
 				$list_type.='</select>';
 				$options_data['listtype']=$list_type;
 				if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-					$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($max_optid);
+					$options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($max_optid, 'class="form-control"');
 					if (!empty($options_group)) {
-						$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$options_group.'</span>';
+						$options_group='<div class="form-group row"><label class="col-md-4 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$options_group.'</div></div>';
 					} else {
-						$options_group='<span class="options_groups">'.$this->pi_getLL('admin_label_options_group').': '.$this->pi_getLL('admin_label_no_groups_defined').'</span>';
+                        $options_group='<div class="form-group row"><label class="col-md-4 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$this->pi_getLL('admin_label_no_groups_defined').'</div></div>';
 					}
 					$options_data['options_groups']=$options_group;
 				} else {
