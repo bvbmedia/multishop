@@ -324,6 +324,8 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 				bottom:0
 			}
 		});
+		$(\'ul#tx_multishop_admin_header\').find(\'.active_leftbar_menu\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'open\');
+		$(\'ul#tx_multishop_admin_header\').find(\'.active_leftbar_menu\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');
 	';
 }
 $html.='

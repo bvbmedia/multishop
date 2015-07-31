@@ -198,7 +198,11 @@ function renderAdminMenu(json, type, includeDescinFooter) {
             var tab_counter = 0;
             jQuery.each(json, function (tablevel1_key, tablevel1) {
                 tab_counter++;
-                admin_content += '<li role="presentation" class="' + tablevel1_key + ' dropdown ms_admin_has_subs">';
+                var active_class='';
+                if (tablevel1.active!=undefined && tablevel1.active==1) {
+                    active_class='active_leftbar_menu';
+                }
+                admin_content += '<li role="presentation" class="' + tablevel1_key + ' ' + active_class + ' dropdown ms_admin_has_subs mainmenu_parents">';
                 if (tablevel1.label == null && tablevel1.description) {
                     admin_content += tablevel1.description;
 
@@ -237,7 +241,10 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                         jQuery.each(tablevel1.subs, function (tablevel2_key, tablevel2) {
                             counter_tablevel2++;
-
+                            var active_class='';
+                            if (tablevel2.active!=undefined && tablevel2.active==1) {
+                                active_class='active_leftbar_menu';
+                            }
                             if (type == 'header' && (counter_tablevel2 == total_tablevel2)) {
                                 tablevel2_params = 'dropdown_bottom';
 
@@ -255,13 +262,13 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                             if (tablevel2.subs == null) {
                                 if (tablevel2.link) {
-                                    admin_content += '<li class="' + tablevel2_params + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>';
+                                    admin_content += '<li class="' + tablevel2_params + ' ' + active_class + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>';
                                     if (tablevel2.class) {
                                         admin_content += '<i class="' + tablevel2.class + '"></i>';
                                     }
                                     admin_content += tablevel2.label + '<span class="ms_admin_menu_item_description"></span></a></li>';
                                 } else {
-                                    admin_content += '<li class="' + tablevel2_params + '"><span>';
+                                    admin_content += '<li class="' + tablevel2_params + ' ' + active_class + '"><span>';
                                     if (tablevel2.class) {
                                         admin_content += '<i class="' + tablevel2.class + '"></i>';
                                     }
@@ -269,7 +276,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                 }
 
                             } else {
-                                admin_content += '<li class="ms_admin_has_subs"><a href="' + (tablevel2.link != undefined ? tablevel2.link : '#') + '">';
+                                admin_content += '<li class="ms_admin_has_subs ' + active_class + '"><a href="' + (tablevel2.link != undefined ? tablevel2.link : '#') + '">';
                                 if (tablevel2.class) {
                                     admin_content += '<i class="' + tablevel2.class + '"></i>';
                                 }
@@ -287,7 +294,10 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                                 jQuery.each(tablevel2.subs, function (tablevel3_key, tablevel3) {
                                     counter_tablevel3++;
-
+                                    var active_class='';
+                                    if (tablevel3.active!=undefined && tablevel3.active==1) {
+                                        active_class='active_leftbar_menu';
+                                    }
                                     if (type == 'header' && (counter_tablevel3 == total_tablevel3)) {
                                         tablevel3_params = 'dropdown_bottom';
 
@@ -299,7 +309,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                     }
 
                                     if (tablevel3.subs == null) {
-                                        admin_content += '<li class="' + tablevel3_key + '">';
+                                        admin_content += '<li class="' + tablevel3_key + ' ' + active_class + '">';
                                         if (tablevel3.link) {
                                             /*
                                              if (tablevel3.description != null) {
@@ -323,7 +333,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                         admin_content += '</li>';
 
                                     } else {
-                                        admin_content += '<li class="' + (tablevel3_key != '' ? tablevel3_key + ' ' : '') + 'ms_admin_has_subs">';
+                                        admin_content += '<li class="' + (tablevel3_key != '' ? tablevel3_key + ' ' : '') + 'ms_admin_has_subs' + ' ' + active_class + '">';
 
                                         if (tablevel3.link) {
                                             admin_content += '<a href="' + tablevel3.link + '"' + (tablevel3.link_params != undefined ? tablevel3.link_params : '') + '>';
@@ -354,7 +364,10 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                                         jQuery.each(tablevel3.subs, function (tablevel4_key, tablevel4) {
                                             counter_tablevel4++;
-
+                                            var active_class='';
+                                            if (tablevel4.active!=undefined && tablevel4.active==1) {
+                                                active_class='active_leftbar_menu';
+                                            }
                                             if (type == 'header' && (counter_tablevel4 == total_tablevel4)) {
                                                 tablevel4_params = 'dropdown_bottom';
 
@@ -366,7 +379,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                             }
 
                                             if (tablevel4.subs == null) {
-                                                admin_content += '<li class="' + tablevel4_key + '">';
+                                                admin_content += '<li class="' + tablevel4_key + ' ' + active_class + '">';
 
                                                 if (tablevel4.link) {
                                                     admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>';
@@ -385,7 +398,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                 admin_content += '</li>';
                                             } else {
 
-                                                admin_content += '<li class="' + tablevel4_key + '">';
+                                                admin_content += '<li class="' + tablevel4_key + ' ' + active_class + '">';
 
                                                 if (tablevel4.link) {
                                                     admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + '>';
@@ -415,7 +428,10 @@ function renderAdminMenu(json, type, includeDescinFooter) {
 
                                                 jQuery.each(tablevel4.subs, function (tablevel5_key, tablevel5) {
                                                     counter_tablevel5++;
-
+                                                    var active_class='';
+                                                    if (tablevel5.active!=undefined && tablevel5.active==1) {
+                                                        active_class='active_leftbar_menu';
+                                                    }
                                                     if (type == 'header' && (counter_tablevel5 == total_tablevel5)) {
                                                         tablevel5_params = 'dropdown_bottom';
 
@@ -426,7 +442,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                         tablevel5_params = '';
                                                     }
 
-                                                    admin_content += '<li class="' + tablevel5_key + '">';
+                                                    admin_content += '<li class="' + tablevel5_key + ' ' + active_class + '">';
 
                                                     if (tablevel5.link) {
                                                         admin_content += '<a href="' + tablevel5.link + '"' + (tablevel5.link_params != undefined ? tablevel5.link_params : '') + '>';
