@@ -286,16 +286,33 @@ if ($this->ADMIN_USER) {
 
 							// top admin menu
 							var admin_menu_header = \'<div id="tx_multishop_admin_header_wrapper">\';
-							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
-							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1);
+';
+if ($this->get['type']=='2003') {
+	// Backend column left nav
+	$html.='
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false">\';
+							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'collapse\');
 							admin_menu_header += admin_menu_header_html;
 							admin_menu_header += \'</ul></div>\';
+	';
+} else {
+	// Frontend overlay top nav
+	$html.='
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
+							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'dropdown\');
+							admin_menu_header += admin_menu_header_html;
+							admin_menu_header += \'</ul></div>\';
+	';
+}
+
+							$html.='
 							admin_menu_header += \'<div id="ms_admin_minimaxi_wrapper"><ul id="ms_admin_minimize"><li><a href="#" class="ms_admin_minimize">'.$this->pi_getLL('minimize').'</a></li></ul></div>\';
 							admin_menu_header += \'</div>\';
 
 							var admin_menu_newheader=\'\';
 ';
 if ($this->get['type']=='2003') {
+	// Backend top nav
 							$html.='
 							// new top admin menu
 							var admin_menu_newheader = \'<div id="tx_multishop_admin_newheader_wrapper">\';
@@ -324,8 +341,30 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 				bottom:0
 			}
 		});
-		/*$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'open active\');
-		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');*/
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'in\');
+		//$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');
+		/*
+		$(".ms_admin_has_subs").on("click",function(e) {
+            if ($(e.currentTarget).hasClass("open")) {
+                $(e.currentTarget).toggleClass("open",false);
+            } else {
+                $(e.currentTarget).toggleClass("open",true);
+                e.preventDefault();
+                return false;
+            }
+        });
+        $(".a_dropdown").on("click",function(e) {
+            if ($(this).parent(".ms_admin_has_subs").hasClass("open")) {
+                $(this).parent(".ms_admin_has_subs").toggleClass("open", false);
+                console.log($(this).parent(".ms_admin_has_subs").attr("class"));
+            } else {
+                $(this).parent(".ms_admin_has_subs").toggleClass("open", true);
+            }
+        });
+		$(".dropdown").on("hide.bs.dropdown", function(e){
+		    e.preventDefault();
+		});
+		*/
 	';
 }
 $html.='
