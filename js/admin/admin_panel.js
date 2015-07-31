@@ -198,11 +198,15 @@ function renderAdminMenu(json, type, includeDescinFooter) {
             var tab_counter = 0;
             jQuery.each(json, function (tablevel1_key, tablevel1) {
                 tab_counter++;
+                var has_sub_class=' ms_admin_has_subs';
+                if (tablevel1.subs == null) {
+                    has_sub_class='';
+                }
                 var active_class='';
                 if (tablevel1.active!=undefined && tablevel1.active==1) {
                     active_class='active';
                 }
-                admin_content += '<li role="presentation" class="' + tablevel1_key + ' ' + active_class + ' dropdown ms_admin_has_subs mainmenu_parents">';
+                admin_content += '<li role="presentation" class="' + tablevel1_key + ' ' + active_class + ' dropdown' + has_sub_class + ' mainmenu_parents">';
                 if (tablevel1.label == null && tablevel1.description) {
                     admin_content += tablevel1.description;
 
@@ -254,12 +258,10 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                             } else {
                                 tablevel2_params = '';
                             }
-
                             if (tablevel2.divider) {
                                 admin_content += '<li class="ms_admin_divider"></li>';
                                 return true;
                             }
-
                             if (tablevel2.subs == null) {
                                 if (tablevel2.link) {
                                     admin_content += '<li class="' + tablevel2_params + ' ' + active_class + '"><a href="' + tablevel2.link + '"' + (tablevel2.link_params != undefined ? tablevel2.link_params : '') + '>';
