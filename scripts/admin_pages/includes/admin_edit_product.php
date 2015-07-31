@@ -2251,7 +2251,7 @@ if ($this->post) {
 								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_from')).'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_1" readonly="readonly" value="1" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
-								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_till2')).'</span> <input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
+								elem += \'<div class="input-group"><span class="input-group-addon">'.addslashes($this->pi_getLL('admin_till2')).'</span><input type="text" class="form-control price small_input" name="sp[\' + counter_data + \'][]" id="sp_\' + counter_data + \'_qty_2" value="" /></div>\';
 								elem += \'</td>\';
 								elem += \'<td>\';
 								elem += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name_excluding_vat" class="form-control msStaffelPriceExcludingVat" value=""><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
@@ -2663,12 +2663,12 @@ if ($this->post) {
 			new_attributes_html+=\'</select>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_price_col']='new_attributes_html+=\'<td class="product_attribute_price">\';
-			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">\';
-			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
+			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceExcludingVat">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span>\';
 			new_attributes_html+=\'</div></div>\';
-			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">\';
-			new_attributes_html+=\''.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
+			new_attributes_html+=\'<div class="msAttributesField"><div class="input-group">\';
+			new_attributes_html+=\'<span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat">\';
 			new_attributes_html+=\'<span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span>\';
 			new_attributes_html+=\'</div></div>\';
 			new_attributes_html+=\'<div class="msAttributesField hidden">\';
@@ -2676,7 +2676,7 @@ if ($this->post) {
 			new_attributes_html+=\'</div>\';
 			new_attributes_html+=\'</td>\';';
 			$new_product_attributes_block_columns_js['attribute_save_col']='new_attributes_html+=\'<td class="product_attribute_action">\';
-			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-primary save_new_attributes"><i class="fa fa-plus-square"></i></button> <button type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-danger delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
+			new_attributes_html+=\'<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('admin_label_save_attribute')).'" class="btn btn-primary btn-sm save_new_attributes"><i class="fa fa-plus"></i></button> <button type="button" value="'.htmlspecialchars($this->pi_getLL('cancel')).'" class="btn btn-danger btn-sm delete_tmp_product_attributes"><i class="fa fa-remove"></i></button></div>\';
 			new_attributes_html+=\'</td>\';';
 			// custom hook that can be controlled by third-party plugin
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockJSNewCols'])) {
@@ -2701,8 +2701,8 @@ if ($this->post) {
 					var n = d.getTime();
 					$(this).parent().parent().hide();
 					var new_attributes_html=\'\';
-					new_attributes_html+=\'<div class="panel panel-primary"><div class="panel-heading"><h3 class="panel-title">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</h3></div><div class="panel-body"><div class="wrap-attributes-item" rel="new">\';
-					new_attributes_html+=\'<table class="table">\';
+					new_attributes_html+=\'<div class="panel panel-primary no-mb"><div class="panel-heading"><h3 class="panel-title">'.addslashes($this->pi_getLL('admin_label_add_new_product_attributes')).'</h3></div><div class="panel-body"><div class="wrap-attributes-item" rel="new">\';
+					new_attributes_html+=\'<table class="table no-mb">\';
 					new_attributes_html+=\'<thead><tr class="option_row">\';
 					'.implode("\n", $new_product_attributes_block_columns_js).'
 					new_attributes_html+=\'</tr></thead>\';
@@ -2740,7 +2740,7 @@ if ($this->post) {
 						},
 						template: \'<div class="qq-uploader">\' +
 								  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
-								  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+								  \'<div class="qq-upload-button btn btn-primary btn-sm"><i class="fa fa-upload"></i> '.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 								  \'<ul class="qq-upload-list" id="qq-upload-list-ul\' + n + \'"></ul>\' +
 								  \'</div>\',
 						onComplete: function(id, fileName, responseJSON){
@@ -2751,7 +2751,7 @@ if ($this->post) {
 							$("#attribute_value_image_action" + n).empty();
 							var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image\' + n + \'" />\';
 							new_image+=\'<div class="image_tools">\';
-							new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="\' + n + \':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+							new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_product_attribute_value_images" rel="\' + n + \':\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
 							new_image+=\'</div>\';
 							$("#attribute_value_image_action" + n).html(new_image);
 						},
@@ -2841,7 +2841,7 @@ if ($this->post) {
 						},
 						template: \'<div class="qq-uploader">\' +
 								  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
-								  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+								  \'<div class="qq-upload-button btn btn-primary btn-sm"><i class="fa fa-upload"></i> '.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 								  \'<ul class="qq-upload-list" id="qq-upload-list-ul\' + n + \'"></ul>\' +
 								  \'</div>\',
 						onComplete: function(id, fileName, responseJSON){
@@ -2852,7 +2852,7 @@ if ($this->post) {
 							$("#attribute_value_image_action" + n).empty();
 							var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image\' + n + \'" />\';
 							new_image+=\'<div class="image_tools">\';
-							new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="\' + n + \':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+							new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_product_attribute_value_images" rel="\' + n + \':\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
 							new_image+=\'</div>\';
 							$("#attribute_value_image_action" + n).html(new_image);
 						},
@@ -3380,8 +3380,8 @@ if ($this->post) {
 											},
 											template: \'<div class="qq-uploader">\' +
 													  \'<div class="qq-upload-drop-area"><span>'.$this->pi_getLL('admin_label_drop_files_here_to_upload').'</span></div>\' +
-													  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
-													  \'<ul class="qq-upload-list" id="qq-upload-list-ul'.$element_id.'"></ul>\' +
+													  \'<div class="qq-upload-button btn btn-primary btn-sm"><i class="fa fa-upload"></i> '.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+													  \'<ul class="qq-upload-list qq-vertical-list" id="qq-upload-list-ul'.$element_id.'"></ul>\' +
 													  \'</div>\',
 											onComplete: function(id, fileName, responseJSON){
 												var filenameServer = responseJSON[\'filename\'];
@@ -3391,7 +3391,7 @@ if ($this->post) {
 												$("#attribute_value_image_action'.$element_id.'").empty();
 												var new_image=\'<img src="\' + filenameLocationServer + \'" width="75" id="product_attribute_value_image'.$element_id.'" />\';
 												new_image+=\'<div class="image_tools">\';
-												new_image+=\'<a href="#" class="delete_product_attribute_value_images" rel="'.$element_id.':\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+												new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_product_attribute_value_images" rel="'.$element_id.':\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
 												new_image+=\'</div>\';
 												$("#attribute_value_image_action'.$element_id.'").html(new_image);
 											},
@@ -3413,12 +3413,12 @@ if ($this->post) {
 								$attributes_tax=mslib_fe::taxDecimalCrop(($attribute_data['options_values_price']*$product_tax_rate)/100);
 								$attribute_price_display=mslib_fe::taxDecimalCrop($attribute_data['options_values_price'], 2, false);
 								$attribute_price_display_incl=mslib_fe::taxDecimalCrop($attribute_data['options_values_price']+$attributes_tax, 2, false);
-								$existing_product_attributes_block_columns['attribute_price_col']='<td class="product_attribute_price">
+								$existing_product_attributes_block_columns['attribute_price_col']='<td class="cellPrice">
 									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msAttributesPriceExcludingVat" value="'.$attribute_price_display.'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
 									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msAttributesPriceIncludingVat" value="'.$attribute_price_display_incl.'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 									<div class="msAttributesField hidden"><input type="hidden" name="tx_multishop_pi1[price][]" value="'.$attribute_data['options_values_price'].'" /></div>
 								</td>';
-								$existing_product_attributes_block_columns['attribute_save_col']='<td class="product_attribute_action">
+								$existing_product_attributes_block_columns['attribute_save_col']='<td class="cellAction">
 								<div class="product_attribute_action_container"><button type="button" value="'.htmlspecialchars($this->pi_getLL('delete')).'" class="btn btn-danger delete_product_attributes"><i class="fa fa-remove"></i></button></div>
 								</td>';
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_product.php']['attributesBlockExistingCols'])) {
