@@ -341,7 +341,7 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 				bottom:0
 			}
 		});
-		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'active in\');
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'in\');
 		//$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');
 		/*
 		$(".ms_admin_has_subs").on("click",function(e) {
