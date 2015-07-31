@@ -324,8 +324,28 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 				bottom:0
 			}
 		});
-		/*$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'open active\');
-		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');*/
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'active open\');
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');
+		$(".ms_admin_has_subs").on("click",function(e) {
+            if ($(e.currentTarget).hasClass("open")) {
+                $(e.currentTarget).toggleClass("open",false);
+            } else {
+                $(e.currentTarget).toggleClass("open",true);
+                e.preventDefault();
+                return false;
+            }
+        });
+        $(".a_dropdown").on("click",function(e) {
+            if ($(this).parent(".ms_admin_has_subs").hasClass("open")) {
+                $(this).parent(".ms_admin_has_subs").toggleClass("open", false);
+                console.log($(this).parent(".ms_admin_has_subs").attr("class"));
+            } else {
+                $(this).parent(".ms_admin_has_subs").toggleClass("open", true);
+            }
+        });
+		$(".dropdown").on("hide.bs.dropdown", function(e){
+		    e.preventDefault();
+		});
 	';
 }
 $html.='
