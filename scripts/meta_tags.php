@@ -288,6 +288,7 @@ if ($this->ADMIN_USER) {
 							var admin_menu_header = \'<div id="tx_multishop_admin_header_wrapper">\';
 ';
 if ($this->get['type']=='2003') {
+	// Backend column left nav
 	$html.='
 							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false">\';
 							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'collapse\');
@@ -295,6 +296,7 @@ if ($this->get['type']=='2003') {
 							admin_menu_header += \'</ul></div>\';
 	';
 } else {
+	// Frontend overlay top nav
 	$html.='
 							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
 							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'dropdown\');
@@ -310,6 +312,7 @@ if ($this->get['type']=='2003') {
 							var admin_menu_newheader=\'\';
 ';
 if ($this->get['type']=='2003') {
+	// Backend top nav
 							$html.='
 							// new top admin menu
 							var admin_menu_newheader = \'<div id="tx_multishop_admin_newheader_wrapper">\';
@@ -332,16 +335,13 @@ $html.='
 ';
 if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') {
 	$html.='
-	/*
 		$(\'ul#tx_multishop_admin_header\').affix({
 			offset: {
 				top:0,
 				bottom:0
 			}
 		});
-*/
-//		$(\'.collapse\').collapse();
-		//$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'active open\');
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'active open\');
 		//$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');
 		/*
 		$(".ms_admin_has_subs").on("click",function(e) {
