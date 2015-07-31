@@ -25,7 +25,14 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
             if (tablevel1.active!=undefined && tablevel1.active==1) {
                 active_class=' active';
             }
-            admin_content += '<li role="presentation" class="' + tablevel1_key + active_class + has_sub_class + '">';
+            switch(menuType) {
+                case 'collapse':
+                    admin_content += '<li role="presentation" class="panel panel-default ' + tablevel1_key + active_class + has_sub_class + '">';
+                    break;
+                case 'dropdown':
+                    admin_content += '<li role="presentation" class="' + tablevel1_key + active_class + has_sub_class + '">';
+                    break;
+            }
             if (tablevel1.label == null && tablevel1.description) {
                 admin_content += tablevel1.description;
 
@@ -67,10 +74,10 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                     counter_tablevel2 = 0;
                     switch(menuType) {
                         case 'collapse':
-                            admin_content += '<a href="#subs' + tablevel1_key + '" role="button" data-toggle="collapse" data-parent="#tx_multishop_admin_header" aria-expanded="false" aria-controls="subs' + tablevel1_key + '">';
+                            admin_content += '<a href="#subs' + tablevel1_key + '" id="subsA' + tablevel1_key + '" class="a_dropdown" role="button" data-toggle="collapse" data-parent="#tx_multishop_admin_header" aria-expanded="false" aria-controls="subs' + tablevel1_key + '">';
                             break;
                         case 'dropdown':
-                            admin_content += '<a href="' + (tablevel1.link != undefined ? tablevel1.link : '#') + '" class="a_dropdown" role="button" id="subs' + tablevel1_key + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
+                            admin_content += '<a href="' + (tablevel1.link != undefined ? tablevel1.link : '#') + '" id="subsA' + tablevel1_key + '" class="a_dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">';
                             break;
                     }
                     if (tablevel1.class) {
@@ -79,7 +86,7 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                     admin_content += tablevel1.label + '</a>';
                     switch(menuType) {
                         case 'collapse':
-                            admin_content += '<ul id="subs' + tablevel1_key + '" class="panel-collapse collapse">';
+                            admin_content += '<ul id="subs' + tablevel1_key + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="subsA' + tablevel1_key + '">';
                             break;
                         case 'dropdown':
                             admin_content += '<ul class="dropdown-menu">';
