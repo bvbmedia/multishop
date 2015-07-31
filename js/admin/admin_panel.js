@@ -198,7 +198,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
             var tab_counter = 0;
             jQuery.each(json, function (tablevel1_key, tablevel1) {
                 tab_counter++;
-                var has_sub_class=' ms_admin_has_subs ';
+                var has_sub_class=' ms_admin_has_subs';
                 if (tablevel1.subs == null) {
                     has_sub_class='';
                 }
@@ -206,7 +206,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                 if (tablevel1.active!=undefined && tablevel1.active==1) {
                     active_class='active';
                 }
-                admin_content += '<li role="presentation" class="' + tablevel1_key + ' ' + active_class + ' dropdown' + has_sub_class + 'mainmenu_parents">';
+                admin_content += '<li role="presentation" class="' + tablevel1_key + ' ' + active_class + ' dropdown' + has_sub_class + ' mainmenu_parents">';
                 if (tablevel1.label == null && tablevel1.description) {
                     admin_content += tablevel1.description;
 
