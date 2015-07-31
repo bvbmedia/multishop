@@ -667,13 +667,16 @@ if ($this->post) {
 		$category_name_block='';
 		foreach ($this->languages as $key=>$language) {
 			$category_name_block.='
-			<div class="form-group" id="msEditCategoryInputName_'.$language['uid'].'">
-			<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$category_name_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$category_name_block.=''.$language['title'].'
-			</p></div></div>
+			<div class="panel panel-default">
+                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputName_'.$language['uid'].'">
+                    <h3 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#msEditCategoryInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+                    </h3>
+                </div>
+                <div id="msEditCategoryInputName_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div class="panel-body">
+			';
+			$category_name_block.='
 			<div class="form-group" id="msEditCategoryInputCategoryName_'.$language['uid'].'">
 				<label class="control-label col-md-2" for="categories_name">'.$this->pi_getLL('admin_name').'</label>
 				<div class="col-md-10">
@@ -681,6 +684,7 @@ if ($this->post) {
 				</div>
 			</div>
 			';
+            $category_name_block.='</div></div></div>';
 		}
 		if ($this->get['action']=='add_category') {
 			if (isset($this->get['cid']) && $this->get['cid']>0) {
@@ -722,15 +726,14 @@ if ($this->post) {
 		$categories_content_block='';
 		foreach ($this->languages as $key=>$language) {
 			$categories_content_block.='
-			<div class="form-group" id="msEditCategoryInputContent_'.$language['uid'].'">
-			<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$categories_content_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$categories_content_block.=''.$language['title'].'
-			</p>
-			</div>
-			</div>
+			<div class="panel panel-default toggle_advanced_option">
+                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputContent_'.$language['uid'].'">
+                    <h3 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#msEditCategoryInputContent_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+                    </h3>
+                </div>
+                <div id="msEditCategoryInputContent_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div class="panel-body">
 			<div class="form-group" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
 						<label class="control-label col-md-2" for="content">'.$this->pi_getLL('content').' '.$this->pi_getLL('top').'</label>
 						<div class="col-md-10">
@@ -743,18 +746,19 @@ if ($this->post) {
 						<textarea spellcheck="true" name="content_footer['.$language['uid'].']" id="content_footer['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content_footer']).'</textarea>
 						</div>
 			</div>';
+            $categories_content_block.='</div></div></div>';
 		}
 		$categories_meta_block='';
 		foreach ($this->languages as $key=>$language) {
 			$categories_meta_block.='
-			<div class="form-group" id="msEditCategoryInputMeta_'.$language['uid'].'">
-			<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$categories_meta_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$categories_meta_block.=''.$language['title'].'
-			</p></div>
-			</div>
+			<div class="panel panel-default toggle_advanced_option">
+                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputMeta_'.$language['uid'].'">
+                    <h3 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#msEditCategoryInputMeta_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+                    </h3>
+                </div>
+                <div id="msEditCategoryInputMeta_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div class="panel-body">
 			<div class="form-group" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
 				<label class="control-label col-md-2" for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
 				<div class="col-md-10">
@@ -773,6 +777,7 @@ if ($this->post) {
 				<input type="text" class="form-control text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
 				</div>
 			</div>';
+            $categories_meta_block.='</div></div></div>';
 		}
 		// INPUT_CATEGORY_TREE
 		$tmpcontent='';
