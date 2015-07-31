@@ -286,10 +286,24 @@ if ($this->ADMIN_USER) {
 
 							// top admin menu
 							var admin_menu_header = \'<div id="tx_multishop_admin_header_wrapper">\';
-							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
-							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1);
+';
+if ($this->get['type']=='2003') {
+	$html.='
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false">\';
+							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'collapse\');
 							admin_menu_header += admin_menu_header_html;
 							admin_menu_header += \'</ul></div>\';
+	';
+} else {
+	$html.='
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
+							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'dropdown\');
+							admin_menu_header += admin_menu_header_html;
+							admin_menu_header += \'</ul></div>\';
+	';
+}
+
+							$html.='
 							admin_menu_header += \'<div id="ms_admin_minimaxi_wrapper"><ul id="ms_admin_minimize"><li><a href="#" class="ms_admin_minimize">'.$this->pi_getLL('minimize').'</a></li></ul></div>\';
 							admin_menu_header += \'</div>\';
 
@@ -318,14 +332,18 @@ $html.='
 ';
 if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') {
 	$html.='
+	/*
 		$(\'ul#tx_multishop_admin_header\').affix({
 			offset: {
 				top:0,
 				bottom:0
 			}
 		});
-		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'active open\');
-		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');
+*/
+//		$(\'.collapse\').collapse();
+		//$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().addClass(\'active open\');
+		//$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').attr(\'aria-expanded\', \'true\');
+		/*
 		$(".ms_admin_has_subs").on("click",function(e) {
             if ($(e.currentTarget).hasClass("open")) {
                 $(e.currentTarget).toggleClass("open",false);
@@ -346,6 +364,7 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 		$(".dropdown").on("hide.bs.dropdown", function(e){
 		    e.preventDefault();
 		});
+		*/
 	';
 }
 $html.='

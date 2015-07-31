@@ -422,11 +422,6 @@ switch ($this->ms['page']) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_home.php');
 		}
 		break;
-	case 'admin_ajax':
-		if ($this->ADMIN_USER) {
-			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_ajax.php');
-		}
-		break;
 	case 'admin_system_rebuild_flat_database':
 		if ($this->ADMIN_USER) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_rebuild_flat_database.php');
