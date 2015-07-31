@@ -200,7 +200,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                 tab_counter++;
                 var active_class='';
                 if (tablevel1.active!=undefined && tablevel1.active==1) {
-                    active_class='active_leftbar_menu';
+                    active_class='active';
                 }
                 admin_content += '<li role="presentation" class="' + tablevel1_key + ' ' + active_class + ' dropdown ms_admin_has_subs mainmenu_parents">';
                 if (tablevel1.label == null && tablevel1.description) {
@@ -243,7 +243,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                             counter_tablevel2++;
                             var active_class='';
                             if (tablevel2.active!=undefined && tablevel2.active==1) {
-                                active_class='active_leftbar_menu';
+                                active_class='active';
                             }
                             if (type == 'header' && (counter_tablevel2 == total_tablevel2)) {
                                 tablevel2_params = 'dropdown_bottom';
@@ -296,7 +296,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                     counter_tablevel3++;
                                     var active_class='';
                                     if (tablevel3.active!=undefined && tablevel3.active==1) {
-                                        active_class='active_leftbar_menu';
+                                        active_class='active';
                                     }
                                     if (type == 'header' && (counter_tablevel3 == total_tablevel3)) {
                                         tablevel3_params = 'dropdown_bottom';
@@ -366,7 +366,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                             counter_tablevel4++;
                                             var active_class='';
                                             if (tablevel4.active!=undefined && tablevel4.active==1) {
-                                                active_class='active_leftbar_menu';
+                                                active_class='active';
                                             }
                                             if (type == 'header' && (counter_tablevel4 == total_tablevel4)) {
                                                 tablevel4_params = 'dropdown_bottom';
@@ -430,7 +430,7 @@ function renderAdminMenu(json, type, includeDescinFooter) {
                                                     counter_tablevel5++;
                                                     var active_class='';
                                                     if (tablevel5.active!=undefined && tablevel5.active==1) {
-                                                        active_class='active_leftbar_menu';
+                                                        active_class='active';
                                                     }
                                                     if (type == 'header' && (counter_tablevel5 == total_tablevel5)) {
                                                         tablevel5_params = 'dropdown_bottom';
