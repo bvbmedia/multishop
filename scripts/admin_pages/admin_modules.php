@@ -34,12 +34,14 @@ jQuery(document).ready(function($) {
 	$(".nav-tabs a:first").tab("show");
 
 	var lochash=window.location.hash;
+	console.log(lochash);
 	if (lochash!="") {
-		var li_this=$("ul.nav-tabs > .tab-pane").find("a[href=\'" + lochash + "\']").parent();
+		var li_this=$("ul.nav-tabs > li").find("a[href=\'" + lochash + "\']").parent();
 		if (li_this.length > 0) {
 			$("ul.nav-tabs li").removeClass("active");
 			$(li_this).addClass("active");
-			$(".tab-pane").hide();
+			$(".tab-pane").removeClass("active");
+			$(lochash).addClass("active");
 			$(lochash).fadeIn(0);
 		}
 	}
