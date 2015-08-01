@@ -6285,7 +6285,14 @@ class mslib_fe {
 		}
 		$order_status_array=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 		$ms_menu=array();
-		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';
+		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.$this->conf['admin_development_company_url'].'" title="'.htmlspecialchars($this->conf['admin_development_company_name']).'" alt="'.htmlspecialchars($this->conf['admin_development_company_name']).'" target="_blank">';
+		if ($this->conf['admin_development_company_logo']) {
+			$ms_menu['header']['ms_admin_logo']['description'].='<img src="'.$this->conf['admin_development_company_logo'].'">';
+		} else {
+			$ms_menu['header']['ms_admin_logo']['description'].='<span></span>';
+		}
+		$ms_menu['header']['ms_admin_logo']['description'].='</a>';
+		
 //		$ms_menu['header']['ms_admin_logo']['description']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_home').'" title="Home dashboard" alt="Home dashboard"><img src="'.$this->conf['admin_development_company_logo'].'"></a>';
 		if ($this->ROOTADMIN_USER or $this->CATALOGADMIN_USER) {
 			$ms_menu['header']['ms_admin_catalog']['label']=$this->pi_getLL('admin_catalog');
