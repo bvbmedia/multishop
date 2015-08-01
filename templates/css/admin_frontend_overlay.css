@@ -32,6 +32,7 @@
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > span > .fa,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user > div > a > .fa { float:left; width:21px; line-height:38px; margin-bottom:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo > a { line-height:0; padding:1px 7px 1px 0; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo > a > span { display:block; width:128px; height:36px; background:url(../admin_multishop/images/admin_logo.gif); }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div { line-height:38px; color:#fff; padding:0 15px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_products_nr > div > span > span { font-weight:bold; padding-right:5px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_user,
