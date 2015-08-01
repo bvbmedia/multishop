@@ -105,7 +105,7 @@ if ($this->post) {
 			<label class="control-label col-md-3" for="percentage">'.$this->pi_getLL('admin_mass_updater_increase_decrease_product_price_by_percentage').'</label>
 			<div class="col-md-9">
 				<div class="input-group"><input name="percentage" type="text" class="form-control" value="'.$this->post['percentage'].'" id="percentage" /><span class="input-group-addon width-auto">%.</span></div>
-				<p class="helper-text">'.$this->pi_getLL('admin_mass_updater_example_update').'</p>
+				<div class="helper-text">'.$this->pi_getLL('admin_mass_updater_example_update').'</div>
 			</div>
 		</div>
 		<div class="form-group">
