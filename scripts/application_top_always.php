@@ -368,12 +368,11 @@ if (!$this->conf['admin_development_company_url']) {
 if (!$this->conf['admin_development_company_name']) {
 	$this->conf['admin_development_company_name']='TYPO3 Multishop';
 }
+/*
 if (!$this->conf['admin_development_company_logo']) {
 	$this->conf['admin_development_company_logo']=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_multishop/images/admin_logo.gif';
 }
-if (!$this->conf['admin_development_company_logo_gray_path']) {
-	$this->conf['admin_development_company_logo_gray_path']=\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/images/powered_by_typo3multishop_gray.png';
-}
+*/
 if ($this->conf['cart_uid']) {
 	$this->ms['MODULES']['CART_PAGE_UID']=$this->conf['cart_uid'];
 }
