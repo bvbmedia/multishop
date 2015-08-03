@@ -16,14 +16,17 @@ if ($this->get['Search'] and ($this->get['no_checkout_cart_entries_only']!=$this
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
 	$GLOBALS['TSFE']->storeSessionData();
 }
-$content.='
+$content.='<div class="panel-body">
 <form method="get" action="index.php" id="orders_stats_form" class="float_right">
 <input name="id" type="hidden" value="'.$this->shop_pid.'" />
 <input name="Search" type="hidden" value="1" />
 <input name="type" type="hidden" value="2003" />
 <input name="tx_multishop_pi1[page_section]" type="hidden" value="'.$this->ms['page'].'" />
-<input id="checkbox_no_checkout_cart_entries_only" name="no_checkout_cart_entries_only" type="checkbox" value="1" '.($this->cookie['no_checkout_cart_entries_only'] ? 'checked' : '').' /> '.$this->pi_getLL('display_unfinished_checkout_cart_entries_only').'
-
+<div class="well">
+	<div class="checkbox checkbox-success checkbox-inline">
+		<input id="checkbox_no_checkout_cart_entries_only" name="no_checkout_cart_entries_only" id="no_checkout_cart_entries_only" type="checkbox" value="1" '.($this->cookie['no_checkout_cart_entries_only'] ? 'checked' : '').' /><label for="no_checkout_cart_entries_only">'.$this->pi_getLL('display_unfinished_checkout_cart_entries_only').'</label>
+	</div>
+</div>
 </form>
 ';
 $GLOBALS['TSFE']->additionalHeaderData[]='
@@ -37,18 +40,18 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 </script>
 ';
 $dates=array();
-$content.='<h2>'.htmlspecialchars($this->pi_getLL('month')).'</h2>';
+$content.='<h3>'.htmlspecialchars($this->pi_getLL('month')).'</h3>';
 for ($i=1; $i<13; $i++) {
 	$time=strtotime(date("Y-".$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date("Y-m", $time);
 }
-$content.='<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">';
-$content.='<tr class="odd">';
+$content.='<table class="table table-striped table-bordered" id="product_import_table">';
+$content.='<thead><tr>';
 foreach ($dates as $key=>$value) {
-	$content.='<td align="right">'.ucfirst($key).'</td>';
+	$content.='<th class="cellDate">'.ucfirst($key).'</th>';
 }
-$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td></tr>';
-$content.='<tr class="even">';
+$content.='<th class="cellDate">'.htmlspecialchars($this->pi_getLL('cumulative')).'</th></tr></thead>';
+$content.='<tbody><tr>';
 $total=0;
 foreach ($dates as $key=>$value) {
 	$total_price=0;
@@ -66,7 +69,7 @@ foreach ($dates as $key=>$value) {
 	$content.='<td align="right">'.$rows.'</td>';
 	$total_carts=$total_carts+$rows;
 }
-$content.='<td align="right" nowrap>'.number_format(($total_carts/date("m"))*12).'</td></tr>';
+$content.='<td align="right" nowrap>'.number_format(($total_carts/date("m"))*12).'</td></tr></tbody>';
 if (!$tr_type or $tr_type=='even') {
 	$tr_type='odd';
 } else {
@@ -217,6 +220,6 @@ if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORD
 }
 $content.=$pagination_listing;
 // LAST MONTHS EOF
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>
