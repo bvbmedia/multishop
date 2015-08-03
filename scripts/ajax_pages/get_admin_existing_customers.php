@@ -11,6 +11,9 @@ if ($this->ADMIN_USER) {
 	$limit=50;
 	if (is_numeric($groupid) and $groupid>0) {
 		$filter=array();
+		if (is_numeric($this->get['preselected_id'])) {
+			$filter[]='uid='.$this->get['preselected_id'];
+		}
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			$limit='';
 			$this->get['q']=addslashes($this->get['q']);
