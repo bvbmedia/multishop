@@ -66,10 +66,10 @@ foreach ($dates as $key=>$value) {
 	$str="SELECT c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
-	$content.='<td align="right">'.$rows.'</td>';
+	$content.='<td class="cellDate">'.$rows.'</td>';
 	$total_carts=$total_carts+$rows;
 }
-$content.='<td align="right" nowrap>'.number_format(($total_carts/date("m"))*12).'</td></tr></tbody>';
+$content.='<td class="cellDate">'.number_format(($total_carts/date("m"))*12).'</td></tr></tbody>';
 if (!$tr_type or $tr_type=='even') {
 	$tr_type='odd';
 } else {
@@ -85,13 +85,15 @@ for ($i=0; $i<31; $i++) {
 	$time=strtotime("-".$i." day");
 	$dates[strftime("%x", $time)]=$time;
 }
-$content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="product_import_table">
+$content.='<table class="table table-striped table-bordered" id="product_import_table">
+<thead>
 <tr>
-	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
-	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('number_of_shopping_carts')).'</th>
+	<th class="cellDate">'.htmlspecialchars($this->pi_getLL('day')).'</th>
+	<th class="text-right">'.htmlspecialchars($this->pi_getLL('number_of_shopping_carts')).'</th>
 	<th>'.htmlspecialchars($this->pi_getLL('content')).'</th>
 </tr>
-';
+</thead>
+<tbody>';
 foreach ($dates as $key=>$value) {
 	if (!$tr_type or $tr_type=='even') {
 		$tr_type='odd';
@@ -99,7 +101,7 @@ foreach ($dates as $key=>$value) {
 		$tr_type='even';
 	}
 	$content.='<tr class="'.$tr_type.'">';
-	$content.='<td align="right">'.$key.'</td>';
+	$content.='<td class="cellDate">'.$key.'</td>';
 	$total_price=0;
 	$system_date=date("Y-m-d", $value);
 	$start_time=strtotime($system_date." 00:00:00");
@@ -113,7 +115,7 @@ foreach ($dates as $key=>$value) {
 	$str="SELECT c.ip_address,c.session_id FROM tx_multishop_cart_contents c WHERE (".implode(" AND ", $where).") and (c.crdate BETWEEN ".$start_time." and ".$end_time.") and page_uid='".$this->shop_pid."' group by c.session_id ";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
-	$content.='<td align="right">'.number_format($rows).'</td>';
+	$content.='<td class="text-right">'.number_format($rows).'</td>';
 	$content.='<td>';
 	$pageset['total_rows']=$rows;
 	// GET THE PRODUCTS THAT ARE INSIDE THE CART
@@ -130,11 +132,11 @@ foreach ($dates as $key=>$value) {
 				}
 				if (count($products)>0) {
 					// print customer settings
-					$content.='<table cellspacing="0" cellpadding="0" border="0" id="product_import_table" class="table table-striped table-bordered '.(!$row['is_checkout'] ? 'is_not_checkout' : '').'">';
+					$content.='<table id="product_import_table" class="table table-striped table-bordered '.(!$row['is_checkout'] ? 'is_not_checkout' : '').'">';
 					$tr_rows=array();
-					$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('date').'</th><td>'.strftime("%x %X", $row['crdate']).'</td>';
+					$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('date').'</th><td>'.strftime("%x %X", $row['crdate']).'</td>';
 					if ($row['ip_address']) {
-						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('ip_address').'</th><td>'.$row['ip_address'].'</td>';
+						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('ip_address').'</th><td>'.$row['ip_address'].'</td>';
 					}
 					if ($row['is_checkout']) {
 						// lets find out how long the user did to finish the checkout
@@ -147,7 +149,7 @@ foreach ($dates as $key=>$value) {
 						} else {
 							$time_label=$time.' seconds';
 						}
-						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('time_needed_to_finish_checkout').'</th><td>'.$time_label.'</td>';
+						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('time_needed_to_finish_checkout').'</th><td>'.$time_label.'</td>';
 					} else {
 						if ($row['customer_id']) {
 							$user=mslib_fe::getUser($row['customer_id']);
@@ -155,26 +157,26 @@ foreach ($dates as $key=>$value) {
 						}
 					}
 					if ($cart['user']['username']) {
-						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('username').'</th><td>'.$cart['user']['username'].'</td>';
+						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('username').'</th><td>'.$cart['user']['username'].'</td>';
 					}
 					if ($cart['user']['first_name']) {
-						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('name').'</th><td>'.$cart['user']['first_name'].' '.$cart['user']['middle_name'].' '.$cart['user']['last_name'].'</td>';
+						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('name').'</th><td>'.$cart['user']['first_name'].' '.$cart['user']['middle_name'].' '.$cart['user']['last_name'].'</td>';
 					}
 					if ($cart['user']['company']) {
-						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('company').'</th><td>'.$cart['user']['company'].'</td>';
+						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('company').'</th><td>'.$cart['user']['company'].'</td>';
 					}
 					if ($cart['user']['telephone']) {
-						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('telephone').'</th><td>'.$cart['user']['telephone'].'</td>';
+						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('telephone').'</th><td>'.$cart['user']['telephone'].'</td>';
 					}
 					if ($cart['user']['email']) {
-						$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('email').'</th><td>'.$cart['user']['email'].'</td>';
+						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('email').'</th><td>'.$cart['user']['email'].'</td>';
 					}
-					$tmp_content='<table width="500" cellspacing="0" class="table table-striped table-bordered" cellpadding="0" border="1">';
-					$tmp_content.='<tr>
-					<th>'.$this->pi_getLL('qty').'</th>
-					<th>'.$this->pi_getLL('products_name').'</th>
-					<th>'.$this->pi_getLL('price').'</th>
-					</tr>';
+					$tmp_content='<table class="table table-striped table-bordered table-condensed no-mb">';
+					$tmp_content.='<thead><tr>
+					<th class="cellQty">'.$this->pi_getLL('qty').'</th>
+					<th class="cellName">'.$this->pi_getLL('products_name').'</th>
+					<th class="cellPrice">'.$this->pi_getLL('price').'</th>
+					</tr></thead><tbody>';
 					$sub_sub_tr_type='odd';
 					foreach ($products as $product) {
 						if (!$sub_sub_tr_type or $sub_sub_tr_type=='even') {
@@ -183,14 +185,14 @@ foreach ($dates as $key=>$value) {
 							$sub_sub_tr_type='even';
 						}
 						$tmp_content.='<tr class="'.$sub_sub_tr_type.'">';
-						$tmp_content.='<td align="right">'.$product['qty'].'</td>';
-						$tmp_content.='<td nowrap>'.$product['products_name'].'</td>';
-						$tmp_content.='<td align="right">'.mslib_fe::amount2Cents($product['final_price'], 0).'</td>';
+						$tmp_content.='<td class="cellQty">'.$product['qty'].'</td>';
+						$tmp_content.='<td class="cellName">'.$product['products_name'].'</td>';
+						$tmp_content.='<td class="cellPrice">'.mslib_fe::amount2Cents($product['final_price'], 0).'</td>';
 						$tmp_content.='</tr>';
 					}
-					$tmp_content.='</table>';
+					$tmp_content.='</tbody></table>';
 //					$tmp_content.='</table>';
-					$tr_rows[]='<th class="text_right" width="100">'.$this->pi_getLL('content').'</th><td>'.$tmp_content.'</td>';
+					$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('content').'</th><td>'.$tmp_content.'</td>';
 					$sub_tr_type='odd';
 					foreach ($tr_rows as $tr_row) {
 						if (!$sub_tr_type or $sub_tr_type=='even') {
@@ -210,7 +212,7 @@ foreach ($dates as $key=>$value) {
 	</td>';
 	$content.='</tr>';
 }
-$content.='</table>';
+$content.='</tbody></table>';
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
 	$tmp='';

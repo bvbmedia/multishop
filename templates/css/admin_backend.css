@@ -250,14 +250,24 @@ td.cellSpecialPrice,
 td.cellAction { white-space:nowrap; }
 .cellStatus,
 .cellAction { text-align:center; }
+.cellPrice,
+.cellSpecialPrice,
+.cellQty { text-align:right; }
 .cellBackup > .btn { width:100%; }
 .cellWeight .form-control { width:69px; }
 .cellUserAgent { min-width:500px; }
 
-table#address_details { margin-bottom:0; }
+.cellContent .table { margin-bottom:0; }
+.cellContent table#msOrderDetailsSubTotalTable.table,
+.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td { border:none; text-align:right; }
+.cellContent table#msOrderDetailsSubTotalTable.table { border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; }
+.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:first-child { width:80%; }
+.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:last-child { font-weight:bold; }
 
 td.cellPrice .msAttributesField .form-control,
 td.cellSpecialPrice .msAttributesField .form-control { width:90px}
+
+table#address_details { margin-bottom:0; }
 
 #msAdminSearchByCharNav { text-align:center; margin-bottom:20px; }
 
@@ -289,12 +299,12 @@ table#product_attributes_table > tfoot > tr > td { border-top:none; }
 table#product_attributes_table > tbody > tr > td { padding-top:20px; }
 table#product_attributes_table > tbody > tr > td .new_product_attributes { font-weight:bold; }
 
-.cellContent .table { margin-bottom:0; }
-.cellContent table#msOrderDetailsSubTotalTable.table,
-.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td { border:none; text-align:right; }
-.cellContent table#msOrderDetailsSubTotalTable.table { border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; }
-.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:first-child { width:80%; }
-.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:last-child { font-weight:bold; }
+.table-condensed > thead > tr > th,
+.table-condensed > tbody > tr > th,
+.table-condensed > tfoot > tr > th,
+.table-condensed > thead > tr > td,
+.table-condensed > tbody > tr > td,
+.table-condensed > tfoot > tr > td { font-size:13px; }
 
 .msadminVerticalTabs > .nav-tabs { float:left; width:15%; border-bottom:none; margin-top:20px; margin-right:0; }
 .msadminVerticalTabs > .nav-tabs > li { float:none; }
