@@ -432,10 +432,10 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					</select>
 					</div>
 					<input name="advanced_settings" class="importer_advanced_settings" type="button" value="'.$that->pi_getLL('admin_advanced_settings').'" />
-					<fieldset class="advanced_settings_container hide">
-						<div class="form-field">
-							aux
-							<input name="input['.$i.']" type="text" style="width:150px;" value="'.htmlspecialchars($that->post['input'][$i]).'" />
+					<fieldset class="advanced_settings_container" style="display:none;">
+						<div class="form-group">
+							<label class="control-label">aux</label>
+							<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
 						</div>
 					</fieldset>
 				</td>
