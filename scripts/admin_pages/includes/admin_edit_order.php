@@ -2318,16 +2318,16 @@ if (is_numeric($this->get['orders_id'])) {
                     <input type="hidden" id="payment_method_tax_id" value="'.$payment_method['tax_id'].'" class="align_right" style="width:60px">
                     ';
 				} else {
-					$shipping_costs='<input name="tx_multishop_pi1[shipping_method_costs]" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="align_right" style="width:60px">';
-					$payment_costs='<input name="tx_multishop_pi1[payment_method_costs]" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="align_right" style="width:60px">';
+					$shipping_costs='<input name="tx_multishop_pi1[shipping_method_costs]" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control">';
+					$payment_costs='<input name="tx_multishop_pi1[payment_method_costs]" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control">';
 				}
 			} else {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$shipping_costs=mslib_fe::amount2Cents($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 0);
-					$payment_costs=mslib_fe::amount2Cents($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 0);
+					$shipping_costs.='<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 0).'</p>';
+					$payment_costs.='<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 0).'</p>';
 				} else {
-					$shipping_costs=mslib_fe::amount2Cents($orders['shipping_method_costs'], 0);
-					$payment_costs=mslib_fe::amount2Cents($orders['payment_method_costs'], 0);
+					$shipping_costs.='<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders['shipping_method_costs'], 0).'</p>';
+					$payment_costs.='<p class="form-control-static order_total_value">'.mslib_fe::amount2Cents($orders['payment_method_costs'], 0).'</p>';
 				}
 			}
 			if ($orders_tax_data['shipping_tax'] || $orders_tax_data['payment_tax']) {
@@ -2371,14 +2371,14 @@ if (is_numeric($this->get['orders_id'])) {
             <div class="form-group" id="shipping_cost_input_wrapper" style="display:none">
                 <label class="control-label col-md-10">'.$this->pi_getLL('shipping_costs').'</label>
                 <div class="col-md-2">
-                <p class="form-control-static order_total_value">'.$shipping_costs.'</p>
+                '.$shipping_costs.'
                 </div>
             </div>';
 			$content_payment_costs='
             <div class="form-group" id="payment_cost_input_wrapper" style="display:none">
                 <label class="control-label col-md-10">'.$this->pi_getLL('payment_costs').'</label>
                 <div class="col-md-2">
-                <p class="form-control-static order_total_value">'.$payment_costs.'</p>
+                '.$payment_costs.'
                 </div>
             </div>';
 			$discount_content='';
@@ -3252,7 +3252,7 @@ if (url.match("#")) {
 		foreach ($tabs as $key=>$value) {
 			$count++;
 			$content.='
-                <div id="'.$key.'" class="tab-pane">
+                <div role="tabpanel" id="'.$key.'" class="tab-pane">
                     '.$value[1].'
                 </div>';
 		}

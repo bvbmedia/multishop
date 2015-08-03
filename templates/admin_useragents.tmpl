@@ -1,59 +1,82 @@
 <!-- ###TEMPLATE### begin -->
+<script type="text/javascript">
+jQuery(document).ready(function ($) {
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+} else {
+	$('.nav-tabs a:first').tab('show');
+}
+
+// Change hash for page-reload
+$('.nav-tabs a').on('shown.bs.tab', function (e) {
+	window.location.hash = e.target.hash;
+	$("body,html,document").scrollTop(0);
+});
+});
+</script>
+<div class="panel-body">
 <div id="tab-container">
-    <ul class="tabs" id="admin_orders">
-        <li class="active"><a href="#user-agents">###HEADING_TAB1###</a></li>
+    <ul class="nav nav-tabs" id="admin_orders" role="tablist">
+        <li role="presentation"><a href="#user-agents" aria-controls="profile" role="tab" data-toggle="tab">###HEADING_TAB1###</a></li>
     </ul>
-    <div class="tab_container">
+    <div class="tab-content">
         <form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="post">
-            <div style="display: block;" id="Orders_By_Date" class="tab_content">
-                <div id="search-orders">
+            <div role="tabpanel" id="user-agents" class="tab-pane">
+                <div id="search-orders" class="well">
                     <input name="id" type="hidden" value="###SHOP_PID###" />
                     <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_stats_user_agent" />
-                    <table width="100%">
-                        <tr>
-                            <td valign="top">
-                                <div class="formfield-wrapper">
+                    <div class="clearfix">
+                        <div class="pull-left">
+                            <div class="form-inline">
                                     <label>###LABEL_KEYWORD###</label>
-                                    <input type="text" name="skeyword" value="###VALUE_KEYWORD###">
-                                    <input type="submit" name="Search" value="###VALUE_SEARCH###" />
-                                </div>
-                            </td>
-                            <td nowrap valign="top" align="right" class="searchLimit">
-                                <div style="float:right;">
+                                    <input type="text" class="form-control" name="skeyword" value="###VALUE_KEYWORD###">
+                                    <input type="submit" class="btn btn-success" name="Search" value="###VALUE_SEARCH###" />
+                            </div>
+                        </div>
+                        <div class="pull-right">
+                            <div class="pull-right">
+                                <div class="form-inline">
                                     <label>###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
                                     ###RESULTS_LIMIT_SELECTBOX###
                                 </div>
-                            </td>
-                        </tr>
-                    </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- ###RESULTS### begin -->
                 <div class="msHorizontalOverflowWrapper">
-                    <table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
+                    <table id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
+                        <thead>
                         <tr>
-                            <th width="100" class="cell_orders_id align_right">###LABEL_HEADER_ORDERS_ID###</th>
-                            <th width="250" class="cell_customer_name">###LABEL_HEADER_CUSTOMER###</th>
-                            <th width="110" class="cell_ipaddress">###LABEL_HEADER_IP_ADDRESS###</th>
-                            <th class="cell_useragents">###LABEL_HEADER_USER_AGENT###</th>
+                            <th class="cellID">###LABEL_HEADER_ORDERS_ID###</th>
+                            <th class="cellName">###LABEL_HEADER_CUSTOMER###</th>
+                            <th class="cellIP">###LABEL_HEADER_IP_ADDRESS###</th>
+                            <th class="cellUserAgent">###LABEL_HEADER_USER_AGENT###</th>
                         </tr>
+                        </thead>
+                        <tbody>
                         <!-- ###ORDERS_LISTING### begin -->
                         <tr class="###ROW_TYPE###">
-                            <td align="left" class="align_right" nowrap>###ORDERS_ID###</td>
-                            <td align="left" nowrap><a href="###CUSTOMER_NAME_LINK###">###CUSTOMER_NAME###</a></td>
-                            <td align="left" nowrap>###IP_ADDRESS###</td>
-                            <td align="left" nowrap>###USER_AGENT###</td>
+                            <td class="cellID">###ORDERS_ID###</td>
+                            <td class="cellName"><a href="###CUSTOMER_NAME_LINK###">###CUSTOMER_NAME###</a></td>
+                            <td class="cellIP">###IP_ADDRESS###</td>
+                            <td class="cellUserAgent">###USER_AGENT###</td>
                         </tr>
                         <!-- ###ORDERS_LISTING### end -->
+                        </tbody>
+                        <tfoot>
                         <tr>
-                            <th width="100" class="cell_orders_id align_right">###LABEL_FOOTER_ORDERS_ID###</th>
-                            <th width="250" class="cell_customer_name">###LABEL_FOOTER_CUSTOMER###</th>
-                            <th width="110" class="cell_ipaddress">###LABEL_FOOTER_IP_ADDRESS###</th>
-                            <th class="cell_useragents">###LABEL_FOOTER_USER_AGENT###</th>
+                            <th class="cellID">###LABEL_FOOTER_ORDERS_ID###</th>
+                            <th class="cellName">###LABEL_FOOTER_CUSTOMER###</th>
+                            <th class="cellIP">###LABEL_FOOTER_IP_ADDRESS###</th>
+                            <th class="cellUserAgent">###LABEL_FOOTER_USER_AGENT###</th>
                         </tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div id="msAdminOrdersListingActionForm">
-                    <a href="###DOWNLOAD_EXCEL###">###ADMIN_LABEL_LINK_DOWNLOAD_AS_EXCEL###</a>
+                    <a class="btn btn-primary" href="###DOWNLOAD_EXCEL###"><i class="fa fa-download"></i> ###ADMIN_LABEL_LINK_DOWNLOAD_AS_EXCEL###</a>
                 </div>
                 ###PAGINATION###
                 <!-- ###RESULTS### end -->

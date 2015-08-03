@@ -119,7 +119,7 @@ if (!count($pageset['dataset'])) {
 	<th width="100" nowrap align="right">'.$this->pi_getLL('ip_address').'</th>
 	<th width="100" nowrap>'.$this->pi_getLL('session_id', 'Session ID').'</th>
 	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
-	<th>'.$this->pi_getLL('content').'</th>
+	<th class="cellContent">'.$this->pi_getLL('content').'</th>
 	';
 	$content.='<table class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table"><thead><tr>'.$headercol.'</tr></thead><tbody>';
 	foreach ($pageset['dataset'] as $row) {
@@ -153,7 +153,7 @@ if (!count($pageset['dataset'])) {
 		<td valign="top" nowrap>
 			'.htmlspecialchars($row['message_type']).'
 		</td>
-		<td valign="top">
+		<td class="cellContent">
 			'.$row['message'].'
 		</td>	
 		</tr>

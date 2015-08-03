@@ -251,7 +251,8 @@ td.cellAction { white-space:nowrap; }
 .cellStatus,
 .cellAction { text-align:center; }
 .cellBackup > .btn { width:100%; }
-.cellWeight .form-control { width: 69px; }
+.cellWeight .form-control { width:69px; }
+.cellUserAgent { min-width:500px; }
 
 table#address_details { margin-bottom:0; }
 
@@ -287,6 +288,13 @@ table#product_attributes_table > tbody > tr > td,
 table#product_attributes_table > tfoot > tr > td { border-top:none; }
 table#product_attributes_table > tbody > tr > td { padding-top:20px; }
 table#product_attributes_table > tbody > tr > td .new_product_attributes { font-weight:bold; }
+
+.cellContent .table { margin-bottom:0; }
+.cellContent table#msOrderDetailsSubTotalTable.table,
+.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td { border:none; text-align:right; }
+.cellContent table#msOrderDetailsSubTotalTable.table { border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; }
+.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:first-child { width:80%; }
+.cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:last-child { font-weight:bold; }
 
 .msadminVerticalTabs > .nav-tabs { float:left; width:15%; border-bottom:none; margin-top:20px; margin-right:0; }
 .msadminVerticalTabs > .nav-tabs > li { float:none; }
