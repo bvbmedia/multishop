@@ -986,9 +986,11 @@ if ($this->get['feed_hash']) {
 						), $tmpcontent);
 					}
 					// test extra delimiter strip
+					/*
 					if ($feed['delimiter_char']) {
 						$tmpcontent=preg_replace("/\r\n|\n|".$feed['delimiter_char']."/", " ", $tmpcontent);
 					}
+					*/
 				}
 				if ($this->get['format']=='excel') {
 					$excelCols[]=$tmpcontent;
