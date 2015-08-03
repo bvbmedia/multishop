@@ -153,7 +153,7 @@ if ($configuration['id'] or $_REQUEST['action']=='edit_module') {
 		$content
 	);
 	$content='';
-	$content='<div class="panel-heading"><h3>'.$this->pi_getLL('admin_multishop_settings').' INSERT DUMMY HEADING HERE</h3></div>';
+	$content='<div class="panel-heading"><h3>'.$this->pi_getLL('admin_multishop_settings').'</h3></div>';
 	$content.='
 <div class="panel-body">';
 	$content.='
