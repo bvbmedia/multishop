@@ -71,7 +71,7 @@ for ($i=1; $i<13; $i++) {
 	$time=strtotime(date($selected_year.$i."-01")." 00:00:00");
 	$dates[strftime("%B %Y", $time)]=date($selected_year."m", $time);
 }
-$content.='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
+$content.='<table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="product_import_table">';
 $content.='<tr class="odd">';
 foreach ($dates as $key=>$value) {
 	$content.='<td align="right">'.ucfirst($key).'</td>';
@@ -97,7 +97,7 @@ foreach ($dates as $key=>$value) {
 		';
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 		$content.='
-		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="msZebraTable" id="product_import_table">
+		<table width="100%" cellspacing="0" cellpadding="0" border="0" class="table table-striped table-bordered" id="product_import_table">
 			<tr class="'.$tr_type.'">
 				<th valign="top">'.$this->pi_getLL('amount').'</td>
 				<th valign="top">'.$this->pi_getLL('customer').'</td>
@@ -115,7 +115,7 @@ foreach ($dates as $key=>$value) {
 			} else {
 				$name=$customer['billing_name'];
 			}
-			$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$customer['customer_id'].'&action=edit_customer', 1);
+			$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$customer['customer_id'].'&action=edit_customer', 1);
 			$total_amount+=$customer['total'];
 			$content.='
 			<tr class="'.$tr_type.'">
@@ -138,7 +138,7 @@ $content.='</tr>';
 $content.='
 </table>';
 $content.='<p class="extra_padding_bottom">';
-$content.='<a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a>';
+$content.='<a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>';
 $content.='
 </p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';

@@ -163,7 +163,7 @@ if (is_array($users) && count($users)) {
 $subpartArray=array();
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER_GROUP###']=$this->pi_getLL('edit_group');
 $subpartArray['###LABEL_HEADING###']=$this->pi_getLL('edit_group');
-$subpartArray['###FORM_ACTION###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&customer_group_id='.$_REQUEST['customer_group_id']);
+$subpartArray['###FORM_ACTION###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax&customer_group_id='.$_REQUEST['customer_group_id']);
 $subpartArray['###CUSTOMER_GROUP_ID###']=$_REQUEST['customer_group_id'];
 $subpartArray['###FORM_INPUT_ACTION###']=$_REQUEST['action'];
 $subpartArray['###LABEL_NAME###']=$this->pi_getLL('name');
@@ -222,7 +222,7 @@ $head.='
 jQuery(document).ready(function($) {
 	var usersSearchList=[];
 	var usersList=[];
-	var ajax_url="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_users').'"
+	var ajax_url="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_users').'"
 	$("#userIdSelect2").select2({
 		placeholder: "'.$this->pi_getLL('select_members').'",
 		multiple: true,

@@ -3,7 +3,8 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content.='<script type="text/javascript" src="'.$this->FULL_HTTP_URL_MS.'scripts/front_pages/includes/js/shipping/weight_based_shipping_costs.js"></script>';
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('shipping_costs').'</h1></div>';
+$content.='<div class="panel panel-default">';
+$content.='<div class="panel-heading"><h3>'.$this->pi_getLL('shipping_costs').'</h3></div>';
 if ($this->post) {
 	// custom hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_shipping_cost.php']['postedShippingCostData'])) {
@@ -158,30 +159,31 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 // hook to add shipping cost type eof
 $tr_type='even';
 if (count($shipping_methods)>0) {
-	$content.='<form class="edit_form" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'], 1).'" method="post" enctype="multipart/form-data">';
+	$content.='<div class="panel-body">';
+	$content.='<form class="form-horizontal edit_form" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page'], 1).'" method="post" enctype="multipart/form-data">';
 	$content.='<div class="shipping_cost_input_field_wrapper">';
 	$count_shipping_methods=array();
 	foreach ($shipping_methods as $row) {
-		$content.='<fieldset class="multishop_fieldset">';
-		$content.='<legend>'.$this->pi_getLL('shipping_method').': '.$row['name'].'</legend>';
-		$content.='<select name="costs['.$row['id'].']" id="flat_weight'.$row['id'].'">
+		$content.='<div class="multishop_fieldset">';
+		$content.='<div class="form-group"><label class="control-label col-md-4">'.$this->pi_getLL('shipping_method').': '.$row['name'].'</label>';
+		$content.='<div class="col-md-8"><select name="costs['.$row['id'].']" id="flat_weight'.$row['id'].'" class="form-control">
 		<option value="">'.$this->pi_getLL('no_shipping_costs').'</option>';
 		foreach ($shipping_cost_types as $shipping_cost_type) {
 			$content.='<option value="'.$shipping_cost_type['value'].'" '.(($row['shipping_costs_type']==$shipping_cost_type['value']) ? 'selected' : '').'>'.$shipping_cost_type['title'].'</option>';
 		}
-		$content.='</select><input type="hidden" id="based_old'.$row['id'].'" value="'.$row['shipping_costs_type'].'" />';
+		$content.='</select><input type="hidden" id="based_old'.$row['id'].'" value="'.$row['shipping_costs_type'].'" /></div></div>';
 		$content.='<div id="has'.$row['id'].'">';
 		//if empty
 		if (empty($row['shipping_costs_type'])) {
 			$count_shipping_methods[]=$row['id'];
-			$content.='</div></fieldset>';
+			$content.='</div></div>';
 			continue;
 		}
 		if ($row['shipping_costs_type']=='flat') {
 			// start for flat based
 			foreach ($zones as $zone) {
-				$content.='<fieldset>';
-				$content.='<legend>Zone: '.$zone['name'];
+				$content.='<div class="panel panel-default">';
+				$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 				$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$content.=' (';
@@ -191,7 +193,7 @@ if (count($shipping_methods)>0) {
 				}
 				$tmpcontent=substr($tmpcontent, 0, strlen($tmpcontent)-1);
 				$content.=$tmpcontent.')';
-				$content.='</legend>';
+				$content.='</h3></div>';
 				$str3="SELECT * from tx_multishop_shipping_methods_costs where shipping_method_id='".$row['id']."' and zone_id='".$zone['id']."'";
 				$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 				$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
@@ -229,39 +231,32 @@ if (count($shipping_methods)>0) {
 				}
 				$zone_pid=$row['id'].":".$zone['id'];
 				$content.='
-					<table>
-						<tr>
-							<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><b> Level 1 :</b></div></td>
-							<td width="100" align="right">
-								<div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value="'.$row3['price'].'"></div>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
-						<tr>
-							<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</b></div></td>
-							<td width="100" align="right">
-								<div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-									<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
-								</div>
-							</td>
-						</tr>
-					</table>';
-				$content.='</fieldset>';
+					<div class="panel-body">
+					<div class="form-group">
+						<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4">Level 1 :</label>
+						<div class="col-md-8">
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($sc_price_display).'" rel="'.$row['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($sc_price_display_incl).'" rel="'.$row['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value="'.$row3['price'].'"></div>
+						</div>
+					</div>
+					<hr>
+					<div class="form-group">
+						<div id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4"><div class="checkbox checkbox-success"><input type="checkbox" id="freeshippingcostsabove['.$zone_pid.']" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</label></div></div>
+						<div class="col-md-8">
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="'.htmlspecialchars($fsc_price_display).'" rel="'.$row['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+							<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+							<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
+						</div>
+					</div>';
+				$content.='</div></div>';
 			}
 		} else {
 			if ($row['shipping_costs_type']=='weight') {
 				// start for weight based
 				foreach ($zones as $zone) {
-					$content.='<fieldset>';
-					$content.='<legend>Zone: '.$zone['name'];
+					$content.='<div class="panel panel-default">';
+					$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 					$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 					$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 					$content.=' (';
@@ -271,11 +266,11 @@ if (count($shipping_methods)>0) {
 					}
 					$tmpcontent=substr($tmpcontent, 0, strlen($tmpcontent)-1);
 					$content.=$tmpcontent.')';
-					$content.='</legend>';
+					$content.='</h3></div>';
 					$str3="SELECT * from tx_multishop_shipping_methods_costs where shipping_method_id='".$row['id']."' and zone_id='".$zone['id']."'";
 					$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 					$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
-					$content.='<table border="0" cellpadding="0" cellspacing="0" height="100%">';
+					$content.='<table>';
 					$zone_pid=$row['id'].$zone['id'];
 					$shipping_cost=array();
 					if (isset($row3['price']) && !empty($row3['price'])) {
@@ -386,9 +381,6 @@ if (count($shipping_methods)>0) {
 						$fsc_price_display_incl=mslib_fe::taxDecimalCrop($free_shippingcosts+$fsc_tax, 2, false);
 					}
 					$content.='
-					<tr>
-							<td colspan="2">&nbsp;</td>
-						</tr>
 						<tr>
 							<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>'.$this->pi_getLL('free_shippingcosts_for_order_amount_above').'</b></div></td>
 							<td width="100" align="right">
@@ -403,7 +395,7 @@ if (count($shipping_methods)>0) {
 					$content.='</table>';
 					$content.='<script type="text/javascript">';
 					$content.="</script>";
-					$content.='</fieldset>';
+					$content.='</div>';
 					//break;
 				} //end for weight based
 			} else {
@@ -421,15 +413,16 @@ if (count($shipping_methods)>0) {
 				// hook to process custom visual shipping cost type eof
 			}
 		}
-		$content.='</div></fieldset>';
+		$content.='</div></div>';
 		$count_shipping_methods[]=$row['id'];
 		//break;
 	}
 	$content.='
 	</div>
-	<div class="account-field">
-		<label>&nbsp;</label>
-		<input name="Submit" type="submit" value="Save" class="msadmin_button" />
+	<div class="clearfix">
+		<div class="pull-right">
+		<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+		</div>
 	</div>
 	</form>';
 	if (isset($this->ms['MODULES']['SHIPPING_COST_WEIGHT_JS_AJAX']) && !empty($this->ms['MODULES']['SHIPPING_COST_WEIGHT_JS_AJAX'])) {
@@ -440,7 +433,7 @@ if (count($shipping_methods)>0) {
 	$content.='
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
-			var url_relatives = "'.mslib_fe::typolink(',2002', $url_relative).'";
+			var url_relatives = "'.mslib_fe::typolink($this->shop_pid.',2002', $url_relative).'";
 			jQuery("#load").hide();
 			jQuery().ajaxStart(function() {
 				jQuery("#load").show();
@@ -466,71 +459,57 @@ if (count($shipping_methods)>0) {
 	}
 	$content.='
 	function productPrice(to_include_vat, o, type) {
-		var original_val	= o.val();
-		var current_value 	= parseFloat(o.val());
-		var tax_id 			= o.attr("rel");
+		var original_val = jQuery(o).val();
+		var current_value = parseFloat(jQuery(o).val());
+		var tax_id 			= jQuery(o).attr("rel");
 
 		var have_comma = original_val.indexOf(",");
 		var have_colon = original_val.indexOf(":");
-
-		/*
-		if ((have_comma > 0 || have_colon > 0) || (have_comma > 0 && have_colon > 0)) {
-			if (to_include_vat) {
-				// update the incl. vat
-				o.parent().next().first().children().val(original_val);
-
-				// update the hidden excl vat
-				o.parent().next().next().first().children().val(original_val);
-
-			} else {
-				// update the excl. vat
-				o.parent().prev().first().children().val(original_val);
-
-				// update the hidden excl vat
-				o.parent().next().first().children().val(original_val);
-			}
-		} else*/
 
 		if (current_value > 0) {
 			if (to_include_vat) {
 				jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: true, tax_group_id: tax_id }, function(json) {
     				if (json && json.price_including_tax) {
 						if ((have_comma > 0 || have_colon > 0) || (have_comma > 0 && have_colon > 0)) {
-							o.parent().next().first().children().val(json.price_including_tax);
+							//o.parent().next().first().children().val(json.price_including_tax);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(json.price_including_tax);
 						} else {
 							var incl_tax_crop = decimalCrop(json.price_including_tax);
-							o.parent().next().first().children().val(incl_tax_crop);
+							//o.parent().next().first().children().val(incl_tax_crop);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(incl_tax_crop);
 						}
 
 					} else {
-						o.parent().next().first().children().val(original_val);
+						//o.parent().next().first().children().val(original_val);
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(original_val);
 					}
     			});
 
 				// update the hidden excl vat
-				o.parent().next().next().first().children().val(original_val);
+				jQuery(o).parentsUntil(\'msAttributesField\').next().next().first().children().val(original_val);
 
 			} else {
 				jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: original_val, to_tax_include: false, tax_group_id: tax_id }, function(json) {
     				if (json && json.price_excluding_tax) {
 						if ((have_comma > 0 || have_colon > 0) || (have_comma > 0 && have_colon > 0)) {
-							o.parent().prev().first().children().val(json.price_excluding_tax);
+							//o.parent().prev().first().children().val(json.price_excluding_tax);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(json.price_excluding_tax);
 						} else {
 							var excl_tax_crop = decimalCrop(json.price_excluding_tax);
-
 							// update the excl. vat
-							o.parent().prev().first().children().val(excl_tax_crop);
+							//o.parent().prev().first().children().val(excl_tax_crop);
+							jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(excl_tax_crop);
 						}
 
 						// update the hidden excl vat
-						o.parent().next().first().children().val(json.price_excluding_tax);
+						//o.parent().next().first().children().val(json.price_excluding_tax);
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(json.price_excluding_tax);
 
 					} else {
 						// update the excl. vat
-						o.parent().prev().first().children().val(original_val);
-
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(original_val);
 						// update the hidden excl vat
-						o.parent().next().first().children().val(original_val);
+						jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().first().children().val(original_val);
 					}
     			});
 			}
@@ -538,17 +517,14 @@ if (count($shipping_methods)>0) {
 		} else {
 			if (to_include_vat) {
 				// update the incl. vat
-				o.parent().next().first().children().val(0);
-
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().children().find(\'input\').val(0);
 				// update the hidden excl vat
-				o.parent().next().next().first().children().val(0);
-
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
 			} else {
 				// update the excl. vat
-				o.parent().prev().first().children().val(0);
-
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().prev().children().find(\'input\').val(0);
 				// update the hidden excl vat
-				o.parent().next().first().children().val(0);
+				jQuery(o).parentsUntil(\'.msAttributesField\').parent().next().next().first().children().val(0);
 			}
 		}
 	}
@@ -564,16 +540,16 @@ if (count($shipping_methods)>0) {
 		return number;
 	}
 	$(document).on("change", ".msProductsPriceExcludingVat", function() {
-		productPrice(true, jQuery(this));
+		productPrice(true, this);
 	});
 	$(document).on("change", ".msProductsPriceIncludingVat", function() {
-		productPrice(false, $(this));
+		productPrice(false, this);
 	});
 });
 </script>';
 } else {
 	$content.=$this->pi_getLL('admin_label_currently_no_shipping_method_defined');
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content=''.mslib_fe::shadowBox($content).'';
 ?>

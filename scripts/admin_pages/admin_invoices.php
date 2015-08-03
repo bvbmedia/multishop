@@ -147,7 +147,7 @@ foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
-$orders_status_list='<select name="orders_status_search" class="invoice_select2" style="width:200px"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
+$orders_status_list='<select name="orders_status_search" class="invoice_select2"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
 	$order_status_search_selected=false;
 	foreach ($all_orders_status as $row) {
@@ -160,7 +160,7 @@ if (is_array($all_orders_status)) {
 $orders_status_list.='</select>';
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
-$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup" style="width:200px">'."\n";
+$customer_groups_input.='<select id="groups" class="invoice_select2" name="usergroup">'."\n";
 $customer_groups_input.='<option value="0">'.$this->pi_getLL('all').' '.$this->pi_getLL('usergroup').'</option>'."\n";
 if (is_array($groups) and count($groups)) {
 	foreach ($groups as $group) {
@@ -186,7 +186,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$payment_methods[$row['payment_method']]=$row['payment_method_label'].($row['payment_method']!='nopm' ? ' (code: '.$row['payment_method'].')' : '');
 }
 $payment_method_input='';
-$payment_method_input.='<select id="payment_method" class="invoice_select2" name="payment_method" style="width:200px">'."\n";
+$payment_method_input.='<select id="payment_method" class="invoice_select2" name="payment_method">'."\n";
 $payment_method_input.='<option value="all">'.$this->pi_getLL('all_payment_methods').'</option>'."\n";
 if (is_array($payment_methods) and count($payment_methods)) {
 	foreach ($payment_methods as $payment_method_code=>$payment_method) {
@@ -212,7 +212,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'].($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
 }
 $shipping_method_input='';
-$shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method" style="width:200px">'."\n";
+$shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method">'."\n";
 $shipping_method_input.='<option value="all">'.$this->pi_getLL('all_shipping_methods').'</option>'."\n";
 if (is_array($shipping_methods) and count($shipping_methods)) {
 	foreach ($shipping_methods as $shipping_method_code=>$shipping_method) {
@@ -229,21 +229,33 @@ foreach ($order_countries as $order_country) {
 }
 ksort($order_billing_country);
 $billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
-$form_orders_search='<div id="search-orders">
+$form_orders_search='<div id="search-orders" class="well">
 	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
 	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 	<input name="type" type="hidden" value="2003" />
 	<div class="row formfield-container-wrapper">
 		<div class="col-sm-4 formfield-wrapper">
-			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
+			<div class="form-group">
+			<label class="control-label col-md-4">'.ucfirst($this->pi_getLL('keyword')).'</label>
+			<div class="col-md-8">
 			<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-			<label for="type_search">'.$this->pi_getLL('search_for').'</label>
-			<select name="type_search" class="invoice_select2" style="width:200px"><option value="all">'.$this->pi_getLL('all').'</option>
+			</div>
+			</div>
+			<div class="form-group">
+			<label for="type_search" class="control-label col-md-4">'.$this->pi_getLL('search_for').'</label>
+			<div class="col-md-8">
+			<select name="type_search" class="invoice_select2"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 			</select>
-			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
+			</div>
+			</div>
+			<div class="form-group">
+			<label for="groups" class="control-label col-md-4 labelInbetween">'.$this->pi_getLL('usergroup').'</label>
+			<div class="col-md-8">
 			'.$customer_groups_input.'
+			</div>
+			</div>
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
@@ -252,8 +264,10 @@ $form_orders_search='<div id="search-orders">
 			<input type="text" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
 			<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
 			'.$orders_status_list.'
+			<div class="checkbox checkbox-success">
+			<input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
 			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
-			<input type="checkbox" class="PrettyInput" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
+			</div>
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
@@ -453,34 +467,18 @@ jQuery(document).ready(function($) {
 	$(".invoice_select2").select2();
 });
 </script>
-<div id="tab-container">
-    <ul class="tabs" id="admin_invoices">
 ';
-$count=0;
 foreach ($tabs as $key=>$value) {
-	$count++;
-	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
-}
-$content.='
-    </ul>
-    <div class="tab_container">
-	<form action="index.php" method="get">
-	';
-$count=0;
-foreach ($tabs as $key=>$value) {
-	$count++;
 	$content.='
-        <div style="display: block;" id="'.$key.'" class="tab_content">
-        	'.$form_orders_search.'
-			'.$value[1].'
-        </div>
+		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
+		<div class="panel-body">
+		<form id="form1" name="form1" method="get" action="index.php">
+		'.$formTopSearch.'
+		</form>
+		'.$value[1].'
 	';
+	break;
 }
-$content.='
-	</form>
-    </div>
-</div>
-';
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
@@ -488,7 +486,7 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>

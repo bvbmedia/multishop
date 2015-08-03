@@ -1221,7 +1221,7 @@ class mslib_befe {
 	}
 	public function deleteManufacturer($id) {
 		if (is_numeric($id)) {
-			$record=mslib_fe::getRecord($id,'tx_multishop_manufacturers','manufacturers_id');
+			$record=mslib_befe::getRecord($id,'tx_multishop_manufacturers','manufacturers_id');
 			if ($record['manufacturers_image']) {
 				$filter=array();
 				$filter[]='manufacturers_image=\''.addslashes($record['manufacturers_image']).'\'';

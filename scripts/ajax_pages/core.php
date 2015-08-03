@@ -427,7 +427,7 @@ switch ($this->ms['page']) {
 								$catpath[]=$cat['name'];
 							}
 							if (count($catpath)>0) {
-								$tmp_return_data[$preselected_id]=implode(' \ ', $catpath);
+								$tmp_return_data[$preselected_id]=implode(' > ', $catpath);
 							}
 						}
 					}
@@ -458,13 +458,13 @@ switch ($this->ms['page']) {
 						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid);
 						if (count($subcategories_tree)) {
 							foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
-								$tmp_return_data[$subcategory_tree_0['id']]=implode(' \ ', $catpath).' \ '.$subcategory_tree_0['name'];
+								$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
 								if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 									mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree);
 								}
 							}
 						} else {
-							$tmp_return_data[$category_tree['id']]=implode(' \ ', $catpath);
+							$tmp_return_data[$category_tree['id']]=implode(' > ', $catpath);
 						}
 					}
 				} else {
@@ -502,7 +502,7 @@ switch ($this->ms['page']) {
 								foreach ($cats as $cat_idx=>$cat) {
 									if (!in_array($cat['id'], $skip_ids)) {
 										if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
-											$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' \ '.$cat['name'];
+											$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'];
 										} else {
 											$tmp_return_data[$cat['id']]=$cat['name'];
 										}
@@ -515,14 +515,14 @@ switch ($this->ms['page']) {
 								if (count($subcategories_tree)) {
 									foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
 										if (!in_array($subcategory_tree_0['id'], $skip_ids)) {
-											$tmp_return_data[$subcategory_tree_0['id']]=implode(' \ ', $catpath).' \ '.$subcategory_tree_0['name'];
+											$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
 											if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 												mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
 											}
 										}
 									}
 								} else {
-									$tmp_return_data[$category_tree['id']]=implode(' \ ', $catpath);
+									$tmp_return_data[$category_tree['id']]=implode(' > ', $catpath);
 								}
 							}
 						} else {
@@ -531,7 +531,7 @@ switch ($this->ms['page']) {
 							$catpath=array();
 							foreach ($cats as $cat_idx=>$cat) {
 								if (isset($tmp_return_data[$cats[$cat_idx-1]['id']])) {
-									$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' \ '.$cat['name'];
+									$tmp_return_data[$cat['id']]=$tmp_return_data[$cats[$cat_idx-1]['id']].' > '.$cat['name'];
 								} else {
 									$tmp_return_data[$cat['id']]=$cat['name'];
 								}
@@ -542,13 +542,13 @@ switch ($this->ms['page']) {
 							mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid);
 							if (count($subcategories_tree)) {
 								foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
-									$tmp_return_data[$subcategory_tree_0['id']]=implode(' \ ', $catpath).' \ '.$subcategory_tree_0['name'];
+									$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
 									if (is_array($subcategories_tree[$subcategory_tree_0['id']])) {
 										mslib_fe::build_categories_path($tmp_return_data, $subcategory_tree_0['id'], $tmp_return_data[$subcategory_tree_0['id']], $subcategories_tree, true);
 									}
 								}
 							} else {
-								$tmp_return_data[$category_tree['id']]=implode(' \ ', $catpath);
+								$tmp_return_data[$category_tree['id']]=implode(' > ', $catpath);
 							}
 						}
 					}
@@ -711,6 +711,12 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+    case 'getProductsList':
+        if ($this->ADMIN_USER) {
+            require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/ajax_pages/get_products_list.php');
+        }
+        exit();
+        break;
 	case 'retrieveAdminNotificationMessage':
 		if ($this->ADMIN_USER) {
 			$startTime=(time()-(60));

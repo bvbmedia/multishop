@@ -423,7 +423,7 @@ if ($this->post) {
 				$(\'#delivery_telephone\').attr(\'title\', \''.$this->pi_getLL('telephone_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')\');
 			}); //end of first load
 		</script>';
-	$content.='<div class="error_msg" style="display:none">';
+	$content.='<div class="alert alert-danger" style="display:none">';
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul class="ul-display-error">';
 	$content.='<li class="item-error" style="display:none"></li>';
 	$content.='</ul></div>';

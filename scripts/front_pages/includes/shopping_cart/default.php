@@ -37,7 +37,7 @@ if ($this->ms['MODULES']['COUPONS']) {
 	function postCoupon(value) {
 		jQuery.ajax({
 			type: "POST",
-			url: "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_discount').'",
+			url: "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_discount').'",
 			cache :false,
 			data: "&code=" + value,
 			success:

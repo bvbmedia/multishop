@@ -28,8 +28,8 @@ if (count($zones['zone_id'])) {
 	$colspan=4;
 	$tr_type='even';
 	if (count($payment_methods)) {
-		$content.='<form method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
-		$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">';
+		$content.='<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'">';
+		$content.='<table width="100%" border="0" align="center" class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">';
 		$content.='<tr>';
 		$content.='<th width="100px">Zones</th>';
 		$content.='<th colspan="'.count($payment_methods).'">Payments</th>';
@@ -57,6 +57,6 @@ if (count($zones['zone_id'])) {
 } else {
 	$content.='Currently there isn\'t any payment methods defined.';
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

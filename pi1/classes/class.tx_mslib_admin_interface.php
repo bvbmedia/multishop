@@ -76,7 +76,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$that->searchKeywords[]=$that->get['tx_multishop_pi1']['keyword'];
 			$that->searchMode='%keyword%';
 		}
-		$limit_search_result_selectbox='<label>'.$that->pi_getLL('limit_number_of_records_to').':</label><select name="limit">';
+		$limit_search_result_selectbox='<select name="limit" class="form-control">';
 		$limits=array();
 		$limits[]='10';
 		$limits[]='15';
@@ -214,15 +214,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';
 			}
-			$tableContent.='
-			<table class="msZebraTable msadmin_orders_listing" id="product_import_table">';
-			$tableContent.='<tr>';
+			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
+			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
 			}
-			//<th>'.$that->pi_getLL('admin_action').'</th>
-			$tableContent.='
-			</tr>';
+			$tableContent.='</thead></tr><tbody>';
 			$summarize=array();
 			$recordCounter=0;
 			foreach ($pageset['dataset'] as $row) {
@@ -305,14 +302,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 									foreach ($row as $tmpCol=>$tmpVal) {
 										$valArray['hrefEnable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefEnable']);
 									}
-									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green_disable" alt="'.$this->pi_getLL('enabled').'"></span></a>';
+									$status_html.='<a href="'.$valArray['hrefEnable'].'"><span class="admin_status_green disabled" alt="'.$this->pi_getLL('enabled').'"></span></a>';
 								}
 							} else {
 								if ($valArray['hrefDisable']) {
 									foreach ($row as $tmpCol=>$tmpVal) {
 										$valArray['hrefDisable']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['hrefDisable']);
 									}
-									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red_disable" alt="'.$this->pi_getLL('disabled').'"></span></a>';
+									$status_html.='<a href="'.$valArray['hrefDisable'].'"><span class="admin_status_red disabled" alt="'.$this->pi_getLL('disabled').'"></span></a>';
 								}
 								$status_html.='<span class="admin_status_green" alt="'.$this->pi_getLL('enable').'"></span>';
 							}
@@ -349,8 +346,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				*/
 				$tableContent.='</tr>';
 			}
+			$tableContent.='</tbody>';
 			// SUMMARIZE
-			$tableContent.='<tr>';
+			$tableContent.='<tfoot><tr>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
 				switch ($valArray['valueType']) {
 					case 'currency':
@@ -362,7 +360,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				}
 				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 			}
-			$tableContent.='</tr>';
+			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
 			$tableContent.='</table>';
 			if (!$params['settings']['disableForm']) {
@@ -374,154 +372,65 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			// pagination
 			if (!$params['settings']['skipPaginationMarkup'] and $pageset['total_rows']>$that->ms['MODULES']['PAGESET_LIMIT']) {
 				$total_pages=ceil(($pageset['total_rows']/$that->ms['MODULES']['PAGESET_LIMIT']));
-				$tmp='';
-				$tmp.='<div id="pagenav_container_list_wrapper">
-				<ul id="pagenav_container_list">
-				<li class="pagenav_first">';
-				if ($p>0) {
-					$tmp.='<a class="pagination_button msBackendButton backState arrowLeft arrowPosLeft" href="'.mslib_fe::typolink(',2003', ''.mslib_fe::tep_get_all_get_params(array(
-								'p',
-								'Submit',
-								'tx_multishop_pi1[action]',
-								'clearcache'
-							))).'"><span>'.$that->pi_getLL('first').'</span></a>';
-				} else {
-					$tmp.='<span class="pagination_button msBackendButton backState arrowLeft arrowPosLeft disabled"><span>'.$that->pi_getLL('first').'</span></span>';
-				}
-				$tmp.='</li>';
-				$tmp.='<li class="pagenav_previous">';
-				if ($p>0) {
-					if (($p-1)>0) {
-						$tmp.='<a class="pagination_button msBackendButton backState arrowLeft arrowPosLeft" href="'.mslib_fe::typolink(',2003', 'p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array(
-									'p',
-									'Submit',
-									'tx_multishop_pi1[action]',
-									'clearcache'
-								))).'"><span>'.$that->pi_getLL('previous').'</span></a>';
-					} else {
-						$tmp.='<a class="pagination_button msBackendButton backState arrowLeft arrowPosLeft" href="'.mslib_fe::typolink(',2003', 'p='.($p-1).'&'.mslib_fe::tep_get_all_get_params(array(
-									'p',
-									'Submit',
-									'tx_multishop_pi1[action]',
-									'clearcache'
-								))).'"><span>'.$that->pi_getLL('previous').'</span></a>';
-					}
-				} else {
-					$tmp.='<span class="pagination_button msBackendButton backState arrowLeft arrowPosLeft disabled"><span>'.$that->pi_getLL('previous').'</span></span>';
-				}
-				$tmp.='</li>';
-				if ($p==0 || $p<9) {
-					$start_page_number=1;
-					if ($total_pages<=10) {
-						$end_page_number=$total_pages;
-					} else {
-						$end_page_number=10;
-					}
-				} else {
-					if ($p>=9) {
-						$start_page_number=($p-5)+1;
-						$end_page_number=($p+4)+1;
-						if ($end_page_number>$total_pages) {
-							$end_page_number=$total_pages;
-						}
-					}
-				}
-				$tmp.='<li class="pagenav_number">
-				<ul id="pagenav_number_wrapper">';
-				for ($x=$start_page_number; $x<=$end_page_number; $x++) {
-					if (($p+1)==$x) {
-						$tmp.='<li><span>'.$x.'</span></a></li>';
-					} else {
-						$tmp.='<li><a class="ajax_link pagination_button" href="'.mslib_fe::typolink(',2003', 'p='.($x-1).'&'.mslib_fe::tep_get_all_get_params(array(
-									'p',
-									'Submit',
-									'page',
-									'tx_multishop_pi1[action]',
-									'clearcache'
-								))).'">'.$x.'</a></li>';
-					}
-				}
-				$tmp.='</ul>
-				</li>';
-				$tmp.='<li class="pagenav_next">';
-				if ((($p+1)*$that->ms['MODULES']['PAGESET_LIMIT'])<$pageset['total_rows']) {
-					$tmp.='<a class="pagination_button msBackendButton continueState arrowRight arrowPosLeft" href="'.mslib_fe::typolink(',2003', 'p='.($p+1).'&'.mslib_fe::tep_get_all_get_params(array(
-								'p',
-								'Submit',
-								'tx_multishop_pi1[action]',
-								'clearcache'
-							))).'"><span>'.$that->pi_getLL('next').'</span></a>';
-				} else {
-					$tmp.='<span class="pagination_button msBackendButton continueState arrowRight arrowPosLeft disabled"><span>'.$that->pi_getLL('next').'</span></span>';
-				}
-				$tmp.='</li>';
-				$tmp.='<li class="pagenav_last">';
-				if ((($p+1)*$that->ms['MODULES']['PAGESET_LIMIT'])<$pageset['total_rows']) {
-					$lastpage=floor(($pageset['total_rows']/$that->ms['MODULES']['PAGESET_LIMIT']));
-					$tmp.='<a class="pagination_button msBackendButton continueState arrowRight arrowPosLeft" href="'.mslib_fe::typolink(',2003', 'p='.$lastpage.'&'.mslib_fe::tep_get_all_get_params(array(
-								'p',
-								'Submit',
-								'tx_multishop_pi1[action]',
-								'clearcache'
-							))).'"><span>'.$that->pi_getLL('last').'</span></a>';
-				} else {
-					$tmp.='<span class="pagination_button msBackendButton continueState arrowRight arrowPosLeft disabled"><span>'.$that->pi_getLL('last').'</span></span>';
-				}
-				$tmp.='</li>';
-				$tmp.='</ul>
-				</div>
-				';
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
 				$tableContent.=$tmp;
+				$tmp='';
 			}
 			// pagination eof
 		}
 		if (!$params['settings']['skipTabMarkup']) {
+			$GLOBALS['TSFE']->additionalHeaderData['msAdminTabJs']='<script type="text/javascript">
+			jQuery(document).ready(function ($) {
+				$(\'.nav-tabs a:first\').tab(\'show\');
+			});
+			</script>
+			';
 			$content='
+			<div class="panel-body">
 			<div id="tab-container">
-			<ul class="tabs" id="admin_orders">
-				<li class="active"><a href="#CmsListing">'.$params['title'].'</a></li>
+			<ul class="nav nav-tabs" id="admin_orders" role="tablist">
+				<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.$params['title'].'</a></li>
 			</ul>
-			<div class="tab_container">
+			<div class="tab-content">
 			';
 		}
 		$searchForm='';
 		if ($params['settings']['enableKeywordSearch']) {
 			$searchForm='
 			<form id="form1" name="form1" method="get" action="index.php">
-				<div id="search-orders">
-					<table width="100%">
-						<tr>
-							<td nowrap valign="top">';
+				<div class="well">
+					<div class="row formfield-container-wrapper">
+						';
 			foreach ($params['searchForm']['hiddenFields'] as $key=>$val) {
 				$searchForm.='<input name="'.$key.'" type="hidden" value="'.htmlspecialchars($val).'" />'."\n";
 			}
 			$searchForm.='
-								<div class="formfield-container-wrapper">
-									<div class="formfield-wrapper">
-										<label>'.$that->pi_getLL('keyword').'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
-										<input type="submit" name="Search" class="msadmin_button" value="'.$that->pi_getLL('search').'" />
-									</div>
-								</div>
-							</td>
-							<td nowrap valign="top" align="right" class="searchLimit">
-								<div style="float:right;">
-									'.$limit_search_result_selectbox.'
-								</div>
-							</td>
-						</tr>
-					</table>
+						<div class="col-sm-8 formfield-wrapper">
+							<div class="form-inline">
+								<label class="control-label">'.$that->pi_getLL('keyword').'</label>
+								<input type="text" name="tx_multishop_pi1[keyword]" class="form-control" value="'.htmlspecialchars($that->get['tx_multishop_pi1']['keyword']).'" />
+								<input type="submit" name="Search" class="btn btn-success" value="'.$that->pi_getLL('search').'" />
+							</div>
+						</div>
+						<div class="col-sm-4 formfield-wrapper">
+							<div class="pull-right form-inline">
+								<label class="control-label">'.$that->pi_getLL('limit_number_of_records_to').'</label>
+								'.$limit_search_result_selectbox.'
+							</div>
+						</div>
+					</div>
 				</div>
 			</form>
 			';
 		}
 		if (!$params['settings']['skipTabMarkup']) {
 			$content.='
-					<div style="display: block;" id="CmsListing" class="tab_content">
+					<div role="tabpanel" id="CmsListing" class="tab-pane">
 						'.$searchForm.'
 						'.$tableContent.'
 					</div>
 				</div>
-			</div>
+
 			';
 		} else {
 			$content.=$searchForm.$tableContent;
@@ -533,14 +442,14 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$skipTotalCount=1;
 		}
 		if (!$skipRecordCount) {
-			$content.='<p><center>Found records: <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></center></p>';
+			$content.='<hr><p class="text-center">'.$this->pi_getLL('found_records').': <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
 		}
 		if (!$skipTotalCount) {
-			$content.='<p><center>Total records in database: <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></center></p>';
+			$content.='<p class="text-center">'.$this->pi_getLL('total_records_in_database').': <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
-			$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-			$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
+			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 		}
 		return $content;
 	}

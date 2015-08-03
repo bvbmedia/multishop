@@ -56,6 +56,9 @@ if ($this->post && $this->post['email']) {
 	}
 	if ($continue) {
 		$updateArray=array();
+        if (isset($this->post['tx_multishop_language'])) {
+            $updateArray['tx_multishop_language']=$this->post['tx_multishop_language'];
+        }
 		$updateArray['username']=$this->post['username'];
 		if ($this->post['birthday']) {
 			$updateArray['date_of_birth']=strtotime($this->post['birthday']);
@@ -247,6 +250,9 @@ if ($this->post && $this->post['email']) {
 			}
 		} else {
 			// insert mode
+            if (isset($this->post['tx_multishop_language'])) {
+                $updateArray['tx_multishop_language']=$this->post['tx_multishop_language'];
+            }
 			if (count($this->post['tx_multishop_pi1']['groups'])) {
 				$this->post['tx_multishop_pi1']['groups'][]=$this->conf['fe_customer_usergroup'];
 				$updateArray['usergroup']=implode(",", $this->post['tx_multishop_pi1']['groups']);
@@ -426,12 +432,63 @@ $head.='
 			showOtherMonths: true,
 			yearRange: "'.(date("Y")-100).':'.date("Y").'"
 		});
+		var originalLeave = $.fn.popover.Constructor.prototype.leave;
+		$.fn.popover.Constructor.prototype.leave = function(obj){
+		  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+		  var container, timeout;
+		  originalLeave.call(this, obj);
+		  if(obj.currentTarget) {
+			container = $(obj.currentTarget).siblings(\'.popover\')
+			timeout = self.timeout;
+			container.one(\'mouseenter\', function(){
+			  //We entered the actual popover – call off the dogs
+			  clearTimeout(timeout);
+			  //Let\'s monitor popover content instead
+			  container.one(\'mouseleave\', function(){
+				  $.fn.popover.Constructor.prototype.leave.call(self, self);
+				  $(".popover-link").popover("hide");
+			  });
+			})
+		  }
+		};
+		$(".popover-link").popover({
+			position: "down",
+			placement: \'bottom\',
+			html: true,
+			trigger:"hover",
+			delay: {show: 20, hide: 200}
+		});
+		var tooltip_is_shown=\'\';
+		$(\'.popover-link\').on(\'show.bs.popover, mouseover\', function () {
+			var that=$(this);
+			//$(".popover").remove();
+			//$(".popover-link").popover(\'hide\');
+			var orders_id=$(this).attr(\'rel\');
+			//if (tooltip_is_shown != orders_id) {
+				tooltip_is_shown=orders_id;
+				$.ajax({
+					type:   "POST",
+					url:    \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
+					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
+					dataType: "json",
+					success: function(data) {
+						if (data.content!="") {
+							that.next().html(\'<div class="arrow"></div>\' + data.title + data.content);
+							//that.next().popover("show");
+							//$(that).popover(\'show\');
+						} else {
+							$(".popover").remove();
+						}
+					}
+				});
+			//}
+		});
 	}); //end of first load
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$head;
 $head='';
 if (is_array($erno) and count($erno)>0) {
-	$content.='<div class="error_msg">';
+	$content.='<div class="alert alert-danger">';
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul class="ul-display-error">';
 	$content.='<li class="item-error" style="display:none"></li>';
 	foreach ($erno as $item) {
@@ -440,7 +497,7 @@ if (is_array($erno) and count($erno)>0) {
 	$content.='</ul>';
 	$content.='</div>';
 } else {
-	$content.='<div class="error_msg" style="display:none">';
+	$content.='<div class="alert alert-danger" style="display:none">';
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul class="ul-display-error">';
 	//$content.='<li class="item-error" style="display:none"></li>';
 	$content.='</ul></div>';
@@ -469,7 +526,7 @@ if (count($enabled_countries)==1) {
 	if ($tmpcontent_con) {
 		$countries_input='
 		<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
-		<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'" style="width:295px">
+		<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 		<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 		'.$tmpcontent_con.'
 		</select>
@@ -505,7 +562,7 @@ $images_tab_block.='
 	<input name="tx_multishop_pi1[image]" id="ajax_fe_user_image" type="hidden" value="" />';
 if ($_REQUEST['action']=='edit_product' and $this->post['image']) {
 	$images_tab_block.='<img src="'.mslib_befe::getImagePath($this->post['image'], 'products', '50').'">';
-	$images_tab_block.=' <a href="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
+	$images_tab_block.=' <a href="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 }
 $images_tab_block.='</div>';
 $images_tab_block.='
@@ -513,13 +570,13 @@ $images_tab_block.='
 jQuery(document).ready(function($) {
 	var uploader = new qq.FileUploader({
 		element: document.getElementById(\'fe_user_image'.'\'),
-		action: \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_upload&tx_multishop_pi1[uid]='.$user['uid']).'\',
+		action: \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_upload&tx_multishop_pi1[uid]='.$user['uid']).'\',
 		params: {
 			file_type: \'fe_user_image'.'\'
 		},
 		template: \'<div class="qq-uploader">\' +
 				  \'<div class="qq-upload-drop-area"><span>'.addslashes(htmlspecialchars($this->pi_getLL('admin_label_drop_files_here_to_upload'))).'</span></div>\' +
-				  \'<div class="qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
+				  \'<div class="btn btn-primary btn-sm qq-upload-button">'.addslashes(htmlspecialchars($this->pi_getLL('choose_image'))).'</div>\' +
 				  \'<ul class="qq-upload-list"></ul>\' +
 				  \'</div>\',
 		onComplete: function(id, fileName, responseJSON){
@@ -546,7 +603,7 @@ if (is_array($groups) and count($groups)) {
 }
 $login_as_this_user_link='';
 if ($this->get['tx_multishop_pi1']['cid']) {
-	$login_as_this_user_link='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$this->get['tx_multishop_pi1']['cid']).'" target="_parent" class="msadmin_button">'.$this->pi_getLL('login_as_user').'</a>';
+	$login_as_this_user_link='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers&login_as_customer=1&customer_id='.$this->get['tx_multishop_pi1']['cid']).'" target="_parent" class="btn btn-success">'.$this->pi_getLL('login_as_user').'</a>';
 }
 $subpartArray=array();
 $subpartArray['###VALUE_REFERRER###']='';
@@ -558,10 +615,10 @@ if ($this->post['tx_multishop_pi1']['referrer']) {
 // global fields
 // VAT ID
 $vat_input_block='<label for="tx_multishop_vat_id" id="account-tx_multishop_vat_id">'.ucfirst($this->pi_getLL('vat_id', 'VAT ID')).'</label>
-<input type="text" name="tx_multishop_vat_id" class="tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/>';
+<input type="text" name="tx_multishop_vat_id" class="form-control tx_multishop_vat_id" id="tx_multishop_vat_id" value="'.htmlspecialchars($this->post['tx_multishop_vat_id']).'"/>';
 //COC ID
 $coc_input_block='<label for="tx_multishop_coc_id" id="account-tx_multishop_coc_id">'.ucfirst($this->pi_getLL('coc_id', 'KvK ID')).'</label>
-<input type="text" name="tx_multishop_coc_id" class="tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
+<input type="text" name="tx_multishop_coc_id" class="form-control tx_multishop_coc_id" id="tx_multishop_coc_id" value="'.htmlspecialchars($this->post['tx_multishop_coc_id']).'"/>';
 $subpartArray['###INPUT_VAT_ID###']=$vat_input_block;
 $subpartArray['###INPUT_COC_ID###']=$coc_input_block;
 $subpartArray['###LABEL_IMAGE###']=ucfirst($this->pi_getLL('image'));
@@ -572,7 +629,7 @@ $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
 $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
-$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
+$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
 // customer to shipping/payment method mapping
 $shipping_payment_method='';
 if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
@@ -656,7 +713,7 @@ switch ($_REQUEST['action']) {
 				$total=count($multishop_content_objects);
 				$selectContent.='<select name="page_uid"><option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'."\n";
 				foreach ($multishop_content_objects as $pageinfo) {
-					$selectContent.='<option value="'.$pageinfo['uid'].'"'.($pageinfo['uid']==$this->post['page_uid'] ? ' selected' : '').'>'.htmlspecialchars(mslib_befe::strtoupper($pageinfo['title'])).'</option>';
+					$selectContent.='<option value="'.$pageinfo['uid'].'"'.($pageinfo['uid']==$this->post['page_uid'] ? ' selected' : '').'>'.htmlspecialchars($pageinfo['title']).'</option>';
 					$counter++;
 				}
 				$selectContent.='</select>'."\n";
@@ -766,29 +823,72 @@ switch ($_REQUEST['action']) {
 			$delivery_country=ucwords(mslib_befe::strtolower($user['country']));
 		}
 		$markerArray['DETAILS_COMPANY_NAME']=$company_name;
+		$actionButtons=array();
 		if (!$markerArray['DETAILS_COMPANY_NAME']) {
 			$markerArray['DETAILS_COMPANY_NAME']=$fullname;
 		}
+		$markerArray['BILLING_COMPANY']='';
+		if ($company_name) {
+			$markerArray['BILLING_COMPANY']=$company_name.'<br/>';
+		}
 		$markerArray['BILLING_FULLNAME']=$fullname.'<br/>';
-		$markerArray['BILLING_TELEPHONE']=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
-		$markerArray['BILLING_EMAIL']=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
-		$markerArray['CUSTOMER_ID']='<strong>'.$this->pi_getLL('admin_customer_id').': '.$user['uid'].'</strong><br/>';
+		$markerArray['BILLING_TELEPHONE']='';
+		if ($telephone) {
+			$markerArray['BILLING_TELEPHONE'].=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
+			$actionLink='callto:'.$telephone;
+			$actionButtons['call']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.$this->pi_getLL('call').'</a>';
+		}
+		$markerArray['BILLING_EMAIL']='';
+		if ($email_address) {
+			$markerArray['BILLING_EMAIL'].=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
+			$actionLink='mailto:'.$email_address;
+			$actionButtons['email']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-envelope-o"></i> '.$this->pi_getLL('email').'</a>';
+		}
+		$address=array();
+		$address[]=rawurlencode($user['address']);
+		$address[]=rawurlencode($user['zip']);
+		$address[]=rawurlencode($user['city']);
+		$address[]=rawurlencode($user['country']);
+		$actionLink='http://maps.google.com/maps?daddr='.implode('+',$address);
+		$actionButtons['travel_guide']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('travel_guide').'</a>';
+
+		$markerArray['BILLING_COMPANY_ACTION_NAV']='';
+		// custom page hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'])) {
+			$params=array(
+				'actionButtons'=>&$actionButtons,
+				'customer'=>&$user
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom page hook that can be controlled by third-party plugin eol
+		if (count($actionButtons)) {
+			$markerArray['BILLING_COMPANY_ACTION_NAV']='<div class="btn-group">';
+			foreach ($actionButtons as $actionButton) {
+				$markerArray['BILLING_COMPANY_ACTION_NAV'].=$actionButton;
+			}
+			$markerArray['BILLING_COMPANY_ACTION_NAV'].='</div>';
+		}
+		$markerArray['CUSTOMER_ID']=$this->pi_getLL('admin_customer_id').': '.$user['uid'].'<br/>';
 		if ($user['crdate']>0) {
 			$user['crdate']=strftime("%x %X", $user['crdate']);
 		} else {
 			$user['crdate']='';
 		}
-		$markerArray['REGISTERED_DATE']='<strong>'.$this->pi_getLL('created').': '.$user['crdate'].'</strong><br/>';
+		$markerArray['REGISTERED_DATE']=$this->pi_getLL('created').': '.$user['crdate'].'<br/>';
 		if ($user['lastlogin']) {
 			$user['lastlogin']=strftime("%x %X", $user['lastlogin']);
 		} else {
 			$user['lastlogin']='-';
 		}
-		$markerArray['LAST_LOGIN']='<strong>'.$this->pi_getLL('latest_login').': '.$user['lastlogin'].'</strong><br/>';
+		$markerArray['LAST_LOGIN']=$this->pi_getLL('latest_login').': '.$user['lastlogin'].'<br/>';
 		$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
 		$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
 		$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
 		$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
+
 		$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
 		$markerArray['ADMIN_LABEL_DELIVERY_ADDRESS']=$this->pi_getLL('admin_label_delivery_address');
 		// customers related orders listings
@@ -807,7 +907,7 @@ switch ($_REQUEST['action']) {
 		if ($orders_pageset['total_rows']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 			$order_listing='<div class="msHorizontalOverflowWrapper">
-				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msZebraTable msadmin_orders_listing">
+				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
 					<tr>
 						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
 						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
@@ -826,21 +926,21 @@ switch ($_REQUEST['action']) {
 					$tr_type='odd';
 				}
 				if ($order['is_proposal']>0) {
-					$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
+					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
 				} else {
-					$order_edit_url=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order');
+					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order');
 				}
 				if (!$order['paid']) {
-					$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
+					$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
 				} else {
 					$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 				}
 				$order_listing.='<tr class="'.$tr_type.'">
-							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
+							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
 							<td align="right" nowrap>'.strftime("%x %X", $order['crdate']).'</td>
-							<td align="right" nowrap id="order_amount_###ORDER_ID###">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
-							<td align="center" nowrap id="shipping_method_###ORDER_ID###">'.$order['shipping_method_label'].'</td>
-							<td align="center" nowrap id="payment_method_###ORDER_ID###">'.$order['payment_method_label'].'</td>
+							<td align="right" nowrap>'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
+							<td align="center" nowrap>'.$order['shipping_method_label'].'</td>
+							<td align="center" nowrap>'.$order['payment_method_label'].'</td>
 							<td align="left" nowrap>'.$all_orders_status[$order['status']]['name'].'</td>
 							<td align="right" nowrap>'.($order['status_last_modified'] ? strftime("%x %X", $order['status_last_modified']) : '').'</td>
 							<td align="center" nowrap>'.$paid_status.'</td>
@@ -859,15 +959,16 @@ switch ($_REQUEST['action']) {
 				</table>
 			</div>';
 		}
-		$customer_related_orders_listing='<div class="" id="orders_details">';
-		$customer_related_orders_listing.='<fieldset>';
-		$customer_related_orders_listing.='<legend>'.$this->pi_getLL('orders').'</legend>';
+		$customer_related_orders_listing='<div id="orders_details">';
+		$customer_related_orders_listing.='<div class="panel panel-default">';
+		$customer_related_orders_listing.='<div class="panel-heading"><h3>'.$this->pi_getLL('orders').'</h3></div>';
+		$customer_related_orders_listing.='<div class="panel-body"><fieldset>';
 		$customer_related_orders_listing.=$order_listing;
-		$customer_related_orders_listing.='</fieldset>';
-		$customer_related_orders_listing.='</div>';
+		$customer_related_orders_listing.='</fieldset></div>';
+		$customer_related_orders_listing.='</div></div>';
 		$markerArray['CUSTOMER_RELATED_ORDERS_LISTING']=$customer_related_orders_listing;
 		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
-		$subpartArray['###DETAILS_TAB###']='<li class="active"><a href="#view_customer">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
+		$subpartArray['###DETAILS_TAB###']='<li role="presentation"><a href="#view_customer" aria-controls="profile" role="tab" data-toggle="tab">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
 		$subpartArray['###DETAILS###']=$customer_details;
 		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		break;
@@ -947,6 +1048,26 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : 14);
 		break;
 }
+// language input
+$language_selectbox='';
+foreach ($this->languages as $key=>$language) {
+    $language['lg_iso_2']=strtolower($language['lg_iso_2']);
+    if (empty($user['tx_multishop_language']) && $language['uid']===0) {
+        $language_selectbox.='<option value="'.$language['lg_iso_2'].'" selected="selected">'.$language['title'].'</option>';
+    } else {
+        if (strtolower($user['tx_multishop_language'])==$language['lg_iso_2']) {
+            $language_selectbox.='<option value="'.$language['lg_iso_2'].'" selected="selected">'.$language['title'].'</option>';
+        } else {
+            $language_selectbox.='<option value="'.$language['lg_iso_2'].'">'.$language['title'].'</option>';
+        }
+    }
+}
+if (!empty($language_selectbox)) {
+    $language_selectbox='<select name="tx_multishop_language">'.$language_selectbox.'</select>';
+}
+$subpartArray['###LABEL_LANGUAGE###']=$this->pi_getLL('language');
+$subpartArray['###LANGUAGE_SELECTBOX###']=$language_selectbox;
+// language eol
 // h5validate message
 $subpartArray['###INVALID_FIRSTNAME_MESSAGE###']=$this->pi_getLL('first_name_required');
 $subpartArray['###INVALID_LASTNAME_MESSAGE###']=$this->pi_getLL('surname_is_required');

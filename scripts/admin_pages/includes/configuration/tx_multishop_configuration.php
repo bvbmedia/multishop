@@ -459,10 +459,10 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Enable the manual order',
+	'configuration_title'=>'Allow merchant to create manual/telephone order',
 	'configuration_key'=>'MANUAL_ORDER',
 	'configuration_value'=>'0',
-	'description'=>'This module enables the manual order.',
+	'description'=>'This module allows the merchant to create a telephone order for the customer.',
 	'group_id'=>'9',
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
@@ -481,7 +481,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'This module enable to print order packing list',
+	'configuration_title'=>'Enable print order packing list',
 	'configuration_key'=>'PACKING_LIST_PRINT',
 	'configuration_value'=>'1',
 	'description'=>'This module enable to print order packing list.',
@@ -550,7 +550,7 @@ $records[]=array(
 	'configuration_title'=>'Cache front-end',
 	'configuration_key'=>'CACHE_FRONT_END',
 	'configuration_value'=>'0',
-	'description'=>'This setting enables optimal caching features to the front-end. This is especially for big stores.',
+	'description'=>'This setting enables optimal caching features to the front-end. This feature is created for large catalogs.',
 	'group_id'=>'14',
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
@@ -558,7 +558,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Cache time out for categories/products listing page',
+	'configuration_title'=>'Cache time-out for categories/products listing page',
 	'configuration_key'=>'CACHE_TIME_OUT_LISTING_PAGES',
 	'configuration_value'=>'120',
 	'description'=>'Specify the expiry time of the categories and products listing page cache files. Default: 3600. To turn this caching feature off specify: 0.',
@@ -569,7 +569,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Cache time out for search page',
+	'configuration_title'=>'Cache time-out for search page',
 	'configuration_key'=>'CACHE_TIME_OUT_SEARCH_PAGES',
 	'configuration_value'=>'120',
 	'description'=>'Specify the expiry time of the search page cache files. Default: 3600. To turn this caching feature off specify: 0.',
@@ -580,7 +580,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Cache time out for products detail page',
+	'configuration_title'=>'Cache time-out for products detail page',
 	'configuration_key'=>'CACHE_TIME_OUT_PRODUCTS_DETAIL_PAGES',
 	'configuration_value'=>'120',
 	'description'=>'Specify the expiry time of the products detail page cache files. Default: 3600. To turn this caching feature off specify: 0.',
@@ -591,7 +591,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Cache time out for the categories navigation menu',
+	'configuration_title'=>'Cache time-out for the categories navigation menu',
 	'configuration_key'=>'CACHE_TIME_OUT_CATEGORIES_NAVIGATION_MENU',
 	'configuration_value'=>'360',
 	'description'=>'Specify the expiry time of the categories navigation menu cache files. Default: 3600. To turn this caching feature off specify: 0.',
@@ -1000,7 +1000,7 @@ $records[]=array(
 $records[]=array(
 	'configuration_title'=>'Subtract Stock',
 	'configuration_key'=>'SUBTRACT_STOCK',
-	'configuration_value'=>'0',
+	'configuration_value'=>'1',
 	'description'=>'Enable the subtraction of the products stock level.',
 	'group_id'=>'10',
 	'use_function'=>'',
@@ -1174,6 +1174,7 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+/*
 $records[]=array(
 	'configuration_title'=>'Admin Order Proposal System',
 	'configuration_key'=>'ADMIN_ORDER_PROPOSAL_MODULE',
@@ -1185,6 +1186,7 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+*/
 $records[]=array(
 	'configuration_title'=>'Admin Invoice System',
 	'configuration_key'=>'ADMIN_INVOICE_MODULE',
@@ -1573,11 +1575,11 @@ $records[]=array(
 $records[]=array(
 	'configuration_title'=>'Search also in products attributes values',
 	'configuration_key'=>'SEARCH_ALSO_IN_ATTRIBUTE_OPTION_IDS',
-	'configuration_value'=>'',
+	'configuration_value'=>'0',
 	'description'=>'This enables the search-engine to also search in the product attribute option values table. Provide the option id(s) here. Example value: 1,2,3.',
 	'group_id'=>'13',
 	'use_function'=>'',
-	'set_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
@@ -1593,7 +1595,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Enable the status on order product level',
+	'configuration_title'=>'Enable order status per entry of the ordered products',
 	'configuration_key'=>'ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS',
 	'configuration_value'=>'0',
 	'description'=>'Enable the status on order product level',
@@ -1604,10 +1606,10 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Allowing customers to make reservation order for out of stock product',
+	'configuration_title'=>'Allow customers to order products that are out of stock',
 	'configuration_key'=>'ALLOW_ORDER_OUT_OF_STOCK_PRODUCT',
 	'configuration_value'=>'1',
-	'description'=>'Allowing customers to make reservation order for out-of-stock product(s), by enabling this setting the \'Disable Product When Negative Stock\' module will not functioning properly even when the module turned on.',
+	'description'=>'Allow customers to make a reservation order for out of stock product(s), by enabling this setting the \'Disable Product When Negative Stock\' module will not functioning properly even when the module turned on.',
 	'group_id'=>'10',
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
@@ -1615,10 +1617,10 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Allowing webshop owner to disable out of stock warning message',
+	'configuration_title'=>'Disable out of stock message in checkout',
 	'configuration_key'=>'DISABLE_OUT_OF_STOCK_PRODUCT_WARNING_MESSAGE',
 	'configuration_value'=>'1',
-	'description'=>'Disable the out of stock warning message on shopping cart page',
+	'description'=>'Disables the out of stock warning on the shopping cart page',
 	'group_id'=>'10',
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
@@ -2099,7 +2101,7 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Display customer comments on order product level',
+	'configuration_title'=>'Enable customer comments per entry of the ordered products',
 	'configuration_key'=>'ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS',
 	'configuration_value'=>'0',
 	'description'=>'Display customer comments on order product level',

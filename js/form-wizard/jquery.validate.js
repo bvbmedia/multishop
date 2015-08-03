@@ -58,7 +58,7 @@
                     /**
                     jQuery(".ul-display-error").find("li").remove("."+getClass);
                     if (jQuery(".item-error").length == 1 || jQuery(".item-error").length== 0) {
-                    	jQuery(".error_msg").fadeOut("fast");
+                    	jQuery(".alert alert-danger").fadeOut("fast");
                     }
                     */
                 });
@@ -76,7 +76,7 @@
                 	/**
                 	jQuery(".ul-display-error").find("li").remove("."+getClass);
                     if (jQuery(".item-error").length == 1 || jQuery(".item-error").length== 0) {
-                    	jQuery(".error_msg").fadeOut("fast");
+                    	jQuery(".alert alert-danger").fadeOut("fast");
                     }
                     */
                 });
@@ -88,7 +88,7 @@
                      	jQuery(".ul-display-error").find("li").remove("."+getClass);
                      	
                         if (jQuery(".item-error").length == 1 || jQuery(".item-error").length== 0) {
-                        	jQuery(".error_msg").fadeOut("fast");
+                        	jQuery(".alert alert-danger").fadeOut("fast");
                         }
                         */
      				}
@@ -336,7 +336,7 @@
 	         					 jQuery(id).next().removeClass(options['valid_class']);
 	                         	 jQuery(id).next().addClass(options['error_class']);
 	                             jQuery(id).addClass(options['error_field_class']);
-                            	 jQuery(".error_msg").fadeIn();
+                            	 jQuery(".alert alert-danger").fadeIn();
 	                             
 	                         }
 	               		  	//Display box message	
@@ -368,7 +368,7 @@
 	                
 	                jQuery(".ul-display-error").find("li").remove("."+getClass);
 	                if (jQuery(".item-error").length== 1 || jQuery(".item-error").length == 0) {
-	                	jQuery(".error_msg").fadeOut("fast");
+	                	jQuery(".alert alert-danger").fadeOut("fast");
 	                }
                 
                 return true;

@@ -32,7 +32,6 @@ lib.multishop_itemArrayProcFunc {
 	admin_development_company_url = {$plugin.multishop.admin_development_company_url}
 	admin_development_company_name = {$plugin.multishop.admin_development_company_name}
 	admin_development_company_logo = {$plugin.multishop.admin_development_company_logo}
-	admin_development_company_logo_gray_path = {$plugin.multishop.admin_development_company_logo_gray_path}
 	catalog_shop_pid = {$plugin.multishop.catalog_shop_pid}
 	categoriesStartingPoint = {$plugin.multishop.categoriesStartingPoint}
 	enableAdminPanelSettings = {$plugin.multishop.enableAdminPanelSettings}

@@ -3,11 +3,11 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content.='<div class="main-heading"><h1>Updating Images</h1></div>';
-// we go to reconnect to the DB, because sometimes when scripts takes too long, the database connection is lost.
 // first the products
 $files=mslib_befe::listdir($this->DOCUMENT_ROOT.$this->ms['image_paths']['products']['original']);
 sort($files, SORT_LOCALE_STRING);
 $tel=0;
+// we go to reconnect to the DB, because sometimes when scripts takes too long, the database connection is lost.
 $GLOBALS['TYPO3_DB']->connectDB();
 $updated=0;
 if (count($files)>0) {

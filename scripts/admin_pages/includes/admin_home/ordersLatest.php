@@ -14,11 +14,11 @@ $headerData.='
 			var orders_status_id=$("option:selected", this).val();
 			var orders_status_label=$("option:selected", this).text();
 			if (confirm("Do you want to change orders id: "+orders_id+" to status: "+orders_status_label)) {
-				$.ajax({ 
-						type:   "POST", 
-						url:    "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
+				$.ajax({
+						type:   "POST",
+						url:    "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_update_orders_status').'",
 						dataType: \'json\',
-						data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id, 
+						data:   "tx_multishop_pi1[orders_id]="+orders_id+"&tx_multishop_pi1[orders_status_id]="+orders_status_id,
 						success: function(msg) {
 						}
 				});
@@ -39,26 +39,62 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 }
 $headerData.='});
 		'.($this->get['tx_multishop_pi1']['action']!='change_order_status_for_selected_orders' ? '$("#msadmin_order_status_select").hide();' : '').'
-		$(".tooltip").tooltip({position: "bottom",
-			onBeforeShow: function() {
-				var that=this;
-				var orders_id=this.getTrigger().attr(\'rel\');
-				$.ajax({ 
-					type:   "POST", 
-					url:    \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails').'\',
-					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id, 
-					dataType: "json",
-					success: function(data) { 
-						that.getTip().html(data.html);
-					} 
-				}); 				
-			
-			}
+		var originalLeave = $.fn.popover.Constructor.prototype.leave;
+		$.fn.popover.Constructor.prototype.leave = function(obj){
+		  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+		  var container, timeout;
+		  originalLeave.call(this, obj);
+		  if(obj.currentTarget) {
+			container = $(obj.currentTarget).siblings(\'.popover\')
+			timeout = self.timeout;
+			container.one(\'mouseenter\', function(){
+			  //We entered the actual popover – call off the dogs
+			  clearTimeout(timeout);
+			  //Let\'s monitor popover content instead
+			  container.one(\'mouseleave\', function(){
+				  $.fn.popover.Constructor.prototype.leave.call(self, self);
+				  $(".popover-link").popover("hide");
+			  });
+			})
+		  }
+		};
+		$(".popover-link").popover({
+			position: "down",
+			placement: \'bottom\',
+			html: true,
+			trigger:"hover",
+			delay: {show: 20, hide: 200}
 		});
-		$(\'#check_all_1\').click(function(){			
-			checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
-		});	
-	});	
+		var tooltip_is_shown=\'\';
+		$(\'.popover-link\').on(\'show.bs.popover, mouseover\', function () {
+			var that=$(this);
+			//$(".popover").remove();
+			//$(".popover-link").popover(\'hide\');
+			var orders_id=$(this).attr(\'rel\');
+			//if (tooltip_is_shown != orders_id) {
+				tooltip_is_shown=orders_id;
+				$.ajax({
+					type:   "POST",
+					url:    \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminOrdersListingDetails&').'\',
+					data:   \'tx_multishop_pi1[orders_id]=\'+orders_id,
+					dataType: "json",
+					success: function(data) {
+            			if (data.content!="") {
+            				that.next().html(\'<div class="arrow"></div>\' + data.title + data.content);
+            				//that.next().popover("show");
+            				//$(that).popover(\'show\');
+            			} else {
+            				$(".popover").remove();
+            			}
+					}
+				});
+			//}
+		});
+		$(\'#check_all_1\').click(function(){
+			//checkAllPrettyCheckboxes(this,$(\'.msadmin_orders_listing\'));
+			$(\'input:checkbox\').prop(\'checked\', this.checked);
+		});
+	});
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 $headerData='';
@@ -147,7 +183,7 @@ if ($this->cookie['paid_orders_only']) {
 if (!$this->masterShop) {
 	$filter[]='o.page_uid='.$this->shop_pid;
 }
-//$orderby[]='orders_id desc';	
+//$orderby[]='orders_id desc';
 $select[]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
 switch ($this->get['tx_multishop_pi1']['order_by']) {
@@ -241,25 +277,25 @@ if ($pageset['total_rows']>0) {
 		}
 		$paid_status='';
 		if (!$order['paid']) {
-			$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>&nbsp;';
+			$paid_status.='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
 		} else {
 			$paid_status.='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 		}
 		$print_order_list_button=false;
 		switch ($page_type) {
 			case 'proposals':
-				$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
-				$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
+				$orderlist_buttons['mail_order']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=mail_order&orders_id='.$order['orders_id'].'&action=mail_order', 1).'" rel="email" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('email')).'</a>';
+				$orderlist_buttons['convert_to_order']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&orders_id='.$order['orders_id'].'&tx_multishop_pi1[action]=convert_to_order').'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('convert_to_order')).'</a>';
 				$print_order_list_button=true;
 				break;
 			case 'orders':
 				if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 					if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
-						$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
+						$orderlist_buttons['invoice']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('invoice')).'</a>';
 						$print_order_list_button=true;
 					}
 					if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
-						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="msadmin_button">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
+						$orderlist_buttons['pakbon']='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'" class="btn btn-success">'.htmlspecialchars($this->pi_getLL('packing_list')).'</a>';
 						$print_order_list_button=true;
 					}
 				}
@@ -294,7 +330,7 @@ if ($pageset['total_rows']>0) {
 			}
 		}
 		$data[]=array(
-			'<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="tooltip" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
+			'<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order', 1).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a>',
 			mslib_fe::amount2Cents($order['grand_total'], 0),
 			strftime("%x %X", $order['crdate']),
 			$paid_status,
@@ -302,7 +338,7 @@ if ($pageset['total_rows']>0) {
 		);
 	}
 	$counter=0;
-	$compiledWidget['content'].='<div id="tblWidgetOrdersLatest-wrapper"><table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" id="tblWidgetOrdersLatest">';
+	$compiledWidget['content'].='<div id="tblWidgetOrdersLatest-wrapper"><table width="100%" class="table table-striped table-bordered" cellspacing="0" cellpadding="0" border="0" id="tblWidgetOrdersLatest">';
 	$tr_type='';
 	$rowCounter=0;
 	foreach ($data as $host=>$item) {

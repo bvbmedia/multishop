@@ -518,14 +518,14 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$tmpcontent.='
 				<fieldset>
 					<legend>'.$that->pi_getLL('save_import_task').'</legend>
-					<div class="account-field">
+					<div class="form-group">
 						<label for="cron_name">'.$that->pi_getLL('name').'</label>
 						<input name="cron_name" type="text" value="'.htmlspecialchars($that->post['cron_name']).'" />
 					</div>
 ';
 				if ($that->get['action']=='edit_job') {
 					$tmpcontent.='
-							<div class="account-field">
+							<div class="form-group">
 								<label for="duplicate">'.$that->pi_getLL('duplicate').'</label>
 								<input name="duplicate" type="checkbox" value="1" />
 								<input name="skip_import" type="hidden" value="1" />
@@ -535,7 +535,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			';
 				}
 				$tmpcontent.='
-		<div class="account-field">
+		<div class="form-group">
 		<label for="cron_period">'.$that->pi_getLL('schedule').'</label>
 		<select name="cron_period" id="cron_period">
 		<option value="" '.(!$that->post['cron_period'] ? 'selected' : '').'>'.$that->pi_getLL('manual').'</option>
@@ -544,7 +544,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		<option value="'.(3600*24*30).'" '.($that->post['cron_period']==(3600*24*30) ? 'selected' : '').'>'.$that->pi_getLL('monthly').'</option>
 		</select>
 		</div>
-		<div class="account-field">
+		<div class="form-group">
 		<label for="prefix_source_name">'.$that->pi_getLL('source_name').'</label>
 		<input name="prefix_source_name" type="text" value="'.htmlspecialchars($that->post['prefix_source_name']).'" />
 		</div>
@@ -560,7 +560,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		</form>
 
 		';
-				$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($tmpcontent).'</div>';
+				$content='<div class="panel panel-default">'.mslib_fe::shadowBox($tmpcontent).'</div>';
 				// $content='<div
 				// class="fullwidth_div">'.mslib_fe::shadowBox($tmpcontent).'</div>';
 			}
@@ -939,7 +939,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		}
 		if ($that->ms['show_default_form']) {
 			$that->ms['upload_'.$params['importKey'].'feed_form'].=self::renderImportJobProperties($params, $that);
-			$content.='<form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">';
+			$content.='<div class="panel-body"><form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1" class="form-horizontal">';
 			$content.=$that->ms['upload_'.$params['importKey'].'feed_form'];
 			$content.='</form>';
 			// load the jobs templates
@@ -952,7 +952,9 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			if (count($jobs)>0) {
 				$schedule_content.='
 		<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('import_tasks').'</legend>
-		<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
+		<table class="table table-striped table-bordered" id="msAdminImportTableInterface">
+		<thead>
+		<tr>
 		<th>'.$that->pi_getLL('source_name').'</th>
 		<th>'.$that->pi_getLL('name').'</th>
 		<th>'.$that->pi_getLL('last_run').'</th>
@@ -961,8 +963,12 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		<th>'.ucfirst($that->pi_getLL('delete')).'</th>
 		<th>'.$that->pi_getLL('file_exists').'</th>
 		<th>'.$that->pi_getLL('upload_file').'</th>
-		<th>'.$that->pi_getLL('download_import_task').'</th>';
+		<th>'.$that->pi_getLL('download_import_task').'</th>
+		</tr>
+		</thead>
+		';
 				$switch='';
+				$schedule_content.='<tbody>';
 				foreach ($jobs as $job) {
 					if ($switch=='odd') {
 						$switch='even';
@@ -979,16 +985,16 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 					$schedule_content.='<td nowrap align="right">'.$lastRun.'</td>';
 					if (!$job['period']) {
-						$schedule_content.='<td>manual<br /><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=run_job&limit=99999999" class="msadmin_button" onClick="return CONFIRM(\''.addslashes($that->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$that->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999" >/dev/null 2>&1').'" ><i>'.$that->pi_getLL('run_by_crontab').'</i></a></td>';
+						$schedule_content.='<td>manual<br /><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=run_job&limit=99999999" class="btn btn-success" onClick="return CONFIRM(\''.addslashes($that->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$that->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999" >/dev/null 2>&1').'" ><i>'.$that->pi_getLL('run_by_crontab').'</i></a></td>';
 					} else {
 						$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 					}
 					$schedule_content.='<td class="status_field" align="center">';
 					if (!$job['status']) {
 						$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
-						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=1"><span class="admin_status_green_disable" alt="Enabled"></span></a>';
+						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=1"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
 					} else {
-						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=0"><span class="admin_status_red_disable" alt="Disabled"></span></a>';
+						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=0"><span class="admin_status_red disabled" alt="Disabled"></span></a>';
 						$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 					}
 					$schedule_content.='</td>
@@ -1011,7 +1017,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			<td>
 			 	<form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">
 					<input type="file" name="file" />
-					<input type="submit" name="Submit" class="submit msadmin_button" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
+					<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
 					<input name="skip_import" type="hidden" value="1" />
 					<input name="preProcExistingTask" type="hidden" value="1" />
 					<input name="job_id" type="hidden" value="'.$job['id'].'" />
@@ -1019,11 +1025,12 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				</form>
 			</td>
 			<td>
-				<a href="'.$params['postForm']['actionUrl'].'&download=task&job_id='.$job['id'].'" class="msadmin_button"><i>'.$that->pi_getLL('download_import_task').'</i></a>
+				<a href="'.$params['postForm']['actionUrl'].'&download=task&job_id='.$job['id'].'" class="btn btn-success"><i>'.$that->pi_getLL('download_import_task').'</i></a>
 			</td>
 			';
 					$schedule_content.='</tr>';
 				}
+				$schedule_content.='</tbody>';
 				$schedule_content.='</table>
 		</fieldset>
 		<script type="text/javascript">
@@ -1046,72 +1053,115 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				//$tabs['tasks']=array($that->pi_getLL('import_tasks'),$schedule_content);
 			}
 			// load the jobs templates eof
-			$content.='
-			<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('upload_import_task').'</legend>
-				<form action="'.$params['postForm']['actionUrl'].'&upload=task" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="blockSubmitForm">
-					<div class="account-field">
-						<label for="new_cron_name">'.$that->pi_getLL('name').'</label>
-						<input name="new_cron_name" type="text" value="" size="125">
-					</div>
-					<div class="account-field">
-						<label for="new_prefix_source_name">'.$that->pi_getLL('source_name').'</label>
-						<input name="new_prefix_source_name" type="text" value="" />
-					</div>
-					<div class="account-field">
-						<label for="upload_task_file">'.$that->pi_getLL('file').'</label>
-						<input type="file" name="task_file">&nbsp;<input type="submit" name="upload_task_file" class="submit msadmin_button" id="upload_task_file" value="upload">
-					</div>
-				</form>
-			</fieldset>';
+			if ($this->ROOTADMIN_USER) {
+				$content.='
+				<div id="scheduled_import_jobs_form" class="panel panel-default">
+				<div class="panel-heading"><h3>'.$that->pi_getLL('upload_import_task').'</h3></div>
+				<div class="panel-body">
+					<form action="'.$params['postForm']['actionUrl'].'&upload=task" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
+						<div class="form-group">
+							<label for="new_cron_name" class="control-label col-md-2">'.$that->pi_getLL('name').'</label>
+							<div class="col-md-10">
+								<input name="new_cron_name" type="text" class="form-control" value="" size="125">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="new_prefix_source_name" class="control-label col-md-2">'.$that->pi_getLL('source_name').'</label>
+							<div class="col-md-10">
+								<input name="new_prefix_source_name" type="text" class="form-control" value="" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="upload_task_file" class="control-label col-md-2">'.$that->pi_getLL('file').'</label>
+							<div class="col-md-10">
+								<div class="input-group">
+								<input type="file" name="task_file" class="form-control">
+								<span class="input-group-btn">
+								<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
+								</span>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				</div>';
+			}
 		}
-		$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($that->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-		$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+		$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+		$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 		return $content;
 	}
 	function renderImportJobProperties($params, &$that) {
 		$content='<div id="upload_'.$params['importKey'].'feed_form">';
 		$content.='
-		<fieldset>
-		<legend>'.$that->pi_getLL('source').'</legend>
-		<fieldset style="margin-top:5px;"><legend>'.$that->pi_getLL('file').'</legend>
-		<ul>
-		<li><input type="file" name="file" /></li>
-		<li>URL <input name="file_url" type="text" /></li>
-		<li>'.$that->pi_getLL('database_table').' <input name="database_name" type="text" /></li>
-		</ul>
-		</fieldset>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h3>'.$that->pi_getLL('source').'</h3></div>
+		<div class="panel-body">
+			<div class="form-group">
+				<label class="control-label col-md-2">'.$that->pi_getLL('file').'</label>
+				<div class="col-md-10">
+					<input type="file" name="file" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">URL</label>
+				<div class="col-md-10">
+					<input name="file_url" type="text" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-md-2">'.$that->pi_getLL('database_table').'</label>
+				<div class="col-md-10">
+					<input name="database_name" type="text" class="form-control" />
+				</div>
+			</div>
 		';
-		$content.='
-		<fieldset><legend>'.ucfirst($that->pi_getLL('format')).'</legend>
-			<script type="text/javascript">
-				jQuery(document).ready(function($) {
-					$(document).on("click", ".hide_advanced_import_radio", function() {
-						$(this).parent().find(".hide").hide();
+		$content.='<hr>
+		<div class="form-group">
+			<label class="control-label col-md-2">'.ucfirst($that->pi_getLL('format')).'</label>
+			<div class="col-md-10">
+				<script type="text/javascript">
+					jQuery(document).ready(function($) {
+						$(document).on("click", ".hide_advanced_import_radio", function() {
+							$(this).parent().find(".hide").hide();
+						});
+						$(document).on("click", ".advanced_import_radio", function() {
+							$(this).parent().find(".hide").show();
+						});
 					});
-					$(document).on("click", ".advanced_import_radio", function() {
-						$(this).parent().find(".hide").show();
-					});
-				});
-			</script>
-		<input name="format" type="radio" value="excel" checked class="hide_advanced_import_radio" /> Excel
-		<input name="format" type="radio" value="xml" class="hide_advanced_import_radio" /> XML
-		<input name="format" type="radio" value="txt" class="advanced_import_radio" /> TXT/CSV
-		<div class="hide">
-		'.$that->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
-		<option value="dotcomma">'.$that->pi_getLL('dotcomma').'</option>
-		<option value="comma">'.$that->pi_getLL('comma').'</option>
-		<option value="tab">'.$that->pi_getLL('tab').'</option>
-		<option value="dash">'.$that->pi_getLL('dash').'</option>
-		</select>
-		<BR /><input name="backquotes" type="checkbox" value="1" /> '.$that->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
-		<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$that->pi_getLL('ignore_first_line').'
-		<input type="checkbox" name="os" id="os" value="linux" /> '.$that->pi_getLL('unix_file').'
-		<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$that->pi_getLL('consolidate').'
+				</script>
+				<div class="radio radio-success radio-inline">
+				<input name="format" type="radio" id="excel" value="excel" checked class="hide_advanced_import_radio" /><label for="excel">Excel</label>
+				</div>
+				<div class="radio radio-success radio-inline">
+				<input name="format" type="radio" id="xml" value="xml" class="hide_advanced_import_radio" /><label for="xml">XML</label>
+				</div>
+				<div class="radio radio-success radio-inline">
+				<input name="format" type="radio" id="txt" value="txt" class="advanced_import_radio" /><label for="txt">TXT/CSV</label>
+				</div>
+				<div class="hidden">
+					'.$that->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
+					<option value="dotcomma">'.$that->pi_getLL('dotcomma').'</option>
+					<option value="comma">'.$that->pi_getLL('comma').'</option>
+					<option value="tab">'.$that->pi_getLL('tab').'</option>
+					<option value="dash">'.$that->pi_getLL('dash').'</option>
+					</select>
+					<BR />
+					<input name="backquotes" type="checkbox" value="1" /> '.$that->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
+					<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$that->pi_getLL('ignore_first_line').'
+					<input type="checkbox" name="os" id="os" value="linux" /> '.$that->pi_getLL('unix_file').'
+					<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$that->pi_getLL('consolidate').'
+				</div>
+			</div>
 		</div>
-		<input type="submit" name="Submit" class="submit submit_block" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
-		<input name="action" type="hidden" value="import-preview" />
-		</fieldset>
+		<div class="form-group">
+			<div class="col-md-10 col-md-offset-2">
+			<input type="submit" name="Submit" class="btn btn-success submit submit_block" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
+			<input name="action" type="hidden" value="import-preview" />
+			</div>
 		</div>
+	</div>
+	</div>
 		';
 		return $content;
 	}

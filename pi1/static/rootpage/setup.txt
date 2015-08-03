@@ -47,7 +47,6 @@ plugin.tx_multishop_pi1 {
 	admin_development_company_url = {$plugin.multishop.admin_development_company_url}
 	admin_development_company_name = {$plugin.multishop.admin_development_company_name}
 	admin_development_company_logo = {$plugin.multishop.admin_development_company_logo}
-	admin_development_company_logo_gray_path = {$plugin.multishop.admin_development_company_logo_gray_path}
 	catalog_shop_pid = {$plugin.multishop.catalog_shop_pid}
 	categoriesStartingPoint = {$plugin.multishop.categoriesStartingPoint}
 	enableAdminPanelSettings = {$plugin.multishop.enableAdminPanelSettings}
@@ -189,19 +188,38 @@ multishop_ajax_server {
 [globalVar = LIT:1 = {$plugin.multishop.includeCSS}]
 	page {
 		includeCSS {
-			jqueryTab = EXT:multishop/templates/global/css/tab.css
-			jqueryTab {
+			jqueryToastr = EXT:multishop/js/toastr/toastr.min.css
+			jqueryToastr {
 				media =
 				import = 0
 				compress = 1
 			}
-
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/css/jquery-confirm.css
+			jqueryConfirm {
+				media =
+				import = 0
+				compress = 1
+			}
+			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
+			awesomeFontCss {
+				media =
+				import = 0
+				compress = 1
+			}
+			awesomeBootstrapCheckbox = EXT:multishop/templates/css/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css
+			awesomeBootstrapCheckbox {
+				media =
+				import = 0
+				compress = 1
+			}
 			jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
 			jqueryAutocomplete {
 				media =
 				import = 0
 				compress = 1
 			}
+			# not needed for Bootstrap
+			jqueryAutocomplete >
 
 			core = EXT:multishop/templates/global/css/core.css
 			core {
@@ -209,31 +227,51 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
-
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
-			prettycheckboxes {
-				media =
-				import = 0
-				compress = 1
-			}
+			# not needed for Bootstrap
+			core >
 		}
 	}
-
 	multishop_admin_page {
 		includeCSS {
-			jqueryTab = EXT:multishop/templates/global/css/tab.css
-			jqueryTab {
+			bootstrapCss = EXT:multishop/templates/css/bootstrap/css/bootstrap.css
+			bootstrapCss {
+				media =
+				import = 0
+				compress = 1
+				forceOnTop= 1
+			}
+			jqueryToastr = EXT:multishop/js/toastr/toastr.min.css
+			jqueryToastr {
 				media =
 				import = 0
 				compress = 1
 			}
-
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/css/jquery-confirm.css
+			jqueryConfirm {
+				media =
+				import = 0
+				compress = 1
+			}
+			awesomeFontCss = EXT:multishop/templates/css/font-awesome/css/font-awesome.min.css
+			awesomeFontCss {
+				media =
+				import = 0
+				compress = 1
+			}
+			awesomeBootstrapCheckbox = EXT:multishop/templates/css/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css
+			awesomeBootstrapCheckbox {
+				media =
+				import = 0
+				compress = 1
+			}
 			jqueryAutocomplete = EXT:multishop/templates/global/css/autocomplete_front.css
 			jqueryAutocomplete {
 				media =
 				import = 0
 				compress = 1
 			}
+			# not needed for Bootstrap
+			jqueryAutocomplete >
 
 			core = EXT:multishop/templates/global/css/core.css
 			core {
@@ -241,13 +279,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
-
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/css/prettyCheckboxes.css
-			prettycheckboxes {
-				media =
-				import = 0
-				compress = 1
-			}
+			# not needed for Bootstrap
+			core >
 		}
 	}
 [end]
@@ -279,6 +312,10 @@ multishop_ajax_server {
 [globalVar = LIT:1 = {$plugin.multishop.includeJS}]
 	page {
 		includeJS {
+			jqueryToastr = EXT:multishop/js/toastr/toastr.min.js
+			jqueryToastr.compress = 1
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/js/jquery-confirm.js
+			jqueryConfirm.compress = 1
 			msGeneral = EXT:multishop/js/general.js
 			msGeneral.compress = 1
 			#jquerymigrate = EXT:multishop/js/jquery-migrate-1.2.1.js
@@ -287,32 +324,39 @@ multishop_ajax_server {
 			jqueryvalidate.compress = 1
 			#jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
 			#jqueryvalidatefunctions.compress=1
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
-			prettycheckboxes.compress = 1
+			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
+			#prettycheckboxes.compress = 1
 			#webshim for fallback html5 attributes support, bugged when including through compressor
 			#webshimsJs = EXT:multishop/js/js-webshim/extras/modernizr-custom.js
 			#webshimsJs.compress=0
 			#pollyfillerJs = EXT:multishop/js/js-webshim/polyfiller.js
 			#pollyfillerJs.compress=0
 		}
+		headerData {
+			# load manually cause the TYPO3 js compressor is not aware of the additional loadCSS and loadJS lines
+			1438243305 = TEXT
+			1438243305.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/extras/modernizr-custom.js" data-ignore="1"></script>
+			1438243323 = TEXT
+			1438243323.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/polyfiller.js" data-ignore="1"></script>
+		}
 	}
-
-	# load manually cause the TYPO3 js compressor is not aware of the additional loadCSS and loadJS lines
-	page.headerData.2482824 = TEXT
-	page.headerData.2482824.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/extras/modernizr-custom.js" data-ignore="1"></script>
-	page.headerData.2482825 = TEXT
-	page.headerData.2482825.value = <script type="text/javascript" src="typo3conf/ext/multishop/js/js-webshim/polyfiller.js" data-ignore="1"></script>
-
 	multishop_admin_page {
 		includeJS {
+			jqueryToastr = EXT:multishop/js/toastr/toastr.min.js
+			jqueryToastr.compress = 1
+			jqueryConfirm = EXT:multishop/js/craftpip-jquery-confirm-5e428e1/js/jquery-confirm.js
+			jqueryConfirm.compress = 1
 			msGeneral = EXT:multishop/js/general.js
 			msGeneral.compress = 1
 			jqueryvalidate = EXT:multishop/js/jquery.h5validate.js
 			jqueryvalidate.compress = 1
 			#jqueryvalidatefunctions = EXT:multishop/js/form-wizard/jquery.validation.functions.js
 			#jqueryvalidatefunctions.compress=1
-			prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
-			prettycheckboxes.compress = 1
+			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
+			#prettycheckboxes.compress = 1
+		}
+		headerData {
+
 		}
 	}
 [end]
@@ -363,6 +407,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed in bootstrap
+			adminglobalCSS >
 
 			adminCSS = {$plugin.multishop.admin_template_folder}/css/admin_frontend.css
 			adminCSS {
@@ -370,9 +416,17 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed in bootstrap
+			adminCSS >
 
 			select2 = EXT:multishop/js/select2/select2.css
 			select2 {
+				media =
+				import = 0
+				compress = 1
+			}
+			adminFrontendOverlayBootstrapCSS = EXT:multishop/templates/css/admin_frontend_overlay.css
+			adminFrontendOverlayBootstrapCSS {
 				media =
 				import = 0
 				compress = 1
@@ -381,6 +435,91 @@ multishop_ajax_server {
 	}
 
 	multishop_admin_page {
+		# TreeView
+		includeJS.msTreeView=EXT:multishop/js/jquery.treeview/jquery.treeview.js
+		includeJS.msTreeView.compress = 1
+		includeCSS.msTreeView=EXT:multishop/js/jquery.treeview/jquery.treeview.css
+		includeCSS.msTreeView  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# TreeView EOL
+		# Blockui
+		includeJS.msAdminBlockUi=EXT:multishop/js/jquery.blockUI.js
+		includeJS.msAdminBlockUi.compress = 1
+		includeCSS.msAdminBlockUi=EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
+		includeCSS.msAdminBlockUi  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# Blockui EOL
+		# H5validate
+		includeJS.msH5validate=EXT:multishop/js/jquery.h5validate.js
+		includeJS.msH5validate.compress = 1
+		# H5validate EOL
+		# ValumsFileUploader
+		includeJS.msAdminValumsFileUploader=EXT:multishop/js/valums-file-uploader/client/fileuploader.js
+		includeJS.msAdminValumsFileUploader.compress = 1
+		# H5validate EOL
+		# MultiSelect
+		includeJS.msAdminMultiSelect=EXT:multishop/js/multiselect/js/ui.multiselect_normal.js
+		includeJS.msAdminMultiSelect.compress = 1
+		includeCSS.msAdminMultiSelect=EXT:multishop/js/multiselect/css/ui.multiselect.css
+		includeCSS.msAdminMultiSelect  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# MultiSelect EOL
+		# TimePicker
+		includeJS.msAdminTimePicker1=EXT:multishop/js/jquery.timepicker/jquery-ui-sliderAccess.js
+		includeJS.msAdminTimePicker1.compress = 1
+		includeJS.msAdminTimePicker2=EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.js
+		includeJS.msAdminTimePicker2.compress = 1
+		includeCSS.msAdminTimePicker=EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.css
+		includeCSS.msAdminTimePicker  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# TimePicker EOL
+		# Redactor
+		includeJS.msRedactor=EXT:multishop/js/redactor/redactor/redactor.js
+		includeJS.msRedactor.compress = 1
+		includeCSS.msRedactorCore=EXT:multishop/js/redactor/redactor/redactor.css
+		includeCSS.msRedactorCore  {
+			media =
+			import = 0
+			compress = 1
+		}
+		includeCSS.msRedactor=EXT:multishop/js/redactor/css/style.css
+		includeCSS.msRedactor  {
+			media =
+			import = 0
+			compress = 1
+		}
+		# Redactor EOL
+		# Redactor Plugins
+		includeJS.msRedactorTable=EXT:multishop/js/redactor/plugins/table.js
+		includeJS.msRedactorTable.compress = 1
+		includeJS.msRedactorFontColor=EXT:multishop/js/redactor/plugins/fontcolor.js
+		includeJS.msRedactorFontColor.compress = 1
+		includeJS.msRedactorFontSize=EXT:multishop/js/redactor/plugins/fontsize.js
+		includeJS.msRedactorFontSize.compress = 1
+		includeJS.msRedactorFileManager=EXT:multishop/js/redactor/plugins/filemanager.js
+		includeJS.msRedactorFileManager.compress = 1
+		includeJS.msRedactorImageManager=EXT:multishop/js/redactor/plugins/imagemanager.js
+		includeJS.msRedactorImageManager.compress = 1
+		includeJS.msRedactorVideo=EXT:multishop/js/redactor/plugins/video.js
+		includeJS.msRedactorVideo.compress = 1
+		includeJS.msRedactorTextExpander=EXT:multishop/js/redactor/plugins/textexpander.js
+		includeJS.msRedactorTextExpander.compress = 1
+		includeJS.msRedactorFullScreen=EXT:multishop/js/redactor/plugins/fullscreen.js
+		includeJS.msRedactorFullScreen.compress = 1
+		# Redactor Plugins EOL
+
 		includeJS {
 			msAdminPanel = EXT:multishop/js/admin/admin_panel.js
 			msAdminPanel.compress = 1
@@ -403,6 +542,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed in bootstrap version
+			adminglobalCSS >
 
 			adminCSS = {$plugin.multishop.admin_template_folder}/css/admin_frontend.css
 			adminCSS {
@@ -410,6 +551,8 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			# not needed in bootstrap version
+			adminCSS >
 
 			msUiTimePickerCSS = EXT:multishop/js/jquery.timepicker/jquery-ui-timepicker-addon.css
 			msUiTimePickerCSS {
@@ -424,6 +567,14 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+
+			adminBackendBootstrapCSS = EXT:multishop/templates/css/admin_backend.css
+			adminBackendBootstrapCSS {
+				media =
+				import = 0
+				compress = 1
+			}
+
 		}
 	}
 [end]
@@ -481,7 +632,8 @@ multishop_admin_page {
 		)
 	}
 
-	includeCSS.adminDashboard = EXT:multishop/templates/admin_dashboard/css/core.css
+	# not needed in Bootstrap
+	#includeCSS.adminDashboard = EXT:multishop/templates/admin_dashboard/css/core.css
 	# loading application top (meta tags + admin panel)
 	1 = USER_INT
 	1 =< plugin.tx_multishop_pi1

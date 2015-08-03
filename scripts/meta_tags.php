@@ -77,7 +77,7 @@ if (!$GLOBALS["TYPO3_CONF_VARS"]["tx_multishop_started"]) {
 			$mslib_cart=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_cart');
 			$mslib_cart->init($this);
 			$mslib_cart->updateCart();
-			$link=mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart');
+			$link=mslib_fe::typolink($this->shoppingcart_page_pid, '&tx_multishop_pi1[page_section]=shopping_cart', 1);
 			if ($link) {
 				header("Location: ".$this->FULL_HTTP_URL.$link);
 				exit();
@@ -142,9 +142,9 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('there_is_one_customer_registered'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('there_is_one_customer_registered'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			} else {
-				$string=sprintf($this->pi_getLL('there_are_s_customers_registered'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('there_are_s_customers_registered'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
 			$messages[]='"<a href=\"'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers').'\">'.$string.'</a>"';
 		}
@@ -160,9 +160,9 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('today_there_is_one_order_created'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('today_there_is_one_order_created'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			} else {
-				$string=sprintf($this->pi_getLL('today_there_are_s_orders_created'), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('today_there_are_s_orders_created'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
 			$messages[]='"<a href=\"'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders').'\">'.$string.'</a>"';
 		}
@@ -179,9 +179,9 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), mslib_befe::strtoupper($this->pi_getLL('week')), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), $this->pi_getLL('week'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			} else {
-				$string=sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), mslib_befe::strtoupper($this->pi_getLL('week')), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), $this->pi_getLL('week'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
 			$messages[]='"<a href=\"'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders').'\">'.$string.'</a>"';
 		}
@@ -197,9 +197,9 @@ if ($this->ADMIN_USER) {
 		$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 		if ($row['total']>0) {
 			if ($row['total']==1) {
-				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), mslib_befe::strtoupper($this->pi_getLL('month')), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('this_s_there_is_one_order_created'), $this->pi_getLL('month'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			} else {
-				$string=sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), mslib_befe::strtoupper($this->pi_getLL('month')), '<strong>'.$row['total'].'</strong>');
+				$string=sprintf($this->pi_getLL('this_s_there_are_s_orders_created'), $this->pi_getLL('month'), '<strong>'.number_format($row['total'],0,'','.').'</strong>');
 			}
 			$messages[]='"<a href=\"'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders').'\">'.$string.'</a>"';
 		}
@@ -241,9 +241,11 @@ if ($this->ADMIN_USER) {
 			$Cache_Lite->save($html);
 		}
 	}
+	/*
 	if ($this->get['tx_multishop_pi1']['page_section']=='admin_home') {
 		$this->ms['MODULES']['DISABLE_ADMIN_PANEL']=1;
 	}
+	*/
 	// admin stats eof
 	$html.='
 			<script type="text/javascript">
@@ -274,7 +276,7 @@ if ($this->ADMIN_USER) {
 				// }
 				$.ajax({
 					url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel&tx_multishop_pi1[categories_id]='.$this->get['categories_id'].'&tx_multishop_pi1[products_id]='.$this->get['products_id']).'\',
-					data: \'\',
+					data: \'tx_multishop_pi1[type]='.$this->get['type'].'&tx_multishop_pi1[page_section]='.$this->get['tx_multishop_pi1']['page_section'].'\',
 					type: \'post\',
 					dataType: \'json\',
 					success: function (j){
@@ -284,22 +286,88 @@ if ($this->ADMIN_USER) {
 
 							// top admin menu
 							var admin_menu_header = \'<div id="tx_multishop_admin_header_wrapper">\';
-							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
-							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1);
+';
+if ($this->get['type']=='2003') {
+	// Backend column left nav
+	$html.='
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false">\';
+							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'collapse\');
 							admin_menu_header += admin_menu_header_html;
 							admin_menu_header += \'</ul></div>\';
+	';
+} else {
+	// Frontend overlay top nav
+	$html.='
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul id="tx_multishop_admin_header">\';
+							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'dropdown\');
+							admin_menu_header += admin_menu_header_html;
+							admin_menu_header += \'</ul></div>\';
+	';
+}
+
+							$html.='
 							admin_menu_header += \'<div id="ms_admin_minimaxi_wrapper"><ul id="ms_admin_minimize"><li><a href="#" class="ms_admin_minimize">'.$this->pi_getLL('minimize').'</a></li></ul></div>\';
 							admin_menu_header += \'</div>\';
 
+							var admin_menu_newheader=\'\';
+';
+if ($this->get['type']=='2003') {
+	// Backend top nav
+							$html.='
+							// new top admin menu
+							var admin_menu_newheader = \'<div id="tx_multishop_admin_newheader_wrapper">\';
+							admin_menu_newheader += \'<div id="tx_multishop_admin_newheader_bg">\';
+							var admin_menu_newheader_html = renderAdminMenu(json_data.newheader, \'newheader\', 1);
+							admin_menu_newheader += admin_menu_newheader_html;
+							admin_menu_newheader += \'</div>\';
+							admin_menu_newheader += \'</div>\';
+							';
+}
+$html.='
 							// bottom admin menu
 							var admin_menu_footer = \'<div id="tx_multishop_admin_footer_wrapper"><ul id="tx_multishop_admin_footer">\';
 							var admin_menu_footer_html = renderAdminMenu(json_data.footer, \'footer\', 1);
 							admin_menu_footer += admin_menu_footer_html;
 							admin_menu_footer += \'</ul></div>\';
 
-							var admin_menu= admin_menu_header + admin_menu_footer;
+							var admin_menu= admin_menu_newheader + admin_menu_header + admin_menu_footer;
 							'.(!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] ? '$("body").prepend(admin_menu);' : '').'
-
+';
+if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') {
+	$html.='
+		$(\'ul#tx_multishop_admin_header\').affix({
+			offset: {
+				top:0,
+				bottom:0
+			}
+		});
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').removeClass("collapsed");
+		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').next().addClass("in");
+		/*
+		$(".ms_admin_has_subs").on("click",function(e) {
+            if ($(e.currentTarget).hasClass("open")) {
+                $(e.currentTarget).toggleClass("open",false);
+            } else {
+                $(e.currentTarget).toggleClass("open",true);
+                e.preventDefault();
+                return false;
+            }
+        });
+        $(".a_dropdown").on("click",function(e) {
+            if ($(this).parent(".ms_admin_has_subs").hasClass("open")) {
+                $(this).parent(".ms_admin_has_subs").toggleClass("open", false);
+                console.log($(this).parent(".ms_admin_has_subs").attr("class"));
+            } else {
+                $(this).parent(".ms_admin_has_subs").toggleClass("open", true);
+            }
+        });
+		$(".dropdown").on("hide.bs.dropdown", function(e){
+		    e.preventDefault();
+		});
+		*/
+	';
+}
+$html.='
 							// load partial menu items and add them to the footer
 							if ($(".footer_content").length > 0) {
 								$("#footer_content_cols").hide();
@@ -338,9 +406,9 @@ if ($this->ADMIN_USER) {
 									$("#ms_admin_minimaxi_wrapper").html(\'<ul id="ms_admin_maximize"><li><a href="#" class="ms_admin_maximize">'.$this->pi_getLL('maximize').'</a></li></ul>\');
 								';
 	}
-	$html.='}
-					}
-				});
+	$html.='		}
+				}
+			});
 
 				';
 	$html.='
@@ -360,7 +428,7 @@ $(document).on("click", "#multishop_update_button", function(e) {
 				message:  \'<ul class="multishop_block_message"><li>'.$this->pi_getLL('handling_in_progress_one_moment_please').'</li></ul>\',
 				onBlock: function() {
 					$.ajax({
-					  url: \''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=update_multishop').'\',
+					  url: \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=update_multishop').'\',
 					  data: \'\',
 					  type: \'post\',
 					  dataType: \'json\',

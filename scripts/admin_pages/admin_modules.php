@@ -5,28 +5,40 @@ if (!defined('TYPO3_MODE')) {
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$(".msadminTooltip").tooltip({
-		placement: \'auto\',
-		html: true
+	var originalLeave = $.fn.popover.Constructor.prototype.leave;
+	$.fn.popover.Constructor.prototype.leave = function(obj){
+	  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
+	  var container, timeout;
+	  originalLeave.call(this, obj);
+	  if(obj.currentTarget) {
+		container = $(obj.currentTarget).siblings(\'.popover\')
+		timeout = self.timeout;
+		container.one(\'mouseenter\', function(){
+		  //We entered the actual popover – call off the dogs
+		  clearTimeout(timeout);
+		  //Let\'s monitor popover content instead
+		  container.one(\'mouseleave\', function(){
+			  $.fn.popover.Constructor.prototype.leave.call(self, self);
+			  $(".popover-link").popover("hide");
+		  });
+		})
+	  }
+	};
+	$(".msadminTooltip").popover({
+		placement: "right",
+		html: true,
+		trigger:"hover",
+		delay: {show: 20, hide: 200}
 	});
-	$(".tab_content").hide();
-	$("ul.tabs li:first").addClass("active").show();
-	$(".tab_content:first").show();
-	$("ul.tabs li").click(function() {
-		$("ul.tabs li").removeClass("active");
-		$(this).addClass("active");
-		$(".tab_content").hide();
-		var activeTab = $(this).find("a").attr("href");
-		$(activeTab).fadeIn(0);
-		return false;
-	});
+	$(".nav-tabs a:first").tab("show");
 	var lochash=window.location.hash;
 	if (lochash!="") {
-		var li_this=$("ul > li").find("a[href=\'" + lochash + "\']").parent();
+		var li_this=$("ul.nav-tabs > li").find("a[href=\'" + lochash + "\']").parent();
 		if (li_this.length > 0) {
-			$("ul.tabs li").removeClass("active");
+			$("ul.nav-tabs li").removeClass("active");
 			$(li_this).addClass("active");
-			$(".tab_content").hide();
+			$(".tab-pane").removeClass("active");
+			$(lochash).addClass("active");
 			$(lochash).fadeIn(0);
 		}
 	}
@@ -45,13 +57,12 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 $content.='<div id="accordion2">';
 foreach ($categories as $cat) {
 	$innerContent='';
-	$innerContent.='<div>';
-	$innerContent.='<table width="100%" border="0" align="center" class="msadmin_border msZebraTable" id="admin_modules_listing">';
-	$innerContent.='<tr><td colspan="'.$colspan.'" class="module_heading">'.mslib_befe::strtoupper($cat['gtitle']).' (ID: '.$cat['gid'].')</div></td></tr>';
-	$innerContent.='<tr>
-	<th>'.$this->pi_getLL('name').'</th>
+	$innerContent.='<table width="100%" border="0" align="center" class="msadmin_border table table-striped table-bordered" id="admin_modules_listing">';
+	$innerContent.='<thead><tr><th colspan="'.$colspan.'" class="module_heading">'.$cat['gtitle'].' (ID: '.$cat['gid'].')</th></tr></thead>';
+	$innerContent.='<thead><tr>
+	<th>'.$this->pi_getLL('title').'</th>
 	<th>'.$this->pi_getLL('current_value').'</th>
-	</tr>';
+	</tr></thead>';
 	$str="SELECT * from tx_multishop_configuration where group_id='".addslashes($cat['group_id'])."' order by configuration_key";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$tr_type='even';
@@ -68,17 +79,16 @@ foreach ($categories as $cat) {
 		if (strlen($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']])>$maxchars) {
 			$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']]=substr($this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']], 0, $maxchars).'...';
 		}
-		$editLink=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[gid]='.$cat['gid'].'&module_id='.$row['id'].'&action=edit_module', 1);
+		$editLink=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_module&tx_multishop_pi1[gid]='.$cat['gid'].'&module_id='.$row['id'].'&action=edit_module', 1);
 //		$row['description']='';
 		$innerContent.='<tr class="'.$tr_type.'">
-		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_title'].'</h3>'.$row['description']).'" class="msadminTooltip">'.$row['configuration_key'].'</a></strong></td>
+		<td><strong><a href="'.$editLink.'" title="'.htmlspecialchars('<h3>'.$row['configuration_title'].'</h3><p>'.$row['description']).'</p>Key: '.$row['configuration_key'].'" class="msadminTooltip">'.$row['configuration_title'].'</a></strong></td>
 		<td><a href="'.$editLink.'">'.$this->ms['MODULES'][$row['configuration_key']].'</a></td>
 		</tr>';
 		//<td><a href="'.$editLink.'">'.$this->ms['MODULES']['GLOBAL_MODULES'][$row['configuration_key']].'</a></td>
 		//$innerContent.='<tr class="'.$tr_type.'"><td colspan="'.$colspan.'">'.$row['description'].'</td></tr>';
 	}
 	$innerContent.='</table>';
-	$innerContent.='</div>';
 	$tabs['module'.$cat['gid']]=array(
 		$cat['gtitle'],
 		$innerContent
@@ -86,24 +96,24 @@ foreach ($categories as $cat) {
 	$tmp='';
 }
 $content.='</div>';
-$content='<div class="main-heading"><h2>'.$this->pi_getLL('admin_multishop_settings').'</h2></div>';
-$content.='
+$content='<div class="panel-heading"><h3>'.$this->pi_getLL('admin_multishop_settings').'</h3></div>';
+$content.='<div class="panel-body">
 <div id="tab-container" class="msadminVerticalTabs">
-    <ul class="tabs" id="admin_modules">';
+    <ul class="nav nav-tabs" role="tablist" id="admin_modules">';
 $count=0;
 foreach ($tabs as $key=>$value) {
 	$count++;
-	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+	$content.='<li'.(($count==1) ? '' : '').' role="presentation"><a href="#'.$key.'" aria-controls="profile" role="tab" data-toggle="tab">'.$value[0].'</a></li>';
 }
 $content.='
     </ul>
-    <div class="tab_container">
+    <div class="tab-content">
 	';
 $count=0;
 foreach ($tabs as $key=>$value) {
 	$count++;
 	$content.='
-        <div style="display: block;" id="'.$key.'" class="tab_content">
+        <div id="'.$key.'" class="tab-pane" role="tabpanel">
         	<form id="form1" name="form1" method="get" action="index.php">
 			'.$formTopSearch.'
 			</form>
@@ -114,6 +124,6 @@ foreach ($tabs as $key=>$value) {
 $content.='
     </div>
 </div>';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>

@@ -1,5 +1,5 @@
 var adminPanelSearch = function () {
-    jQuery("li.ms_admin_search > form#ms_admin_top_search > input#ms_admin_skeyword").select2({
+    jQuery("form#ms_admin_top_search > input#ms_admin_skeyword").select2({
         placeholder: MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL,
         minimumInputLength: 1,
         formatResult: function (data) {

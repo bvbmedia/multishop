@@ -2,6 +2,58 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+// Code moved from admin_ajax.php
+$GLOBALS['TSFE']->additionalHeaderData[]='
+<script type="text/javascript">
+	jQuery(function($){
+		$(".multiselect").multiselect();
+	});
+</script>
+<script type="text/javascript">
+$(function() {
+	$(\'.mceEditor\').redactor({
+		focus: false,
+		clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
+		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
+		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
+		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
+		minHeight:\'400\',
+		plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',[\'fullscreen\']]
+	});
+});
+</script>
+<script type="text/javascript">
+var browser_width;
+var browser_height;
+jQuery().ready(function($){
+	browser_width=$(document).width();
+	browser_height=$(document).height();
+	$(document).on("click", ".toggle_advanced_options", function(){
+		var value=$(this).val();
+		if (value==\''.addslashes($this->pi_getLL('admin_show_options')).'\')
+		{
+			$.cookie("hide_advanced_options", "0", { expires: 7, path: \'/\', domain: \''.$this->server['HTTP_HOST'].'\'});
+			$(this).val("'.addslashes($this->pi_getLL('admin_hide_options')).'");
+			$(".toggle_advanced_option").show();
+		}
+		else
+		{
+			$.cookie("hide_advanced_options", "1", { expires: 7, path: \'/\', domain: \''.$this->server['HTTP_HOST'].'\'});
+			$(this).val("'.addslashes($this->pi_getLL('admin_show_options')).'");
+			$(".toggle_advanced_option").hide();
+		}
+	});
+});
+</script>
+<link rel="stylesheet" type="text/css" href="'.$this->FULL_HTTP_URL_MS.'templates/global/css/print.css" media="print" />
+';
+if (strstr($this->conf['admin_template_folder'], "/")) {
+	$prefixed_url=$this->FULL_HTTP_URL;
+} else {
+	$prefixed_url=$this->FULL_HTTP_URL_MS.'templates/';
+}
+$GLOBALS['TSFE']->additionalHeaderData[]=mslib_fe::jQueryBlockUI();
+// Code moved from admin_ajax.php EOL
 $this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
 switch ($this->ms['page']) {
     case 'admin_sort_products':
@@ -370,16 +422,227 @@ switch ($this->ms['page']) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_home.php');
 		}
 		break;
-	case 'admin_ajax':
-		if ($this->ADMIN_USER) {
-			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_ajax.php');
-		}
-		break;
 	case 'admin_system_rebuild_flat_database':
 		if ($this->ADMIN_USER) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_rebuild_flat_database.php');
 		}
 		break;
+// move from front
+	case 'admin_sitemap_generator':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_sitemap_generator.php');
+		}
+		break;
+	case 'admin_repair_missing_multilanguages_attributes':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_repair_missing_multilanguages_attributes.php');
+		}
+		break;
+	case 'merge_categories':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_categories.php');
+		}
+		break;
+	case 'merge_manufacturers':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_manufacturers.php');
+		}
+		break;
+	case 'merge_attribute_options':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options.php');
+		}
+		break;
+	case 'merge_attribute_options_values':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_merge_attribute_options_values.php');
+		}
+		break;
+	case 'admin_system_clear_database':
+		if ($this->ROOTADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_clear_database.php');
+		}
+		break;
+	case 'admin_system_consistency_checker':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_consistency_checker.php');
+		}
+		break;
+	case 'admin_system_images_update':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_images_update.php');
+		}
+		break;
+	case 'admin_system_clear_cooluri_cache':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_clear_cooluri_cache.php');
+		}
+		break;
+	case 'admin_system_orphan_files':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_system_orphan_files.php');
+		}
+		break;
+	case 'admin_mass_product_updater':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_mass_product_updater.php');
+		}
+		break;
+	// Interfaces are moved from admin_ajax.php
+	case 'edit_customer_group':
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_customer_group.php');
+		break;
+	case 'add_product':
+	case 'edit_product':
+		if (strstr($this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'], "..")) {
+			die('error in ADMIN_PRODUCTS_EDIT_TYPE value');
+		} else {
+			if (strstr($this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'], "/")) {
+				// relative mode
+				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_PRODUCTS_EDIT_TYPE'].'.php');
+			} else {
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_product.php');
+			}
+		}
+		break;
+	case 'delete_product':
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_delete_product.php');
+		break;
+	case 'add_category':
+	case 'edit_category':
+		if (strstr($this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'], "..")) {
+			die('error in ADMIN_CATEGORIES_EDIT_TYPE value');
+		} else {
+			if (strstr($this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'], "/")) {
+				// relative mode
+				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CATEGORIES_EDIT_TYPE'].'.php');
+			} else {
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_category.php');
+			}
+		}
+		break;
+	case 'add_multiple_category':
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_add_multiple_categories.php');
+		break;
+	case 'delete_category':
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_delete_category.php');
+		break;
+	case 'mail_order':
+		if ($this->post['orders_id'] and $this->post['tx_multishop_pi1']['email']) {
+			mslib_fe::mailOrder($this->post['orders_id'], 1, $this->post['tx_multishop_pi1']['email']);
+			/*
+			$content.='
+			<script type="text/javascript">
+			parent.window.location.reload();
+			</script>
+		';
+			*/
+		} else {
+			if ($this->get['orders_id']) {
+				$order=mslib_fe::getOrder($this->get['orders_id']);
+				if ($order['orders_id']) {
+					$content.='
+			<div id="mini-form-field">
+				<form method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=mail_order&orders_id='.$order['orders_id'].'&action=mail_order').'">
+					<div class="mini-account-field">
+						<label>E-mail address</label>
+						<input name="tx_multishop_pi1[email]" type="text" value="'.htmlspecialchars($order['billing_email']).'" />
+						<input name="Submit" class="btn btn-success" type="submit" value="send e-mail" />
+						<input name="orders_id" type="hidden" value="'.$order['orders_id'].'" />
+					</div>
+				</form>
+			</div>
+			';
+				}
+			}
+		}
+		break;
+	case 'edit_order':
+		if (isset($_GET['print'])) {
+			if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'], "..")) {
+				die('error in ADMIN_EDIT_ORDER_PRINT_TYPE value');
+			} else {
+				if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'], "/")) {
+					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_EDIT_ORDER_PRINT_TYPE'].'.php');
+				} else {
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order_print.php');
+				}
+			}
+		} else {
+			if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'], "..")) {
+				die('error in ADMIN_EDIT_ORDER_TYPE value');
+			} else {
+				if (strstr($this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'], "/")) {
+					require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_EDIT_ORDER_TYPE'].'.php');
+				} else {
+					require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_order.php');
+				}
+			}
+		}
+		break;
+	case 'edit_module':
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_module.php');
+		break;
+	case 'edit_cms':
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_cms.php');
+		break;
+	case 'add_manufacturer':
+	case 'edit_manufacturer':
+		if (strstr($this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'], "..")) {
+			die('error in ADMIN_MANUFACTURERS_EDIT_TYPE value');
+		} else {
+			if (strstr($this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'], "/")) {
+				// relative mode
+				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_MANUFACTURERS_EDIT_TYPE'].'.php');
+			} else {
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_manufacturer.php');
+			}
+		}
+		break;
+	case 'add_customer':
+	case 'edit_customer':
+		if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'], "..")) {
+			die('error in ADMIN_CUSTOMERS_EDIT_TYPE value');
+		} else {
+			if (strstr($this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'], "/")) {
+				// relative mode
+				require($this->DOCUMENT_ROOT.$this->ms['MODULES']['ADMIN_CUSTOMERS_EDIT_TYPE'].'.php');
+			} else {
+				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_edit_customer.php');
+			}
+		}
+		break;
+	// Interfaces are moved from admin_ajax.php EOL
+
+	/*
+	 * TODO: can be removed soon, because I can't seeing it being used
+	case 'admin_list_manual_orders':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/manual_order/admin_list_manual_orders.php');
+		}
+		break;
+	*/
+	case 'admin_processed_manual_order':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/manual_order/admin_processed_manual_order.php');
+		}
+		break;
+	/*
+	 * TODO: can be removed soon, because I can't seeing it being used
+	case 'admin_shipping_options':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_shipping_options.php');
+		}
+		break;
+	*/
+	/*
+	 * TODO: can be removed soon, because I can't seeing it being used
+	case 'admin_add_order':
+		if ($this->ADMIN_USER) {
+			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_add_order.php');
+		}
+		break;
+	*/
 	case 'custom_page':
 		if ($this->ADMIN_USER) {
 			// custom page hook that can be controlled by third-party plugin

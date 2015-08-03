@@ -172,7 +172,7 @@ if ($this->post['proceed_order']) {
 		// now add the order eof
 		$orders_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
 		// redirect back to orders and let highslide open it
-		$url=$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$orders_id.'&tx_multishop_pi1[is_manual]=1&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal'], 1);
+		$url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$orders_id.'&tx_multishop_pi1[is_manual]=1&action=edit_order&tx_multishop_pi1[is_proposal]='.$this->post['tx_multishop_pi1']['is_proposal'], 1);
 		header('Location: '.$url);
 		exit();
 	} //add to orders eof

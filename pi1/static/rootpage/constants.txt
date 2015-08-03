@@ -73,9 +73,6 @@ plugin.multishop {
 	# cat=plugin.multishop - optional/file; type=string; label= Development company logo: The logo of the development company. Example: fileadmin/logo.png or http://www.domain.com/fileadmin/logo.png.
 	admin_development_company_logo =
 
-	# cat=plugin.multishop - optional/file; type=string; label= Development company logo (grayed) path: The development company logo (grayed) path.
-	admin_development_company_logo_gray_path =
-
 	customSettings =
 	jQueryPopup_rel = {$plugin.rzcolorbox.rel}
 

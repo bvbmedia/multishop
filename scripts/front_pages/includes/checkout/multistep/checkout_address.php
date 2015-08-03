@@ -406,7 +406,7 @@ if (count($cart['products'])<1) {
 		}
 		//
 		if (is_array($erno) and count($erno)>0) {
-			$content.='<div class="error_msg">';
+			$content.='<div class="alert alert-danger">';
 			$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 			foreach ($erno as $item) {
 				$content.='<li>'.$item.'</li>';
@@ -414,7 +414,7 @@ if (count($cart['products'])<1) {
 			$content.='</ul>';
 			$content.='</div>';
 		}
-		$content.='<div class="error_msg" style="display:none">';
+		$content.='<div class="alert alert-danger" style="display:none">';
 		$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul class="ul-display-error">';
 		$content.='<li class="item-error" style="display:none"></li>';
 		$content.='</ul></div>';

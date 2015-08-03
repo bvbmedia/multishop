@@ -25,68 +25,70 @@
 
     });
 </script>
-<div id="tab-container">
-    <ul class="tabs" id="admin_orders">
-        <li class="active"><a href="#CmsListing">###ADMIN_LABEL_TABS_MANUFACTURERS###</a></li>
-    </ul>
-    <div class="tab_container">
-        <div style="display: block;" id="CmsListing" class="tab_content">
-            <form id="form1" name="form1" method="get" action="index.php">
-                <div id="search-orders">
-                    <table width="100%">
-                        <tr>
-                            <td nowrap valign="top">
-                                <input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
+<div class="panel-heading"><h3>###ADMIN_LABEL_TABS_MANUFACTURERS###</h3></div>
+<div class="panel-body">
+	<form id="form1" name="form1" method="get" action="index.php">
+    	<div id="page-topheader" class="well">
+			<div class="row">
+				<div class="col-md-6">
+                               <input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
                                 <input name="id" type="hidden" value="###SHOP_PID###" />
                                 <input name="type" type="hidden" value="2003" />
                                 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_manufacturers" />
-
-                                <div class="formfield-container-wrapper">
-                                    <div class="formfield-wrapper">
-                                        <label>###LABEL_KEYWORD###</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###" />
-                                        <input type="submit" name="Search" class="msadmin_button" value="###LABEL_SEARCH###" />
+<div class="form-inline">
+                                    <div class="form-group">
+                                        <label>###LABEL_KEYWORD###</label>
+                                        	<div class="input-group">
+                                        		<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="###VALUE_KEYWORD###" class="form-control" />
+                                        		<span class="input-group-btn">
+                                        			<input type="submit" name="Search" class="btn btn-success" value="###LABEL_SEARCH###" />
+                                        		</span>
+                                             </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td nowrap valign="top" align="right" class="searchLimit">
-                                <div style="float:right;">
-                                    ###INPUT_LIMIT_RESULT_SELECTBOX###
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                    ###SEARCH_NAV###
+                                    </div>
+				</div>
+				<div class="col-md-6 searchLimit">
+                	###INPUT_LIMIT_RESULT_SELECTBOX###
                 </div>
-            </form>
+			</div>
+		</div>
+    </form>
+            ###SEARCH_NAV###
             <!-- ###RESULTS### begin -->
             <div class="msHorizontalOverflowWrapper">
-                <table class="msZebraTable msadmin_orders_listing" id="product_import_table">
+                <table class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table">
+                <thead>
                     <tr>
-                        <th width="50" nowrap>###LABEL_MANUFACTURER_ID###</th>
-                        <th>###LABEL_MANUFACTURER_NAME###</th>
-                        <th width="100" nowrap>###LABEL_MANUFACTURER_DATE_ADDED###</th>
-                        <th width="50" nowrap>###LABEL_MANUFACTURER_STATUS###</th>
-                        <th>###LABEL_MANUFACTURER_ACTION###</th>
+                        <th class="cellID">###LABEL_MANUFACTURER_ID###</th>
+                        <th class="cellName">###LABEL_MANUFACTURER_NAME###</th>
+                        <th class="cellDate">###LABEL_MANUFACTURER_DATE_ADDED###</th>
+                        <th class="cellStatus">###LABEL_MANUFACTURER_STATUS###</th>
+                        <th class="cellAction">###LABEL_MANUFACTURER_ACTION###</th>
                     </tr>
+                    </thead>
                     <!-- ###MANUFACTURERS### begin -->
+                    <tbody>
                     <tr class="###ROW_TYPE###">
-                        <td align="right" nowrap>###MANUFACTURER_ID###</td>
-                        <td><a href="###MANUFACTURER_EDIT_LINK###">###MANUFACTURER_NAME###</a></td>
-                        <td align="right" nowrap>###MANUFACTURER_DATE_ADDED###</td>
-                        <td align="center">###MANUFACTURER_STATUS###</td>
-                        <td width="50">
-                            <a href="###MANUFACTURER_EDIT_LINK###" class="admin_menu_edit">###ADMIN_LABEL_LINK_EDIT###</a>
-                            <a href="###MANUFACTURER_DELETE_LINK###" class="admin_menu_remove" alt="###ADMIN_LABEL_ALT_REMOVE###"></a>
+                        <td class="cellID">###MANUFACTURER_ID###</td>
+                        <td class="cellName"><a href="###MANUFACTURER_EDIT_LINK###">###MANUFACTURER_NAME###</a></td>
+                        <td class="cellDate">###MANUFACTURER_DATE_ADDED###</td>
+                        <td class="cellStatus">###MANUFACTURER_STATUS###</td>
+                        <td class="cellAction">
+                            <a href="###MANUFACTURER_EDIT_LINK###" class="btn btn-primary btn-sm admin_menu_edit"><i class="fa fa-pencil fa-fw"></i></a>
+                            <a href="###MANUFACTURER_DELETE_LINK###" class="btn btn-danger btn-sm admin_menu_remove"><i class="fa fa-trash-o fa-fw"></i></a>
                         </td>
                     </tr>
+                    </tbody>
                     <!-- ###MANUFACTURERS### end -->
+                    <tfoot>
                     <tr>
-                        <th width="50" nowrap>###LABEL_FOOTER_MANUFACTURER_ID###</th>
-                        <th>###LABEL_FOOTER_MANUFACTURER_NAME###</th>
-                        <th width="100" nowrap>###LABEL_FOOTER_MANUFACTURER_DATE_ADDED###</th>
-                        <th width="50" nowrap>###LABEL_FOOTER_MANUFACTURER_STATUS###</th>
-                        <th>###LABEL_FOOTER_MANUFACTURER_ACTION###</th>
+                        <th class="cellID">###LABEL_FOOTER_MANUFACTURER_ID###</th>
+                        <th class="cellName">###LABEL_FOOTER_MANUFACTURER_NAME###</th>
+                        <th class="cellDate">###LABEL_FOOTER_MANUFACTURER_DATE_ADDED###</th>
+                        <th class="cellStatus">###LABEL_FOOTER_MANUFACTURER_STATUS###</th>
+                        <th class="cellAction">###LABEL_FOOTER_MANUFACTURER_ACTION###</th>
                     </tr>
+                    </tfoot>
                 </table>
             </div>
             <!-- ###RESULTS### end -->
@@ -94,7 +96,4 @@
             <!-- ###NORESULTS### begin -->
             ###LABEL_NO_RESULT###
             <!-- ###NORESULTS### end -->
-        </div>
-    </div>
-</div>
 <!-- ###TEMPLATE### end -->

@@ -74,46 +74,76 @@ if ($p>0) {
 	$offset=0;
 }
 $user=$GLOBALS['TSFE']->fe_user->user;
-$content='
-<div class="main-heading"><h2>'.$this->pi_getLL('add_new_group').'</h2></div>
-<form id="form1" name="form1" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups').'">
-	<div class="account-field">
-		<label>'.$this->pi_getLL('name').'</label><input type="text" name="group_name" id="group_name" value="'.htmlspecialchars($this->post['group_name']).'" />
+$content='<div class="panel panel-default">
+<div class="panel-heading"><h3>'.$this->pi_getLL('add_new_group').'</h3></div>
+<div class="panel-body">
+<form id="form1" class="form-horizontal" name="form1" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups').'">
+	<div class="form-group">
+		<label class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+		<div class="col-md-10">
+		<input class="form-control" type="text" name="group_name" id="group_name" value="'.htmlspecialchars($this->post['group_name']).'" />
+		</div>
 	</div>
-	<div class="account-field">
-		<label>Enable usage of budget</label>
-		<input name="tx_multishop_pi1[budget_enabled]" type="radio" value="1" '.(($this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /> '.$this->pi_getLL('admin_yes').' <input name="tx_multishop_pi1[budget_enabled]" type="radio" value="0" '.((!$this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /> '.$this->pi_getLL('admin_no').'
+	<div class="form-group">
+		<label class="control-label col-md-2">Enable usage of budget</label>
+		<div class="col-md-10">
+		<div class="radio radio-success radio-inline">
+		<input name="tx_multishop_pi1[budget_enabled]" id="radio1" type="radio" value="1" '.(($this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /><label for="radio1">'.$this->pi_getLL('admin_yes').'</label>
+		</div>
+		<div class="radio radio-success radio-inline">
+		<input name="tx_multishop_pi1[budget_enabled]" id="radio2" type="radio" value="0" '.((!$this->post['tx_multishop_pi1']['budget_enabled']) ? 'checked' : '').' /><label for="radio2">'.$this->pi_getLL('admin_no').'</label>
+		</div>
+		</div>
 	</div>
-	<div class="account-field">
-		<label>Budget usage</label>
-		<input type="text" name="tx_multishop_pi1[remaining_budget]" size="8" id="remaining_budget" value="'.htmlspecialchars($this->post['tx_multishop_pi1']['remaining_budget']).'" />
+	<div class="form-group">
+		<label class="control-label col-md-2">Budget usage</label>
+		<div class="col-md-10">
+		<input class="form-control" type="text" name="tx_multishop_pi1[remaining_budget]" size="8" id="remaining_budget" value="'.htmlspecialchars($this->post['tx_multishop_pi1']['remaining_budget']).'" />
+		</div>
 	</div>
-	<div class="account-field">
-		<label>'.$this->pi_getLL('discount').'</label>
-		<input type="text" name="discount" size="2" maxlength="2" id="discount" value="'.htmlspecialchars($this->post['discount']).'" />%
+	<div class="form-group">
+		<label class="control-label col-md-2">'.$this->pi_getLL('discount').'</label>
+		<div class="col-md-10">
+		<div class="input-group">
+		<input class="form-control" type="text" name="discount" size="2" maxlength="2" id="discount" value="'.htmlspecialchars($this->post['discount']).'" />
+		<span class="input-group-addon width-auto">%</span>
+		</div>
+		</div>
 	</div>
-	<div class="account-field">
-		<label>&nbsp;</label>
-		<span class="msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" name="Submit" value="'.$this->pi_getLL('add_new_group').'" /></span>
+	<div class="form-group">
+		<label class="control-label col-md-2">&nbsp;</label>
+		<div class="col-md-10">
+		<input class="btn btn-success" type="submit" name="Submit" value="'.$this->pi_getLL('add_new_group').'" />
+		</div>
 	</div>
 </form>
-<div class="main-heading"><h2>'.$this->pi_getLL('groups').'</h2></div>
-<form id="form1" name="form1" method="get" action="index.php">
+<div class="page-header"><h3>'.$this->pi_getLL('groups').'</h2></div>
+<form id="form1" name="form1" method="get" action="index.php" class="form-horizontal">
 	<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
 	<input name="type" type="hidden" value="2003" />
 	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customer_groups" />
-	<div class="account-field">
-		<label>'.$this->pi_getLL('search_by').'</label>
-		<select name="tx_multishop_pi1[search_by]">
+	<div class="form-group">
+		<label class="control-label col-md-2">'.$this->pi_getLL('search_by').'</label>
+		<div class="col-md-10">
+		<select name="tx_multishop_pi1[search_by]" class="form-control">
 			<option value="group_name">'.$this->pi_getLL('name').'</option>
 		</select>
+		</div>
 	</div>
-	<div class="account-field">
-		<label>'.ucfirst($this->pi_getLL('keyword')).'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
-		<input type="submit" name="Submit" class="msadmin_button" value="'.$this->pi_getLL('search').'" />
+	<div class="form-group">
+		<label class="control-label col-md-2">'.ucfirst($this->pi_getLL('keyword')).'</label>
+		<div class="col-md-10">
+		<div class="input-group">
+		<input class="form-control" type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
+		<span class="input-group-btn">
+		<input type="submit" name="Submit" class="btn btn-success" value="'.$this->pi_getLL('search').'" />
+		</span>
+		</div></div>
 	</div>
-</form>';
+</form>
+
+';
 // product search
 $filter=array();
 $having=array();
@@ -166,6 +196,6 @@ if ($pageset['total_rows']>0) {
 	}
 	// pagination eof
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content=''.mslib_fe::shadowBox($content).'';
 ?>

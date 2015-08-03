@@ -70,7 +70,7 @@ if ($this->post) {
 	}
 }
 if (is_array($erno) and count($erno)>0) {
-	$content.='<div class="error_msg">';
+	$content.='<div class="alert alert-danger">';
 	$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 	foreach ($erno as $item) {
 		$content.='<li>'.$item.'</li>';
@@ -97,18 +97,24 @@ if ($this->get['delete'] and is_numeric($this->get['tax_id'])) {
 	$this->post['tax_status']=$taxRow['status'];
 }
 $formfields=array();
-$formfields[]='<div class="account-field">
-				<label for="">TAX name</label>
-				<input type="text" name="tax_name" id="tax_name" value="'.$this->post['tax_name'].'"> (name that will be displayed on the invoice. Example: VAT)
+$formfields[]='<div class="form-group">
+				<label for="" class="control-label col-md-2">TAX name</label>
+				<div class="col-md-10">
+					<input class="form-control" type="text" name="tax_name" id="tax_name" value="'.$this->post['tax_name'].'"> (name that will be displayed on the invoice. Example: VAT)
+				</div>
 		</div>';
-$formfields[]='<div class="account-field">
-				<label for="">TAX rate</label>
-				<input type="text" name="tax_rate" id="tax_rate" value="'.$this->post['tax_rate'].'"> (example: 19 for 19%)
+$formfields[]='<div class="form-group">
+				<label for="" class="control-label col-md-2">TAX rate</label>
+				<div class="col-md-10">
+					<input class="form-control" type="text" name="tax_rate" id="tax_rate" value="'.$this->post['tax_rate'].'"> (example: 19 for 19%)
+				</div>
 		</div>';
-$formfields[]='<div class="account-field">
-				<label for="">Status</label>
-				<input name="tax_status" type="radio" value="1" '.((!isset($this->post['tax_status']) or $this->post['tax_status']==1) ? 'checked' : '').' /> on
-				<input name="tax_status" type="radio" value="0" '.((isset($this->post['tax_status']) and $this->post['tax_status']==0) ? 'checked' : '').' /> off
+$formfields[]='<div class="form-group">
+				<label for="" class="control-label col-md-2">Status</label>
+				<div class="col-md-10">
+					<div class="radio radio-success radio-inline"><input name="tax_status" id="tax_status_0" type="radio" value="1" '.((!isset($this->post['tax_status']) or $this->post['tax_status']==1) ? 'checked' : '').' /><label for="tax_status_0">on</label></div>
+					<div class="radio radio-success radio-inline"><input name="tax_status" id="tax_status_1" type="radio" value="0" '.((isset($this->post['tax_status']) and $this->post['tax_status']==0) ? 'checked' : '').' /><label for="tax_status_0">off</label></div>
+				</div>
 		</div>';
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_taxes.php']['renderInsertEditTaxesFormPreProc'])) {
 	$params=array(
@@ -120,19 +126,20 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 	}
 }
 $content.='
-<form action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
-	<fieldset>
-		<legend>ADD / UPDATE TAX</legend>
+<div class="panel panel-default">
+<div class="panel-heading"><h3>ADD / UPDATE TAX</h3></div>
+<div class="panel-body">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
 		'.implode('', $formfields).'
-
-
-		<div class="account-field">
-				<label for="">&nbsp;</label>
-				<input name="tax_id" type="hidden" value="'.$this->post['tax_id'].'" />
-				<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button" />
+		<div class="form-group">
+				<label for="" class="control-label col-md-2">&nbsp;</label>
+				<div class="col-md-10">
+					<input name="tax_id" type="hidden" value="'.$this->post['tax_id'].'" />
+					<button name="Submit" type="submit" value="" class="btn btn-success"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</button>
+				</div>
 		</div>
-	</fieldset>
 </form>
+<br>
 ';
 // load taxes
 $str="SELECT * from tx_multishop_taxes order by tax_id";
@@ -142,38 +149,38 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$taxes[]=$row;
 }
 if (count($taxes)) {
-	$content.='<table width="100%" border="0" align="center" class="msZebraTable msadmin_border" id="admin_modules_listing">
-	<tr>
-		<th>ID</th>
-		<th>Name</th>
-		<th>Rate</th>
-		<th>Status</th>
-		<th>Action</th>
-	</tr>
+	$content.='<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+	<thead><tr>
+		<th class="cellID">ID</th>
+		<th class="cellName">Name</th>
+		<th class="cellTax">Rate</th>
+		<th class="cellStatus">Status</th>
+		<th class="cellAction">Action</th>
+	</tr></thead>
 	';
 	foreach ($taxes as $tax) {
 		$content.='
 		<tr class="'.$tr_type.'">
-			<td>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['tax_id'].'</a>
+			<td class="cellID">
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['tax_id'].'</a>
 			</td>
-			<td>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['name'].'</a>
+			<td class="cellName">
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&edit=1').'">'.$tax['name'].'</a>
 			</td>
-			<td>
+			<td class="cellTax">
 				'.round($tax['rate'], 4).'%
 			</td>
-			<td>
+			<td class="cellStatus">
 				'.$tax['status'].'
 			</td>			
-			<td>
-				<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&delete=1').'">delete</a>
+			<td class="cellAction">
+				<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tax_id='.$tax['tax_id'].'&delete=1').'" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></a>
 			</td>
 		</tr>
 		';
 	}
 	$content.='</table>';
 }
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content=''.mslib_fe::shadowBox($content).'';
 ?>

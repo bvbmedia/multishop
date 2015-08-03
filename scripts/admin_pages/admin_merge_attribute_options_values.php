@@ -19,14 +19,16 @@ if ($rows) {
 		$js_select2_cache_options[$row['products_options_id']]='attributesOptions['.$row['products_options_id'].']={id:"'.$row['products_options_id'].'", text:"'.htmlentities($row['products_options_name'], ENT_QUOTES).'"}';
 	}
 }
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_attribute_values').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values').'" method="post" class="merge_attribute_values_form">
-	<div class="account-field">
+$content.='<div class="panel panel-default">
+<div class="panel-heading"><h3>'.$this->pi_getLL('merge_attribute_values').'</h3></div>
+<div class="panel-body">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options_values').'" method="post" class="merge_attribute_values_form">
+	<div class="merge_attribute_values_listing">
 			<ul>
 			';
 foreach ($options_data as $option_val) {
 	$content.='<li>';
-	$content.='<span class="option_name">'.$option_val['products_options_name'].'</span>';
+	$content.='<strong class="option_name">'.$option_val['products_options_name'].'</strong>';
 	//
 	$src_values_id=mslib_fe::getAttributeValuesByOptionId($option_val['products_options_id']);
 	if (count($src_values_id)>0) {
@@ -49,15 +51,15 @@ foreach ($options_data as $option_val) {
 			$content.='<li>';
 			$content.='<div class="merge_attribute_values_wrapper">';
 			$content.='<div class="merge_attribute_values_source">';
-			$content.='<input name="tx_multishop_pi1[merge_attribute_values_src]['.$option_val['products_options_id'].'][]" id="merge_src_'.$option_val['products_options_id'].'_'.$src_value_id.'" type="checkbox" value="'.$src_value_id.'" class="merge_source" rel="'.$option_val['products_options_id'].'" />';
-			$content.='<label for="merge_src_'.$option_val['products_options_id'].'_'.$src_value_id.'" class="merge_source_label"><span>'.$src_value_name.$item_count.'</span></label>';
+			$content.='<div class="checkbox checkbox-success"><input name="tx_multishop_pi1[merge_attribute_values_src]['.$option_val['products_options_id'].'][]" id="merge_src_'.$option_val['products_options_id'].'_'.$src_value_id.'" type="checkbox" value="'.$src_value_id.'" class="merge_source" rel="'.$option_val['products_options_id'].'" />';
+			$content.='<label for="merge_src_'.$option_val['products_options_id'].'_'.$src_value_id.'" class="merge_source_label">'.$src_value_name.$item_count.'</label></div>';
 			$content.='</div>';
 			$content.='</div>';
 			$content.='</li>';
 		}
 		$content.='</ul>';
 		$content.='<div class="merge_attribute_values_target" id="merge_target_'.$option_val['products_options_id'].'_wrapper" style="display:none">';
-		$content.='<label for="merge_target_'.$option_val['products_options_id'].'"><span>'.$this->pi_getLL('merge_to').'</span></label>';
+		$content.='<label for="merge_target_'.$option_val['products_options_id'].'">'.$this->pi_getLL('merge_to').'</label> ';
 		$content.='<input type="hidden" id="merge_option_id_'.$option_val['products_options_id'].'" value="'.$option_val['products_options_id'].'">';
 		$content.='<input type="hidden" id="merge_target_'.$option_val['products_options_id'].'" name="tx_multishop_pi1[merge_attribute_values_target]['.$option_val['products_options_id'].']" class="merge_attribute_target_selectbox" style="width:400px">';
 		$content.='</div>';
@@ -67,11 +69,15 @@ foreach ($options_data as $option_val) {
 $content.='
 			</ul>
 	</div>
-	<div class="account-field">
-			<label></label>
-			<input type="submit" id="submit" class="msadmin_button" value="'.$this->pi_getLL('merge_selected').'" />
+	<hr>
+	<div class="clearfix">
+	<div class="pull-right">
+		<button type="submit" id="submit" class="btn btn-success" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-compress fa-stack-1x"></i></span> '.$this->pi_getLL('merge_selected').'</button>
+	</div>
 	</div>
 </form>
+</div>
+</div>
 <script type="text/javascript">
 var select2_sb = function(selector_str, option_id, exclude_id) {
 	jQuery(selector_str).select2({
@@ -81,7 +87,7 @@ var select2_sb = function(selector_str, option_id, exclude_id) {
 		},
 		minimumInputLength: 0,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
 				data: {
 					q: query.term
 				},
@@ -93,7 +99,7 @@ var select2_sb = function(selector_str, option_id, exclude_id) {
 		initSelection: function(element, callback) {
 			var id=$(element).val();
 			if (id!=="") {
-				$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_attributes&tx_multishop_pi1[admin_ajax_product_attributes]=get_attributes_values').'\' + \'&option_id=\' + option_id + \'&exclude_id=\' + exclude_id, {
 					data: {
 						preselected_id: id
 					},
@@ -315,6 +321,7 @@ if ($this->post) {
 		$GLOBALS['TYPO3_DB']->sql_query($delete_qry);
 	}
 	//
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
+	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_attribute_options_values'));
+	exit();
 }
 ?>

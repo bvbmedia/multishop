@@ -134,8 +134,8 @@ if (is_array($products) && count($products)) {
 		}*/
 		if ($this->ROOTADMIN_USER or ($this->ADMIN_USER and $this->CATALOGADMIN_USER)) {
 			$output['admin_icons']='<div class="admin_menu">
-		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit"></a>
-		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_ajax&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"></a>
+		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_product&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit"><i class="fa fa-pencil"></i></a>
+		<a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=delete_product&cid='.$current_product['categories_id'].'&pid='.$current_product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a>
 		</div>';
 		}
 		$markerArray=array();
@@ -453,7 +453,7 @@ if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or (
 			cursor:     "move",
 			//axis:       "y",
 			update: function(e, ui) {
-				href = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=product&catid='.$current_product['categories_id']).'";
+				href = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=product&catid='.$current_product['categories_id']).'";
 				jQuery(this).sortable("refresh");
 				sorted = jQuery(this).sortable("serialize", "id");
 				jQuery.ajax({

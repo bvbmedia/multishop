@@ -38,24 +38,30 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 if (count($data)==1) {
 	$compiledWidget['content']='<p>'.$this->pi_getLL('admin_label_data_not_available').'</p>';
 } else {
-//	$compiledWidget['content']='<p>Websites waarvandaan bestellingen tot stand zijn gekomen.</p>';
 	$counter=0;
-	$compiledWidget['content'].='<table width="100%" class="msZebraTable" cellspacing="0" cellpadding="0" border="0" >';
-	foreach ($data as $host=>$item) {
-		$counter++;
-		$compiledWidget['content'].='<tr>';
-		if ($counter==1) {
-			$compiledWidget['content'].='
-				<th>'.$item[0].'</th>
-				<th>'.$item[1].'</th>		
-			';
-		} else {
-			$compiledWidget['content'].='
-				<td>'.$host.'</td>
-				<td>'.number_format($item[1], 0, 3, '.').'</td>
-			';
+	$compiledWidget['content'].='<table class="table table-striped table-bordered tblWidget">';
+	if (count($data)) {
+		$compiledWidget['content'].='
+		<thead>
+			<tr>
+				<th>'.$data[0][0].'</th>
+				<th class="text-right">'.$data[0][1].'</th>
+			</tr>
+		</thead>
+		';
+		$compiledWidget['content'].='<tbody>';
+		foreach ($data as $host=>$item) {
+			$counter++;
+			if ($counter>1) {
+				$compiledWidget['content'].='
+				<tr>
+					<td>'.$host.'</td>
+					<td class="text-right">'.number_format($item[1], 0, 3, '.').'</td>
+				</tr>
+				';
+			}
 		}
-		$compiledWidget['content'].='</tr>';
+		$compiledWidget['content'].='</tbody>';
 	}
 	$compiledWidget['content'].='</table>';
 }

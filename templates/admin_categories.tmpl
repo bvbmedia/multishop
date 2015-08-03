@@ -1,6 +1,6 @@
 <!-- ###TEMPLATE### begin -->
 ###ADMIN_CATEGORIES_HEADER###
-<form name="movecats" action="###FORM_ACTION_LINK###" method="post">
+<form name="movecats" action="###FORM_ACTION_LINK###" method="post" class="form-horizontal">
     <div id="sidetree">
         <div class="treeheader">&nbsp;</div>
         <div id="sidetreecontrol">
@@ -9,7 +9,9 @@
         <ul id="msAdmin_category_listing_ul" class="master_categories_ul">
             <!-- ###CATEGORIES### begin -->
             <li class="item_###COUNTER### ###EXTRA_CLASS### categories_sorting" id="categories_id_###CATEGORY_ID###">
-            <input type="checkbox" class="movecats" name="movecats[]" value="###CATEGORY_ID###" id="cb-cat_###CATEGORY_ID###" rel="###CATEGORY_ID###">&nbsp;
+                <div class="checkbox checkbox-success checkbox-inline">
+                    <input type="checkbox" class="movecats" name="movecats[]" value="###CATEGORY_ID###" id="cb-cat_###CATEGORY_ID###" rel="###CATEGORY_ID###"><label for="cb-cat_###CATEGORY_ID###"></label>
+                </div>
                 <strong>
                     <a href="###CATEGORY_EDIT_LINK###">###CATEGORY_NAME### ###CATEGORY_STATUS###</a>
                     ###CATEGORY_ACTION_ICON###
@@ -19,17 +21,23 @@
             <!-- ###CATEGORIES### end -->
         </ul>
     </div>
-    <div id="cat-selectbox">
-        <label for="move_to_cat">###ADMIN_LABEL_MOVE_SELECTED_CATEGORIES_TO###</label>
+    <hr>
+    <div id="cat-selectbox1" class="form-group">
+        <label for="move_to_cat" class="control-label col-md-2">###ADMIN_LABEL_MOVE_SELECTED_CATEGORIES_TO###</label>
+        <div class="col-md-10">
+        <div class="input-group">
         ###TARGET_CATEGORIES_TREE###
-        <input type="submit" name="move_selected_categories" value="###ADMIN_LABEL_BTN_MOVE###" />
+        <span class="input-group-btn">
+        <input class="btn btn-success" type="submit" name="move_selected_categories" value="###ADMIN_LABEL_BTN_MOVE###" />
+        </span>
+        </div>
+        </div>
     </div>
-    <div id="cat-selectbox">
-        <br/>
-        <br/>
-        <pre>- ###ADMIN_LABEL_OR### -</pre>
-        <br/>
-        <input type="submit" name="delete_selected_categories" id="delete_selected_categories" value="###ADMIN_LABEL_BTN_DELETE_SELECTED_CATEGORIES###" />
+    <div id="cat-selectbox2" class="form-group">
+    <div class="col-md-10 col-md-offset-2">
+        <p class="form-control-static">- ###ADMIN_LABEL_OR### -</p>
+        <button class="btn btn-danger" type="submit" name="delete_selected_categories" id="delete_selected_categories" value=""><i class="fa fa-remove"></i> ###ADMIN_LABEL_BTN_DELETE_SELECTED_CATEGORIES###</button>
+    </div>
     </div>
 </form>
 <!-- ###TEMPLATE### end -->

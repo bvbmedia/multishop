@@ -15,79 +15,17 @@ function isMobile() {
     }
 }
 function ifConfirm(textTitle, textBody, yesFn, noFn) {
-    var dialog = $('<div/>', {
-        id: 'dialog',
-        title: textTitle
-    });
-    // if there is no form function defined create a default one
-    if (typeof yesFn == 'function' && typeof noFn != 'function') {
-        noFn=function() {
-            $(this).dialog("close");
-            $(this).hide();
-        }
-    }
-    dialog.append(textBody);
-    dialog.dialog({
-        width: 900,
-        modal: true,
-        body: "",
-        resizable: false,
-        open: function () {
-            // right button (save button) must be the default button when user presses enter key
-            $(this).siblings('.ui-dialog-buttonpane').find('.continueState').focus();
-        },
-        buttons: {
-            "no": {
-                text: "No",
-                class: 'msCancelButton msBackendButton prevState arrowLeft arrowPosLeft',
-                click: noFn
-            },
-            "yes": {
-                text: "Yes",
-                class: 'msOkButton msBackendButton continueState arrowRight arrowPosLeft',
-                click: yesFn
-            }
-        }
+    return $.confirm({
+        title: textTitle,
+        content: textBody,
+        confirm: yesFn,
+        cancel: noFn
     });
 }
 function msDialog(textTitle, textBody, width,opacity) {
-    width = typeof width !== 'undefined' ? width : 450;
-    opacity = typeof opacity !== 'undefined' ? opacity : 30;
-    var dialog = $('<div/>', {
-        id: 'dialog',
-        title: textTitle
-    });
-    dialog.append(textBody);
-    dialog.dialog({
-        width: width,
-        modal: true,
-        body: "",
-        resizable: false,
-        open : function(event, ui){
-            $("body").css({
-                overflow: 'hidden'
-            });
-            $(".ui-widget-overlay").css({
-                opacity: (opacity/100),
-                filter: "Alpha(Opacity="+opacity+")",
-                backgroundColor: ""
-            });
-            // right button (OK button) must be the default button when user presses enter key
-            $(this).siblings('.ui-dialog-buttonpane').find('.continueState').focus();
-        },
-        beforeClose: function(event, ui) {
-            $("body").css({ overflow: 'inherit' });
-        },
-        buttons: {
-            "ok": {
-                text: "OK",
-                class: 'msOkButton msBackendButton continueState arrowRight arrowPosLeft',
-                click: function () {
-                    $(this).dialog("close");
-                    $(this).hide();
-                }
-            }
-        }
+    return $.confirm({
+        title: textTitle,
+        content: textBody
     });
 }
 function msAdminBlockUi(onBlock) {
@@ -107,6 +45,13 @@ function msAdminBlockUi(onBlock) {
     });
 }
 jQuery(document).ready(function ($) {
+    $('.msBtnConfirm').click(function(e) {
+        e.preventDefault();
+        var linkTarget=$(this).attr("href");
+        ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
+            window.location.href=linkTarget;
+        });
+    });
     $('.blockSubmitForm').submit(function(e) {
         msAdminBlockUi();
     });

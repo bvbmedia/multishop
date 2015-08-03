@@ -146,7 +146,7 @@ if (mslib_fe::loggedin()) {
 							$array2[]=$this->ms['MODULES']['STORE_NAME'];
 							$array1[]='###CUSTOMER_ID###';
 							$array2[]=$customer_id;
-							$link=$this->FULL_HTTP_URL.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=confirm_create_account&tx_multishop_pi1[hash]='.$newCustomer['tx_multishop_code']);
+							$link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=confirm_create_account&tx_multishop_pi1[hash]='.$newCustomer['tx_multishop_code']);
 							$array1[]='###LINK###';
 							$array2[]='<a href="'.$link.'" rel="noreferrer">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
 							$array1[]='###CONFIRMATION_LINK###';
@@ -186,7 +186,7 @@ if (mslib_fe::loggedin()) {
 		}
 		if (!$this->post or count($erno)) {
 			if (count($erno)>0) {
-				$content.='<div class="error_msg">';
+				$content.='<div class="alert alert-danger">';
 				$content.='<h3>'.$this->pi_getLL('the_following_errors_occurred').'</h3><ul>';
 				foreach ($erno as $item) {
 					$content.='<li>'.$item.'</li>';

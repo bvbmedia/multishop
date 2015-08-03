@@ -58,14 +58,14 @@ var uncheckAll = function() {
 </script>
 ';
 $tr_type='even';
-$tmp.='<table class="msZebraTable msadmin_border" width="100%">';
+$tmp.='<table class="table table-striped table-bordered msadmin_border" width="100%">';
 if ($this->ms['MODULES']['INVOICE_PRINT'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 	$tmp.='<th align="center"><input type="checkbox" onclick="if (this.checked == true) { checkAll(); } else { uncheckAll(); }"></th>';
 }
 $tmp.='<th>'.$this->pi_getLL('admin_order_id').'</th><th>'.$this->pi_getLL('admin_customer_name').'</th><th>'.$this->pi_getLL('total_price').'</th><th>'.$this->pi_getLL('paid').'</th><th>'.$this->pi_getLL('status').'</th>';
 if ($this->ms['MODULES']['INVOICE_PRINT'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 	$tmp.='<th>&nbsp;</th>';
-	$tmp.='<form action="'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'?action=edit_order&print=invoice&all=1" method="post" target="_blank">';
+	$tmp.='<form action="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax').'?action=edit_order&print=invoice&all=1" method="post" target="_blank">';
 }
 $cb_ctr=0;
 foreach ($orders as $order) {
@@ -79,7 +79,7 @@ foreach ($orders as $order) {
 		$tmp.='<td align="center"><input type="checkbox" name="ordid[]" id="ordid_'.$cb_ctr++.'" value="'.$order['orders_id'].'"></td>';
 	}
 	$tmp.='<td align="left">'.$order['orders_id'].'</td>';
-	$tmp.='<td align="left"><a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order', 1).'">'.$order['billing_name'].'</a></td>';
+	$tmp.='<td align="left"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order', 1).'">'.$order['billing_name'].'</a></td>';
 	$tmp.='<td align="right">'.mslib_fe::amount2Cents($order['total_amount'], 0).'</td>';
 	$tmp.='<td align="center">'.(($order['paid']) ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</td>';
 	// green,red,yellow,grey,orange
@@ -87,19 +87,19 @@ foreach ($orders as $order) {
 	if ($this->ms['MODULES']['INVOICE_PRINT'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
 		$tmp.='<td align="center">';
 		if ($this->ms['MODULES']['INVOICE_PRINT']) {
-			$tmp.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'"><input type="button" class="msadmin_button" value="'.htmlspecialchars($this->pi_getLL('invoice')).'" /></a>';
+			$tmp.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice', 1).'"><input type="button" class="btn btn-success" value="'.htmlspecialchars($this->pi_getLL('invoice')).'" /></a>';
 		}
 		if ($this->ms['MODULES']['INVOICE_PRINT'] && $this->ms['MODULES']['INVOICE_PRINT']) {
 			$tmp.='&nbsp;';
 		}
 		if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
-			$tmp.='<a href="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'"><input type="button" class="msadmin_button" value="'.htmlspecialchars($this->pi_getLL('packing_list')).'" /></a>';
+			$tmp.='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=packing', 1).'"><input type="button" class="btn btn-success" value="'.htmlspecialchars($this->pi_getLL('packing_list')).'" /></a>';
 		}
 		$tmp.='</td>';
 	}
 	$tmp.='</tr>';
 }
-$tmp.='<tr><td colspan="7"><input type="submit" class="msadmin_button" value="'.htmlspecialchars($this->pi_getLL('print_selected_orders')).'"></td></tr>';
+$tmp.='<tr><td colspan="7"><input type="submit" class="btn btn-success" value="'.htmlspecialchars($this->pi_getLL('print_selected_orders')).'"></td></tr>';
 $tmp.='</form>';
 $tmp.='</table>';
 $tabs=array();
@@ -154,6 +154,6 @@ $content.=$save_block.'
     </div>
 </div>
 ';
-$content.='<p class="extra_padding_bottom"><a class="msadmin_button" href="'.mslib_fe::typolink().'">'.mslib_befe::strtoupper($this->pi_getLL('admin_close_and_go_back_to_catalog')).'</a></p>';
+$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
 $content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

@@ -27,7 +27,7 @@ if (count($shopPids) && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES'])
 							$catpath[]=$cat['name'];
 						}
 						if (count($catpath)>0) {
-							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \\\\ ', $catpath), ENT_QUOTES).'"};';
+							$jsSelect2InitialValue[]='categoriesIdTerm['.$shopPid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' > ', $catpath), ENT_QUOTES).'"};';
 						}
 					}
 				}
@@ -49,7 +49,7 @@ if (count($shopPids) && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES'])
 				$catpath[]=$cat['name'];
 			}
 			if (count($catpath)>0) {
-				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' \\\\ ', $catpath), ENT_QUOTES).'"};';
+				$jsSelect2InitialValue[]='categoriesIdTerm['.$this->shop_pid.']['.$category_id.']={id:"'.$category_id.'", text:"'.htmlentities(implode(' > ', $catpath), ENT_QUOTES).'"};';
 			}
 		}
 	}
@@ -86,7 +86,7 @@ jQuery(document).ready(function($) {
 		multiple: false,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
 				data: {
 					q: query.term,
 					skip_ids: \''.implode(',', $skip_ids).'\'
@@ -110,7 +110,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -120,7 +120,7 @@ jQuery(document).ready(function($) {
 						callback(data);
 					});
 				}
-				/*$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+				/*$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 					data: {
 						preselected_id: id,
 						skip_ids: \''.implode(',', $skip_ids).'\'
@@ -158,7 +158,7 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&no_maincat=1').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&no_maincat=1').'\', {
 				data: {
 					q: query.term,
 					skip_ids: \''.implode(',', $skip_ids).'\'
@@ -182,7 +182,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -192,7 +192,7 @@ jQuery(document).ready(function($) {
 						callback(data);
 					});
 				}
-				/*$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+				/*$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
 					data: {
 						preselected_id: id,
 						skip_ids: \''.implode(',', $skip_ids).'\'
@@ -645,7 +645,7 @@ if ($this->post) {
 		//$category['parent_id']=$this->get['cid'];
 		//}
 		if ($_REQUEST['action']=='add_category') {
-			$heading_page='<div class="main-heading"><h1>'.$this->pi_getLL('add_category').'</h1></div>';
+			$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('add_category').'</h3></div>';
 		} else {
 			if ($_REQUEST['action']=='edit_category') {
 				$level=0;
@@ -661,24 +661,30 @@ if ($this->post) {
 				}
 				// get all cats to generate multilevel fake url eof
 				$details_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-				$heading_page='<div class="main-heading"><h1>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].')</h1><span class="viewfront"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_category', 'View in front').'</a></span></div>';
+				$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].') <span class="viewfront pull-right"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_category', 'View in front').'</a></span></h3></div>';
 			}
 		}
 		$category_name_block='';
 		foreach ($this->languages as $key=>$language) {
 			$category_name_block.='
-			<div class="account-field" id="msEditCategoryInputName_'.$language['uid'].'">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$category_name_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$category_name_block.=''.$language['title'].'
-			</div>
-			<div class="account-field" id="msEditCategoryInputCategoryName_'.$language['uid'].'">
-				<label for="categories_name">'.$this->pi_getLL('admin_name').'</label>
-				<input spellcheck="true" type="text" class="text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'">
+			<div class="panel panel-default">
+                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputName_'.$language['uid'].'">
+                    <h3 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#msEditCategoryInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+                    </h3>
+                </div>
+                <div id="msEditCategoryInputName_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div class="panel-body">
+			';
+			$category_name_block.='
+			<div class="form-group" id="msEditCategoryInputCategoryName_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="categories_name">'.$this->pi_getLL('admin_name').'</label>
+				<div class="col-md-10">
+				<input spellcheck="true" type="text" class="form-control text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'">
+				</div>
 			</div>
 			';
+            $category_name_block.='</div></div></div>';
 		}
 		if ($this->get['action']=='add_category') {
 			if (isset($this->get['cid']) && $this->get['cid']>0) {
@@ -688,9 +694,11 @@ if ($this->post) {
 			}
 		}
 		$category_tree='
-		<div class="account-field" id="msEditCategoryInputParent">
-			<label for="parent_id">'.$this->pi_getLL('admin_parent').'</label>
+		<div class="form-group" id="msEditCategoryInputParent">
+			<label for="parent_id" class="control-label col-md-2">'.$this->pi_getLL('admin_parent').'</label>
+			<div class="col-md-10">
 			<input type="hidden" name="parent_id" id="parent_id" class="categoriesIdSelect2BigDropWider" value="'.$category['parent_id'].'" />
+			</div>
 		</div>';
 		//'.mslib_fe::tx_multishop_draw_pull_down_menu('parent_id', mslib_fe::tx_multishop_get_category_tree('', '', $skip_ids), $category['parent_id'],'class="select2BigDropWider"').'
 		$categories_image='<div class="image_action">';
@@ -698,9 +706,9 @@ if ($this->post) {
 			$categories_image.='<img src="'.mslib_befe::getImagePath($category['categories_image'], 'categories', 'normal').'">';
 			$categories_image.='<div class="image_tools">';
 			if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
-				$categories_image.=' <a href="#" id="cropEditor" rel="'.$category['categories_image'].'"><span>crop</span></a>';
+				$categories_image.=' <a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="'.$category['categories_image'].'"><i class="fa fa-crop"></i></a>';
 			}
-			$categories_image.=' <a  class="delete_categories_images" rel="\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="delete image"></a>';
+			$categories_image.=' <a class="btn btn-danger btn-sm delete_categories_images" rel="\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>';
 			$categories_image.='</div>';
 		}
 		$categories_image.='</div>';
@@ -718,50 +726,64 @@ if ($this->post) {
 		$categories_content_block='';
 		foreach ($this->languages as $key=>$language) {
 			$categories_content_block.='
-			<div class="account-field" id="msEditCategoryInputContent_'.$language['uid'].'">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$categories_content_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$categories_content_block.=''.$language['title'].'
-			</div>
-			<div class="account-field" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
-						<label for="content">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('top')).'</label>
+			<div class="panel panel-default toggle_advanced_option">
+                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputContent_'.$language['uid'].'">
+                    <h3 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#msEditCategoryInputContent_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+                    </h3>
+                </div>
+                <div id="msEditCategoryInputContent_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div class="panel-body">
+			<div class="form-group" id="msEditCategoryInputContentHeader_'.$language['uid'].'">
+						<label class="control-label col-md-2" for="content">'.$this->pi_getLL('content').' '.$this->pi_getLL('top').'</label>
+						<div class="col-md-10">
 						<textarea spellcheck="true" name="content['.$language['uid'].']" id="content['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content']).'</textarea>
+						</div>
 					</div>
-					<div class="account-field" id="msEditCategoryInputContentFooter_'.$language['uid'].'">
-						<label for="content_footer">'.mslib_befe::strtoupper($this->pi_getLL('content')).' '.mslib_befe::strtoupper($this->pi_getLL('bottom')).'</label>
+					<div class="form-group" id="msEditCategoryInputContentFooter_'.$language['uid'].'">
+						<label class="control-label col-md-2" for="content_footer">'.$this->pi_getLL('content').' '.$this->pi_getLL('bottom').'</label>
+						<div class="col-md-10">
 						<textarea spellcheck="true" name="content_footer['.$language['uid'].']" id="content_footer['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngcat[$language['uid']]['content_footer']).'</textarea>
+						</div>
 			</div>';
+            $categories_content_block.='</div></div></div>';
 		}
 		$categories_meta_block='';
 		foreach ($this->languages as $key=>$language) {
 			$categories_meta_block.='
-			<div class="account-field" id="msEditCategoryInputMeta_'.$language['uid'].'">
-			<label>'.mslib_befe::strtoupper($this->pi_getLL('language')).'</label>';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$categories_meta_block.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$categories_meta_block.=''.$language['title'].'
+			<div class="panel panel-default toggle_advanced_option">
+                <div class="panel-heading panel-heading-toggle'.($language['uid']>0 ? ' collapsed' : '').'" data-toggle="collapse" data-target="#msEditCategoryInputMeta_'.$language['uid'].'">
+                    <h3 class="panel-title">
+                        <a role="button" data-toggle="collapse" href="#msEditCategoryInputMeta_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+                    </h3>
+                </div>
+                <div id="msEditCategoryInputMeta_'.$language['uid'].'" class="panel-collapse collapse'.($language['uid']===0 ? ' in' : '').'">
+                <div class="panel-body">
+			<div class="form-group" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="meta_title['.$language['uid'].']" id="meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_title']).'">
+				</div>
 			</div>
-			<div class="account-field" id="msEditCategoryInputMetaTitle_'.$language['uid'].'">
-				<label for="meta_title">'.$this->pi_getLL('admin_label_input_meta_title').'</label>
-				<input type="text" class="text" name="meta_title['.$language['uid'].']" id="meta_title['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_title']).'">
+			<div class="form-group" id="msEditCategoryInputMetaKeywords_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="meta_keywords['.$language['uid'].']" id="meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_keywords']).'">
+				</div>
 			</div>
-			<div class="account-field" id="msEditCategoryInputMetaKeywords_'.$language['uid'].'">
-				<label for="meta_keywords">'.$this->pi_getLL('admin_label_input_meta_keywords').'</label>
-				<input type="text" class="text" name="meta_keywords['.$language['uid'].']" id="meta_keywords['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_keywords']).'">
-			</div>
-			<div class="account-field" id="msEditCategoryInputMetaDesc_'.$language['uid'].'">
-				<label for="meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
-				<input type="text" class="text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
+			<div class="form-group" id="msEditCategoryInputMetaDesc_'.$language['uid'].'">
+				<label class="control-label col-md-2" for="meta_description">'.$this->pi_getLL('admin_label_input_meta_description').'</label>
+				<div class="col-md-10">
+				<input type="text" class="form-control text" name="meta_description['.$language['uid'].']" id="meta_description['.$language['uid'].']" value="'.htmlspecialchars($lngcat[$language['uid']]['meta_description']).'">
+				</div>
 			</div>';
+            $categories_meta_block.='</div></div></div>';
 		}
 		// INPUT_CATEGORY_TREE
 		$tmpcontent='';
 		if ($this->conf['enableMultipleShops'] && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 			$shopPids=explode(',', $this->conf['connectedShopPids']);
-			$tmpcontent.='<div class="account-field" class="msEditCategoriesInputMultipleShopCategory">
+			$tmpcontent.='<div class="form-group" class="msEditCategoriesInputMultipleShopCategory">
 				<label>'.$this->pi_getLL('link_to_categories_in_other_shops').'</label>
 				<div class="msAttributesWrapper">';
 			foreach ($shopPids as $shopPid) {
@@ -780,7 +802,7 @@ if ($this->post) {
 						}
 						$tmpcontent.='<div class="msAttributes">
 						<input type="checkbox" class="enableMultipleShopsCheckbox" id="enableMultipleShops_'.$pageinfo['uid'].'" name="tx_multishop_pi1[enableMultipleShops][]" value="'.$pageinfo['uid'].'" rel="'.$pageinfo['uid'].'"'.$shop_checkbox.' />
-						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.mslib_befe::strtoupper($pageinfo['title']).'</label>
+						<label for="enableMultipleShops_'.$pageinfo['uid'].'">'.$pageinfo['title'].'</label>
 						<div class="msEditCategoriesInputMultipleShopCategory" id="msEditCategoriesInputMultipleShopCategory'.$pageinfo['uid'].'"'.$select2_block_visibility.'>
 							<input type="hidden" name="tx_multishop_pi1[categories_to_categories]['.$pageinfo['uid'].']" id="enableMultipleShopsTree_'.$pageinfo['uid'].'" class="categoriesIdSelect2BigDropWider" value="'.$categories_to_categories.'" />
 						</div>
@@ -796,7 +818,7 @@ if ($this->post) {
 								multiple: true,
 								//allowClear: true,
 								query: function(query) {
-									$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'&no_maincat=1\', {
+									$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'&no_maincat=1\', {
 										data: {
 											q: query.term
 										},
@@ -819,7 +841,7 @@ if ($this->post) {
 										if (callback_data.length) {
 											callback(callback_data);
 										} else {
-											$.ajax(\''.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+											$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
 												data: {
 													preselected_id: id
 												},
@@ -878,9 +900,11 @@ if ($this->post) {
 		if ($this->get['action']=='edit_category' && $this->ms['MODULES']['ENABLE_CATEGORIES_TO_CATEGORIES']) {
 			$link_categories_id=mslib_fe::getCategoriesToCategories($this->get['cid'], $this->shop_pid);
 			$link_to_categories_elem='
-			<div class="account-field" id="msEditLinkInputCategory">
-            	<label for="link_categories_id">'.$this->pi_getLL('admin_link_category').'</label>
+			<div class="form-group" id="msEditLinkInputCategory">
+            	<label for="link_categories_id" class="control-label col-md-2">'.$this->pi_getLL('admin_link_category').'</label>
+            	<div class="col-md-10">
 				<input type="hidden" name="link_categories_id" id="link_categories_id" class="categoriesIdSelect2BigDropWider" value="'.$link_categories_id.'" />
+				</div>
             </div>';
 		}
 		$subpartArray=array();
@@ -897,7 +921,8 @@ if ($this->post) {
 		}
 		$subpartArray['###CATEGORIES_ID0###']=$category['categories_id'];
 		$subpartArray['###CATEGORIES_ID1###']=$category['categories_id'];
-		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid']);
+
+		$subpartArray['###FORM_POST_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&cid='.$_REQUEST['cid']);
 		$subpartArray['###LABEL_BUTTON_CANCEL###']=$this->pi_getLL('cancel');
 		$subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 		$subpartArray['###LINK_BUTTON_CANCEL_FOOTER###']=$subpartArray['###VALUE_REFERRER###'];
@@ -913,10 +938,10 @@ if ($this->post) {
 		$subpartArray['###CATEGORY_STATUS_NO###']=((!$category['status'] and $_REQUEST['action']=='edit_category') ? 'checked' : '');
 		$subpartArray['###LABEL_STATUS_NO###']=$this->pi_getLL('admin_no');
 		$subpartArray['###LABEL_IMAGE###']=$this->pi_getLL('admin_image');
-		$subpartArray['###UPLOAD_IMAGE_URL###']=mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images');
+		$subpartArray['###UPLOAD_IMAGE_URL###']=mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_product_images');
 		$subpartArray['###DELETE_IMAGES_CATEGORIES_ID###']=$category['categories_id'];
 		$subpartArray['###LABEL_ARE_YOU_SURE###']=addslashes($this->pi_getLL('admin_label_js_are_you_sure'));
-		$subpartArray['###AJAX_URL_DELETE_CATEGORIES_IMAGE###']=mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=delete_categories_images');
+		$subpartArray['###AJAX_URL_DELETE_CATEGORIES_IMAGE###']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=delete_categories_images');
 		$subpartArray['###CATEGORIES_IMAGE_CROP_JS###']='';
 		if ($this->ms['MODULES']['ADMIN_CROP_CATEGORIES_IMAGES']) {
 			$subpartArray['###CATEGORIES_IMAGE_CROP_JS###']='
@@ -927,8 +952,8 @@ if ($this->post) {
 			$(".image_action").empty();
 			var new_image=\'<img src="\' + filenameLocationServer + \'" />\';
 			new_image+=\'<div class="image_tools">\';
-			new_image+=\'<a href="#" id="cropEditor" rel="\' + filenameServer + \'"><span>crop</span></a>\';
-			new_image+=\'<a href="#" class="delete_categories_images" rel="\' + filenameServer + \'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>\';
+			new_image+=\'<a href="#" class="btn btn-primary btn-sm" id="cropEditor" rel="\' + filenameServer + \'"><i class="fa fa-crop"></i></a> \';
+			new_image+=\'<a href="#" class="btn btn-danger btn-sm delete_categories_images" rel="\' + filenameServer + \'"><i class="fa fa-trash-o"></i></a>\';
 			new_image+=\'</div>\';
 			$(".image_action").html(new_image);';
 		}
@@ -1044,34 +1069,16 @@ function updateCoords(c) {
 	$(\'#jCropH\').val(c.h);
 }
 function cropEditorDialog(textTitle, textBody) {
-    maxwidth = typeof maxwidth !== \'undefined\' ? maxwidth : 1100;
-    var dialog = $(\'<div/>\', {
-        id: \'dialog\',
-        title: textTitle
-    });
-    dialog.append(textBody);
-    dialog.dialog({
-        width: 670,
-        modal: true,
-        body: "",
-        resizable: false,
-        open: function () {
-            // right button (OK button) must be the default button when user presses enter key
-            $(this).siblings(\'.ui-dialog-buttonpane\').find(\'.continueState\').focus();
+    $.confirm({
+        title: textTitle,
+        content: textBody,
+        columnClass: "col-md-12",
+        closeIcon: true,
+        confirmButton:"'.$this->pi_getLL('close').'",
+        confirm: function(){
         },
-        close: function() {
-        	$(this).dialog("close");
-			$(this).remove();
-        },
-        buttons: {
-            "ok": {
-                text: "Close",
-                class: \'msOkButton msBackendButton backState arrowRight arrowPosLeft\',
-                click: function () {
-                    $(this).dialog("close");
-                    $(this).remove();
-                }
-            }
+        cancelButton: "'.$this->pi_getLL('cancel').'",
+        cancel: function(){
         }
     });
 }';
@@ -1079,7 +1086,7 @@ function cropEditorDialog(textTitle, textBody) {
 $(document).on(\'click\', "#cropEditor", function(e) {
 	e.preventDefault();
 	var image_name=$(this).attr("rel");
-	href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop&tx_multishop_pi1[crop_section]=categories').'";
+	href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop&tx_multishop_pi1[crop_section]=categories').'";
 	jQuery.ajax({
 		type:"POST",
 		url:href,
@@ -1127,7 +1134,7 @@ $(document).on(\'click\', "#cropEditor", function(e) {
 });
 $(document).on(\'click\', "#crop_save", function(e) {
 	e.preventDefault();
-	href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=crop_product_image&tx_multishop_pi1[crop_section]=categories').'";
+	href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=crop_product_image&tx_multishop_pi1[crop_section]=categories').'";
 	var cropall=0;
 	if ($("#onecrop_for_all").prop("checked")) {
 		cropall=1;
@@ -1167,7 +1174,7 @@ $(document).on(\'click\', "#crop_save", function(e) {
 });
 $(document).on(\'click\',"#crop_restore",function(e) {
 	e.preventDefault();
-	href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=restore_crop_image&tx_multishop_pi1[crop_section]=categories').'";
+	href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=restore_crop_image&tx_multishop_pi1[crop_section]=categories').'";
 	var cropall=0;
 	if ($("#onecrop_for_all").prop("checked")) {
 		cropall=1;

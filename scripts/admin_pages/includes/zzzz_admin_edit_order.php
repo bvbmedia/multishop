@@ -414,7 +414,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 		}
 		if ($redirect_after_delete) {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
+			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
 			exit();
 		} else {
 			if ($close_window) {
@@ -437,8 +437,8 @@ if (is_numeric($this->get['orders_id'])) {
 	if ($orders['orders_id']) {
 		$save_block='
 			<div class="save_block">
-				<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="msBackendButton backState arrowLeft arrowPosLeft"><span>'.$this->pi_getLL('cancel').'</span></a>
-				<span class="msBackendButton continueState arrowRight arrowPosLeft"><input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" /></span>
+				<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger">'.$this->pi_getLL('cancel').'</a>
+				<input name="Submit" type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success" />
 			</div>';
 		// count total products
 		$total_amount=0;
@@ -579,7 +579,7 @@ if (is_numeric($this->get['orders_id'])) {
 			<label>'.ucfirst($this->pi_getLL('coc_id', 'COC Nr.:')).'</label>
 			<input name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
 			</div>
-			<a href="#" id="close_edit_billing_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
+			<a href="#" id="close_edit_billing_info" class="float_right btn btn-success">'.$this->pi_getLL('save').'</a>
 			</div>';
 		}
 		if ($hide_billing_vcard) {
@@ -590,7 +590,7 @@ if (is_numeric($this->get['orders_id'])) {
 		if ($orders['billing_company']) {
 			$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 		}
-		$customer_edit_link=mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
+		$customer_edit_link=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&tx_multishop_pi1[cid]='.$orders['customer_id'].'&action=edit_customer', 1);
 		$tmpcontent.='<a href="'.$customer_edit_link.'">'.$orders['billing_name'].'</a><br />
 		'.$orders['billing_address'].'<br />
 		'.$orders['billing_zip'].' '.$orders['billing_city'].' <br />
@@ -614,7 +614,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='<strong>'.$this->pi_getLL('coc_id').': '.$orders['billing_coc_id'].'</strong><br />';
 		}
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-			$tmpcontent.='<span><a href="#" id="edit_billing_info" class="msadmin_button">'.$this->pi_getLL('edit').'</a></span>';
+			$tmpcontent.='<span><a href="#" id="edit_billing_info" class="btn btn-success">'.$this->pi_getLL('edit').'</a></span>';
 		}
 		$tmpcontent.='</div>';
 		$tmpcontent.='
@@ -687,7 +687,7 @@ if (is_numeric($this->get['orders_id'])) {
 			<label>'.ucfirst($this->pi_getLL('fax')).':</label>
 			<input name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
 			</div>
-			<a href="#" id="close_edit_delivery_info" class="float_right msadmin_button">'.$this->pi_getLL('save').'</a>
+			<a href="#" id="close_edit_delivery_info" class="float_right btn btn-success">'.$this->pi_getLL('save').'</a>
 			</div>';
 		}
 		if ($hide_delivery_vcard) {
@@ -715,7 +715,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.=$this->pi_getLL('fax').': '.$orders['delivery_fax'].'<br />';
 		}
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-			$tmpcontent.='<span><a href="#" id="edit_delivery_info" class="msadmin_button">'.$this->pi_getLL('edit').'</a></span>';
+			$tmpcontent.='<span><a href="#" id="edit_delivery_info" class="btn btn-success">'.$this->pi_getLL('edit').'</a></span>';
 		}
 		$tmpcontent.='</div>';
 		$tmpcontent.='
@@ -728,7 +728,7 @@ if (is_numeric($this->get['orders_id'])) {
 		$headerData='
 	<script type="text/javascript">
 	function updateCustomerOrderDetails(type, data_serial) {
-		href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=update_customer_order_details', 1).'&details_type=" + type + "&orders_id='.$this->get['orders_id'].'";
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=update_customer_order_details', 1).'&details_type=" + type + "&orders_id='.$this->get['orders_id'].'";
 		jQuery.ajax({
 				type:   "POST",
 				url:    href,
@@ -855,7 +855,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			});
 			$("#billing_details_container").empty();
-			$("#billing_details_container").html(billing_details + "<span><a href=\"#\" id=\"edit_billing_info\" class=\"msadmin_button\">'.$this->pi_getLL('edit').'</a></span>");
+			$("#billing_details_container").html(billing_details + "<span><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-success\">'.$this->pi_getLL('edit').'</a></span>");
 			updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
 			$("#billing_details_container").show();
 			$("#edit_billing_details_container").hide();
@@ -913,7 +913,7 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 			});
 			$("#delivery_details_container").empty();
-			$("#delivery_details_container").html(delivery_details + "<span><a href=\"#\" id=\"edit_delivery_info\" class=\"msadmin_button\">'.$this->pi_getLL('edit').'</a></span>");
+			$("#delivery_details_container").html(delivery_details + "<span><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-success\">'.$this->pi_getLL('edit').'</a></span>");
 			updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
 			$("#delivery_details_container").show();
 			$("#edit_delivery_details_container").hide();
@@ -1056,7 +1056,7 @@ if (is_numeric($this->get['orders_id'])) {
 <fieldset>
 <legend>'.$this->pi_getLL('product_details').'</legend>';
 		$tr_type='even';
-		$tmpcontent.='<table class="msZebraTable msadmin_border orders_products_listing" width="100%">';
+		$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing" width="100%">';
 		$order_product_level_th='';
 		if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus();
@@ -1306,12 +1306,12 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 					if (!$this->get['edit_product'] || ($this->get['edit_product'] && $this->get['order_pid']!=$order['orders_products_id'])) {
 						$tmpcontent.='<td align="right" class="cell_products_action">';
-						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="msadmin_button order_product_action">';
-						$tmpcontent.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="msadmin_button order_product_action"></a>';
+						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('edit').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="btn btn-success order_product_action">';
+						$tmpcontent.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><input type="button" value="'.$this->pi_getLL('delete').'" onclick="return CONFIRM();" class="btn btn-success order_product_action"></a>';
 						$tmpcontent.='</td>';
 					} else {
 						$tmpcontent.='<td align="right" class="cell_products_action">';
-						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button order_product_action">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="msadmin_button submit_button order_product_action">';
+						$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-success order_product_action">&nbsp;<input type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-success submit_button order_product_action">';
 						$tmpcontent.='</td>';
 					}
 				}
@@ -1425,7 +1425,7 @@ if (is_numeric($this->get['orders_id'])) {
 									$tmpcontent.='<td align="right">'.mslib_fe::amount2Cents($optprice, 0).'</td>';
 								}
 								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-									$tmpcontent.='<td align="left"><input type="button" class="msadmin_button remove_attributes" value="-"></td>';
+									$tmpcontent.='<td align="left"><input type="button" class="btn btn-success remove_attributes" value="-"></td>';
 								}
 								$tmpcontent.='</tr>';
 								$attr_counter++;
@@ -1557,7 +1557,7 @@ if (is_numeric($this->get['orders_id'])) {
 					$tmpcontent.='<tr id="last_edit_product_row">
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
-					<td><input type="button" id="edit_add_attributes" class="msadmin_button" value="add attribute"></td>
+					<td><input type="button" id="edit_add_attributes" class="btn btn-success" value="add attribute"></td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>';
@@ -1624,8 +1624,8 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$tmpcontent.='<td align="right" id="manual_final_price">&nbsp;</td>';
 			$tmpcontent.='<td align="right" class="cell_products_action">';
-			$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="msadmin_button">&nbsp;';
-			$tmpcontent.='<input type="submit" value="'.$this->pi_getLL('add').'" class="msadmin_button submit_button">';
+			$tmpcontent.='<input type="button" value="'.$this->pi_getLL('cancel').'" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-success">&nbsp;';
+			$tmpcontent.='<input type="submit" value="'.$this->pi_getLL('add').'" class="btn btn-success submit_button">';
 			$tmpcontent.='</td>';
 			$tmpcontent.='';
 			$tmpcontent.='</tr>';
@@ -1648,14 +1648,14 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='<tr class="manual_add_new_product" id="last_edit_product_row" style="display:none">';
 			$tmpcontent.='<td>&nbsp;</td>';
 			$tmpcontent.='<td>&nbsp;</td>';
-			$tmpcontent.='<td style="border:0px solid #fff"><input type="button" class="msadmin_button" value="add attribute" id="add_attributes" /></td>';
+			$tmpcontent.='<td style="border:0px solid #fff"><input type="button" class="btn btn-success" value="add attribute" id="add_attributes" /></td>';
 			$tmpcontent.='<td>&nbsp;</td>';
 			$tmpcontent.='<td>&nbsp;</td>';
 			$tmpcontent.='<td>&nbsp;</td>';
 			$tmpcontent.='<td>&nbsp;</td>';
 			$tmpcontent.='</tr>';
 			if (!isset($this->get['edit_product'])) {
-				$tmpcontent.='<tr><td colspan="'.$colspan.'" style="text-align:left;"><a href="#" id="button_manual_new_product" class="msadmin_button">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a></td></tr>';
+				$tmpcontent.='<tr><td colspan="'.$colspan.'" style="text-align:left;"><a href="#" id="button_manual_new_product" class="btn btn-success">'.$this->pi_getLL('add_manual_product', 'ADD ITEM').'</a></td></tr>';
 			}
 		} else {
 			$colspan=7;
@@ -2028,9 +2028,9 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			// eof autocomplete for option
 			'.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
-			select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
-			select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-			select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+			select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+			select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+			select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
 			' : '').'
 			var add_new_attributes = function(optid_value, optvalid_value) {
 				var d = new Date();
@@ -2080,13 +2080,13 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			$tmpcontent.='selectbox += \'<td>&nbsp;</td>\';
 				selectbox+=\'<td>\';
-				selectbox+=\'<input type="button" class="msadmin_button remove_attributes" value="-">\';
+				selectbox+=\'<input type="button" class="btn btn-success remove_attributes" value="-">\';
 				selectbox+=\'</td>\';
 				selectbox+=\'</tr>\';
 				$(\'#last_edit_product_row\').before(selectbox);
 
-				select2_sb(".edit_product_manual_option" + n, "option", "edit_product_manual_option", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-				select2_values_sb(".edit_product_manual_values" + n, "value", "edit_product_manual_values", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+				select2_sb(".edit_product_manual_option" + n, "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+				select2_values_sb(".edit_product_manual_values" + n, "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
 			}
 			// manual function for removing the manual attributes
 			jQuery(document).ready(function($) {';
@@ -2222,7 +2222,7 @@ if (is_numeric($this->get['orders_id'])) {
 		<div class="tabs-fieldset" id="order_status_history">
 		<fieldset>
 		<legend>'.$this->pi_getLL('order_status_history').'</legend>
-		<table class="msZebraTable msadmin_border" width="100%">
+		<table class="table table-striped table-bordered msadmin_border" width="100%">
 		<tr>
 			<th>'.$this->pi_getLL('status').'</th>
 			<th>'.$this->pi_getLL('old_status').'</th>
@@ -2294,7 +2294,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$(".manual_add_new_product").hide();
 			}
 			$(".order_product_action").hide();
-			select2_pn(".product_name", "product", "product_name", "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
+			select2_pn(".product_name", "product", "product_name", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
 		});';
 	}
 	$content.='
@@ -2328,7 +2328,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if (confirm("Do you want to change orders product id: " + order_pid + " to status: " + orders_status_label)) {
 				$.ajax({
 					type: "POST",
-					url: "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_update_order_product_status').'",
+					url: "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_update_order_product_status').'",
 					dataType: \'json\',
 					data: "tx_multishop_pi1[orders_id]='.$order['orders_id'].'&tx_multishop_pi1[order_product_id]=" + order_pid + "&tx_multishop_pi1[orders_status_id]=" + orders_status_id,
 					success: function(msg) {}
@@ -2341,7 +2341,7 @@ if (is_numeric($this->get['orders_id'])) {
 			items: "tbody.sortbody",
 			//axis:       "y",
 			update: function(e, ui) {
-				href = "'.mslib_fe::typolink(',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=sort_orders_products').'";
+				href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=sort_orders_products').'";
 				jQuery(this).sortable("refresh");
 				sorted = jQuery(this).sortable("serialize", "id");
 				jQuery.ajax({
@@ -2355,7 +2355,7 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 		});
 		' : '').'
-		var url_relatives = "'.mslib_fe::typolink(',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
+		var url_relatives = "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_product_relatives').'";
 		$(".tab_content").hide();
 		$("ul.tabs li:first").addClass("active").show();
 		$(".tab_content:first").show();
@@ -2401,7 +2401,7 @@ if (is_numeric($this->get['orders_id'])) {
 	}
 	$content.='</ul>
 		<div class="tab_container">
-		<form class="admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink(',2003', '&tx_multishop_pi1[page_section]=admin_ajax&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
+		<form class="admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
 		<input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" >';
 	$count=0;
 	foreach ($tabs as $key=>$value) {
