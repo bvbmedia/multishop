@@ -119,6 +119,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='cms' && $_FILES) {
 		}
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_cms'));
+	exit();
 }
 if (is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
 	$updateArray=array();
@@ -131,6 +132,7 @@ if (is_numeric($this->get['status']) and is_numeric($this->get['cms_id'])) {
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_cms_description', 'id=\''.$this->get['cms_id'].'\'');
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_cms'));
+	exit();
 }
 if ($this->get['Search'] and ($this->get['cmsLimit']!=$this->cookie['cmsLimit'])) {
 	$this->cookie['cmsLimit']=$this->get['cmsLimit'];

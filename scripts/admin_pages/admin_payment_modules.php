@@ -27,11 +27,13 @@ if ($this->post) {
 				}
 			}
 			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
+			exit();
 		} else {
 			// delete mapping
 			$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_payment_methods_to_zones', 'zone_id>0');
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#payment_to_zone_mapping');
+			exit();
 		}
 	}
 	if (is_array($this->post['checkbox']) && count($this->post['checkbox'])) {
@@ -54,6 +56,7 @@ if ($this->post) {
 			}
 		}
 		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'#admin_shipping_payment_mappings');
+		exit();
 	}
 	if ($this->post['sub']=='add_payment_method' && $this->post['payment_method_code']) {
 		$erno=array();
@@ -103,6 +106,7 @@ if ($this->post) {
 				}
 				$this->ms['show_main']=1;
 				header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+				exit();
 			}
 		}
 	} else if ($this->post['sub']=='update_payment_method' && $this->post['payment_method_id']) {
@@ -140,6 +144,7 @@ if ($this->post) {
 			}
 			$this->ms['show_main']=1;
 			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+			exit();
 		}
 	}
 }
@@ -689,6 +694,7 @@ if ($this->ms['show_main']) {
 			}
 		}
 		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']));
+		exit();
 	}
 	// payment method admin system
 	$colspan=4;

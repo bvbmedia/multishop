@@ -119,6 +119,7 @@ if ($this->post) {
         }
         // redirect to current page after done saving an option settings
         header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_product_attributes'));
+		exit();
     }
 }
 // select2 cache

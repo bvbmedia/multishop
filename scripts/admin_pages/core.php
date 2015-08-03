@@ -311,6 +311,7 @@ switch ($this->ms['page']) {
 					}
 				}
 				header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_categories&cid='.$this->get['categories_id']));
+				exit();
 			}
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_categories.php');
 		}

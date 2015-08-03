@@ -74,6 +74,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 		}
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_customer_import').'#tasks');
+	exit();
 }
 //$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
 $default_country=$this->tta_shop_info['country'];
