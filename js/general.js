@@ -29,6 +29,7 @@ function msDialog(textTitle, textBody, width,opacity) {
     });
 }
 function msAdminBlockUi(onBlock) {
+    /*
     $.blockUI({
         css: {
             width: '350',
@@ -43,6 +44,7 @@ function msAdminBlockUi(onBlock) {
         message: '<ul class="multishop_block_message"><li>One moment please...</li></ul>',
         onBlock: onBlock
     });
+    */
 }
 jQuery(document).ready(function ($) {
     $('.msBtnConfirm').click(function(e) {

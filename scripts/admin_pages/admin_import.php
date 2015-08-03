@@ -2,6 +2,9 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
+if ($this->get['action']=='edit_job') {
+	sleep(20);
+}
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 	jQuery(document).ready(function($) {

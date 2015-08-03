@@ -281,6 +281,12 @@ multishop_ajax_server {
 			}
 			# not needed for Bootstrap
 			core >
+			jqueryPace = EXT:multishop/res/pace/pace-theme-center-simple.tmpl.css
+			jqueryPace {
+				media =
+				import = 0
+				compress = 0
+			}
 		}
 	}
 [end]
@@ -354,9 +360,11 @@ multishop_ajax_server {
 			#jqueryvalidatefunctions.compress=1
 			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
 			#prettycheckboxes.compress = 1
+			jqueryPace = EXT:multishop/res/pace/pace.js
+			jqueryPace.compress = 0
+			jqueryPace.forceOnTop= 1
 		}
 		headerData {
-
 		}
 	}
 [end]
@@ -364,19 +372,19 @@ multishop_ajax_server {
 [globalVar = LIT:1 = {$plugin.multishop.includeJS}] && [usergroup = {$plugin.multishop.fe_admin_usergroup}, {$plugin.multishop.fe_rootadmin_usergroup}]
 	page {
 		includeJS {
-			jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
-			jqueryblockUI.compress = 1
-			jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
-			jqueryhotkeys.compress = 1
+			#jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
+			#jqueryblockUI.compress = 1
+			#jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
+			#jqueryhotkeys.compress = 1
 		}
 	}
 
 	multishop_admin_page {
 		includeJS {
-			jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
-			jqueryblockUI.compress = 1
-			jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
-			jqueryhotkeys.compress = 1
+			#jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
+			#jqueryblockUI.compress = 1
+			#jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
+			#jqueryhotkeys.compress = 1
 		}
 	}
 [end]
@@ -446,14 +454,14 @@ multishop_ajax_server {
 		}
 		# TreeView EOL
 		# Blockui
-		includeJS.msAdminBlockUi=EXT:multishop/js/jquery.blockUI.js
-		includeJS.msAdminBlockUi.compress = 1
-		includeCSS.msAdminBlockUi=EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
-		includeCSS.msAdminBlockUi  {
-			media =
-			import = 0
-			compress = 1
-		}
+		#includeJS.msAdminBlockUi=EXT:multishop/js/jquery.blockUI.js
+		#includeJS.msAdminBlockUi.compress = 1
+		#includeCSS.msAdminBlockUi=EXT:multishop/js/jqui/css/smoothness/jquery-ui-1.8.custom.css
+		#includeCSS.msAdminBlockUi  {
+		#	media =
+		#	import = 0
+		#	compress = 1
+		#}
 		# Blockui EOL
 		# H5validate
 		includeJS.msH5validate=EXT:multishop/js/jquery.h5validate.js
