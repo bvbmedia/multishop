@@ -1607,7 +1607,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$order_products_body_data['products_qty']['value']='';
 							// products name col
 							$order_products_body_data['products_name']['value']='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>
-                            <textarea rows="8" cols="75" id="order_products_description" name="order_products_description">'.$order['products_description'].'</textarea>';
+                            <textarea rows="8" id="order_products_description" class="form-control" name="order_products_description">'.$order['products_description'].'</textarea>';
 							if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 								// products status col
 								$order_products_body_data['products_status']['value']='';
