@@ -31,9 +31,6 @@ if (!$product['products_id']) {
 	if ($product['minimum_quantity']>0) {
 		$qty=round($product['minimum_quantity'], 2);
 	}
-	if ($product['products_multiplication']>0) {
-		$qty=round($product['products_multiplication'], 2);
-	}
 	if (!$this->conf['disableMetatags']) {
 		// meta tags
 		if ($product['products_meta_title']) {
@@ -186,7 +183,7 @@ if (!$product['products_id']) {
 		$output['products_staffel_price_table']=$staffel_table_content;
 	}
 	// show selectbox by products multiplication or show default input
-	if ($this->get['tx_multishop_pi1']['cart_item']) {
+    if ($this->get['tx_multishop_pi1']['cart_item']) {
 		$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
 		$qty=$cart['products'][$this->get['tx_multishop_pi1']['cart_item']]['qty'];
 	}
@@ -347,7 +344,7 @@ if (!$product['products_id']) {
 		var minQty=parseFloat(\''.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'\');
 		var maxQty=parseFloat(\''.($product['maximum_quantity']!='0.00' ? $product['maximum_quantity'] : '0').'\');
 		if ($("#quantity").val() == "") {
-			$("#quantity").val(stepSize);
+			$("#quantity").val(\''.($product['minimum_quantity']!='0.00' ? $product['minimum_quantity'] : '1').'\');
 		}
 		$(".qty_minus").click(function() {
 			var qty = parseFloat($("#quantity").val());
