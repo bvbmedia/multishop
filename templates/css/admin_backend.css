@@ -364,7 +364,7 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 #msadmin_wrapper .popover .popover-content table td { font-size:13px; padding:5px; }
 
 .msAttributesField:first-child { margin-bottom:10px; }
-.input-group-addon:last-child { width:88px; text-align:left; }
+.input-group-addon:last-child { width:105px; text-align:left; }
 .input-group-addon.width-auto:last-child { width:auto; }
 
 #msEditProductInputUnit .input-group { width:100%; }
