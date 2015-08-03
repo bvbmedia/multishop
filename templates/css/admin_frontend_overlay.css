@@ -186,3 +186,6 @@ ul#ms_admin_maximize li a:focus { background:#000; text-decoration:none; }
 .admin_menu > a:hover,
 .admin_menu > a:focus { color:#000; transition:color .5s; }
 .admin_menu > a:first-child { padding-right:5px; }
+
+/* bootstrap overrule */
+.dropdown-backdrop { display:none; }

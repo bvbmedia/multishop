@@ -90,7 +90,7 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 #ms_admin_top_search .select2-container.adminpanel-search-bigdrop { width:150px !important; }
 #ms_admin_top_search .select2-container.adminpanel-search-bigdrop.select2-dropdown-open { width:500px !important; }
 #ms_admin_top_search .select2-container.adminpanel-search-bigdrop.select2-dropdown-open .select2-choice { background:#666; border-radius:0;}
-#ms_admin_top_search .select2-container.adminpanel-search-bigdrop .select2-choice .select2-chosen { background:none; line-height:38px; color:#cdcdcd; }
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop .select2-choice .select2-chosen { background:none; line-height:38px; color:#cdcdcd; padding-top:0; }
 #ms_admin_top_search #btn_search_admin_panel { display:none; border:none; background:#888; line-height:38px; padding-top:0; padding-bottom:0; border-radius:0; }
 #ms_admin_top_search .select2-container .select2-choice .select2-arrow { border:none; background:#666; }
 #ms_admin_top_search .select2-container .select2-choice .select2-arrow b { background-position:left 7px; }
@@ -500,6 +500,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .checkbox label::after { line-height:16px; }
 
 .shipping_cost_input_field_wrapper > div > .form-group { margin-bottom:20px; }
+
+.blockUI.blockOverlay { z-index:10100 !important; }
 
 @media (min-width:992px) {
 	#Order_Details > .row,
