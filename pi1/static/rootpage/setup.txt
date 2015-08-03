@@ -373,8 +373,8 @@ multishop_ajax_server {
 [globalVar = LIT:1 = {$plugin.multishop.includeJS}] && [usergroup = {$plugin.multishop.fe_admin_usergroup}, {$plugin.multishop.fe_rootadmin_usergroup}]
 	page {
 		includeJS {
-			#jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
-			#jqueryblockUI.compress = 1
+			jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
+			jqueryblockUI.compress = 1
 			#jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
 			#jqueryhotkeys.compress = 1
 		}
@@ -382,8 +382,8 @@ multishop_ajax_server {
 
 	multishop_admin_page {
 		includeJS {
-			#jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
-			#jqueryblockUI.compress = 1
+			jqueryblockUI = EXT:multishop/js/jquery.blockUI.js
+			jqueryblockUI.compress = 1
 			#jqueryhotkeys = EXT:multishop/js/jquery.hotkeys.js
 			#jqueryhotkeys.compress = 1
 		}

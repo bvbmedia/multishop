@@ -15,6 +15,7 @@ if (isset($this->post['new_options_groups_name']) && !empty($this->post['new_opt
 		$GLOBALS['TYPO3_DB']->sql_query($sql_ins);
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
+	exit();
 }
 if (is_array($this->post['option_groups_names']) and count($this->post['option_groups_names'])) {
 	foreach ($this->post['option_groups_names'] as $attributes_options_groups_id=>$array) {
@@ -35,6 +36,7 @@ if (is_array($this->post['option_groups_names']) and count($this->post['option_g
 		}
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_attributes_options_groups'));
+	exit();
 }
 $content.='
 <div class="panel-heading"><h3>'.$this->pi_getLL('admin_attributes_options_groups').'</h3></div>

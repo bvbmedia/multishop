@@ -59,6 +59,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='export_customers_task'
 		}
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_customer_export'));
+	exit();
 }
 // defining the types
 $array=array();
@@ -137,6 +138,7 @@ if ($_REQUEST['section']=='edit' or $_REQUEST['section']=='add') {
 			}
 			$this->ms['show_main']=1;
 			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_export'));
+			exit();
 		}
 	} else {
 		if ($_REQUEST['section']=='edit' and is_numeric($this->get['customers_export_id'])) {
