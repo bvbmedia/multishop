@@ -77,7 +77,7 @@ window.onload = function(){
 jQuery(document).ready(function($) {
 	$(\'.select2BigDropWider\').select2({
 		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
-		width:\'220px\'
+		width:\'100%\'
 	});
 	$(\'#parent_id\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller

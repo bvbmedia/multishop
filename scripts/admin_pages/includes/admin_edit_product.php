@@ -135,7 +135,7 @@ jQuery(document).ready(function($) {
 	text_input.select();
 	$(\'.select2BigDropWider\').select2({
 		dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
-		width:\'220px\'
+		width:\'100%\'
 	});
 	$(\'#categories_id\').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller

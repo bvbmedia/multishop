@@ -390,10 +390,10 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				$tmpcontent.='
 					</select>&nbsp;
 					<input name="advanced_settings" class="btn btn-primary importer_advanced_settings" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
-					<fieldset class="advanced_settings_container hide">
-						<div class="form-field">
-							aux
-							<input name="input['.$i.']" type="text" style="width:150px;" value="'.htmlspecialchars($this->post['input'][$i]).'" />
+					<fieldset class="advanced_settings_container" style="display:none;">
+						<div class="form-group">
+							<label class="control-label">aux</label>
+							<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
 						</div>
 					</fieldset>
 				</td>

@@ -1323,7 +1323,7 @@ if (is_numeric($this->get['orders_id'])) {
 						$tmpcontent.='<td>&nbsp;</td>';
 						$tmpcontent.='<td>';
 						$tmpcontent.='<label for="order_products_description">'.$this->pi_getLL('admin_edit_order_products_description').':</label><br/>';
-						$tmpcontent.='<textarea rows="8" cols="75" id="order_products_description" name="order_products_description">'.$order['products_description'].'</textarea></td>';
+						$tmpcontent.='<textarea rows="8" id="order_products_description" class="form-control" name="order_products_description">'.$order['products_description'].'</textarea></td>';
 						$tmpcontent.='<td>&nbsp;</td>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							$tmpcontent.='<td>&nbsp;</td>';

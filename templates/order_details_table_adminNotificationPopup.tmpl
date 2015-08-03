@@ -1,23 +1,27 @@
 <!-- ###TEMPLATE### begin -->
-<table class="border" id="msOrderDetailsTable">
+<table class="table table-striped table-bordered border" id="msOrderDetailsTable">
 	<!-- ###ITEMS_HEADER_WRAPPER### begin -->
+	<thead>
 	<tr class="msOrderDetailsHeading">
-		<th class="msOrderDetailsHeadingImage">&nbsp;</th>
-		<th class="msOrderDetailsHeadingName">###HEADING_PRODUCTS_NAME###</th>
-		<th class="msOrderDetailsHeadingQuantity">###HEADING_QUANTITY###</th>
-		<th class="msOrderDetailsHeadingTotal">###HEADING_TOTAL###</th>
+		<th class="cellImage">&nbsp;</th>
+		<th class="cellName">###HEADING_PRODUCTS_NAME###</th>
+		<th class="cellQty">###HEADING_QUANTITY###</th>
+		<th class="cellPrice">###HEADING_TOTAL###</th>
 	</tr>
+	</thead>
+	<tbody>
 	<!-- ###ITEMS_HEADER_WRAPPER### end -->	
 	<!-- ###ITEMS_WRAPPER### begin -->
 	<tr class="###ITEM_CLASS###">
-		<td class="msOrderDetailsItemImage">###ITEM_IMAGE###</td>
-		<td class="msOrderDetailsItemName">###ITEM_NAME###</td>
-		<td class="msOrderDetailsItemQuantity">###ITEM_QUANTITY###</td>
-		<td class="msOrderDetailsItemTotal">###ITEM_TOTAL###</td>
+		<td class="cellImage">###ITEM_IMAGE###</td>
+		<td class="cellName">###ITEM_NAME###</td>
+		<td class="cellQty">###ITEM_QUANTITY###</td>
+		<td class="cellPrice">###ITEM_TOTAL###</td>
 	</tr>
     <!-- ###ITEMS_WRAPPER### end -->
+    </tbody>
 </table>
-<table id="msOrderDetailsSubTotalTable">
+<table class="table table-stiped table-bordered" id="msOrderDetailsSubTotalTable">
 <!-- ###SUBTOTAL_WRAPPER### begin -->
 <tr>
 	<td class="msOrderDetailsSubTotalProductsLabel msOrderDetailsSubTotalLabel">###PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL###</td>

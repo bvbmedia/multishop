@@ -1033,6 +1033,7 @@ if (url.match("#")) {
 // Change hash for page-reload
 $(".nav-tabs a").on("shown.bs.tab", function (e) {
 	window.location.hash = e.target.hash;
+	$("body,html,document").scrollTop(0);
 })
 });
 </script>

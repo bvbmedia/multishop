@@ -24,25 +24,25 @@ if ($this->cookie['limit']) {
 }
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->get['limit'];
 $formTopSearch='
-<div id="search-orders">
-	<table width="100%">
-		<tr>
-			<td nowrap valign="top">				
-					<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
-					<input name="id" type="hidden" value="'.$this->shop_pid.'" />
-					<input name="type" type="hidden" value="2003" />
-					<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_action_notification_log" />
-					<div class="formfield-container-wrapper">
-					<div class="formfield-wrapper">
-						<label>'.ucfirst($this->pi_getLL('keyword')).'</label><input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />					
-						<input type="submit" name="Search" class="btn btn-success" value="'.$this->pi_getLL('search').'" />
-					</div>	
-					</div>
-			</td>
-			<td nowrap valign="top" align="right" class="searchLimit">
-				<div style="float:right;">			
-					<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-					<select name="limit">';
+<div id="search-orders" class="well">
+	<div class="clearfix">
+		<div class="pull-left">
+			<div class="form-inline">
+				<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
+				<input name="id" type="hidden" value="'.$this->shop_pid.'" />
+				<input name="type" type="hidden" value="2003" />
+				<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_action_notification_log" />
+				<div class="formfield-wrapper">
+					<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
+					<input type="text" class="form-control" name="tx_multishop_pi1[keyword]" id="skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
+					<input type="submit" name="Search" class="btn btn-success" value="'.$this->pi_getLL('search').'" />
+				</div>
+			</div>
+		</div>
+		<div class="pull-right">
+			<div class="form-inline">
+				<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
+					<select name="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -66,9 +66,8 @@ foreach ($limits as $limit) {
 $formTopSearch.='
 					</select>
 				</div>
-			</td>			
-		</tr>
-	</table>
+			</div>
+		</div>
 	'.$searchCharNav.'
 </div>
 ';
@@ -113,16 +112,16 @@ if (!count($pageset['dataset'])) {
 } else {
 	$tr_type='even';
 	$headercol.='		
-	<th width="100" nowrap>'.$this->pi_getLL('date').'</th>
+	<th class="cellDate">'.$this->pi_getLL('date').'</th>
 	<th width="100" nowrap>'.$this->pi_getLL('title', 'Title').'</th>
-	<th width="100" nowrap align="right">'.$this->pi_getLL('admin_customer_id').'</th>
-	<th width="100" nowrap>'.$this->pi_getLL('admin_customer_name').'</th>
+	<th class="cellID">'.$this->pi_getLL('admin_customer_id').'</th>
+	<th class="cellUser">'.$this->pi_getLL('admin_customer_name').'</th>
 	<th width="100" nowrap align="right">'.$this->pi_getLL('ip_address').'</th>
 	<th width="100" nowrap>'.$this->pi_getLL('session_id', 'Session ID').'</th>
 	<th width="75" nowrap>'.$this->pi_getLL('type', 'Type').'</th>
-	<th>'.$this->pi_getLL('content').'</th>
+	<th class="cellContent">'.$this->pi_getLL('content').'</th>
 	';
-	$content.='<table class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table"><tr>'.$headercol.'</tr>';
+	$content.='<table class="table table-striped table-bordered msadmin_orders_listing" id="product_import_table"><thead><tr>'.$headercol.'</tr></thead><tbody>';
 	foreach ($pageset['dataset'] as $row) {
 		if (!$tr_type or $tr_type=='even') {
 			$tr_type='odd';
@@ -135,14 +134,14 @@ if (!count($pageset['dataset'])) {
 		}
 		$content.='
 		<tr class="'.$tr_type.'">
-		<td valign="top" align="right" nowrap>'.strftime("%x %X", $row['crdate']).'</td>
+		<td class="cellDate">'.strftime("%x %X", $row['crdate']).'</td>
 		<td valign="top" nowrap>
 			'.htmlspecialchars($row['title']).'
 		</td>
-		<td valign="top" nowrap align="right">
+		<td class="cellID">
 			'.($row['customer_id']>0 ? '<a href="'.$customer_edit_link.'">'.$row['customer_id'].'</a>' : '').'
 		</td>
-		<td valign="top" nowrap>
+		<td class="cellUser">
 			'.($row['company'] ? '<a href="'.$customer_edit_link.'">'.htmlspecialchars($row['company']).'</a>' : htmlspecialchars($row['name'])).'
 		</td>
 		<td valign="top" nowrap align="right">
@@ -154,13 +153,13 @@ if (!count($pageset['dataset'])) {
 		<td valign="top" nowrap>
 			'.htmlspecialchars($row['message_type']).'
 		</td>
-		<td valign="top">
+		<td class="cellContent">
 			'.$row['message'].'
 		</td>	
 		</tr>
 		';
 	}
-	$content.='<tr>'.$headercol.'</tr></table>';
+	$content.='</tbody><tfoot><tr>'.$headercol.'</tr></tfoot></table>';
 	// pagination
 	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['PAGESET_LIMIT']) {
 		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
@@ -179,17 +178,18 @@ $tmp='';
 $content.='
 <script type="text/javascript">      
 jQuery(document).ready(function($) {
-	jQuery(".tab_content").hide(); 
-	jQuery("ul.tabs li:first").addClass("active").show();
-	jQuery(".tab_content:first").show();
-	jQuery("ul.tabs li").click(function() {
-		jQuery("ul.tabs li").removeClass("active");
-		jQuery(this).addClass("active"); 
-		jQuery(".tab_content").hide();
-		var activeTab = jQuery(this).find("a").attr("href");
-		jQuery(activeTab).fadeIn(0);
-		return false;
-	});
+var url = document.location.toString();
+if (url.match("#")) {
+    $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+} else {
+		$(".nav-tabs a:first").tab("show");
+	}
+
+// Change hash for page-reload
+	$(".nav-tabs a").on("shown.bs.tab", function (e) {
+		window.location.hash = e.target.hash;
+		$("body,html,document").scrollTop(0);
+	})
              		
     jQuery(\'#order_date_from\').datetimepicker({
     	dateFormat: \'dd/mm/yy\',
@@ -205,22 +205,23 @@ jQuery(document).ready(function($) {
  
 });
 </script>
+<div class="panel-body">
 <div id="tab-container">
-    <ul class="tabs" id="admin_orders">';
+    <ul class="nav nav-tabs" id="admin_orders" role="tablist">';
 $count=0;
 foreach ($tabs as $key=>$value) {
 	$count++;
-	$content.='<li'.(($count==1) ? ' class="active"' : '').'><a href="#'.$key.'">'.$value[0].'</a></li>';
+	$content.='<li'.(($count==1) ? '' : '').' role="presentation"><a href="#'.$key.'" aria-controls="profile" role="tab" data-toggle="tab">'.$value[0].'</a></li>';
 }
 $content.='
     </ul>
-    <div class="tab_container">
+    <div class="tab-content">
 	';
 $count=0;
 foreach ($tabs as $key=>$value) {
 	$count++;
 	$content.='
-        <div style="display: block;" id="'.$key.'" class="tab_content">
+        <div id="'.$key.'" class="tab-pane" role="tabpanel">
         	<form id="form1" name="form1" method="get" action="index.php">
 			'.$formTopSearch.'
 			</form>
@@ -231,7 +232,6 @@ foreach ($tabs as $key=>$value) {
 $content.='
     </div>
 </div>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
-
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>
