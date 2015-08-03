@@ -30,11 +30,8 @@ jQuery(document).ready(function($) {
 		trigger:"hover",
 		delay: {show: 20, hide: 200}
 	});
-
 	$(".nav-tabs a:first").tab("show");
-
 	var lochash=window.location.hash;
-	console.log(lochash);
 	if (lochash!="") {
 		var li_this=$("ul.nav-tabs > li").find("a[href=\'" + lochash + "\']").parent();
 		if (li_this.length > 0) {
