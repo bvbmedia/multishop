@@ -130,6 +130,7 @@ foreach ($tmporders as $order) {
 	$markerArray['ORDER_LAST_MODIFIED']=($order['status_last_modified'] ? strftime("%x %X", $order['status_last_modified']) : '');
 	$markerArray['ORDER_PAID_STATUS']=$paid_status;
 	$markerArray['PRINT_ORDER_LIST_BUTTON']=$order_list_button_extra;
+    $markerArray['PLUGIN_EXTRA_CONTENT']='';
 	$markerArray['MASTER_SHOP']=$master_shop_col;
 	// custom page hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/orders_listing_table.php']['adminOrdersListingTmplIteratorPreProc'])) {
@@ -288,6 +289,10 @@ if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKIN
 $subpartArray['###EXTRA_RIGHT_HEADER###']=$extra_header;
 $subpartArray['###EXTRA_RIGHT_FOOTER###']=$extra_header;
 $subpartArray['###FORM_FIELDS_LISTING_ACTION_BLOCK###']=$form_fields_block;
+//
+$subpartArray['###PLUGIN_EXTRA_HEADER###']='';
+$subpartArray['###PLUGIN_EXTRA_FOOTER###']='';
+//
 $pagination_listing='';
 // pagination
 $this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
