@@ -246,6 +246,7 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .cellDownload > .btn:first-child { margin-bottom:5px; }
 td.cellPrice,
 td.cellSpecialPrice,
+.cellStatus,
 td.cellAction { white-space:nowrap; }
 .cellStatus,
 .cellAction { text-align:center; }
@@ -456,6 +457,15 @@ ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; paddi
 .merge_attribute_values_target { margin-top:20px; }
 
 /* bootstrap overrule */
+.radio-inline,
+.checkbox-inline { z-index:0; }
+.radio label::before,
+.checkbox label::before { outline:none; z-index:0; }
+.checkbox input[type="checkbox"]:focus + label::before,
+.radio input[type="radio"]:focus + label::before { outline:none; }
+.checkbox input[type="checkbox"]:checked + label::before,
+.radio input[type="radio"]:checked + label::before { outline:none; }
+
 hr { margin-top:15px; margin-bottom:15px; }
 
 .horizontal_list.pagination,

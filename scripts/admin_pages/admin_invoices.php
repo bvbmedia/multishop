@@ -235,49 +235,58 @@ $form_orders_search='<div id="search-orders" class="well">
 	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
 	<input name="type" type="hidden" value="2003" />
 	<div class="row formfield-container-wrapper">
-		<div class="col-sm-4 formfield-wrapper">
+		<div class="col-md-4 formfield-wrapper">
 			<div class="form-group">
-			<label class="control-label col-md-4">'.ucfirst($this->pi_getLL('keyword')).'</label>
-			<div class="col-md-8">
-			<input type="text" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-			</div>
+			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
+			<input type="text" class="form-control" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
 			</div>
 			<div class="form-group">
-			<label for="type_search" class="control-label col-md-4">'.$this->pi_getLL('search_for').'</label>
-			<div class="col-md-8">
+			<label for="type_search">'.$this->pi_getLL('search_for').'</label>
 			<select name="type_search" class="invoice_select2"><option value="all">'.$this->pi_getLL('all').'</option>
 				'.$option_item.'
 			</select>
 			</div>
-			</div>
 			<div class="form-group">
-			<label for="groups" class="control-label col-md-4 labelInbetween">'.$this->pi_getLL('usergroup').'</label>
-			<div class="col-md-8">
+			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
 			'.$customer_groups_input.'
 			</div>
+		</div>
+		<div class="col-md-4 formfield-wrapper">
+			<label>Date</label>
+			<div class="form-group">
+				<div class="form-inline">
+				<label for="order_date_from">'.$this->pi_getLL('from').':</label>
+				<input type="text" class="form-control" name="invoice_date_from" id="invoice_date_from" value="'.$this->get['invoice_date_from'].'">
+				<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
+				<input type="text" class="form-control" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
+				'.$orders_status_list.'
+			</div>
+			<div class="form-group">
+				<div class="checkbox checkbox-success checkbox-inline">
+					<input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' ><label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
+				</div>
 			</div>
 		</div>
-		<div class="col-sm-4 formfield-wrapper">
-			<label for="order_date_from">'.$this->pi_getLL('from').':</label>
-			<input type="text" name="invoice_date_from" id="invoice_date_from" value="'.$this->get['invoice_date_from'].'">
-			<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
-			<input type="text" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
-			<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
-			'.$orders_status_list.'
-			<div class="checkbox checkbox-success">
-			<input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' >
-			<label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
+		<div class="col-md-4 formfield-wrapper">
+			<div class="form-group">
+				<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
+				'.$payment_method_input.'
 			</div>
-		</div>
-		<div class="col-sm-4 formfield-wrapper">
-			<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
-			'.$payment_method_input.'
-			<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
-			'.$shipping_method_input.'
-			<label for="country">'.$this->pi_getLL('countries').'</label>
-			'.$billing_countries_sb.'
-			<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-			<select name="limit">';
+			<div class="form-group">
+				<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
+				'.$shipping_method_input.'
+			</div>
+			<div class="form-group">
+				<label for="country">'.$this->pi_getLL('countries').'</label>
+				'.$billing_countries_sb.'
+			</div>
+			<div class="form-group">
+				<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
+				<select name="limit" class="form-control">';
 $limits=array();
 $limits[]='15';
 $limits[]='20';
@@ -291,12 +300,17 @@ foreach ($limits as $limit) {
 	$form_orders_search.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
 $form_orders_search.='
-			</select>
+				</select>
+			</div>
 		</div>
 	</div>
 	<div class="row formfield-container-wrapper">
 		<div class="col-sm-12 formfield-wrapper">
-			<input type="submit" name="Search" value="'.htmlspecialchars($this->pi_getLL('search')).'"></input>
+			<div class="clearfix">
+				<div class="pull-right">
+					<input type="submit" class="btn btn-success" name="Search" value="'.htmlspecialchars($this->pi_getLL('search')).'"></input>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>';
