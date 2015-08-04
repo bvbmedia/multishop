@@ -622,7 +622,7 @@ if ($this->post['action']=='category-insert') {
 				}
 				$tmpcontent.='
 				<tr class="'.$switch.'">
-					<td class="first">
+					<td class="cellAux">
 					<div class="form-inline">
 					<select name="select['.$i.']" id="select['.$i.']" class="select_columns_fields">
 						<option value="">'.$this->pi_getLL('skip').'</option>

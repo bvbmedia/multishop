@@ -255,6 +255,7 @@ td.cellAction { white-space:nowrap; }
 .cellBackup > .btn { width:100%; }
 .cellWeight .form-control { width:69px; }
 .cellUserAgent { min-width:500px; }
+.cellAux { width:416px; }
 
 .cellContent .table { margin-bottom:0; }
 .cellContent table#msOrderDetailsSubTotalTable.table,

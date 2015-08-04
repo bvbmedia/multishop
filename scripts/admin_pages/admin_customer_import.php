@@ -381,7 +381,8 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				}
 				$tmpcontent.='
 				<tr class="'.$switch.'">
-					<td class="first">
+					<td class="cellAux">
+					<div class="form-inline">
 					<select name="select['.$i.']" id="select['.$i.']" class="select_columns_fields">
 						<option value="">'.$this->pi_getLL('skip').'</option>
 						';
@@ -390,6 +391,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				}
 				$tmpcontent.='
 					</select>&nbsp;<input name="advanced_settings" class="btn btn-primary importer_advanced_settings" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
+					</div>
 					<div class="advanced_settings_container" style="display:none;">
 						<div class="form-group no-mb">
 							<div class="col-md-12">
@@ -463,7 +465,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				$(this).prev().append(add_property_html);
 			});
 			$(".importer_advanced_settings").click(function(event) {
-				$(this).next().toggle();
+				$(this).parent().next().toggle();
 			});
 			$(\'.select_columns_fields\').select2({
 				width:\'250px\'
