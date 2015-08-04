@@ -240,6 +240,7 @@ jQuery(document).ready(function($) {
 			var tabs_content_li="";
 			tabs_content_li+=buildCustomProductsDescriptionInput('.$this->shop_pid.', e.object.id, e.object.text, languages);
 			$(target_ul_id).append(tabs_content_li);
+			/*
 			$(\'.mceEditor\').redactor({
 				focus: false,
 				clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
@@ -249,6 +250,7 @@ jQuery(document).ready(function($) {
 				minHeight:\'400\',
 				plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 			});
+			*/
 		}
 		' : '').'
 	});
@@ -3914,6 +3916,7 @@ if ($this->post) {
 									var tabs_content_li="";
 									tabs_content_li+=buildCustomProductsDescriptionInput('.$pageinfo['uid'].', e.object.id, e.object.text, languages);
 									$(target_ul_id).append(tabs_content_li);
+									/*
 									$(\'.mceEditor\').redactor({
 										focus: false,
 										clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
@@ -3923,6 +3926,7 @@ if ($this->post) {
 										minHeight:\'400\',
 										plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 									});
+									*/
 									' : '').'
 								})
 							});
@@ -4073,6 +4077,7 @@ if ($this->post) {
 								} else {
 									$(tabs_content).insertAfter("#product_copy");
 								}
+								/*
 								$(\'.mceEditor\').redactor({
 									focus: false,
 									clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
@@ -4082,6 +4087,7 @@ if ($this->post) {
 									minHeight:\'400\',
 									plugins: [\'table\',\'fontcolor\',\'fontsize\',\'filemanager\',\'imagemanager\',\'video\',\'textexpander\',\'fullscreen\']
 								});
+								*/
 							}
 							$(block_id).show();
 						} else {

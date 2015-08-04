@@ -227,14 +227,6 @@ function mathRound(float) {
 	return Math.round(float*100)/100;
 }
 jQuery(document).ready(function($) {
-	$(\'.mceEditor\').redactor({
-		focus: false,
-		clipboardUploadUrl: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=clipboardUploadUrl').'\',
-		imageUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageUpload').'\',
-		fileUpload: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=fileUpload').'\',
-		imageGetJson: \''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_upload_redactor&tx_multishop_pi1[redactorType]=imageGetJson').'\',
-		minHeight:\'400\'
-	});
 	$("#add_payment_method").click(function(e){
 		e.preventDefault();
 		$(\'#admin_payment_methods_list\').slideToggle(\'slow\', function(){});
