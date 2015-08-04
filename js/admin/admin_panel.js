@@ -249,7 +249,7 @@ function renderAdminMenu(json, type, includeDescinFooter,menuType) {
                                             admin_content += '</li>';
                                         } else {
 
-                                            admin_content += '<li class="' + tablevel4_key + ' ' + active_class + '">';
+                                            admin_content += '<li class="ms_admin_has_subs ' + tablevel4_key + ' ' + active_class + '">';
 
                                             if (tablevel4.link) {
                                                 admin_content += '<a href="' + tablevel4.link + '"' + (tablevel4.link_params != undefined ? tablevel4.link_params : '') + ' class="a_dropdown">';
