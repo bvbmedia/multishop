@@ -77,7 +77,7 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 	$save_block='
 		<hr><div class="clearfix"><div class="pull-right">
 			<a href="'.$subpartArray['###VALUE_REFERRER###'].'" class="btn btn-danger"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>
-			<button name="Submit" type="button" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
+			<button name="Submit" type="submit" value="" class="btn btn-success"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>
 		</div></div>
 	';
 	$types=array();
