@@ -722,7 +722,7 @@ if ($this->post['action']=='category-insert') {
 				});
 				$(\'.select_columns_fields\').select2({
 					dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
-					width:\'250px\'
+					width:\'100%\'
 				});
 			});
 			</script>
