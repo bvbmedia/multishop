@@ -6060,7 +6060,7 @@ class mslib_fe {
 				}
 				if ($tmpcontent) {
 					$html='
-					<script type="text/javascript">
+					<script type="text/javascript" data-ignore="1">
 					jQuery(document).ready(function($) {
 						jQuery.blockUI({
 							message: \'<h1>'.$this->conf['admin_development_company_name'].' warning'.($total_warnings==1 ? '' : 's').'</h1><div class="growl_message">'.addslashes(str_replace("\n", "", $tmpcontent)).'</div>\',
@@ -6235,7 +6235,7 @@ class mslib_fe {
 	}
 	public function jQueryBlockUI() {
 		$html='
-		<script type="text/javascript">
+		<script type="text/javascript" data-ignore="1">
 		jQuery(document).ready(function($) {
 			jQuery(\'.submit_block\').click(function() {
 				jQuery.blockUI({ css: {
@@ -8699,7 +8699,7 @@ class mslib_fe {
 		setcookie($name, $value, $lifetime, $path, $domain, $secure);
 	}
 	public function displayAdminNotificationPopup() {
-		$content='<script language="javascript" type="text/javascript">
+		$content='<script type="text/javascript" data-ignore="1">
 			function displayAdminNotificationMessage() {
 				jQuery.ajax({
 				  url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=retrieveAdminNotificationMessage').'\',
