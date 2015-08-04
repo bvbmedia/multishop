@@ -718,7 +718,7 @@ if ($this->post['action']=='category-insert') {
 					$(this).prev().append(add_property_html);
 				});
 				$(".importer_advanced_settings").click(function(event) {
-					$(this).next().toggle();
+					$(this).parent().next().toggle();
 				});
 				$(\'.select_columns_fields\').select2({
 					dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
