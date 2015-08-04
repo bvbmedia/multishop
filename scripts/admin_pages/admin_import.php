@@ -158,6 +158,7 @@ if ($this->get['delete'] and is_numeric($this->get['job_id'])) {
 	$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_import_jobs', 'id='.$this->get['job_id']);
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	exit();
 }
 if (isset($this->get['download']) && $this->get['download']=='task' && is_numeric($this->get['job_id'])) {
 	$sql=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
@@ -216,6 +217,7 @@ if (isset($this->get['upload']) && $this->get['upload']=='task' && $_FILES) {
 		}
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	exit();
 }
 $this->ms['show_default_form']=1;
 if ($this->post) {
@@ -320,6 +322,7 @@ if ($this->get['update_category_for_job']) {
 		// update the target category of a job eof
 	}
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	exit();
 }
 if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	// update the status of a job
@@ -329,6 +332,7 @@ if (is_numeric($this->get['job_id']) and is_numeric($this->get['status'])) {
 	$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 	// update the status of a job eof
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+	exit();
 }
 $tabs=array();
 /*
@@ -630,10 +634,10 @@ if ($this->post['action']=='category-insert') {
 					</select>
 					</div>
 					<input name="advanced_settings" class="importer_advanced_settings btn btn-success" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
-					<fieldset class="advanced_settings_container hide">
-						<div class="form-field">
-							<span>aux</span>
-							<input name="input['.$i.']" type="text" style="width:150px;" value="'.htmlspecialchars($this->post['input'][$i]).'" />
+					<fieldset class="advanced_settings_container" style="display:none;">
+						<div class="form-group">
+							<label class="control-label">aux</label>
+							<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
 						</div>
 					</fieldset>
 				</td>
@@ -717,7 +721,7 @@ if ($this->post['action']=='category-insert') {
 				});
 				$(\'.select_columns_fields\').select2({
 					dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
-					width:\'220px\'
+					width:\'100%\'
 				});
 			});
 			</script>
@@ -894,6 +898,7 @@ if ($this->post['action']=='category-insert') {
 		// we have to update the import job eof
 		$this->ms['show_default_form']=1;
 		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'#tasks');
+		exit();
 	}
 	if (!$this->post['skip_import']) {
 		$stats=array();
@@ -3236,6 +3241,7 @@ if (url.match("#")) {
 // Change hash for page-reload
 	$(".nav-tabs a").on("shown.bs.tab", function (e) {
 		window.location.hash = e.target.hash;
+		$("body,html,document").scrollTop(0);
 	})
 
 		});

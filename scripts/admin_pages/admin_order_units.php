@@ -11,6 +11,7 @@ if ($this->get['tx_multishop_pi1']['action']) {
 				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_order_units_description', 'id=\''.$this->get['tx_multishop_pi1']['order_unit_id'].'\'');
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
+				exit();
 			}
 			break;
 	}
@@ -31,6 +32,7 @@ if ($this->post) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
+			exit();
 		}
 	} else {
 		// add new order status eof
@@ -55,6 +57,7 @@ if ($this->post) {
 				}
 			}
 			header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units'));
+			exit();
 		}
 		// add new order status eof
 	}

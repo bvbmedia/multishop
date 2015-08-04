@@ -128,7 +128,6 @@ if ($this->post) {
 		$update_shipping['shipping_costs_type']=$shipping_type;
 		$query_update_shipping=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_shipping_methods', "id = ".$shipping_id, $update_shipping);
 		$res_update_ship=$GLOBALS['TYPO3_DB']->sql_query($query_update_shipping);
-		//header('Location: '.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_shipping_costs',1));
 	} // end for POST
 } //end if post
 $str="SELECT * from tx_multishop_zones order by name";

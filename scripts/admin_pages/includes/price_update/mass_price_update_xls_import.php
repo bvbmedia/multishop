@@ -784,5 +784,6 @@ if (!empty($filename)) {
 	// +--------------------------------------------------------------------------------------------------------------------+
 	@unlink($this->DOCUMENT_ROOT.'var/tmp/'.$filename);
 	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid='.$this->post['cid'], 1));
+	exit();
 }
 ?>

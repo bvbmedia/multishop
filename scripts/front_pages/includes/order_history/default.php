@@ -45,6 +45,7 @@ if (mslib_fe::loggedin()) {
 						$mslib_cart->updateCart();
 					}
 					header('Location: '.\TYPO3\CMS\Core\Utility\GeneralUtility::locationHeaderUrl($this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['shoppingcart_page_pid'], '&tx_multishop_pi1[page_section]=shopping_cart')));
+					exit();
 				}
 			}
 			$this->ms['MODULES']['ORDERS_LISTING_LIMIT']=50;

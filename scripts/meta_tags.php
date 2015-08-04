@@ -96,6 +96,7 @@ if (!$GLOBALS["TYPO3_CONF_VARS"]["tx_multishop_started"]) {
 // application top things that are only runned the first time when the plugin is initiated eof
 $meta_tags=array();
 if ($this->ADMIN_USER) {
+	/*
 	// bind shortkeys
 	$meta_tags['1_jquery'].='
 	<script type="text/javascript">
@@ -112,6 +113,7 @@ if ($this->ADMIN_USER) {
 	});
 	</script>
 	';
+	*/
 }
 if ($this->ADMIN_USER) {
 	$admin_menu_panel=mslib_fe::jQueryAdminMenu();

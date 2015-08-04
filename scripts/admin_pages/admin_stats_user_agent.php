@@ -49,7 +49,7 @@ if ($p>0) {
 	$offset=0;
 }
 // orders search
-$limit_selectbox='<select name="limit" onchange="this.form.submit()">';
+$limit_selectbox='<select name="limit" onchange="this.form.submit()" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
@@ -127,6 +127,6 @@ $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###HEADING_TAB1###']=$this->pi_getLL('admin_user_agent_statistics');
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content.='<p class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></p>';
-$content='<div class="fullwidth_div">'.$content.'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content='<div class="panel panel-default">'.$content.'</div>';
 ?>
