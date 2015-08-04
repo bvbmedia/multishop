@@ -2522,17 +2522,17 @@ class mslib_fe {
 												foreach ($sessionData['attributes'] as $options_id=>$item) {
 													if ($options_id==$options['products_options_id']) {
 														if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
-															$items.=' checked';
+															$items.=' checked="checked"';
 														}
 													}
 												}
 											} else {
-												if ($value_counter===1) {
-													//$items.=' checked';
+												if ($value_counter===1 && !$options['required']) {
+													$items.=' checked="checked"';
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
-																					<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
+											$items.=' class="attributes'.$options['products_options_id'].' attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
+											<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
 											'.$attribute_value_image.'
 											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].$value_desc.'</span>
 										</label>
@@ -2674,13 +2674,20 @@ class mslib_fe {
 				}
 			}
 			// hook
-			$output.='<div class="products_attributesWrapper">';
-			$title=$this->pi_getLL('product_options');
-			if ($title) {
-				$output.='<h3>'.$this->pi_getLL('product_options').'</h3>';
-			}
-			$output.='<div class="products_attributes">'.implode("\n", $output_html).'</div>';
-			$output.='</div>';
+            if (count($output_html)) {
+                $product_attribute_options_html=implode("\n", $output_html);
+                if (strpos($product_attribute_options_html, 'attribute_item_wrapper')!==false) {
+                    $output.='<div class="products_attributesWrapper">';
+                    $title=$this->pi_getLL('product_options');
+                    if ($title) {
+                        $output.='<h3>'.$this->pi_getLL('product_options').'</h3>';
+                    }
+                    $output.='<div class="products_attributes">'.$product_attribute_options_html.'</div>';
+                    $output.='</div>';
+                } else {
+                    $output.='<div class="products_attributes_hidden_field">'.$product_attribute_options_html.'</div>';
+                }
+            }
 		}
 		return $output;
 	}
