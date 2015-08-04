@@ -420,14 +420,14 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					if (strlen($tmpitem[$i])>100) {
 						$tmpitem[$i]=substr($tmpitem[$i], 0, 100).'...';
 					}
-					$tmpcontent.='<td class="product_'.$teller.'">'.htmlspecialchars($tmpitem[$i]).'</td>';
+					$tmpcontent.='<td class="cellBreak product_'.$teller.'">'.htmlspecialchars($tmpitem[$i]).'</td>';
 					if ($teller==5 or $teller==count($rows)) {
 						break;
 					}
 				}
 				if ($teller<5) {
 					for ($x=$teller; $x<5; $x++) {
-						$tmpcontent.='<td class="product_'.$x.'">&nbsp;</td>';
+						$tmpcontent.='<td class="cellBreak product_'.$x.'">&nbsp;</td>';
 					}
 				}
 				// now 5 products eof
@@ -1411,7 +1411,7 @@ if ($this->ms['show_default_form']) {
 		<div class="panel panel-default" id="scheduled_import_jobs_form">
 		<div class="panel-heading"><h3>'.$this->pi_getLL('import_tasks').'</h3></div>
 		<div class="panel-body">
-		<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+		<table class="table table-striped table-bordered msadmin_border no-mb" id="admin_modules_listing">
 		<thead>
 		<th>'.$this->pi_getLL('source_name').'</th>
 		<th class="cellName">'.$this->pi_getLL('name').'</th>

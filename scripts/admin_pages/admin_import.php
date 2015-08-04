@@ -252,7 +252,6 @@ $this->ms['upload_productfeed_form'].='
 		<input type="hidden" name="cid" value="" class="importCategoryTargetTree" />
 	</div>
 </div>
-</div>
 ';
 // custom hook that can be controlled by third-party plugin
 $importParserTemplateTypes=array();
@@ -302,11 +301,12 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
 </div>
 </div>
 <div class="form-group">
-<div class="col-md-10 col-md-offset-2">
-<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
-<input name="action" type="hidden" value="product-import-preview" />
-</div></div>
-
+	<div class="col-md-10 col-md-offset-2">
+		<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+		<input name="action" type="hidden" value="product-import-preview" />
+	</div>
+</div>
+</div>
 <!-- <input name="cid" class="cid" type="hidden" value="0" /> -->
 </div>
 </div>
@@ -673,7 +673,7 @@ if ($this->post['action']=='category-insert') {
 					if (strlen($tmpitem[$i])>15) {
 						$tmpitem[$i]=substr($tmpitem[$i], 0, 15).'..';
 					}
-					$tmpcontent.='<td class="product_'.$item_counter.' review_records"><div class="text_content" title="'.htmlspecialchars($alt).'">'.htmlspecialchars($tmpitem[$i]).'</div></td>';
+					$tmpcontent.='<td class="cellBreak product_'.$item_counter.' review_records"><div class="text_content" title="'.htmlspecialchars($alt).'">'.htmlspecialchars($tmpitem[$i]).'</div></td>';
 					if ($item_counter==5 or $item_counter==count($rows)) {
 						break;
 					}
@@ -681,7 +681,7 @@ if ($this->post['action']=='category-insert') {
 				if ($item_counter<5) {
 					// lets add few blank cells cause there are no 5 products to show
 					for ($x=$item_counter; $x<5; $x++) {
-						$tmpcontent.='<td class="product_'.$x.'">&nbsp;</td>';
+						$tmpcontent.='<td class="cellBreak product_'.$x.'">&nbsp;</td>';
 					}
 				}
 				// now 5 products eof
@@ -3032,7 +3032,7 @@ if ($this->post['action']!='product-import-preview') {
 			<div id="scheduled_import_jobs_form" class="panel panel-default">
 			<div class="panel-heading"><h3>'.$this->pi_getLL('import_tasks').'</h3></div>
 			<div class="panel-body">
-			<table class="table table-striped table-bordered msadmin_border" id="msAdminProducsImport">
+			<table class="table table-striped table-bordered msadmin_border no-mb" id="msAdminProducsImport">
 			<thead>
 			<tr>
 			<th>'.$this->pi_getLL('source_name').'</th>
@@ -3220,7 +3220,7 @@ if ($this->post['action']!='product-import-preview') {
 			$tmptab='';
 		}
 		if ($this->ROOTADMIN_USER) {
-			$schedule_content.='<div id="scheduled_import_jobs_form" class="panel panel-default">
+			$schedule_content.='<div id="scheduled_import_jobs_form" class="panel panel-default no-mb">
 			<div class="panel-heading"><h3>'.$this->pi_getLL('upload_import_task').'</h3></div>
 			<div class="panel-body">
 				<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
@@ -3239,12 +3239,12 @@ if ($this->post['action']!='product-import-preview') {
 					<div class="form-group">
 						<label for="upload_task_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
 						<div class="col-md-10">
-							<div class="input-group">
-								<input type="file" name="task_file" class="form-control">
-								<span class="input-group-btn">
-									<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
-								</span>
-							</div>
+							<input type="file" name="task_file" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-10 col-md-offset-2">
+							<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
 						</div>
 					</div>
 				</form>
