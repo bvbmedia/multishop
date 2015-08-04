@@ -10,8 +10,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			e.preventDefault();
 			var linkTarget=$(this).attr("href");
 			ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
-				$(this).dialog("close");
-				$(this).hide();
+				this.close();
 				msAdminBlockUi();
 				window.location.href=linkTarget;
 			});
