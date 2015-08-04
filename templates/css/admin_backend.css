@@ -255,6 +255,7 @@ td.cellAction { white-space:nowrap; }
 .cellBackup > .btn { width:100%; }
 .cellWeight .form-control { width:69px; }
 .cellUserAgent { min-width:500px; }
+.cellAux { width:418px; }
 
 .cellContent .table { margin-bottom:0; }
 .cellContent table#msOrderDetailsSubTotalTable.table,
@@ -265,6 +266,8 @@ td.cellAction { white-space:nowrap; }
 
 td.cellPrice .msAttributesField .form-control,
 td.cellSpecialPrice .msAttributesField .form-control { width:90px}
+
+td.cellBreak { width:200px; word-break:break-all; }
 
 table#address_details { margin-bottom:0; }
 
