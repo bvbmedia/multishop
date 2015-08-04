@@ -504,7 +504,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$(this).prev().append(add_property_html);
 						});
 						$(".importer_advanced_settings").click(function(event) {
-							$(this).next().toggle();
+							$(this).parent().next().toggle();
 						});
 						$(\'.select_columns_fields\').select2({
 							dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
