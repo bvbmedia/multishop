@@ -236,10 +236,6 @@ if ($this->ADMIN_USER) {
 			';
 		}
 		$html.='
-			$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
-				$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
-				return true;
-			});
 		});
 		</script>
 		';
@@ -374,37 +370,12 @@ if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') 
 	';
 }
 $html.='
-							// load partial menu items and add them to the footer
-							if ($(".footer_content").length > 0) {
-								$("#footer_content_cols").hide();
-								$("#footer_content_cols #footer_content1").html("");
-								$("#footer_content_cols #footer_content2").html("");
-								$("#footer_content_cols #footer_content3").html("");
-								$("#footer_content_cols #footer_content4").html("");
-								//$("#footer_content_cols #footer_content5").html("");
-								if (json_data.header.ms_admin_catalog != undefined) {
-									var admin_menu_catalog_html=renderAdminMenu(json_data.header.ms_admin_catalog, \'header\', 0);
-									$("#footer_content_cols #footer_content1").append(\'<ul>\'+admin_menu_catalog_html+\'</ul>\');
-								}
-								if (json_data.header.ms_admin_cms != undefined) {
-									var admin_menu_cms_html=renderAdminMenu(json_data.header.ms_admin_cms, \'header\', 0);
-									$("#footer_content_cols #footer_content1").append(\'<ul>\'+admin_menu_cms_html+\'</ul>\');
-								}
-								if (json_data.header.ms_admin_orders_customers != undefined) {
-									var admin_menu_orders_html=renderAdminMenu(json_data.header.ms_admin_orders_customers, \'header\', 0);
-									$("#footer_content_cols #footer_content2").append(\'<ul>\'+admin_menu_orders_html+\'</ul>\');
-								}
-								if (json_data.header.ms_admin_statistics != undefined) {
-									var admin_menu_statistics_html=renderAdminMenu(json_data.header.ms_admin_statistics, \'header\', 0);
-									$("#footer_content_cols #footer_content3").append(\'<ul>\'+admin_menu_statistics_html+\'</ul>\');
-								}
-								if (json_data.footer.ms_admin_system != undefined) {
-									var admin_menu_system_html=renderAdminMenu(json_data.footer.ms_admin_system, \'footer\', 0);
-									$("#footer_content_cols #footer_content4").append(\'<ul>\'+admin_menu_system_html+\'</ul>\');
-								}
-								$("#footer_content_cols").slideToggle("500");
-							}
-							';
+		adminPanelSearch();
+		$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
+			$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
+			return true;
+		});
+	';
 	if ($_COOKIE['hide_admin_panel']) {
 		$html.='
 									$("#tx_multishop_admin_header_bg").hide();

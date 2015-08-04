@@ -534,6 +534,7 @@ multishop_ajax_server {
 			msAdminPanel.compress = 1
 			msAdminAutoComplete = EXT:multishop/js/admin/admin_auto_complete.js
 			msAdminAutoComplete.compress = 1
+			#msAdminAutoComplete.forceOnTop=1
 			msAdminMisc = EXT:multishop/js/admin/misc.js
 			msAdminMisc.compress = 1
 			msUiSliderAccess = EXT:multishop/js/jquery.timepicker/jquery-ui-sliderAccess.js
