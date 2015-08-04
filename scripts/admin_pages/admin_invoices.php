@@ -468,6 +468,7 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+$content.=$form_orders_search;
 foreach ($tabs as $key=>$value) {
 	$content.='
 		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
