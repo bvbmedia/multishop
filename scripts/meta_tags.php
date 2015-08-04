@@ -129,7 +129,7 @@ if ($this->ADMIN_USER) {
 	}
 	if (!$this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['GLOBAL_MODULES']['CACHE_FRONT_END'] and !$html=$Cache_Lite->get($string))) {
 		$html='
-		<script type="text/javascript" data-ignore="1">
+		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			var intervalID;
 			// messages
@@ -236,6 +236,10 @@ if ($this->ADMIN_USER) {
 			';
 		}
 		$html.='
+			$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
+				$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
+				return true;
+			});
 		});
 		</script>
 		';
@@ -250,7 +254,7 @@ if ($this->ADMIN_USER) {
 	*/
 	// admin stats eof
 	$html.='
-			<script type="text/javascript" data-ignore="1">
+			<script type="text/javascript">
 			var MS_ADMIN_PANEL_AUTO_COMPLETE_URL=\''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search').'\';
 			var MS_ADMIN_PANEL_AUTO_COMPLETE_LABEL=\''.$this->pi_getLL('keyword').'\';
 			var MS_ADMIN_PANEL_FULL_URL=\''.$this->FULL_HTTP_URL.'\';

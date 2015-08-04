@@ -6643,13 +6643,6 @@ class mslib_fe {
 				<input name="Submit" type="submit" id="btn_search_admin_panel" class="btn btn-success" />
 			</form>'."\n";
 			$ms_menu[$key]['ms_admin_search']['description'].='
-			<script type="text/javascript" data-ignore="1">
-			adminPanelSearch();
-			$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
-				$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
-				return true;
-			});
-			</script>
 			</div>
 			'."\n";
 		}
