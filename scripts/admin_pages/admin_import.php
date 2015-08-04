@@ -631,7 +631,7 @@ if ($this->post['action']=='category-insert') {
 					$tmpcontent.='<option value="'.$key.'" '.($this->post['select'][$i]!='' && $this->post['select'][$i]==$key ? 'selected' : '').'>'.htmlspecialchars($value).'</option>';
 				}
 				$tmpcontent.='
-						</select>&nbsp;<input name="advanced_settings" class="importer_advanced_settings btn btn-primary" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
+						</select>&nbsp;<input name="advanced_settings" class="importer_advanced_settings btn btn-primary row-fluid" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
 					</div>
 					<div class="advanced_settings_container" style="display:none;">
 						<div class="form-group no-mb">
