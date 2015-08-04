@@ -468,13 +468,12 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
-$content.=$form_orders_search;
 foreach ($tabs as $key=>$value) {
 	$content.='
 		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
 		<div class="panel-body">
 		<form id="form1" name="form1" method="get" action="index.php">
-		'.$formTopSearch.'
+		'.$form_orders_search.'
 		</form>
 		'.$value[1].'
 	';
