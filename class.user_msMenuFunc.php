@@ -16,7 +16,7 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$this->conf['catalog_shop_pid']=$this->conf['shop_pid'];
 		}
 		$this->showCatalogFromPage=$this->conf['catalog_shop_pid'];
-		$cats=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint);
+		$cats=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint,0,$this->conf['catalog_shop_pid'],0);
 		$menuArr=array();
 		$tel=0;
 		foreach ($cats as $cat) {
@@ -98,7 +98,7 @@ class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		return $menuArr;
 	}
 	function makeMenuArray() {
-		$cats=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint);
+		$cats=mslib_fe::getSubcatsOnly($this->categoriesStartingPoint,0,$this->conf['catalog_shop_pid'],0);
 		$menuArr=array();
 		$tel=0;
 		foreach ($cats as $cat) {

@@ -5420,7 +5420,7 @@ class mslib_fe {
 			return false;
 		}
 	}
-	public function getSubcatsOnly($parent_id=0, $include_disabled_categories=0, $page_uid='') {
+	public function getSubcatsOnly($parent_id=0, $include_disabled_categories=0, $page_uid='',$include_hidden_categories=1) {
 		if (!is_numeric($parent_id)) {
 			return false;
 		}
@@ -5435,6 +5435,9 @@ class mslib_fe {
 			$query_array['where'][]='c.page_uid=\''.$page_uid.'\'';
 			if (!$include_disabled_categories) {
 				$query_array['where'][]='c.status=1';
+			}
+			if (!$include_hidden_categories) {
+				$query_array['where'][]='c.hide_in_menu=0';
 			}
 			//hook to let other plugins further manipulate the query
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getSubcatsOnlyQueryPreProc'])) {
