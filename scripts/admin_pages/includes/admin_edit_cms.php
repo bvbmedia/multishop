@@ -376,7 +376,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			placement:\'right\',
 			title:\'Markers\',
 			content: function() {
-			  return $("#msadminMarkersBox .valueField").html();
+			  return \'<div class="form-group">\' + $("#msadminMarkersBox").html() + \'</div>\';
 			}
 		});
 	});
