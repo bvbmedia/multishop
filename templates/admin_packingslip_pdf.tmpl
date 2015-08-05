@@ -3,32 +3,42 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
-      @page {margin:0; margin-top:170px; margin-bottom:100px;}
-      body { font-size:13px; line-height:13px; font-family:arial, helvetica, sans-serif; }
-        li, p, th, td { font-size:13px; font-family:arial, helvetica, sans-serif; }
-      td { padding:2px 5px; }
-        .valign_top { vertical-align:top; }
-        hr {border:0; height:1px; background:#333; }
-        #packingslip_header { position: fixed; top:-170px; height: 150px}
-        #packingslip_footer { position: fixed; bottom:-100px; height: 60px;}
+      @page { margin:0; margin-top:170px; margin-bottom:210px; }
+      body { font-size:13px; line-height:18px; font-family:arial, helvetica, sans-serif; }
+      table { border-collapse:collapse; }
+
+      li, p, th, td, strong { font-size:13px; line-height:18px; font-family:arial, helvetica, sans-serif; }
+      td { padding:0 5px; }
+      .valign_top { vertical-align:top; }
+      hr { border:0; height:1px; background:#333; }
+      #packingslip_header { position:fixed; position:fixed; top:-170px; height:170px; }
+      #packingslip_footer { position:fixed; left:60px; right:60px; bottom:-210px; height:210px; text-align:center; }
       #packingslip_content { margin:0 60px; }
-       #customerDetailsHeader { padding-bottom:50px; }
-        .invoiceTableHeading {background-color:#000; color:#fff; white-space:nowrap;}
-        .cell_qty, .cell_products_vat, .cell_products_normal_price, .cell_products_final_price { white-space:nowrap; width: 50px }
-        #orderDetailsPDFPackingslip { border-collapse: collapse;}
-        #orderDetailsPDFPackingslip th, #orderDetailsPDFPackingslip td { border:none; }
-        #orderDetailsPDFPackingslip { vertical-align:top;}
+
+      table#customerDetailsHeader { padding-bottom:50px; }
+      table#customerDetailsHeader td,
+      table#customerDetailsHeader td table td { padding:0; }
+
+      h2.page-heading { font-size:34px; line-height:34px; color:#000; margin:0 0 10px; }
+      .cell_qty, .cell_products_vat, .cell_products_normal_price, .cell_products_final_price { white-space:nowrap; width: 50px }
+
+      #orderDetailsPDFPackingslip { border-collapse:collapse; vertical-align:top; }
+      #orderDetailsPDFPackingslip tr.invoiceTableHeading { color:#000; white-space:nowrap; }
+      #orderDetailsPDFPackingslip tr.invoiceTableHeading th { border-bottom:1px solid #000; }
+      #orderDetailsPDFPackingslip tr.cellData td { border-bottom:1px solid #cdcdcd; }
+      #orderDetailsPDFPackingslip th,
       #orderDetailsPDFPackingslip td { padding:7px 5px; }
+      #orderDetailsPDFPackingslip td { border:none; }
       #orderDetailsPDFPackingslip td.order_total_wrapper { padding:0; }
       #orderDetailsPDFPackingslip td.order_total_wrapper table td,
-     #orderDetailsPDFPackingslip tr.hrWrapper td { border-bottom:none; }
+      #orderDetailsPDFPackingslip tr.hrWrapper td { border-bottom:none; }
       #orderDetailsPDFPackingslip tr td td { padding:0; }
-        #orderDetailsPDFPackingslip td.order_total_wrapper { padding: 0px;}
-      #orderDetailsPDFPackingslip td.order_total_wrapper table td { padding:2px 5px; }
-        .grandTotalLabel { }
-        .grandTotalValue { width:70px;}
-        ul { margin:0 0 10px; padding:0; }
-        .products_attributes ul { margin:0 0 0 18px; }
+      #orderDetailsPDFPackingslip td.order_total_wrapper { padding:0;}
+      #orderDetailsPDFPackingslip td.order_total_wrapper table td { padding:0; }
+      .grandTotalLabel { }
+      .grandTotalValue { width:70px;}
+      ul { margin:0 0 10px; padding:0; }
+      .products_attributes ul { margin:0 0 0 18px; }
       .products_attributes br { display:none; }
     </style>
 </head>
@@ -41,54 +51,51 @@
 </div>
 <div id="packingslip_content">
     <table width="100%" border="0" id="customerDetailsHeader">
-        <tr>
-            <td width="50%">&nbsp;</td>
-            <td width="50%" align="center" style="font-size:34px"><strong>###LABEL_PACKINGSLIP_HEADER###</strong></td>
-        </tr>
-        <tr>
-            <td>
-                <table style="margin-left:33px; margin-top:0px">
-                    <tr>
-                        <td>
-                            ###DELIVERY_COMPANY###
-                            <strong>###DELIVERY_NAME###</strong><br/>
-                            <strong>###DELIVERY_ADDRESS###</strong><br/>
-                            <strong>###DELIVERY_ZIP###&nbsp;&nbsp;###DELIVERY_CITY###</strong><br/>
-                            <strong>###DELIVERY_COUNTRY###</strong><br/><br/>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <table style="margin-right:0px; margin-top:0px" align="right">
-                    <tr>
-                        <td width="130px"><strong>###LABEL_CUSTOMER_ID###</strong></td>
-                        <td>###CUSTOMER_ID###</td>
-                    </tr>
-                    <tr>
-                        <td><strong>###LABEL_ORDER_ID###</strong></td>
-                        <td>###ORDER_ID###</td>
-                    </tr>
-                    <tr>
-                        <td><strong>###LABEL_ORDER_DATE###</strong></td>
-                        <td>###ORDER_DATE###</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><strong>###LABEL_PACKINGSLIP_SHIPPING_METHOD###</strong></td>
-                        <td>###PACKINGSLIP_SHIPPING_METHOD###</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><strong>###LABEL_PACKINGSLIP_PAYMENT_METHOD###</strong></td>
-                        <td>###PACKINGSLIP_PAYMENT_METHOD###</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><strong>###LABEL_YOUR_VAT_ID###</strong></td>
-                        <td>###YOUR_VAT_ID###</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+            <tr>
+                <td width="60%" valign="top">
+                    <table width="100%" border="0">
+                        <tr>
+                            <td>
+                                ###DELIVERY_COMPANY###
+                                <strong>###DELIVERY_NAME###</strong><br/>
+                                <strong>###DELIVERY_ADDRESS###</strong><br/>
+                                <strong>###DELIVERY_ZIP###&nbsp;&nbsp;###DELIVERY_CITY###</strong><br/>
+                                <strong>###DELIVERY_COUNTRY###</strong><br/><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="40%" valign="top">
+                    <h2 class="page-heading">###LABEL_PACKINGSLIP_HEADER###</h2>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="130px"><strong>###LABEL_CUSTOMER_ID###</strong></td>
+                            <td>###CUSTOMER_ID###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_ORDER_ID###</strong></td>
+                            <td>###ORDER_ID###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_ORDER_DATE###</strong></td>
+                            <td>###ORDER_DATE###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_PACKINGSLIP_SHIPPING_METHOD###</strong></td>
+                            <td>###PACKINGSLIP_SHIPPING_METHOD###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_PACKINGSLIP_PAYMENT_METHOD###</strong></td>
+                            <td>###PACKINGSLIP_PAYMENT_METHOD###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_YOUR_VAT_ID###</strong></td>
+                            <td>###YOUR_VAT_ID###</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     ###PACKINGSLIP_CONTENT_HEADER_MESSAGE###
     ###PACKINGSLIP_ORDER_DETAILS###
     ###PACKINGSLIP_CONTENT_FOOTER_MESSAGE###

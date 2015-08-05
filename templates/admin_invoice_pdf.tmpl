@@ -3,32 +3,42 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
-      @page {margin:0; margin-top:170px; margin-bottom:100px;}
-      body { font-size:13px; line-height:13px; font-family:arial, helvetica, sans-serif; }
-        li, p, th, td { font-size:13px; font-family:arial, helvetica, sans-serif; }
-      td { padding:2px 5px; }
-        .valign_top { vertical-align:top; }
-        hr {border:0; height:1px; background:#333; }
-        #invoice_header { position: fixed; top:-170px; height: 150px}
-        #invoice_footer { position: fixed; bottom:-100px; height: 60px;}
+      @page { margin:0; margin-top:170px; margin-bottom:210px; }
+      body { font-size:13px; line-height:18px; font-family:arial, helvetica, sans-serif; }
+      table { border-collapse:collapse; }
+
+      li, p, th, td, strong { font-size:13px; line-height:18px; font-family:arial, helvetica, sans-serif; }
+      td { padding:0 5px; vertical-align:top; }
+      .valign_top { vertical-align:top; }
+      hr { border:0; height:1px; background:#333; }
+      #invoice_header { position:fixed; top:-170px; height:170px; }
+      #invoice_footer { position:fixed; left:60px; right:60px; bottom:-210px; height:210px; text-align:center; }
       #invoice_content { margin:0 60px; }
-       #customerDetailsHeader { padding-bottom:50px; }
-        .invoiceTableHeading {background-color:#000; color:#fff; white-space:nowrap;}
-        .cell_qty, .cell_products_vat, .cell_products_normal_price, .cell_products_final_price { white-space:nowrap; }
-        #orderDetailsPDFInvoice { border-collapse: collapse;}
-        #orderDetailsPDFInvoice th, #orderDetailsPDFInvoice td { border:none; }
-        #orderDetailsPDFInvoice { vertical-align:top;}
+
+      table#customerDetailsHeader { padding-bottom:50px; }
+      table#customerDetailsHeader td,
+      table#customerDetailsHeader td table td { padding:0; }
+
+      h2.page-heading { font-size:34px; line-height:34px; color:#000; margin:0 0 10px; }
+      .cell_qty, .cell_products_vat, .cell_products_normal_price, .cell_products_final_price { white-space:nowrap; width:50px }
+
+      #orderDetailsPDFInvoice { border-collapse:collapse; vertical-align:top; }
+      #orderDetailsPDFInvoice tr.invoiceTableHeading { color:#000; white-space:nowrap; }
+      #orderDetailsPDFInvoice tr.invoiceTableHeading th { border-bottom:1px solid #000; }
+      #orderDetailsPDFInvoice th,
       #orderDetailsPDFInvoice td { padding:7px 5px; }
+      #orderDetailsPDFInvoice td { border:none; }
+      #orderDetailsPDFInvoice > tbody > tr.cellData td { border-bottom:1px solid #cdcdcd; }
       #orderDetailsPDFInvoice td.order_total_wrapper { padding:0; }
       #orderDetailsPDFInvoice td.order_total_wrapper table td,
-     #orderDetailsPDFInvoice tr.hrWrapper td { border-bottom:none; }
+      #orderDetailsPDFInvoice tr.hrWrapper td { border-bottom:none; }
       #orderDetailsPDFInvoice tr td td { padding:0; }
-        #orderDetailsPDFInvoice td.order_total_wrapper { padding: 0px;}
-      #orderDetailsPDFInvoice td.order_total_wrapper table td { padding:2px 5px; }
-        .grandTotalLabel { }
-        .grandTotalValue { width:70px;}
-        ul { margin:0 0 10px; padding:0; }
-        .products_attributes ul { margin:0 0 0 18px; }
+      #orderDetailsPDFInvoice td.order_total_wrapper,
+      #orderDetailsPDFInvoice td.order_total_wrapper table td { padding:0 !important; }
+      .grandTotalLabel { }
+      .grandTotalValue { width:70px;}
+      ul { margin:0 0 10px; padding:0; }
+      .products_attributes ul { margin:0 0 0 18px; }
       .products_attributes br { display:none; }
     </style>
 </head>
@@ -41,62 +51,59 @@
 </div>
 <div id="invoice_content">
     <table width="100%" border="0" id="customerDetailsHeader">
-        <tr>
-            <td width="50%">&nbsp;</td>
-            <td width="50%" align="center" style="font-size:34px"><strong>###LABEL_INVOICE_HEADER###</strong></td>
-        </tr>
-        <tr>
-            <td>
-                <table style="margin-left:33px; margin-top:0px">
-                    <tr>
-                        <td>
-                            ###BILLING_COMPANY###
-                            <strong>###BILLING_NAME###</strong><br/>
-                            <strong>###BILLING_ADDRESS###</strong><br/>
-                            <strong>###BILLING_ZIP###&nbsp;&nbsp;###BILLING_CITY###</strong><br/>
-                            <strong>###BILLING_COUNTRY###</strong><br/><br/>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td>
-                <table style="margin-right:0px; margin-top:0px" align="right">
-                    <tr>
-                        <td width="130px"><strong>###LABEL_CUSTOMER_ID###</strong></td>
-                        <td>###CUSTOMER_ID###</td>
-                    </tr>
-                    <tr>
-                        <td><strong>###LABEL_ORDER_ID###</strong></td>
-                        <td>###ORDER_ID###</td>
-                    </tr>
-                    <tr>
-                        <td><strong>###LABEL_ORDER_DATE###</strong></td>
-                        <td>###ORDER_DATE###</td>
-                    </tr>
-                    <tr>
-                        <td><strong>###LABEL_INVOICE_NUMBER###</strong></td>
-                        <td>###INVOICE_NUMBER###</td>
-                    </tr>
-                    <tr>
-                        <td><strong>###LABEL_INVOICE_DATE###</strong></td>
-                        <td>###INVOICE_DATE###</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><strong>###LABEL_INVOICE_PAYMENT_METHOD###</strong></td>
-                        <td>###INVOICE_PAYMENT_METHOD###</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><strong>###LABEL_INVOICE_PAYMENT_CONDITION###</strong></td>
-                        <td>###INVOICE_PAYMENT_CONDITION###</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><strong>###LABEL_YOUR_VAT_ID###</strong></td>
-                        <td>###YOUR_VAT_ID###</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+            <tr>
+                <td width="60%" valign="top">
+                    <table width="100%" border="0">
+                        <tr>
+                            <td>
+                                ###BILLING_COMPANY###
+                                <strong>###BILLING_NAME###</strong><br/>
+                                <strong>###BILLING_ADDRESS###</strong><br/>
+                                <strong>###BILLING_ZIP###&nbsp;&nbsp;###BILLING_CITY###</strong><br/>
+                                <strong>###BILLING_COUNTRY###</strong><br/><br/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="40%" valign="top">
+                    <h2 class="page-heading">###LABEL_INVOICE_HEADER###</h2>
+                    <table width="100%" border="0">
+                        <tr>
+                            <td width="130px"><strong>###LABEL_CUSTOMER_ID###</strong></td>
+                            <td>###CUSTOMER_ID###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_ORDER_ID###</strong></td>
+                            <td>###ORDER_ID###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_ORDER_DATE###</strong></td>
+                            <td>###ORDER_DATE###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_INVOICE_NUMBER###</strong></td>
+                            <td>###INVOICE_NUMBER###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_INVOICE_DATE###</strong></td>
+                            <td>###INVOICE_DATE###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_INVOICE_PAYMENT_METHOD###</strong></td>
+                            <td>###INVOICE_PAYMENT_METHOD###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_INVOICE_PAYMENT_CONDITION###</strong></td>
+                            <td>###INVOICE_PAYMENT_CONDITION###</td>
+                        </tr>
+                        <tr>
+                            <td><strong>###LABEL_YOUR_VAT_ID###</strong></td>
+                            <td>###YOUR_VAT_ID###</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     ###INVOICE_CONTENT_HEADER_MESSAGE###
     ###INVOICE_ORDER_DETAILS###
     ###INVOICE_CONTENT_FOOTER_MESSAGE###
