@@ -10,8 +10,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			e.preventDefault();
 			var linkTarget=$(this).attr("href");
 			ifConfirm($(this).attr("data-dialog-title"),$(this).attr("data-dialog-body"),function() {
-				$(this).dialog("close");
-				$(this).hide();
+				this.close();
 				msAdminBlockUi();
 				window.location.href=linkTarget;
 			});
@@ -252,7 +251,6 @@ $this->ms['upload_productfeed_form'].='
 		<input type="hidden" name="cid" value="" class="importCategoryTargetTree" />
 	</div>
 </div>
-</div>
 ';
 // custom hook that can be controlled by third-party plugin
 $importParserTemplateTypes=array();
@@ -302,11 +300,12 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
 </div>
 </div>
 <div class="form-group">
-<div class="col-md-10 col-md-offset-2">
-<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
-<input name="action" type="hidden" value="product-import-preview" />
-</div></div>
-
+	<div class="col-md-10 col-md-offset-2">
+		<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$this->pi_getLL('upload').'" />
+		<input name="action" type="hidden" value="product-import-preview" />
+	</div>
+</div>
+</div>
 <!-- <input name="cid" class="cid" type="hidden" value="0" /> -->
 </div>
 </div>
@@ -603,14 +602,14 @@ if ($this->post['action']=='category-insert') {
 		}
 		$tmpcontent='';
 		if (!$rows) {
-			$tmpcontent.='<h1>'.$this->pi_getLL('no_products_available').'</h1>';
+			$tmpcontent.='<h3>'.$this->pi_getLL('no_products_available').'</h3>';
 		} else {
-			$tmpcontent.='<table id="product_import_table" class="table table-striped table-bordered" cellpadding="0" cellspacing="0" border="0">';
-			$header='<tr><th>'.$this->pi_getLL('target_column').'</th><th>'.$this->pi_getLL('source_column').'</th>';
+			$tmpcontent.='<table id="product_import_table" class="table table-striped table-bordered">';
+			$header='<thead><tr><th>'.$this->pi_getLL('target_column').'</th><th>'.$this->pi_getLL('source_column').'</th>';
 			for ($x=1; $x<6; $x++) {
 				$header.='<th>'.$this->pi_getLL('row').' '.$x.'</th>';
 			}
-			$header.='</tr>';
+			$header.='</tr></thead><tbody>';
 			$tmpcontent.=$header;
 			$cols=count($rows[0]);
 			$preview_listing=array();
@@ -622,8 +621,8 @@ if ($this->post['action']=='category-insert') {
 				}
 				$tmpcontent.='
 				<tr class="'.$switch.'">
-					<td class="first">
-					<div class="msAdminSelect2Wrapper bigdropWider">
+					<td class="cellAux">
+					<div class="form-inline">
 					<select name="select['.$i.']" id="select['.$i.']" class="select_columns_fields">
 						<option value="">'.$this->pi_getLL('skip').'</option>
 						';
@@ -631,15 +630,16 @@ if ($this->post['action']=='category-insert') {
 					$tmpcontent.='<option value="'.$key.'" '.($this->post['select'][$i]!='' && $this->post['select'][$i]==$key ? 'selected' : '').'>'.htmlspecialchars($value).'</option>';
 				}
 				$tmpcontent.='
-					</select>
+						</select>&nbsp;<input name="advanced_settings" class="importer_advanced_settings btn btn-primary row-fluid" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
 					</div>
-					<input name="advanced_settings" class="importer_advanced_settings btn btn-success" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
-					<fieldset class="advanced_settings_container" style="display:none;">
-						<div class="form-group">
-							<label class="control-label">aux</label>
-							<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
+					<div class="advanced_settings_container" style="display:none;">
+						<div class="form-group no-mb">
+							<div class="col-md-12">
+								<label class="control-label">aux</label>
+								<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
+							</div>
 						</div>
-					</fieldset>
+					</div>
 				</td>
 				<td class="column_name"><strong>'.htmlspecialchars($table_cols[$i]).'</strong></td>
 				';
@@ -672,7 +672,7 @@ if ($this->post['action']=='category-insert') {
 					if (strlen($tmpitem[$i])>15) {
 						$tmpitem[$i]=substr($tmpitem[$i], 0, 15).'..';
 					}
-					$tmpcontent.='<td class="product_'.$item_counter.' review_records"><div class="text_content" title="'.htmlspecialchars($alt).'">'.htmlspecialchars($tmpitem[$i]).'</div></td>';
+					$tmpcontent.='<td class="cellBreak product_'.$item_counter.' review_records"><div class="text_content" title="'.htmlspecialchars($alt).'">'.htmlspecialchars($tmpitem[$i]).'</div></td>';
 					if ($item_counter==5 or $item_counter==count($rows)) {
 						break;
 					}
@@ -680,7 +680,7 @@ if ($this->post['action']=='category-insert') {
 				if ($item_counter<5) {
 					// lets add few blank cells cause there are no 5 products to show
 					for ($x=$item_counter; $x<5; $x++) {
-						$tmpcontent.='<td class="product_'.$x.'">&nbsp;</td>';
+						$tmpcontent.='<td class="cellBreak product_'.$x.'">&nbsp;</td>';
 					}
 				}
 				// now 5 products eof
@@ -717,7 +717,7 @@ if ($this->post['action']=='category-insert') {
 					$(this).prev().append(add_property_html);
 				});
 				$(".importer_advanced_settings").click(function(event) {
-					$(this).next().toggle();
+					$(this).parent().next().toggle();
 				});
 				$(\'.select_columns_fields\').select2({
 					dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
@@ -726,13 +726,14 @@ if ($this->post['action']=='category-insert') {
 			});
 			</script>
 			';
-			$tmpcontent.=$header.'</table>';
+			$tmpcontent.=$header.'</tbody></table>';
 		}
 	} else {
-		$tmpcontent.='<strong>Products cannot be retrieved.</strong>';
+		$tmpcontent.='<div class="alert alert-danger"><strong>Products cannot be retrieved.</strong></div>';
 	}
 	// print form
-	$combinedContent='<form id="product_import_form" class="form-horizontal blockSubmitForm" name="form1" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'">
+	$combinedContent='<div class="panel-body">
+<form id="product_import_form" class="form-horizontal blockSubmitForm" name="form1" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import').'">
 	<input name="consolidate" type="hidden" value="'.$this->post['consolidate'].'" />
 	<input name="os" type="hidden" value="'.$this->post['os'].'" />
 	<input name="escape_first_line" type="hidden" value="'.$this->post['escape_first_line'].'" />
@@ -756,45 +757,58 @@ if ($this->post['action']=='category-insert') {
 	}
 	$combinedContent.=$tmpcontent;
 	$combinedContent.='
-			<br />
-			<fieldset>
-			<legend>'.$this->pi_getLL('save_import_task').'</legend>
+			<div class="panel panel-default">
+			<div class="panel-heading"><h3>'.$this->pi_getLL('save_import_task').'</h3></div>
+			<div class="panel-body">
 			<div class="form-group">
-				<label for="cron_name">'.$this->pi_getLL('name').'</label>
-				<input name="cron_name" type="text" value="'.htmlspecialchars($this->post['cron_name']).'" size="125" />
+				<label for="cron_name" class="control-label col-md-2">'.$this->pi_getLL('name').'</label>
+				<div class="col-md-10">
+					<input name="cron_name" type="text" class="form-control" value="'.htmlspecialchars($this->post['cron_name']).'" />
+				</div>
 			</div>
 		';
 	if ($this->get['action']=='edit_job') {
 		$combinedContent.='
 			<div class="form-group">
-				<label for="duplicate">'.$this->pi_getLL('duplicate_task').'</label>
-				<input name="duplicate" type="checkbox" value="1" />
-				<input name="skip_import" type="hidden" value="1" />
-				<input name="job_id" type="hidden" value="'.$this->get['job_id'].'" />
+				<label for="duplicate" class="control-label col-md-2">'.$this->pi_getLL('duplicate_task').'</label>
+				<div class="col-md-10">
+					<input name="skip_import" type="hidden" value="1" />
+					<input name="job_id" type="hidden" value="'.$this->get['job_id'].'" />
+					<div class="checkbox checkbox-success checkbox-inline">
+						<input name="duplicate" id="duplicate" type="checkbox" value="1" /><label for="duplicate"></label>
+					</div>
+				</div>
 			</div>
 			<div class="form-group">
-				<label for="duplicate">URL</label>
-				<input name="file_url" type="text" value="'.$this->post['file_url'].'" size="125" />
+				<label for="duplicate" class="control-label col-md-2">URL</label>
+				<div class="col-md-10">
+					<input name="file_url" type="text" class="form-control" value="'.$this->post['file_url'].'" />
+				</div>
 			</div>
 			';
 	}
 	$combinedContent.='
 		<div class="form-group">
-		<label for="cron_period">'.$this->pi_getLL('schedule').'</label>
-		<select name="cron_period" id="cron_period">
-		<option value=""'.(!$this->post['cron_period'] ? ' selected' : '').'>'.$this->pi_getLL('manual').'</option>
-		<option value="'.(3600*24).'"'.($this->post['cron_period']==(3600*24) ? ' selected' : '').'>'.$this->pi_getLL('daily').'</option>
-		<option value="'.(3600*24*7).'"'.($this->post['cron_period']==(3600*24*7) ? ' selected' : '').'>'.$this->pi_getLL('weekly').'</option>
-		<option value="'.(3600*24*30).'"'.($this->post['cron_period']==(3600*24*30) ? ' selected' : '').'>'.$this->pi_getLL('monthly').'</option>
-		</select>
+			<label for="cron_period" class="control-label col-md-2">'.$this->pi_getLL('schedule').'</label>
+			<div class="col-md-10">
+				<select name="cron_period" id="cron_period" class="form-control">
+				<option value=""'.(!$this->post['cron_period'] ? ' selected' : '').'>'.$this->pi_getLL('manual').'</option>
+				<option value="'.(3600*24).'"'.($this->post['cron_period']==(3600*24) ? ' selected' : '').'>'.$this->pi_getLL('daily').'</option>
+				<option value="'.(3600*24*7).'"'.($this->post['cron_period']==(3600*24*7) ? ' selected' : '').'>'.$this->pi_getLL('weekly').'</option>
+				<option value="'.(3600*24*30).'"'.($this->post['cron_period']==(3600*24*30) ? ' selected' : '').'>'.$this->pi_getLL('monthly').'</option>
+				</select>
+			</div>
 		</div>
 		<div class="form-group">
-		<label for="prefix_source_name">'.$this->pi_getLL('source_name').'</label>
-		<input name="prefix_source_name" type="text" value="'.htmlspecialchars($this->post['prefix_source_name']).'" />
+			<label for="prefix_source_name" class="control-label col-md-2">'.$this->pi_getLL('source_name').'</label>
+			<div class="col-md-10">
+				<input name="prefix_source_name" class="form-control" type="text" value="'.htmlspecialchars($this->post['prefix_source_name']).'" />
+			</div>
 		</div>
 		<div class="form-group multiselect_horizontal">
-		<label for="locked_fields">'.$this->pi_getLL('lock_following_fields_when_adjusted', 'lock the following fields if the product is being adjusted (in edit product)').'</label>
-		<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[locked_fields][]">
+			<label for="locked_fields" class="control-label col-md-2">'.$this->pi_getLL('lock_following_fields_when_adjusted', 'lock the following fields if the product is being adjusted (in edit product)').'</label>
+			<div class="col-md-10">
+				<select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[locked_fields][]">
 		';
 	$locked_fields=array();
 	$locked_fields['categories_id']='Category';
@@ -811,11 +825,13 @@ if ($this->post['action']=='category-insert') {
 		}
 	}
 	$combinedContent.='
-		</select>
+				</select>
+			</div>
 		</div>
 		<div class="form-group">
-		<label for="">'.$this->pi_getLL('default_vat_rate', 'Default VAT Rate').'</label>
-		<select name="tx_multishop_pi1[default_vat_rate]"><option value="">skip</option>
+			<label for="" class="control-label col-md-2">'.$this->pi_getLL('default_vat_rate', 'Default VAT Rate').'</label>
+			<div class="col-md-10">
+				<select name="tx_multishop_pi1[default_vat_rate]" class="form-control"><option value="">skip</option>
 		';
 	$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -823,24 +839,36 @@ if ($this->post['action']=='category-insert') {
 		$combinedContent.='<option value="'.$row['rules_group_id'].'"'.($this->post['tx_multishop_pi1']['default_vat_rate']==$row['rules_group_id'] ? ' selected' : '').'>'.htmlspecialchars($row['name']).'</option>';
 	}
 	$combinedContent.='
-		</select>
+				</select>
+			</div>
 		</div>
 		<div class="form-group">
-		<label>&nbsp;</label>
-		<input name="incremental_update" type="checkbox" value="1" '.(($this->post['incremental_update']==1) ? 'checked' : '').' /> '.$this->pi_getLL('import_incremental').' (only use this when you upload partial data. For example when you have 2 feeds that contains the values of 1 attribute then you have to enable this checkbox. Products will always be inserted on incremental basis, so you allmost never have to enable this checkbox)
+			<div class="col-md-10 col-md-offset-2">
+				<div class="checkbox checkbox-success checkbox-inline">
+					<input name="incremental_update" id="incremental_update" type="checkbox" value="1" '.(($this->post['incremental_update']==1) ? 'checked' : '').' /><label for="incremental_update">'.$this->pi_getLL('import_incremental').' (only use this when you upload partial data. For example when you have 2 feeds that contains the values of 1 attribute then you have to enable this checkbox. Products will always be inserted on incremental basis, so you allmost never have to enable this checkbox)</label>
+				</div>
+			</div>
 		</div>
 		<div class="form-group">
-		<label>&nbsp;</label>
-		<input name="fetch_existing_product_by_direct_field" type="checkbox" value="1" '.(($this->post['fetch_existing_product_by_direct_field']==1) ? 'checked' : '').' /> '.$this->pi_getLL('fetch_existing_product_by_direct_field', 'Fetch existing product by db field (i.e. products_id, products_sku, products_ean) instead of hashed extid field.').'
+			<div class="col-md-10 col-md-offset-2">
+				<div class="checkbox checkbox-success checkbox-inline">
+					<input name="fetch_existing_product_by_direct_field" id="fetch_existing_product_by_direct_field" type="checkbox" value="1" '.(($this->post['fetch_existing_product_by_direct_field']==1) ? 'checked' : '').' /><label for="fetch_existing_product_by_direct_field"">'.$this->pi_getLL('fetch_existing_product_by_direct_field', 'Fetch existing product by db field (i.e. products_id, products_sku, products_ean) instead of hashed extid field.').'</label>
+				</div>
+			</div>
 		</div>
 		<input name="database_name" type="hidden" value="'.$this->post['database_name'].'" />
 		<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($this->post)).'" />
-		</fieldset>
-		<span class="float_right msBackendButton continueState arrowRight arrowPosLeft"><input type="submit" class="btn btn-success" name="AdSubmit" value="'.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'"></span>
-		<p class="extra_padding_bottom"></p>
+		</div>
+		</div>
+		<hr>
+		<div class="clearfix">
+			<div class="pull-right">
+				<button type="submit" class="btn btn-success" name="AdSubmit" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-save fa-stack-1x"></i></span> '.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'</button>
+			</div>
+		</div>
 		';
-	$combinedContent.='</form>';
-	$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($combinedContent).'</div>';
+	$combinedContent.='</form></div>';
+	$content='<div class="panel panel-default">'.mslib_fe::shadowBox($combinedContent).'</div>';
 } elseif ((is_numeric($this->get['job_id']) and $this->get['action']=='run_job') or ($this->post['action']=='product-import' and (($this->post['filename']) or $this->post['database_name']))) {
 	// removed this:  and file_exists($this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$this->post['filename']) so we can also save the task if the file is not found
 	if ((!$this->post['preProcExistingTask'] and $this->post['cron_name'] and !$this->post['skip_import'] and !$this->post['job_id']) or ($this->post['skip_import'] and $this->post['duplicate'])) {
@@ -3003,7 +3031,7 @@ if ($this->post['action']!='product-import-preview') {
 			<div id="scheduled_import_jobs_form" class="panel panel-default">
 			<div class="panel-heading"><h3>'.$this->pi_getLL('import_tasks').'</h3></div>
 			<div class="panel-body">
-			<table class="table table-striped table-bordered msadmin_border" id="msAdminProducsImport">
+			<table class="table table-striped table-bordered msadmin_border no-mb" id="msAdminProducsImport">
 			<thead>
 			<tr>
 			<th>'.$this->pi_getLL('source_name').'</th>
@@ -3191,7 +3219,7 @@ if ($this->post['action']!='product-import-preview') {
 			$tmptab='';
 		}
 		if ($this->ROOTADMIN_USER) {
-			$schedule_content.='<div id="scheduled_import_jobs_form" class="panel panel-default">
+			$schedule_content.='<div id="scheduled_import_jobs_form" class="panel panel-default no-mb">
 			<div class="panel-heading"><h3>'.$this->pi_getLL('upload_import_task').'</h3></div>
 			<div class="panel-body">
 				<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=admin_import&upload=task').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
@@ -3210,12 +3238,12 @@ if ($this->post['action']!='product-import-preview') {
 					<div class="form-group">
 						<label for="upload_task_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
 						<div class="col-md-10">
-							<div class="input-group">
-								<input type="file" name="task_file" class="form-control">
-								<span class="input-group-btn">
-									<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
-								</span>
-							</div>
+							<input type="file" name="task_file" class="form-control">
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-md-10 col-md-offset-2">
+							<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
 						</div>
 					</div>
 				</form>

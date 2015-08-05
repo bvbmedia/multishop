@@ -384,7 +384,8 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					// try the generic way eol
 				}
 				$tmpcontent='';
-				$tmpcontent.='<form id="product_import_form" class="" name="form1" method="post" action="'.$params['postForm']['actionUrl'].'">
+				$tmpcontent.='<div class="panel-body">
+		<form id="product_import_form" class="form-horizontal" name="form1" method="post" action="'.$params['postForm']['actionUrl'].'">
 		<input name="consolidate" type="hidden" value="'.$that->post['consolidate'].'" />
 		<input name="os" type="hidden" value="'.$that->post['os'].'" />
 		<input name="escape_first_line" type="hidden" value="'.$that->post['escape_first_line'].'" />
@@ -401,14 +402,14 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$tmpcontent.='<input name="preProcExistingTask" type="hidden" value="1" />';
 				}
 				if (!$rows) {
-					$tmpcontent.='<h1>No data available.</h1>';
+					$tmpcontent.='<div class="alert alert-danger"><h3>No data available.</h3></div>';
 				} else {
-					$tmpcontent.='<table id="product_import_table" class="msZebraTable" cellpadding="0" cellspacing="0" border="0">';
-					$header='<tr><th>'.$that->pi_getLL('target_column').'</th><th>'.$that->pi_getLL('source_column').'</th>';
+					$tmpcontent.='<table id="product_import_table" class="table table-striped table-bordered">';
+					$header='<thead><tr><th>'.$that->pi_getLL('target_column').'</th><th>'.$that->pi_getLL('source_column').'</th>';
 					for ($x=1; $x<6; $x++) {
 						$header.='<th>'.$that->pi_getLL('row').' '.$x.'</th>';
 					}
-					$header.='</tr>';
+					$header.='</tr></thead>';
 					$tmpcontent.=$header;
 					$cols=count($rows[0]);
 					$preview_listing=array();
@@ -420,8 +421,8 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						}
 						$tmpcontent.='
 				<tr class="'.$switch.'">
-					<td class="first">
-					<div class="msAdminSelect2Wrapper bigdropWider">
+					<td class="cellAux">
+					<div class="form-inline">
 					<select name="select['.$i.']" id="select['.$i.']" class="select_columns_fields">
 						<option value="">'.$that->pi_getLL('skip').'</option>
 						';
@@ -429,13 +430,14 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$tmpcontent.='<option value="'.$key.'" '.($that->post['select'][$i]!='' && $that->post['select'][$i]==$key ? 'selected' : '').'>'.htmlspecialchars($value).'</option>';
 						}
 						$tmpcontent.='
-					</select>
+					</select>&nbsp;<input name="advanced_settings" class="btn btn-primary importer_advanced_settings" type="button" value="'.$that->pi_getLL('admin_advanced_settings').'" />
 					</div>
-					<input name="advanced_settings" class="importer_advanced_settings" type="button" value="'.$that->pi_getLL('admin_advanced_settings').'" />
-					<fieldset class="advanced_settings_container" style="display:none;">
-						<div class="form-group">
-							<label class="control-label">aux</label>
-							<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
+					<div class="advanced_settings_container" style="display:none;">
+						<div class="form-group no-mb">
+							<div class="col-md-12">
+								<label class="control-label">aux</label>
+								<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
+							</div>
 						</div>
 					</fieldset>
 				</td>
@@ -458,14 +460,14 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							if (strlen($tmpitem[$i])>100) {
 								$tmpitem[$i]=substr($tmpitem[$i], 0, 100).'...';
 							}
-							$tmpcontent.='<td class="product_'.$teller.'">'.htmlspecialchars($tmpitem[$i]).'</td>';
+							$tmpcontent.='<td class="cellBreak product_'.$teller.'">'.htmlspecialchars($tmpitem[$i]).'</td>';
 							if ($teller==5 or $teller==count($rows)) {
 								break;
 							}
 						}
 						if ($teller<5) {
 							for ($x=$teller; $x<5; $x++) {
-								$tmpcontent.='<td class="product_'.$x.'">&nbsp;</td>';
+								$tmpcontent.='<td class="cellBreak product_'.$x.'">&nbsp;</td>';
 							}
 						}
 						// now 5 products eof
@@ -504,11 +506,11 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 							$(this).prev().append(add_property_html);
 						});
 						$(".importer_advanced_settings").click(function(event) {
-							$(this).next().toggle();
+							$(this).parent().next().toggle();
 						});
 						$(\'.select_columns_fields\').select2({
 							dropdownCssClass: "bigdropWider", // apply css that makes the dropdown taller
-							width:\'220px\'
+							width:\'250px\'
 						});
 					});
 					</script>
@@ -516,51 +518,63 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				}
 				//$tmpcontent.=self::renderImportJobProperties($params,$that);
 				$tmpcontent.='
-				<fieldset>
-					<legend>'.$that->pi_getLL('save_import_task').'</legend>
+				<div class="panel panel-default">
+					<div class="panel-heading"><h3>'.$that->pi_getLL('save_import_task').'</h3></div>
+					<div class="panel-body">
 					<div class="form-group">
-						<label for="cron_name">'.$that->pi_getLL('name').'</label>
-						<input name="cron_name" type="text" value="'.htmlspecialchars($that->post['cron_name']).'" />
+						<label for="cron_name" class="control-label col-md-2">'.$that->pi_getLL('name').'</label>
+						<div class="col-md-10">
+							<input name="cron_name" type="text" class="form-control" value="'.htmlspecialchars($that->post['cron_name']).'" />
+						</div>
 					</div>
 ';
 				if ($that->get['action']=='edit_job') {
 					$tmpcontent.='
 							<div class="form-group">
-								<label for="duplicate">'.$that->pi_getLL('duplicate').'</label>
-								<input name="duplicate" type="checkbox" value="1" />
-								<input name="skip_import" type="hidden" value="1" />
-								<input name="job_id" type="hidden" value="'.$that->get['job_id'].'" />
-								<input name="file_url" type="hidden" value="'.$that->post['file_url'].'" />
+								<label for="duplicate" class="control-label col-md-2">'.$that->pi_getLL('duplicate').'</label>
+								<div class="col-md-10">
+									<div class="checkbox checkbox-success checkbox-inline">
+										<input name="duplicate" id="duplicate" type="checkbox" value="1" /><label for="duplicate"></label>
+										<input name="skip_import" type="hidden" value="1" />
+										<input name="job_id" type="hidden" value="'.$that->get['job_id'].'" />
+										<input name="file_url" type="hidden" value="'.$that->post['file_url'].'" />
+									</div>
+								</div>
 							</div>
 			';
 				}
 				$tmpcontent.='
 		<div class="form-group">
-		<label for="cron_period">'.$that->pi_getLL('schedule').'</label>
-		<select name="cron_period" id="cron_period">
-		<option value="" '.(!$that->post['cron_period'] ? 'selected' : '').'>'.$that->pi_getLL('manual').'</option>
-		<option value="'.(3600*24).'" '.($that->post['cron_period']==(3600*24) ? 'selected' : '').'>'.$that->pi_getLL('daily').'</option>
-		<option value="'.(3600*24*7).'" '.($that->post['cron_period']==(3600*24*7) ? 'selected' : '').'>'.$that->pi_getLL('weekly').'</option>
-		<option value="'.(3600*24*30).'" '.($that->post['cron_period']==(3600*24*30) ? 'selected' : '').'>'.$that->pi_getLL('monthly').'</option>
-		</select>
+			<label for="cron_period" class="control-label col-md-2">'.$that->pi_getLL('schedule').'</label>
+			<div class="col-md-10">
+				<select name="cron_period" id="cron_period" class="form-control">
+				<option value="" '.(!$that->post['cron_period'] ? 'selected' : '').'>'.$that->pi_getLL('manual').'</option>
+				<option value="'.(3600*24).'" '.($that->post['cron_period']==(3600*24) ? 'selected' : '').'>'.$that->pi_getLL('daily').'</option>
+				<option value="'.(3600*24*7).'" '.($that->post['cron_period']==(3600*24*7) ? 'selected' : '').'>'.$that->pi_getLL('weekly').'</option>
+				<option value="'.(3600*24*30).'" '.($that->post['cron_period']==(3600*24*30) ? 'selected' : '').'>'.$that->pi_getLL('monthly').'</option>
+				</select>
+			</div>
 		</div>
 		<div class="form-group">
-		<label for="prefix_source_name">'.$that->pi_getLL('source_name').'</label>
-		<input name="prefix_source_name" type="text" value="'.htmlspecialchars($that->post['prefix_source_name']).'" />
+			<label for="prefix_source_name" class="control-label col-md-2">'.$that->pi_getLL('source_name').'</label>
+			<div class="col-md-10">
+				<input name="prefix_source_name" type="text" class="form-control" value="'.htmlspecialchars($that->post['prefix_source_name']).'" />
+			</div>
 		</div>
 		<input name="database_name" type="hidden" value="'.$that->post['database_name'].'" />
 		<input name="cron_data" type="hidden" value="'.htmlspecialchars(serialize($that->post)).'" />
-		</fieldset>
-		<table cellspacing="0" id="nositenav" width="100%">
-		<tr>
-		<td align="right" ><input type="submit" class="submit_block" id="cl_submit" name="AdSubmit" value="'.($that->get['action']=='edit_job' ? $that->pi_getLL('save') : $that->pi_getLL('import')).'"></td>
-		</tr>
-		</table>
-		<p class="extra_padding_bottom"></p>
+		<div class="form-group">
+			<div class="col-md-10 col-md-offset-2">
+				<button type="submit" class="btn btn-success submit_block" id="cl_submit" name="AdSubmit" value=""><i class="fa fa-save"></i> '.($that->get['action']=='edit_job' ? $that->pi_getLL('save') : $that->pi_getLL('import')).'</button>
+			</div>
+		</div>
+		</div>
+		</div>
+
 		</form>
 
 		';
-				$content='<div class="panel panel-default">'.mslib_fe::shadowBox($tmpcontent).'</div>';
+				$content=''.mslib_fe::shadowBox($tmpcontent).'';
 				// $content='<div
 				// class="fullwidth_div">'.mslib_fe::shadowBox($tmpcontent).'</div>';
 			}
@@ -951,17 +965,18 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 			if (count($jobs)>0) {
 				$schedule_content.='
-		<fieldset id="scheduled_import_jobs_form"><legend>'.$that->pi_getLL('import_tasks').'</legend>
-		<table class="table table-striped table-bordered" id="msAdminImportTableInterface">
+		<div class="panel panel-default" id="scheduled_import_jobs_form"><div class="panel-heading"><h3>'.$that->pi_getLL('import_tasks').'</h3></div>
+		<div class="panel-body">
+		<table class="table table-striped table-bordered no-mb" id="msAdminImportTableInterface">
 		<thead>
 		<tr>
 		<th>'.$that->pi_getLL('source_name').'</th>
-		<th>'.$that->pi_getLL('name').'</th>
-		<th>'.$that->pi_getLL('last_run').'</th>
+		<th class="cellName">'.$that->pi_getLL('name').'</th>
+		<th class="cellDate">'.$that->pi_getLL('last_run').'</th>
 		<th>'.$that->pi_getLL('action').'</th>
-		<th>'.ucfirst($that->pi_getLL('status')).'</th>
-		<th>'.ucfirst($that->pi_getLL('delete')).'</th>
-		<th>'.$that->pi_getLL('file_exists').'</th>
+		<th class="cellStatus">'.ucfirst($that->pi_getLL('status')).'</th>
+		<th class="cellAction">'.ucfirst($that->pi_getLL('delete')).'</th>
+		<th class="cellStatus">'.$that->pi_getLL('file_exists').'</th>
 		<th>'.$that->pi_getLL('upload_file').'</th>
 		<th>'.$that->pi_getLL('download_import_task').'</th>
 		</tr>
@@ -977,19 +992,19 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					}
 					$schedule_content.='<tr class="'.$switch.'">';
 					$schedule_content.='<td>'.$job['prefix_source_name'].'</td>
-			<td><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=edit_job">'.$job['name'].'</a></td>
+			<td class="cellName"><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=edit_job">'.$job['name'].'</a></td>
 			';
 					$lastRun='';
 					if ($job['last_run']>0) {
 						$lastRun=date("Y-m-d", $job['last_run']).'<br />'.date("G:i:s", $job['last_run']);
 					}
-					$schedule_content.='<td nowrap align="right">'.$lastRun.'</td>';
+					$schedule_content.='<td class="cellDate">'.$lastRun.'</td>';
 					if (!$job['period']) {
 						$schedule_content.='<td>manual<br /><a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&action=run_job&limit=99999999" class="btn btn-success" onClick="return CONFIRM(\''.addslashes($that->pi_getLL('are_you_sure_you_want_to_run_the_import_job')).': '.htmlspecialchars(addslashes($job['name'])).'?\')"><i>'.$that->pi_getLL('run_now').'</i></a><br /><a href="" class="copy_to_clipboard" rel="'.htmlentities('/usr/bin/wget -O /dev/null --tries=1 --timeout=30 -q "'.$that->FULL_HTTP_URL.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&code='.$job['code'].'&action=run_job&run_as_cron=1&limit=99999999" >/dev/null 2>&1').'" ><i>'.$that->pi_getLL('run_by_crontab').'</i></a></td>';
 					} else {
 						$schedule_content.='<td>'.date("Y-m-d G:i:s", $job['last_run']+$job['period']).'</td>';
 					}
-					$schedule_content.='<td class="status_field" align="center">';
+					$schedule_content.='<td class="cellStatus">';
 					if (!$job['status']) {
 						$schedule_content.='<span class="admin_status_red" alt="Disable"></span>';
 						$schedule_content.='<a href="'.$params['postForm']['actionUrl'].'&job_id='.$job['id'].'&status=1"><span class="admin_status_green disabled" alt="Enabled"></span></a>';
@@ -998,10 +1013,10 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$schedule_content.='<span class="admin_status_green" alt="Enable"></span>';
 					}
 					$schedule_content.='</td>
-			<td align="center">
-			<a href="'.$params['postForm']['actionUrl'].'&delete=1&&job_id='.$job['id'].'&action=delete_job" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"></a>
+			<td class="cellAction">
+			<a href="'.$params['postForm']['actionUrl'].'&delete=1&&job_id='.$job['id'].'&action=delete_job" onClick="return CONFIRM(\'Are you sure you want to delete the import job: '.htmlspecialchars($job['name']).'?\')" alt="Remove '.htmlspecialchars($job['name']).'" class="btn btn-danger btn-sm admin_menu_remove" title="Remove '.htmlspecialchars($job['name']).'"><i class="fa fa-trash-o"></i></a>
 			</td>
-			<td align="center">
+			<td class="cellStatus">
 				';
 					$data=unserialize($job['data']);
 					if ($data[1]['filename']) {
@@ -1016,23 +1031,28 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			</td>
 			<td>
 			 	<form action="'.$params['postForm']['actionUrl'].'" method="post" enctype="multipart/form-data" name="form1" id="form1">
-					<input type="file" name="file" />
-					<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
+			 		<div class="input-group">
+					<input type="file" name="file" class="form-control" style="width:300px" />
 					<input name="skip_import" type="hidden" value="1" />
 					<input name="preProcExistingTask" type="hidden" value="1" />
 					<input name="job_id" type="hidden" value="'.$job['id'].'" />
 					<input name="action" type="hidden" value="edit_job" />
+					<span class="input-group-btn">
+					<input type="submit" name="Submit" class="submit btn btn-success" id="cl_submit" value="'.$that->pi_getLL('upload').'" />
+					</span>
+					</div>
 				</form>
 			</td>
 			<td>
-				<a href="'.$params['postForm']['actionUrl'].'&download=task&job_id='.$job['id'].'" class="btn btn-success"><i>'.$that->pi_getLL('download_import_task').'</i></a>
+				<a href="'.$params['postForm']['actionUrl'].'&download=task&job_id='.$job['id'].'" class="btn btn-success"><i class="fa fa-download"></i> '.$that->pi_getLL('download_import_task').'</a>
 			</td>
 			';
 					$schedule_content.='</tr>';
 				}
 				$schedule_content.='</tbody>';
 				$schedule_content.='</table>
-		</fieldset>
+		</div>
+		</div>
 		<script type="text/javascript">
 		jQuery(document).ready(function($) {
 			$(".copy_to_clipboard").click(function(event) {
@@ -1074,12 +1094,12 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						<div class="form-group">
 							<label for="upload_task_file" class="control-label col-md-2">'.$that->pi_getLL('file').'</label>
 							<div class="col-md-10">
-								<div class="input-group">
 								<input type="file" name="task_file" class="form-control">
-								<span class="input-group-btn">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-10 col-md-offset-2">
 								<input type="submit" name="upload_task_file" class="submit btn btn-success" id="upload_task_file" value="upload">
-								</span>
-								</div>
 							</div>
 						</div>
 					</form>

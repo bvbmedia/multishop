@@ -2522,17 +2522,17 @@ class mslib_fe {
 												foreach ($sessionData['attributes'] as $options_id=>$item) {
 													if ($options_id==$options['products_options_id']) {
 														if ($item['products_options_values_id']==$products_options_values['products_options_values_id']) {
-															$items.=' checked';
+															$items.=' checked="checked"';
 														}
 													}
 												}
 											} else {
-												if ($value_counter===1) {
-													//$items.=' checked';
+												if ($value_counter===1 && !$options['required']) {
+													$items.=' checked="checked"';
 												}
 											}
-											$items.=' class="attributes'.$options['products_options_id'].' PrettyInput attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
-																					<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
+											$items.=' class="attributes'.$options['products_options_id'].' attribute-value-radio" '.($options['required'] ? 'required="required"' : '').' rel="attributes'.$options['products_options_id'].'" />
+											<label for="attributes'.$options['products_options_id'].'_'.$option_value_counter.'">
 											'.$attribute_value_image.'
 											<span class="attribute_value_label">'.$products_options_values['products_options_values_name'].$value_desc.'</span>
 										</label>
@@ -2674,13 +2674,20 @@ class mslib_fe {
 				}
 			}
 			// hook
-			$output.='<div class="products_attributesWrapper">';
-			$title=$this->pi_getLL('product_options');
-			if ($title) {
-				$output.='<h3>'.$this->pi_getLL('product_options').'</h3>';
-			}
-			$output.='<div class="products_attributes">'.implode("\n", $output_html).'</div>';
-			$output.='</div>';
+            if (count($output_html)) {
+                $product_attribute_options_html=implode("\n", $output_html);
+                if (strpos($product_attribute_options_html, 'attribute_item_wrapper')!==false) {
+                    $output.='<div class="products_attributesWrapper">';
+                    $title=$this->pi_getLL('product_options');
+                    if ($title) {
+                        $output.='<h3>'.$this->pi_getLL('product_options').'</h3>';
+                    }
+                    $output.='<div class="products_attributes">'.$product_attribute_options_html.'</div>';
+                    $output.='</div>';
+                } else {
+                    $output.='<div class="products_attributes_hidden_field">'.$product_attribute_options_html.'</div>';
+                }
+            }
 		}
 		return $output;
 	}
@@ -6060,7 +6067,7 @@ class mslib_fe {
 				}
 				if ($tmpcontent) {
 					$html='
-					<script type="text/javascript">
+					<script type="text/javascript" data-ignore="1">
 					jQuery(document).ready(function($) {
 						jQuery.blockUI({
 							message: \'<h1>'.$this->conf['admin_development_company_name'].' warning'.($total_warnings==1 ? '' : 's').'</h1><div class="growl_message">'.addslashes(str_replace("\n", "", $tmpcontent)).'</div>\',
@@ -6235,7 +6242,7 @@ class mslib_fe {
 	}
 	public function jQueryBlockUI() {
 		$html='
-		<script type="text/javascript">
+		<script type="text/javascript" data-ignore="1">
 		jQuery(document).ready(function($) {
 			jQuery(\'.submit_block\').click(function() {
 				jQuery.blockUI({ css: {
@@ -6642,13 +6649,7 @@ class mslib_fe {
 				<input name="page" id="ms_admin_us_page" type="hidden" value="0" />
 				<input name="Submit" type="submit" id="btn_search_admin_panel" class="btn btn-success" />
 			</form>'."\n";
-			$ms_menu[$key]['ms_admin_search']['description'].='<script type="text/javascript">
-			adminPanelSearch();
-			$(document).on(\'click\', \'#btn_search_admin_panel\', function(){
-				$(\'#ms_admin_skeyword\').val($(\'div.select2-search > input.select2-input\').val());
-				return true;
-			});
-			</script>
+			$ms_menu[$key]['ms_admin_search']['description'].='
 			</div>
 			'."\n";
 		}
@@ -8705,7 +8706,7 @@ class mslib_fe {
 		setcookie($name, $value, $lifetime, $path, $domain, $secure);
 	}
 	public function displayAdminNotificationPopup() {
-		$content='<script language="javascript" type="text/javascript">
+		$content='<script type="text/javascript" data-ignore="1">
 			function displayAdminNotificationMessage() {
 				jQuery.ajax({
 				  url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=retrieveAdminNotificationMessage').'\',

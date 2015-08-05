@@ -365,11 +365,11 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 			$tmpcontent.='<h1>No customers available.</h1>';
 		} else {
 			$tmpcontent.='<table id="product_import_table" class="table table-striped table-bordered">';
-			$header='<tr><th>'.$this->pi_getLL('target_column').'</th><th>'.$this->pi_getLL('source_column').'</th>';
+			$header='<thead><tr><th>'.$this->pi_getLL('target_column').'</th><th>'.$this->pi_getLL('source_column').'</th>';
 			for ($x=1; $x<6; $x++) {
 				$header.='<th>'.$this->pi_getLL('row').' '.$x.'</th>';
 			}
-			$header.='</tr>';
+			$header.='</tr></thead>';
 			$tmpcontent.=$header;
 			$cols=count($rows[0]);
 			$preview_listing=array();
@@ -381,7 +381,8 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				}
 				$tmpcontent.='
 				<tr class="'.$switch.'">
-					<td class="first">
+					<td class="cellAux">
+					<div class="form-inline">
 					<select name="select['.$i.']" id="select['.$i.']" class="select_columns_fields">
 						<option value="">'.$this->pi_getLL('skip').'</option>
 						';
@@ -389,14 +390,16 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					$tmpcontent.='<option value="'.$key.'" '.($this->post['select'][$i]!='' && $this->post['select'][$i]==$key ? 'selected' : '').'>'.htmlspecialchars($value).'</option>';
 				}
 				$tmpcontent.='
-					</select>&nbsp;
-					<input name="advanced_settings" class="btn btn-primary importer_advanced_settings" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
-					<fieldset class="advanced_settings_container" style="display:none;">
-						<div class="form-group">
-							<label class="control-label">aux</label>
-							<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
+					</select>&nbsp;<input name="advanced_settings" class="btn btn-primary importer_advanced_settings" type="button" value="'.$this->pi_getLL('admin_advanced_settings').'" />
+					</div>
+					<div class="advanced_settings_container" style="display:none;">
+						<div class="form-group no-mb">
+							<div class="col-md-12">
+								<label class="control-label">aux</label>
+								<input name="input['.$i.']" class="form-control" type="text" value="'.htmlspecialchars($this->post['input'][$i]).'">
+							</div>
 						</div>
-					</fieldset>
+					</div>
 				</td>
 				<td class="column_name"><strong>'.htmlspecialchars($table_cols[$i]).'</strong></td>
 				';
@@ -417,14 +420,14 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 					if (strlen($tmpitem[$i])>100) {
 						$tmpitem[$i]=substr($tmpitem[$i], 0, 100).'...';
 					}
-					$tmpcontent.='<td class="product_'.$teller.'">'.htmlspecialchars($tmpitem[$i]).'</td>';
+					$tmpcontent.='<td class="cellBreak product_'.$teller.'">'.htmlspecialchars($tmpitem[$i]).'</td>';
 					if ($teller==5 or $teller==count($rows)) {
 						break;
 					}
 				}
 				if ($teller<5) {
 					for ($x=$teller; $x<5; $x++) {
-						$tmpcontent.='<td class="product_'.$x.'">&nbsp;</td>';
+						$tmpcontent.='<td class="cellBreak product_'.$x.'">&nbsp;</td>';
 					}
 				}
 				// now 5 products eof
@@ -462,7 +465,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				$(this).prev().append(add_property_html);
 			});
 			$(".importer_advanced_settings").click(function(event) {
-				$(this).next().toggle();
+				$(this).parent().next().toggle();
 			});
 			$(\'.select_columns_fields\').select2({
 				width:\'250px\'
@@ -490,8 +493,7 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 								<label for="duplicate" class="control-label col-md-2">'.$this->pi_getLL('duplicate').'</label>
 								<div class="col-md-10">
 									<div class="checkbox checkbox-success checkbox-inline">
-										<input name="duplicate" type="checkbox" value="1" />
-										<label></label>
+										<input name="duplicate" id="duplicate" type="checkbox" value="1" /><label for="duplicate"></label>
 										<input name="skip_import" type="hidden" value="1" />
 										<input name="job_id" type="hidden" value="'.$this->get['job_id'].'" />
 										<input name="file_url" type="hidden" value="'.$this->post['file_url'].'" />
@@ -525,9 +527,9 @@ if ($this->post['action']=='customer-import-preview' or (is_numeric($this->get['
 				<button type="submit" class="btn btn-success submit_block" id="cl_submit" name="AdSubmit" value=""><i class="fa fa-save"></i> '.($this->get['action']=='edit_job' ? $this->pi_getLL('save') : $this->pi_getLL('import')).'</button>
 			</div>
 		</div>
-
 		</form>
-		';
+		</div>
+		</div>';
 		$content=''.mslib_fe::shadowBox($tmpcontent).'';
 		// $content='<div
 		// class="fullwidth_div">'.mslib_fe::shadowBox($tmpcontent).'</div>';
@@ -1409,7 +1411,7 @@ if ($this->ms['show_default_form']) {
 		<div class="panel panel-default" id="scheduled_import_jobs_form">
 		<div class="panel-heading"><h3>'.$this->pi_getLL('import_tasks').'</h3></div>
 		<div class="panel-body">
-		<table class="table table-striped table-bordered msadmin_border" id="admin_modules_listing">
+		<table class="table table-striped table-bordered msadmin_border no-mb" id="admin_modules_listing">
 		<thead>
 		<th>'.$this->pi_getLL('source_name').'</th>
 		<th class="cellName">'.$this->pi_getLL('name').'</th>

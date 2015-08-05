@@ -46,7 +46,9 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.active > a,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header li.active > span { background:rgba(255,255,255,.03); color:#fff; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.in > a,
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:hover > a { background:#111; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:hover > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.active > a,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.active > span { background:#111; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li > a.collapsed,
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:hover > a.collapsed { background:none; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header a:hover,
@@ -244,6 +246,7 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .cellDownload > .btn:first-child { margin-bottom:5px; }
 td.cellPrice,
 td.cellSpecialPrice,
+.cellStatus,
 td.cellAction { white-space:nowrap; }
 .cellStatus,
 .cellAction { text-align:center; }
@@ -253,6 +256,7 @@ td.cellAction { white-space:nowrap; }
 .cellBackup > .btn { width:100%; }
 .cellWeight .form-control { width:69px; }
 .cellUserAgent { min-width:500px; }
+.cellAux { width:418px; }
 
 .cellContent .table { margin-bottom:0; }
 .cellContent table#msOrderDetailsSubTotalTable.table,
@@ -263,6 +267,8 @@ td.cellAction { white-space:nowrap; }
 
 td.cellPrice .msAttributesField .form-control,
 td.cellSpecialPrice .msAttributesField .form-control { width:90px}
+
+td.cellBreak { width:200px; word-break:break-all; }
 
 table#address_details { margin-bottom:0; }
 
@@ -451,6 +457,15 @@ ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; paddi
 .merge_attribute_values_target { margin-top:20px; }
 
 /* bootstrap overrule */
+.radio-inline,
+.checkbox-inline { z-index:0; }
+.radio label::before,
+.checkbox label::before { outline:none; z-index:0; }
+.checkbox input[type="checkbox"]:focus + label::before,
+.radio input[type="radio"]:focus + label::before { outline:none; }
+.checkbox input[type="checkbox"]:checked + label::before,
+.radio input[type="radio"]:checked + label::before { outline:none; }
+
 hr { margin-top:15px; margin-bottom:15px; }
 
 .horizontal_list.pagination,
@@ -463,6 +478,7 @@ hr { margin-top:15px; margin-bottom:15px; }
 /* typo3 helper class */
 .no-mb { margin-bottom:0 !important; }
 .no-mt { margin-top:0 !important; }
+.mb-5 { margin-bottom:10px; }
 .mb-10 { margin-bottom:10px; }
 .mb-20 { margin-bottom:20px; }
 .mt-10 { margin-top:10px; }
