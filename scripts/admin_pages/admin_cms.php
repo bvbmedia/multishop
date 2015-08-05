@@ -345,9 +345,7 @@ if (!count($pageset['dataset'])) {
 	if ($this->ROOTADMIN_USER) {
 		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th class="cellCheckbox"><div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" id="checkAllCMS"/><label for="checkAllCMS"></label></th>';
 		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th class="cellCheckbox">&nbsp;</th>';
-		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<tr>
-				<td colspan="7"><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></td>
-			</tr>';
+		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<div><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms').'" class="btn btn-success admin_menu_add pull-right">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a></div>';
 	}
 	$results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 	// pagination
@@ -394,7 +392,6 @@ $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=mslib_fe::shadowBox($content);
-$content.='<hr><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms').'" class="btn btn-success admin_menu_add">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
-$content.='<hr><div class="clearfix"><div class="pull-right"><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
+$content.='<hr><div class="clearfix"><div><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
 
 ?>
