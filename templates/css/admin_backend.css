@@ -465,8 +465,10 @@ ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; paddi
 /* bootstrap overrule */
 
 @-moz-document url-prefix() {
-	fieldset { display: table-cell; }
+  fieldset { display: table-cell; }
 }
+
+.popover { max-width:500px; }
 
 .radio-inline,
 .checkbox-inline { z-index:0; }
