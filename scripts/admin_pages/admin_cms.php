@@ -158,7 +158,7 @@ if ($this->get['tx_multishop_pi1']['keyword']) {
 	$this->searchKeywords[]=$this->get['tx_multishop_pi1']['keyword'];
 	$this->searchMode='%keyword%';
 }
-$limit_search_result_selectbox='<div class="form-inline"><div class="form-group"><label>'.$this->pi_getLL('limit_number_of_records_to').':</label><select name="limit" class="form-control">';
+$limit_search_result_selectbox='<div class="form-inline"><div class="form-group"><label>'.$this->pi_getLL('limit_number_of_records_to').':</label><select name="cmsLimit" class="form-control">';
 $limits=array();
 $limits[]='10';
 $limits[]='15';
