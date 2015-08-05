@@ -1807,7 +1807,7 @@
             <label index="creation_date">Datum aangemaakt</label>
             <label index="cumulative">Cumulatief</label>
             <label index="current_value">Huidige waarde</label>
-            <label index="currently_there_are_no_invoices_export_created">Momenteel is er geen export voor factureren aangemaakt</label>
+            <label index="currently_there_are_no_invoices_export_created">Momenteel is er geen export voor facturen aangemaakt</label>
             <label index="currently_there_are_no_orders_export_created">Op dit moment is er nog geen bestand aangemaakt</label>
             <label index="currently_there_are_no_payment_methods_defined">Momenteel zijn er geen betaalmethodes ingesteld</label>
             <label index="currently_there_are_no_shipping_methods_defined">Momenteel zijn er geen verzendmethodes ingesteld</label>
