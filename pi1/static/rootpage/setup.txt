@@ -360,8 +360,8 @@ multishop_ajax_server {
 			#jqueryvalidatefunctions.compress=1
 			#prettycheckboxes = EXT:multishop/js/prettycheckboxes/js/prettyCheckboxes.js
 			#prettycheckboxes.compress = 1
-			#jqueryPace = EXT:multishop/res/pace/pace.js
-			#jqueryPace.compress = 0
+			jqueryPace = EXT:multishop/res/pace/pace.js
+			jqueryPace.compress = 1
 			#jqueryPace.forceOnTop= 1
 		}
 		includeJS
