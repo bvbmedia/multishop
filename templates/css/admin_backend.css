@@ -463,6 +463,11 @@ ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; paddi
 .merge_attribute_values_target { margin-top:20px; }
 
 /* bootstrap overrule */
+
+@-moz-document url-prefix() {
+	fieldset { display: table-cell; }
+}
+
 .radio-inline,
 .checkbox-inline { z-index:0; }
 .radio label::before,
