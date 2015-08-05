@@ -309,6 +309,12 @@ table#product_attributes_table > tbody > tr > td .new_product_attributes { font-
 .table-condensed > tbody > tr > td,
 .table-condensed > tfoot > tr > td { font-size:13px; }
 
+ul.primaryProductsWrapper { margin:0; padding:0; list-style:none; }
+ul.primaryProductsWrapper > li {  }
+ul.primaryProductsWrapper > li > span { display:block; border-bottom:1px solid #eee; font-weight:600; padding:5px 0; }
+ul.primaryProductsWrapper > li > ul { border-bottom:1px solid #eee; margin:0; padding:7px 0 6px 30px; list-style-type:disc; }
+ul.primaryProductsWrapper > li:last-child > span { border-bottom:none; }
+
 .msadminVerticalTabs > .nav-tabs { float:left; width:15%; border-bottom:none; margin-top:20px; margin-right:0; }
 .msadminVerticalTabs > .nav-tabs > li { float:none; }
 .msadminVerticalTabs > .nav-tabs > li > a { text-align:right; margin-bottom:3px; margin-right: -1px; border-radius:4px 0 0 4px; }

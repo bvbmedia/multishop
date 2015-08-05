@@ -1034,7 +1034,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#billing_details_container").empty();
-                $("#billing_details_container").html(billing_details + "<span><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-success\">'.$this->pi_getLL('edit').'</a></span>");
+                $("#billing_details_container").html(billing_details + "<hr><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
                 $("#billing_details_container").show();
                 $("#edit_billing_details_container").hide();
@@ -1092,7 +1092,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary btn-sm\"><i class=\"fa fa-pencil\"></i>'.$this->pi_getLL('edit').'</a>");
+                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary btn-sm\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
                 $("#delivery_details_container").show();
                 $("#edit_delivery_details_container").hide();
