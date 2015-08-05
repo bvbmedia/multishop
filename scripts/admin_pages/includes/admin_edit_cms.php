@@ -289,12 +289,12 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		<div class="form-group">
 			<label for="cms_name['.$language['uid'].']" class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 			<div class="col-md-10">
-			<div class="input-group">
 			<input spellcheck="true" type="text" class="form-control text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
-			<span class="input-group-btn">
-			<button type="button" class="tooltipMarker btn btn-success" data-container="body" data-toggle="popover">Markers</button>
-			</span>
 			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-10 col-md-offset-2">
+				<button type="button" class="tooltipMarker btn btn-success" data-container="body" data-toggle="popover">Markers</button>
 			</div>
 		</div>
 		<div class="form-group">
