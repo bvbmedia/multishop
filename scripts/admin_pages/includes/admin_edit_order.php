@@ -2559,6 +2559,7 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                             });
                             // get the pre-def attributes
+                            $(\'.manual_new_attributes\').remove();
                             jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order&ajax_products_attributes_search[action]=get_options_values').'",{pid: e.object.id, optid: 0}, function(optionsData){
                                 $.each(optionsData, function(i, opt){
                                     var valid=opt.value.valid
