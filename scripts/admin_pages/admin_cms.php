@@ -342,7 +342,7 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###HEADER_CHECKALL_COLUMN###']='';
 	$subpartArray['###FOOTER_CHECKALL_COLUMN###']='';
 	$subpartArray['###DOWNLOAD_CMS_BUTTON###']='';
-	if ($this->ROOTADMIN_USER) {
+	if ($this->ADMIN_USER) {
 		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th class="cellCheckbox"><div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" id="checkAllCMS"/><label for="checkAllCMS"></label></th>';
 		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th class="cellCheckbox">&nbsp;</th>';
 		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<div><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/><a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms').'" class="btn btn-success admin_menu_add pull-right">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a></div>';
