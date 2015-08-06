@@ -418,22 +418,22 @@ $(document).on("click", "#multishop_update_button", function(e) {
 							  "debug": false,
 							  "newestOnTop": true,
 							  "progressBar": true,
-							  "positionClass": "toast-bottom-full-width",
+							  "positionClass": "toast-bottom-left",
 							  "preventDuplicates": false,
 							  "onclick": null,
 							  "showDuration": "300",
 							  "hideDuration": "1000",
 							  "timeOut": "5000",
 							  "extendedTimeOut": "1000",
-							  "showEasing": "swing",
-							  "hideEasing": "linear",
-							  "showMethod": "fadeIn",
+							  "showEasing": "easeOutCirc",
+							  "hideEasing": "easeInCirc",
+							  "showMethod": "slideDown",
 							  "hideMethod": "fadeOut"
 							}
 						if (string) {
-							toastr["info"](\'Multishop Update\', string);
+							toastr["info"](string,\'Multishop Update\');
 						} else {
-							toastr["info"](\'Multishop Update\', \'We are sorry, but the update failed\');
+							toastr["info"](\'We are sorry, but the update failed\',\'Multishop Update\');
 						}
 					  }
 					});
