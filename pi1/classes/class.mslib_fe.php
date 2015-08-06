@@ -8723,13 +8723,13 @@ class mslib_fe {
 							  "debug": false,
 							  "newestOnTop": true,
 							  "progressBar": true,
-							  "positionClass": "toast-bottom-full-width",
+							  "positionClass": "toast-bottom-left",
 							  "preventDuplicates": false,
 							  "onclick": null,
 							  "showDuration": "300",
 							  "hideDuration": "1000",
-							  "timeOut": "5000",
-							  "extendedTimeOut": "1000",
+							  "timeOut": "500000",
+							  "extendedTimeOut": "500000",
 							  "showEasing": "swing",
 							  "hideEasing": "linear",
 							  "showMethod": "fadeIn",
@@ -8746,7 +8746,7 @@ class mslib_fe {
 							  "debug": false,
 							  "newestOnTop": true,
 							  "progressBar": true,
-							  "positionClass": "toast-bottom-full-width",
+							  "positionClass": "toast-bottom-left",
 							  "preventDuplicates": false,
 							  "onclick": null,
 							  "showDuration": "300",
@@ -8759,11 +8759,6 @@ class mslib_fe {
 							  "hideMethod": "fadeOut"
 							}
 							toastr["info"](\'Je weet toch\', \'This is a Toastr!\');
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 1400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui.\')}, 2400);
 
 				  }
 				});
