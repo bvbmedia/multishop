@@ -412,52 +412,28 @@ $(document).on("click", "#multishop_update_button", function(e) {
 					  success: function (j){
 						$.unblockUI();
 						var string=j.html;
+
+						toastr.options = {
+							  "closeButton": true,
+							  "debug": false,
+							  "newestOnTop": true,
+							  "progressBar": true,
+							  "positionClass": "toast-bottom-full-width",
+							  "preventDuplicates": false,
+							  "onclick": null,
+							  "showDuration": "300",
+							  "hideDuration": "1000",
+							  "timeOut": "5000",
+							  "extendedTimeOut": "1000",
+							  "showEasing": "swing",
+							  "hideEasing": "linear",
+							  "showMethod": "fadeIn",
+							  "hideMethod": "fadeOut"
+							}
 						if (string) {
-							$.blockUI({
-								message: \'<h1>Multishop Update</h1><div class="growl_message">\'+string+\'</div>\',
-								fadeIn: 700,
-								fadeOut: 700,
-								timeout: 10000,
-								showOverlay: false,
-								centerY: true,
-								css: {
-									width: \'350px\',
-									height: \'350px\',
-									top: \'250px\',
-									left: \'\',
-									right: \'50%\',
-									border: \'none\',
-									padding: \'5px\',
-									backgroundColor: \'#000\',
-									\'-webkit-border-radius\': \'10px\',
-									\'-moz-border-radius\': \'10px\',
-									opacity: .9,
-									color: \'#fff\'
-								}
-							});
+							toastr["info"](\'Multishop Update\', string);
 						} else {
-							$.blockUI({
-								message: \'<h1>Multishop Update</h1><div class="growl_message">We are sorry, but the update failed</div>\',
-								fadeIn: 700,
-								fadeOut: 700,
-								timeout: 10000,
-								showOverlay: false,
-								centerY: true,
-								css: {
-									width: \'350px\',
-									height: \'350px\',
-									top: \'250px\',
-									left: \'\',
-									right: \'50%\',
-									border: \'none\',
-									padding: \'5px\',
-									backgroundColor: \'#000\',
-									\'-webkit-border-radius\': \'10px\',
-									\'-moz-border-radius\': \'10px\',
-									opacity: .9,
-									color: \'#fff\'
-								}
-							});
+							toastr["info"](\'Multishop Update\', \'We are sorry, but the update failed\');
 						}
 					  }
 					});
