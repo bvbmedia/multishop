@@ -854,7 +854,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.=$this->pi_getLL('fax').': '.$orders['delivery_fax'].'<br />';
 			}
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
+				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_delivery_info" class="btn btn-primary"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
 			}
 			$tmpcontent.='</div>';
 			$tmpcontent.='
@@ -2559,22 +2559,11 @@ if (is_numeric($this->get['orders_id'])) {
                                 }
                             });
                             // get the pre-def attributes
-                            jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: 0}, function(j){
-                                $(".manual_new_attributes").remove();
-                                jQuery.each(j, function(key, val) {
-                                    jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: val.optid}, function(k) {
-                                        var valid=0;
-                                        var price_data={};
-                                        var ctr=0;
-                                        jQuery.each(k, function(idx, optvalid) {
-                                            if (ctr==0) {
-                                                valid=optvalid.valid;
-                                                price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
-                                            }
-                                            ctr++;
-                                        });
-                                        add_new_attributes(val.optid, valid, price_data);
-                                    });
+                            jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order&ajax_products_attributes_search[action]=get_options_values').'",{pid: e.object.id, optid: 0}, function(optionsData){
+                                $.each(optionsData, function(i, opt){
+                                    var valid=opt.value.valid
+                                    var price_data={values_price: opt.value.values_price, display_values_price: opt.value.display_values_price, display_values_price_including_vat: opt.value.display_values_price_including_vat, price_prefix: opt.value.price_prefix};
+                                    add_new_attributes(opt.optid, valid, price_data);
                                 });
                             });
                             '.($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME'] ? '
@@ -2704,7 +2693,6 @@ if (is_numeric($this->get['orders_id'])) {
                                         },
                                         dataType: "json"
                                     }).done(function(data) {
-                                        console.log($(".edit_manual_attributes_input:input").serialize());
                                         attributesValues[data.id]={id: data.id, text: data.text};
                                         callback(data);
                                     });
