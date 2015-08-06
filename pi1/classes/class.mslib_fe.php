@@ -8728,15 +8728,15 @@ class mslib_fe {
 							  "onclick": null,
 							  "showDuration": "300",
 							  "hideDuration": "1000",
-							  "timeOut": "5000",
-							  "extendedTimeOut": "1000",
-							  "showEasing": "swing",
-							  "hideEasing": "linear",
-							  "showMethod": "fadeIn",
+							  "timeOut": "7500",
+							  "extendedTimeOut": "1500",
+							  "showEasing": "easeOutCirc",
+							  "hideEasing": "easeInCirc",
+							  "showMethod": "slideDown",
 							  "hideMethod": "fadeOut"
 							}
 							jQuery.each(j, function(i, val) {
-								toastr["info"](val.title, val.message);
+								toastr["info"](val.message, val.title);
 							});
 					  }
 				  }
@@ -8744,6 +8744,90 @@ class mslib_fe {
 				setTimeout("displayAdminNotificationMessage()", 45000);
 			}
 			jQuery(document).ready(function($) {
+
+						string="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+						string+="Test you know Test you know Test you know Test you know Test you know Test you know Test you know<br>";
+
+						toastr.options = {
+						  "closeButton": true,
+						  "debug": false,
+						  "newestOnTop": true,
+						  "progressBar": true,
+						  "positionClass": "toast-bottom-left",
+						  "preventDuplicates": false,
+						  "onclick": null,
+						  "showDuration": "300",
+						  "hideDuration": "1000",
+						  "timeOut": "7500",
+						  "extendedTimeOut": "1500",
+						  "showEasing": "easeOutCirc",
+						  "hideEasing": "easeInCirc",
+						  "showMethod": "slideDown",
+						  "hideMethod": "fadeOut"
+						}
+						toastr["info"](string,\'Title\');
 				displayAdminNotificationMessage();
 			});
 		</script>';

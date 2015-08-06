@@ -493,7 +493,9 @@ hr { margin-top:15px; margin-bottom:15px; }
 .select2-container .select2-choice > .select2-chosen { line-height:20px; padding-top:7px; }
 .select2-container .select2-choice > .select2-chosen > h3 { font-size:14px; line-height:20px; margin-bottom:1px; }
 #edit_customer .select2-container,
-.select2-container.pspSelect2 { width:100%; }
+.select2-container.pspSelect2,
+#s2id_new_customers_price_name.select2-container.input_new_customers_price,
+#s2id_new_customers_groups_price_name.select2-container.input_new_customers_groups_price { width:100%; }
 .select2-results li h3 { font-size:14px; line-height:20px; margin-bottom:0; }
 
 .panel-heading-toggle { cursor:pointer; }

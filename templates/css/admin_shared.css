@@ -114,12 +114,19 @@ td.cellAction { white-space:nowrap; }
 .alert h3:last-child { margin-bottom:0; }
 
 /* toast overrule */
-#toast-container > div { width:auto; max-width:500px; font-family:"Open Sans", Arial, Helvetica, sans-serif; line-height:20px; padding:10px 14px 10px 14px; box-shadow:0 0 10px rgba(0,0,0,.8); }
-#toast-container > .toast-info { background-image:none !important; }
-.toast-title { padding-right:22px; }
+#toast-container > div { width:auto; max-width:500px; font-family:"Open Sans", Arial, Helvetica, sans-serif; line-height:18px; padding:10px 14px 10px 40px; box-shadow:0 0 10px rgba(0,0,0,.8); }
+#toast-container > div a,
+#toast-container > div a:hover,
+#toast-container > div a:focus { color:#fff; text-decoration:underline; }
+#toast-container > .toast-info { overflow:auto; max-height:494px; background-image:none !important; }
+#toast-container > .toast-info:after { position:absolute; left:10px; top:16px; font-size:26px; line-height:20px; color:#0090E3; font-family:"fontAwesome"; content:"\f05a"; }
+.toast-bottom-left { bottom:33px; }
 .toast-info { background-color:#000; }
+.toast-title { margin-bottom:3px; padding-right:22px; }
+.toast-message { font-size:13px; line-height:18px; }
 .toast-close-button { right:0; top:0; color:#fff; text-shadow:none; }
 .toast-close-button:focus,
 .toast-close-button:hover { color:#fff; outline:none; opacity:1; }
 #toast-container .cellImage img { max-width:initial; }
+#toast-container .table { margin-top:5px; }
 #toast-container .table td { font-weight:normal; font-family:"Open Sans", Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; }
