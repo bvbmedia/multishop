@@ -121,6 +121,7 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 
 #ms_admin_minimaxi_wrapper { display:none; }
 #tx_multishop_admin_header.affix { position:fixed !important; top:0; width:220px; }
+#tx_multishop_admin_header.affix-bottom { position:absolute !important; width:220px; }
 
 #tx_multishop_admin_footer_wrapper { position:fixed; left:220px; right:0; bottom:0; height:38px; background:#000; font-family:"Open Sans", Arial, Helvetica, sans-serif; text-align:left; margin:0; padding:0; z-index:10004; }
 
@@ -500,3 +501,5 @@ hr { margin-top:15px; margin-bottom:15px; }
 /* CSS Method for adding Font Awesome Chevron Icons */
 .panel-heading-toggle h3:after { float:right; font-family:"FontAwesome"; content:"\f077"; }
 .panel-heading-toggle.collapsed h3:after { content:"\f078"; }
+
+.cellPlPrice { min-width:250px; }
