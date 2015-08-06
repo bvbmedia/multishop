@@ -440,6 +440,12 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
+			adminSharedBootstrapCSS = EXT:multishop/templates/css/admin_shared.css
+			adminSharedBootstrapCSS {
+				media =
+				import = 0
+				compress = 1
+			}
 		}
 	}
 
@@ -584,7 +590,12 @@ multishop_ajax_server {
 				import = 0
 				compress = 1
 			}
-
+			adminSharedBootstrapCSS = EXT:multishop/templates/css/admin_shared.css
+			adminSharedBootstrapCSS {
+				media =
+				import = 0
+				compress = 1
+			}
 		}
 	}
 [end]
