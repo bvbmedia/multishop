@@ -1,3 +1,37 @@
+#ms_admin_top_search .select2-container { float:left; }
+#ms_admin_top_search .select2-container .select2-choice { height:38px; border:none; background:#444; border-radius:0; box-shadow:none; padding-left:30px; }
+#ms_admin_top_search .select2-container .select2-choice:before { position:absolute; left:10px; top:5px; font-family:"FontAwesome"; content:"\f002"; }
+#ms_admin_top_search .select2-container .select2-choice .select2-arrow { border-radius:0; }
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop { width:150px !important; }
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop.select2-dropdown-open { width:500px !important; }
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop.select2-dropdown-open .select2-choice { background:#666; border-radius:0;}
+#ms_admin_top_search .select2-container.adminpanel-search-bigdrop .select2-choice .select2-chosen { background:none; line-height:38px; color:#cdcdcd; padding-top:0; }
+#ms_admin_top_search #btn_search_admin_panel { display:none; border:none; background:#888; line-height:38px; padding-top:0; padding-bottom:0; border-radius:0; }
+#ms_admin_top_search .select2-container .select2-choice .select2-arrow { border:none; background:#666; }
+#ms_admin_top_search .select2-container .select2-choice .select2-arrow b { background-position:left 7px; }
+
+.select2-drop.adminpanel-search-bigdrop { width:150px !important; border:none; background:#666; border-radius:0; }
+#select2-drop.select2-drop.adminpanel-search-bigdrop { width:500px !important; font-size:14px; line-height:20px; font-family:"Open Sans"; z-index:10005; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-results { max-height:297px; font-size:13px; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-results > li > .select2-result-label { background:#333; color:#fff; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a { color:#fff; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a:hover { text-decoration:none; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li.select2-highlighted { background:#444; }
+.select2-drop.adminpanel-search-bigdrop .select2-results .select2-no-results,
+.select2-drop.adminpanel-search-bigdrop .select2-results .select2-searching,
+.select2-drop.adminpanel-search-bigdrop .select2-results .select2-selection-limit { background:#333; color:#fff; padding:3px 7px; }
+.select2-drop.adminpanel-search-bigdrop .select2-results ul.select2-result-sub > li .select2-result-label { padding-left:10px; }
+.select2-drop.adminpanel-search-bigdrop .ajax_products:after { clear:both; display:table; content:""; }
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_image { float:left; width:60px; padding-top:5px; }
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_name,
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_shortdescription,
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_price { padding-left:60px; }
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_shortdescription { font-size:12px; line-height:18px; color:#cdcdcd; }
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_price { color:#fff; }
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_price > .ajax_old_price,
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_price > .ajax_specials_price { display:inline-block; }
+.select2-drop.adminpanel-search-bigdrop .ajax_products > .ajax_products_price > .ajax_old_price { color:#222; text-decoration:line-through; padding-right:10px; }
+
 #tx_multishop_admin_footer_wrapper ul { margin:0; padding:0; list-style:none; }
 #tx_multishop_admin_footer_wrapper ul li { background:none; margin:0; padding:0; }
 #tx_multishop_admin_footer_wrapper ul li a:hover,
@@ -110,6 +144,7 @@ td.cellAction { white-space:nowrap; }
 .cellWeight .form-control { width:69px; }
 .cellUserAgent { min-width:500px; }
 .cellAux { width:418px; }
+.cellStock input[type="text"] { width:73px; text-align:right; }
 
 .alert h3:last-child { margin-bottom:0; }
 
