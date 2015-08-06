@@ -91,10 +91,30 @@
 .width-auto { width:auto; }
 .width-fw { width:100%; }
 
+.cellID { text-align:right; }
+.cellName { width:90%; }
+.cellDate,
+.cellTax { text-align:right; white-space:nowrap; }
+.cellDownload > .btn { width:100%; text-align:left; }
+.cellDownload > .btn:first-child { margin-bottom:5px; }
+td.cellPrice,
+td.cellSpecialPrice,
+.cellStatus,
+td.cellAction { white-space:nowrap; }
+.cellStatus,
+.cellAction { text-align:center; }
+.cellPrice,
+.cellSpecialPrice,
+.cellQty { text-align:right; }
+.cellBackup > .btn { width:100%; }
+.cellWeight .form-control { width:69px; }
+.cellUserAgent { min-width:500px; }
+.cellAux { width:418px; }
+
 .alert h3:last-child { margin-bottom:0; }
 
 /* toast overrule */
-#toast-container > div { width:auto; max-width:500px; padding:10px 14px 10px 14px; box-shadow:0 0 10px rgba(0,0,0,.8); }
+#toast-container > div { width:auto; max-width:500px; font-family:"Open Sans", Arial, Helvetica, sans-serif; line-height:20px; padding:10px 14px 10px 14px; box-shadow:0 0 10px rgba(0,0,0,.8); }
 #toast-container > .toast-info { background-image:none !important; }
 .toast-title { padding-right:22px; }
 .toast-info { background-color:#000; }
@@ -102,4 +122,4 @@
 .toast-close-button:focus,
 .toast-close-button:hover { color:#fff; outline:none; opacity:1; }
 #toast-container .cellImage img { max-width:initial; }
-#toast-container .table td { font-size:13px; font-weight:normal; }
+#toast-container .table td { font-weight:normal; font-family:"Open Sans", Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; }

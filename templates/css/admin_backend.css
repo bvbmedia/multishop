@@ -157,26 +157,6 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .panel-default > .panel-heading h3 a:focus { text-decoration:none; }
 
 /* custom */
-.cellID { text-align:right; }
-.cellName { width:90%; }
-.cellDate,
-.cellTax { text-align:right; white-space:nowrap; }
-.cellDownload > .btn { width:100%; text-align:left; }
-.cellDownload > .btn:first-child { margin-bottom:5px; }
-td.cellPrice,
-td.cellSpecialPrice,
-.cellStatus,
-td.cellAction { white-space:nowrap; }
-.cellStatus,
-.cellAction { text-align:center; }
-.cellPrice,
-.cellSpecialPrice,
-.cellQty { text-align:right; }
-.cellBackup > .btn { width:100%; }
-.cellWeight .form-control { width:69px; }
-.cellUserAgent { min-width:500px; }
-.cellAux { width:418px; }
-
 .cellContent .table { margin-bottom:0; }
 .cellContent table#msOrderDetailsSubTotalTable.table,
 .cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td { border:none; text-align:right; }
