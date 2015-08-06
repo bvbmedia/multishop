@@ -113,6 +113,12 @@ td.cellAction { white-space:nowrap; }
 
 .alert h3:last-child { margin-bottom:0; }
 
+/* blockUI overrule */
+.blockUI.blockOverlay { z-index:16000 !important; }
+.blockUI.blockMsg.blockPage { z-index:16001 !important; }
+.blockUI ul.multishop_block_message { margin-bottom:0; padding-left:0; list-style:none; }
+.blockUI ul.multishop_block_message li { background:none; margin:0; padding:0; }
+
 /* toast overrule */
 #toast-container > div { width:auto; max-width:500px; font-family:"Open Sans", Arial, Helvetica, sans-serif; line-height:18px; padding:10px 14px 10px 40px; box-shadow:0 0 10px rgba(0,0,0,.8); }
 #toast-container > div a,

@@ -483,8 +483,6 @@ hr { margin-top:15px; margin-bottom:15px; }
 #msAdmin_category_listing_ul.treeview,
 #msAdmin_category_listing_ul.treeview ul { padding:0; list-style:none; }
 
-.blockUI ul.multishop_block_message { margin-bottom:0; padding-left:0; list-style:none; }
-
 /* redactor overrule */
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
 
@@ -497,6 +495,10 @@ hr { margin-top:15px; margin-bottom:15px; }
 #s2id_new_customers_price_name.select2-container.input_new_customers_price,
 #s2id_new_customers_groups_price_name.select2-container.input_new_customers_groups_price { width:100%; }
 .select2-results li h3 { font-size:14px; line-height:20px; margin-bottom:0; }
+.select2-container-multi .select2-choices { border-color:#ccc; background-image:none; border-radius:4px; box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075); transition:border-color ease-in-out .15s, box-shadow ease-in-out .15s; }
+.select2-container-multi .select2-choices .select2-search-choice { line-height:18px; }
+.select2-container-multi.select2-dropdown-open .select2-choices { border-color:#5897fb; border-radius:4px 4px 0 0; box-shadow:inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6); }
+.select2-search-choice-close { top:6px; }
 
 .panel-heading-toggle { cursor:pointer; }
 
