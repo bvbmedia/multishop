@@ -2328,7 +2328,7 @@
             <label index="title_descriptions">Beschrijving</label>
             <label index="title_is_required">Titel is verplicht</label>
             <label index="to">Tot</label>
-            <label index="today_there_are_s_orders_created">Vandaaag zijn er %s bestellingen geplaatst</label>
+            <label index="today_there_are_s_orders_created">Vandaag zijn er %s bestellingen geplaatst</label>
             <label index="today_there_is_one_order_created">Vandaag is er %s bestelling geplaatst</label>
             <label index="top">boven</label>
             <label index="total">Totaal</label>
