@@ -342,7 +342,7 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###HEADER_CHECKALL_COLUMN###']='';
 	$subpartArray['###FOOTER_CHECKALL_COLUMN###']='';
 	$subpartArray['###DOWNLOAD_CMS_BUTTON###']='';
-	if ($this->ADMIN_USER) {
+	if ($this->ROOTADMIN_USER) {
 		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th class="cellCheckbox"><div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" id="checkAllCMS"/><label for="checkAllCMS"></label></th>';
 		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th class="cellCheckbox">&nbsp;</th>';
 		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<div><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></div>';
