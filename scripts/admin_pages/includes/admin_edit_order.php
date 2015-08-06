@@ -1713,20 +1713,20 @@ if (is_numeric($this->get['orders_id'])) {
 									$order_products_body_data['products_name']['value']='<div class="product_attributes_wrapper">';
 									$order_products_body_data['products_name']['value'].='<span class="products_attributes_option">';
 									if ($attributes_data['products_options_id']>0) {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$attributes_data['products_options_id'].'"/> ';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$attributes_data['products_options_id'].'"/> ';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="0"/>';
 									} else {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$optname.'"/> ';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$optname.'"/> ';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="1"/>';
 									}
 									$order_products_body_data['products_name']['value'].='</span>';
 									$order_products_body_data['products_name']['value'].='<span> : </span>';
 									$order_products_body_data['products_name']['value'].='<span class="products_attributes_values">';
 									if ($attributes_data['products_options_values_id']>0) {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:195px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="0"/>';
 									} else {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values" name="edit_manual_values[]" style="width:195px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:195px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="1"/>';
 									}
 									$order_products_body_data['products_name']['value'].='</span>';
@@ -1744,7 +1744,7 @@ if (is_numeric($this->get['orders_id'])) {
 									}
 									// products price col
 									$order_products_body_data['products_normal_price']['value']='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value="'.number_format($optprice, 2).'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>';
-									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value="'.($optprice+$attributes_tax_data['tax']).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
+									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value="'.number_format($optprice+$attributes_tax_data['tax'], 2).'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>';
 									$order_products_body_data['products_normal_price']['value'].='<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_manual_price" value="'.$optprice.'" /></div>';
 									if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 										// products vat col
@@ -2440,10 +2440,14 @@ if (is_numeric($this->get['orders_id'])) {
                     $(selector_str).select2({
                         placeholder: placeholder,
                         createSearchChoice:function(term, data) {
-                            if (productsSearch[term] === undefined) {
-                                productsSearch[term]={id: term, text: term};
+                            if ($(data).filter(function() {
+							    return this.text.localeCompare(term)===0;
+                            }).length===0) {
+                                if (productsSearch[term] === undefined) {
+                                    productsSearch[term]={id: term, text: term};
+                                }
+                                return {id:term, text:term};
                             }
-                            return {id:term, text:term};
                         },
                         minimumInputLength: 0,
                         query: function(query) {
@@ -2520,20 +2524,20 @@ if (is_numeric($this->get['orders_id'])) {
                             jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, qty: 1}, function(d){
                                 if (d.tax_id) {
                                     if ($("#product_tax").length>0) {
-                                        if ($("#product_tax").children().length>1) {
+                                        if ($("#product_tax").children().length>0) {
                                             $("#product_tax").val(d.tax_id);
                                         } else {
-                                            d.price_include_vat=false;
+                                            d.price_include_vat=0;
                                         }
                                     } else {
-                                        if ($("#manual_product_tax").children().length>1) {
+                                        if ($("#manual_product_tax").length>0) {
                                             $("#manual_product_tax").val(d.tax_id);
                                         } else {
-                                            d.price_include_vat=false;
+                                            d.price_include_vat=0;
                                         }
                                     }
                                 }
-                                if (d.price_include_vat) {
+                                if (d.price_include_vat>0) {
                                     if ($("#product_tax").length>0) {
                                         $("#display_name_including_vat").val(d.display_price_include_vat);
                                     } else {
@@ -2561,9 +2565,13 @@ if (is_numeric($this->get['orders_id'])) {
                                     jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, optid: val.optid}, function(k) {
                                         var valid=0;
                                         var price_data={};
+                                        var ctr=0;
                                         jQuery.each(k, function(idx, optvalid) {
-                                            valid=optvalid.valid;
-                                            price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
+                                            if (ctr==0) {
+                                                valid=optvalid.valid;
+                                                price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
+                                            }
+                                            ctr++;
                                         });
                                         add_new_attributes(val.optid, valid, price_data);
                                     });
@@ -2583,10 +2591,14 @@ if (is_numeric($this->get['orders_id'])) {
                     $(selector_str).select2({
                         placeholder: placeholder,
                         createSearchChoice:function(term, data) {
-                            if (attributesOptions[term] === undefined) {
-                                attributesOptions[term]={id: term, text: term};
+                            if ($(data).filter(function() {
+							    return this.text.localeCompare(term)===0;
+                            }).length===0) {
+                                if (attributesOptions[term] === undefined) {
+                                    attributesOptions[term]={id: term, text: term};
+                                }
+                                return {id:term, text:term};
                             }
-                            return {id:term, text:term};
                         },
                         minimumInputLength: 0,
                         query: function(query) {
@@ -2666,9 +2678,9 @@ if (is_numeric($this->get['orders_id'])) {
                         minimumInputLength: 0,
                         query: function(query) {
                             var current_optid=$(selector_str).parent().prev().prev().children("input").val();
-                            if (attributesSearchValues[query.term + "||" + current_optid] !== undefined) {
-                                query.callback({results: attributesSearchValues[query.term + "||" + current_optid]});
-                            } else {
+                            //if (attributesSearchValues[query.term + "||" + current_optid] !== undefined) {
+                            //    query.callback({results: attributesSearchValues[query.term + "||" + current_optid]});
+                            //} else {
                                 $.ajax(ajax_url, {
                                     data: {
                                         q: query.term + "||optid=" +  $(selector_str).parent().prev().prev().children("input").val()
@@ -2678,24 +2690,25 @@ if (is_numeric($this->get['orders_id'])) {
                                     attributesSearchValues[query.term]=data;
                                     query.callback({results: data});
                                 });
-                            }
+                            //}
                         },
                         initSelection: function(element, callback) {
                             var id=$(element).val();
                             if (id!=="") {
-                                if (attributesValues[id] !== undefined) {
-                                    callback(attributesValues[id]);
-                                } else {
+                                //if (attributesValues[id] !== undefined) {
+                                //    callback(attributesValues[id]);
+                                //} else {
                                     $.ajax(ajax_url, {
                                         data: {
                                             preselected_id: id,
                                         },
                                         dataType: "json"
                                     }).done(function(data) {
+                                        console.log($(".edit_manual_attributes_input:input").serialize());
                                         attributesValues[data.id]={id: data.id, text: data.text};
                                         callback(data);
                                     });
-                                }
+                                //}
                             }
                         },
                         formatResult: function(data){
@@ -2714,13 +2727,11 @@ if (is_numeric($this->get['orders_id'])) {
                     }).on("select2-selecting", function(e) {
                         if (e.object.id == e.object.text) {
                             $(this).next().val("1");
-                            $.each($(this).parent().parent().parent().next().next().children().children(), function(i, v){
-                                $(v).val("0.00");
-                            });
+                            $(this).parent().parent().parent().parent().children().find(".msAttributesField").find("input").val("0.00");
                         } else {
                             var option_id=$(this).parent().prev().prev().find("input[type=hidden]").val();
                             var option_value_id=e.object.id;
-                            var price_input_obj=$(this).parent().parent().parent().next().next().children();
+                            var price_input_obj=$(this).parent().parent().parent().parent().children().find(".msAttributesField").find("input");
                             var tr_parent=$(this).parent().parent().parent().parent();
                             var tbody_parent=$(tr_parent).parent();
                             //
@@ -2734,21 +2745,35 @@ if (is_numeric($this->get['orders_id'])) {
                             $(this).next().val("0");
                             //
                             jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_attributes_search&tx_multishop_pi1[type]=edit_order').'",{pid: product_id, optid: option_id, valid: option_value_id}, function(k){
-                                jQuery.each(k, function(idx, optvalid) {
-                                    valid=optvalid.valid;
-                                    price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
-                                    jQuery.each(jQuery(price_input_obj).children(), function(i, v) {
+                                if (k.length>0) {
+                                    jQuery.each(k, function(idx, optvalid) {
+                                        valid=optvalid.valid;
+                                        price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
+                                        jQuery.each(jQuery(price_input_obj), function(i, v) {
+                                            if ($(v).attr("id")=="display_manual_name_excluding_vat") {
+                                                $(v).val(price_data.display_values_price);
+                                            }
+                                            if ($(v).attr("id")=="display_manual_name_including_vat") {
+                                                $(v).val(price_data.display_values_price_including_vat);
+                                            }
+                                            if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
+                                                $(v).val(price_data.values_price);
+                                            }
+                                        });
+                                    });
+                                } else {
+                                    jQuery.each(jQuery(price_input_obj), function(i, v) {
                                         if ($(v).attr("id")=="display_manual_name_excluding_vat") {
-                                            $(v).val(price_data.display_values_price);
+                                            $(v).val("0.00");
                                         }
                                         if ($(v).attr("id")=="display_manual_name_including_vat") {
-                                            $(v).val(price_data.display_values_price_including_vat);
+                                            $(v).val("0.00");
                                         }
                                         if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
-                                            $(v).val(price_data.values_price);
+                                            $(v).val("0.00");
                                         }
                                     });
-                                });
+                                }
                             });
                         }
                     });
@@ -2756,8 +2781,13 @@ if (is_numeric($this->get['orders_id'])) {
                 // eof autocomplete for option
                 '.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
                 select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
-                select2_sb(".edit_product_manual_option", "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-                select2_values_sb(".edit_product_manual_values", "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                $.each($(".edit_product_manual_option"), function(i, v){
+                    select2_sb("#" + $(v).attr("id"), "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+                });
+                $.each($(".edit_product_manual_values"), function(i, v){
+                    var select2_element_id="#" + $(v).attr("id");
+                    select2_values_sb(select2_element_id, "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                });
                 ' : '').'
                 var add_new_attributes = function(optid_value, optvalid_value, price_data) {
                     var d = new Date();
@@ -2766,18 +2796,18 @@ if (is_numeric($this->get['orders_id'])) {
                     var manual_attributes_selectbox = \'<div class="product_attributes_wrapper">\';
                     manual_attributes_selectbox += \'<span class="product_attributes_option">\';
                     if (optid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \'" name="edit_manual_option[]" style="width:195px" value="\' + optid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:195px" value="\' + optid_value + \'"/>\';
                     } else {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \'" name="edit_manual_option[]" style="width:195px" value=""/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:195px" value=""/>\';
                     }
                     manual_attributes_selectbox += \'<input type="hidden" name="is_manual_option[]"value="0"/>\';
                     manual_attributes_selectbox += \'</span>\';
                     manual_attributes_selectbox += \'<span> : </span>\';
                     manual_attributes_selectbox += \'<span class="product_attributes_values">\';
                     if (optvalid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \'" name="edit_manual_values[]" style="width:195px" value="\' + optvalid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:195px" value="\' + optvalid_value + \'"/>\';
                     } else {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \'" name="edit_manual_values[]" style="width:195px"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:195px"/>\';
                     }
                     manual_attributes_selectbox += \'<input type="hidden" name="is_manual_value[]"value="0"/>\';
                     manual_attributes_selectbox += \'</span>\';
@@ -3219,6 +3249,9 @@ if (url.match("#")) {
             });
             $("#product_tax").change(function () {
                 $(".msOrderProductPriceExcludingVat").each(function (i) {
+                    productPrice(true, $(this), "#product_tax");
+                });
+                $(".msManualOrderProductPriceExcludingVat").each(function (i) {
                     productPrice(true, $(this), "#product_tax");
                 });
             });

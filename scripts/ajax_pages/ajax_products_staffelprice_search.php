@@ -23,7 +23,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	if ($_REQUEST['pid'] and strlen($_REQUEST['pid'])<1) {
 		exit();
 	}
-	$product=mslib_fe::getProduct($this->get['pid']);
+	$product=mslib_fe::getProduct($this->get['pid'], '', '', 1, 1);
 	$quantity=$this->get['qty'];
 	if ($product['staffel_price']) {
 		$staffel_price['price']=(mslib_fe::calculateStaffelPrice($product['staffel_price'], $quantity)/$quantity);
