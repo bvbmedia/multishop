@@ -30,7 +30,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_edit_order']) {
 			if (!is_numeric($this->get['q'])) {
 				$where[]='pd.products_name like \'%'.addslashes($this->get['q']).'%\'';
 			} else {
-				$where[]='p.products_id = \''.addslashes($this->get['q']).'\'';
+				$where[]='(pd.products_name like \'%'.addslashes($this->get['q']).'%\' or p.products_id = \''.addslashes($this->get['q']).'\')';
 			}
 		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
 			$where[]='p.products_id = \''.addslashes($this->get['preselected_id']).'\'';
