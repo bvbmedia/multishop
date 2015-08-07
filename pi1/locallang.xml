@@ -2085,7 +2085,7 @@
             <label index="login">Inloggen</label>
             <label index="login_as_user">Inloggen als gebruiker</label>
             <label index="login_details">Inloggegevens</label>
-            <label index="login_details_description">Je e-mailadres en wachtwoord zijn nodig om toegang te krijgen tot je gegevens. Tevens zullen we je via dit e-mailadres op de hoogte houden van de status van je bestellingen</label>
+            <label index="login_details_description">Je e-mailadres en wachtwoord zijn nodig om toegang te krijgen tot je gegevens. Tevens zullen we je via dit e-mailadres op de hoogte houden van de status van je bestelling(en)</label>
             <label index="mail_selected_invoices">E-mail geselecteerde facturen</label>
             <label index="mail_selected_orders_for_payment_reminder">Mail betaalherinnering voor geselecteerde bestellingen</label>
             <label index="mail_selected_orders_to_customer">Mail geselecteerde bestellingen naar klant</label>

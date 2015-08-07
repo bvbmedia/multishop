@@ -477,6 +477,33 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$array2[]=$billing_address;
 			$array1[]='###DELIVERY_ADDRESS###';
 			$array2[]=$delivery_address;
+
+			$array1[]='###BILLING_STREET_NAME###';
+			$array2[]=$order['billing_street_name'];
+			$array1[]='###BILLING_ADDRESS_NUMBER###';
+			$array2[]=$order['billing_address_number'];
+			$array1[]='###BILLING_ADDRESS_EXT###';
+			$array2[]=$order['billing_address_ext'];
+			$array1[]='###BILLING_ZIP###';
+			$array2[]=$order['billing_zip'];
+			$array1[]='###BILLING_CITY###';
+			$array2[]=$order['billing_city'];
+			$array1[]='###BILLING_COUNTRY###';
+			$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang,$order['billing_country']);
+
+			$array1[]='###DELIVERY_STREET_NAME###';
+			$array2[]=$order['delivery_street_name'];
+			$array1[]='###DELIVERY_ADDRESS_NUMBER###';
+			$array2[]=$order['delivery_address_number'];
+			$array1[]='###DELIVERY_ADDRESS_EXT###';
+			$array2[]=$order['delivery_address_ext'];
+			$array1[]='###DELIVERY_ZIP###';
+			$array2[]=$order['delivery_zip'];
+			$array1[]='###DELIVERY_CITY###';
+			$array2[]=$order['delivery_city'];
+			$array1[]='###DELIVERY_COUNTRY###';
+			$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang,$order['delivery_country']);
+
 			$array1[]='###CUSTOMER_ID###';
 			$array2[]=$order['customer_id'];
 			$ORDER_DETAILS=self::printOrderDetailsTable($order, 'email');
