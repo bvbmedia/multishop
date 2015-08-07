@@ -1021,7 +1021,7 @@
             <label index="search_for">Search for</label>
             <label index="security_code">Security Code</label>
             <label index="select_members">Select members</label>
-            <label index="select_orders_payment_status">Filter by orders payment status</label>
+            <label index="select_orders_payment_status">Filter by payment status</label>
             <label index="select_percentage">select percentage</label>
             <label index="send_email_to_customer">Send e-mail to customer</label>
             <label index="shipping_and_handling_cost_overview">Shipping and handling costs</label>
@@ -2247,7 +2247,7 @@
             <label index="search_for">Zoek naar</label>
             <label index="security_code">Beveiligingscode</label>
             <label index="select_members">Selecteer leden</label>
-            <label index="select_orders_payment_status">filteren op bestellingen betaalstatus</label>
+            <label index="select_orders_payment_status">filteren op betaalstatus</label>
             <label index="select_percentage">selecteer percentage</label>
             <label index="send_email_to_customer">Verstuur e-mail naar klant</label>
             <label index="shipping_and_handling_cost_overview">Bezorg- en verwerkkosten</label>
