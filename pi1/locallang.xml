@@ -1639,7 +1639,7 @@
             <label index="admin_product_images">Productafbeeldingen</label>
             <label index="admin_product_options">Productopties</label>
             <label index="admin_product_units">Producteenheden</label>
-            <label index="admin_products">Product</label>
+            <label index="admin_products">Producten</label>
             <label index="admin_products_search">Product zoekopdrachten</label>
             <label index="admin_products_search_description">Toon belangrijkste zoekopdrachten</label>
             <label index="admin_proposals">Offertes</label>
