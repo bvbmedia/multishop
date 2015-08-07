@@ -2953,6 +2953,33 @@ class mslib_befe {
 		$array2[]=strftime("%x", $order['expected_delivery_date']);
 		$array1[]='###TRACK_AND_TRACE_CODE###';
 		$array2[]=$order['track_and_trace_code'];
+
+		$array1[]='###BILLING_STREET_NAME###';
+		$array2[]=$order['billing_street_name'];
+		$array1[]='###BILLING_ADDRESS_NUMBER###';
+		$array2[]=$order['billing_address_number'];
+		$array1[]='###BILLING_ADDRESS_EXT###';
+		$array2[]=$order['billing_address_ext'];
+		$array1[]='###BILLING_ZIP###';
+		$array2[]=$order['billing_zip'];
+		$array1[]='###BILLING_CITY###';
+		$array2[]=$order['billing_city'];
+		$array1[]='###BILLING_COUNTRY###';
+		$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang,$order['billing_country']);
+
+		$array1[]='###DELIVERY_STREET_NAME###';
+		$array2[]=$order['delivery_street_name'];
+		$array1[]='###DELIVERY_ADDRESS_NUMBER###';
+		$array2[]=$order['delivery_address_number'];
+		$array1[]='###DELIVERY_ADDRESS_EXT###';
+		$array2[]=$order['delivery_address_ext'];
+		$array1[]='###DELIVERY_ZIP###';
+		$array2[]=$order['delivery_zip'];
+		$array1[]='###DELIVERY_CITY###';
+		$array2[]=$order['delivery_city'];
+		$array1[]='###DELIVERY_COUNTRY###';
+		$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang,$order['delivery_country']);
+
 		// dynamic variablese eof
 		if ($this->post['comments']) {
 			$this->post['comments']=str_replace($array1, $array2, $this->post['comments']);
