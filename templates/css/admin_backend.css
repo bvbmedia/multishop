@@ -451,6 +451,7 @@ hr { margin-top:15px; margin-bottom:15px; }
 
 /* redactor overrule */
 .form-group .col-md-10 .redactor-box { margin-bottom:0; }
+.redactor-box textarea { font-size:14px; line-height: 1.6em; font-family: Arial, Helvetica, Verdana, Tahoma, sans-serif; padding:20px; }
 
 /* select2 overrule */
 .select2-container .select2-choice { height:34px; }
