@@ -292,7 +292,7 @@ if ($this->ADMIN_USER) {
 if ($this->get['type']=='2003') {
 	// Backend column left nav
 	$html.='
-							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false">\';
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="affix panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false" data-spy="affix" data-offset-top="0" data-offset-bottom="0">\';
 							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'collapse\');
 							admin_menu_header += admin_menu_header_html;
 							admin_menu_header += \'</ul></div>\';
@@ -337,12 +337,6 @@ $html.='
 ';
 if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') {
 	$html.='
-		$(\'ul#tx_multishop_admin_header\').affix({
-			offset: {
-				top:0,
-				bottom:0
-			}
-		});
 		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').removeClass("collapsed");
 		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').next().addClass("in");
 		/*
