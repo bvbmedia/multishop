@@ -460,7 +460,10 @@ hr { margin-top:15px; margin-bottom:15px; }
 #edit_customer .select2-container,
 .select2-container.pspSelect2,
 #s2id_new_customers_price_name.select2-container.input_new_customers_price,
-#s2id_new_customers_groups_price_name.select2-container.input_new_customers_groups_price { width:100%; }
+#s2id_new_customers_groups_price_name.select2-container.input_new_customers_groups_price,
+#s2id_msAdminSelect2Bottom.select2-container { width:100%; }
+#s2id_msAdminSelect2Top.select2-container { width:300px; }
+
 .select2-results li h3 { font-size:14px; line-height:20px; margin-bottom:0; }
 .select2-container-multi .select2-choices { border-color:#ccc; background-image:none; border-radius:4px; box-shadow:inset 0 1px 1px rgba(0, 0, 0, .075); transition:border-color ease-in-out .15s, box-shadow ease-in-out .15s; }
 .select2-container-multi .select2-choices .select2-search-choice { line-height:18px; }
