@@ -206,7 +206,7 @@ foreach ($fields as $key=>$label) {
 }
 $searchby_selectbox.='</select>';
 //$search_category_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('cid', mslib_fe::tx_multishop_get_category_tree('', '', '', '', false, false, 'Root'), $this->get['cid'],'class="form-control"');
-$search_category_selectbox='<input type="hidden" name="cid" class="categories_select_top">';
+$search_category_selectbox='<input type="hidden" name="cid" class="categories_select2" id="msAdminSelect2Top">';
 $search_limit='<select name="tx_multishop_pi1[limit]" class="form-control">';
 $limits=array();
 $limits[]='10';
@@ -699,7 +699,7 @@ if ($pageset['total_rows']>0) {
 	}
 	$action_selectbox.='</select>';
 	//$input_categories_selectbox=mslib_fe::tx_multishop_draw_pull_down_menu('tx_multishop_pi1[target_categories_id]', mslib_fe::tx_multishop_get_category_tree('', '', ''), '', 'class="form-control" id="target_categories_id"');
-    $input_categories_selectbox='<div id="target_categories_id"><input type="hidden" name="tx_multishop_pi1[target_categories_id]" class="categories_select_bottom"></div>';
+    $input_categories_selectbox='<div id="target_categories_id"><input type="hidden" name="tx_multishop_pi1[target_categories_id]" class="categories_select2" id="msAdminSelect2Bottom"></div>';
 	$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls')."'";
 	if (isset($this->get['cid']) && $this->get['cid']>0) {
 		$dlink="location.href = '/".mslib_fe::typolink('', 'tx_multishop_pi1[page_section]=admin_price_update_dl_xls&cid='.$this->get['cid'])."'";
