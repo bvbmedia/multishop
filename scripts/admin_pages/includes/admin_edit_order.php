@@ -1257,7 +1257,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$order_products_table=array();
 			$order_products_header_data=array();
 			$tr_type='even';
-			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing">';
+			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing" id="orders_products_listing_table">';
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 				$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 			}
@@ -1373,9 +1373,9 @@ if (is_numeric($this->get['orders_id'])) {
 						$order_products_body_data['products_name']['align']='left';
 						$order_products_body_data['products_name']['class']='cellName';
 						if ($order['products_id']>0) {
-							$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:400px" />';
+							$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_id'].'" style="width:402px" />';
 						} else {
-							$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:400px" />';
+							$order_products_body_data['products_name']['value']='<input class="product_name_input" type="hidden" name="products_id" value="'.$order['products_name'].'" style="width:402px" />';
 						}
 						if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
 							if ($order['products_id']>0) {
@@ -1384,9 +1384,9 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($original_pn!=$order['products_name']) {
 									$custom_product_name=$order['products_name'];
 								}
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="'.$custom_product_name.'" width="300px" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_current_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="'.$custom_product_name.'" style="width:402px;" /></div>';
 							} else {
-								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
+								$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" class="form-control" name="custom_manual_product_name" value="" disabled="disabled" style="width:402px;" /></div>';
 							}
 						}
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
@@ -1892,8 +1892,8 @@ if (is_numeric($this->get['orders_id'])) {
 								$order_products_body_data['products_qty']['value']='';
 								// products name col
 								$order_products_body_data['products_name']['align']='left';
-								$order_products_body_data['products_name']['value']=$rs_option['products_options_name'].': ';
-								$order_products_body_data['products_name']['value'].='<select name="option['.$rs_option['products_options_id'].']" id="option_'.$rs_option['products_options_id'].'">';
+								$order_products_body_data['products_name']['value'].='<label>'.$rs_option['products_options_name'].':</label>';
+								$order_products_body_data['products_name']['value'].='<select name="option['.$rs_option['products_options_id'].']" id="option_'.$rs_option['products_options_id'].'" class="form-control" style="width:402px;">';
 								$sql_optval="select pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id = pov.products_options_values_id where pov.language_id = '".$this->sys_language_uid."' and pa.options_id = '".$rs_option['products_options_id']."' and pa.products_id = ".$order['products_id'];
 								$qry_optval=$GLOBALS['TYPO3_DB']->sql_query($sql_optval);
 								while (($rs_optval=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_optval))!=false) {
