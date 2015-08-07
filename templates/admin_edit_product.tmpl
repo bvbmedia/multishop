@@ -297,13 +297,8 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     // populate the existing related products
     initRelatedProduct(url_relatives);
     $("#filter").click(function () {
-        if ($("#key").val().length === 0) {
-            var keywords = 2;
-        } else {
-            var keywords = $("#key").val();
-        }
+        var keywords = $("#key").val();
         var cid = $("#rel_catid").val();
-
         $.ajax({
             type: "POST",
             url: url_relatives,
