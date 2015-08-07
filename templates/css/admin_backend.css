@@ -233,7 +233,7 @@ table#product_attributes_table table td.product_attribute_price .input-group .fo
 }
 table#product_attributes_table table td .product_attribute_action_container { width:87px !important; white-space:nowrap; }
 table#product_attributes_table table td:last-child { padding-right:0; }
-
+#orders_products_listing_table .cellName { width:402px; }
 .table > tfoot > tr > td.order_total_data { padding-bottom:0; }
 
 .product_staffel_price .table > * > tr > td { border-bottom:none; }
