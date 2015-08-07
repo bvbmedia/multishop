@@ -97,7 +97,7 @@ $content.='
 <div class="panel-body">
 <form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post" class="form-horizontal">
 	<fieldset>
-		
+
 		<div class="form-group">
 				<label for="" class="control-label col-md-2">Name</label>
 				<div class="col-md-10">
@@ -247,7 +247,18 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	$content.='
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
-		$(".nav-tabs a:first").tab("show");
+		var url = document.location.toString();
+        if (url.match("#")) {
+            $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
+        } else {
+            $(".nav-tabs a:first").tab("show");
+        }
+        // Change hash for page-reload
+        $(".nav-tabs a").on("shown.bs.tab", function (e) {
+            window.location.hash = e.target.hash;
+            $("body,html,document").scrollTop(0);
+        });
+
 	});
 	</script>
 	<div id="tab-container" class="zone-tabs">
@@ -266,13 +277,12 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
-			<div id="'.$key.'" class="tab-content">
+			<div id="'.$key.'" class="tab-pane" role="tabpanel">
 				'.$value[1].'
 			</div>
 		';
 	}
 	$content.=$save_block.'
-
 		</div>
 	</div>
 	';
@@ -335,6 +345,11 @@ if (!$this->get['edit']) {
 		$content.='</table>';
 	}
 }
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
+$content.='<hr>
+            <div class="clearfix">
+                <a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a>
+            </div>
+       </div>
+       </div>';
 $content=''.mslib_fe::shadowBox($content).'';
 ?>
