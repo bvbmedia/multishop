@@ -3063,8 +3063,8 @@ class mslib_befe {
 			}
 		}
 		if (!$objPHPass && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('saltedpasswords')) {
-			if (TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled()) {
-				$objPHPass=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::getDefaultSaltingHashingMethod());
+			if (\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled()) {
+				$objPHPass=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::getDefaultSaltingHashingMethod());
 			}
 		}
 		if ($objPHPass) {
