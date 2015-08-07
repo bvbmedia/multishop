@@ -3028,10 +3028,14 @@ if ($this->post) {
 					$(selector_str).select2({
 						placeholder: placeholder,
 						createSearchChoice:function(term, data) {
-							if (attributesOptions[term] === undefined) {
-								attributesOptions[term]={id: term, text: term};
-							}
-							return {id:term, text:term};
+							if ($(data).filter(function() {
+							    return this.text.localeCompare(term)===0;
+                            }).length===0) {
+                                if (attributesOptions[term] === undefined) {
+                                    attributesOptions[term]={id: term, text: term};
+                                }
+                                return {id:term, text:term};
+                            }
 						},
 						minimumInputLength: 0,
 						query: function(query) {

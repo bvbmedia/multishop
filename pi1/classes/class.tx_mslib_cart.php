@@ -1910,7 +1910,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									'orders_products_id'=>$orders_products_id,
 									'insertArray'=>$insertArray,
 									'insertAttributes'=>$insertAttributes,
-									'cart'=>$cart
+									'cart'=>$cart,
+                                    'cart_value'=>$value
 								);
 								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['insertOrdersProductsPostProc'] as $funcRef) {
 									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

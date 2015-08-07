@@ -906,7 +906,7 @@ switch ($_REQUEST['action']) {
 		$order_listing=$this->pi_getLL('no_orders_found');
 		if ($orders_pageset['total_rows']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
-			$order_listing='<div class="msHorizontalOverflowWrapper">
+			$order_listing='<div class="table-responsive">
 				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
 					<tr>
 						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>

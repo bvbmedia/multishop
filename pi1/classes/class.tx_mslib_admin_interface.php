@@ -209,7 +209,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		if (count($pageset['dataset'])) {
 			$tr_type='even';
 			$tableContent.='
-			<div class="msHorizontalOverflowWrapper">
+			<div class="table-responsive">
 			';
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';

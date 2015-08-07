@@ -5420,7 +5420,7 @@ class mslib_fe {
 			return false;
 		}
 	}
-	public function getSubcatsOnly($parent_id=0, $include_disabled_categories=0, $page_uid='') {
+	public function getSubcatsOnly($parent_id=0, $include_disabled_categories=0, $page_uid='',$include_hidden_categories=1) {
 		if (!is_numeric($parent_id)) {
 			return false;
 		}
@@ -5435,6 +5435,9 @@ class mslib_fe {
 			$query_array['where'][]='c.page_uid=\''.$page_uid.'\'';
 			if (!$include_disabled_categories) {
 				$query_array['where'][]='c.status=1';
+			}
+			if (!$include_hidden_categories) {
+				$query_array['where'][]='c.hide_in_menu=0';
 			}
 			//hook to let other plugins further manipulate the query
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getSubcatsOnlyQueryPreProc'])) {
@@ -8725,43 +8728,17 @@ class mslib_fe {
 							  "onclick": null,
 							  "showDuration": "300",
 							  "hideDuration": "1000",
-							  "timeOut": "5000",
-							  "extendedTimeOut": "1000",
-							  "showEasing": "swing",
-							  "hideEasing": "linear",
-							  "showMethod": "fadeIn",
+							  "timeOut": "7500",
+							  "extendedTimeOut": "1500",
+							  "showEasing": "easeOutCirc",
+							  "hideEasing": "easeInCirc",
+							  "showMethod": "slideDown",
 							  "hideMethod": "fadeOut"
 							}
 							jQuery.each(j, function(i, val) {
-								toastr["info"](val.title, val.message);
+								toastr["info"](val.message, val.title);
 							});
 					  }
-					  /*
-						  // testing
-						  	toastr.options = {
-							  "closeButton": true,
-							  "debug": false,
-							  "newestOnTop": true,
-							  "progressBar": true,
-							  "positionClass": "toast-bottom-left",
-							  "preventDuplicates": false,
-							  "onclick": null,
-							  "showDuration": "300",
-							  "hideDuration": "1000",
-							  "timeOut": "5000",
-							  "extendedTimeOut": "1000",
-							  "showEasing": "swing",
-							  "hideEasing": "linear",
-							  "showMethod": "fadeIn",
-							  "hideMethod": "fadeOut"
-							}
-							toastr["info"](\'Je weet toch\', \'This is a Toastr!\');
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 1400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
-							setTimeout(function(){toastr["info"](\'Je weet toch\', \'This is a Toastr!\')}, 2400);
-						*/
 				  }
 				});
 				setTimeout("displayAdminNotificationMessage()", 45000);
@@ -8841,7 +8818,7 @@ class mslib_fe {
 			'tx_multishop_products_attributes', // FROM ...
 			'products_id="'.addslashes($pid).'"', // WHERE...
 			'', // GROUP BY...
-			'', // ORDER BY...
+			'sort_order_option_name asc, sort_order_option_value asc', // ORDER BY...
 			'' // LIMIT ...
 		);
 		$res=$GLOBALS['TYPO3_DB']->sql_query($query);

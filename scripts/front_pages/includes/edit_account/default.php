@@ -470,7 +470,9 @@ if ($this->post) {
 	$markerArray['###VALUE_COMPANY###']=htmlspecialchars($user['company']);
 	$markerArray['###COMPANY_VALIDATION###']=($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"' : '');
 	$markerArray['###INPUT_VAT_BLOCK###']=$vat_input_block;
+    $markerArray['###VALUE_VAT_ID###']=htmlspecialchars($user['tx_multishop_vat_id']);
 	$markerArray['###INPUT_COC_BLOCK###']=$coc_input_block;
+    $markerArray['###VALUE_COC_ID###']=htmlspecialchars($user['tx_multishop_coc_id']);
 	$markerArray['###LABEL_FIRST_NAME###']=ucfirst($this->pi_getLL('first_name'));
 	$markerArray['###VALUE_FIRST_NAME###']=htmlspecialchars($user['first_name']);
 	$markerArray['###LABEL_ERROR_FIRST_NAME_IS_REQUIRED###']=$this->pi_getLL('first_name_required');

@@ -1,8 +1,8 @@
 <!-- ###TEMPLATE### begin -->
-<table class="table table-striped table-bordered border" id="msOrderDetailsTable">
+<table class="table table-striped border" id="msOrderDetailsTable">
 	<!-- ###ITEMS_HEADER_WRAPPER### begin -->
 	<thead>
-	<tr class="msOrderDetailsHeading">
+	<tr>
 		<th class="cellImage">&nbsp;</th>
 		<th class="cellName">###HEADING_PRODUCTS_NAME###</th>
 		<th class="cellQty">###HEADING_QUANTITY###</th>
@@ -12,7 +12,7 @@
 	<tbody>
 	<!-- ###ITEMS_HEADER_WRAPPER### end -->	
 	<!-- ###ITEMS_WRAPPER### begin -->
-	<tr class="###ITEM_CLASS###">
+	<tr>
 		<td class="cellImage">###ITEM_IMAGE###</td>
 		<td class="cellName">###ITEM_NAME###</td>
 		<td class="cellQty">###ITEM_QUANTITY###</td>
@@ -20,13 +20,13 @@
 	</tr>
     <!-- ###ITEMS_WRAPPER### end -->
     </tbody>
-</table>
-<table class="table table-stiped table-bordered" id="msOrderDetailsSubTotalTable">
-<!-- ###SUBTOTAL_WRAPPER### begin -->
-<tr>
-	<td class="msOrderDetailsSubTotalProductsLabel msOrderDetailsSubTotalLabel">###PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL###</td>
-	<td class="msOrderDetailsSubTotalProducts msOrderDetailsSubTotalValue">###PRODUCTS_TOTAL_PRICE_INCLUDING_VAT###</td>
-</tr>
-<!-- ###SUBTOTAL_WRAPPER### end -->
+    <!-- ###SUBTOTAL_WRAPPER### begin -->
+    <tfoot>
+    <tr id="msOrderDetailsSubTotalTable">
+		<td colspan="2" align="right"><strong>###PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL###</strong></td>
+		<td colspan="2" class="cellPrice"><strong>###PRODUCTS_TOTAL_PRICE_INCLUDING_VAT###</strong></td>
+    </tr>
+    </tfoot>
+    <!-- ###SUBTOTAL_WRAPPER### end -->
 </table>
 <!-- ###TEMPLATE### end -->

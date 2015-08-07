@@ -205,13 +205,13 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 			});
 		</script>
 		<div class="form-group" style="display:none" id="msadminMarkersBox">
-			<label class="col-md-2 control-label">'.$this->pi_getLL('marker').'</label>
-			<div class="col-md-10">
-				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="msAdminTooltipTable table table-striped table-bordered msadmin_orders_listing">
+				<table id="product_import_table" class="msAdminTooltipTable table table-striped table-bordered table-condensed msadmin_orders_listing no-mb">
+				<thead>
 				<tr>
 					<th>'.$this->pi_getLL('marker').'</th>
 					<th>'.$this->pi_getLL('description').'</th>
 				</tr>
+				</thead><tbody>
 				';
 	$markers=array();
 	$markers['GENDER_SALUTATION']=$this->pi_getLL('admin_label_gender_salutation');
@@ -272,10 +272,9 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		} else {
 			$tr_subtype='even';
 		}
-		$tmpcontent.='<tr class="'.$tr_subtype.'"><td class="marker_key">###'.$key.'###</td><td class="marker_description">'.htmlspecialchars($label).'</td></tr>'."\n";
+		$tmpcontent.='<tr><td class="marker_key">###'.$key.'###</td><td class="marker_description">'.htmlspecialchars($label).'</td></tr>'."\n";
 	}
-	$tmpcontent.='</table>
-				</div>
+	$tmpcontent.='</tbody></table>
 			</div>';
 	foreach ($this->languages as $key=>$language) {
 		$tmpcontent.='
@@ -289,12 +288,12 @@ if ($cms['id'] or $_REQUEST['action']=='edit_cms') {
 		<div class="form-group">
 			<label for="cms_name['.$language['uid'].']" class="control-label col-md-2">'.htmlspecialchars($this->pi_getLL('name')).'</label>
 			<div class="col-md-10">
-			<div class="input-group">
 			<input spellcheck="true" type="text" class="form-control text" name="cms_name['.$language['uid'].']" id="cms_name['.$language['uid'].']" value="'.htmlspecialchars($cms[$language['uid']]['name']).'">
-			<span class="input-group-btn">
-			<button type="button" class="tooltipMarker btn btn-success" data-container="body" data-toggle="popover">Markers</button>
-			</span>
 			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-10 col-md-offset-2">
+				<button type="button" class="tooltipMarker btn btn-success" data-container="body" data-toggle="popover">Markers</button>
 			</div>
 		</div>
 		<div class="form-group">
@@ -376,7 +375,7 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			placement:\'right\',
 			title:\'Markers\',
 			content: function() {
-			  return $("#msadminMarkersBox .valueField").html();
+			  return \'<div class="form-group">\' + $("#msadminMarkersBox").html() + \'</div>\';
 			}
 		});
 	});

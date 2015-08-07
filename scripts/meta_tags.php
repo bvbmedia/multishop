@@ -292,7 +292,7 @@ if ($this->ADMIN_USER) {
 if ($this->get['type']=='2003') {
 	// Backend column left nav
 	$html.='
-							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false">\';
+							admin_menu_header += \'<div id="tx_multishop_admin_header_bg"><ul class="affix panel-group" id="tx_multishop_admin_header" role="tablist" aria-multiselectable="false" data-spy="affix" data-offset-top="0" data-offset-bottom="0">\';
 							var admin_menu_header_html = renderAdminMenu(json_data.header, \'header\', 1,\'collapse\');
 							admin_menu_header += admin_menu_header_html;
 							admin_menu_header += \'</ul></div>\';
@@ -337,12 +337,6 @@ $html.='
 ';
 if (!$this->ms['MODULES']['DISABLE_ADMIN_PANEL'] && $this->get['type']=='2003') {
 	$html.='
-		$(\'ul#tx_multishop_admin_header\').affix({
-			offset: {
-				top:0,
-				bottom:0
-			}
-		});
 		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').removeClass("collapsed");
 		$(\'ul#tx_multishop_admin_header\').find(\'.active\').parentsUntil(\'li.mainmenu_parents\').parent().children(\'a\').next().addClass("in");
 		/*
@@ -412,52 +406,28 @@ $(document).on("click", "#multishop_update_button", function(e) {
 					  success: function (j){
 						$.unblockUI();
 						var string=j.html;
+
+						toastr.options = {
+							  "closeButton": true,
+							  "debug": false,
+							  "newestOnTop": true,
+							  "progressBar": true,
+							  "positionClass": "toast-bottom-left",
+							  "preventDuplicates": false,
+							  "onclick": null,
+							  "showDuration": "300",
+							  "hideDuration": "1000",
+							  "timeOut": "5000",
+							  "extendedTimeOut": "1000",
+							  "showEasing": "easeOutCirc",
+							  "hideEasing": "easeInCirc",
+							  "showMethod": "slideDown",
+							  "hideMethod": "fadeOut"
+							}
 						if (string) {
-							$.blockUI({
-								message: \'<h1>Multishop Update</h1><div class="growl_message">\'+string+\'</div>\',
-								fadeIn: 700,
-								fadeOut: 700,
-								timeout: 10000,
-								showOverlay: false,
-								centerY: true,
-								css: {
-									width: \'350px\',
-									height: \'350px\',
-									top: \'250px\',
-									left: \'\',
-									right: \'50%\',
-									border: \'none\',
-									padding: \'5px\',
-									backgroundColor: \'#000\',
-									\'-webkit-border-radius\': \'10px\',
-									\'-moz-border-radius\': \'10px\',
-									opacity: .9,
-									color: \'#fff\'
-								}
-							});
+							toastr["info"](string,\'Multishop Update\');
 						} else {
-							$.blockUI({
-								message: \'<h1>Multishop Update</h1><div class="growl_message">We are sorry, but the update failed</div>\',
-								fadeIn: 700,
-								fadeOut: 700,
-								timeout: 10000,
-								showOverlay: false,
-								centerY: true,
-								css: {
-									width: \'350px\',
-									height: \'350px\',
-									top: \'250px\',
-									left: \'\',
-									right: \'50%\',
-									border: \'none\',
-									padding: \'5px\',
-									backgroundColor: \'#000\',
-									\'-webkit-border-radius\': \'10px\',
-									\'-moz-border-radius\': \'10px\',
-									opacity: .9,
-									color: \'#fff\'
-								}
-							});
+							toastr["info"](\'We are sorry, but the update failed\',\'Multishop Update\');
 						}
 					  }
 					});

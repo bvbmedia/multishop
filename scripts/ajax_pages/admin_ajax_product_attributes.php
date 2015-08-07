@@ -142,11 +142,6 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 					'id'=>$this->get['preselected_id'],
 					'text'=>$this->get['preselected_id']
 				);
-			} else {
-				$data[]=array(
-					'id'=>$this->get['q'],
-					'text'=>$this->get['q']
-				);
 			}
 		}
 		$content=json_encode($data);
