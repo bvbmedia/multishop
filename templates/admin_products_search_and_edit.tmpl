@@ -156,11 +156,11 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
-	$('.categories_select2').select2({
+	$('.categories_select_top').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
 		minimumInputLength: 0,
 		multiple: false,
-        width:'100%',
+        width:'400px',
 		//allowClear: true,
 		query: function (query) {
 		   $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL###', {
@@ -207,6 +207,57 @@ jQuery(document).ready(function($) {
 		   return m;
 		}
 	});
+    $('.categories_select_bottom').select2({
+        dropdownCssClass: "", // apply css that makes the dropdown taller
+        minimumInputLength: 0,
+        multiple: false,
+        width:'100%',
+        //allowClear: true,
+        query: function (query) {
+            $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL###', {
+                data: {
+                    q: query.term
+                },
+                dataType: "json"
+            }).done(function (data) {
+                //categoriesIdSearchTerm[query.term]=data;
+                query.callback({results: data});
+            });
+        },
+        initSelection: function (element, callback) {
+            var id = $(element).val();
+            if (id !== "") {
+                $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE###', {
+                    data: {
+                        preselected_id: id
+                    },
+                    dataType: "json"
+                }).done(function (data) {
+                    categoriesIdTerm[data.id] = {id: data.id, text: data.text};
+                    callback(data);
+                });
+            }
+        },
+        formatResult: function (data) {
+            if (data.text === undefined) {
+                $.each(data, function (i, val) {
+                    return val.text;
+                });
+            } else {
+                return data.text;
+            }
+        },
+        formatSelection: function (data) {
+            if (data.text === undefined) {
+                return data[0].text;
+            } else {
+                return data.text;
+            }
+        },
+        escapeMarkup: function (m) {
+            return m;
+        }
+    });
 	$('#check_all_1').click(function () {
 		$('input:checkbox').prop('checked', this.checked);
 	});
