@@ -6455,7 +6455,7 @@ class mslib_fe {
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_product_feeds' || $this->post['tx_multishop_pi1']['page_section']=='admin_product_feeds') {
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_product_feeds']['active']=1;
 			}
-			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['label']=$this->pi_getLL('admin_order_unit');
+			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['label']=$this->pi_getLL('admin_order_units');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_order_units');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['class']='fa fa-mouse-pointer';
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_order_units']['description']='';

@@ -1233,6 +1233,7 @@
             <label index="export">Export</label>
             <label index="filter_by_date">Filter by date</label>
             <label index="overview">Overview</label>
+            <label index="admin_order_units">Order units</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2459,6 +2460,7 @@
             <label index="export">Exporteren</label>
             <label index="filter_by_date">Filter op datum</label>
             <label index="overview">Overzicht</label>
+            <label index="admin_order_units">Besteleenheden</label>
         </languageKey>
     </data>
 </T3locallang>
