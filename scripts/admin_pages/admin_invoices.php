@@ -488,8 +488,8 @@ foreach ($tabs as $key=>$value) {
 		<div class="panel-body">
 		<form id="form1" name="form1" method="get" action="index.php">
 		'.$form_orders_search.'
-		</form>
 		'.$value[1].'
+		</form>
 	';
 	break;
 }
