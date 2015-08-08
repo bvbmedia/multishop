@@ -2535,7 +2535,7 @@ if (is_numeric($this->get['orders_id'])) {
                             ' : '').'
                         } else {
                             $("#edit_order_product_id").html(e.object.id);
-                            jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, qty: 1}, function(d){
+                            jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, oid:'.$this->get['orders_id'].', qty: 1}, function(d){
                                 if (d.tax_id) {
                                     if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
@@ -2550,6 +2550,9 @@ if (is_numeric($this->get['orders_id'])) {
                                             d.price_include_vat=0;
                                         }
                                     }
+                                }
+                                if (!d.use_tax_id) {
+                                	d.price_include_vat=0;
                                 }
                                 if (d.price_include_vat>0) {
                                     if ($("#product_tax").length>0) {

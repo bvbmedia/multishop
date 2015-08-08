@@ -35,6 +35,30 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 	//}
 	$staffel_price['display_price']=mslib_fe::taxDecimalCrop($staffel_price['price'], 2, false);
 	$staffel_price['display_price_include_vat']=mslib_fe::taxDecimalCrop($staffel_price['price_include_vat'], 2, false);
+	//
+	$staffel_price['use_tax_id']=true;
+	if (isset($this->get['oid']) && is_numeric($this->get['oid']) && $this->get['oid']>0) {
+		$orders=mslib_fe::getOrder($this->get['oid']);
+		$iso_customer = mslib_fe::getCountryByName($orders['billing_country']);
+		$iso_customer['country'] = $iso_customer['cn_short_en'];
+		//
+		$sql_tax_sb=$GLOBALS['TYPO3_DB']->SELECTquery('t.tax_id, t.rate, t.name, trg.default_status', // SELECT ...
+				'tx_multishop_taxes t, tx_multishop_tax_rules tr, tx_multishop_tax_rule_groups trg', // FROM ...
+				't.tax_id=tr.tax_id and tr.rules_group_id=trg.rules_group_id and trg.status=1 and tr.cn_iso_nr=\''.$iso_customer['cn_iso_nr'].'\'', // WHERE...
+				'', // GROUP BY...
+				'', // ORDER BY...
+				'' // LIMIT ...
+		);
+		$qry_tax_sb=$GLOBALS['TYPO3_DB']->sql_query($sql_tax_sb);
+		$rs_tx_sb=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb);
+		if ($rs_tx_sb['tax_id']>0) {
+			if ($rs_tx_sb['rate']<1) {
+				$staffel_price['use_tax_id']=false;
+			}
+			$product['tax_id']=$rs_tx_sb['tax_id'];
+		}
+	}
+	//
 	$staffel_price['tax_id']=$product['tax_id'];
 	$content=$staffel_price;
 	$content=json_encode($content, ENT_NOQUOTES);
