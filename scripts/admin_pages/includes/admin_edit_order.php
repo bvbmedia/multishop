@@ -2022,7 +2022,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['id']='manual_add_product';
 				$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:100%;" tabindex="2" /></div>';
 				if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
-					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
+					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
 				}
 				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 					// products status col
