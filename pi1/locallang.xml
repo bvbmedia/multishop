@@ -1711,7 +1711,7 @@
             <label index="admin_till">tot</label>
             <label index="admin_till2">t/m</label>
             <label index="admin_update_images">Upgrade afbeeldingen</label>
-            <label index="admin_update_prices">Wijzig prijzen</label>
+            <label index="admin_update_prices">Prijzen wijzigen</label>
             <label index="admin_update_product_prices_by_percentage">Pas prijzen aan op basis van percentage</label>
             <label index="admin_upload">Upload</label>
             <label index="admin_upload_excel_file">Upload Excel bestand</label>
