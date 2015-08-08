@@ -2170,7 +2170,7 @@
             <label index="ordered_product_stock_not_available_waiting_for_restock">Let op. Het aantal producten in winkelwagen is niet voorradig. U kunt deze wel bestellen.</label>
             <label index="orders">Bestellingen</label>
             <label index="orders_by_date">Bestellingen op Datum</label>
-            <label index="orders_id">Bestelnr</label>
+            <label index="orders_id">Bestelnummer</label>
             <label index="packing_list">Pakbon</label>
             <label index="page">pagina</label>
             <label index="paid">Betaald</label>
