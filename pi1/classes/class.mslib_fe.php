@@ -8711,7 +8711,7 @@ class mslib_fe {
 							  "debug": false,
 							  "newestOnTop": true,
 							  "progressBar": true,
-							  "positionClass": "toast-bottom-left",
+							  "positionClass": "toast-bottom-right",
 							  "preventDuplicates": false,
 							  "onclick": null,
 							  "showDuration": "300",
