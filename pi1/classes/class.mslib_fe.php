@@ -6505,6 +6505,14 @@ class mslib_fe {
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_customers' || $this->post['tx_multishop_pi1']['page_section']=='admin_customers') {
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_customers']['active']=1;
 			}
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['label']=$this->pi_getLL('admin_new_customer');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['link']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=add_customer&action=add_customer');
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['link_params']='';
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['class']='fa fa-file-o';
+			if (($this->post['tx_multishop_pi1']['page_section']=='add_customer' || $this->post['tx_multishop_pi1']['page_section']=='add_customer')) {
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['active']=1;
+			}
+
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['label']=$this->pi_getLL('admin_customer_groups');
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups');
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['class']='fa fa-users';
