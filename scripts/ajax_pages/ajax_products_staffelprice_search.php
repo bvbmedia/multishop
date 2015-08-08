@@ -52,7 +52,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 		$qry_tax_sb=$GLOBALS['TYPO3_DB']->sql_query($sql_tax_sb);
 		$rs_tx_sb=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_tax_sb);
 		if ($rs_tx_sb['tax_id']>0) {
-			if ($rs_tx_sb['rate']<1) {
+			if ($rs_tx_sb['rate']<0.1) {
 				$staffel_price['use_tax_id']=false;
 			}
 			$product['tax_id']=$rs_tx_sb['tax_id'];
