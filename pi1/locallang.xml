@@ -1320,7 +1320,7 @@
             <label index="admin_custom_product_name">Afwijkende productnaam</label>
             <label index="admin_customer_email">Debiteur e-mailadres</label>
             <label index="admin_customer_groups">Debiteurgroepen</label>
-            <label index="admin_customer_id">Klantnr</label>
+            <label index="admin_customer_id">Klantnummer</label>
             <label index="admin_customer_name">Debiteur naam</label>
             <label index="admin_customers">Debiteuren</label>
             <label index="admin_customers_description">Beheer hier uw debiteuren</label>
@@ -1621,7 +1621,7 @@
             <label index="admin_options">Opties</label>
             <label index="admin_or_add_a_new_manufacturer">of voer hier een nieuwe fabrikant in</label>
             <label index="admin_order_date">Besteldatum</label>
-            <label index="admin_order_id">Bestelnr</label>
+            <label index="admin_order_id">Bestelnummer</label>
             <label index="admin_order_products">Order products</label>
             <label index="admin_order_unit">Besteleenheid</label>
             <label index="admin_orders">Bestellingen</label>
