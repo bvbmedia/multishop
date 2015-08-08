@@ -816,8 +816,8 @@
             <label index="hidden_in_checkout">hidden in checkout</label>
             <label index="hide_in_menu">Hide in menu</label>
             <label index="id">ID</label>
-            <label index="ignore_first_line">ignore first line</label>
-            <label index="import">import</label>
+            <label index="ignore_first_line">Ignore first line</label>
+            <label index="import">Import</label>
             <label index="import_customer_feed">Import Customer Feed</label>
             <label index="import_export_record">Upload export record</label>
             <label index="import_feed_record">Import feed record</label>
@@ -2045,8 +2045,8 @@
             <label index="hidden_in_checkout">verborgen in afrekengedeelte</label>
             <label index="hide_in_menu">Verberg in menu</label>
             <label index="id">ID</label>
-            <label index="ignore_first_line">sla eerste regel over</label>
-            <label index="import">importeren</label>
+            <label index="ignore_first_line">Sla eerste regel over</label>
+            <label index="import">Importeren</label>
             <label index="import_customer_feed">Importeer debiteurenbestand</label>
             <label index="import_export_record">Upload export record</label>
             <label index="import_feed_record">Importeer backup feed record</label>
