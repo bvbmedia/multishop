@@ -889,16 +889,16 @@ if (is_numeric($this->get['orders_id'])) {
                     if(tax_id!=0 || tax_id!="") {
                         $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $(this).val(), to_tax_include: false, tax_group_id: tax_id }, function (json) {
                             if (json.price_excluding_tax!="") {
-                                $(self).next().val(json.price_excluding_tax);
+                                $(self).parent().next().val(json.price_excluding_tax);
                             } else {
-                                $(self).next().val($(self).val());
+                                $(self).parent().next().val($(self).val());
                             }
                         });
                     } else {
-                        $(self).next().val($(self).val());
+                        $(self).parent().next().val($(self).val());
                     }
                 } else {
-                    $(self).next().val("0");
+                    $(self).parent().next().val("0");
                 }
             });
             $(document).on("change", "#product_tax", function(){
@@ -2307,8 +2307,22 @@ if (is_numeric($this->get['orders_id'])) {
 			$orders_tax_data=unserialize($orders['orders_tax_data']);
 			$tmpcontent.='<tfoot><tr><td colspan="'.$colspan.'" class="order_total_data text-right">';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$payment_method=mslib_fe::getPaymentMethod($orders['payment_method'], 'p.code');
-				$shipping_method=mslib_fe::getShippingMethod($orders['shipping_method'], 's.code');
+				$iso_customer=mslib_fe::getCountryByName($orders['billing_country']);
+				$iso_customer['country']=$iso_customer['cn_short_en'];
+				//
+				$payment_method=mslib_fe::getPaymentMethod($orders['payment_method'], 'p.code', $iso_customer['cn_iso_nr']);
+				$shipping_method=mslib_fe::getShippingMethod($orders['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
+				//
+				if ($iso_customer['cn_iso_nr']>0) {
+					$payment_tax_ruleset = mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
+					$shipping_tax_ruleset = mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
+					if (!$payment_tax_ruleset) {
+						$payment_method['tax_id']=0;
+					}
+					if (!$shipping_tax_ruleset) {
+						$shipping_method['tax_id']=0;
+					}
+				}
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$shipping_costs='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control" id="display_shipping_method_cost" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" /></div>
                     <input name="tx_multishop_pi1[shipping_method_costs]" type="hidden" value="'.$orders['shipping_method_costs'].'">
