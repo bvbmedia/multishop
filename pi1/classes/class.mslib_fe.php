@@ -6508,7 +6508,7 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['label']=$this->pi_getLL('admin_new_customer');
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['link']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=add_customer&action=add_customer');
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['link_params']='';
-			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['class']='fa fa-file-o';
+			$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['class']='fa fa-plus-circle';
 			if (($this->post['tx_multishop_pi1']['page_section']=='add_customer' || $this->post['tx_multishop_pi1']['page_section']=='add_customer')) {
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['active']=1;
 			}
