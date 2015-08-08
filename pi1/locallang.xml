@@ -2448,7 +2448,7 @@
             <label index="search_keywords_toplist">Toplijst zoekopdrachten</label>
             <label index="latest_orders">Nieuwste bestellingen</label>
             <label index="referrer_toplist">Verwijzende websites</label>
-            <label index="admin_sort_products">Sorteer producten</label>
+            <label index="admin_sort_products">Producten sorteren</label>
             <label index="show_disabled_product">Toon ook uitgeschakelde producten</label>
             <label index="call">Bel</label>
             <label index="travel_guide">Routebeschrijving</label>
