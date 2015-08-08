@@ -252,7 +252,7 @@ $form_orders_search='<div id="search-orders" class="well">
 			</div>
 		</div>
 		<div class="col-md-4 formfield-wrapper">
-			<label>Date</label>
+			<label>'.$this->pi_getLL('filter_by_date').'</label>
 			<div class="form-group">
 				<div class="form-inline">
 				<label for="order_date_from">'.$this->pi_getLL('from').':</label>

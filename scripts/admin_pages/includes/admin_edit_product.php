@@ -2187,7 +2187,7 @@ if ($this->post) {
 		/*
 		 * options tab
 		 */
-		$input_vat_rate='<select name="tax_id" id="tax_id" class="form-control"><option value="0">No TAX</option>';
+		$input_vat_rate='<select name="tax_id" id="tax_id" class="form-control"><option value="0">'.$this->pi_getLL('admin_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product_tax_rate=0;
