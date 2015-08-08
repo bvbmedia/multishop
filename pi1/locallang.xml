@@ -8,7 +8,7 @@
         <languageKey index="default" type="array">
             <label index="account_order_history">Order history</label>
             <label index="action">Action</label>
-            <label index="add">add</label>
+            <label index="add">Add</label>
             <label index="add_category">Add category</label>
             <label index="add_countries">add/delete countries</label>
             <label index="add_field">add field</label>
@@ -1232,14 +1232,15 @@
             <label index="please_select_your_salutation">Please select your salutation</label>
             <label index="export">Export</label>
             <label index="filter_by_date">Filter by date</label>
+            <label index="overview">Overview</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
             <label index="action">Aktie</label>
-            <label index="add">toevoegen</label>
+            <label index="add">Toevoegen</label>
             <label index="add_category">Categorie toevoegen</label>
-            <label index="add_countries">landen toevoegen/verwijderen</label>
-            <label index="add_field">veld toevoegen</label>
+            <label index="add_countries">Landen toevoegen/verwijderen</label>
+            <label index="add_field">Veld toevoegen</label>
             <label index="add_item_to_order">Item toevoegen om te bestellen</label>
             <label index="add_manual_product">Regel toevoegen</label>
             <label index="add_manufacturer">Fabrikant toevoegen</label>
@@ -1249,11 +1250,11 @@
             <label index="add_order_status">Orderstatus toevoegen</label>
             <label index="add_payment_method">Betaalmethode toevoegen</label>
             <label index="add_shipping_method">Verzendmethode toevoegen</label>
-            <label index="add_to_basket">in winkelwagen</label>
-            <label index="address">adres</label>
+            <label index="add_to_basket">In winkelwagen</label>
+            <label index="address">Adres</label>
             <label index="address_details">Adresgegevens</label>
-            <label index="address_extension">toevoeging</label>
-            <label index="address_number_extension">huisnummertoevoeging</label>
+            <label index="address_extension">Toevoeging</label>
+            <label index="address_number_extension">Huisnummertoevoeging</label>
             <label index="admin_action">Aktie</label>
             <label index="admin_action_notification_log">Debiteuren gebeurtenis log</label>
             <label index="admin_action_notification_log_description">Bekijk handelingen van debiteuren</label>
@@ -2457,6 +2458,7 @@
             <label index="total_records_in_database">Totaal aantal records in database</label>
             <label index="export">Exporteren</label>
             <label index="filter_by_date">Filter op datum</label>
+            <label index="overview">Overzicht</label>
         </languageKey>
     </data>
 </T3locallang>
