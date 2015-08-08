@@ -1230,6 +1230,7 @@
             <label index="found_records">Found records</label>
             <label index="total_records_in_database">Total records in database</label>
             <label index="please_select_your_salutation">Please select your salutation</label>
+            <label index="export">Export</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2043,7 +2044,7 @@
             <label index="hide_in_menu">Verberg in menu</label>
             <label index="id">ID</label>
             <label index="ignore_first_line">sla eerste regel over</label>
-            <label index="import">importeer</label>
+            <label index="import">importeren</label>
             <label index="import_customer_feed">Importeer debiteurenbestand</label>
             <label index="import_export_record">Upload export record</label>
             <label index="import_feed_record">Importeer backup feed record</label>
@@ -2452,6 +2453,7 @@
             <label index="close">Sluiten</label>
             <label index="found_records">Gevonden records</label>
             <label index="total_records_in_database">Totaal aantal records in database</label>
+            <label index="export">Exporteren</label>
         </languageKey>
     </data>
 </T3locallang>
