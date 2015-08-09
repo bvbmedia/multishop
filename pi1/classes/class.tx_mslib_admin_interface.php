@@ -233,6 +233,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				foreach ($params['tableColumns'] as $col=>$valArray) {
 					$originalValue=$row[$col];
 					switch ($valArray['valueType']) {
+						case 'number_format_thousand_seperator':
+							$row[$col]=number_format($row[$col], 0, '', '.');
+							break;
 						case 'recordCounter':
 							$row[$col]=$recordCounter;
 							break;
