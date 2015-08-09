@@ -1,5 +1,4 @@
 <?php
-
 class tx_multishop_addMiscFieldsToFlexForm {
 	function addMiscFields($config) {
 		$optionList=array();
