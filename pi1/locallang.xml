@@ -1234,6 +1234,7 @@
             <label index="filter_by_date">Filter by date</label>
             <label index="overview">Overview</label>
             <label index="admin_order_units">Order units</label>
+            <label index="companies">Companies</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2461,6 +2462,7 @@
             <label index="filter_by_date">Filter op datum</label>
             <label index="overview">Overzicht</label>
             <label index="admin_order_units">Besteleenheden</label>
+            <label index="companies">Bedrijven</label>
         </languageKey>
     </data>
 </T3locallang>
