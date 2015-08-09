@@ -28,6 +28,7 @@ jQuery(document).ready(function ($) {
     $(document).on("change", "#check_all_1", function () {
         $("#msAdminInvoicesListing").find('input').prop('checked',$(this).prop("checked"));
     });
+
     //
     $('#selected_invoices_action').change(function() {
         if ($(this).val()=='mail_invoices') {
