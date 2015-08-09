@@ -4177,8 +4177,8 @@ class mslib_befe {
 			$query = "SHOW COLUMNS FROM ".$table;
 			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
 			$fields=array();
-			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_array($res)){
-				$fields[]=$row[0];
+			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				$fields[]=$row['Field'];
 			}
 			return $fields;
 		}
