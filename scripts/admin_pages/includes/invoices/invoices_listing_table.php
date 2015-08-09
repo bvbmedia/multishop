@@ -140,6 +140,15 @@ $subpartArray['###FOOTER_INVOICES_PAID_STATUS###']=$this->pi_getLL('admin_paid')
 $subpartArray['###FOOTER_INVOICES_ACTION###']=$this->pi_getLL('action');
 $subpartArray['###CUSTOM_MARKER_1_HEADER###']='';
 $subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
-//
+// custom page hook that can be controlled by third-party plugin
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplPreProc'])) {
+	$params=array(
+		'subpartArray'=>&$subpartArray,
+		'invoice'=>&$invoice
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 $invoices_results=$this->cObj->substituteMarkerArrayCached($subparts['invoices_results'], array(), $subpartArray);
 ?>
