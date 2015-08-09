@@ -4172,6 +4172,17 @@ class mslib_befe {
 			}
 		}
 	}
+	function getTableColumnNames($table) {
+		if ($table) {
+			$query = "SHOW COLUMNS FROM ".$table;
+			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+			$fields=array();
+			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_array($res)){
+				$fields[]=$row[0];
+			}
+			return $fields;
+		}
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
