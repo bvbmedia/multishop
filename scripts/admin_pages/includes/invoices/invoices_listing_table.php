@@ -66,7 +66,7 @@ foreach ($invoices as $invoice) {
 			'markerArray'=>&$markerArray,
 			'invoice'=>&$invoice
 		);
-		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/orders/invoices_listing_table.php']['adminInvoicesListingTmplIteratorPreProc'] as $funcRef) {
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplIteratorPreProc'] as $funcRef) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 		}
 	}
