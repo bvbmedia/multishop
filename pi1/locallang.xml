@@ -39,7 +39,7 @@
             <label index="admin_add_new_product">Add new product</label>
             <label index="admin_add_new_value">Add new value</label>
             <label index="admin_add_option_plus_value">Add Option + Value</label>
-            <label index="admin_add_staffel_price">add tiered price</label>
+            <label index="admin_add_staffel_price">Add tiered price</label>
             <label index="admin_address">Address</label>
             <label index="admin_advanced_settings">Advanced settings</label>
             <label index="admin_alert_quantity_threshold">Alert quantity threshold</label>
@@ -1270,7 +1270,7 @@
             <label index="admin_add_new_product">Product toevoegen</label>
             <label index="admin_add_new_value">Voeg waarde toe</label>
             <label index="admin_add_option_plus_value">Voeg optie en waarde toe</label>
-            <label index="admin_add_staffel_price">staffel prijs toevoegen</label>
+            <label index="admin_add_staffel_price">Staffel prijs toevoegen</label>
             <label index="admin_address">Adres</label>
             <label index="admin_advanced_settings">Geavanceerde instellingen</label>
             <label index="admin_alert_quantity_threshold">Alert hoeveelheid drempel</label>
