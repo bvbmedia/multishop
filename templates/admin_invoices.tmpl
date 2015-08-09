@@ -25,8 +25,8 @@ jQuery(document).ready(function ($) {
     $(".invoice_select2").select2();
     //
     jQuery(".tooltip").tooltip({position: "bottom"});
-    $('#check_all_1').click(function(){
-        $('input:checkbox').prop('checked', this.checked);
+    $(document).on("change", "#check_all_1", function () {
+        $(".msadmin_orders_listing").find('input').prop('checked',$(this).prop("checked"));
     });
     //
     $('#selected_invoices_action').change(function() {
