@@ -2164,7 +2164,7 @@ if ($this->post) {
 			} else {
 				$markerArray['LOCAL_PRIMARY_PRODUCTS_CATEGORIES']='';
 			}
-			$markerArray['LABEL_PRODUCT_NAME']=$this->pi_getLL('admin_name');
+			$markerArray['LABEL_PRODUCT_NAME']=$this->pi_getLL('admin_name').($key===0 ? '<span class="text-danger">*</span>' : '');
 			$markerArray['VALUE_PRODUCT_NAME']=htmlspecialchars($lngproduct[$language['uid']]['products_name']);
 			$markerArray['LABEL_SHORT_DESCRIPTION']=$this->pi_getLL('admin_short_description');
 			$markerArray['TEXTAREA_SHORT_DESCRIPTION_PARAMS']='';
