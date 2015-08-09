@@ -2397,7 +2397,7 @@ if (is_numeric($this->get['orders_id'])) {
             </div>';
 			$discount_content='';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$discount_content='<input name="edit_discount_value" class="form-control" type="text" value="'.round($orders['discount'], 4).'" class="align_right">';
+				$discount_content='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control" type="text" value="'.round($orders['discount'], 4).'" class="align_right"></div>';
 			} else {
 				if ($orders['discount']>0) {
 					$discount_content=mslib_fe::amount2Cents($orders['discount'], 0);
@@ -2412,7 +2412,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('discount').$coupon_code.'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static order_total_value">'.$discount_content.'</p>
+                    '.$discount_content.'
                     </div>
                 </div>';
 			}
