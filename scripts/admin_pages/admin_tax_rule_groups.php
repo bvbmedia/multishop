@@ -251,6 +251,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
         if (url.match("#")) {
             $(".nav-tabs a[href=#"+url.split("#")[1]+"]").tab("show") ;
         } else {
+            console.log($(".nav-tabs a:first").tab("show"));
             $(".nav-tabs a:first").tab("show");
         }
         // Change hash for page-reload
@@ -264,6 +265,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	<div id="tab-container" class="zone-tabs">
 		<ul class="nav nav-tabs" role="tablist">
 	';
+	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='<li'.(($count==1) ? ' class="active"' : '').' role="presentation"><a href="#'.$key.'" aria-controls="profile" role="tab" data-toggle="tab">'.$value[0].'</a></li>';
@@ -277,7 +279,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
-			<div id="'.$key.'" class="tab-pane" role="tabpanel">
+			<div id="'.$key.'" class="tab-pane'.(($count==1) ? ' active' : '').'" role="tabpanel">
 				'.$value[1].'
 			</div>
 		';
