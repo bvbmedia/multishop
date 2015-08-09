@@ -224,6 +224,9 @@ plugin.multishop {
 	# cat=plugin.multishop - templates/file; type=string; label= Admin orders File Path: Optionally specify the location of the template file that is being used for building up the admin orders. Example: fileadmin/templates/multishop/admin_orders.tmpl.
 	admin_orders_tmpl_path = EXT:multishop/templates/admin_orders.tmpl
 
+	# cat=plugin.multishop - templates/file; type=string; label= Admin invoices File Path: Optionally specify the location of the template file that is being used for building up the admin invoices. Example: fileadmin/templates/multishop/admin_invoices.tmpl.
+	admin_invoices_tmpl_path = EXT:multishop/templates/admin_invoices.tmpl
+
 	# cat=plugin.multishop - templates/file; type=string; label= Admin user-agents File Path: Optionally specify the location of the template file that is being used for building up the admin user-agents statistic. Example: fileadmin/templates/multishop/admin_useragents.tmpl.
 	admin_useragents_tmpl_path = EXT:multishop/templates/admin_useragents.tmpl
 

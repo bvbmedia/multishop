@@ -90,6 +90,7 @@ lib.multishop_itemArrayProcFunc {
 	admin_cms_tmpl_path = {$plugin.multishop.admin_cms_tmpl_path}
 	admin_categories_tmpl_path = {$plugin.multishop.admin_categories_tmpl_path}
 	admin_orders_tmpl_path = {$plugin.multishop.admin_orders_tmpl_path}
+	admin_invoices_tmpl_path = {$plugin.multishop.admin_invoices_tmpl_path}
 	admin_home_tmpl_path = {$plugin.multishop.admin_home_tmpl_path}
 	tt_address_record_id_store = {$plugin.multishop.tt_address_record_id_store}
 	disableFeFromCalculatingVatPrices = {$plugin.multishop.disableFeFromCalculatingVatPrices}

@@ -107,6 +107,7 @@ plugin.tx_multishop_pi1 {
 	admin_cms_tmpl_path = {$plugin.multishop.admin_cms_tmpl_path}
 	admin_categories_tmpl_path = {$plugin.multishop.admin_categories_tmpl_path}
 	admin_orders_tmpl_path = {$plugin.multishop.admin_orders_tmpl_path}
+	admin_invoices_tmpl_path = {$plugin.multishop.admin_invoices_tmpl_path}
 	admin_useragents_tmpl_path = {$plugin.multishop.admin_useragents_tmpl_path}
 	admin_home_tmpl_path = {$plugin.multishop.admin_home_tmpl_path}
 	admin_invoice_pdf_tmpl_path = {$plugin.multishop.admin_invoice_pdf_tmpl_path}
