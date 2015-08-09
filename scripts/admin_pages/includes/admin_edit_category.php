@@ -678,9 +678,9 @@ if ($this->post) {
 			';
 			$category_name_block.='
 			<div class="form-group" id="msEditCategoryInputCategoryName_'.$language['uid'].'">
-				<label class="control-label col-md-2" for="categories_name">'.$this->pi_getLL('admin_name').'</label>
+				<label class="control-label col-md-2" for="categories_name">'.$this->pi_getLL('admin_name').($key===0 ? '<span class="text-danger">*</span>' : '').'</label>
 				<div class="col-md-10">
-				<input spellcheck="true" type="text" class="form-control text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'">
+				<input spellcheck="true" type="text" class="form-control text" name="categories_name['.$language['uid'].']" id="categories_name_'.$language['uid'].'" value="'.htmlspecialchars($lngcat[$language['uid']]['categories_name']).'"'.($key===0 ? ' required="required"' : '').'>
 				</div>
 			</div>
 			';
