@@ -769,6 +769,17 @@ class mslib_fe {
 				}
 				$array['products'][]=$product;
 			}
+			//hook to let other plugins further manipulate the query
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetPostProc'])) {
+				$params=array(
+					'array'=>&$array,
+					'query_elements'=>&$query_elements,
+					'enableFetchTaxRate'=>&$enableFetchTaxRate
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetPostProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			if (count($array['products'])==1 and $redirect_if_one_product) {
 				$where='';
 				$product=$array['products'][0];
