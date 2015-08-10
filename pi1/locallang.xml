@@ -489,7 +489,7 @@
             <label index="admin_user">User</label>
             <label index="admin_user_agent_statistics">User-agent</label>
             <label index="admin_user_agent_statistics_description">Show device/browser visitor used to access the shop</label>
-            <label index="admin_value">value</label>
+            <label index="admin_value">Value</label>
             <label index="admin_vat_rate">VAT rate</label>
             <label index="admin_vat_statistics">VAT statistics</label>
             <label index="admin_virtual_product">Virtual product</label>
@@ -1721,7 +1721,7 @@
             <label index="admin_user">Gebruiker</label>
             <label index="admin_user_agent_statistics">Gebruikte browsers</label>
             <label index="admin_user_agent_statistics_description">Bekijk hier welke browsers en apparaten zijn gebruikt om de webwinkel te bezoeken</label>
-            <label index="admin_value">waarde</label>
+            <label index="admin_value">Waarde</label>
             <label index="admin_vat_rate">BTW tarief</label>
             <label index="admin_vat_statistics">BTW statistieken</label>
             <label index="admin_virtual_product">Virtueel product</label>
