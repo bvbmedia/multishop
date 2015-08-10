@@ -19,11 +19,16 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 #tx_multishop_admin_header_wrapper ul li span { white-space:normal; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header { line-height:18px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li { position:relative; border:none; background:none; margin:0; box-shadow:none; border-radius:0; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > a:before { position:absolute; right:10px; top:16px; border-bottom:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:""; transition:opacity .25s; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > a.collapsed:before { border-top:5px solid #fff; border-bottom:none; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > a:before { position:absolute; right:10px; top:12px; border-left:5px solid #999; border-top:5px solid transparent; border-bottom:5px solid transparent; content:""; transition:opacity .25s; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.in.ms_admin_has_subs > a:before { border-left:5px solid #fff; }
-#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:hover > a:before { opacity:0; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > a:before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > span:before { position:absolute; right:10px; top:16px; border-bottom:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:""; transition:opacity .25s; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > a.collapsed:before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs > span.collapsed:before { border-top:5px solid #fff; border-bottom:none; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > a:before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs > span:before { position:absolute; right:10px; top:12px; border-left:5px solid #999; border-top:5px solid transparent; border-bottom:5px solid transparent; content:""; transition:opacity .25s; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.in.ms_admin_has_subs > a:before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.in.ms_admin_has_subs > span:before { border-left:5px solid #fff; }
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:hover > a:before,
+#tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header ul li.ms_admin_has_subs:hover > span:before { opacity:0; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo a { background:#000; padding:1px 10px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_logo > a > span { display:block; width:128px; height:36px; background:url(../admin_multishop/images/admin_logo_white.png) left top no-repeat; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li:hover.ms_admin_logo a { background:#000; }
@@ -131,8 +136,8 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:first-child { width:80%; }
 .cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:last-child { font-weight:bold; }
 
-td.cellPrice .msAttributesField .form-control,
-td.cellSpecialPrice .msAttributesField .form-control { width:90px}
+/* td.cellPrice .msAttributesField .form-control,
+td.cellSpecialPrice .msAttributesField .form-control { width:90px; } */
 .msAttributesField input[type="text"] { text-align:right; }
 td.cellBreak { width:200px; word-break:break-all; }
 
@@ -233,7 +238,10 @@ table#product_attributes_table table td.product_attribute_price .input-group .fo
 }
 table#product_attributes_table table td .product_attribute_action_container { width:87px !important; white-space:nowrap; }
 table#product_attributes_table table td:last-child { padding-right:0; }
+#orders_products_listing_table .cellQty { width:67px; }
 #orders_products_listing_table .cellName { width:402px; }
+#orders_products_listing_table .cellVat { width:114px; }
+#orders_products_listing_table .cellPrice { width:259px; }
 .table > tfoot > tr > td.order_total_data { padding-bottom:0; }
 
 .product_staffel_price .table > * > tr > td { border-bottom:none; }

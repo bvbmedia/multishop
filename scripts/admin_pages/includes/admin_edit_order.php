@@ -1713,20 +1713,20 @@ if (is_numeric($this->get['orders_id'])) {
 									$order_products_body_data['products_name']['value']='<div class="product_attributes_wrapper">';
 									$order_products_body_data['products_name']['value'].='<span class="products_attributes_option">';
 									if ($attributes_data['products_options_id']>0) {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$attributes_data['products_options_id'].'"/> ';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:187px" value="'.$attributes_data['products_options_id'].'"/> ';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="0"/>';
 									} else {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$optname.'"/> ';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:187px" value="'.$optname.'"/> ';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="1"/>';
 									}
 									$order_products_body_data['products_name']['value'].='</span>';
 									$order_products_body_data['products_name']['value'].='<span> : </span>';
 									$order_products_body_data['products_name']['value'].='<span class="products_attributes_values">';
 									if ($attributes_data['products_options_values_id']>0) {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:195px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:187px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="0"/>';
 									} else {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:195px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:187px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="1"/>';
 									}
 									$order_products_body_data['products_name']['value'].='</span>';
@@ -2802,18 +2802,18 @@ if (is_numeric($this->get['orders_id'])) {
                     var manual_attributes_selectbox = \'<div class="product_attributes_wrapper">\';
                     manual_attributes_selectbox += \'<span class="product_attributes_option">\';
                     if (optid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:195px" value="\' + optid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' + optid_value + \'"/>\';
                     } else {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:195px" value=""/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value=""/>\';
                     }
                     manual_attributes_selectbox += \'<input type="hidden" name="is_manual_option[]"value="0"/>\';
                     manual_attributes_selectbox += \'</span>\';
                     manual_attributes_selectbox += \'<span> : </span>\';
                     manual_attributes_selectbox += \'<span class="product_attributes_values">\';
                     if (optvalid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:195px" value="\' + optvalid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' + optvalid_value + \'"/>\';
                     } else {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:195px"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px"/>\';
                     }
                     manual_attributes_selectbox += \'<input type="hidden" name="is_manual_value[]"value="0"/>\';
                     manual_attributes_selectbox += \'</span>\';

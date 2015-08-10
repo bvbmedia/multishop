@@ -139,12 +139,14 @@ td.cellAction { white-space:nowrap; }
 .cellAction { text-align:center; }
 .cellPrice,
 .cellSpecialPrice,
-.cellQty { text-align:right; }
+.cellQty,
+.cellVat { text-align:right; }
 .cellBackup > .btn { width:100%; }
 .cellWeight .form-control { width:69px; }
 .cellUserAgent { min-width:500px; }
 .cellAux { width:418px; }
 .cellStock input[type="text"] { width:73px; text-align:right; }
+.cellProjectsID { width:170px; }
 
 .alert h3:last-child { margin-bottom:0; }
 
