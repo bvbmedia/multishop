@@ -648,7 +648,7 @@
             <label index="duplicate_selected_products_to">Duplicate selected products to</label>
             <label index="duplicate_task">Duplicate task</label>
             <label index="e-mail_address">E-mail address</label>
-            <label index="edit">edit</label>
+            <label index="edit">Edit</label>
             <label index="edit_category">Edit category</label>
             <label index="edit_group">Edit Group</label>
             <label index="edit_manufacturer">Edit manufacturer</label>
@@ -1235,6 +1235,7 @@
             <label index="overview">Overview</label>
             <label index="admin_order_units">Order units</label>
             <label index="companies">Companies</label>
+            <label index="add_attribute">Add attribute</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1879,7 +1880,7 @@
             <label index="duplicate_selected_products_to">Dupliceer geselecteerde producten naar</label>
             <label index="duplicate_task">KOPIEER TAAK</label>
             <label index="e-mail_address">E-mailadres</label>
-            <label index="edit">bewerken</label>
+            <label index="edit">Bewerken</label>
             <label index="edit_category">Categorie bewerken</label>
             <label index="edit_group">Bewerk groep</label>
             <label index="edit_manufacturer">Bewerk fabrikant</label>
@@ -2463,6 +2464,7 @@
             <label index="overview">Overzicht</label>
             <label index="admin_order_units">Besteleenheden</label>
             <label index="companies">Bedrijven</label>
+            <label index="add_attribute">Attribuut toevoegen</label>
         </languageKey>
     </data>
 </T3locallang>
