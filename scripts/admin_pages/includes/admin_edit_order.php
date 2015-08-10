@@ -2788,11 +2788,11 @@ if (is_numeric($this->get['orders_id'])) {
                 '.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
                 select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
                 $.each($(".edit_product_manual_option"), function(i, v){
-                    select2_sb("#" + $(v).attr("id"), "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+                    select2_sb("#" + $(v).attr("id"), "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
                 });
                 $.each($(".edit_product_manual_values"), function(i, v){
                     var select2_element_id="#" + $(v).attr("id");
-                    select2_values_sb(select2_element_id, "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                    select2_values_sb(select2_element_id, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 });
                 ' : '').'
                 var add_new_attributes = function(optid_value, optvalid_value, price_data) {
@@ -2846,8 +2846,8 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                     $(\'#last_edit_product_row\').before(cloned_row);
 
-                    select2_sb(".edit_product_manual_option" + n, "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-                    select2_values_sb(".edit_product_manual_values" + n, "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                    select2_sb(".edit_product_manual_option" + n, "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+                    select2_values_sb(".edit_product_manual_values" + n, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 }
                 // manual function for removing the manual attributes
                 jQuery(document).ready(function($) {';
