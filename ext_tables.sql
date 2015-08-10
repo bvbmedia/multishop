@@ -492,6 +492,7 @@ CREATE TABLE `tx_multishop_orders` (
   `coupon_discount_value` DECIMAL(24, 14) DEFAULT '0.00000000000000',
   `orders_last_modified` int(11) default '0',
   `track_and_trace_link` varchar(255) default '',
+  `orders_paid_timestamp` int(11) default '0',
   PRIMARY KEY (`orders_id`),
   KEY `customer_id` (`customer_id`),
   KEY `bu` (`page_uid`),
@@ -530,7 +531,8 @@ CREATE TABLE `tx_multishop_orders` (
   KEY `coupon_code` (`coupon_code`),
   KEY `coupon_discount_type` (`coupon_discount_type`),
   KEY `coupon_discount_value` (`coupon_discount_value`),
-  KEY `date_mail_last_sent` (`date_mail_last_sent`)
+  KEY `date_mail_last_sent` (`date_mail_last_sent`),
+  KEY `orders_paid_timestamp` (`orders_paid_timestamp`)
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (

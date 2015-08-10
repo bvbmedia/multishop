@@ -70,7 +70,7 @@ if ($this->get['tx_multishop_pi1']['action']=='edit') {
 		$lngstatus[$row['language_id']]=$row;
 	}
 }
-$content.='<div class="panel-heading"><h3>'.$this->pi_getLL('admin_order_unit').'</h3></div>';
+$content.='<div class="panel-heading"><h3>'.$this->pi_getLL('admin_order_units').'</h3></div>';
 $content.='<div class="panel-body">
 <form class="form-horizontal" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('add').'</h3></div>

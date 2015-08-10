@@ -177,7 +177,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 							$tab_content.='<label class="tree_item_label">';
 							$tab_content.=$row['cn_short_en'];
 							$tab_content.='</label> ';
-							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control"><option value="">No TAX</option>';
+							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
 							$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 								'tx_multishop_tax_rules', // FROM ...
 								"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='0' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -207,7 +207,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 									$tab_content.='<label class="tree_item_label">';
 									$tab_content.=$row2['zn_name_local'];
 									$tab_content.='</label> ';
-									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control"><option value="">No TAX</option>';
+									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
 									$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 										'tx_multishop_tax_rules', // FROM ...
 										"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='".$row2['uid']."' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -264,6 +264,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	<div id="tab-container" class="zone-tabs">
 		<ul class="nav nav-tabs" role="tablist">
 	';
+	$count=0;
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='<li'.(($count==1) ? ' class="active"' : '').' role="presentation"><a href="#'.$key.'" aria-controls="profile" role="tab" data-toggle="tab">'.$value[0].'</a></li>';
@@ -277,7 +278,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 	foreach ($tabs as $key=>$value) {
 		$count++;
 		$content.='
-			<div id="'.$key.'" class="tab-pane" role="tabpanel">
+			<div id="'.$key.'" class="tab-pane'.(($count==1) ? ' active' : '').'" role="tabpanel">
 				'.$value[1].'
 			</div>
 		';

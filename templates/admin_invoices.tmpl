@@ -1,0 +1,194 @@
+<!-- ###TEMPLATE### begin -->
+<script type="text/javascript">
+jQuery(document).ready(function ($) {
+    $(".tab_content").hide();
+    $("ul.tabs li:first").addClass("active").show();
+    $(".tab_content:first").show();
+    $("ul.tabs li").click(function() {
+        $("ul.tabs li").removeClass("active");
+        $(this).addClass("active");
+        $(".tab_content").hide();
+        var activeTab = $(this).find("a").attr("href");
+        $(activeTab).fadeIn(0);
+        return false;
+    });
+    $("#invoice_date_from").datetimepicker({
+        dateFormat: "dd/mm/yy",
+        showSecond: true,
+        timeFormat: "HH:mm:ss"
+    });
+    $("#invoice_date_till").datetimepicker({
+        dateFormat: "dd/mm/yy",
+        showSecond: true,
+        timeFormat: "HH:mm:ss"
+    });
+    $(".invoice_select2").select2();
+    //
+    jQuery(".tooltip").tooltip({position: "bottom"});
+    $(document).on("change", "#check_all_1", function () {
+        $("#msAdminInvoicesListing").find('input').prop('checked',$(this).prop("checked"));
+    });
+
+    //
+    $('#selected_invoices_action').change(function() {
+        if ($(this).val()=='mail_invoices') {
+            $("#msadmin_invoices_mailto").show();
+        } else {
+            $("#msadmin_invoices_mailto").hide();
+        }
+    });
+});
+</script>
+<div class="panel-heading"><h3>###ADMIN_LABEL_TABS_INVOICES###</h3></div>
+<div class="panel-body">
+<form id="form1" name="form1" method="get" action="index.php">
+    <div id="search-orders" class="well">
+        <input name="id" type="hidden" value="###PAGE_ID###" />
+        <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
+        <input name="id" type="hidden" value="###SHOP_PID###" />
+        <input name="type" type="hidden" value="2003" />
+        <div class="row formfield-container-wrapper">
+            <div class="col-md-4 formfield-wrapper">
+                <div class="form-group">
+                    <label>###LABEL_KEYWORD###</label>
+                    <input type="text" class="form-control" name="skeyword" value="###VALUE_KEYWORD###">
+                </div>
+                <div class="form-group">
+                    <label for="type_search">###LABEL_SEARCH_ON###</label>
+                    ###OPTION_ITEM_SELECTBOX###
+                </div>
+                <div class="form-group">
+                    <label for="groups" class="labelInbetween">###LABEL_USERGROUP###</label>
+                    ###USERGROUP_SELECTBOX###
+                </div>
+            </div>
+            <div class="col-md-4 formfield-wrapper">
+                <label>###LABEL_FILTER_BY_DATE###</label>
+                <div class="form-group">
+                    <div class="form-inline">
+                        <label for="order_date_from">###LABEL_DATE_FROM###:</label>
+                        <input type="text" class="form-control" name="invoice_date_from" id="invoice_date_from" value="###VALUE_DATE_FROM###">
+                        <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###:</label>
+                        <input type="text" class="form-control" name="invoice_date_till" id="invoice_date_till" value="###VALUE_DATE_TO###">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
+                    ###INVOICES_STATUS_LIST_SELECTBOX###
+                </div>
+                <div class="form-group">
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"###FILTER_BY_PAID_INVOICES_ONLY_CHECKED### ><label for="paid_invoices_only">###LABEL_FILTER_BY_PAID_INVOICES_ONLY###</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 formfield-wrapper">
+                <div class="form-group">
+                    <label for="payment_method">###LABEL_PAYMENT_METHOD###</label>
+                    ###PAYMENT_METHOD_SELECTBOX###
+                </div>
+                <div class="form-group">
+                    <label for="shipping_method" class="labelInbetween">###LABEL_SHIPPING_METHOD###</label>
+                    ###SHIPPING_METHOD_SELECTBOX###
+                </div>
+                <div class="form-group">
+                    <label for="country">###LABEL_COUNTRIES_SELECTBOX###</label>
+                    ###COUNTRIES_SELECTBOX###
+                </div>
+                <div class="form-group">
+                    <label>###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+                    ###RESULTS_LIMIT_SELECTBOX###
+                </div>
+            </div>
+        </div>
+        <div class="row formfield-container-wrapper">
+            <div class="col-sm-12 formfield-wrapper">
+                <div class="clearfix">
+                    <div class="pull-right">
+                        <input type="submit" class="btn btn-success" name="Search" value="###VALUE_SEARCH###">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ###RESULTS### begin -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminInvoicesListing" class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th class="cellCheckbox">
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" id="check_all_1"><label for="check_all_1"></label>
+                    </div>
+                </th>
+                <th class="cellID"></th>
+                <th class="cellID">###HEADER_INVOICES_NUMBER###</th>
+                <th class="cellID">###HEADER_INVOICES_ORDER_ID###</th>
+                ###HEADER_MASTER_SHOP###
+                <th class="cellName">###HEADER_INVOICES_CUSTOMER###</th>
+                ###CUSTOM_MARKER_1_HEADER###
+                <th class="cellDate">###HEADER_INVOICES_ORDER_DATE###</th>
+                <th width="50">###HEADER_INVOICES_PAYMENT_METHOD###</th>
+                <th width="50">###HEADER_INVOICES_PAYMENT_CONDITION###</th>
+                <th class="cellPrice">###HEADER_INVOICES_AMOUNT###</th>
+                <th class="cellDate">###HEADER_INVOICES_DATE_LAST_SENT###</th>
+                <th class="cellStatus">###HEADER_INVOICES_PAID_STATUS###</th>
+                <th class="cellAction">###HEADER_INVOICES_ACTION###</th>
+            </tr>
+        </thead>
+        <tbody>
+        <!-- ###INVOICES_LISTING### begin -->
+            <tr>
+                <td class="cellCheckbox">
+                    <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" name="selected_invoices[]" id="checkbox_###INVOICES_ID###" value="###INVOICES_ID###"><label for="checkbox_###INVOICES_ID###"></label>
+                    </div>
+                </td>
+                <td class="cellID">###INVOICE_CTR###</td>
+                <td class="cellID">
+                    <a href="###INVOICES_URL###" target="_blank">###INVOICES_ID###</a>
+                </td>
+                <td class="cellID">###INVOICES_ORDER_ID###</td>
+                ###MASTER_SHOP###
+                <td class="cellName">
+                    <a href="###INVOICES_URL###" target="_blank">###INVOICES_CUSTOMER_NAME###</a>
+                </td>
+                ###CUSTOM_MARKER_1_BODY###
+                <td class="cellDate">###INVOICES_ORDER_DATE###</td>
+                <td align="center" nowrap>###INVOICES_PAYMENT_METHOD###</td>
+                <td align="center" nowrap>###INVOICES_PAYMENT_CONDITION###</td>
+                <td class="cellPrice">###INVOICES_AMOUNT###</td>
+                <td class="cellDate">###INVOICES_DATE_LAST_SENT###</td>
+                <td class="cellStatus">###INVOICES_PAID_STATUS###</td>
+                <td class="cellAction">###INVOICES_ACTION###</td>
+            </tr>
+        <!-- ###INVOICES_LISTING### end -->
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>&nbsp;</th>
+                <th class="cellID"></th>
+                <th class="cellID">###FOOTER_INVOICES_NUMBER###</th>
+                <th class="cellID">###FOOTER_INVOICES_ORDER_ID###</th>
+                ###FOOTER_MASTER_SHOP###
+                <th class="cellName">###FOOTER_INVOICES_CUSTOMER###</th>
+                ###CUSTOM_MARKER_1_FOOTER###
+                <th class="cellDate">###FOOTER_INVOICES_ORDER_DATE###</th>
+                <th width="50">###FOOTER_INVOICES_PAYMENT_METHOD###</th>
+                <th width="50">###FOOTER_INVOICES_PAYMENT_CONDITION###</th>
+                <th class="cellPrice">###FOOTER_INVOICES_AMOUNT###</th>
+                <th class="cellDate">###FOOTER_INVOICES_DATE_LAST_SENT###</th>
+                <th class="cellStatus">###FOOTER_INVOICES_PAID_STATUS###</th>
+                <th class="cellAction">###FOOTER_INVOICES_ACTION###</th>
+            </tr>
+        </tfoot>
+    </table>
+    ###PAGINATION###
+    ###FORM_FIELDS_LISTING_ACTION_BLOCK###
+    <!-- ###RESULTS### end -->
+
+    <!-- ###NORESULTS### begin -->
+    ###LABEL_NO_RESULTS###
+    <!-- ###NORESULTS### end -->
+</form>
+</div>
+<!-- ###TEMPLATE### end -->

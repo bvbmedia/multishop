@@ -93,6 +93,19 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 		}
 		break;
 }
+// now parse all the objects in the tmpl file
+if ($this->conf['admin_invoices_tmpl_path']) {
+	$template=$this->cObj->fileResource($this->conf['admin_invoices_tmpl_path']);
+} else {
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_invoices.tmpl');
+}
+// Extract the subparts from the template
+$subparts=array();
+$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
+$subparts['invoices_results']=$this->cObj->getSubpart($subparts['template'], '###RESULTS###');
+$subparts['invoices_listing']=$this->cObj->getSubpart($subparts['invoices_results'], '###INVOICES_LISTING###');
+$subparts['invoices_noresults']=$this->cObj->getSubpart($subparts['template'], '###NORESULTS###');
+//
 if ($this->get['Search'] and ($this->get['paid_invoices_only']!=$this->cookie['paid_invoices_only'])) {
 	$this->cookie['paid_invoices_only']=$this->get['paid_invoices_only'];
 	$GLOBALS['TSFE']->fe_user->setKey('ses', 'tx_multishop_cookie', $this->cookie);
@@ -143,9 +156,12 @@ if ($p>0) {
 	$offset=0;
 }
 // orders search
+$option_item='<select name="type_search" class="invoice_select2"><option value="all">'.$this->pi_getLL('all').'</option>';
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
+$option_item='</select>';
+//
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 $orders_status_list='<select name="orders_status_search" class="invoice_select2"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
 if (is_array($all_orders_status)) {
@@ -212,7 +228,7 @@ while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 	$shipping_methods[$row['shipping_method']]=$row['shipping_method_label'].($row['shipping_method']!='nosm' ? ' (code: '.$row['shipping_method'].')' : '');
 }
 $shipping_method_input='';
-$shipping_method_input.='<select id="shipping_method" class="order_select2" name="shipping_method">'."\n";
+$shipping_method_input.='<select id="shipping_method" class="invoice_select2" name="shipping_method">'."\n";
 $shipping_method_input.='<option value="all">'.$this->pi_getLL('all_shipping_methods').'</option>'."\n";
 if (is_array($shipping_methods) and count($shipping_methods)) {
 	foreach ($shipping_methods as $shipping_method_code=>$shipping_method) {
@@ -229,64 +245,7 @@ foreach ($order_countries as $order_country) {
 }
 ksort($order_billing_country);
 $billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
-$form_orders_search='<div id="search-orders" class="well">
-	<input name="id" type="hidden" value="'.$this->showCatalogFromPage.'" />
-	<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
-	<input name="id" type="hidden" value="'.$this->shop_pid.'" />
-	<input name="type" type="hidden" value="2003" />
-	<div class="row formfield-container-wrapper">
-		<div class="col-md-4 formfield-wrapper">
-			<div class="form-group">
-			<label>'.ucfirst($this->pi_getLL('keyword')).'</label>
-			<input type="text" class="form-control" name="skeyword" value="'.($this->get['skeyword'] ? $this->get['skeyword'] : "").'"></input>
-			</div>
-			<div class="form-group">
-			<label for="type_search">'.$this->pi_getLL('search_for').'</label>
-			<select name="type_search" class="invoice_select2"><option value="all">'.$this->pi_getLL('all').'</option>
-				'.$option_item.'
-			</select>
-			</div>
-			<div class="form-group">
-			<label for="groups" class="labelInbetween">'.$this->pi_getLL('usergroup').'</label>
-			'.$customer_groups_input.'
-			</div>
-		</div>
-		<div class="col-md-4 formfield-wrapper">
-			<label>Date</label>
-			<div class="form-group">
-				<div class="form-inline">
-				<label for="order_date_from">'.$this->pi_getLL('from').':</label>
-				<input type="text" class="form-control" name="invoice_date_from" id="invoice_date_from" value="'.$this->get['invoice_date_from'].'">
-				<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').':</label>
-				<input type="text" class="form-control" name="invoice_date_till" id="invoice_date_till" value="'.$this->get['invoice_date_till'].'">
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="orders_status_search">'.$this->pi_getLL('order_status').'</label>
-				'.$orders_status_list.'
-			</div>
-			<div class="form-group">
-				<div class="checkbox checkbox-success checkbox-inline">
-					<input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"'.($this->cookie['paid_invoices_only'] ? ' checked' : '').' ><label for="paid_invoices_only">'.$this->pi_getLL('show_paid_invoices_only').'</label>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4 formfield-wrapper">
-			<div class="form-group">
-				<label for="payment_method">'.$this->pi_getLL('payment_method').'</label>
-				'.$payment_method_input.'
-			</div>
-			<div class="form-group">
-				<label for="shipping_method" class="labelInbetween">'.$this->pi_getLL('shipping_method').'</label>
-				'.$shipping_method_input.'
-			</div>
-			<div class="form-group">
-				<label for="country">'.$this->pi_getLL('countries').'</label>
-				'.$billing_countries_sb.'
-			</div>
-			<div class="form-group">
-				<label>'.$this->pi_getLL('limit_number_of_records_to').':</label>
-				<select name="limit" class="form-control">';
+$limit_selectbox='<select name="limit" class="form-control">';
 $limits=array();
 $limits[]='15';
 $limits[]='20';
@@ -297,23 +256,9 @@ $limits[]='50';
 $limits[]='100';
 $limits[]='150';
 foreach ($limits as $limit) {
-	$form_orders_search.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected' : '').'>'.$limit.'</option>';
+	$limit_selectbox.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
-$form_orders_search.='
-				</select>
-			</div>
-		</div>
-	</div>
-	<div class="row formfield-container-wrapper">
-		<div class="col-sm-12 formfield-wrapper">
-			<div class="clearfix">
-				<div class="pull-right">
-					<input type="submit" class="btn btn-success" name="Search" value="'.htmlspecialchars($this->pi_getLL('search')).'"></input>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>';
+$limit_selectbox.='</select>';
 $filter=array();
 $from=array();
 $having=array();
@@ -427,80 +372,55 @@ $select[]='*, i.hash';
 $orderby[]='i.id desc';
 $pageset=mslib_fe::getInvoicesPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
 $invoices=$pageset['invoices'];
-$listing_content='';
 if ($pageset['total_rows']>0) {
 	$this->ms['MODULES']['PAGESET_LIMIT']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/invoices/invoices_listing_table.php');
-	// pagination
-	if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORDERS_LISTING_LIMIT']) {
-		// reassign the listing table content to $listing_content, because the pagination also use $tmp and cleared the variable before use
-		$listing_content=$tmp;
-		//require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/invoices/pagination.php');
-		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
-		// concate it again
-		$listing_content.=$tmp;
-	}
-	// pagination eof
 } else {
-	$tmp=$this->pi_getLL('no_invoices_found').'.';
+	$subpartArray=array();
+	$subpartArray['###LABEL_NO_RESULTS###']=$this->pi_getLL('no_invoices_found').'.';
+	$no_results=$this->cObj->substituteMarkerArrayCached($subparts['invoices_noresults'], array(), $subpartArray);
 }
-if (!empty($listing_content)) {
-	$tmp='';
-	$tmp=$listing_content;
-}
-$tabs=array();
-$tabs['Invoices_By_Date']=array(
-	$this->pi_getLL('admin_invoices'),
-	$tmp
-);
-$tmp='';
-$content.='
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	$(".tab_content").hide();
-	$("ul.tabs li:first").addClass("active").show();
-	$(".tab_content:first").show();
-	$("ul.tabs li").click(function() {
-		$("ul.tabs li").removeClass("active");
-		$(this).addClass("active");
-		$(".tab_content").hide();
-		var activeTab = $(this).find("a").attr("href");
-		$(activeTab).fadeIn(0);
-		return false;
-	});
-	$("#invoice_date_from").datetimepicker({
-		dateFormat: "dd/mm/yy",
-		showSecond: true,
-		timeFormat: "HH:mm:ss"
-	});
-	$("#invoice_date_till").datetimepicker({
-		dateFormat: "dd/mm/yy",
-		showSecond: true,
-		timeFormat: "HH:mm:ss"
-	});
-	$(".invoice_select2").select2();
-});
-</script>
-';
-foreach ($tabs as $key=>$value) {
-	$content.='
-		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
-		<div class="panel-body">
-		<form id="form1" name="form1" method="get" action="index.php">
-		'.$form_orders_search.'
-		</form>
-		'.$value[1].'
-	';
-	break;
-}
-$GLOBALS['TSFE']->additionalHeaderData[]='
-<script type="text/javascript">
-jQuery(document).ready(function($) {
-	$(".order_select2").select2();
-});
-</script>
-';
+//
+$subpartArray=array();
+$subpartArray['###PAGE_ID###']=$this->showCatalogFromPage;
+$subpartArray['###SHOP_PID###']=$this->shop_pid;
+$subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
+$subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
+$subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_for');
+$subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
+$subpartArray['###LABEL_USERGROUP###']=$this->pi_getLL('usergroup');
+$subpartArray['###USERGROUP_SELECTBOX###']=$customer_groups_input;
+$subpartArray['###LABEL_PAYMENT_METHOD###']=$this->pi_getLL('payment_method');
+$subpartArray['###PAYMENT_METHOD_SELECTBOX###']=$payment_method_input;
+$subpartArray['###LABEL_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
+$subpartArray['###SHIPPING_METHOD_SELECTBOX###']=$shipping_method_input;
+$subpartArray['###LABEL_ORDER_STATUS###']=$this->pi_getLL('order_status');
+$subpartArray['###INVOICES_STATUS_LIST_SELECTBOX###']=$orders_status_list;
+$subpartArray['###VALUE_SEARCH###']=htmlspecialchars($this->pi_getLL('search'));
+$subpartArray['###LABEL_FILTER_BY_DATE###']=$this->pi_getLL('filter_by_date');
+$subpartArray['###LABEL_DATE_FROM###']=$this->pi_getLL('from');
+$subpartArray['###LABEL_DATE###']=$this->pi_getLL('date');
+$subpartArray['###VALUE_DATE_FROM###']=$this->post['invoice_date_from'];
+$subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
+$subpartArray['###VALUE_DATE_TO###']=$this->post['invoice_date_till'];
+$subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###']=$this->pi_getLL('show_paid_invoices_only');
+$subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###']=($this->cookie['paid_invoices_only'] ? ' checked' : '');
+$subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
+$subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
+$subpartArray['###RESULTS###']=$invoices_results;
+$subpartArray['###NORESULTS###']=$no_results;
+$subpartArray['###ADMIN_LABEL_TABS_INVOICES###']=$this->pi_getLL('admin_invoices');
+$subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
+$subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_sb;
+$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
+//
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
-
+$content.='
+<script>
+	jQuery(document).ready(function($) {
+		'.($this->get['tx_multishop_pi1']['action']!='mail_invoices' ? '$("#msadmin_invoices_mailto").hide();' : '').'
+	});
+</script>
+';
 ?>

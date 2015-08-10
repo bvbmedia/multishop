@@ -3063,8 +3063,8 @@ class mslib_befe {
 			}
 		}
 		if (!$objPHPass && \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('saltedpasswords')) {
-			if (tx_saltedpasswords_div::isUsageEnabled()) {
-				$objPHPass=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(tx_saltedpasswords_div::getDefaultSaltingHashingMethod());
+			if (\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::isUsageEnabled()) {
+				$objPHPass=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Saltedpasswords\Utility\SaltedPasswordsUtility::getDefaultSaltingHashingMethod());
 			}
 		}
 		if ($objPHPass) {
@@ -4170,6 +4170,17 @@ class mslib_befe {
 			if (is_array($record) && $record['uid']) {
 				return $record['uid'];
 			}
+		}
+	}
+	function getTableColumnNames($table) {
+		if ($table) {
+			$query = "SHOW COLUMNS FROM ".$table;
+			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+			$fields=array();
+			while($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)){
+				$fields[]=$row['Field'];
+			}
+			return $fields;
 		}
 	}
 }

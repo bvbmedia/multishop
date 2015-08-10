@@ -8,7 +8,7 @@
         <languageKey index="default" type="array">
             <label index="account_order_history">Order history</label>
             <label index="action">Action</label>
-            <label index="add">add</label>
+            <label index="add">Add</label>
             <label index="add_category">Add category</label>
             <label index="add_countries">add/delete countries</label>
             <label index="add_field">add field</label>
@@ -39,7 +39,7 @@
             <label index="admin_add_new_product">Add new product</label>
             <label index="admin_add_new_value">Add new value</label>
             <label index="admin_add_option_plus_value">Add Option + Value</label>
-            <label index="admin_add_staffel_price">add tiered price</label>
+            <label index="admin_add_staffel_price">Add tiered price</label>
             <label index="admin_address">Address</label>
             <label index="admin_advanced_settings">Advanced settings</label>
             <label index="admin_alert_quantity_threshold">Alert quantity threshold</label>
@@ -489,7 +489,7 @@
             <label index="admin_user">User</label>
             <label index="admin_user_agent_statistics">User-agent</label>
             <label index="admin_user_agent_statistics_description">Show device/browser visitor used to access the shop</label>
-            <label index="admin_value">value</label>
+            <label index="admin_value">Value</label>
             <label index="admin_vat_rate">VAT rate</label>
             <label index="admin_vat_statistics">VAT statistics</label>
             <label index="admin_virtual_product">Virtual product</label>
@@ -648,7 +648,7 @@
             <label index="duplicate_selected_products_to">Duplicate selected products to</label>
             <label index="duplicate_task">Duplicate task</label>
             <label index="e-mail_address">E-mail address</label>
-            <label index="edit">edit</label>
+            <label index="edit">Edit</label>
             <label index="edit_category">Edit category</label>
             <label index="edit_group">Edit Group</label>
             <label index="edit_manufacturer">Edit manufacturer</label>
@@ -816,8 +816,8 @@
             <label index="hidden_in_checkout">hidden in checkout</label>
             <label index="hide_in_menu">Hide in menu</label>
             <label index="id">ID</label>
-            <label index="ignore_first_line">ignore first line</label>
-            <label index="import">import</label>
+            <label index="ignore_first_line">Ignore first line</label>
+            <label index="import">Import</label>
             <label index="import_customer_feed">Import Customer Feed</label>
             <label index="import_export_record">Upload export record</label>
             <label index="import_feed_record">Import feed record</label>
@@ -1021,8 +1021,8 @@
             <label index="search_for">Search for</label>
             <label index="security_code">Security Code</label>
             <label index="select_members">Select members</label>
-            <label index="select_orders_payment_status">Filter by orders payment status</label>
-            <label index="select_percentage">select percentage</label>
+            <label index="select_orders_payment_status">Filter by payment status</label>
+            <label index="select_percentage">Select percentage</label>
             <label index="send_email_to_customer">Send e-mail to customer</label>
             <label index="shipping_and_handling_cost_overview">Shipping and handling costs</label>
             <label index="shipping_costs">Shipping costs</label>
@@ -1230,14 +1230,20 @@
             <label index="found_records">Found records</label>
             <label index="total_records_in_database">Total records in database</label>
             <label index="please_select_your_salutation">Please select your salutation</label>
+            <label index="export">Export</label>
+            <label index="filter_by_date">Filter by date</label>
+            <label index="overview">Overview</label>
+            <label index="admin_order_units">Order units</label>
+            <label index="companies">Companies</label>
+            <label index="add_attribute">Add attribute</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
             <label index="action">Aktie</label>
-            <label index="add">toevoegen</label>
+            <label index="add">Toevoegen</label>
             <label index="add_category">Categorie toevoegen</label>
-            <label index="add_countries">landen toevoegen/verwijderen</label>
-            <label index="add_field">veld toevoegen</label>
+            <label index="add_countries">Landen toevoegen/verwijderen</label>
+            <label index="add_field">Veld toevoegen</label>
             <label index="add_item_to_order">Item toevoegen om te bestellen</label>
             <label index="add_manual_product">Regel toevoegen</label>
             <label index="add_manufacturer">Fabrikant toevoegen</label>
@@ -1247,11 +1253,11 @@
             <label index="add_order_status">Orderstatus toevoegen</label>
             <label index="add_payment_method">Betaalmethode toevoegen</label>
             <label index="add_shipping_method">Verzendmethode toevoegen</label>
-            <label index="add_to_basket">in winkelwagen</label>
-            <label index="address">adres</label>
+            <label index="add_to_basket">In winkelwagen</label>
+            <label index="address">Adres</label>
             <label index="address_details">Adresgegevens</label>
-            <label index="address_extension">toevoeging</label>
-            <label index="address_number_extension">huisnummertoevoeging</label>
+            <label index="address_extension">Toevoeging</label>
+            <label index="address_number_extension">Huisnummertoevoeging</label>
             <label index="admin_action">Aktie</label>
             <label index="admin_action_notification_log">Debiteuren gebeurtenis log</label>
             <label index="admin_action_notification_log_description">Bekijk handelingen van debiteuren</label>
@@ -1265,7 +1271,7 @@
             <label index="admin_add_new_product">Product toevoegen</label>
             <label index="admin_add_new_value">Voeg waarde toe</label>
             <label index="admin_add_option_plus_value">Voeg optie en waarde toe</label>
-            <label index="admin_add_staffel_price">staffel prijs toevoegen</label>
+            <label index="admin_add_staffel_price">Staffel prijs toevoegen</label>
             <label index="admin_address">Adres</label>
             <label index="admin_advanced_settings">Geavanceerde instellingen</label>
             <label index="admin_alert_quantity_threshold">Alert hoeveelheid drempel</label>
@@ -1316,7 +1322,7 @@
             <label index="admin_custom_product_name">Afwijkende productnaam</label>
             <label index="admin_customer_email">Debiteur e-mailadres</label>
             <label index="admin_customer_groups">Debiteurgroepen</label>
-            <label index="admin_customer_id">Klantnr</label>
+            <label index="admin_customer_id">Klantnummer</label>
             <label index="admin_customer_name">Debiteur naam</label>
             <label index="admin_customers">Debiteuren</label>
             <label index="admin_customers_description">Beheer hier uw debiteuren</label>
@@ -1617,7 +1623,7 @@
             <label index="admin_options">Opties</label>
             <label index="admin_or_add_a_new_manufacturer">of voer hier een nieuwe fabrikant in</label>
             <label index="admin_order_date">Besteldatum</label>
-            <label index="admin_order_id">Bestelnr</label>
+            <label index="admin_order_id">Bestelnummer</label>
             <label index="admin_order_products">Order products</label>
             <label index="admin_order_unit">Besteleenheid</label>
             <label index="admin_orders">Bestellingen</label>
@@ -1708,14 +1714,14 @@
             <label index="admin_till">tot</label>
             <label index="admin_till2">t/m</label>
             <label index="admin_update_images">Upgrade afbeeldingen</label>
-            <label index="admin_update_prices">Wijzig prijzen</label>
+            <label index="admin_update_prices">Prijzen wijzigen</label>
             <label index="admin_update_product_prices_by_percentage">Pas prijzen aan op basis van percentage</label>
             <label index="admin_upload">Upload</label>
             <label index="admin_upload_excel_file">Upload Excel bestand</label>
             <label index="admin_user">Gebruiker</label>
             <label index="admin_user_agent_statistics">Gebruikte browsers</label>
             <label index="admin_user_agent_statistics_description">Bekijk hier welke browsers en apparaten zijn gebruikt om de webwinkel te bezoeken</label>
-            <label index="admin_value">waarde</label>
+            <label index="admin_value">Waarde</label>
             <label index="admin_vat_rate">BTW tarief</label>
             <label index="admin_vat_statistics">BTW statistieken</label>
             <label index="admin_virtual_product">Virtueel product</label>
@@ -1874,7 +1880,7 @@
             <label index="duplicate_selected_products_to">Dupliceer geselecteerde producten naar</label>
             <label index="duplicate_task">KOPIEER TAAK</label>
             <label index="e-mail_address">E-mailadres</label>
-            <label index="edit">bewerken</label>
+            <label index="edit">Bewerken</label>
             <label index="edit_category">Categorie bewerken</label>
             <label index="edit_group">Bewerk groep</label>
             <label index="edit_manufacturer">Bewerk fabrikant</label>
@@ -2042,8 +2048,8 @@
             <label index="hidden_in_checkout">verborgen in afrekengedeelte</label>
             <label index="hide_in_menu">Verberg in menu</label>
             <label index="id">ID</label>
-            <label index="ignore_first_line">sla eerste regel over</label>
-            <label index="import">importeer</label>
+            <label index="ignore_first_line">Sla eerste regel over</label>
+            <label index="import">Importeren</label>
             <label index="import_customer_feed">Importeer debiteurenbestand</label>
             <label index="import_export_record">Upload export record</label>
             <label index="import_feed_record">Importeer backup feed record</label>
@@ -2166,7 +2172,7 @@
             <label index="ordered_product_stock_not_available_waiting_for_restock">Let op. Het aantal producten in winkelwagen is niet voorradig. U kunt deze wel bestellen.</label>
             <label index="orders">Bestellingen</label>
             <label index="orders_by_date">Bestellingen op Datum</label>
-            <label index="orders_id">Bestelnr</label>
+            <label index="orders_id">Bestelnummer</label>
             <label index="packing_list">Pakbon</label>
             <label index="page">pagina</label>
             <label index="paid">Betaald</label>
@@ -2247,8 +2253,8 @@
             <label index="search_for">Zoek naar</label>
             <label index="security_code">Beveiligingscode</label>
             <label index="select_members">Selecteer leden</label>
-            <label index="select_orders_payment_status">filteren op bestellingen betaalstatus</label>
-            <label index="select_percentage">selecteer percentage</label>
+            <label index="select_orders_payment_status">Filteren op betaalstatus</label>
+            <label index="select_percentage">Selecteer percentage</label>
             <label index="send_email_to_customer">Verstuur e-mail naar klant</label>
             <label index="shipping_and_handling_cost_overview">Bezorg- en verwerkkosten</label>
             <label index="shipping_costs">Verzendkosten</label>
@@ -2300,7 +2306,7 @@
             <label index="street_address_number">huisnummer</label>
             <label index="street_number_is_required">Huisnummer is verplicht</label>
             <label index="sub_total">Subtotaal</label>
-            <label index="submit">verstuur</label>
+            <label index="submit">Versturen</label>
             <label index="submit_button_label">Click here to submit value</label>
             <label index="subscribe_to_our_newsletter">Ik meld mij aan voor de nieuwsbrief</label>
             <label index="subscribe_to_our_newsletter_description">Blijf op de hoogte van alle acties en voordelen door onze nieuwsbrief te ontvangen. Je ontvangt het laatste nieuws direct in je mailbox en je kunt je op ieder gewenst moment weer uitschrijven</label>
@@ -2433,6 +2439,7 @@
             <label index="free_shippingcosts_for_order_amount_above">Gratis verzendkosten voor orderbedrag boven</label>
             <label index="free_shippingcosts_for_order_weight_above">Free shippingcosts for order weight above</label>
             <label index="merge_categories">Categorieën samenvoegen</label>
+            <label index="merge_manufacturers">Fabrikanten samenvoegen</label>
             <label index="admin_label_hide_in_details_page">verbergen op productdetail pagina</label>
             <label index="attribute_radio_option_warning">Je dient een optie te selecteren uit onderstaande lijst:</label>
             <label index="create_account">Account aanmaken</label>
@@ -2444,7 +2451,7 @@
             <label index="search_keywords_toplist">Toplijst zoekopdrachten</label>
             <label index="latest_orders">Nieuwste bestellingen</label>
             <label index="referrer_toplist">Verwijzende websites</label>
-            <label index="admin_sort_products">Sorteer producten</label>
+            <label index="admin_sort_products">Producten sorteren</label>
             <label index="show_disabled_product">Toon ook uitgeschakelde producten</label>
             <label index="call">Bel</label>
             <label index="travel_guide">Routebeschrijving</label>
@@ -2452,6 +2459,12 @@
             <label index="close">Sluiten</label>
             <label index="found_records">Gevonden records</label>
             <label index="total_records_in_database">Totaal aantal records in database</label>
+            <label index="export">Exporteren</label>
+            <label index="filter_by_date">Filter op datum</label>
+            <label index="overview">Overzicht</label>
+            <label index="admin_order_units">Besteleenheden</label>
+            <label index="companies">Bedrijven</label>
+            <label index="add_attribute">Attribuut toevoegen</label>
         </languageKey>
     </data>
 </T3locallang>

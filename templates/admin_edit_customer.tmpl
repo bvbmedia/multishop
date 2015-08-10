@@ -124,9 +124,9 @@ jQuery(document).ready(function ($) {
                     ###MASTER_SHOP###
                     <div class="form-group">
 						<span id="ValidRadio" class="InputGroup">
-							<label for="radio" id="account-gender">###LABEL_GENDER###*</label>
+							<label for="radio" id="account-gender">###LABEL_GENDER###<span class="text-danger">*</span></label>
 							<div class="radio-inline">
-							<input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" ###GENDER_MR_CHECKED###>
+							<input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" required="required" ###GENDER_MR_CHECKED###>
 							###LABEL_GENDER_MR###
 							</div>
 							<div class="radio-inline">
@@ -211,7 +211,7 @@ jQuery(document).ready(function ($) {
                         <div id="invalid-email" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-6">
-                        <label for="www" id="account-www">###LABEL_WEBSITE###*</label>
+                        <label for="www" id="account-www">###LABEL_WEBSITE###</label>
                         <input type="text" name="www" id="www" class="form-control www" value="###VALUE_WEBSITE###">
                             </div>
                         </div>
@@ -219,7 +219,7 @@ jQuery(document).ready(function ($) {
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
-                        <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###*</label>
+                        <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###</label>
                         <input type="text" name="telephone" id="telephone" class="form-control telephone" value="###VALUE_TELEPHONE###"###TELEPHONE_VALIDATION###>
                         <div id="invalid-telephone" class="error-space" style="display:none"></div>
                             </div>

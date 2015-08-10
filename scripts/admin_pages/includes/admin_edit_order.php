@@ -690,7 +690,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <input class="form-control" name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
                 </div>
                 </div>
-                <hr><div class="clearfix"><div class="pull-right"><a href="#" id="close_edit_billing_info" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a></div></div>
+                <hr><div class="clearfix"><div class="pull-right"><a href="#" id="close_edit_billing_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a></div></div>
                 </div>';
 			}
 			if ($hide_billing_vcard) {
@@ -725,7 +725,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='<strong>'.$this->pi_getLL('coc_id').': '.$orders['billing_coc_id'].'</strong><br />';
 			}
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
+				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
 			}
 			$tmpcontent.='</div>';
 			$tmpcontent.='
@@ -823,8 +823,8 @@ if (is_numeric($this->get['orders_id'])) {
                 <hr>
                 <div class="clearfix">
                 <div class="pull-right">
-                <a href="#" id="close_edit_delivery_info" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
-                <a href="#" id="copy_from_billing_details" class="btn btn-primary btn-sm"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
+                <a href="#" id="close_edit_delivery_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
+                <a href="#" id="copy_from_billing_details" class="btn btn-primary"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
                 </div>
                 </div>
                 </div>';
@@ -889,16 +889,16 @@ if (is_numeric($this->get['orders_id'])) {
                     if(tax_id!=0 || tax_id!="") {
                         $.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_tax_ruleset').'", { current_price: $(this).val(), to_tax_include: false, tax_group_id: tax_id }, function (json) {
                             if (json.price_excluding_tax!="") {
-                                $(self).next().val(json.price_excluding_tax);
+                                $(self).parent().next().val(json.price_excluding_tax);
                             } else {
-                                $(self).next().val($(self).val());
+                                $(self).parent().next().val($(self).val());
                             }
                         });
                     } else {
-                        $(self).next().val($(self).val());
+                        $(self).parent().next().val($(self).val());
                     }
                 } else {
-                    $(self).next().val("0");
+                    $(self).parent().next().val("0");
                 }
             });
             $(document).on("change", "#product_tax", function(){
@@ -1092,7 +1092,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary btn-sm\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
+                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
                 $("#delivery_details_container").show();
                 $("#edit_delivery_details_container").hide();
@@ -1587,7 +1587,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> ';
 							$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><button type="button" onclick="return CONFIRM();" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-trash-o"></i></button></a>';
 						} else {
-							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-remove"></i></button> <button type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-primary btn-sm submit_button order_product_action"><i class="fa fa-save"></i></button>';
+							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> <button type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-primary btn-sm submit_button order_product_action"><i class="fa fa-save"></i></button>';
 						}
 						// product final price
 						$order_products_body_data['products_action']['align']='right';
@@ -1713,20 +1713,20 @@ if (is_numeric($this->get['orders_id'])) {
 									$order_products_body_data['products_name']['value']='<div class="product_attributes_wrapper">';
 									$order_products_body_data['products_name']['value'].='<span class="products_attributes_option">';
 									if ($attributes_data['products_options_id']>0) {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$attributes_data['products_options_id'].'"/> ';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:187px" value="'.$attributes_data['products_options_id'].'"/> ';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="0"/>';
 									} else {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:195px" value="'.$optname.'"/> ';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_option edit_manual_attributes_input" id="edit_product_manual_option'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_option[]" style="width:187px" value="'.$optname.'"/> ';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_option[]"value="1"/>';
 									}
 									$order_products_body_data['products_name']['value'].='</span>';
 									$order_products_body_data['products_name']['value'].='<span> : </span>';
 									$order_products_body_data['products_name']['value'].='<span class="products_attributes_values">';
 									if ($attributes_data['products_options_values_id']>0) {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:195px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:187px" value="'.$attributes_data['products_options_values_id'].'" rel="'.$attributes_data['orders_products_attributes_id'].'" />';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="0"/>';
 									} else {
-										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:195px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
+										$order_products_body_data['products_name']['value'].='<input type="hidden" class="edit_product_manual_values edit_manual_attributes_input" id="edit_product_manual_values'.$attributes_data['orders_products_attributes_id'].'" name="edit_manual_values[]" style="width:187px" value="'.$optvalue.'" rel="'.$attributes_data['orders_products_attributes_id'].'"/>';
 										$order_products_body_data['products_name']['value'].='<input type="hidden" name="is_manual_value[]"value="1"/>';
 									}
 									$order_products_body_data['products_name']['value'].='</span>';
@@ -1945,7 +1945,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products name col
 						$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 						$order_products_body_data['products_name']['align']='left';
-						$order_products_body_data['products_name']['value']='<input type="button" id="edit_add_attributes" class="btn btn-success" value="add attribute">';
+						$order_products_body_data['products_name']['value']='<button type="button" id="edit_add_attributes" class="btn btn-primary btn-sm" value=""><i class="fa fa-plus"></i> '.$this->pi_getLL('add_attribute').'</button>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							// products status col
 							$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2022,7 +2022,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_body_data['products_name']['id']='manual_add_product';
 				$order_products_body_data['products_name']['value']='<div id="manual_product_name_select2"><input class="product_name" type="hidden" name="manual_products_id" value="" style="width:100%;" tabindex="2" /></div>';
 				if ($this->ms['MODULES']['ENABLE_MANUAL_ORDER_CUSTOM_ORDER_PRODUCTS_NAME']) {
-					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="300px" /></div>';
+					$order_products_body_data['products_name']['value'].='<div id="custom_manual_product_name_wrapper" class="mt-10" style="display:none"><label for="custom_manual_product_name">'.$this->pi_getLL('admin_custom_product_name').' :</label><input type="text" id="custom_manual_product_name" name="custom_manual_product_name" value="" disabled="disabled" width="402px" class="form-control" /></div>';
 				}
 				if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 					// products status col
@@ -2307,8 +2307,22 @@ if (is_numeric($this->get['orders_id'])) {
 			$orders_tax_data=unserialize($orders['orders_tax_data']);
 			$tmpcontent.='<tfoot><tr><td colspan="'.$colspan.'" class="order_total_data text-right">';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$payment_method=mslib_fe::getPaymentMethod($orders['payment_method'], 'p.code');
-				$shipping_method=mslib_fe::getShippingMethod($orders['shipping_method'], 's.code');
+				$iso_customer=mslib_fe::getCountryByName($orders['billing_country']);
+				$iso_customer['country']=$iso_customer['cn_short_en'];
+				//
+				$payment_method=mslib_fe::getPaymentMethod($orders['payment_method'], 'p.code', $iso_customer['cn_iso_nr']);
+				$shipping_method=mslib_fe::getShippingMethod($orders['shipping_method'], 's.code', $iso_customer['cn_iso_nr']);
+				//
+				if ($iso_customer['cn_iso_nr']>0) {
+					$payment_tax_ruleset = mslib_fe::taxRuleSet($payment_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
+					$shipping_tax_ruleset = mslib_fe::taxRuleSet($shipping_method['tax_id'], 0, $iso_customer['cn_iso_nr'], 0);
+					if (!$payment_tax_ruleset) {
+						$payment_method['tax_id']=0;
+					}
+					if (!$shipping_tax_ruleset) {
+						$shipping_method['tax_id']=0;
+					}
+				}
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 					$shipping_costs='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control" id="display_shipping_method_cost" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" /></div>
                     <input name="tx_multishop_pi1[shipping_method_costs]" type="hidden" value="'.$orders['shipping_method_costs'].'">
@@ -2383,7 +2397,7 @@ if (is_numeric($this->get['orders_id'])) {
             </div>';
 			$discount_content='';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$discount_content='<input name="edit_discount_value" class="form-control" type="text" value="'.round($orders['discount'], 4).'" class="align_right">';
+				$discount_content='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control text-right" type="text" value="'.round($orders['discount'], 4).'"></div>';
 			} else {
 				if ($orders['discount']>0) {
 					$discount_content=mslib_fe::amount2Cents($orders['discount'], 0);
@@ -2398,7 +2412,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <div class="form-group">
                     <label class="control-label col-md-10">'.$this->pi_getLL('discount').$coupon_code.'</label>
                     <div class="col-md-2">
-                    <p class="form-control-static order_total_value">'.$discount_content.'</p>
+                    '.$discount_content.'
                     </div>
                 </div>';
 			}
@@ -2521,7 +2535,7 @@ if (is_numeric($this->get['orders_id'])) {
                             ' : '').'
                         } else {
                             $("#edit_order_product_id").html(e.object.id);
-                            jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, qty: 1}, function(d){
+                            jQuery.getJSON("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=ajax_products_staffelprice_search&tx_multishop_pi1[type]=edit_order').'",{pid: e.object.id, oid:'.$this->get['orders_id'].', qty: 1}, function(d){
                                 if (d.tax_id) {
                                     if ($("#product_tax").length>0) {
                                         if ($("#product_tax").children().length>0) {
@@ -2536,6 +2550,9 @@ if (is_numeric($this->get['orders_id'])) {
                                             d.price_include_vat=0;
                                         }
                                     }
+                                }
+                                if (!d.use_tax_id) {
+                                	d.price_include_vat=0;
                                 }
                                 if (d.price_include_vat>0) {
                                     if ($("#product_tax").length>0) {
@@ -2771,11 +2788,11 @@ if (is_numeric($this->get['orders_id'])) {
                 '.(($this->get['action']=='edit_order' && isset($this->get['edit_product']) && $this->get['edit_product']>0) ? '
                 select2_pn(".product_name_input", "product", "product_name_input", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_products').'");
                 $.each($(".edit_product_manual_option"), function(i, v){
-                    select2_sb("#" + $(v).attr("id"), "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+                    select2_sb("#" + $(v).attr("id"), "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
                 });
                 $.each($(".edit_product_manual_values"), function(i, v){
                     var select2_element_id="#" + $(v).attr("id");
-                    select2_values_sb(select2_element_id, "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                    select2_values_sb(select2_element_id, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 });
                 ' : '').'
                 var add_new_attributes = function(optid_value, optvalid_value, price_data) {
@@ -2785,18 +2802,18 @@ if (is_numeric($this->get['orders_id'])) {
                     var manual_attributes_selectbox = \'<div class="product_attributes_wrapper">\';
                     manual_attributes_selectbox += \'<span class="product_attributes_option">\';
                     if (optid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:195px" value="\' + optid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' + optid_value + \'"/>\';
                     } else {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:195px" value=""/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value=""/>\';
                     }
                     manual_attributes_selectbox += \'<input type="hidden" name="is_manual_option[]"value="0"/>\';
                     manual_attributes_selectbox += \'</span>\';
                     manual_attributes_selectbox += \'<span> : </span>\';
                     manual_attributes_selectbox += \'<span class="product_attributes_values">\';
                     if (optvalid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:195px" value="\' + optvalid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' + optvalid_value + \'"/>\';
                     } else {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:195px"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px"/>\';
                     }
                     manual_attributes_selectbox += \'<input type="hidden" name="is_manual_value[]"value="0"/>\';
                     manual_attributes_selectbox += \'</span>\';
@@ -2829,8 +2846,8 @@ if (is_numeric($this->get['orders_id'])) {
                     });
                     $(\'#last_edit_product_row\').before(cloned_row);
 
-                    select2_sb(".edit_product_manual_option" + n, "option", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
-                    select2_values_sb(".edit_product_manual_values" + n, "value", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
+                    select2_sb(".edit_product_manual_option" + n, "'.$this->pi_getLL('admin_label_option').'", "edit_product_manual_option", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_options').'");
+                    select2_values_sb(".edit_product_manual_values" + n, "'.$this->pi_getLL('admin_value').'", "edit_product_manual_values", "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax_edit_order&tx_multishop_pi1[admin_ajax_edit_order]=get_attributes_values').'");
                 }
                 // manual function for removing the manual attributes
                 jQuery(document).ready(function($) {';
@@ -3259,7 +3276,7 @@ if (url.match("#")) {
         </script>
         <div class="panel panel-default">
         <div class="panel-body">
-        <div id="tab-container" class="msadminVerticalTabs">
+        <div id="tab-container" class="">
             <ul class="nav nav-tabs" role="tablist">';
 		foreach ($tabs as $key=>$value) {
 			$count++;

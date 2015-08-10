@@ -370,7 +370,7 @@ $html.='
 			return true;
 		});
 	';
-	if ($_COOKIE['hide_admin_panel']) {
+	if ($_COOKIE['hide_admin_panel'] && $this->get['type']!='2003') {
 		$html.='
 									$("#tx_multishop_admin_header_bg").hide();
 									$("#tx_multishop_admin_footer_wrapper").hide();
@@ -412,7 +412,7 @@ $(document).on("click", "#multishop_update_button", function(e) {
 							  "debug": false,
 							  "newestOnTop": true,
 							  "progressBar": true,
-							  "positionClass": "toast-bottom-left",
+							  "positionClass": "toast-bottom-right",
 							  "preventDuplicates": false,
 							  "onclick": null,
 							  "showDuration": "300",

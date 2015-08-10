@@ -525,7 +525,7 @@ if (count($enabled_countries)==1) {
 	$tmpcontent_con_delivery=implode("\n", $delivery_countries_option);
 	if ($tmpcontent_con) {
 		$countries_input='
-		<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
+		<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>
 		<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 		<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 		'.$tmpcontent_con.'
@@ -764,7 +764,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
 		$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
 		$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
-		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
+		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
 		$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 		$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
@@ -981,7 +981,7 @@ switch ($_REQUEST['action']) {
 			$mr_checked='checked="checked"';
 			$mrs_checked='';
 		}
-		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
+		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username')).'<span class="text-danger">*</span>';
 		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
 			$subpartArray['###USERNAME_READONLY###']=($this->get['action']=='edit_customer' ? 'readonly="readonly"' : '');
 		} else {
@@ -1005,7 +1005,7 @@ switch ($_REQUEST['action']) {
 		$company_validation='';
 		$subpartArray['###LABEL_COMPANY###']=ucfirst($this->pi_getLL('company'));
 		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY']) {
-			$subpartArray['###LABEL_COMPANY###'].='*';
+			$subpartArray['###LABEL_COMPANY###'].='<span class="text-danger">*</span>';
 			$company_validation=' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"';
 		}
 		$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
@@ -1026,7 +1026,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
 		$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
 		$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
-		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
+		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
 		$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 		$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
@@ -1079,7 +1079,6 @@ $subpartArray['###INVALID_EMAIL_MESSAGE###']=$this->pi_getLL('email_is_required'
 $subpartArray['###INVALID_USERNAME_MESSAGE###']=$this->pi_getLL('username_is_required');
 $subpartArray['###INVALID_PASSWORD_MESSAGE###']=$this->pi_getLL('password_is_required');
 $telephone_validation='';
-/*
 if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 	if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
 		$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'"';
@@ -1087,13 +1086,12 @@ if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 		$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'" pattern=".{'.$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER'].'}"';
 	}
 }
-*/
 $subpartArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 // plugin marker place holder
 if (!$this->ms['MODULES']['FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_PAGE']) {
-	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name')).'*';
-	$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name')).'*';
+	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span>';
+	$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span>';
 	$subpartArray['###FIRSTNAME_VALIDATION###']=' required="required" data-h5-errorid="invalid-first_name" title="'.$this->pi_getLL('first_name_required').'"';
 	$subpartArray['###LASTNAME_VALIDATION###']=' required="required" data-h5-errorid="invalid-last_name" title="'.$this->pi_getLL('last_name_required').'"';
 } else {

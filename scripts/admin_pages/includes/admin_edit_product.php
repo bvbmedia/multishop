@@ -2164,7 +2164,7 @@ if ($this->post) {
 			} else {
 				$markerArray['LOCAL_PRIMARY_PRODUCTS_CATEGORIES']='';
 			}
-			$markerArray['LABEL_PRODUCT_NAME']=$this->pi_getLL('admin_name');
+			$markerArray['LABEL_PRODUCT_NAME']=$this->pi_getLL('admin_name').($key===0 ? '<span class="text-danger">*</span>' : '');
 			$markerArray['VALUE_PRODUCT_NAME']=htmlspecialchars($lngproduct[$language['uid']]['products_name']);
 			$markerArray['LABEL_SHORT_DESCRIPTION']=$this->pi_getLL('admin_short_description');
 			$markerArray['TEXTAREA_SHORT_DESCRIPTION_PARAMS']='';
@@ -2187,7 +2187,7 @@ if ($this->post) {
 		/*
 		 * options tab
 		 */
-		$input_vat_rate='<select name="tax_id" id="tax_id" class="form-control"><option value="0">No TAX</option>';
+		$input_vat_rate='<select name="tax_id" id="tax_id" class="form-control"><option value="0">'.$this->pi_getLL('admin_no_tax').'</option>';
 		$str="SELECT * FROM `tx_multishop_tax_rule_groups`";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$product_tax_rate=0;

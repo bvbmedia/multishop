@@ -93,7 +93,7 @@ if (count($products)<0) {
 		<div class="col-md-8">
 		<div class="form-group">
 			<span id="ValidRadio" class="InputGroup">
-				<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).($this->ms['MODULES']['GENDER_INPUT_REQUIRED'] ? '*' : '').'</label>
+				<label for="radio" id="account-gender">'.ucfirst($this->pi_getLL('title')).($this->ms['MODULES']['GENDER_INPUT_REQUIRED'] ? '<span class="text-danger">*</span>' : '').'</label>
 				<div class="radio radio-success radio-inline">
 				<input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio" '.(($user['gender']=='m') ? 'checked' : '').($this->ms['MODULES']['GENDER_INPUT_REQUIRED'] ? ' required="required" data-h5-errorid="invalid-gender" title="'.$this->pi_getLL('gender_is_required', 'Title is required').'"' : '').'>
 				<label class="account-male" for="radio">'.ucfirst($this->pi_getLL('mr')).'</label>
@@ -114,7 +114,7 @@ if (count($products)<0) {
 				<input type="hidden" name="birthday" class="birthday" id="birthday" value="'.htmlspecialchars($user['birthday']).'" >
 			</div>
 			<div class="col-md-6">
-				<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').'</label>
+				<label for="company" id="account-company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<span class="text-danger">*</span>' : '').'</label>
 				<input type="text" name="company" class="form-control company" id="company" value="'.htmlspecialchars($user['company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"' : '').'/>
 				'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-company" class="error-space" style="display:none"></div>' : '').'
 			</div>
@@ -135,7 +135,7 @@ if (count($products)<0) {
 		<div class="form-group">
 			<div class="row">
 			<div class="col-md-4">
-				<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>
+				<label class="account-firstname" for="first_name">'.ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span></label>
 				<input type="text" name="first_name" class="form-control first-name" id="first_name" value="'.htmlspecialchars($user['first_name']).'" required="required" data-h5-errorid="invalid-first_name" title="'.$this->pi_getLL('first_name_required').'"><div id="invalid-first_name" class="error-space" style="display:none"></div>
 			</div>
 			<div class="col-md-4">
@@ -143,7 +143,7 @@ if (count($products)<0) {
 				<input type="text" name="middle_name" id="middle_name" class="form-control middle_name" value="'.htmlspecialchars($user['middle_name']).'">
 			</div>
 			<div class="col-md-4">
-				<label class="account-lastname" for="last_name">'.ucfirst($this->pi_getLL('last_name')).'*</label>
+				<label class="account-lastname" for="last_name">'.ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span></label>
 				<input type="text" name="last_name" id="last_name" class="form-control last-name" value="'.htmlspecialchars($user['last_name']).'" required="required" data-h5-errorid="invalid-last_name" title="'.$this->pi_getLL('surname_is_required').'"><div id="invalid-last_name" class="error-space" style="display:none"></div>
 			</div>
 			</div>
@@ -151,11 +151,11 @@ if (count($products)<0) {
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-4">
-					<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'*</label>
+					<label class="account-address" for="address">'.ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span></label>
 					<input type="text" name="street_name" id="address" class="form-control address" value="'.htmlspecialchars($user['street_name']).'" required="required" data-h5-errorid="invalid-address" title="'.$this->pi_getLL('street_address_is_required').'"><div id="invalid-address" class="error-space" style="display:none"></div>
 				</div>
 				<div class="col-md-4">
-					<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+					<label class="account-addressnumber" for="address_number">'.ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span></label>
 					<input type="text" name="address_number" id="address_number" class="form-control address-number" value="'.htmlspecialchars($user['address_number']).'" required="required" data-h5-errorid="invalid-address_number" title="'.$this->pi_getLL('street_number_is_required').'"><div id="invalid-address_number" class="error-space" style="display:none"></div>
 				</div>
 				<div class="col-md-4">
@@ -167,11 +167,11 @@ if (count($products)<0) {
 		<div class="form-group">
 			<div class="row">
 			<div class="col-md-6">
-				<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+				<label class="account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span></label>
 				<input type="text" name="zip" id="zip" class="form-control zip" value="'.htmlspecialchars($user['zip']).'" required="required" data-h5-errorid="invalid-zip" title="'.$this->pi_getLL('zip_is_required').'"><div id="invalid-zip" class="error-space" style="display:none"></div>
 			</div>
 			<div class="col-md-6">
-				<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
+				<label class="account-city" for="city">'.ucfirst($this->pi_getLL('city')).'<span class="text-danger">*</span></label>
 				<input type="text" name="city" id="city" class="form-control city" value="'.htmlspecialchars($user['city']).'" required="required" data-h5-errorid="invalid-city" title="'.$this->pi_getLL('city_is_required').'"><div id="invalid-city" class="error-space" style="display:none"></div>
 			</div>
 			</div>
@@ -195,7 +195,7 @@ if (count($products)<0) {
 			$tmpcontent_con=implode("\n", $billing_countries_option);
 			$tmpcontent_con_delivery=implode("\n", $delivery_countries_option);
 			if ($tmpcontent_con) {
-				$content.='<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
+				$content.='<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>
 				<select name="country" id="country" class="form-control country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 				<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 				'.$tmpcontent_con.'
@@ -205,6 +205,7 @@ if (count($products)<0) {
 		}
 		$telephone_validation='';
 		$mobile_validation='';
+		$this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']=1;
 		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 			if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
 				$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'"';
@@ -217,14 +218,14 @@ if (count($products)<0) {
 		// country eof
 		$content.='</div>
 		<div class="form-group">
-			<label for="email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'</label>
+			<label for="email" id="account-email">'.ucfirst($this->pi_getLL('e-mail_address')).'<span class="text-danger">*</span></label>
 			<input type="text" name="email" id="email" class="form-control email" value="'.htmlspecialchars($user['email']).'" required="required" data-h5-errorid="invalid-email" title="'.$this->pi_getLL('email_is_required').'">
 			<div id="invalid-email" class="error-space" style="display:none"></div>
 		</div>
 		<div class="form-group">
 			<div class="row">
 				<div class="col-md-6">
-					<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).'</label>
+					<label for="telephone" id="account-telephone">'.ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '').'</label>
 					<input type="text" name="tx_multishop_pi1[telephone]" id="telephone" class="form-control telephone" value="'.htmlspecialchars($user['telephone']).'"'.$telephone_validation.'>
 					<div id="invalid-telephone" class="error-space" style="display:none"></div>
 				</div>
@@ -470,7 +471,7 @@ if (count($products)<0) {
 			</script>
 			<div class="form-group">
 				<span id="delivery_ValidRadio" class="delivery_InputGroup">
-					<label for="delivery_gender" id="account-gender">'.ucfirst($this->pi_getLL('title')).'*</label>
+					<label for="delivery_gender" id="account-gender">'.ucfirst($this->pi_getLL('title')).'<span class="text-danger">*</span></label>
 					<div class="radio radio-success radio-inline">
 					<input type="radio" class="delivery_InputGroup" name="delivery_gender" value="m" class="account-gender-radio" id="delivery_radio" '.(($user['delivery_gender']=='m') ? 'checked' : '').'>
 					<label class="account-male" for="delivery_radio">'.ucfirst($this->pi_getLL('mr')).'</label>
@@ -483,14 +484,14 @@ if (count($products)<0) {
 				</span>
 		 </div>
 			<div class="form-group">
-				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '').':</label>
+				<label for="delivery_company">'.ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<span class="text-danger">*</span>' : '').':</label>
 				<input type="text" name="delivery_company" id="delivery_company" class="form-control delivery_company" value="'.htmlspecialchars($user['delivery_company']).'"'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-delivery_company" title="'.$this->pi_getLL('company_is_required').'"' : '').'>
 				'.($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '<div id="invalid-delivery_company" class="error-space" style="display:none"></div>' : '').'
 			</div>
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-4">
-						<label class="account-firstname" for="delivery_first_name">'.ucfirst($this->pi_getLL('first_name')).'*</label>
+						<label class="account-firstname" for="delivery_first_name">'.ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span></label>
 						<input type="text" name="delivery_first_name" class="form-control delivery_first-name left-this" id="delivery_first_name" value="'.htmlspecialchars($user['delivery_first_name']).'" ><div id="invalid-delivery_first_name" class="error-space" style="display:none"></div>
 					</div>
 					<div class="col-md-4">
@@ -498,7 +499,7 @@ if (count($products)<0) {
 						<input type="text" name="delivery_middle_name" id="delivery_middle_name" class="form-control delivery_middle_name left-this" value="'.htmlspecialchars($user['delivery_middle_name']).'">
 					</div>
 					<div class="col-md-4">
-						<label class="account-lastname" for="delivery_last_name">'.ucfirst($this->pi_getLL('last_name')).'*</label>
+						<label class="account-lastname" for="delivery_last_name">'.ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span></label>
 						<input type="text" name="delivery_last_name" id="delivery_last_name" class="form-control delivery_last-name left-this" value="'.htmlspecialchars($user['delivery_last_name']).'" ><div id="invalid-delivery_last_name" class="error-space" style="display:none"></div>
 					</div>
 				</div>
@@ -506,11 +507,11 @@ if (count($products)<0) {
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-4">
-						<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
+						<label for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span>:</label>
 						<input type="text" name="delivery_street_name" id="delivery_address" class="form-control delivery_address left-this" value="'.htmlspecialchars($user['delivery_street_name']).'"><div id="invalid-delivery_address" class="error-space" style="display:none"></div>
 					</div>
 					<div class="col-md-4">
-						<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+						<label class="delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span></label>
 						<input type="text" name="delivery_address_number" id="delivery_address_number" class="form-control delivery_address-number" value="'.htmlspecialchars($user['delivery_address_number']).'" ><div id="invalid-delivery_address_number" class="error-space" style="display:none"></div>
 					</div>
 					<div class="col-md-4">
@@ -523,12 +524,12 @@ if (count($products)<0) {
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-6">
-						<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'*:</label>
+						<label for="delivery_zip">'.ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span>:</label>
 						<input type="text" name="delivery_zip" id="delivery_zip" class="form-control delivery_zip left-this" value="'.htmlspecialchars($user['delivery_zip']).'">
 						<div id="invalid-delivery_zip" class="error-space" style="display:none"></div>
 					</div>
 					<div class="col-md-6">
-						<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'*</label>
+						<label class="account-city" for="delivery_city">'.ucfirst($this->pi_getLL('city')).'<span class="text-danger">*</span></label>
 						<input type="text" name="delivery_city" id="delivery_city" class="form-control delivery_city" value="'.htmlspecialchars($user['delivery_city']).'" >
 						<div id="invalid-delivery_city" class="error-space" style="display:none"></div>
 					</div>
@@ -537,7 +538,7 @@ if (count($products)<0) {
 				';
 		if ($tmpcontent_con) {
 			$tmpcontent.='<div class="form-group">
-				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
+				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>
 				<select name="delivery_country" id="delivery_country" class="form-control delivery_country">
 					<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 					'.$tmpcontent_con_delivery.'
@@ -553,7 +554,7 @@ if (count($products)<0) {
 			<div class="form-group">
 				<div class="row">
 				<div class="col-md-6">
-				<label for="delivery_telephone">'.ucfirst($this->pi_getLL('telephone')).'*:</label>
+				<label for="delivery_telephone">'.ucfirst($this->pi_getLL('telephone')).'<span class="text-danger">*</span>:</label>
 				<input type="text" name="delivery_telephone" id="delivery_telephone" class="form-control delivery_telephone" value="'.htmlspecialchars($user['delivery_telephone']).'"><div id="invalid-delivery_telephone" class="error-space" style="display:none"></div>
 				</div>
 				<div class="col-md-6">
