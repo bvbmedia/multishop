@@ -725,7 +725,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='<strong>'.$this->pi_getLL('coc_id').': '.$orders['billing_coc_id'].'</strong><br />';
 			}
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
+				$tmpcontent.='<hr><div class="clearfix"><div class="pull-right"><a href="#" id="edit_billing_info" class="btn btn-primary"><i class="fa fa-pencil"></i> '.$this->pi_getLL('edit').'</a></div></div>';
 			}
 			$tmpcontent.='</div>';
 			$tmpcontent.='
