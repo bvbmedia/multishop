@@ -3276,7 +3276,7 @@ if (url.match("#")) {
         </script>
         <div class="panel panel-default">
         <div class="panel-body">
-        <div id="tab-container" class="msadminVerticalTabs">
+        <div id="tab-container" class="">
             <ul class="nav nav-tabs" role="tablist">';
 		foreach ($tabs as $key=>$value) {
 			$count++;
