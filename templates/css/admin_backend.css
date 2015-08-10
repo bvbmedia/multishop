@@ -238,10 +238,18 @@ table#product_attributes_table table td.product_attribute_price .input-group .fo
 }
 table#product_attributes_table table td .product_attribute_action_container { width:87px !important; white-space:nowrap; }
 table#product_attributes_table table td:last-child { padding-right:0; }
-#orders_products_listing_table .cellQty { width:67px; }
-#orders_products_listing_table .cellName { width:402px; }
-#orders_products_listing_table .cellVat { width:114px; }
-#orders_products_listing_table .cellPrice { width:259px; }
+#orders_products_listing_table .cellID,
+.proposals_products_listing .cellID { width:50px; }
+#orders_products_listing_table .cellQty,
+.proposals_products_listing .cellQty { width:67px; }
+#orders_products_listing_table .cellName,
+.proposals_products_listing .cellName { width:402px; }
+#orders_products_listing_table .cellVat,
+.proposals_products_listing .cellVat { width:114px; }
+#orders_products_listing_table .cellPrice,
+.proposals_products_listing .cellPrice { width:259px; }
+#orders_products_listing_table .cellAction,
+.proposals_products_listing .cellAction { width:84px; }
 .table > tfoot > tr > td.order_total_data { padding-bottom:0; }
 
 .product_staffel_price .table > * > tr > td { border-bottom:none; }

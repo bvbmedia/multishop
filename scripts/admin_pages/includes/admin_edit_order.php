@@ -1587,7 +1587,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> ';
 							$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><button type="button" onclick="return CONFIRM();" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-trash-o"></i></button></a>';
 						} else {
-							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-remove"></i></button> <button type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-primary btn-sm submit_button order_product_action"><i class="fa fa-save"></i></button>';
+							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> <button type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-primary btn-sm submit_button order_product_action"><i class="fa fa-save"></i></button>';
 						}
 						// product final price
 						$order_products_body_data['products_action']['align']='right';
@@ -1945,7 +1945,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products name col
 						$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 						$order_products_body_data['products_name']['align']='left';
-						$order_products_body_data['products_name']['value']='<input type="button" id="edit_add_attributes" class="btn btn-success" value="'.$this->pi_getLL('add_attribute').'">';
+						$order_products_body_data['products_name']['value']='<button type="button" id="edit_add_attributes" class="btn btn-primary btn-sm" value=""><i class="fa fa-plus"></i> '.$this->pi_getLL('add_attribute').'</button>';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							// products status col
 							$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
@@ -2397,7 +2397,7 @@ if (is_numeric($this->get['orders_id'])) {
             </div>';
 			$discount_content='';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$discount_content='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control" type="text" value="'.round($orders['discount'], 4).'" class="align_right"></div>';
+				$discount_content='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input name="edit_discount_value" class="form-control text-right" type="text" value="'.round($orders['discount'], 4).'"></div>';
 			} else {
 				if ($orders['discount']>0) {
 					$discount_content=mslib_fe::amount2Cents($orders['discount'], 0);
