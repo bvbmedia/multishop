@@ -1945,7 +1945,7 @@ if (is_numeric($this->get['orders_id'])) {
 						// products name col
 						$order_products_body_data['products_name']['class']='last_edit_product_row_pname_col';
 						$order_products_body_data['products_name']['align']='left';
-						$order_products_body_data['products_name']['value']='<input type="button" id="edit_add_attributes" class="btn btn-success" value="add attribute">';
+						$order_products_body_data['products_name']['value']='<input type="button" id="edit_add_attributes" class="btn btn-success" value="'.$this->pi_getLL('add_attribute').'">';
 						if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 							// products status col
 							$order_products_body_data['products_status']['class']='last_edit_product_row_pstatus_col';
