@@ -690,7 +690,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <input class="form-control" name="tx_multishop_pi1[billing_coc_id]" type="text" id="edit_billing_coc_id" value="'.$orders['billing_coc_id'].'" />
                 </div>
                 </div>
-                <hr><div class="clearfix"><div class="pull-right"><a href="#" id="close_edit_billing_info" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a></div></div>
+                <hr><div class="clearfix"><div class="pull-right"><a href="#" id="close_edit_billing_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a></div></div>
                 </div>';
 			}
 			if ($hide_billing_vcard) {
@@ -823,8 +823,8 @@ if (is_numeric($this->get['orders_id'])) {
                 <hr>
                 <div class="clearfix">
                 <div class="pull-right">
-                <a href="#" id="close_edit_delivery_info" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
-                <a href="#" id="copy_from_billing_details" class="btn btn-primary btn-sm"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
+                <a href="#" id="close_edit_delivery_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a>
+                <a href="#" id="copy_from_billing_details" class="btn btn-primary"><i class="fa fa-copy"></i> '.$this->pi_getLL('copy_from_billing_details').'</a>
                 </div>
                 </div>
                 </div>';
@@ -1092,7 +1092,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary btn-sm\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
+                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
                 $("#delivery_details_container").show();
                 $("#edit_delivery_details_container").hide();
