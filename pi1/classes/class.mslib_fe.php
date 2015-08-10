@@ -688,6 +688,7 @@ class mslib_fe {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArray'])) {
 					$params=array(
 						'product'=>&$product,
+						'search_section'=>&$search_section
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetProductArray'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -774,7 +775,8 @@ class mslib_fe {
 				$params=array(
 					'array'=>&$array,
 					'query_elements'=>&$query_elements,
-					'enableFetchTaxRate'=>&$enableFetchTaxRate
+					'enableFetchTaxRate'=>&$enableFetchTaxRate,
+					'search_section'=>&$search_section
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getProductsPageSetPostProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
