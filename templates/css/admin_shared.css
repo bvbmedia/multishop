@@ -161,7 +161,9 @@ td.cellAction { white-space:nowrap; }
 #toast-container > div a:focus { color:#fff; text-decoration:underline; }
 #toast-container > .toast-info { overflow:auto; max-height:494px; background-image:none !important; }
 #toast-container > .toast-info:after { position:absolute; left:10px; top:16px; font-size:26px; line-height:20px; color:#0090E3; font-family:"fontAwesome"; content:"\f05a"; }
-.toast-bottom-left { bottom:33px; }
+.toast-bottom-left,
+.toast-bottom-right,
+.toast-bottom-center { bottom:33px; }
 .toast-info { background-color:#000; }
 .toast-title { margin-bottom:3px; padding-right:22px; }
 .toast-message { font-size:13px; line-height:18px; }
