@@ -1977,7 +1977,6 @@ if ($this->post) {
 			}
 			// custom hook that can be controlled by third-party plugin eof
 		}
-		// OLD OBSOLUTE HOOK
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_product.php']['saveProductPostHook'])) {
 			$params=array(
 				'prodid'=>$prodid
