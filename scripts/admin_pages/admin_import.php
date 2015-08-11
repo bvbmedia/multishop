@@ -977,6 +977,7 @@ if ($this->post['action']=='category-insert') {
 				$file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$this->post['filename'];
 			}
 		}
+		$import_data_collector=array();
 		if (($this->post['database_name'] or $file) and isset($this->post['cid'])) {
 			if ($file) {
 				$str=mslib_fe::file_get_contents($file);
@@ -2911,6 +2912,18 @@ if ($this->post['action']=='category-insert') {
 							}
 							// custom hook that can be controlled by third-party plugin eof
 						}
+						// custom hook that can be controlled by third-party plugin
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertAndUpdateProductPostHook'])) {
+							$params=array(
+									'products_id'=>($item['added_products_id'] ? $item['added_products_id'] : $item['updated_products_id']),
+									'import_data_collector'=>&$import_data_collector,
+									'item'=>&$item,
+									'prefix_source_name'=>$this->post['prefix_source_name']
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertAndUpdateProductPostHook'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
 						// add/update eof
 						if ($this->get['run_as_cron']) {
 							$subtel++;
@@ -2986,6 +2999,7 @@ if ($this->post['action']=='category-insert') {
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportPostProcHook'])) {
 			$params=array(
+				'import_data_collector'=>$import_data_collector,
 				'prefix_source_name'=>$this->post['prefix_source_name'],
 				'stats'=>&$stats
 			);
