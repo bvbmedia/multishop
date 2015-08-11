@@ -52,8 +52,6 @@ $content.='
 		</div>
 	</div>
 </form>
-</div>
-</div>
 ';
 if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count($this->post['tx_multishop_pi1']['items'])) {
 	set_time_limit(86400);
@@ -218,4 +216,8 @@ if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count
 		}
 	}
 }
+$content.='
+</div>
+</div>
+';
 ?>
