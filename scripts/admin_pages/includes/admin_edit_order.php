@@ -2324,10 +2324,10 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 				}
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$shipping_costs='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control" id="display_shipping_method_cost" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" /></div>
+					$shipping_costs='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control text-right" id="display_shipping_method_cost" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" /></div>
                     <input name="tx_multishop_pi1[shipping_method_costs]" type="hidden" value="'.$orders['shipping_method_costs'].'">
                     <input type="hidden" id="shipping_method_tax_id" value="'.$shipping_method['tax_id'].'" class="align_right" style="width:60px">';
-					$payment_costs='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control" id="display_payment_method_cost" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" /></div>
+					$payment_costs='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control text-right" id="display_payment_method_cost" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" /></div>
                     <input name="tx_multishop_pi1[payment_method_costs]" type="hidden" value="'.$orders['payment_method_costs'].'">
                     <input type="hidden" id="payment_method_tax_id" value="'.$payment_method['tax_id'].'" class="align_right" style="width:60px">
                     ';
