@@ -32,23 +32,28 @@ $navItems['products_attributes']=$this->pi_getLL('admin_label_products_attribute
 $navItems['manufacturers']=$this->pi_getLL('manufacturers');
 $navItems['orders']=$this->pi_getLL('orders');
 $navItems['everything']=$this->pi_getLL('admin_label_everything');
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_label_clear_database').'</h1></div>
-<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_clear_database').'" method="post">
-	<div class="account-field">
-			<label>'.$this->pi_getLL('admin_label_items_to_delete').'</label>
-			<ul>
+$content.='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('admin_label_clear_database').'</h3></div>
+<div class="panel-body">
+<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_clear_database').'" method="post" class="form-horizontal">
+	<div class="form-group">
+			<label class="control-label col-md-2">'.$this->pi_getLL('admin_label_items_to_delete').'</label>
+			<div class="col-md-10">
 			';
 foreach ($navItems as $key=>$val) {
-	$content.='<li><input name="tx_multishop_pi1[items][]" type="checkbox" value="'.$key.'" /> '.$val.'</li>'."\n";
+	$content.='<div class="checkbox checkbox-success"><input name="tx_multishop_pi1[items][]" type="checkbox" id="'.$key.'" value="'.$key.'" /><label for="'.$key.'">'.$val.'</label></div>'."\n";
 }
 $content.='
-			</ul>
+			</div>
 	</div>
-	<div class="account-field">
-			<label></label>
-			<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('delete').'" />
+	<hr>
+	<div class="clearfix">
+		<div class="pull-right">
+			<button type="submit" id="submit" class="btn btn-success" value=""><i class="fa fa-save"></i> '.$this->pi_getLL('delete').'</button>
+		</div>
 	</div>
 </form>
+</div>
+</div>
 ';
 if ($this->post and is_array($this->post['tx_multishop_pi1']['items']) and count($this->post['tx_multishop_pi1']['items'])) {
 	set_time_limit(86400);
