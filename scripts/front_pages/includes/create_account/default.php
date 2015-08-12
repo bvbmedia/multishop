@@ -256,7 +256,7 @@ if (mslib_fe::loggedin()) {
 					$tmpcontent.='<option value="'.mslib_befe::strtoupper($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 				}
 				if ($tmpcontent) {
-					$country_block.='<select name="country" class="country" required="required">
+					$country_block.='<select name="country" id="country" class="country" required="required">
 						<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 						'.$tmpcontent.'
 					</select>';
