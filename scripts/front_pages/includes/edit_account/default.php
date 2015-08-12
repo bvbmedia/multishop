@@ -450,7 +450,7 @@ if ($this->post) {
 	//
 	$markerArray=array();
 	$markerArray['###LABEL_BILLING_ADDRESS###']=$this->pi_getLL('billing_address');
-	$markerArray['###LABEL_TITLE###']=ucfirst($this->pi_getLL('title'));
+	$markerArray['###LABEL_TITLE###']=ucfirst($this->pi_getLL('title')).'<span class="text-danger">*</span>';
 	$markerArray['###GENDER_MR_CHECKED###']=(($user['gender']=='m') ? 'checked' : '');
 	$markerArray['###LABEL_ERROR_GENDER_IS_REQUIRED###']=$this->pi_getLL('gender_is_required', 'Title is required');
 	$markerArray['###LABEL_GENDER_MR###']=ucfirst($this->pi_getLL('mr'));
@@ -473,12 +473,12 @@ if ($this->post) {
     $markerArray['###VALUE_VAT_ID###']=htmlspecialchars($user['tx_multishop_vat_id']);
 	$markerArray['###INPUT_COC_BLOCK###']=$coc_input_block;
     $markerArray['###VALUE_COC_ID###']=htmlspecialchars($user['tx_multishop_coc_id']);
-	$markerArray['###LABEL_FIRST_NAME###']=ucfirst($this->pi_getLL('first_name'));
+	$markerArray['###LABEL_FIRST_NAME###']=ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_FIRST_NAME###']=htmlspecialchars($user['first_name']);
 	$markerArray['###LABEL_ERROR_FIRST_NAME_IS_REQUIRED###']=$this->pi_getLL('first_name_required');
 	$markerArray['###LABEL_MIDDLE_NAME###']=ucfirst($this->pi_getLL('middle_name'));
 	$markerArray['###VALUE_MIDDLE_NAME###']=htmlspecialchars($user['middle_name']);
-	$markerArray['###LABEL_LAST_NAME###']=ucfirst($this->pi_getLL('last_name'));
+	$markerArray['###LABEL_LAST_NAME###']=ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_LAST_NAME###']=htmlspecialchars($user['last_name']);
 	$markerArray['###LABEL_ERROR_LAST_NAME_IS_REQUIRED###']=$this->pi_getLL('surname_is_required');
 	//
@@ -495,7 +495,7 @@ if ($this->post) {
 		}
 		if ($tmpcontent_con) {
 			$country_block='<div id="input-country" class="account-field col-sm-'.($this->conf['edit_account_tmpl_path'] ? '12' : '8').'">
-				<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
+				<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>
 				<select name="country" id="country" class="country" required="required" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 				<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 				'.$tmpcontent_con.'
@@ -503,8 +503,8 @@ if ($this->post) {
 				<div id="invalid-country" class="error-space" style="display:none"></div>
 			</div>';
 			$delivery_country_block='<div id="input-dcountry" class="account-field col-sm-'.($this->conf['edit_account_tmpl_path'] ? '12' : '8').'">
-				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>
-				<select name="delivery_country" id="delivery_country" class="delivery_country">
+				<label for="delivery_country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>
+				<select name="delivery_country" id="delivery_country" class="delivery_country" data-h5-errorid="invalid-country" title="'.$this->pi_getLL('country_is_required').'">
 				<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 				'.$tmpcontent_con_delivery.'
 				</select>
@@ -515,26 +515,26 @@ if ($this->post) {
 	// country eof
 	$markerArray['###INPUT_COUNTRY_BLOCK###']=$country_block;
 	//
-	$markerArray['###LABEL_ZIP###']=ucfirst($this->pi_getLL('zip'));
+	$markerArray['###LABEL_ZIP###']=ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_ZIP###']=htmlspecialchars($user['zip']);
 	$markerArray['###LABEL_ERROR_ZIP_IS_REQUIRED###']=$this->pi_getLL('zip_is_required');
-	$markerArray['###LABEL_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
+	$markerArray['###LABEL_ADDRESS###']=ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_ADDRESS###']=htmlspecialchars($user['street_name']);
 	$markerArray['###LABEL_ERROR_ADDRESS_IS_REQUIRED###']=$this->pi_getLL('street_address_is_required');
-	$markerArray['###LABEL_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
+	$markerArray['###LABEL_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_ADDRESS_NUMBER###']=htmlspecialchars($user['address_number']);
 	$markerArray['###LABEL_ERROR_ADDRESS_NUMBER_IS_REQUIRED###']=$this->pi_getLL('street_number_is_required');
 	$markerArray['###LABEL_ADDRESS_EXT###']=ucfirst($this->pi_getLL('address_extension'));
 	$markerArray['###VALUE_ADDRESS_EXT###']=htmlspecialchars($user['address_ext']);
-	$markerArray['###LABEL_CITY###']=ucfirst($this->pi_getLL('city'));
+	$markerArray['###LABEL_CITY###']=ucfirst($this->pi_getLL('city')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_CITY###']=htmlspecialchars($user['city']);
 	$markerArray['###LABEL_ERROR_CITY_IS_REQUIRED###']=$this->pi_getLL('city_is_required');
-	$markerArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
+	$markerArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']=='1' ? '<span class="text-danger">*</span>' : '');
 	$markerArray['###VALUE_TELEPHONE###']=htmlspecialchars($user['telephone']);
 	//
 	$telephone_validation='';
 	$mobile_validation='';
-	if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
+	if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']=='1') {
 		if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
 			$telephone_validation=' required="required" data-h5-errorid="invalid-telephone" title="'.$this->pi_getLL('telephone_is_required').'"';
 			$mobile_validation=' required="required" data-h5-errorid="invalid-mobile" title="'.$this->pi_getLL('mobile_must_be_x_digits_long').'"';
@@ -547,11 +547,11 @@ if ($this->post) {
 	$markerArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
 	$markerArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 	$markerArray['###VALUE_MOBILE###']=htmlspecialchars($user['mobile']);
-	$markerArray['###LABEL_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address'));
+	$markerArray['###LABEL_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_EMAIL###']=htmlspecialchars($user['email']);
 	$markerArray['###LABEL_ERROR_EMAIL_IS_REQUIRED###']=$this->pi_getLL('email_is_required');
 	$markerArray['###LABEL_DELIVERY_ADDRESS_TITLE###']=ucfirst($this->pi_getLL('delivery_address'));
-	$markerArray['###LABEL_DELIVERY_TITLE###']=ucfirst($this->pi_getLL('title'));
+	$markerArray['###LABEL_DELIVERY_TITLE###']=ucfirst($this->pi_getLL('title')).'<span class="text-danger">*</span>';
 	$markerArray['###DELIVERY_GENDER_MR_CHECKED###']=(($user['delivery_gender']=='m') ? 'checked' : '');
 	$markerArray['###LABEL_DELIVERY_GENDER_MR###']=ucfirst($this->pi_getLL('mr'));
 	$markerArray['###DELIVERY_GENDER_MRS_CHECKED###']=(($user['delivery_gender']=='f') ? 'checked' : '');
@@ -559,22 +559,22 @@ if ($this->post) {
 	$markerArray['###LABEL_DELIVERY_COMPANY###']=ucfirst($this->pi_getLL('company')).($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '');
 	$markerArray['###VALUE_DELIVERY_COMPANY###']=htmlspecialchars($user['delivery_company']);
 	$markerArray['###DELIVERY_COMPANY_VALIDATION###']=($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? ' required="required" data-h5-errorid="invalid-delivery_company" title="'.$this->pi_getLL('company_is_required').' ('.mslib_befe::strtolower($this->pi_getLL('delivery_address')).')"' : '');
-	$markerArray['###LABEL_DELIVERY_FIRST_NAME###']=ucfirst($this->pi_getLL('first_name'));
+	$markerArray['###LABEL_DELIVERY_FIRST_NAME###']=ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_DELIVERY_FIRST_NAME###']=htmlspecialchars($user['delivery_first_name']);
 	$markerArray['###LABEL_DELIVERY_MIDDLE_NAME###']=ucfirst($this->pi_getLL('middle_name'));
 	$markerArray['###VALUE_DELIVERY_MIDDLE_NAME###']=htmlspecialchars($user['delivery_middle_name']);
-	$markerArray['###LABEL_DELIVERY_LAST_NAME###']=ucfirst($this->pi_getLL('last_name'));
+	$markerArray['###LABEL_DELIVERY_LAST_NAME###']=ucfirst($this->pi_getLL('last_name').'<span class="text-danger">*</span>');
 	$markerArray['###VALUE_DELIVERY_LAST_NAME###']=htmlspecialchars($user['delivery_last_name']);
 	$markerArray['###INPUT_DELIVERY_COUNTRY_BLOCK###']=$delivery_country_block;
-	$markerArray['###LABEL_DELIVERY_ZIP###']=ucfirst($this->pi_getLL('zip'));
+	$markerArray['###LABEL_DELIVERY_ZIP###']=ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_DELIVERY_ZIP###']=htmlspecialchars($user['delivery_zip']);
-	$markerArray['###LABEL_DELIVERY_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
+	$markerArray['###LABEL_DELIVERY_ADDRESS###']=ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_DELIVERY_ADDRESS###']=htmlspecialchars($user['delivery_street_name']);
-	$markerArray['###LABEL_DELIVERY_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
+	$markerArray['###LABEL_DELIVERY_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_DELIVERY_ADDRESS_NUMBER###']=htmlspecialchars($user['delivery_address_number']);
 	$markerArray['###LABEL_DELIVERY_ADDRESS_EXT###']=ucfirst($this->pi_getLL('address_extension'));
 	$markerArray['###VALUE_DELIVERY_ADDRESS_EXT###']=htmlspecialchars($user['delivery_address_ext']);
-	$markerArray['###LABEL_DELIVERY_CITY###']=ucfirst($this->pi_getLL('city'));
+	$markerArray['###LABEL_DELIVERY_CITY###']=ucfirst($this->pi_getLL('city')).'<span class="text-danger">*</span>';
 	$markerArray['###VALUE_DELIVERY_CITY###']=htmlspecialchars($user['delivery_city']);
 	$markerArray['###LABEL_DELIVERY_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
 	$markerArray['###VALUE_DELIVERY_TELEPHONE###']=htmlspecialchars($user['delivery_telephone']);
