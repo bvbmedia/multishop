@@ -260,6 +260,7 @@ if (!$product['products_id']) {
 	$output['products_category']='Category: '.$product['categories_name'];
 	$output['products_relatives']=mslib_fe::getProductRelativesBox($product);
 	$output['customers_also_bought']=mslib_fe::getProductRelativesBox($product, 'customers_also_bought');
+	$output['PRODUCTS_SHORT_DESCRIPTION']=$product['products_shortdescription'];
 	$output['products_description']=$product['products_description'];
 	$output['products_extra_description']=$product['products_extra_description'];
 	$output['products_image']='<div class="image">';
