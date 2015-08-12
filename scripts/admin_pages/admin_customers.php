@@ -204,19 +204,11 @@ $formTopSearch='
 		<div class="col-sm-4 formfield-wrapper">
 			<label class="control-label" for="type_search">'.$this->pi_getLL('date').'</label>
 			<div class="form-group">
-				<div class="row">
-				<div class="col-sm-6 form-inline">
-					<div class="form-group">
-						<label class="control-label" for="order_date_from">'.$this->pi_getLL('from').'</label>
-						<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="'.$this->get['crdate_from'].'">
-					</div>
-				</div>
-				<div class="col-sm-6 form-inline">
-					<div class="form-group">
-						<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').'</label>
-						<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="'.$this->get['crdate_till'].'">
-					</div>
-				</div>
+				<div class="form-inline">
+					<label class="control-label" for="order_date_from">'.$this->pi_getLL('from').'</label>
+					<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="'.$this->get['crdate_from'].'">
+					<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').'</label>
+					<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="'.$this->get['crdate_till'].'">
 				</div>
 			</div>
 			<div class="form-group">
