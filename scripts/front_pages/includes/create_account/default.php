@@ -244,7 +244,7 @@ if (mslib_fe::loggedin()) {
 			// load enabled countries to array eof
 			$country_block='';
 			if (count($enabled_countries)==1) {
-				$country_block.='<input name="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+				$country_block.='<input name="country" id="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 			} else {
 				$country_block.='<div class="account-field col-sm-8" id="input-country">
 							<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>';

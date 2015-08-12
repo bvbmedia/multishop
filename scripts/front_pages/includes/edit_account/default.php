@@ -486,8 +486,8 @@ if ($this->post) {
 	$country_block='';
 	$delivery_country_block='';
 	if (count($enabled_countries)==1) {
-		$country_block='<input name="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
-		$delivery_country_block='<input name="delivery_country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+		$country_block='<input name="country" id="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+		$delivery_country_block='<input name="delivery_country" id="delivery_country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 	} else {
 		foreach ($enabled_countries as $country) {
 			$tmpcontent_con.='<option value="'.mslib_befe::strtolower($country['cn_short_en']).'" '.((mslib_befe::strtolower($user['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
