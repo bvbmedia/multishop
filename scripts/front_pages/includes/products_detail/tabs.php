@@ -271,6 +271,7 @@ if (!$product['products_id']) {
 			});
 		</script>
 	';
+	$output['PRODUCTS_SHORT_DESCRIPTION']=$product['products_shortdescription'];
 	$output['products_extra_description']=$product['products_extra_description'];
 	$output['products_image']='
 	<div class="image">
@@ -325,6 +326,7 @@ if (!$product['products_id']) {
 	$markerArray['###PAGINATION###']=$output['pagination'];
 	$markerArray['###STOCK###']=$output['products_quantity'];
 	$markerArray['###PRODUCTS_NAME###']=$output['products_name'];
+	$markerArray['###PRODUCTS_SHORT_DESCRIPTION###']=$output['PRODUCTS_SHORT_DESCRIPTION'];
 	$markerArray['###PRODUCTS_DESCRIPTION###']=$output['products_description'];
 	$markerArray['###PRODUCTS_EXTRA_DESCRIPTION###']=$output['products_extra_description'];
 	$markerArray['###PRODUCTS_CATEGORY###']=$output['products_category'];
