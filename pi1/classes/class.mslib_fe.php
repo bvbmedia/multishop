@@ -5921,7 +5921,7 @@ class mslib_fe {
 			return false;
 		}
 		if (is_numeric($option_id)) {
-			$where='pov.products_options_values_id=pov2po.products_options_values_id and pov.language_id=0 and pov2po.products_options_id = '.$option_id;
+			$where='pov.language_id=0 and pov2po.products_options_id = '.$option_id.' and pov.products_options_values_id=pov2po.products_options_values_id';
 			$query=$GLOBALS['TYPO3_DB']->SELECTquery('pov.*', // SELECT ...
 				'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options pov2po', // FROM ...
 				$where, // WHERE.
@@ -5940,7 +5940,7 @@ class mslib_fe {
 	public function getAttributeValueIdByValueName($value_name, $option_id=0) {
 		if ($value_name) {
 			if ($option_id>0) {
-				$where='pov.products_options_values_id=pov2po.products_options_values_id and pov.language_id=0 and pov.products_options_values_name=\''.addslashes($value_name).'\' and pov2po.products_options_id = '.$option_id;
+				$where='pov.language_id=0 and pov.products_options_values_name=\''.addslashes($value_name).'\' and pov2po.products_options_id = '.$option_id.' and pov.products_options_values_id=pov2po.products_options_values_id';
 				$from='tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options pov2po';
 			} else {
 				$where='pov.language_id=0 and pov.products_options_values_name=\''.addslashes($value_name).'\'';

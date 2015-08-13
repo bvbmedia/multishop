@@ -11,8 +11,8 @@
 #ms_admin_top_search .select2-container .select2-choice .select2-arrow b { background-position:left 7px; }
 
 .select2-drop.adminpanel-search-bigdrop { width:150px !important; border:none; background:#666; border-radius:0; }
-#select2-drop.select2-drop.adminpanel-search-bigdrop { width:500px !important; font-size:14px; line-height:20px; font-family:"Open Sans"; z-index:10005; }
-.select2-drop.adminpanel-search-bigdrop ul.select2-results { max-height:297px; font-size:13px; }
+#select2-drop.select2-drop.adminpanel-search-bigdrop { width:500px !important; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; z-index:10005; }
+.select2-drop.adminpanel-search-bigdrop ul.select2-results { max-height:297px; font-size:13px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
 .select2-drop.adminpanel-search-bigdrop ul.select2-results > li > .select2-result-label { background:#333; color:#fff; }
 .select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a { color:#fff; }
 .select2-drop.adminpanel-search-bigdrop ul.select2-result-sub > li > .select2-result-label a:hover { text-decoration:none; }
@@ -65,7 +65,7 @@
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_help,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system { float:right; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_language { height:38px; border-left:1px solid rgba(255,255,255,.3); padding:0; }
-#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_language select { display:inline-block; height:38px; border:none; background:#333; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; padding:0 0 0 10px; }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_language select { display:inline-block; height:38px; border:none; background:#333; font-size:14px; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; padding:0 0 0 10px; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.open > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.open > span { background:#333; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul { width:250px; border:none; background:#333; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); z-index:2; }
