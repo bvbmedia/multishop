@@ -65,7 +65,7 @@
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_help,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_system { float:right; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_language { height:38px; border-left:1px solid rgba(255,255,255,.3); padding:0; }
-#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_language select { display:inline-block; height:38px; border:none; background:#333; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; padding:0 0 0 10px; }
+#tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_language select { display:inline-block; height:38px; border:none; background:#333; font-size:14px; font-family:"Open Sans", Arial, Helvetica, sans-serif; color:#fff; padding:0 0 0 10px; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.open > a,
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.open > span { background:#333; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li > ul { width:250px; border:none; background:#333; border-radius:0; box-shadow:0 0 10px rgba(0,0,0,.4); z-index:2; }
