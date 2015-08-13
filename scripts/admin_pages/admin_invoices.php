@@ -160,7 +160,7 @@ $option_item='<select name="type_search" class="invoice_select2"><option value="
 foreach ($option_search as $key=>$val) {
 	$option_item.='<option value="'.$key.'" '.($this->get['type_search']==$key ? "selected" : "").'>'.$val.'</option>';
 }
-$option_item='</select>';
+$option_item.='</select>';
 //
 $all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 $orders_status_list='<select name="orders_status_search" class="invoice_select2"><option value="0" '.((!$order_status_search_selected) ? 'selected' : '').'>'.$this->pi_getLL('all_orders_status', 'All orders status').'</option>';
@@ -385,7 +385,7 @@ $subpartArray=array();
 $subpartArray['###PAGE_ID###']=$this->showCatalogFromPage;
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
-$subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
+$subpartArray['###VALUE_KEYWORD###']=($this->get['skeyword'] ? $this->get['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_for');
 $subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
 $subpartArray['###LABEL_USERGROUP###']=$this->pi_getLL('usergroup');
@@ -400,9 +400,9 @@ $subpartArray['###VALUE_SEARCH###']=htmlspecialchars($this->pi_getLL('search'));
 $subpartArray['###LABEL_FILTER_BY_DATE###']=$this->pi_getLL('filter_by_date');
 $subpartArray['###LABEL_DATE_FROM###']=$this->pi_getLL('from');
 $subpartArray['###LABEL_DATE###']=$this->pi_getLL('date');
-$subpartArray['###VALUE_DATE_FROM###']=$this->post['invoice_date_from'];
+$subpartArray['###VALUE_DATE_FROM###']=$this->get['invoice_date_from'];
 $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
-$subpartArray['###VALUE_DATE_TO###']=$this->post['invoice_date_till'];
+$subpartArray['###VALUE_DATE_TO###']=$this->get['invoice_date_till'];
 $subpartArray['###LABEL_FILTER_BY_PAID_INVOICES_ONLY###']=$this->pi_getLL('show_paid_invoices_only');
 $subpartArray['###FILTER_BY_PAID_INVOICES_ONLY_CHECKED###']=($this->cookie['paid_invoices_only'] ? ' checked' : '');
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
