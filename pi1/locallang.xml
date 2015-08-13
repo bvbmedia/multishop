@@ -164,8 +164,8 @@
             <label index="admin_label_check_2">Check 2</label>
             <label index="admin_label_check_3">Check 3</label>
             <label index="admin_label_check_4">Check 4 (not existing product images)</label>
-            <label index="admin_label_choose_attribute">choose attribute value</label>
-            <label index="admin_label_choose_option">choose attribute option</label>
+            <label index="admin_label_choose_attribute">Choose attribute value</label>
+            <label index="admin_label_choose_option">Choose attribute option</label>
             <label index="admin_label_clear_database">Clear database</label>
             <label index="admin_label_click_here_to_add_category">Click here to add a category</label>
             <label index="admin_label_click_here_to_add_country">Click here to add a country</label>
@@ -1396,7 +1396,7 @@
             <label index="admin_label_check_2">Controle 2</label>
             <label index="admin_label_check_3">Controle 3</label>
             <label index="admin_label_check_4">Controle 4 (niet bestaande productafbeeldingen)</label>
-            <label index="admin_label_choose_attribute">selecteer attribuut waarde</label>
+            <label index="admin_label_choose_attribute">Selecteer attribuut waarde</label>
             <label index="admin_label_choose_option">selecteer attribuut optie</label>
             <label index="admin_label_clear_database">Leeg database</label>
             <label index="admin_label_click_here_to_add_category">Klik hier om een categorie aan te maken</label>
