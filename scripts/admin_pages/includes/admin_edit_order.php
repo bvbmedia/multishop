@@ -265,6 +265,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
 							$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$tax_rate_for_shipping=((1+$shipping_method['tax_rate'])*100);
+								$price=($price/$tax_rate_for_shipping)*100;
+							}
 						} else {
 							$price=mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
 						}
@@ -344,6 +348,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$updateArray['shipping_method']=$shipping_method['code'];
 						$updateArray['shipping_method_label']=$shipping_method['name'];
+					} else {
+						$updateArray['shipping_method_costs']=0;
+						$updateArray['shipping_method']='';
+						$updateArray['shipping_method_label']='';
 					}
 					if ($this->post['payment_method']) {
 						$payment_method=mslib_fe::getPaymentMethod($this->post['payment_method']);
@@ -356,6 +364,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
 							$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$tax_rate_for_payment=((1+$payment_method['tax_rate'])*100);
+								$price=($price/$tax_rate_for_payment)*100;
+							}
 						} else {
 							$price=$payment_method['handling_costs'];
 						}
@@ -391,6 +403,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$updateArray['payment_method']=$payment_method['code'];
 						$updateArray['payment_method_label']=$payment_method['name'];
+					} else {
+						$updateArray['payment_method_costs']='0';
+						$updateArray['payment_method']='';
+						$updateArray['payment_method_label']='';
 					}
 					if (isset($this->post['edit_discount_value'])) {
 						$updateArray['discount']=$this->post['edit_discount_value'];
@@ -855,14 +871,10 @@ if (is_numeric($this->get['orders_id'])) {
             });
         }
         jQuery(document).ready(function($) {
-            $(document).on("keyup", "#display_shipping_method_cost, #display_payment_method_cost, #display_product_price, .edit_manual_price", function(){
+            $(document).on("keyup", "#display_product_price, .edit_manual_price", function(){
                 var self=$(this);
                 var tax_id=0;
-                if ($(self).attr("id")=="display_shipping_method_cost") {
-                    tax_id=$("#shipping_method_tax_id").val();
-                } else if ($(self).attr("id")=="display_payment_method_cost") {
-                    tax_id=$("#payment_method_tax_id").val();
-                } else if ($(self).attr("id")=="display_product_price" || $(self).hasClass("edit_manual_price")) {
+                if ($(self).attr("id")=="display_product_price" || $(self).hasClass("edit_manual_price")) {
                     tax_id=$("#product_tax").val();
                 }
                 if ($(this).val()!="") {
@@ -1128,6 +1140,9 @@ if (is_numeric($this->get['orders_id'])) {
 							$dontOverrideDefaultOption=1;
 						}
 					}
+					if (empty($orders['shipping_method'])) {
+						$dontOverrideDefaultOption=1;
+					}
 					if ($dontOverrideDefaultOption) {
 						$optionItems=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'), $optionItems);
 					} else {
@@ -1157,6 +1172,9 @@ if (is_numeric($this->get['orders_id'])) {
 						if ($code==$orders['payment_method']) {
 							$dontOverrideDefaultOption=1;
 						}
+					}
+					if (empty($orders['payment_method'])) {
+						$dontOverrideDefaultOption=1;
 					}
 					if ($dontOverrideDefaultOption) {
 						$optionItems=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'), $optionItems);
@@ -2304,16 +2322,24 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 				}
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$shipping_costs='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control text-right" id="display_shipping_method_cost" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" /></div>
-                    <input name="tx_multishop_pi1[shipping_method_costs]" type="hidden" value="'.$orders['shipping_method_costs'].'">
-                    <input type="hidden" id="shipping_method_tax_id" value="'.$shipping_method['tax_id'].'" class="align_right" style="width:60px">';
-					$payment_costs='<div class="input-group pull-right" style="width:140px;"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control text-right" id="display_payment_method_cost" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" /></div>
-                    <input name="tx_multishop_pi1[payment_method_costs]" type="hidden" value="'.$orders['payment_method_costs'].'">
-                    <input type="hidden" id="payment_method_tax_id" value="'.$payment_method['tax_id'].'" class="align_right" style="width:60px">
-                    ';
+					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[shipping_method_costs]" type="text" class="form-control text-right" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" />
+					</div>';
+
+					$payment_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[payment_method_costs]" type="text" class="form-control text-right" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" />
+					</div>';
 				} else {
-					$shipping_costs='<input name="tx_multishop_pi1[shipping_method_costs]" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control">';
-					$payment_costs='<input name="tx_multishop_pi1[payment_method_costs]" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control">';
+					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[shipping_method_costs]" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control text-right">
+					</div>';
+					$payment_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[payment_method_costs]" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control text-right">
+					</div>';
 				}
 			} else {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
