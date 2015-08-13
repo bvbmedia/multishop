@@ -348,6 +348,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$updateArray['shipping_method']=$shipping_method['code'];
 						$updateArray['shipping_method_label']=$shipping_method['name'];
+					} else {
+						$updateArray['shipping_method_costs']=0;
+						$updateArray['shipping_method']='';
+						$updateArray['shipping_method_label']='';
 					}
 					if ($this->post['payment_method']) {
 						$payment_method=mslib_fe::getPaymentMethod($this->post['payment_method']);
@@ -399,6 +403,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$updateArray['payment_method']=$payment_method['code'];
 						$updateArray['payment_method_label']=$payment_method['name'];
+					} else {
+						$updateArray['payment_method_costs']='0';
+						$updateArray['payment_method']='';
+						$updateArray['payment_method_label']='';
 					}
 					if (isset($this->post['edit_discount_value'])) {
 						$updateArray['discount']=$this->post['edit_discount_value'];
@@ -1132,6 +1140,9 @@ if (is_numeric($this->get['orders_id'])) {
 							$dontOverrideDefaultOption=1;
 						}
 					}
+					if (empty($orders['shipping_method'])) {
+						$dontOverrideDefaultOption=1;
+					}
 					if ($dontOverrideDefaultOption) {
 						$optionItems=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'), $optionItems);
 					} else {
@@ -1161,6 +1172,9 @@ if (is_numeric($this->get['orders_id'])) {
 						if ($code==$orders['payment_method']) {
 							$dontOverrideDefaultOption=1;
 						}
+					}
+					if (empty($orders['payment_method'])) {
+						$dontOverrideDefaultOption=1;
 					}
 					if ($dontOverrideDefaultOption) {
 						$optionItems=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'), $optionItems);
