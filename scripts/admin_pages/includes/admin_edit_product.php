@@ -4389,7 +4389,7 @@ if ($this->post) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
 			}
 		}
-		$special_price_percentage_value_selectbox.='</select><label for="specials_price_percentage">'.$this->pi_getLL('discount').'</label>';
+		$special_price_percentage_value_selectbox.='</select> <label for="specials_price_percentage">'.$this->pi_getLL('discount').'</label>';
 		$subpartArray['###LABEL_PERCENTAGE_SELECTBOX###']=$this->pi_getLL('admin_label_or');
 		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
 		//
