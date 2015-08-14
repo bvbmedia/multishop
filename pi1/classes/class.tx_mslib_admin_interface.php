@@ -254,6 +254,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								$row[$col]='<a href="http://'.$row[$col].'" target="_blank">'.$row[$col].'</a>';
 							}
 							break;
+						case 'datetime':
+							if ($row[$col]) {
+								$row[$col]=strftime("%x %X", strtotime($row[$col]));
+							} else {
+								$row[$col]='';
+							}
+							break;
 						case 'timestamp':
 							if (is_numeric($row[$col]) && $row[$col]>0) {
 								$row[$col]=strftime("%x %X", $row[$col]);
