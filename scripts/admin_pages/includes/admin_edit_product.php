@@ -4314,7 +4314,7 @@ if ($this->post) {
 		$subpartArray['###VALUE_DATE_MODIFIED###']='';
 		if ($this->get['pid'] && $product['products_last_modified']) {
 			$subpartArray['###LABEL_DATE_MODIFIED###']=$this->pi_getLL('modified');
-			$subpartArray['###VALUE_DATE_MODIFIED###']=strftime("%a. %x %X", $product['products_last_modified']);
+			$subpartArray['###VALUE_DATE_MODIFIED###']=icfirst(strftime("%a.", $product['products_last_modified'])).' '.strftime("%x %X", $product['products_last_modified']);
 		}
 		$subpartArray['###VALUE_PRODUCT_MODEL###']=htmlspecialchars($product['products_model']);
 		$subpartArray['###LABEL_PRODUCT_MANUFACTURER###']=$this->pi_getLL('admin_manufacturer');
