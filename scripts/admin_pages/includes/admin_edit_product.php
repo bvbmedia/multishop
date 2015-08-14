@@ -4309,6 +4309,13 @@ if ($this->post) {
 		$subpartArray['###VALUE_DATE_ADDED_VISUAL###']=$product['products_date_added_visual'];
 		$subpartArray['###VALUE_DATE_ADDED_SYS###']=$product['products_date_added_sys'];
 		$subpartArray['###LABEL_PRODUCT_MODEL###']=$this->pi_getLL('admin_model');
+
+		$subpartArray['###LABEL_DATE_MODIFIED###']='';
+		$subpartArray['###VALUE_DATE_MODIFIED###']='';
+		if ($this->get['pid'] && $product['products_last_modified']) {
+			$subpartArray['###LABEL_DATE_MODIFIED###']=$this->pi_getLL('modified');
+			$subpartArray['###VALUE_DATE_MODIFIED###']=strftime("%a. %x %X", $product['products_last_modified']);
+		}
 		$subpartArray['###VALUE_PRODUCT_MODEL###']=htmlspecialchars($product['products_model']);
 		$subpartArray['###LABEL_PRODUCT_MANUFACTURER###']=$this->pi_getLL('admin_manufacturer');
 		$subpartArray['###INPUT_MANUFACTURER###']=$manufacturer_input;

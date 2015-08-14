@@ -854,6 +854,7 @@
             <label index="locale_date_format">m/d/Y</label>
             <label index="locale_date_format_js">mm/dd/yy</label>
             <label index="locale_datetime_format">m/d/Y H:i:s</label>
+            <label index="locale_day_plus_datetime_format">D. m/d/Y H:i:s</label>
             <label index="locale_datetime_format_js">mm/dd/yy HH:mm:ss</label>
             <label index="locale_time_format">H:i:s</label>
             <label index="login">Login</label>
@@ -2087,6 +2088,7 @@
             <label index="locale_date_format">d-m-Y</label>
             <label index="locale_date_format_js">dd-mm-yy</label>
             <label index="locale_datetime_format">d-m-Y H:i:s</label>
+            <label index="locale_day_plus_datetime_format">D. d-m-Y H:i:s</label>
             <label index="locale_datetime_format_js">dd-mm-yy HH:mm:ss</label>
             <label index="locale_time_format">H:i:s</label>
             <label index="login">Inloggen</label>
