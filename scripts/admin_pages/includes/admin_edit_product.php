@@ -1812,8 +1812,8 @@ if ($this->post) {
 						}
 					}
 					// sort the values
-					if (!isset($values_sort_order[$opt_id][$pa_value])) {
-						$values_sort_order[$opt_id][$pa_value]=count($values_sort_order[$opt_id])+1;
+					if (!isset($values_sort_order[$pa_option][$pa_value])) {
+						$values_sort_order[$pa_option][$pa_value]=count($values_sort_order[$pa_option])+1;
 					}
 				}
 				$pa_prefix=$this->post['tx_multishop_pi1']['prefix'][$opt_sort];
@@ -1875,7 +1875,7 @@ if ($this->post) {
 							$attributesArray['price_prefix']=$pa_prefix;
 							$attributesArray['options_values_price']=$pa_price;
 							$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
-							$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$pa_value];
+							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						} else {
