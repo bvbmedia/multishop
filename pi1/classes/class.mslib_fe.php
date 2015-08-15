@@ -6102,7 +6102,7 @@ class mslib_fe {
 						  "showMethod": "slideDown",
 						  "hideMethod": "fadeOut"
 						}
-						toastr["info"](\''.addslashes(str_replace("\n", "", $tmpcontent)).'\', \''.$this->conf['admin_development_company_name'].' warning'.($total_warnings==1 ? '' : 's').'\');
+						toastr["warning"](\''.addslashes(str_replace("\n", "", $tmpcontent)).'\', \''.$this->conf['admin_development_company_name'].' warning'.($total_warnings==1 ? '' : 's').'\');
 					});
 					</script>
 					';
