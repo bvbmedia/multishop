@@ -1143,10 +1143,10 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				<script type="text/javascript">
 					jQuery(document).ready(function($) {
 						$(document).on("click", ".hide_advanced_import_radio", function() {
-							$(this).parent().find(".hide").hide();
+							$(".advanced_options").hide();
 						});
 						$(document).on("click", ".advanced_import_radio", function() {
-							$(this).parent().find(".hide").show();
+							$(".advanced_options").show();
 						});
 					});
 				</script>
@@ -1159,7 +1159,7 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				<div class="radio radio-success radio-inline">
 				<input name="format" type="radio" id="txt" value="txt" class="advanced_import_radio" /><label for="txt">TXT/CSV</label>
 				</div>
-				<div class="hidden">
+				<div class="advanced_options" style="display:none">
 					'.$that->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
 					<option value="dotcomma">'.$that->pi_getLL('dotcomma').'</option>
 					<option value="comma">'.$that->pi_getLL('comma').'</option>
