@@ -134,7 +134,7 @@ if (!count($pageset['dataset'])) {
 		}
 		$content.='
 		<tr class="'.$tr_type.'">
-		<td class="cellDate">'.strftime("%x %X", $row['crdate']).'</td>
+		<td class="cellDate">'.strftime("%a. %x %X", $row['crdate']).'</td>
 		<td valign="top" nowrap>
 			'.htmlspecialchars($row['title']).'
 		</td>

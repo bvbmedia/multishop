@@ -873,13 +873,13 @@ switch ($_REQUEST['action']) {
 		}
 		$markerArray['CUSTOMER_ID']=$this->pi_getLL('admin_customer_id').': '.$user['uid'].'<br/>';
 		if ($user['crdate']>0) {
-			$user['crdate']=strftime("%x %X", $user['crdate']);
+			$user['crdate']=strftime("%a. %x %X", $user['crdate']);
 		} else {
 			$user['crdate']='';
 		}
 		$markerArray['REGISTERED_DATE']=$this->pi_getLL('created').': '.$user['crdate'].'<br/>';
 		if ($user['lastlogin']) {
-			$user['lastlogin']=strftime("%x %X", $user['lastlogin']);
+			$user['lastlogin']=strftime("%a. %x %X", $user['lastlogin']);
 		} else {
 			$user['lastlogin']='-';
 		}
@@ -937,12 +937,12 @@ switch ($_REQUEST['action']) {
 				}
 				$order_listing.='<tr class="'.$tr_type.'">
 							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
-							<td align="right" nowrap>'.strftime("%x %X", $order['crdate']).'</td>
+							<td align="right" nowrap>'.strftime("%a. %x %X", $order['crdate']).'</td>
 							<td align="right" nowrap>'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
 							<td align="center" nowrap>'.$order['shipping_method_label'].'</td>
 							<td align="center" nowrap>'.$order['payment_method_label'].'</td>
 							<td align="left" nowrap>'.$all_orders_status[$order['status']]['name'].'</td>
-							<td align="right" nowrap>'.($order['status_last_modified'] ? strftime("%x %X", $order['status_last_modified']) : '').'</td>
+							<td align="right" nowrap>'.($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '').'</td>
 							<td align="center" nowrap>'.$paid_status.'</td>
 						</tr>';
 			}

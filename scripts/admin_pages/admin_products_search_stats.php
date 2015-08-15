@@ -98,7 +98,7 @@ $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('day')).'</h2>';
 for ($i=0; $i<31; $i++) {
 	$time=strtotime("-".$i." day");
-	$dates[strftime("%x", $time)]=$time;
+	$dates[strftime("%a. %x", $time)]=$time;
 }
 $content.='<table width="100%" cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="product_import_table">
 <tr>

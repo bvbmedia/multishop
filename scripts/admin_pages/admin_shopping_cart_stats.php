@@ -83,7 +83,7 @@ $dates=array();
 $content.='<h2>'.htmlspecialchars($this->pi_getLL('day')).'</h2>';
 for ($i=0; $i<31; $i++) {
 	$time=strtotime("-".$i." day");
-	$dates[strftime("%x", $time)]=$time;
+	$dates[strftime("%a. %x", $time)]=$time;
 }
 $content.='<table class="table table-striped table-bordered" id="product_import_table">
 <thead>
@@ -134,7 +134,7 @@ foreach ($dates as $key=>$value) {
 					// print customer settings
 					$content.='<table id="product_import_table" class="table table-striped table-bordered '.(!$row['is_checkout'] ? 'is_not_checkout' : '').'">';
 					$tr_rows=array();
-					$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('date').'</th><td>'.strftime("%x %X", $row['crdate']).'</td>';
+					$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('date').'</th><td>'.strftime("%a. %x %X", $row['crdate']).'</td>';
 					if ($row['ip_address']) {
 						$tr_rows[]='<th class="text-right" width="100">'.$this->pi_getLL('ip_address').'</th><td>'.$row['ip_address'].'</td>';
 					}

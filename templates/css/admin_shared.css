@@ -125,9 +125,9 @@
 .width-auto { width:auto; }
 .width-fw { width:100%; }
 
+.cellDate { white-space:nowrap; }
 .cellID { text-align:right; }
 .cellName { width:90%; }
-.cellDate,
 .cellTax { text-align:right; white-space:nowrap; }
 .cellDownload > .btn { width:100%; text-align:left; }
 .cellDownload > .btn:first-child { margin-bottom:5px; }
