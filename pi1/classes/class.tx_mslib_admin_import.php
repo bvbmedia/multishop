@@ -1159,18 +1159,38 @@ class tx_mslib_admin_import extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				<div class="radio radio-success radio-inline">
 				<input name="format" type="radio" id="txt" value="txt" class="advanced_import_radio" /><label for="txt">TXT/CSV</label>
 				</div>
-				<div class="advanced_options" style="display:none">
-					'.$that->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
-					<option value="dotcomma">'.$that->pi_getLL('dotcomma').'</option>
-					<option value="comma">'.$that->pi_getLL('comma').'</option>
-					<option value="tab">'.$that->pi_getLL('tab').'</option>
-					<option value="dash">'.$that->pi_getLL('dash').'</option>
-					</select>
-					<BR />
-					<input name="backquotes" type="checkbox" value="1" /> '.$that->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
-					<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$that->pi_getLL('ignore_first_line').'
-					<input type="checkbox" name="os" id="os" value="linux" /> '.$that->pi_getLL('unix_file').'
-					<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$that->pi_getLL('consolidate').'
+				<div class="advanced_options offset-md-2" style="display:none">
+					<div class="form-group">
+						<label for="delimiter" class="col-md-2">'.$that->pi_getLL('delimited_by').'</label>
+						<div class="col-md-10">
+							<select name="delimiter" id="delimiter" class="form-control">
+								<option value="dotcomma">'.$that->pi_getLL('dotcomma').'</option>
+								<option value="comma">'.$that->pi_getLL('comma').'</option>
+								<option value="tab">'.$that->pi_getLL('tab').'</option>
+								<option value="dash">'.$that->pi_getLL('dash').'</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="checkbox checkbox-success checkbox-inline">
+							<input name="backquotes" type="checkbox" value="1" id="backquotes" />
+							<label for="backquotes">'.$that->pi_getLL('fields_are_enclosed_with_double_quotes').'</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="checkbox checkbox-success checkbox-inline">
+							<input type="checkbox" name="escape_first_line" id="escape_first_line" value="1" />
+							<label for="escape_first_line">'.$that->pi_getLL('ignore_first_line').'</label>
+						</div>
+						<div class="checkbox checkbox-success checkbox-inline">
+							<input type="checkbox" name="os" id="os" value="linux" />
+							<label for="os">'.$that->pi_getLL('unix_file').'</label>
+						</div>
+						<div class="checkbox checkbox-success checkbox-inline">
+							<input type="checkbox" name="consolidate" id="consolidate" value="1" />
+							<label for="consolidate">'.$that->pi_getLL('consolidate').'</label>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
