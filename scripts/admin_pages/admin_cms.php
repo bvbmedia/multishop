@@ -341,13 +341,18 @@ if (!count($pageset['dataset'])) {
 	$subpartArray['###CMS_LIST###']=$contentItem;
 	$subpartArray['###HEADER_CHECKALL_COLUMN###']='';
 	$subpartArray['###FOOTER_CHECKALL_COLUMN###']='';
-	$subpartArray['###DOWNLOAD_CMS_BUTTON###']='';
+	$download_button='';
 	if ($this->ROOTADMIN_USER) {
 		$subpartArray['###HEADER_CHECKALL_COLUMN###']='<th class="cellCheckbox"><div class="checkbox checkbox-success checkbox-inline"><input type="checkbox" id="checkAllCMS"/><label for="checkAllCMS"></label></th>';
 		$subpartArray['###FOOTER_CHECKALL_COLUMN###']='<th class="cellCheckbox">&nbsp;</th>';
-		$subpartArray['###DOWNLOAD_CMS_BUTTON###']='<div><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></div>';
+		$download_button='<div class="col-md-6"><input type="button" class="submit btn btn-success" id="dl_submit" value="'.$this->pi_getLL('download_selected_cms').'"/></div>';
 	}
-	$subpartArray['###DOWNLOAD_CMS_BUTTON###'].='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms').'" class="btn btn-success admin_menu_add pull-right">'.htmlspecialchars($this->pi_getLL('add_new_page')).'</a>';
+	if (empty($download_button)) {
+		$subpartArray['###DOWNLOAD_CMS_BUTTON###'] .= '<div class="col-md-12"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms') . '" class="btn btn-success admin_menu_add pull-right">' . htmlspecialchars($this->pi_getLL('add_new_page')) . '</a></div>';
+	} else {
+		$subpartArray['###DOWNLOAD_CMS_BUTTON###'] = $download_button;
+		$subpartArray['###DOWNLOAD_CMS_BUTTON###'] .= '<div class="col-md-6"><a href="' . mslib_fe::typolink($this->shop_pid . ',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms') . '" class="btn btn-success admin_menu_add pull-right">' . htmlspecialchars($this->pi_getLL('add_new_page')) . '</a></div>';
+	}
 
 	$results=$this->cObj->substituteMarkerArrayCached($subparts['results'], array(), $subpartArray);
 	// pagination
@@ -368,22 +373,24 @@ $subpartArray['###ADMIN_CMS_LINK###']=mslib_fe::typolink($this->shop_pid.',2003'
 $subpartArray['###IMPORT_CMS_FILE###']='';
 if ($this->ROOTADMIN_USER) {
 	$subpartArray['###IMPORT_CMS_FILE###']='
-		<fieldset id="scheduled_import_jobs_form">
-                <div class="page-header"><h4>'.$this->pi_getLL('upload_cms').'</h4></div>
-                <form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="form-horizontal blockSubmitForm">
-                    <div class="form-group">
-                        <label for="upload_cms_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
-                        <div class="col-md-10">
-                        	<div class="input-group">
-	                        	<input type="file" name="cms_file" class="form-control">
-	                        	<span class="input-group-btn">
-	                        		<input type="submit" name="upload_cms_file" class="submit btn btn-success" id="upload_cms_file" value="upload">
-	                        	</span>
-	                        </div>
-                        </div>
-                    </div>
-                </form>
-            </fieldset>
+		<div class="panel panel-default">
+		<div class="panel-heading"><h3 class="panel-title">'.$this->pi_getLL('upload_cms').'</h3></div>
+		<div class="panel-body">
+			<form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_cms&upload=cms').'" method="post" enctype="multipart/form-data" name="upload_cms" id="upload_cms" class="form-horizontal blockSubmitForm">
+				<div class="form-group">
+					<label for="upload_cms_file" class="control-label col-md-2">'.$this->pi_getLL('file').'</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<input type="file" name="cms_file" class="form-control">
+							<span class="input-group-btn">
+								<input type="submit" name="upload_cms_file" class="submit btn btn-success" id="upload_cms_file" value="upload">
+							</span>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+        </div>
 		';
 }
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
@@ -394,6 +401,6 @@ $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$no_results;
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=mslib_fe::shadowBox($content);
-$content.='<hr><div class="clearfix"><div><a class="btn btn-success" href="'.mslib_fe::typolink().'">'.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div></div>';
 
 ?>
