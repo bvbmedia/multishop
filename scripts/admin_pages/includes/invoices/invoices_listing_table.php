@@ -52,11 +52,11 @@ foreach ($invoices as $invoice) {
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
 	$markerArray['MASTER_SHOP']=$master_shop_col;
 	$markerArray['INVOICES_CUSTOMER_NAME']=$link_name;
-	$markerArray['INVOICES_ORDER_DATE']=strftime("%x", $invoice['crdate']);
+	$markerArray['INVOICES_ORDER_DATE']=strftime("%a. %x", $invoice['crdate']);
 	$markerArray['INVOICES_PAYMENT_METHOD']=$invoice['payment_method_label'];
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];
 	$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['amount'], 0);
-	$markerArray['INVOICES_DATE_LAST_SENT']=($invoice['date_mail_last_sent']>0 ? strftime("%x", $invoice['date_mail_last_sent']) : '');
+	$markerArray['INVOICES_DATE_LAST_SENT']=($invoice['date_mail_last_sent']>0 ? strftime("%a. %x", $invoice['date_mail_last_sent']) : '');
 	$markerArray['INVOICES_PAID_STATUS']=$paid_status;
 	$markerArray['INVOICES_ACTION']=$action_button;
 	$markerArray['CUSTOM_MARKER_1_BODY']='';

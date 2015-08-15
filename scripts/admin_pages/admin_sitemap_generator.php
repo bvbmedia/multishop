@@ -60,7 +60,9 @@ if (!$this->get['skip_categories']) {
 		// XML
 		$tmpContent='<url>'."\n";
 		$tmpContent.="\t".'<loc>'.$link.'</loc>'."\n";
-		$tmpContent.="\t".'<lastmod>'.($categories['last_modified']>0?date('c', $categories['last_modified']):'').'</lastmod>'."\n";
+		if ($categories['last_modified']) {
+			$tmpContent.="\t".'<lastmod>'.($categories['last_modified']>0?date('c', $categories['last_modified']):'').'</lastmod>'."\n";
+		}
 		$tmpContent.="\t".'<changefreq>daily</changefreq>'."\n";
 		$tmpContent.="\t".'<priority>0.5</priority>'."\n";
 		$tmpContent.='</url>'."\n";
@@ -95,7 +97,9 @@ if (!$this->get['skip_products']) {
 		// XML
 		$tmpContent='<url>'."\n";
 		$tmpContent.="\t".'<loc>'.$link.'</loc>'."\n";
-		$tmpContent.="\t".'<lastmod>'.($product['products_last_modified']>0?date('c', $product['products_last_modified']):'').'</lastmod>'."\n";
+		if ($product['products_last_modified']) {
+			$tmpContent.="\t".'<lastmod>'.($product['products_last_modified']>0?date('c', $product['products_last_modified']):'').'</lastmod>'."\n";
+		}
 		$tmpContent.="\t".'<changefreq>daily</changefreq>'."\n";
 		$tmpContent.="\t".'<priority>0.5</priority>'."\n";
 		$tmpContent.='</url>'."\n";
@@ -114,7 +118,9 @@ if (!$this->get['skip_manufacturers']) {
 			// XML
 			$tmpContent='<url>'."\n";
 			$tmpContent.="\t".'<loc>'.$link.'</loc>'."\n";
-			$tmpContent.="\t".'<lastmod>'.($row['last_modified']>0?date('c', $row['last_modified']):'').'</lastmod>'."\n";
+			if ($row['last_modified']) {
+				$tmpContent.="\t".'<lastmod>'.($row['last_modified']>0?date('c', $row['last_modified']):'').'</lastmod>'."\n";
+			}
 			$tmpContent.="\t".'<changefreq>daily</changefreq>'."\n";
 			$tmpContent.="\t".'<priority>0.5</priority>'."\n";
 			$tmpContent.='</url>'."\n";

@@ -2247,7 +2247,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$tmpcontent.='<tr class="odd">
 				<td><strong>'.$status_name.'</strong></td>
 				<td>'.$old_status_name.'</td>
-				<td>'.strftime("%x %X", $row['crdate']).'</td>
+				<td>'.strftime("%a. %x %X", $row['crdate']).'</td>
 				<td align="center">'.($row['customer_notified'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</td>
 			</tr>
 			';

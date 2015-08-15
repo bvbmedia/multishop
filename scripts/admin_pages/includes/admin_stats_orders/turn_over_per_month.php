@@ -448,7 +448,7 @@ if ($currentMonth) {
 }
 for ($i=0; $i<$endDay; $i++) {
 	$time=strtotime("-".$i." day", strtotime(date($currentDay.'-'.$month.'-'.$this->cookie['stats_year_sb'])));
-	$dates[strftime("%x", $time)]=$time;
+	$dates[strftime("%a. %x", $time)]=$time;
 }
 $content.='<table class="table table-striped table-bordered" id="product_import_table">
 <thead><tr>
