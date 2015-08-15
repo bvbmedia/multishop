@@ -507,3 +507,6 @@ hr { margin-top:15px; margin-bottom:15px; }
 .panel-heading-toggle.collapsed h3:after { content:"\f078"; }
 
 .cellPlPrice { min-width:250px; }
+
+.fa-stack .fa-circle-cart-plus { color: #337ab7; }
+.fa-stack .fa-circle-phone { color: orange; }
