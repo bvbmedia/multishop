@@ -6,10 +6,10 @@ if (!$this->get['tx_multishop_pi1']['order_id']) {
 	die();
 }
 $order_id=$this->get['tx_multishop_pi1']['order_id'];
-$pdfFileName='packingslip_'.$order_id.'.pdf';
+$order=mslib_fe::getOrder($order_id);
+$pdfFileName='packingslip_'.$order['hash'].'.pdf';
 $pdfFilePath=$this->DOCUMENT_ROOT.'uploads/tx_multishop/'.$pdfFileName;
-if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePath)) && $order_id) {
-	$order=mslib_fe::getOrder($order_id);
+if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePath)) && $order['hash']) {
 	$orders_tax_data=$order['orders_tax_data'];
 	if ($order['orders_id']) {
 		// now parse all the objects in the tmpl file
