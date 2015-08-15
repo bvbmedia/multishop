@@ -88,12 +88,12 @@ foreach ($this->languages as $key=>$language) {
 	$language_lable.=''.$language['title'];
 	$tmpcontent.='
 		<div class="panel panel-default">
-			<div class="panel-heading panel-heading-toggle'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? '' : ' collapsed').'" data-toggle="collapse" data-target="#msEditManufacturerInputName_'.$language['uid'].'">
+			<div class="panel-heading panel-heading-toggle'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? '' : ' collapsed').'" data-toggle="collapse" data-target="#msEditOrderUnitInputName_'.$language['uid'].'">
 				<h3 class="panel-title">
-					<a role="button" data-toggle="collapse" href="#msEditManufacturerInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+					<a role="button" data-toggle="collapse" href="#msEditOrderUnitInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
 				</h3>
 			</div>
-			<div id="msEditManufacturerInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
+			<div id="msEditOrderUnitInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
 				<div class="panel-body">
 					<div class="form-group">
 						<label class="control-label col-md-2" for="order_unit_name_'.$language['uid'].'">'.$this->pi_getLL('admin_name').'</label>

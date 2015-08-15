@@ -89,18 +89,23 @@ foreach ($this->languages as $key=>$language) {
 	}
 	$language_lable.=''.$language['title'];
 	$tmpcontent.='
-			<div class="form-group toggle_advanced_option msEditProductLanguageDivider">
-				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label>
-				<div class="col-md-10">
-					<p class="form-control-static"><strong>'.$language_lable.'</strong></p>
+		<div class="panel panel-default">
+			<div class="panel-heading panel-heading-toggle'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? '' : ' collapsed').'" data-toggle="collapse" data-target="#msEditOrderStatusInputName_'.$language['uid'].'">
+				<h3 class="panel-title">
+					<a role="button" data-toggle="collapse" href="#msEditOrderStatusInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+				</h3>
+			</div>
+			<div id="msEditOrderStatusInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
+				<div class="panel-body">
+					<div class="form-group">
+						<label for="products_name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
+						<div class="col-md-10">
+						<input type="text" class="text form-control" name="tx_multishop_pi1[order_status_name]['.$language['uid'].']" id="order_status_name_'.$language['uid'].'" value="'.htmlspecialchars($lngstatus[$language['uid']]['name']).'">
+						</div>
+					</div>
 				</div>
-			</div>			
-			<div class="form-group">
-				<label for="products_name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
-				<div class="col-md-10">
-				<input type="text" class="text form-control" name="tx_multishop_pi1[order_status_name]['.$language['uid'].']" id="order_status_name_'.$language['uid'].'" value="'.htmlspecialchars($lngstatus[$language['uid']]['name']).'">
-				</div>
-			</div>		
+			</div>
+		</div>
 		';
 }
 $content.=$tmpcontent.'
@@ -137,7 +142,7 @@ if (count($statusses)) {
 		$content.='<tr class="'.$tr_type.'">
 		<td class="cellID">
 			'.$status['id'].'
-		</td>				
+		</td>
 		';
 		$content.='<td class="cellName">'.$status['name'].'</td>
 		<td class="cellStatus">';
@@ -158,7 +163,7 @@ if (count($statusses)) {
 	}
 	$content.='</tbody></table>';
 }
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-floppy-o fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 
 ?>
