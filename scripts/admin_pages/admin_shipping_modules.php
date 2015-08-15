@@ -708,6 +708,9 @@ if ($this->ms['show_main']) {
 	} else {
 		$tmpcontent.=$this->pi_getLL('currently_there_are_no_shipping_methods_defined').'.';
 	}
+	$tmpcontent.='<div class="clearfix"><div class="pull-right">
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#msAdminModalPopuAddShippingMethod"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</button>
+	</div></div>';
 	$tmpcontent.='<fieldset id="scheduled_import_jobs_form"><h3 class="page-header">'.$this->pi_getLL('upload_record').'</h3>
 			<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&upload=shipping').'" method="post" enctype="multipart/form-data" name="upload_task" id="upload_task" class="form-horizontal blockSubmitForm">
 				<div class="form-group">
@@ -729,10 +732,6 @@ if ($this->ms['show_main']) {
 				</div>
 			</form>
 		</fieldset>';
-
-	$tmpcontent.='<div class="clearfix"><div class="pull-right">
-		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#msAdminModalPopuAddShippingMethod"><i class="fa fa-plus"></i> '.$this->pi_getLL('add_shipping_method').'</button>
-	</div></div>';
 
 	$modalContent='<div class="row">';
 	$innercount=0;
