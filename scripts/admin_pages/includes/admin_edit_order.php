@@ -105,6 +105,8 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
 									$updateArray['customer_comments']=$this->post['product_customer_comments'];
 								}
+								$product_data=mslib_befe::getRecord($this->post['products_id'], 'tx_multishop_products', 'products_id');
+								$updateArray['products_model']=$product_data['products_model'];
 								// hook for adding new items to details fieldset
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'])) {
 									// hook
@@ -192,6 +194,9 @@ if (is_numeric($this->get['orders_id'])) {
 								$insertArray['final_price']=$this->post['manual_product_price'];
 								$insertArray['products_tax']=$this->post['manual_product_tax'];
 								$insertArray['sort_order']=$new_sort_order;
+								//
+								$product_data=mslib_befe::getRecord($this->post['manual_products_id'], 'tx_multishop_products', 'products_id');
+								$insertArray['products_model']=$product_data['products_model'];
 								// hook for adding new items to details fieldset
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'])) {
 									// hook
