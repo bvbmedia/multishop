@@ -96,6 +96,10 @@ foreach ($tmporders as $order) {
 	$markerArray=array();
 	$markerArray['ROW_TYPE']=$tr_type;
 	$markerArray['ORDER_ID']=$order['orders_id'];
+	$markerArray['MANUAL_ORDER_ICON']='<i class="fa fa-cart-plus fa-lg"></i>';
+	if ($order['by_phone']) {
+		$markerArray['MANUAL_ORDER_ICON']='<i class="fa fa-phone-square fa-lg"></i>';
+	}
 	$markerArray['INVOICE_NUMBER']='';
 	if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 		$markerArray['INVOICE_NUMBER']='<td align="right">';
