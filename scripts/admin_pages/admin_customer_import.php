@@ -1359,10 +1359,10 @@ if ($this->ms['show_default_form']) {
 	<script type="text/javascript">
 	jQuery(document).ready(function($) {
 		$(document).on("click", ".hide_advanced_import_radio", function() {
-			$(this).parent().find(".hide").hide();
+			$(".advanced_options").hide();
 		});
 		$(document).on("click", ".advanced_import_radio", function() {
-			$(this).parent().find(".hide").show();
+			$(".advanced_options").show();
 		});
 	});
 	</script>
@@ -1372,7 +1372,7 @@ if ($this->ms['show_default_form']) {
 		<div class="radio radio-success radio-inline"><input name="format" type="radio" value="excel" checked id="hide_advanced_import_radio1" class="hide_advanced_import_radio" /><label for="hide_advanced_import_radio1">Excel</label></div>
   		<div class="radio radio-success radio-inline"><input name="format" type="radio" value="xml" id="hide_advanced_import_radio2" class="hide_advanced_import_radio" /><label for="hide_advanced_import_radio2">XML</label></div>
   		<div class="radio radio-success radio-inline"><input name="format" type="radio" value="txt" id="advanced_import_radio" class="advanced_import_radio" /><label for="advanced_import_radio">TXT/CSV</label></div>
-		<div class="hide">
+		<div class="advanced_options" style="display:none">
 			'.$this->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter">
 			  <option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
 			  <option value="comma">'.$this->pi_getLL('comma').'</option>
