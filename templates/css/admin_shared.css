@@ -125,7 +125,8 @@
 .width-auto { width:auto; }
 .width-fw { width:100%; }
 
-.cellDate { white-space:nowrap; }
+.cellDate,
+.cellModel { white-space:nowrap; }
 .cellID { text-align:right; }
 .cellName { width:90%; }
 .cellTax { text-align:right; white-space:nowrap; }

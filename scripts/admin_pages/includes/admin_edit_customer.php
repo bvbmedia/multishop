@@ -909,7 +909,7 @@ switch ($_REQUEST['action']) {
 			$order_listing='<div class="table-responsive">
 				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
 					<tr>
-						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
+						<th width="50" align="right" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
 						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
 						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
 						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
@@ -936,8 +936,8 @@ switch ($_REQUEST['action']) {
 					$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 				}
 				$order_listing.='<tr class="'.$tr_type.'">
-							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
-							<td align="right" nowrap>'.strftime("%a. %x %X", $order['crdate']).'</td>
+							<td align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></td>
+							<td nowrap>'.strftime("%a. %x %X", $order['crdate']).'</td>
 							<td align="right" nowrap>'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
 							<td align="center" nowrap>'.$order['shipping_method_label'].'</td>
 							<td align="center" nowrap>'.$order['payment_method_label'].'</td>
@@ -947,7 +947,7 @@ switch ($_REQUEST['action']) {
 						</tr>';
 			}
 			$order_listing.='<tr>
-						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
+						<th width="50" align="right" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
 						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
 						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
 						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
