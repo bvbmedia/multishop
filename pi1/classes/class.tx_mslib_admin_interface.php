@@ -222,7 +222,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$tableContent.='</thead></tr><tbody>';
 			$summarize=array();
 			$recordCounter=0;
-			foreach ($pageset['dataset'] as $row) {
+			foreach ($pageset['dataset'] as $rowKey => $row) {
 				$recordCounter++;
 				if (!$tr_type or $tr_type=='even') {
 					$tr_type='odd';
@@ -358,6 +358,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 				</td>';
 				*/
 				$tableContent.='</tr>';
+				if ($params['settings']['returnResultSetAsArray']) {
+					$pageset['dataset'][$rowKey]=$row;
+				}
 			}
 			$tableContent.='</tbody>';
 			// SUMMARIZE
@@ -383,9 +386,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			</div>
 			';
 			// pagination
+			$paginationMarkup='';
 			if (!$params['settings']['skipPaginationMarkup'] and $pageset['total_rows']>$that->ms['MODULES']['PAGESET_LIMIT']) {
 				$total_pages=ceil(($pageset['total_rows']/$that->ms['MODULES']['PAGESET_LIMIT']));
 				require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/admin_pagination.php');
+				$paginationMarkup=$tmp;
 				$tableContent.=$tmp;
 				$tmp='';
 			}
@@ -464,7 +469,15 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 		}
-		return $content;
+		if ($params['settings']['returnResultSetAsArray']) {
+			$array=array();
+			$array['searchForm']=$searchForm;
+			$array['paginationMarkup']=$paginationMarkup;
+			$array['dataset']=$pageset['dataset'];
+			return $array;
+		} else {
+			return $content;
+		}
 	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php"]) {
