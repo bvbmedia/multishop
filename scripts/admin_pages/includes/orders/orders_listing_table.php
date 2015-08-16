@@ -132,7 +132,7 @@ foreach ($tmporders as $order) {
 	$markerArray['ORDER_SHIPPING_METHOD']=$order['shipping_method_label'];
 	$markerArray['ORDER_PAYMENT_METHOD']=$order['payment_method_label'];
 	$markerArray['ORDER_STATUS']=$order_status_selectbox;
-	$markerArray['ORDER_LAST_MODIFIED']=($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '');
+	$markerArray['ORDER_LAST_MODIFIED']=($order['status_last_modified'] ? strftime("%a. %x<br/>%X", $order['status_last_modified']) : '');
 	$markerArray['ORDER_PAID_STATUS']=$paid_status;
 	$markerArray['PRINT_ORDER_LIST_BUTTON']=$order_list_button_extra;
     $markerArray['PLUGIN_EXTRA_CONTENT']='';

@@ -122,7 +122,7 @@ $records[]=array(
 	'description'=>'When flat database is enabled, this setting will improve performance when searching on the admin products search and edit page.',
 	'group_id'=>'14',
 	'use_function'=>'',
-	'set_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
