@@ -235,6 +235,14 @@ class tx_multishop_pi1 extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					$GLOBALS['TSFE']->additionalHeaderData[]=mslib_fe::processmeta($meta_tags_html);
 					mslib_fe::logPageView();
 				}
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['meta_tagsPostProc'])) {
+					$params=array(
+						'content'=>&$content
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_multishop_pi1.php']['meta_tagsPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
 				return $content;
 				break;
 			case 'basket':
