@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$content='';
 switch ($this->get['tx_multishop_pi1']['action']) {
 	case 'mail_invoices':
 		// send invoices by mail
@@ -87,6 +88,7 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 		// post processing by third party plugins
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'])) {
 			$params=array();
+			$params['content']=&$content;
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesPostHookProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
@@ -416,7 +418,7 @@ $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(
 //
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
-$content.='
+$GLOBALS['TSFE']->additionalHeaderData[]='
 <script>
 	jQuery(document).ready(function($) {
 		'.($this->get['tx_multishop_pi1']['action']!='mail_invoices' ? '$("#msadmin_invoices_mailto").hide();' : '').'

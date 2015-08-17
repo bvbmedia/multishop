@@ -2,6 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
+$content='';
 $this->cObj->data['header']='Customers';
 if ($GLOBALS['TSFE']->fe_user->user['uid'] and $this->get['login_as_customer'] && is_numeric($this->get['customer_id'])) {
 	$user=mslib_fe::getUser($this->get['customer_id']);
@@ -10,6 +11,7 @@ if ($GLOBALS['TSFE']->fe_user->user['uid'] and $this->get['login_as_customer'] &
 	}
 }
 if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($this->post['tx_multishop_pi1']['action'])) {
+	$redirectAfterPostProc=1;
 	switch ($this->post['tx_multishop_pi1']['action']) {
 		case 'delete_selected_customers':
 			if (is_array($this->post['selected_customers']) and count($this->post['selected_customers'])) {
@@ -24,14 +26,18 @@ if ($this->post && isset($this->post['tx_multishop_pi1']['action']) && !empty($t
 			// post processing by third party plugins
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'])) {
 				$params=array();
+				$params['content']=&$content;
+				$params['redirectAfterPostProc']=&$redirectAfterPostProc;
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_customers.php']['adminCustomersPostHookProc'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			break;
 	}
-	header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
-	exit();
+	if ($redirectAfterPostProc) {
+		header('Location: '.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers'));
+		exit();
+	}
 }
 if (is_numeric($this->get['disable']) and is_numeric($this->get['customer_id'])) {
 	if ($this->get['disable']) {
