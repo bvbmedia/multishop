@@ -1070,12 +1070,14 @@ CREATE TABLE `tx_multishop_products_to_categories` (
  `sort_order` int(11) default '0',
  `page_uid` int(11) default '0',
  `related_to` int(11) default '0',
+ `is_deepest` tinyint(1) default '0',
  PRIMARY KEY (`products_id`,`categories_id`),
  KEY `page_uid` (`page_uid`),
  KEY `products_id` (`products_id`),
  KEY `sort_order` (`sort_order`),
  KEY `categories_id` (`categories_id`),
- KEY `related_to` (`related_to`)
+ KEY `related_to` (`related_to`),
+ KEY `is_deepest` (`is_deepest`)
 );
 
 CREATE TABLE `tx_multishop_categories_to_categories` (
