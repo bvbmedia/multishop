@@ -4262,6 +4262,7 @@ if ($this->post) {
 		$subpartArray['###VALUE_INCL_VAT_CAPITAL_PRICE###']=htmlspecialchars($capital_price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_CAPITAL_PRICE###']=htmlspecialchars($product['product_capital_price']);
 		$subpartArray['###CUSTOM_MARKER_ABOVE_PRICE_FORM_FIELD###']='';
+		$subpartArray['###CUSTOM_MARKER_BELOW_PRICE_FORM_FIELD###']='';
 		$subpartArray['###CUSTOM_MARKER_ABOVE_VAT_RATE_FORM_FIELD###']='';
 		$subpartArray['###INPUT_STAFFEL_PRICE_BLOCK###']=$staffel_price_block;
 		$subpartArray['###LABEL_STOCK###']=$this->pi_getLL('admin_stock');
