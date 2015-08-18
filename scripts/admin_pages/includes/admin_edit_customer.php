@@ -909,17 +909,17 @@ switch ($_REQUEST['action']) {
 		if ($orders_pageset['total_rows']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 			$order_listing='<div class="table-responsive">
-				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
-					<tr>
-						<th width="50" align="right" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
-						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
+				<table id="product_import_table" class="table table-striped table-bordered no-mb msadmin_orders_listing">
+					<thead><tr>
+						<th width="50" align="right" class="cellID">'.$this->pi_getLL('orders_id').'</th>
+						<th width="110" class="cellDate">'.$this->pi_getLL('order_date').'</th>
+						<th width="50" class="cellPrice">'.$this->pi_getLL('amount').'</th>
 						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
 						<th width="50" class="cell_payment_method">'.$this->pi_getLL('payment_method').'</th>
 						<th width="100" class="cell_status">'.$this->pi_getLL('order_status').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
-						<th width="50" class="cell_paid">'.$this->pi_getLL('admin_paid').'</th>
-					</tr>';
+						<th width="110" class="cellDate">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
+						<th width="50" class="cellStatus">'.$this->pi_getLL('admin_paid').'</th>
+					</tr></thead><tbody>';
 			$tr_type='odd';
 			foreach ($orders_pageset['orders'] as $order) {
 				if (!isset($tr_type) || $tr_type=='odd') {
@@ -937,27 +937,27 @@ switch ($_REQUEST['action']) {
 				} else {
 					$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 				}
-				$order_listing.='<tr class="'.$tr_type.'">
-							<td align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></td>
-							<td nowrap>'.strftime("%a. %x %X", $order['crdate']).'</td>
-							<td align="right" nowrap>'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
-							<td align="center" nowrap>'.$order['shipping_method_label'].'</td>
-							<td align="center" nowrap>'.$order['payment_method_label'].'</td>
+				$order_listing.='<tr>
+							<td class="cellID"><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></td>
+							<td class="cellDate">'.strftime("%a. %x %X", $order['crdate']).'</td>
+							<td class="cellPrice">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
+							<td nowrap>'.$order['shipping_method_label'].'</td>
+							<td nowrap>'.$order['payment_method_label'].'</td>
 							<td align="left" nowrap>'.$all_orders_status[$order['status']]['name'].'</td>
-							<td align="right" nowrap>'.($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '').'</td>
-							<td align="center" nowrap>'.$paid_status.'</td>
+							<td class="cellDate">'.($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '').'</td>
+							<td class="cellStatus">'.$paid_status.'</td>
 						</tr>';
 			}
-			$order_listing.='<tr>
-						<th width="50" align="right" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
-						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
+			$order_listing.='</tbody><tfoot><tr>
+						<th width="50" class="cellID">'.$this->pi_getLL('orders_id').'</th>
+						<th width="110" class="cellDate">'.$this->pi_getLL('order_date').'</th>
+						<th width="50" class="cellPrice">'.$this->pi_getLL('amount').'</th>
 						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
 						<th width="50" class="cell_payment_method">'.$this->pi_getLL('payment_method').'</th>
 						<th width="100" class="cell_status">'.$this->pi_getLL('order_status').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
-						<th width="50" class="cell_paid">'.$this->pi_getLL('admin_paid').'</th>
-					</tr>
+						<th width="110" class="cellDate">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
+						<th width="50" class="cellStatus">'.$this->pi_getLL('admin_paid').'</th>
+					</tr></tfoot>
 				</table>
 			</div>';
 		}
