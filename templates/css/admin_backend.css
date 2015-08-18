@@ -408,7 +408,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .tab-content > form > .tab-pane.active { display:block; }
 
 #product_options .form-inline .form-control { min-width:196px; }
-#product_options .form-inline .form-control-static { padding-left:10px; padding-right:10px;  }
+#product_options .form-inline .form-control-static,
+.form-inline .form-control-static.form-control-inbetween { padding-left:10px; padding-right:10px;  }
 
 .hidden { display:none; }
 
