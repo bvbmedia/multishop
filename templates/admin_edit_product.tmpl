@@ -623,25 +623,27 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
         </div>
     </div>
     <!-- ###EXCLUDE_FROM_FEED_INPUT### end -->
-    <div class="toggle_advanced_option" id="msEditProductInputUnit">
-        <h3 class="page-header">###LABEL_PRODUCT_UNIT###</h3>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputOrderUnit">
-        <label for="order_unit_id" class="col-md-2 control-label">###LABEL_ORDER_UNIT###</label>
-        <div class="col-md-10 form-inline">
-        ###INPUT_PRODUCT_UNIT###
+    <div id="msEditProductInputUnitWrapper">
+        <div class="toggle_advanced_option" id="msEditProductInputUnit">
+            <h3 class="page-header">###LABEL_PRODUCT_UNIT###</h3>
         </div>
-    </div>
-    <div class="form-group" id="msEditProductInputMinimumQuantity">
-        <label for="minimum_quantity" class="col-md-2 control-label">###LABEL_MINIMUM_QTY###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" name="minimum_quantity" class="form-control minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###"> <p class="form-control-static">###LABEL_MAXIMUM_QTY###</p> <input type="text" name="maximum_quantity" class="form-control maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
+        <div class="form-group toggle_advanced_option" id="msEditProductInputOrderUnit">
+            <label for="order_unit_id" class="col-md-2 control-label">###LABEL_ORDER_UNIT###</label>
+            <div class="col-md-10 form-inline">
+            ###INPUT_PRODUCT_UNIT###
+            </div>
         </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputMultiplication">
-        <label for="products_multiplication" class="col-md-2 control-label">###LABEL_QTY_MULTIPLICATION###</label>
-        <div class="col-md-10">
-        <input type="text" class="form-control text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
+        <div class="form-group" id="msEditProductInputMinimumQuantity">
+            <label for="minimum_quantity" class="col-md-2 control-label">###LABEL_MINIMUM_QTY###</label>
+            <div class="col-md-10 form-inline">
+            <input type="text" name="minimum_quantity" class="form-control minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###"> <p class="form-control-static">###LABEL_MAXIMUM_QTY###</p> <input type="text" name="maximum_quantity" class="form-control maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
+            </div>
+        </div>
+        <div class="form-group toggle_advanced_option" id="msEditProductInputMultiplication">
+            <label for="products_multiplication" class="col-md-2 control-label">###LABEL_QTY_MULTIPLICATION###</label>
+            <div class="col-md-10">
+            <input type="text" class="form-control text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
+            </div>
         </div>
     </div>
     <div class="toggle_advanced_option" id="msEditProductInputVirtualProduct">
@@ -659,13 +661,15 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <input name="action" type="hidden" value="###VALUE_HIDDEN_FORM_ACTION###" />
 
     <div id="ajax_message_###VALUE_PRODUCT_PID1###" class="ajax_message"></div>
-    <div class="toggle_advanced_option" id="msEditProductInputAdvancedSettings">
-        <h3 class="page-header">###LABEL_ADVANCED_SETTINGS###</h3>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputCustomConfig">
-        <label for="custom_settings" class="col-md-2 control-label">###LABEL_CUSTOM_CONFIGURATION###</label>
-        <div class="col-md-10">
-        <textarea name="custom_settings" class="form-control expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+    <div id="msEditProductInputAdvancedSettingsWrapper">
+        <div class="toggle_advanced_option" id="msEditProductInputAdvancedSettings">
+            <h3 class="page-header">###LABEL_ADVANCED_SETTINGS###</h3>
+        </div>
+        <div class="form-group toggle_advanced_option" id="msEditProductInputCustomConfig">
+            <label for="custom_settings" class="col-md-2 control-label">###LABEL_CUSTOM_CONFIGURATION###</label>
+            <div class="col-md-10">
+            <textarea name="custom_settings" class="form-control expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+            </div>
         </div>
     </div>
 </div>
