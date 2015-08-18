@@ -427,7 +427,7 @@ $(document).on("click", "#multishop_update_button", function(e) {
 						if (string) {
 							toastr["info"](string,\'Multishop Update\');
 						} else {
-							toastr["info"](\'We are sorry, but the update failed\',\'Multishop Update\');
+							toastr["error"](\'We are sorry, but the update failed\',\'Multishop Update\');
 						}
 					  }
 					});

@@ -58,7 +58,7 @@ class tx_multishop_pi1_wizicon {
 			//$localizationParser= \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_l10n_parser_Llxml');
 			//$LOCAL_LANG=$localizationParser->getParsedData($llFile, $GLOBALS['LANG']->lang);
 			// TYPO3 V7 fix
-			$LOCAL_LANG=TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llFile, $GLOBALS['LANG']->lang);
+			$LOCAL_LANG=\TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile($llFile, $GLOBALS['LANG']->lang);
 		} else {
 			$LOCAL_LANG=\TYPO3\CMS\Core\Utility\GeneralUtility::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
 		}

@@ -34,12 +34,12 @@ foreach ($customers as $customer) {
 		$name=$customer['name'];
 	}
 	if ($customer['lastlogin']) {
-		$customer['lastlogin']=strftime("%x %X", $customer['lastlogin']);
+		$customer['lastlogin']=strftime("%a. %x<br/>%X", $customer['lastlogin']);
 	} else {
 		$customer['lastlogin']='';
 	}
 	if ($customer['crdate']>0) {
-		$customer['crdate']=strftime("%x %X", $customer['crdate']);
+		$customer['crdate']=strftime("%a. %x<br/>%X", $customer['crdate']);
 	} else {
 		$customer['crdate']='';
 	}

@@ -100,7 +100,7 @@ if ($this->post) {
 	<div class="alert alert-danger">
 	<h3>'.$this->pi_getLL('admin_mass_updater_warning_a').'</h3>'.$this->pi_getLL('admin_mass_updater_warning_b').'
 	</div>
-	<form class="form-horizontal edit_form"  method="post" action="'.mslib_fe::typolink('', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" >
+	<form class="form-horizontal edit_form"  method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$this->ms['page']).'" >
 		<div class="form-group">
 			<label class="control-label col-md-3" for="percentage">'.$this->pi_getLL('admin_mass_updater_increase_decrease_product_price_by_percentage').'</label>
 			<div class="col-md-9">

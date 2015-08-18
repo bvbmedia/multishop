@@ -105,6 +105,8 @@ if (is_numeric($this->get['orders_id'])) {
 								if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_CUSTOMER_COMMENTS']) {
 									$updateArray['customer_comments']=$this->post['product_customer_comments'];
 								}
+								$product_data=mslib_befe::getRecord($this->post['products_id'], 'tx_multishop_products', 'products_id');
+								$updateArray['products_model']=$product_data['products_model'];
 								// hook for adding new items to details fieldset
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreUpdateOrderProducts'])) {
 									// hook
@@ -192,6 +194,9 @@ if (is_numeric($this->get['orders_id'])) {
 								$insertArray['final_price']=$this->post['manual_product_price'];
 								$insertArray['products_tax']=$this->post['manual_product_tax'];
 								$insertArray['sort_order']=$new_sort_order;
+								//
+								$product_data=mslib_befe::getRecord($this->post['manual_products_id'], 'tx_multishop_products', 'products_id');
+								$insertArray['products_model']=$product_data['products_model'];
 								// hook for adding new items to details fieldset
 								if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersPreSaveOrderProducts'])) {
 									// hook
@@ -265,6 +270,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						if ($this->post['tx_multishop_pi1']['shipping_method_costs']) {
 							$price=$this->post['tx_multishop_pi1']['shipping_method_costs'];
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$tax_rate_for_shipping=((1+$shipping_method['tax_rate'])*100);
+								$price=($price/$tax_rate_for_shipping)*100;
+							}
 						} else {
 							$price=mslib_fe::getShippingCosts($delivery_country['cn_iso_nr'], $this->post['shipping_method']);
 						}
@@ -344,6 +353,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$updateArray['shipping_method']=$shipping_method['code'];
 						$updateArray['shipping_method_label']=$shipping_method['name'];
+					} else {
+						$updateArray['shipping_method_costs']=0;
+						$updateArray['shipping_method']='';
+						$updateArray['shipping_method_label']='';
 					}
 					if ($this->post['payment_method']) {
 						$payment_method=mslib_fe::getPaymentMethod($this->post['payment_method']);
@@ -356,6 +369,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						if ($this->post['tx_multishop_pi1']['payment_method_costs']) {
 							$price=$this->post['tx_multishop_pi1']['payment_method_costs'];
+							if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+								$tax_rate_for_payment=((1+$payment_method['tax_rate'])*100);
+								$price=($price/$tax_rate_for_payment)*100;
+							}
 						} else {
 							$price=$payment_method['handling_costs'];
 						}
@@ -391,6 +408,10 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						$updateArray['payment_method']=$payment_method['code'];
 						$updateArray['payment_method_label']=$payment_method['name'];
+					} else {
+						$updateArray['payment_method_costs']='0';
+						$updateArray['payment_method']='';
+						$updateArray['payment_method_label']='';
 					}
 					if (isset($this->post['edit_discount_value'])) {
 						$updateArray['discount']=$this->post['edit_discount_value'];
@@ -570,7 +591,7 @@ if (is_numeric($this->get['orders_id'])) {
 			} else {
 				$billing_countries=array_merge(array('<option value="'.$orders['billing_country'].'">'.$orders['billing_country'].'</option>'), $billing_countries);
 			}
-			$billing_countries_sb='<select class="form-control" name="tx_multishop_pi1[billing_country]" id="edit_billing_country" required="required">'.implode("\n", $billing_countries).'</select>';
+			$billing_countries_sb='<select class="form-control" name="tx_multishop_pi1[billing_country]" id="edit_billing_country">'.implode("\n", $billing_countries).'</select>';
 			if ($dont_overide_delivery_countries) {
 				$delivery_countries=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>'), $delivery_countries);
 			} else {
@@ -591,13 +612,7 @@ if (is_numeric($this->get['orders_id'])) {
 						<div class="panel-body">
 						';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$hide_billing_vcard=false;
-				if (empty($orders['billing_telephone']) || empty($orders['billing_name']) || empty($orders['billing_street_name']) || empty($orders['billing_address_number']) || empty($orders['billing_zip']) || empty($orders['billing_city']) || empty($orders['billing_country']) || empty($orders['billing_email']) || empty($orders['billing_telephone'])) {
-					$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container">';
-					$hide_billing_vcard=true;
-				} else {
-					$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container" style="display:none">';
-				}
+				$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container" style="display:none">';
 				$tmpcontent.='<div class="form-group">
                 <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).':</label>
                 <div class="col-md-7">
@@ -605,22 +620,22 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).'*:</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_name]" type="text" id="edit_billing_name" value="'.$orders['billing_name'].'" required="required" />
+                <input class="form-control" name="tx_multishop_pi1[billing_name]" type="text" id="edit_billing_name" value="'.$orders['billing_name'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
+                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_street_name]" type="text" id="edit_billing_street_name" value="'.$orders['billing_street_name'].'" required="required" />
+                <input class="form-control" name="tx_multishop_pi1[billing_street_name]" type="text" id="edit_billing_street_name" value="'.$orders['billing_street_name'].'" />
                 </div>
                 <span  class="error-space left-this"></span>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5 billing_account-addressnumber" for="billing_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+                <label class="control-label col-md-5 billing_account-addressnumber" for="billing_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_address_number]" type="text" id="edit_billing_address_number" value="'.$orders['billing_address_number'].'" required="required" /><span class="error-space left-this"></span>
+                <input class="form-control" name="tx_multishop_pi1[billing_address_number]" type="text" id="edit_billing_address_number" value="'.$orders['billing_address_number'].'" /><span class="error-space left-this"></span>
                 </div>
                 </div>
                 <div class="form-group">
@@ -636,15 +651,15 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+                <label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_zip]" type="text" id="edit_billing_zip" value="'.$orders['billing_zip'].'" required="required" /><span class="error-space"></span>
+                <input class="form-control" name="tx_multishop_pi1[billing_zip]" type="text" id="edit_billing_zip" value="'.$orders['billing_zip'].'" /><span class="error-space"></span>
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
+                <label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_city]" type="text" id="edit_billing_city" value="'.$orders['billing_city'].'" required="required" /><span class="error-space"></span>
+                <input class="form-control" name="tx_multishop_pi1[billing_city]" type="text" id="edit_billing_city" value="'.$orders['billing_city'].'" /><span class="error-space"></span>
                 </div>
                 </div>
                 <div class="form-group">
@@ -654,15 +669,15 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'*:</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" required="required" />
+                <input class="form-control" name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" />
                 </div>
                 </div>
                 <div class="form-group">';
-				$tmpcontent.='<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'*:</label>
+				$tmpcontent.='<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" required="required" />
+                <input class="form-control" name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" />
                 </div>
                 ';
 				$tmpcontent.='</div>
@@ -693,11 +708,7 @@ if (is_numeric($this->get['orders_id'])) {
                 <hr><div class="clearfix"><div class="pull-right"><a href="#" id="close_edit_billing_info" class="btn btn-primary"><i class="fa fa-save"></i> '.$this->pi_getLL('save').'</a></div></div>
                 </div>';
 			}
-			if ($hide_billing_vcard) {
-				$tmpcontent.='<div class="address_details_container" id="billing_details_container" style="display:none">';
-			} else {
-				$tmpcontent.='<div class="address_details_container" id="billing_details_container">';
-			}
+			$tmpcontent.='<div class="address_details_container" id="billing_details_container">';
 			if ($orders['billing_company']) {
 				$tmpcontent.='<strong>'.$orders['billing_company'].'</strong><br />';
 			}
@@ -736,13 +747,7 @@ if (is_numeric($this->get['orders_id'])) {
 			<div class="panel-body">
 				';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
-				$hide_delivery_vcard=false;
-				if (empty($orders['billing_telephone']) || empty($orders['delivery_name']) || empty($orders['delivery_street_name']) || empty($orders['delivery_address_number']) || empty($orders['delivery_zip']) || empty($orders['delivery_city']) || empty($orders['delivery_country']) || empty($orders['delivery_email']) || empty($orders['delivery_telephone'])) {
-					$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container">';
-					$hide_delivery_vcard=true;
-				} else {
-					$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
-				}
+				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
 				$tmpcontent.='<div class="form-group">
                 <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).':</label>
                 <div class="col-md-7">
@@ -750,21 +755,21 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).'*:</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" required="required" />
+                <input class="form-control" name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'*:</label>
+                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" required="required" /><span  class="error-space left-this"></span>
+                <input class="form-control" name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" /><span  class="error-space left-this"></span>
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5 delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'*</label>
+                <label class="control-label col-md-5 delivery_account-addressnumber" for="delivery_address_number">'.ucfirst($this->pi_getLL('street_address_number')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" required="required" /><span class="error-space left-this"></span></div>
+                <input class="form-control" name="tx_multishop_pi1[delivery_address_number]" type="text" id="edit_delivery_address_number" value="'.$orders['delivery_address_number'].'" /><span class="error-space left-this"></span></div>
                 </div>
                 <div class="form-group">
                 <label class="control-label col-md-5 delivery_account-address_ext" for="delivery_address_ext">'.ucfirst($this->pi_getLL('address_extension')).'</label>
@@ -779,33 +784,33 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'*</label>
+                <label class="control-label col-md-5 account-zip" for="zip">'.ucfirst($this->pi_getLL('zip')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" required="required" /><span class="error-space"></span>
+                <input class="form-control" name="tx_multishop_pi1[delivery_zip]" type="text" id="edit_delivery_zip" value="'.$orders['delivery_zip'].'" /><span class="error-space"></span>
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'*</label>
+                <label class="control-label col-md-5 account-city" for="city">'.ucfirst($this->pi_getLL('city')).'</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" required="required" /><span class="error-space"></span>
+                <input class="form-control" name="tx_multishop_pi1[delivery_city]" type="text" id="edit_delivery_city" value="'.$orders['delivery_city'].'" /><span class="error-space"></span>
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'*:</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).':</label>
                 <div class="col-md-7">
                 '.$delivery_countries_sb.'
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'*:</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" required="required" />
+                <input class="form-control" name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'*:</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).':</label>
                 <div class="col-md-7">
-                <input class="form-control" name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" required="required" />
+                <input class="form-control" name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
                 </div>
                 </div>
                 <div class="form-group">
@@ -829,11 +834,7 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>';
 			}
-			if ($hide_delivery_vcard) {
-				$tmpcontent.='<div class="address_details_container" id="delivery_details_container" style="display:none">';
-			} else {
-				$tmpcontent.='<div class="address_details_container" id="delivery_details_container">';
-			}
+			$tmpcontent.='<div class="address_details_container" id="delivery_details_container">';
 			if ($orders['delivery_company']) {
 				$tmpcontent.='<strong>'.$orders['delivery_company'].'</strong><br />';
 			}
@@ -875,14 +876,10 @@ if (is_numeric($this->get['orders_id'])) {
             });
         }
         jQuery(document).ready(function($) {
-            $(document).on("keyup", "#display_shipping_method_cost, #display_payment_method_cost, #display_product_price, .edit_manual_price", function(){
+            $(document).on("keyup", "#display_product_price, .edit_manual_price", function(){
                 var self=$(this);
                 var tax_id=0;
-                if ($(self).attr("id")=="display_shipping_method_cost") {
-                    tax_id=$("#shipping_method_tax_id").val();
-                } else if ($(self).attr("id")=="display_payment_method_cost") {
-                    tax_id=$("#payment_method_tax_id").val();
-                } else if ($(self).attr("id")=="display_product_price" || $(self).hasClass("edit_manual_price")) {
+                if ($(self).attr("id")=="display_product_price" || $(self).hasClass("edit_manual_price")) {
                     tax_id=$("#product_tax").val();
                 }
                 if ($(this).val()!="") {
@@ -1148,6 +1145,9 @@ if (is_numeric($this->get['orders_id'])) {
 							$dontOverrideDefaultOption=1;
 						}
 					}
+					if (empty($orders['shipping_method'])) {
+						$dontOverrideDefaultOption=1;
+					}
 					if ($dontOverrideDefaultOption) {
 						$optionItems=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'), $optionItems);
 					} else {
@@ -1178,6 +1178,9 @@ if (is_numeric($this->get['orders_id'])) {
 							$dontOverrideDefaultOption=1;
 						}
 					}
+					if (empty($orders['payment_method'])) {
+						$dontOverrideDefaultOption=1;
+					}
 					if ($dontOverrideDefaultOption) {
 						$optionItems=array_merge(array('<option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'), $optionItems);
 					} else {
@@ -1197,7 +1200,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$orderDetailsItem='<div class="form-group">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_condition').'</label>';
 				if (!$orders['is_locked']) {
-					$orderDetailsItem.='<input class="form-control" type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" /> '.$this->pi_getLL('days');
+					$orderDetailsItem.='<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" /><span class="input-group-addon">'.$this->pi_getLL('days').'</span></div></div>';
 				} else {
 					$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.$orders['payment_condition'].' '.$this->pi_getLL('days').'</p></div>';
 				}
@@ -1587,7 +1590,7 @@ if (is_numeric($this->get['orders_id'])) {
 							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&edit_product=1&order_pid='.$order['orders_products_id'].'\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> ';
 							$product_action_button.='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order&delete_product=1&order_pid='.$order['orders_products_id'].'" style="text-decoration:none"><button type="button" onclick="return CONFIRM();" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-trash-o"></i></button></a>';
 						} else {
-							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-primary btn-sm order_product_action"><i class="fa fa-pencil"></i></button> <button type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-primary btn-sm submit_button order_product_action"><i class="fa fa-save"></i></button>';
+							$product_action_button='<button type="button" onclick="location.href=\''.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id']).'&action=edit_order\'" class="btn btn-danger btn-sm order_product_action"><i class="fa fa-remove"></i></button> <button type="submit" value="'.$this->pi_getLL('save').'" class="btn btn-primary btn-sm submit_button order_product_action"><i class="fa fa-save"></i></button>';
 						}
 						// product final price
 						$order_products_body_data['products_action']['align']='right';
@@ -2324,16 +2327,24 @@ if (is_numeric($this->get['orders_id'])) {
 					}
 				}
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$shipping_costs='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control" id="display_shipping_method_cost" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" /></div>
-                    <input name="tx_multishop_pi1[shipping_method_costs]" type="hidden" value="'.$orders['shipping_method_costs'].'">
-                    <input type="hidden" id="shipping_method_tax_id" value="'.$shipping_method['tax_id'].'" class="align_right" style="width:60px">';
-					$payment_costs='<div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" class="form-control" id="display_payment_method_cost" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" /></div>
-                    <input name="tx_multishop_pi1[payment_method_costs]" type="hidden" value="'.$orders['payment_method_costs'].'">
-                    <input type="hidden" id="payment_method_tax_id" value="'.$payment_method['tax_id'].'" class="align_right" style="width:60px">
-                    ';
+					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[shipping_method_costs]" type="text" class="form-control text-right" value="'.round($orders['shipping_method_costs']+$orders_tax_data['shipping_tax'], 4).'" class="align_right" />
+					</div>';
+
+					$payment_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[payment_method_costs]" type="text" class="form-control text-right" value="'.round($orders['payment_method_costs']+$orders_tax_data['payment_tax'], 4).'" class="align_right" />
+					</div>';
 				} else {
-					$shipping_costs='<input name="tx_multishop_pi1[shipping_method_costs]" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control">';
-					$payment_costs='<input name="tx_multishop_pi1[payment_method_costs]" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control">';
+					$shipping_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[shipping_method_costs]" type="text" value="'.round($orders['shipping_method_costs'], 4).'" class="form-control text-right">
+					</div>';
+					$payment_costs='<div class="input-group pull-right" style="width:140px;">
+						<span class="input-group-addon">'.mslib_fe::currency().'</span>
+						<input name="tx_multishop_pi1[payment_method_costs]" type="text" value="'.round($orders['payment_method_costs'], 4).'" class="form-control text-right">
+					</div>';
 				}
 			} else {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -3025,7 +3036,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='<tr class="odd">
                     <td><strong>'.$status_name.'</strong></td>
                     <td>'.$old_status_name.'</td>
-                    <td>'.strftime("%x %X", $row['crdate']).'</td>
+                    <td>'.strftime("%a. %x %X", $row['crdate']).'</td>
                     <td align="center">'.($row['customer_notified'] ? $this->pi_getLL('yes') : $this->pi_getLL('no')).'</td>
                 </tr>
                 ';

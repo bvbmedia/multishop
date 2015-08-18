@@ -41,19 +41,11 @@
                         <div class="col-sm-4 formfield-wrapper">
                             <label class="control-label" for="type_search">###LABEL_DATE###</label>
                             <div class="form-group">
-                                <div class="row">
-                                    <div class="col-sm-6 form-inline">
-                                        <div class="form-group">
-                                            <label class="control-label" for="order_date_from">###LABEL_DATE_FROM###</label>
-                                            <input class="form-control" type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 form-inline">
-                                        <div class="form-group">
-                                            <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###:</label>
-                                            <input class="form-control" type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
-                                        </div>
-                                    </div>
+                                <div class="form-inline">
+                                    <label class="control-label" for="order_date_from">###LABEL_DATE_FROM###</label>
+                                    <input class="form-control" type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###">
+                                    <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
+                                    <input class="form-control" type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -107,16 +99,17 @@
                                 <label for="check_all_1"></label>
                                 </div>
                             </th>
+                            <th width="10" class="cell_phone_icon">&nbsp;</th>
                             <th width="50" class="cell_orders_id"><a href="###HEADER_SORTBY_LINK_ORDER_ID###">###LABEL_HEADER_ORDER_ID###</a></th>
                             ###HEADER_INVOICE_NUMBER###
                             ###HEADER_MASTER_SHOP###
                             <th class="cell_customer">###LABEL_HEADER_CUSTOMER###</th>
-                            <th width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_ORDER_DATE###">###LABEL_HEADER_ORDER_DATE###</a></th>
+                            <th align="right" width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_ORDER_DATE###">###LABEL_HEADER_ORDER_DATE###</a></th>
                             <th width="50" class="cell_amount"><a href="###HEADER_SORTBY_LINK_AMOUNT###">###LABEL_HEADER_AMOUNT###</a></th>
                             <th width="50" class="cell_shipping_method"><a href="###HEADER_SORTBY_LINK_SHIPPING_METHOD###">###LABEL_HEADER_SHIPPING_METHOD###</a></th>
                             <th width="50" class="cell_payment_method"><a href="###HEADER_SORTBY_LINK_PAYMENT_METHOD###">###LABEL_HEADER_PAYMENT_METHOD###</a></th>
                             <th class="cell_status">###LABEL_HEADER_STATUS###</th>
-                            <th width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_MODIFIED###">###LABEL_HEADER_MODIFIED###</a></th>
+                            <th align="right" width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_MODIFIED###">###LABEL_HEADER_MODIFIED###</a></th>
                             <th width="50" class="cell_paid">###LABEL_HEADER_PAID###</th>
 							###PLUGIN_EXTRA_HEADER###
                             ###EXTRA_RIGHT_HEADER###
@@ -131,6 +124,7 @@
                                 <label for="checkbox_###ORDER_ID###"></label>
                                 </div>
                             </th>
+                            <td width="5" class="cell_phone_icon">###MANUAL_ORDER_ICON###</td>
                             <td align="right" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_ID###</a></td>
                             ###INVOICE_NUMBER###
                             ###MASTER_SHOP###
@@ -151,6 +145,7 @@
                         <tfoot>
                         <tr>
                             <th>&nbsp;</th>
+                            <th width="10" class="cell_phone_icon">&nbsp;</th>
                             <th width="50" class="cell_orders_id"><a href="###FOOTER_SORTBY_LINK_ORDER_ID###">###LABEL_FOOTER_ORDER_ID###</a></th>
                             ###FOOTER_INVOICE_NUMBER###
                             ###FOOTER_MASTER_SHOP###

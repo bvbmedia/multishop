@@ -218,16 +218,16 @@ if (mslib_fe::loggedin()) {
 			$markerArray['###CREATE_ACCOUNT_FORM_URL###']=mslib_fe::typolink();
 			$markerArray['###LABEL_PERSONAL_DETAILS###']=$this->pi_getLL('personal_details');
 			$markerArray['###LABEL_PERSONAL_DETAILS_DESCRIPTION###']=$this->pi_getLL('personal_details_description');
-			$markerArray['###LABEL_TITLE###']=ucfirst($this->pi_getLL('title'));
+			$markerArray['###LABEL_TITLE###']=ucfirst($this->pi_getLL('title')).'<span class="text-danger">*</span>';
 			$markerArray['###GENDER_MR_CHECKED###']=($this->post['gender']=='m' ? ' checked="checked"' : '');
 			$markerArray['###LABEL_GENDER_MR###']=$this->pi_getLL('mr');
 			$markerArray['###GENDER_MRS_CHECKED###']=($this->post['gender']=='f' ? ' checked="checked"' : '');
 			$markerArray['###LABEL_GENDER_MRS###']=$this->pi_getLL('mrs');
-			$markerArray['###LABEL_FIRST_NAME###']=ucfirst($this->pi_getLL('first_name'));
+			$markerArray['###LABEL_FIRST_NAME###']=ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_FIRST_NAME###']=htmlspecialchars($this->post['first_name']);
 			$markerArray['###LABEL_MIDDLE_NAME###']=ucfirst($this->pi_getLL('middle_name'));
 			$markerArray['###VALUE_MIDDLE_NAME###']=htmlspecialchars($this->post['middle_name']);
-			$markerArray['###LABEL_LAST_NAME###']=ucfirst($this->pi_getLL('last_name'));
+			$markerArray['###LABEL_LAST_NAME###']=ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_LAST_NAME###']=htmlspecialchars($this->post['last_name']);
 			$markerArray['###LABEL_COMPANY###']=$this->pi_getLL('company').($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY'] ? '*' : '');
 			$markerArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
@@ -244,10 +244,10 @@ if (mslib_fe::loggedin()) {
 			// load enabled countries to array eof
 			$country_block='';
 			if (count($enabled_countries)==1) {
-				$country_block.='<input name="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
+				$country_block.='<input name="country" id="country" type="hidden" value="'.mslib_befe::strtolower($enabled_countries[0]['cn_short_en']).'" />';
 			} else {
 				$country_block.='<div class="account-field col-sm-8" id="input-country">
-							<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'*</label>';
+							<label for="country" id="account-country">'.ucfirst($this->pi_getLL('country')).'<span class="text-danger">*</span></label>';
 				$default_country=mslib_fe::getCountryByIso($this->ms['MODULES']['COUNTRY_ISO_NR']);
 				if (!$this->post) {
 					$this->post['country']=$default_country['cn_short_en'];
@@ -256,7 +256,7 @@ if (mslib_fe::loggedin()) {
 					$tmpcontent.='<option value="'.mslib_befe::strtoupper($country['cn_short_en']).'" '.((mslib_befe::strtolower($this->post['country'])==mslib_befe::strtolower($country['cn_short_en'])) ? 'selected' : '').'>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en'])).'</option>';
 				}
 				if ($tmpcontent) {
-					$country_block.='<select name="country" class="country">
+					$country_block.='<select name="country" id="country" class="country" required="required">
 						<option value="">'.ucfirst($this->pi_getLL('choose_country')).'</option>
 						'.$tmpcontent.'
 					</select>';
@@ -266,30 +266,40 @@ if (mslib_fe::loggedin()) {
 			//
 			$markerArray['###INPUT_COUNTRY_BLOCK###']=$country_block;
 			//
-			$markerArray['###LABEL_ZIP###']=ucfirst($this->pi_getLL('zip'));
+			$markerArray['###LABEL_ZIP###']=ucfirst($this->pi_getLL('zip')).'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_ZIP###']=htmlspecialchars($this->post['zip']);
-			$markerArray['###LABEL_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
+			$markerArray['###LABEL_ADDRESS###']=ucfirst($this->pi_getLL('street_address')).'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_ADDRESS###']=htmlspecialchars($this->post['address']);
-			$markerArray['###LABEL_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
+			$markerArray['###LABEL_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number')).'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_ADDRESS_NUMBER###']=htmlspecialchars($this->post['address_number']);
 			$markerArray['###LABEL_ADDRESS_EXT###']=ucfirst($this->pi_getLL('address_extension'));
 			$markerArray['###VALUE_ADDRESS_EXT###']=htmlspecialchars($this->post['address_ext']);
-			$markerArray['###LABEL_CITY###']=ucfirst($this->pi_getLL('city'));
+			$markerArray['###LABEL_CITY###']=ucfirst($this->pi_getLL('city')).'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_CITY###']=htmlspecialchars($this->post['city']);
-			$markerArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));
+			$markerArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] == '1' ? '<span class="text-danger">*</span>' : '');
 			$markerArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
+			$telephone_validation='';
+			if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] == '1') {
+				if (!$this->ms['MODULES']['CHECKOUT_LENGTH_TELEPHONE_NUMBER']) {
+					$telephone_validation=' required="required"';
+				} else {
+					$telephone_validation=' required="required"';
+				}
+			}
+			$markerArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
+			//
 			$markerArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 			$markerArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
 			// login details
 			$markerArray['###LABEL_LOGIN_DETAILS###']=$this->pi_getLL('login_details');
 			$markerArray['###LABEL_LOGIN_DETAILS_DESCRIPTION###']=$this->pi_getLL('login_details_description');
-			$markerArray['###LABEL_EMAIL###']=$this->pi_getLL('e-mail_address');
+			$markerArray['###LABEL_EMAIL###']=$this->pi_getLL('e-mail_address').'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
-			$markerArray['###LABEL_EMAIL_CONFIRM###']=$this->pi_getLL('confirm_email_address');
+			$markerArray['###LABEL_EMAIL_CONFIRM###']=$this->pi_getLL('confirm_email_address').'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_EMAIL_CONFIRM###']=htmlspecialchars($this->post['email_confirm']);
-			$markerArray['###LABEL_PASSWORD###']=$this->pi_getLL('password');
+			$markerArray['###LABEL_PASSWORD###']=$this->pi_getLL('password').'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_PASSWORD###']=htmlspecialchars($this->post['password']);
-			$markerArray['###LABEL_PASSWORD_CONFIRM###']=$this->pi_getLL('confirm_password');
+			$markerArray['###LABEL_PASSWORD_CONFIRM###']=$this->pi_getLL('confirm_password').'<span class="text-danger">*</span>';
 			$markerArray['###VALUE_PASSWORD_CONFIRM###']=htmlspecialchars($this->post['password_confirm']);
 			//
 			$newsletter_subscribe='';
@@ -312,8 +322,8 @@ if (mslib_fe::loggedin()) {
 			if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER']) {
 				$account_disclaimer.='<hr>
 				<div class="checkboxAgreement accept_general_conditions_container">
-					<input name="tx_multishop_pi1[create_account_disclaimer]" id="create_account_disclaimer" type="checkbox" value="1" />
-					<label for="create_account_disclaimer">'.$this->pi_getLL('click_here_if_you_agree_the_create_account_disclaimer');
+					<input name="tx_multishop_pi1[create_account_disclaimer]" id="create_account_disclaimer" type="checkbox" value="1" required="required" />
+					<label for="create_account_disclaimer">'.$this->pi_getLL('click_here_if_you_agree_the_create_account_disclaimer').'<span class="text-danger">*</span>';
 				$page=mslib_fe::getCMScontent('create_account_disclaimer', $GLOBALS['TSFE']->sys_language_uid);
 				if ($page[0]['content']) {
 					$account_disclaimer.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_disclaimer">'.$this->pi_getLL('view_create_account_disclaimer').'</a>)';

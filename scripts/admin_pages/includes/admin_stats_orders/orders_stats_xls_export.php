@@ -124,7 +124,7 @@ for ($s=1; $s<13; $s++) {
 	//echo $end_date."<br/>";
 	for ($i=1; $i<=$end_date; $i++) {
 		$time=strtotime(date($i.'-'.$s.'-'.$select_year));
-		$dates[strftime("%x", $time)]=$time;
+		$dates[strftime("%a. %x", $time)]=$time;
 	}
 }
 $col=0;

@@ -592,7 +592,7 @@ jQuery(document).ready(function($) {
 $groups=mslib_fe::getUserGroups($this->conf['fe_customer_pid']);
 $customer_groups_input='';
 if (is_array($groups) and count($groups)) {
-	$customer_groups_input.='<div class="account-field multiselect_horizontal"><label>'.$this->pi_getLL('member_of').'</label><select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[groups][]">'."\n";
+	$customer_groups_input.='<div class="form-group multiselect_horizontal"><label>'.$this->pi_getLL('member_of').'</label><select id="groups" class="multiselect" multiple="multiple" name="tx_multishop_pi1[groups][]">'."\n";
 	if ($erno) {
 		$this->post['usergroup']=implode(",", $this->post['tx_multishop_pi1']['groups']);
 	}
@@ -640,12 +640,14 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
 		// the value is are the negate value
 		// negate 1 mean the shipping/payment are excluded
 		$shipping_payment_method.='
-						<div class="account-field div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
-							<label>'.$this->pi_getLL('admin_mapped_methods').'</label>
+<div class="form-horizontal">
+						<div class="div_products_mappings toggle_advanced_option" id="msEditProductInputPaymentMethod">
+							<label class="control-label col-md-2">'.$this->pi_getLL('admin_mapped_methods').'</label>
+							<div class="col-md-10">
 							<div class="innerbox_methods">
 								<div class="innerbox_payment_methods">
-									<h4>'.$this->pi_getLL('admin_payment_methods').'</h4>
-									<ul>';
+									<p class="form-control-static"><strong>'.$this->pi_getLL('admin_payment_methods').'</strong></p>
+									';
 		// load mapped ids
 		$method_mappings=array();
 		if ($this->get['tx_multishop_pi1']['cid']) {
@@ -660,40 +662,40 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
 					$tr_type='even';
 				}
 				$count++;
-				$shipping_payment_method.='<li class="'.$tr_type.'"  id="multishop_payment_method_'.$item['id'].'"><span>'.$item['name'].'</span>';
+				$shipping_payment_method.='<div class="form-group" id="multishop_payment_method_'.$item['id'].'"><label class="control-label col-md-4">'.$item['name'].'</label><div class="col-md-8">';
 				if ($price_wrap) {
 					$tmpcontent.=$price_wrap;
 				}
-				$shipping_payment_method.='<input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="enable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && !$method_mappings['payment']['method_data'][$item['id']]['negate']) ? ' checked' : '').' /><label for="enable_payment_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label>';
-				$shipping_payment_method.='<input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="disable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && $method_mappings['payment']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').' /><label for="disable_payment_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label>';
-				$shipping_payment_method.='</li>';
+				$shipping_payment_method.='<div class="checkbox checkbox-success checkbox-inline"><input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="enable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && !$method_mappings['payment']['method_data'][$item['id']]['negate']) ? ' checked' : '').' /><label for="enable_payment_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label></div>';
+				$shipping_payment_method.='<div class="checkbox checkbox-success checkbox-inline"><input name="payment_method['.htmlspecialchars($item['id']).']" class="payment_method_cb" id="disable_payment_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['payment']) && in_array($item['id'], $method_mappings['payment']) && $method_mappings['payment']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').' /><label for="disable_payment_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label></div>';
+				$shipping_payment_method.='</div></div>';
 			}
 		}
 		$shipping_payment_method.='
-									</ul>
+								</div>
 								</div>
 								<div class="innerbox_shipping_methods" id="msEditProductInputShippingMethod">
-									<h4>'.$this->pi_getLL('admin_shipping_methods').'</h4>
-							 		<ul id="multishop_shipping_method">';
+									<p class="form-control-static"><strong>'.$this->pi_getLL('admin_shipping_methods').'</strong></p>
+							 		';
 		$count=0;
 		$tr_type='';
 		if (count($shipping_methods)) {
 			foreach ($shipping_methods as $code=>$item) {
 				$count++;
-				$shipping_payment_method.='<li><span>'.$item['name'].'</span>';
+				$shipping_payment_method.='<div class="form-group" id="multishop_shipping_method"><label class="control-label col-md-4">'.$item['name'].'</label><div class="col-md-8">';
 				if ($price_wrap) {
 					$shipping_payment_method.=$price_wrap;
 				}
-				$shipping_payment_method.='<input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="enable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && !$method_mappings['shipping']['method_data'][$item['id']]['negate']) ? ' checked' : '').'  /><label for="enable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label>';
-				$shipping_payment_method.='<input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="disable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && $method_mappings['shipping']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').'  /><label for="enable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label>';
-				$shipping_payment_method.='</li>';
+				$shipping_payment_method.='<div class="checkbox checkbox-success checkbox-inline"><input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="enable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="0"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && !$method_mappings['shipping']['method_data'][$item['id']]['negate']) ? ' checked' : '').'  /><label for="enable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('enable').'</label></div>';
+				$shipping_payment_method.='<div class="checkbox checkbox-success checkbox-inline"><input name="shipping_method['.htmlspecialchars($item['id']).']" class="shipping_method_cb" id="disable_shipping_method_'.$item['id'].'" type="checkbox" rel="'.$item['id'].'" value="1"'.((is_array($method_mappings['shipping']) && in_array($item['id'], $method_mappings['shipping']) && $method_mappings['shipping']['method_data'][$item['id']]['negate']>0) ? ' checked' : '').'  /><label for="disable_shipping_method_'.$item['id'].'">'.$this->pi_getLL('disable').'</label></div>';
+				$shipping_payment_method.='</div></div>';
 			}
 		}
 		$shipping_payment_method.='
-					 				</ul>
+
 								</div>
 							</div>
-						</div>';
+						</div></div>';
 	}
 }
 switch ($_REQUEST['action']) {
@@ -873,13 +875,13 @@ switch ($_REQUEST['action']) {
 		}
 		$markerArray['CUSTOMER_ID']=$this->pi_getLL('admin_customer_id').': '.$user['uid'].'<br/>';
 		if ($user['crdate']>0) {
-			$user['crdate']=strftime("%x %X", $user['crdate']);
+			$user['crdate']=strftime("%a. %x %X", $user['crdate']);
 		} else {
 			$user['crdate']='';
 		}
 		$markerArray['REGISTERED_DATE']=$this->pi_getLL('created').': '.$user['crdate'].'<br/>';
 		if ($user['lastlogin']) {
-			$user['lastlogin']=strftime("%x %X", $user['lastlogin']);
+			$user['lastlogin']=strftime("%a. %x %X", $user['lastlogin']);
 		} else {
 			$user['lastlogin']='-';
 		}
@@ -907,17 +909,17 @@ switch ($_REQUEST['action']) {
 		if ($orders_pageset['total_rows']>0) {
 			$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 			$order_listing='<div class="table-responsive">
-				<table width="100%" cellpadding="0" cellspacing="0" border="0" id="product_import_table" class="table table-striped table-bordered msadmin_orders_listing">
-					<tr>
-						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
-						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
+				<table id="product_import_table" class="table table-striped table-bordered no-mb msadmin_orders_listing">
+					<thead><tr>
+						<th width="50" align="right" class="cellID">'.$this->pi_getLL('orders_id').'</th>
+						<th width="110" class="cellDate">'.$this->pi_getLL('order_date').'</th>
+						<th width="50" class="cellPrice">'.$this->pi_getLL('amount').'</th>
 						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
 						<th width="50" class="cell_payment_method">'.$this->pi_getLL('payment_method').'</th>
 						<th width="100" class="cell_status">'.$this->pi_getLL('order_status').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
-						<th width="50" class="cell_paid">'.$this->pi_getLL('admin_paid').'</th>
-					</tr>';
+						<th width="110" class="cellDate">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
+						<th width="50" class="cellStatus">'.$this->pi_getLL('admin_paid').'</th>
+					</tr></thead><tbody>';
 			$tr_type='odd';
 			foreach ($orders_pageset['orders'] as $order) {
 				if (!isset($tr_type) || $tr_type=='odd') {
@@ -935,27 +937,27 @@ switch ($_REQUEST['action']) {
 				} else {
 					$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
 				}
-				$order_listing.='<tr class="'.$tr_type.'">
-							<th align="right" nowrap><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></th>
-							<td align="right" nowrap>'.strftime("%x %X", $order['crdate']).'</td>
-							<td align="right" nowrap>'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
-							<td align="center" nowrap>'.$order['shipping_method_label'].'</td>
-							<td align="center" nowrap>'.$order['payment_method_label'].'</td>
+				$order_listing.='<tr>
+							<td class="cellID"><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></td>
+							<td class="cellDate">'.strftime("%a. %x %X", $order['crdate']).'</td>
+							<td class="cellPrice">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
+							<td nowrap>'.$order['shipping_method_label'].'</td>
+							<td nowrap>'.$order['payment_method_label'].'</td>
 							<td align="left" nowrap>'.$all_orders_status[$order['status']]['name'].'</td>
-							<td align="right" nowrap>'.($order['status_last_modified'] ? strftime("%x %X", $order['status_last_modified']) : '').'</td>
-							<td align="center" nowrap>'.$paid_status.'</td>
+							<td class="cellDate">'.($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '').'</td>
+							<td class="cellStatus">'.$paid_status.'</td>
 						</tr>';
 			}
-			$order_listing.='<tr>
-						<th width="50" class="cell_orders_id">'.$this->pi_getLL('orders_id').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('order_date').'</th>
-						<th width="50" class="cell_amount">'.$this->pi_getLL('amount').'</th>
+			$order_listing.='</tbody><tfoot><tr>
+						<th width="50" class="cellID">'.$this->pi_getLL('orders_id').'</th>
+						<th width="110" class="cellDate">'.$this->pi_getLL('order_date').'</th>
+						<th width="50" class="cellPrice">'.$this->pi_getLL('amount').'</th>
 						<th width="50" class="cell_shipping_method">'.$this->pi_getLL('shipping_method').'</th>
 						<th width="50" class="cell_payment_method">'.$this->pi_getLL('payment_method').'</th>
 						<th width="100" class="cell_status">'.$this->pi_getLL('order_status').'</th>
-						<th width="110" class="cell_date">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
-						<th width="50" class="cell_paid">'.$this->pi_getLL('admin_paid').'</th>
-					</tr>
+						<th width="110" class="cellDate">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
+						<th width="50" class="cellStatus">'.$this->pi_getLL('admin_paid').'</th>
+					</tr></tfoot>
 				</table>
 			</div>';
 		}

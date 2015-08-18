@@ -16,10 +16,10 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 			});
 		});
 		$(document).on("click", ".hide_advanced_import_radio", function() {
-			$(this).parent().find(".hide").hide();
+			$(".advanced_options").hide();
 		});
 		$(document).on("click", ".advanced_import_radio", function() {
-			$(this).parent().find(".hide").show();
+			$(".advanced_options").show();
 		});
 
 	});
@@ -284,19 +284,43 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
   <div class="radio radio-success radio-inline">
   <input name="format" type="radio" value="txt" id="txt" class="advanced_import_radio" /><label for="txt">TXT/CSV</label>
   </div>
-<div class="hidden">
-'.$this->pi_getLL('delimited_by').': <select name="delimiter" id="delimiter" class="form-control">
-	  <option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
-	  <option value="comma">'.$this->pi_getLL('comma').'</option>
-	  <option value="tab">'.$this->pi_getLL('tab').'</option>
-	  <option value="dash">'.$this->pi_getLL('dash').'</option>
-</select>
-<br />
-<input name="backquotes" type="checkbox" value="1" /> '.$this->pi_getLL('fields_are_enclosed_with_double_quotes').'<BR />
-<input type="checkbox" name="escape_first_line" id="checkbox" value="1" /> '.$this->pi_getLL('ignore_first_line').'
-<input type="checkbox" name="os" id="os" value="linux" /> '.$this->pi_getLL('unix_file').'
-<input type="checkbox" name="consolidate" id="consolidate" value="1" /> '.$this->pi_getLL('consolidate').'
+<div class="advanced_options offset-md-2" style="display:none">
+	<div class="form-group">
+		<label for="delimiter" class="col-md-2">'.$this->pi_getLL('delimited_by').'</label>
+		<div class="col-md-10">
+			<select name="delimiter" id="delimiter" class="form-control">
+				<option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
+				<option value="comma">'.$this->pi_getLL('comma').'</option>
+				<option value="tab">'.$this->pi_getLL('tab').'</option>
+				<option value="dash">'.$this->pi_getLL('dash').'</option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input name="backquotes" type="checkbox" value="1" id="backquotes" />
+			<label for="backquotes">'.$this->pi_getLL('fields_are_enclosed_with_double_quotes').'</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" name="escape_first_line" id="escape_first_line" value="1" />
+			<label for="escape_first_line">'.$this->pi_getLL('ignore_first_line').'</label>
+		</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" name="os" id="os" value="linux" />
+			<label for="os">'.$this->pi_getLL('unix_file').'</label>
+		</div>
+		<div class="checkbox checkbox-success checkbox-inline">
+			<input type="checkbox" name="consolidate" id="consolidate" value="1" />
+			<label for="consolidate">'.$this->pi_getLL('consolidate').'</label>
+		</div>
+	</div>
 </div>
+
+
+
+
 </div>
 </div>
 <div class="form-group">
@@ -977,6 +1001,7 @@ if ($this->post['action']=='category-insert') {
 				$file=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.$this->post['filename'];
 			}
 		}
+		$import_data_collector=array();
 		if (($this->post['database_name'] or $file) and isset($this->post['cid'])) {
 			if ($file) {
 				$str=mslib_fe::file_get_contents($file);
@@ -2911,6 +2936,18 @@ if ($this->post['action']=='category-insert') {
 							}
 							// custom hook that can be controlled by third-party plugin eof
 						}
+						// custom hook that can be controlled by third-party plugin
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertAndUpdateProductPostHook'])) {
+							$params=array(
+									'products_id'=>($item['added_products_id'] ? $item['added_products_id'] : $item['updated_products_id']),
+									'import_data_collector'=>&$import_data_collector,
+									'item'=>&$item,
+									'prefix_source_name'=>$this->post['prefix_source_name']
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['insertAndUpdateProductPostHook'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
 						// add/update eof
 						if ($this->get['run_as_cron']) {
 							$subtel++;
@@ -2986,6 +3023,7 @@ if ($this->post['action']=='category-insert') {
 		// custom hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_import.php']['productsImportPostProcHook'])) {
 			$params=array(
+				'import_data_collector'=>$import_data_collector,
 				'prefix_source_name'=>$this->post['prefix_source_name'],
 				'stats'=>&$stats
 			);

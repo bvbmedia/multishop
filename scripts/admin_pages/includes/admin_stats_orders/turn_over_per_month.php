@@ -448,11 +448,11 @@ if ($currentMonth) {
 }
 for ($i=0; $i<$endDay; $i++) {
 	$time=strtotime("-".$i." day", strtotime(date($currentDay.'-'.$month.'-'.$this->cookie['stats_year_sb'])));
-	$dates[strftime("%x", $time)]=$time;
+	$dates[strftime("%a. %x", $time)]=$time;
 }
 $content.='<table class="table table-striped table-bordered" id="product_import_table">
 <thead><tr>
-	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('day')).'</th>
+	<th width="200">'.htmlspecialchars($this->pi_getLL('day')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('amount')).'</th>
 	<th width="100" align="right">'.htmlspecialchars($this->pi_getLL('average', 'average')).'</th>
 	<th>'.htmlspecialchars($this->pi_getLL('orders_id')).'</th>
@@ -465,7 +465,7 @@ foreach ($dates as $key=>$value) {
 		$tr_type='even';
 	}
 	$content.='<tr>';
-	$content.='<td align="right">'.$key.'</td>';
+	$content.='<td>'.$key.'</td>';
 	$total_price=0;
 	$system_date=date($selected_year."m-d", $value);
 	if ($search_start_time && $search_end_time) {

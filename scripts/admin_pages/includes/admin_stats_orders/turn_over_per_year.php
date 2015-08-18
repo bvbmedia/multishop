@@ -124,7 +124,7 @@ $tr_type='even';
 $content.='<h3>'.htmlspecialchars($this->pi_getLL('sales_volume_by_year', 'Sales volume by year')).'</h3>';
 $content.='<table class="table table-striped table-bordered" id="product_import_table">
 <thead><tr>
-	<th width="50" align="right">'.htmlspecialchars($this->pi_getLL('year', 'Year')).'</th>
+	<th width="200">'.htmlspecialchars($this->pi_getLL('year', 'Year')).'</th>
 	<th align="right">'.htmlspecialchars($this->pi_getLL('amount', 'Amount')).'</th>
 	<th align="right">'.htmlspecialchars($this->pi_getLL('average', 'Average')).'</th>
 </tr></thead><tbody>';

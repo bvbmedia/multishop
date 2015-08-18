@@ -32,7 +32,7 @@ jQuery(document).ready(function ($) {
     </ul>
     <div class="tab-content">
         <!-- ###DETAILS### begin -->
-        <div id="view_customer" class="tab-pane">
+        <div role="tabpanel" id="view_customer" class="tab-pane">
             <div class="topfieldset">
                 <div class="row" id="customer_info_panel">
                     <div class="col-md-6 tabs-fieldset" id="address_details">
@@ -101,7 +101,7 @@ jQuery(document).ready(function ($) {
             </div>
         </div>
         <!-- ###DETAILS### end -->
-        <div id="edit_customer" class="tab-pane">
+        <div role="tabpanel" id="edit_customer" class="tab-pane">
             <div id="live-validation">
                 <form action="###CUSTOMER_EDIT_FORM_URL###" method="post" name="edit_customer" class="edit_customer" id="edit_customer">
                     <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="###VALUE_REFERRER###">
@@ -271,11 +271,10 @@ jQuery(document).ready(function ($) {
                             <button class="btn btn-success" name="Submit" type="submit" value=""><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> ###LABEL_BUTTON_ADMIN_SAVE###</button>
                             <input type="hidden" id="tx_multishop_pi1[cid]" value="###VALUE_CUSTOMER_ID###" name="tx_multishop_pi1[cid]" />
                         </div>
-                        <div style="float:left">
+                        <div class="pull-left">
                             ###LOGIN_AS_THIS_USER_LINK###
                         </div>
                     </div>
-                    <div class="mb10" style="clear:both"></div>
                 </form>
             </div>
         </div>

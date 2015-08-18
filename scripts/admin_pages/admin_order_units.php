@@ -87,26 +87,29 @@ foreach ($this->languages as $key=>$language) {
 	}
 	$language_lable.=''.$language['title'];
 	$tmpcontent.='
-			<div class="form-group toggle_advanced_option msEditProductLanguageDivider">
-				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label>
-				<div class="col-md-10">
-				<p class="form-control-static"><strong>'.$language_lable.'</strong></p>
+		<div class="panel panel-default">
+			<div class="panel-heading panel-heading-toggle'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? '' : ' collapsed').'" data-toggle="collapse" data-target="#msEditOrderUnitInputName_'.$language['uid'].'">
+				<h3 class="panel-title">
+					<a role="button" data-toggle="collapse" href="#msEditOrderUnitInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+				</h3>
+			</div>
+			<div id="msEditOrderUnitInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
+				<div class="panel-body">
+					<div class="form-group">
+						<label class="control-label col-md-2" for="order_unit_name_'.$language['uid'].'">'.$this->pi_getLL('admin_name').'</label>
+						<div class="col-md-10">
+						<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_name]['.$language['uid'].']" id="order_unit_name_'.$language['uid'].'" value="'.htmlspecialchars($lngstatus[$language['uid']]['name']).'">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-md-2" for="order_unit_code">'.$this->pi_getLL('code').'</label>
+						<div class="col-md-10">
+						<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_code]" value="'.htmlspecialchars($lngstatus[$language['uid']]['code']).'">
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="control-label col-md-2" for="products_name">'.$this->pi_getLL('admin_name').'</label>
-				<div class="col-md-10">
-				<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_name]['.$language['uid'].']" id="order_unit_name_'.$language['uid'].'" value="'.htmlspecialchars($lngstatus[$language['uid']]['name']).'">
-				</div>
-			</div>
-		';
-	$tmpcontent.='
-	<div class="form-group">
-		<label class="control-label col-md-2" for="order_unit_code">'.$this->pi_getLL('code').'</label>
-		<div class="col-md-10">
-		<input type="text" class="form-control text" name="tx_multishop_pi1[order_unit_code]" value="'.htmlspecialchars($lngstatus[$language['uid']]['code']).'">
 		</div>
-	</div>
 	';
 }
 if ($this->get['tx_multishop_pi1']['action']=='edit') {

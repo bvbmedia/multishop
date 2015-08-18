@@ -1674,9 +1674,10 @@ switch ($this->ms['page']) {
 			}
 			if (count($sections)) {
 				$content.='
-					<label for="specials_portleds">'.$this->pi_getLL('admin_show_in_section').'</label>
+					<label for="specials_portleds" class="control-label col-md-2">'.$this->pi_getLL('admin_show_in_section').'</label>
+					<div class="col-md-10">
 					<div class="label_value_container">
-					<ul class="twocols_ul">
+					<div class="twocols_ul">
 				';
 				$i=0;
 				foreach ($sections as $section) {
@@ -1684,14 +1685,14 @@ switch ($this->ms['page']) {
 					$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 					$rows=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
 					$content.='
-					<li><input id="specials_sections_'.$i.'" name="specials_sections[]" type="checkbox" value="'.htmlspecialchars($section).'" '.($rows ? 'checked' : '').' />
-					'.htmlspecialchars($section).'</li>
+					<div class="checkbox checkbox-success"><input id="specials_sections_'.$i.'" name="specials_sections[]" type="checkbox" value="'.htmlspecialchars($section).'" '.($rows ? 'checked' : '').' /><label for="specials_sections_'.$i.'">'.htmlspecialchars($section).'</label></div>
 					';
 					$i++;
 //						<label for="specials_sections_'.$i.'">'.htmlspecialchars($section).'</label>
 				}
 				$content.='
-				</ul>
+				</div>
+				</div>
 				</div>
 				';
 				echo $content;

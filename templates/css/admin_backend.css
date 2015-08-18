@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700);
+@import url(//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700);
 
 html, body { height:100%; }
 body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
@@ -13,7 +13,7 @@ body { background:#f5f5f5 url(../images/backend_bg.gif) left top repeat-y; font-
 
 .dropdown-backdrop { display:none !important; }
 
-#tx_multishop_admin_header_wrapper { position:absolute; left:0; top:0; display:block; width:220px; min-height:100%; background:#222; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; z-index:10005; }
+#tx_multishop_admin_header_wrapper { position:fixed; left:0; top:0; display:block; width:220px; min-height:100%; background:#222; font-size:14px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; z-index:10005; }
 #tx_multishop_admin_header_wrapper ul { margin:0; padding:0; list-style:none; }
 #tx_multishop_admin_header_wrapper ul li a,
 #tx_multishop_admin_header_wrapper ul li span { white-space:normal; }
@@ -136,8 +136,9 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 .cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:first-child { width:80%; }
 .cellContent table#msOrderDetailsSubTotalTable.table > tbody > tr > td:last-child { font-weight:bold; }
 
-/* td.cellPrice .msAttributesField .form-control,
-td.cellSpecialPrice .msAttributesField .form-control { width:90px; } */
+td.cellPrice .msAttributesField .form-control,
+td.cellSpecialPrice .msAttributesField .form-control { min-width:90px; }
+.input-group input[type="text"],
 .msAttributesField input[type="text"] { text-align:right; }
 td.cellBreak { width:200px; word-break:break-all; }
 
@@ -186,20 +187,21 @@ ul.primaryProductsWrapper > li > span { display:block; border-bottom:1px solid #
 ul.primaryProductsWrapper > li > ul { border-bottom:1px solid #eee; margin:0; padding:7px 0 6px 30px; list-style-type:disc; }
 ul.primaryProductsWrapper > li:last-child > span { border-bottom:none; }
 
-.msadminVerticalTabs > .nav-tabs { float:left; width:15%; border-bottom:none; margin-top:20px; margin-right:0; }
-.msadminVerticalTabs > .nav-tabs > li { float:none; }
-.msadminVerticalTabs > .nav-tabs > li > a { text-align:right; margin-bottom:3px; margin-right: -1px; border-radius:4px 0 0 4px; }
-.msadminVerticalTabs > .nav-tabs > li > a:hover,
-.msadminVerticalTabs > .nav-tabs > li > a:focus { border-color: #eeeeee #dddddd #eeeeee #eeeeee; }
-.msadminVerticalTabs > .nav-tabs .active > a,
-.msadminVerticalTabs > .nav-tabs .active > a:hover,
-.msadminVerticalTabs > .nav-tabs .active > a:focus { border-color: #ddd transparent #ddd #ddd; font-weight:bold; }
+@media (min-width:1200px) {
+	.msadminVerticalTabs > .nav-tabs { float:left; width:15%; border-bottom:none; margin-top:20px; margin-right:0; }
+	.msadminVerticalTabs > .nav-tabs > li { float:none; }
+	.msadminVerticalTabs > .nav-tabs > li > a { text-align:right; margin-bottom:3px; margin-right: -1px; border-radius:4px 0 0 4px; }
+	.msadminVerticalTabs > .nav-tabs > li > a:hover,
+	.msadminVerticalTabs > .nav-tabs > li > a:focus { border-color: #eeeeee #dddddd #eeeeee #eeeeee; }
+	.msadminVerticalTabs > .nav-tabs .active > a,
+	.msadminVerticalTabs > .nav-tabs .active > a:hover,
+	.msadminVerticalTabs > .nav-tabs .active > a:focus { border-color: #ddd transparent #ddd #ddd; font-weight:bold; }
 
-.msadminVerticalTabs > .tab-content { padding:0 0 0 15%; }
-.msadminVerticalTabs > .tab-content > .tab-pane,
-.msadminVerticalTabs > .tab-content > form > .tab-pane { min-height:698px; border:1px solid #ddd; padding:10px; border-radius:6px; }
-.msadminVerticalTabs > .tab-content > .tab-pane table#admin_modules_listing td:first-child { width:60%; }
-
+	.msadminVerticalTabs > .tab-content { padding:0 0 0 15%; }
+	.msadminVerticalTabs > .tab-content > .tab-pane,
+	.msadminVerticalTabs > .tab-content > form > .tab-pane { min-height:698px; border:1px solid #ddd; padding:10px; border-radius:6px; }
+	.msadminVerticalTabs > .tab-content > .tab-pane table#admin_modules_listing td:first-child { width:60%; }
+}
 .merge_attribute_options_form ul { margin:0; padding:0; list-style:none; }
 
 .copy_to_clipboard { white-space:nowrap; }
@@ -259,13 +261,17 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 .product_staffel_price .table > * > tr > td:nth-child(3) .input-group .form-control { width:100px; }
 
 #msadmin_wrapper .popover { max-width:700px; }
-#msadmin_wrapper .popover .popover-content { font-size:13px; }
+#msadmin_wrapper .popover .popover-content { font-size:13px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
+#msadmin_wrapper .popover .popover-content h1 { font-size:18px; line-height:24px; margin-bottom:5px; }
+#msadmin_wrapper .popover .popover-content h2 { font-size:16px; line-height:22px; margin-bottom:5px; }
+#msadmin_wrapper .popover .popover-content h3 { font-size:15px; line-height:21px; margin-bottom:5px; }
 #msadmin_wrapper .popover .popover-content table { margin:20px 0 0; }
 #msadmin_wrapper .popover .popover-content table th,
 #msadmin_wrapper .popover .popover-content table td { font-size:13px; padding:5px; }
 
 .msAttributesField:first-child { margin-bottom:10px; }
-.input-group-addon:last-child { width:105px; text-align:left; }
+.input-group-addon:last-child,
+.form-inline .input-group .input-group-addon:last-child { width:105px; text-align:left; }
 .input-group-addon.width-auto:last-child { width:auto; }
 
 #msEditProductInputUnit .input-group { width:100%; }
@@ -347,7 +353,7 @@ ul.admin_sort_product_listing > li > .button_wrapper { white-space:nowrap; paddi
 /* bootstrap overrule */
 
 @-moz-document url-prefix() {
-  fieldset { display: table-cell; }
+	fieldset { display: table-cell; }
 }
 
 .popover { max-width:500px; }
@@ -402,7 +408,8 @@ hr { margin-top:15px; margin-bottom:15px; }
 .tab-content > form > .tab-pane.active { display:block; }
 
 #product_options .form-inline .form-control { min-width:196px; }
-#product_options .form-inline .form-control-static { padding-left:10px; padding-right:10px;  }
+#product_options .form-inline .form-control-static,
+.form-inline .form-control-static.form-control-inbetween { padding-left:10px; padding-right:10px;  }
 
 .hidden { display:none; }
 
@@ -488,8 +495,20 @@ hr { margin-top:15px; margin-bottom:15px; }
 
 .panel-heading-toggle { cursor:pointer; }
 
+#label_custom_shipping_costs .form-group > label { padding-top:28px; }
+#label_custom_shipping_costs .form-group > div.col-md-4 { padding-top:20px; }
+@media (min-width:992px) {
+	#label_custom_shipping_costs .form-group > div.col-md-4 > .checkbox { float:right; }
+}
+#label_custom_shipping_costs .form-group > .col-md-8 > .form-inline > p:first-child { width:60px; text-align:right; }
+#label_custom_shipping_costs .form-group > .col-md-8 > .form-inline > p { padding-right:5px; }
+#label_custom_shipping_costs .form-group > .col-md-8 > .form-inline > select { width:80px; margin-right:5px; }
+
 /* CSS Method for adding Font Awesome Chevron Icons */
 .panel-heading-toggle h3:after { float:right; font-family:"FontAwesome"; content:"\f077"; }
 .panel-heading-toggle.collapsed h3:after { content:"\f078"; }
 
 .cellPlPrice { min-width:250px; }
+
+.fa-stack .fa-circle-cart-plus { color: #337ab7; }
+.fa-stack .fa-circle-phone { color: orange; }

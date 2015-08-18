@@ -391,22 +391,22 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <div class="form-group" id="msEditProductInputStatus">
         <label for="products_status" class="col-md-2 control-label">###LABEL_PRODUCT_STATUS###</label>
         <div class="col-md-10">
-        <div class="radio-inline">
-        <input name="products_status" type="radio" value="1" ###LABEL_PRODUCT_STATUS_ON_CHECKED### /> ###LABEL_ADMIN_YES###
+        <div class="radio radio-success radio-inline">
+        <input name="products_status" id="products_status1" type="radio" value="1" ###LABEL_PRODUCT_STATUS_ON_CHECKED### /><label for="products_status1">###LABEL_ADMIN_YES###</label>
         </div>
-        <div class="radio-inline">
-        <input name="products_status" type="radio" value="0" ###LABEL_PRODUCT_STATUS_OFF_CHECKED### /> ###LABEL_ADMIN_NO###
+        <div class="radio radio-success radio-inline">
+        <input name="products_status" id="products_status2" type="radio" value="0" ###LABEL_PRODUCT_STATUS_OFF_CHECKED### /><label for="products_status2">###LABEL_ADMIN_NO###</label>
         </div>
         </div>
     </div>
     <div class="form-group" id="msEditProductInputSearchEngineIndexing">
         <label for="search_engines_allow_indexing" class="col-md-2 control-label">###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING###</label>
         <div class="col-md-10">
-        <div class="radio-inline">
-        <input name="search_engines_allow_indexing" type="radio" value="1" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED### /> ###LABEL_ADMIN_YES_INDEXING###
+        <div class="radio radio-success radio-inline">
+        <input name="search_engines_allow_indexing" id="search_engines_allow_indexing1" type="radio" value="1" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_ON_CHECKED### /><label for="search_engines_allow_indexing1">###LABEL_ADMIN_YES_INDEXING###</label>
         </div>
-        <div class="radio-inline">
-        <input name="search_engines_allow_indexing" type="radio" value="0" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /> ###LABEL_ADMIN_NO_INDEXING###
+        <div class="radio radio-success radio-inline">
+        <input name="search_engines_allow_indexing" id="search_engines_allow_indexing2" type="radio" value="0" ###LABEL_PRODUCT_SEARCH_ENGINE_INDEXING_OFF_CHECKED### /><label for="search_engines_allow_indexing2">###LABEL_ADMIN_NO_INDEXING###</label>
         </div>
         </div>
     </div>
@@ -520,10 +520,11 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
                 <div class="form-group msAttributesField"><div class="col-md-12"><div class="input-group"><span class="input-group-addon">###LABEL_CURRENCY5###</span><input type="text" name="product_capital_price_incl_vat" class="form-control price small_input msPriceIncludingVat" id="product_capital_price_incl_vat" value="###VALUE_INCL_VAT_CAPITAL_PRICE###"><span class="input-group-addon">###LABEL_INCLUDING_VAT2###</span></div></div></div>
                 <div class="msAttributesField hidden"><input type="hidden" class="msFinalPriceExcludingVat" name="product_capital_price" value="###VALUE_ORIGINAL_CAPITAL_PRICE###" /></div>
             </div>
-            <div class="form-group" id="specials_sections"></div>
         </div>
         </div>
     </div>
+    ###CUSTOM_MARKER_BELOW_PRICE_FORM_FIELD###
+    <div class="form-group" id="specials_sections"></div>
     ###INPUT_STAFFEL_PRICE_BLOCK###
     <!-- ###MANUFACTURERS_ADVICE_PRICE### begin -->
     <div class="form-group" id="msEditProductInputManufacturersPrice">
@@ -552,9 +553,15 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <div class="form-group toggle_advanced_option" id="msEditProductInputDateAvailable">
         <label for="products_date_available" class="col-md-2 control-label">###LABEL_DATE_AVAILABLE###</label>
         <div class="col-md-10 form-inline">
-        <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
-        <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###"> <p class="form-control-static"><strong>###LABEL_DATE_ADDED###</strong></p> <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
-        <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
+            <input type="text" name="products_date_available_visitor" class="form-control products_date_available" id="products_date_available_visitor" value="###VALUE_DATE_AVAILABLE_VISUAL###">
+            <input type="hidden" name="products_date_available" class="products_date_available" id="products_date_available" value="###VALUE_DATE_AVAILABLE_SYS###">
+            <p class="form-control-static">
+                <strong>###LABEL_DATE_ADDED###</strong>
+            </p>
+            <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
+            <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
+            <p class="form-control-static"><strong>###LABEL_DATE_MODIFIED###</strong></p>
+            <span>###VALUE_DATE_MODIFIED###</span>
         </div>
     </div>
     <div class="form-group" id="msEditProductInputModel">
@@ -588,21 +595,27 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <div class="form-group toggle_advanced_option" id="msEditProductInputEANCode">
         <label for="ean_code" class="col-md-2 control-label">###LABEL_EAN_CODE###</label>
         <div class="col-md-10 form-inline">
-        <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+            <div class="form-group">
+                <div class="col-md-12">
+                <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+                </div>
+            </div>
+            <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
+                <div class="col-md-12">
+                <p class="form-control-static"><strong>###LABEL_SKU_CODE###</strong></p>
+                <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="13" value="###VALUE_SKU_CODE###">
+                </div>
+            </div>
+            <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
+                <div class="col-md-12">
+                <p class="form-control-static"><strong>###LABEL_MANUFACTURER_CODE###</strong></p>
+                <input type="text" class="form-control text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
-        <label for="sku_code" class="col-md-2 control-label">###LABEL_SKU_CODE###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="13" value="###VALUE_SKU_CODE###">
-        </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
-        <label for="manufacturers_products_id" class="col-md-2 control-label">###LABEL_MANUFACTURER_CODE###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" class="form-control text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
-        </div>
-    </div>
+
+
     <!-- ###EXCLUDE_FROM_FEED_INPUT### begin -->
     <div class="form-group" id="msEditProductInputExcludeStockFromFeeds">
         <label class="col-md-2 control-label">###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
@@ -617,25 +630,27 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
         </div>
     </div>
     <!-- ###EXCLUDE_FROM_FEED_INPUT### end -->
-    <div class="toggle_advanced_option" id="msEditProductInputUnit">
-        <h3 class="page-header">###LABEL_PRODUCT_UNIT###</h3>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputOrderUnit">
-        <label for="order_unit_id" class="col-md-2 control-label">###LABEL_ORDER_UNIT###</label>
-        <div class="col-md-10 form-inline">
-        ###INPUT_PRODUCT_UNIT###
+    <div id="msEditProductInputUnitWrapper">
+        <div class="toggle_advanced_option" id="msEditProductInputUnit">
+            <h3 class="page-header">###LABEL_PRODUCT_UNIT###</h3>
         </div>
-    </div>
-    <div class="form-group" id="msEditProductInputMinimumQuantity">
-        <label for="minimum_quantity" class="col-md-2 control-label">###LABEL_MINIMUM_QTY###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" name="minimum_quantity" class="form-control minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###"> <p class="form-control-static">###LABEL_MAXIMUM_QTY###</p> <input type="text" name="maximum_quantity" class="form-control maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
+        <div class="form-group toggle_advanced_option" id="msEditProductInputOrderUnit">
+            <label for="order_unit_id" class="col-md-2 control-label">###LABEL_ORDER_UNIT###</label>
+            <div class="col-md-10 form-inline">
+            ###INPUT_PRODUCT_UNIT###
+            </div>
         </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputMultiplication">
-        <label for="products_multiplication" class="col-md-2 control-label">###LABEL_QTY_MULTIPLICATION###</label>
-        <div class="col-md-10">
-        <input type="text" class="form-control text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
+        <div class="form-group" id="msEditProductInputMinimumQuantity">
+            <label for="minimum_quantity" class="col-md-2 control-label">###LABEL_MINIMUM_QTY###</label>
+            <div class="col-md-10 form-inline">
+            <input type="text" name="minimum_quantity" class="form-control minimum_quantity" id="minimum_quantity" value="###VALUE_MINIMUM_QTY###"> <p class="form-control-static">###LABEL_MAXIMUM_QTY###</p> <input type="text" name="maximum_quantity" class="form-control maximum_quantity" id="maximum_quantity" value="###VALUE_MAXIMUM_QTY###">
+            </div>
+        </div>
+        <div class="form-group toggle_advanced_option" id="msEditProductInputMultiplication">
+            <label for="products_multiplication" class="col-md-2 control-label">###LABEL_QTY_MULTIPLICATION###</label>
+            <div class="col-md-10">
+            <input type="text" class="form-control text" name="products_multiplication" id="products_multiplication" value="###VALUE_QTY_MULTIPLICATION###">
+            </div>
         </div>
     </div>
     <div class="toggle_advanced_option" id="msEditProductInputVirtualProduct">
@@ -653,13 +668,15 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <input name="action" type="hidden" value="###VALUE_HIDDEN_FORM_ACTION###" />
 
     <div id="ajax_message_###VALUE_PRODUCT_PID1###" class="ajax_message"></div>
-    <div class="toggle_advanced_option" id="msEditProductInputAdvancedSettings">
-        <h3 class="page-header">###LABEL_ADVANCED_SETTINGS###</h3>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputCustomConfig">
-        <label for="custom_settings" class="col-md-2 control-label">###LABEL_CUSTOM_CONFIGURATION###</label>
-        <div class="col-md-10">
-        <textarea name="custom_settings" class="form-control expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+    <div id="msEditProductInputAdvancedSettingsWrapper">
+        <div class="toggle_advanced_option" id="msEditProductInputAdvancedSettings">
+            <h3 class="page-header">###LABEL_ADVANCED_SETTINGS###</h3>
+        </div>
+        <div class="form-group toggle_advanced_option" id="msEditProductInputCustomConfig">
+            <label for="custom_settings" class="col-md-2 control-label">###LABEL_CUSTOM_CONFIGURATION###</label>
+            <div class="col-md-10">
+            <textarea name="custom_settings" class="form-control expand20-200" rows="15">###VALUE_CUSTOM_CONFIGURATION###</textarea>
+            </div>
         </div>
     </div>
 </div>

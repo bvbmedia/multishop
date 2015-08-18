@@ -164,8 +164,8 @@
             <label index="admin_label_check_2">Check 2</label>
             <label index="admin_label_check_3">Check 3</label>
             <label index="admin_label_check_4">Check 4 (not existing product images)</label>
-            <label index="admin_label_choose_attribute">choose attribute value</label>
-            <label index="admin_label_choose_option">choose attribute option</label>
+            <label index="admin_label_choose_attribute">Choose attribute value</label>
+            <label index="admin_label_choose_option">Choose attribute option</label>
             <label index="admin_label_clear_database">Clear database</label>
             <label index="admin_label_click_here_to_add_category">Click here to add a category</label>
             <label index="admin_label_click_here_to_add_country">Click here to add a country</label>
@@ -854,6 +854,7 @@
             <label index="locale_date_format">m/d/Y</label>
             <label index="locale_date_format_js">mm/dd/yy</label>
             <label index="locale_datetime_format">m/d/Y H:i:s</label>
+            <label index="locale_day_plus_datetime_format">D. m/d/Y H:i:s</label>
             <label index="locale_datetime_format_js">mm/dd/yy HH:mm:ss</label>
             <label index="locale_time_format">H:i:s</label>
             <label index="login">Login</label>
@@ -1236,6 +1237,7 @@
             <label index="admin_order_units">Order units</label>
             <label index="companies">Companies</label>
             <label index="add_attribute">Add attribute</label>
+            <label index="this_field_is_required">This field is required</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1396,7 +1398,7 @@
             <label index="admin_label_check_2">Controle 2</label>
             <label index="admin_label_check_3">Controle 3</label>
             <label index="admin_label_check_4">Controle 4 (niet bestaande productafbeeldingen)</label>
-            <label index="admin_label_choose_attribute">selecteer attribuut waarde</label>
+            <label index="admin_label_choose_attribute">Selecteer attribuut waarde</label>
             <label index="admin_label_choose_option">selecteer attribuut optie</label>
             <label index="admin_label_clear_database">Leeg database</label>
             <label index="admin_label_click_here_to_add_category">Klik hier om een categorie aan te maken</label>
@@ -2086,6 +2088,7 @@
             <label index="locale_date_format">d-m-Y</label>
             <label index="locale_date_format_js">dd-mm-yy</label>
             <label index="locale_datetime_format">d-m-Y H:i:s</label>
+            <label index="locale_day_plus_datetime_format">D. d-m-Y H:i:s</label>
             <label index="locale_datetime_format_js">dd-mm-yy HH:mm:ss</label>
             <label index="locale_time_format">H:i:s</label>
             <label index="login">Inloggen</label>
@@ -2465,6 +2468,7 @@
             <label index="admin_order_units">Besteleenheden</label>
             <label index="companies">Bedrijven</label>
             <label index="add_attribute">Attribuut toevoegen</label>
+            <label index="this_field_is_required">Dit veld is verplicht</label>
         </languageKey>
     </data>
 </T3locallang>

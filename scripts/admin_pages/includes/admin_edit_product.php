@@ -1812,8 +1812,8 @@ if ($this->post) {
 						}
 					}
 					// sort the values
-					if (!isset($values_sort_order[$opt_id][$pa_value])) {
-						$values_sort_order[$opt_id][$pa_value]=count($values_sort_order[$opt_id])+1;
+					if (!isset($values_sort_order[$pa_option][$pa_value])) {
+						$values_sort_order[$pa_option][$pa_value]=count($values_sort_order[$pa_option])+1;
 					}
 				}
 				$pa_prefix=$this->post['tx_multishop_pi1']['prefix'][$opt_sort];
@@ -1875,7 +1875,7 @@ if ($this->post) {
 							$attributesArray['price_prefix']=$pa_prefix;
 							$attributesArray['options_values_price']=$pa_price;
 							$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
-							$attributesArray['sort_order_option_value']=$values_sort_order[$opt_id][$pa_value];
+							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						} else {
@@ -1977,7 +1977,6 @@ if ($this->post) {
 			}
 			// custom hook that can be controlled by third-party plugin eof
 		}
-		// OLD OBSOLUTE HOOK
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_edit_product.php']['saveProductPostHook'])) {
 			$params=array(
 				'prodid'=>$prodid
@@ -4263,6 +4262,7 @@ if ($this->post) {
 		$subpartArray['###VALUE_INCL_VAT_CAPITAL_PRICE###']=htmlspecialchars($capital_price_incl_vat_display);
 		$subpartArray['###VALUE_ORIGINAL_CAPITAL_PRICE###']=htmlspecialchars($product['product_capital_price']);
 		$subpartArray['###CUSTOM_MARKER_ABOVE_PRICE_FORM_FIELD###']='';
+		$subpartArray['###CUSTOM_MARKER_BELOW_PRICE_FORM_FIELD###']='';
 		$subpartArray['###CUSTOM_MARKER_ABOVE_VAT_RATE_FORM_FIELD###']='';
 		$subpartArray['###INPUT_STAFFEL_PRICE_BLOCK###']=$staffel_price_block;
 		$subpartArray['###LABEL_STOCK###']=$this->pi_getLL('admin_stock');
@@ -4310,6 +4310,13 @@ if ($this->post) {
 		$subpartArray['###VALUE_DATE_ADDED_VISUAL###']=$product['products_date_added_visual'];
 		$subpartArray['###VALUE_DATE_ADDED_SYS###']=$product['products_date_added_sys'];
 		$subpartArray['###LABEL_PRODUCT_MODEL###']=$this->pi_getLL('admin_model');
+
+		$subpartArray['###LABEL_DATE_MODIFIED###']='';
+		$subpartArray['###VALUE_DATE_MODIFIED###']='';
+		if ($this->get['pid'] && $product['products_last_modified']) {
+			$subpartArray['###LABEL_DATE_MODIFIED###']=$this->pi_getLL('modified');
+			$subpartArray['###VALUE_DATE_MODIFIED###']=strftime("%a. %x %X", $product['products_last_modified']);
+		}
 		$subpartArray['###VALUE_PRODUCT_MODEL###']=htmlspecialchars($product['products_model']);
 		$subpartArray['###LABEL_PRODUCT_MANUFACTURER###']=$this->pi_getLL('admin_manufacturer');
 		$subpartArray['###INPUT_MANUFACTURER###']=$manufacturer_input;
@@ -4383,7 +4390,7 @@ if ($this->post) {
 				$special_price_percentage_value_selectbox.='<option value="'.$i.'">'.$i.'%</option>';
 			}
 		}
-		$special_price_percentage_value_selectbox.='</select><label for="specials_price_percentage">'.$this->pi_getLL('discount').'</label>';
+		$special_price_percentage_value_selectbox.='</select> <label for="specials_price_percentage">'.$this->pi_getLL('discount').'</label>';
 		$subpartArray['###LABEL_PERCENTAGE_SELECTBOX###']=$this->pi_getLL('admin_label_or');
 		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
 		//
