@@ -259,6 +259,10 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$settings[]='11';
 			$settings[]='500';
 			$settings[]='795';
+			$settings[]='0:0:0';
+		}
+		if (!$settings[5]) {
+			$settings[5]='0:0:0';
 		}
 		$dompdf=new DOMPDF();
 		$dompdf->set_paper('A4');
@@ -267,11 +271,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		// ADD PAGE NUMBER IN FOOTER
 		$canvas=$dompdf->get_canvas();
 		$font=Font_Metrics::get_font($settings[0], $settings[1]);
-		$canvas->page_text($settings[3], $settings[4], $this->pi_getLL('page', 'page').' {PAGE_NUM} '.$this->pi_getLL('of', 'of').' {PAGE_COUNT}', $font, $settings[2], array(
-			0,
-			0,
-			0
-		));
+		$canvas->page_text($settings[3], $settings[4], $this->pi_getLL('page', 'page').' {PAGE_NUM} '.$this->pi_getLL('of', 'of').' {PAGE_COUNT}', $font, $settings[2], explode(':',$settings[5]));
 		// SAVE AS FILE
 		if ($this->get['tx_multishop_pi1']['forceRecreate'] && file_exists($pdfFilePath)) {
 			unlink($pdfFilePath);
