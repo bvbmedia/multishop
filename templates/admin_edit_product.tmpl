@@ -594,21 +594,27 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <div class="form-group toggle_advanced_option" id="msEditProductInputEANCode">
         <label for="ean_code" class="col-md-2 control-label">###LABEL_EAN_CODE###</label>
         <div class="col-md-10 form-inline">
-        <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+            <div class="form-group">
+                <div class="col-md-12">
+                <input type="text" class="form-control text" name="ean_code" id="ean_code" maxlength="13" value="###VALUE_EAN_CODE###">
+                </div>
+            </div>
+            <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
+                <div class="col-md-12">
+                <label for="sku_code">###LABEL_SKU_CODE###</label>
+                <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="13" value="###VALUE_SKU_CODE###">
+                </div>
+            </div>
+            <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
+                <div class="col-md-12">
+                <label for="manufacturers_products_id">###LABEL_MANUFACTURER_CODE###</label>
+                <input type="text" class="form-control text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputSKUCode">
-        <label for="sku_code" class="col-md-2 control-label">###LABEL_SKU_CODE###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" class="form-control text" name="sku_code" id="sku_code" maxlength="13" value="###VALUE_SKU_CODE###">
-        </div>
-    </div>
-    <div class="form-group toggle_advanced_option" id="msEditProductInputManufacturerCode">
-        <label for="manufacturers_products_id" class="col-md-2 control-label">###LABEL_MANUFACTURER_CODE###</label>
-        <div class="col-md-10 form-inline">
-        <input type="text" class="form-control text" name="manufacturers_products_id" id="manufacturers_products_id" value="###VALUE_MANUFACTURER_CODE###">
-        </div>
-    </div>
+
+
     <!-- ###EXCLUDE_FROM_FEED_INPUT### begin -->
     <div class="form-group" id="msEditProductInputExcludeStockFromFeeds">
         <label class="col-md-2 control-label">###LABEL_EXCLUDE_STOCK_FROM_FEED###</label>
