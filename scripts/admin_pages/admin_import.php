@@ -1341,7 +1341,6 @@ if ($this->post['action']=='category-insert') {
 												$option_value=$option_value2[0];
 												$option_price=str_replace(",", ".", $option_value2[1]);
 											} else {
-												$internal_count++;
 												$option_price=0;
 												if ($tmp[$internal_count]=='$key') {
 													// sometimes the option name is inside the field value
@@ -1349,7 +1348,9 @@ if ($this->post['action']=='category-insert') {
 													// we can dynamically convert this by defining the aux field as: $key|#
 													// so we use the first value (Option_name) as key
 													$key=$option_value;
-												} elseif ($tmp[$internal_count]=='$price') {
+													$option_value='';
+												}
+												if ($tmp[$internal_count]=='$price') {
 													// sometimes the option name is inside the field value
 													// example field value: Option value#price
 													// we can dynamically convert this by defining the aux field as: FORMAAT|#|;|$value|$price
@@ -1357,6 +1358,7 @@ if ($this->post['action']=='category-insert') {
 													// so we use the first value (Option_name) as key
 													$option_price=$option_value;
 												}
+												$internal_count++;
 												if ($internal_count==$total) {
 													$internal_count=0;
 												}
