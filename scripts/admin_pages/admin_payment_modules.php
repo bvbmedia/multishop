@@ -486,9 +486,9 @@ if ($this->get['edit']) {
 					<div class="form-group">
 						<label for="related_shop_pid" class="control-label col-md-2">'.$this->pi_getLL('relate_shipping_to_shop', 'Relate this method to').'</label>
 						<div class="col-md-10">
-						<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked"/><label>'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</label></div>';
+						<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="0" checked="checked"/><label for="related_shop_pid">'.$this->pi_getLL('relate_payment_to_all_shop', 'All shop').'</label></div>';
 			foreach ($active_shop as $pageinfo) {
-				$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid" type="radio" value="'.$pageinfo['uid'].'"'.(($this->shop_pid==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label>'.$pageinfo['title'].'</label></div>';
+				$tmpcontent.='<div class="radio radio-success radio-inline"><input name="related_shop_pid" id="related_shop_pid'.$pageinfo['uid'].'" type="radio" value="'.$pageinfo['uid'].'"'.(($this->shop_pid==$pageinfo['uid']) ? ' checked="checked"' : '').' /><label for="related_shop_pid'.$pageinfo['uid'].'">'.$pageinfo['title'].'</label></div>';
 			}
 			$tmpcontent.='
 					</div></div>';
@@ -978,7 +978,7 @@ if ($this->ms['show_main']) {
 	$content=$tabs_element;
 	// payment method admin system eof
 }
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
 $content=''.mslib_fe::shadowBox($content).'';
 $GLOBALS['TSFE']->additionalHeaderData['admin_payment_methods']='
 <script type="text/javascript">
