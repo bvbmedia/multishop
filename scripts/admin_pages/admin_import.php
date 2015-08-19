@@ -266,11 +266,11 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 // custom hook that can be controlled by third-party plugin eof
 $this->ms['upload_productfeed_form'].='<div class="extra_parameters"><hr>';
 if (count($importParserTemplateTypes)) {
-	$this->ms['upload_productfeed_form'].=$this->pi_getLL('datafeed_parser_template').': <select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>';
+	$this->ms['upload_productfeed_form'].='<div class="form-group"><label class="control-label col-md-2">'.$this->pi_getLL('datafeed_parser_template').':</label><div class="col-md-10"><select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>';
 	foreach ($importParserTemplateTypes as $importParserTemplateType) {
 		$this->ms['upload_productfeed_form'].='<option value="'.$importParserTemplateType['key'].'">'.$importParserTemplateType['label'].'</option>';
 	}
-	$this->ms['upload_productfeed_form'].='</select><br />';
+	$this->ms['upload_productfeed_form'].='</select></div></div>';
 }
 $this->ms['upload_productfeed_form'].='<div class="form-group">
   <label class="control-label col-md-2">'.ucfirst($this->pi_getLL('format')).':</label>
