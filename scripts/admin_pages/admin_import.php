@@ -1013,7 +1013,7 @@ if ($this->post['action']=='category-insert') {
 					$params=array(
 						'parser_template'=>&$this->post['parser_template'],
 						'prefix_source_name'=>$this->post['prefix_source_name'],
-						'str'=>$str,
+						'str'=>&$str,
 						'rows'=>&$rows,
 						'file_location'=>&$file,
 						'table_cols'=>&$table_cols,

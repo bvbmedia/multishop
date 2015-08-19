@@ -20,18 +20,20 @@ if (isset($this->post['new_options_groups_name']) && !empty($this->post['new_opt
 if (is_array($this->post['option_groups_names']) and count($this->post['option_groups_names'])) {
 	foreach ($this->post['option_groups_names'] as $attributes_options_groups_id=>$array) {
 		foreach ($array as $language_id=>$value) {
-			$updateArray=array();
-			$updateArray['language_id']=$language_id;
-			$updateArray['attributes_options_groups_id']=$attributes_options_groups_id;
-			$updateArray['attributes_options_groups_name']=$value;
-			$str="select 1 from tx_multishop_attributes_options_groups where attributes_options_groups_id='".$attributes_options_groups_id."' and language_id='".$language_id."'";
-			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
-				$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups', 'attributes_options_groups_id=\''.$attributes_options_groups_id.'\' and language_id=\''.$language_id.'\'', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			} else {
-				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_groups', $updateArray);
-				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if (is_numeric($attributes_options_groups_id)) {
+				$updateArray=array();
+				$updateArray['language_id']=$language_id;
+				$updateArray['attributes_options_groups_id']=$attributes_options_groups_id;
+				$updateArray['attributes_options_groups_name']=$value;
+				$str="select 1 from tx_multishop_attributes_options_groups where attributes_options_groups_id='".$attributes_options_groups_id."' and language_id='".$language_id."'";
+				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)>0) {
+					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_attributes_options_groups', 'attributes_options_groups_id=\''.$attributes_options_groups_id.'\' and language_id=\''.$language_id.'\'', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				} else {
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_attributes_options_groups', $updateArray);
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				}
 			}
 		}
 	}
