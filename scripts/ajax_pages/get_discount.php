@@ -58,6 +58,14 @@ if (!empty($_POST['code'])) {
 		$GLOBALS['TSFE']->fe_user->storeSessionData();
 		$content="0%";
 	}
+} else {
+	$cart=$GLOBALS['TSFE']->fe_user->getKey('ses', $this->cart_page_uid);
+	$cart['coupon_code']='';
+	$cart['discount']='';
+	$cart['discount_type']='';
+	$GLOBALS['TSFE']->fe_user->setKey('ses', $this->cart_page_uid, $cart);
+	$GLOBALS['TSFE']->fe_user->storeSessionData();
+	$content="0%";
 }
 echo $content;
 exit();
