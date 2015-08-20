@@ -39,7 +39,7 @@ if ($this->ms['MODULES']['COUPONS']) {
 			type: "POST",
 			url: "'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_discount').'",
 			cache :false,
-			data: "&code=" + value,
+			data: "code=" + value,
 			success:
 				function(t) {
 					jQuery("#span_discount").html(t);

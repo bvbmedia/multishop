@@ -714,7 +714,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$subtotal_tax=($subtotal_tax+$product['products_tax_data']['total_tax']+$product['products_tax_data']['total_attributes_tax']);
 			$subtotalIncludingVatArray[]=$product['total_price'];
 			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_tax'];
-			$subtotalIncludingVatArray[]=$product['products_tax_data']['total_attributes_tax'];
+			$subtotalIncludingVatArray[]=$product['qty']*$product['products_tax_data']['total_attributes_tax'];
 			// GRAND TOTAL CALCULATIONS EOF
 			//hook to let other plugins further manipulate the replacers
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order']['printOrderDetailsTableItemPreProc'])) {
@@ -799,8 +799,8 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$markerArray['PRODUCTS_TOTAL_PRICE_LABEL']=$this->pi_getLL('total_price').':';
 		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT_LABEL']=$this->pi_getLL('total_price');
 		// rounding is problem with including vat shops.
-//		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,FALSE));
-		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
+		$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT'] = mslib_fe::amount2Cents(mslib_fe::taxDecimalCrop(array_sum($subtotalIncludingVatArray),2,FALSE));
+		//$markerArray['PRODUCTS_TOTAL_PRICE_INCLUDING_VAT']=mslib_fe::amount2Cents(array_sum($subtotalIncludingVatArray));
 		$markerArray['PRODUCTS_TOTAL_PRICE']=mslib_fe::amount2Cents($subtotal);
 		$subpartArray['###'.$key.'###']=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 		//SUBTOTAL_WRAPPER EOF
