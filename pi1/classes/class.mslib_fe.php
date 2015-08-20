@@ -2014,7 +2014,15 @@ class mslib_fe {
 			$mail->XMailer=' ';
 			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
 				$mail->IsSMTP();
-				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				if (strstr($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'],':')) {
+					// Hostname also has port number
+					$array=explode(':',$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server']);
+
+					$mail->Host = $array[0];
+					$mail->Port = $array[1];
+				} else {
+					$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				}
 				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
 					$mail->SMTPAuth=true;
 					if (!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])) {
@@ -2134,7 +2142,15 @@ class mslib_fe {
 			$mail->XMailer=' ';
 			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
 				$mail->IsSMTP();
-				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				if (strstr($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'],':')) {
+					// Hostname also has port number
+					$array=explode(':',$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server']);
+
+					$mail->Host = $array[0];
+					$mail->Port = $array[1];
+				} else {
+					$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				}
 				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
 					$mail->SMTPAuth=true;
 					if (!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])) {
