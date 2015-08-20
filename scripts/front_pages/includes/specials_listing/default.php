@@ -109,6 +109,8 @@ foreach ($products as $product) {
 	$markerArray['ITEM_PRODUCTS_SPECIAL_PRICE']=$item_products_specials_price;
 	$markerArray['ITEM_PRODUCTS_PRICE']=$item_products_price;
 	$markerArray['ADMIN_MENU']=$admin_menu;
+	$markerArray['ADMIN_ICONS']=$admin_menu;
+
 	$markerArray['ITEM_PRODUCT_DETAILS_PAGE_LINK_TITLE']=htmlspecialchars($this->pi_getLL('view')).' '.htmlspecialchars($product['products_name']);;
 	$markerArray['ITEM_LABEL_VIEW']=htmlspecialchars($this->pi_getLL('view'));
 	$markerArray['ITEM_PRODUCTS_EXTERNAL_LINK']=$product['products_url'];

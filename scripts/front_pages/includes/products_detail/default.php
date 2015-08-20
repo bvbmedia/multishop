@@ -258,7 +258,7 @@ if (!$product['products_id']) {
 	}
 	$output['products_quantity']=$product_qty;
 	$output['products_category']='Category: '.$product['categories_name'];
-	$output['products_relatives']=mslib_fe::getProductRelativesBox($product);
+
 	$output['customers_also_bought']=mslib_fe::getProductRelativesBox($product, 'customers_also_bought');
 	$output['PRODUCTS_SHORT_DESCRIPTION']=$product['products_shortdescription'];
 	$output['products_description']=$product['products_description'];
@@ -311,12 +311,18 @@ if (!$product['products_id']) {
 	$markerArray['###STOCK###']=$output['products_quantity'];
 	$markerArray['###PRODUCTS_NAME###']=$output['products_name'];
 
+	if (strstr($template,'###PRODUCTS_RELATIVES_BY_CATEGORY###')) {
+		$markerArray['###PRODUCTS_RELATIVES_BY_CATEGORY###']=mslib_fe::getProductRelativesBox($product,'categories_id');
+	} else {
+		$markerArray['###PRODUCTS_RELATIVES###']=mslib_fe::getProductRelativesBox($product);
+	}
+
 	$markerArray['###PRODUCTS_SHORT_DESCRIPTION###']=$output['PRODUCTS_SHORT_DESCRIPTION'];
 	$markerArray['###PRODUCTS_DESCRIPTION###']=$output['products_description'];
 	$markerArray['###PRODUCTS_EXTRA_DESCRIPTION###']=$output['products_extra_description'];
 	$markerArray['###PRODUCTS_CATEGORY###']=$output['products_category'];
 	$markerArray['###PRODUCTS_ATTRIBUTES###']=$output['product_attributes'];
-	$markerArray['###PRODUCTS_RELATIVES###']=$output['products_relatives'];
+
 	$markerArray['###PRODUCTS_DELIVERY_TIME###']=$product['delivery_time'];
 	$markerArray['###PRODUCTS_MODEL###']=$product['products_model'];
 	$markerArray['###PRODUCTS_IMAGE###']=$output['products_image'];
