@@ -73,6 +73,21 @@ if ($erno or $show_shipping_payment_method) {
 			} else {
 				$tr_type='even';
 			}
+			// custom hook that can be controlled by third-party plugin
+			$payment_method_description = '';
+			if (!empty($item['description'])) {
+				$payment_method_description = '<div class="description">' . $item['description'] . '</div>';
+			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepPaymentgMethodSelectionHook'])) {
+				$params=array(
+						'shipping_method'=>&$shipping_method,
+						'item'=>&$item,
+						'payment_method_description'=>&$payment_method_description
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepPaymentgMethodSelectionHook'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$count++;
 			// costs
 			$price_wrap='';
@@ -92,9 +107,7 @@ if ($erno or $show_shipping_payment_method) {
 				$content.=$price_wrap;
 			}
 			$content.='<input name="payment_method" id="payment_method_'.$item['id'].'" type="radio" value="'.htmlspecialchars($item['id']).'" '.((($this->get['tx_multishop_pi1']['previous_checkout_section']<>current($stepCodes) and $count==1) or $user['payment_method']==$item['code']) ? 'checked' : '').' /><strong class="method_name">'.$item['name'].'</strong>';
-			if ($item['description']) {
-				$content.='<span class="description">'.$item['description'].'</span>';
-			}
+			$content.=$payment_method_description;
 			$content.='</div></label>';
 			$content.='</li>';
 		}
@@ -112,10 +125,15 @@ if ($erno or $show_shipping_payment_method) {
 		foreach ($shipping_methods as $code=>$item) {
 			$shipping_method=mslib_fe::getShippingMethod($item['id'], 's.id', $cart['user']['countries_id']);
 			// custom hook that can be controlled by third-party plugin
+			$shipping_method_description = '';
+			if (!empty($item['description'])) {
+				$shipping_method_description = '<div class="description">' . $item['description'] . '</div>';
+			}
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepShippingMethodSelectionHook'])) {
 				$params=array(
 					'shipping_method'=>&$shipping_method,
 					'item'=>&$item,
+					'shipping_method_description'=>&$shipping_method_description
 				);
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/checkout/multistep/checkout_shipping_payment_method']['checkoutMultistepShippingMethodSelectionHook'] as $funcRef) {
 					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -135,9 +153,7 @@ if ($erno or $show_shipping_payment_method) {
 				$content.=$price_wrap;
 			}
 			$content.='<input name="shipping_method" id="shipping_method_'.$item['id'].'" type="radio" value="'.htmlspecialchars($item['id']).'" '.(($this->post['tx_multishop_pi1']['previous_checkout_section']<>current($stepCodes) and $count==1) ? 'checked' : '').' /><strong class="method_name">'.$item['name'].'</strong>';
-			if ($item['description']) {
-				$content.='<span class="description">'.$item['description'].'</span>';
-			}
+			$content.=$shipping_method_description;
 			$content.='</div></label>';
 			$content.='</li>';
 		}
