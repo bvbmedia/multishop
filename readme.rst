@@ -1,24 +1,27 @@
+===============
+Multishop
+===============
+
 Multishop is the e-commerce plugin for TYPO3.
 
-It makes use of of jQuery 2. For optimal results install it on a webserver that uses PHP 5.4.X or higher and TYPO3 6.2.X LTS.
+Download official version from TYPO3.org
+=====
 
-The latest version can be downloaded from Atlassian Bitbucket:
-https://bitbucket.org/bvbmedia/multishop
+`Multishop <http://typo3.org/extensions/repository/view/multishop>`_
 
-Are you curious about what Multishop can do for you? On the following sites you can find live shops that are running on Multishop:
-http://www.typo3webshop.com/
-https://www.typo3multishop.com/live-shops/
+Installation
+============
 
-Do not forget to like us on Facebook:
-https://www.facebook.com/typo3multishop
-https://www.facebook.com/bvbmedianl
+Simply install the plugin in your TYPO3 installation.
 
-For the latest news and updates check:
-https://www.typo3multishop.com
-https://www.typo3multishop.com/roadmap/
+Usage
+=====
 
-JQUERY NOTICE
-Multishop 3 now requires jQuery 2. Also enable the jQuery module: Migrate.
+After the Plugin is installed the shop must be configured. How you can do this can be read typo3.org.
+
+jQuery notice
+=====
+Multishop 3 requires jQuery 2. Also enable the jQuery module: Migrate.
 
 Login to your TYPO3 backend:
 
@@ -30,17 +33,28 @@ jQuery UI Version - typo.jQueryUiVersion: 1.10.x
 jQuery TOOLS Version - typo.jQueryTOOLSVersion: 1.2.x
 
 TYPO3 MULTISHOP DEMO PACKAGE
+=====
 If you have difficulties with configuring Multishop you could download our demo package (which is configured on TYPO3 6.2.3 with Bootstrap 3). You can download it here:
 https://www.typo3multishop.com/download/
 
 Steps to configure:
+
 - Extract the file to the vhost folder (i.e. /var/www/domain.com/web/).
 - Import the file database.sql to your database and remove it from the server.
 - Adjust the MySQL credentials (host, database, username and password) in the file: typo3conf/LocalConfiguration.php
 - Login to the TYPO3 backend (and also in front-end as fe_user) with the following credentials:
-Username: typo3mslabAdmin
-Password: testMultishop123!
+-- Username: typo3mslabAdmin
+-- Password: testMultishop123!
 - Do not forget to change the password!
 
 
+Credits
+=====
+
+This Plugin is created by `BVB Media <https://www.bvbmedia.com/>`_.
+
+More information
+=====
+
+`TYPO3 Multishop <https://www.typo3multishop.com/>`_
 

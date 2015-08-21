@@ -2069,8 +2069,8 @@
             <label index="invoice_date">Factuurdatum</label>
             <label index="invoice_number">Factuurnummer</label>
             <label index="ip_address">IP adres</label>
-            <label index="job_title">naam functie</label>
-            <label index="keyword">zoekwoord</label>
+            <label index="job_title">Naam functie</label>
+            <label index="keyword">Zoekwoord</label>
             <label index="lang">nl</label>
             <label index="language">Taal</label>
             <label index="last">laatste</label>
@@ -2347,7 +2347,7 @@
             <label index="track_and_trace_code">Track en Trace Code</label>
             <label index="turn_over">Omzet</label>
             <label index="turn_over_this_year">Omzet (dit jaar)</label>
-            <label index="type_your_keyword_here">type zoekwoord</label>
+            <label index="type_your_keyword_here">typ zoekwoord</label>
             <label index="unix_file">unix bestand</label>
             <label index="unlimited">onbeperkt</label>
             <label index="unpaid">Niet betaald</label>
