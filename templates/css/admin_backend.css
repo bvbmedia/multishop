@@ -512,3 +512,10 @@ hr { margin-top:15px; margin-bottom:15px; }
 
 .fa-stack .fa-circle-cart-plus { color: #337ab7; }
 .fa-stack .fa-circle-phone { color: orange; }
+
+.table-borderless > thead > tr > th,
+.table-borderless > tbody > tr > th,
+.table-borderless > tfoot > tr > th,
+.table-borderless > thead > tr > td,
+.table-borderless > tbody > tr > td,
+.table-borderless > tfoot > tr > td { border-top:none; }
