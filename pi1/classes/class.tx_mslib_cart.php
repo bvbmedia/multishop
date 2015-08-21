@@ -1030,6 +1030,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$grand_total['payment_tax']=0;
 			$tax_separation[($orders_tax['shipping_total_tax_rate']*100)]['shipping_tax']=0;
 			$tax_separation[($orders_tax['payment_total_tax_rate']*100)]['payment_tax']=0;
+			$address['shipping_method_costs']=mslib_fe::taxDecimalCrop($address['shipping_method_costs'], 2, false);
+			$address['payment_method_costs']=mslib_fe::taxDecimalCrop($address['payment_method_costs'], 2, false);
 		}
 		// add shipping & payment costs
 		if ($address['shipping_method_costs']) {
