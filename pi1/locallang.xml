@@ -2069,8 +2069,8 @@
             <label index="invoice_date">Factuurdatum</label>
             <label index="invoice_number">Factuurnummer</label>
             <label index="ip_address">IP adres</label>
-            <label index="job_title">naam functie</label>
-            <label index="keyword">zoekwoord</label>
+            <label index="job_title">Naam functie</label>
+            <label index="keyword">Zoekwoord</label>
             <label index="lang">nl</label>
             <label index="language">Taal</label>
             <label index="last">laatste</label>
