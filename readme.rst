@@ -7,7 +7,7 @@ Multishop is the e-commerce plugin for TYPO3.
 Download official version from TYPO3.org
 =====
 
-`Multishop PayPal <http://typo3.org/extensions/repository/view/multishop>`_
+`Multishop <http://typo3.org/extensions/repository/view/multishop>`_
 
 Installation
 ============
