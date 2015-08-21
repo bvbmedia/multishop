@@ -38,6 +38,7 @@ If you have difficulties with configuring Multishop you could download our demo 
 https://www.typo3multishop.com/download/
 
 Steps to configure:
+
 - Extract the file to the vhost folder (i.e. /var/www/domain.com/web/).
 - Import the file database.sql to your database and remove it from the server.
 - Adjust the MySQL credentials (host, database, username and password) in the file: typo3conf/LocalConfiguration.php
