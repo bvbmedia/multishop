@@ -56,7 +56,5 @@ This Plugin is created by `BVB Media <https://www.bvbmedia.com/>`_.
 More information
 =====
 
-`PayPal <https://www.paypal.com/>`_
-
 `TYPO3 Multishop <https://www.typo3multishop.com/>`_
 
