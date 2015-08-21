@@ -33,9 +33,11 @@ foreach ($products as $product) {
 			$markerArray['PRODUCTS_IMAGE_300']='<img src="'.mslib_befe::getImagePath($product['products_image'], 'products', '300').'">';
 		} else {
 			$output['image']='<div class="no_image"></div>';
+			$markerArray['ITEM_PRODUCTS_IMAGE']=$output['image'];
 			$markerArray['ITEM_PRODUCTS_IMAGE_100']=$output['image'];
 			$markerArray['ITEM_PRODUCTS_IMAGE_200']=$output['image'];
 			$markerArray['ITEM_PRODUCTS_IMAGE_300']=$output['image'];
+			$markerArray['PRODUCTS_IMAGE']=$output['image'];
 			$markerArray['PRODUCTS_IMAGE_100']=$output['image'];
 			$markerArray['PRODUCTS_IMAGE_200']=$output['image'];
 			$markerArray['PRODUCTS_IMAGE_300']=$output['image'];
@@ -56,6 +58,12 @@ foreach ($products as $product) {
 			}
 			// get all cats to generate multilevel fake url eof
 		}
+		$admin_menu='';
+		if ($this->ADMIN_USER) {
+			$admin_menu='<div class="admin_menu"><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_product&pid='.$product['products_id'].'&action=edit_product', 1).'" class="admin_menu_edit"><i class="fa fa-pencil"></i></a><a href="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=delete_product&pid='.$product['products_id'].'&action=delete_product', 1).'" class="admin_menu_remove" title="Remove"><i class="fa fa-trash-o"></i></a></div>';
+		}
+		$markerArray['ADMIN_MENU']=$admin_menu;
+		$markerArray['ADMIN_ICONS']=$admin_menu;
 		$output['link']=mslib_fe::typolink($this->conf['products_detail_page_pid'], '&'.$where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
 		$final_price=mslib_fe::final_products_price($product);
 		if (!$this->ms['MODULES']['DB_PRICES_INCLUDE_VAT'] and ($product['tax_rate'] and $this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'])) {

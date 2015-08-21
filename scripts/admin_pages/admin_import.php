@@ -266,11 +266,11 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 // custom hook that can be controlled by third-party plugin eof
 $this->ms['upload_productfeed_form'].='<div class="extra_parameters"><hr>';
 if (count($importParserTemplateTypes)) {
-	$this->ms['upload_productfeed_form'].=$this->pi_getLL('datafeed_parser_template').': <select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>';
+	$this->ms['upload_productfeed_form'].='<div class="form-group"><label class="control-label col-md-2">'.$this->pi_getLL('datafeed_parser_template').':</label><div class="col-md-10"><select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>';
 	foreach ($importParserTemplateTypes as $importParserTemplateType) {
 		$this->ms['upload_productfeed_form'].='<option value="'.$importParserTemplateType['key'].'">'.$importParserTemplateType['label'].'</option>';
 	}
-	$this->ms['upload_productfeed_form'].='</select><br />';
+	$this->ms['upload_productfeed_form'].='</select></div></div>';
 }
 $this->ms['upload_productfeed_form'].='<div class="form-group">
   <label class="control-label col-md-2">'.ucfirst($this->pi_getLL('format')).':</label>
@@ -1013,7 +1013,7 @@ if ($this->post['action']=='category-insert') {
 					$params=array(
 						'parser_template'=>&$this->post['parser_template'],
 						'prefix_source_name'=>$this->post['prefix_source_name'],
-						'str'=>$str,
+						'str'=>&$str,
 						'rows'=>&$rows,
 						'file_location'=>&$file,
 						'table_cols'=>&$table_cols,
@@ -1341,7 +1341,6 @@ if ($this->post['action']=='category-insert') {
 												$option_value=$option_value2[0];
 												$option_price=str_replace(",", ".", $option_value2[1]);
 											} else {
-												$internal_count++;
 												$option_price=0;
 												if ($tmp[$internal_count]=='$key') {
 													// sometimes the option name is inside the field value
@@ -1349,7 +1348,9 @@ if ($this->post['action']=='category-insert') {
 													// we can dynamically convert this by defining the aux field as: $key|#
 													// so we use the first value (Option_name) as key
 													$key=$option_value;
-												} elseif ($tmp[$internal_count]=='$price') {
+													$option_value='';
+												}
+												if ($tmp[$internal_count]=='$price') {
 													// sometimes the option name is inside the field value
 													// example field value: Option value#price
 													// we can dynamically convert this by defining the aux field as: FORMAAT|#|;|$value|$price
@@ -1357,6 +1358,7 @@ if ($this->post['action']=='category-insert') {
 													// so we use the first value (Option_name) as key
 													$option_price=$option_value;
 												}
+												$internal_count++;
 												if ($internal_count==$total) {
 													$internal_count=0;
 												}

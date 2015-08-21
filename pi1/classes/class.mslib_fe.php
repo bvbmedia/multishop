@@ -296,6 +296,22 @@ class mslib_fe {
 			unset($having);
 		}
 		$offset=0;
+		// custom hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'])) {
+			$params=array(
+				'filter'=>&$filter,
+				'offset'=>&$offset,
+				'limit'=>&$limit,
+				'orderby'=>&$orderby,
+				'having'=>&$having,
+				'select'=>&$select,
+				'where'=>&$where,
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/products_relatives.php']['productsRelativesQueryPreHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom hook that can be controlled by third-party plugin eof
 		$pageset=mslib_fe::getProductsPageSet($filter, $offset, $limit, $orderby, $having, $select, $where, 0, array(), array(), 'products_relatives');
 		$products=$pageset['products'];
 		if ($pageset['total_rows']>0) {
@@ -1998,7 +2014,15 @@ class mslib_fe {
 			$mail->XMailer=' ';
 			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
 				$mail->IsSMTP();
-				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				if (strstr($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'],':')) {
+					// Hostname also has port number
+					$array=explode(':',$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server']);
+
+					$mail->Host = $array[0];
+					$mail->Port = $array[1];
+				} else {
+					$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				}
 				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
 					$mail->SMTPAuth=true;
 					if (!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])) {
@@ -2118,7 +2142,15 @@ class mslib_fe {
 			$mail->XMailer=' ';
 			if ($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport']=='smtp') {
 				$mail->IsSMTP();
-				$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				if (strstr($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'],':')) {
+					// Hostname also has port number
+					$array=explode(':',$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server']);
+
+					$mail->Host = $array[0];
+					$mail->Port = $array[1];
+				} else {
+					$mail->Host=$GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_server'];
+				}
 				if (isset($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_username'])) {
 					$mail->SMTPAuth=true;
 					if (!empty($GLOBALS['TYPO3_CONF_VARS']['MAIL']['transport_smtp_encrypt'])) {
