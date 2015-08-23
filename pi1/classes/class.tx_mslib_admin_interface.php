@@ -268,6 +268,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 								$row[$col]='';
 							}
 							break;
+						case 'timestamp_to_day_date_time':
+							if (is_numeric($row[$col]) && $row[$col]>0) {
+								$row[$col]=strftime("%a. %x<br/>%X", $row[$col]);
+							} else {
+								$row[$col]='';
+							}
+							break;
 						case 'timestamp_to_date':
 							if (is_numeric($row[$col]) && $row[$col]>0) {
 								$row[$col]=strftime("%x", $row[$col]);
@@ -334,7 +341,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						foreach ($row as $tmpCol=>$tmpVal) {
 							$valArray['href']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['href']);
 						}
-						$adjustedValue='<a href="'.$valArray['href'].'">'.$adjustedValue.'</a>';
+						$adjustedValue='<a href="'.$valArray['href'].'"'.($valArray['href_target']?' target="'.$valArray['href_target'].'""':'').'>'.$adjustedValue.'</a>';
 					}
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['tableColumnsPreProc'])) {
 						$conf=array(
