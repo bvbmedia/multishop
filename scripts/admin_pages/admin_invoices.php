@@ -3,6 +3,10 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content='';
+if ($this->post['tx_multishop_pi1']['action']) {
+	$this->get['tx_multishop_pi1']['action']=$this->post['tx_multishop_pi1']['action'];
+	$this->get['selected_invoices']=$this->post['selected_invoices'];
+}
 switch ($this->get['tx_multishop_pi1']['action']) {
 	case 'mail_invoices':
 		// send invoices by mail
@@ -386,6 +390,8 @@ if ($pageset['total_rows']>0) {
 $subpartArray=array();
 $subpartArray['###PAGE_ID###']=$this->showCatalogFromPage;
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
+
+
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->get['skeyword'] ? $this->get['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_for');
@@ -415,6 +421,7 @@ $subpartArray['###ADMIN_LABEL_TABS_INVOICES###']=$this->pi_getLL('admin_invoices
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_sb;
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
+
 //
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';

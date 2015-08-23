@@ -48,6 +48,7 @@ foreach ($invoices as $invoice) {
 	$markerArray=array();
 	$markerArray['INVOICE_CTR']=$cb_ctr;
 	$markerArray['INVOICES_URL']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']);
+	$markerArray['INVOICES_INTERNAL_ID']=$invoice['id'];
 	$markerArray['INVOICES_ID']=$invoice['invoice_id'];
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
 	$markerArray['MASTER_SHOP']=$master_shop_col;
@@ -140,6 +141,11 @@ $subpartArray['###FOOTER_INVOICES_PAID_STATUS###']=$this->pi_getLL('admin_paid')
 $subpartArray['###FOOTER_INVOICES_ACTION###']=$this->pi_getLL('action');
 $subpartArray['###CUSTOM_MARKER_1_HEADER###']='';
 $subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
+$subpartArray['###SHOP_PID2###']=$this->shop_pid;
+$subpartArray['###FORM_POST_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_invoices');
+
+
+
 // custom page hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplPreProc'])) {
 	$params=array(
