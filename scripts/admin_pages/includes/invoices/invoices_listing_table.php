@@ -53,13 +53,14 @@ foreach ($invoices as $invoice) {
 	$markerArray['INVOICES_ORDER_ID']=$invoice['orders_id'];
 	$markerArray['MASTER_SHOP']=$master_shop_col;
 	$markerArray['INVOICES_CUSTOMER_NAME']=$link_name;
-	$markerArray['INVOICES_ORDER_DATE']=strftime("%a.<br/>%x", $invoice['crdate']);
+	$markerArray['INVOICES_ORDER_DATE']=strftime("%a. %x", $invoice['crdate']);
 	$markerArray['INVOICES_PAYMENT_METHOD']=$invoice['payment_method_label'];
 	$markerArray['INVOICES_PAYMENT_CONDITION']=$invoice['payment_condition'];
 	$markerArray['INVOICES_AMOUNT']=mslib_fe::amount2Cents(($invoice['reversal_invoice'] ? '-' : '').$invoice['amount'], 0);
 	$markerArray['INVOICES_DATE_LAST_SENT']=($invoice['date_mail_last_sent']>0 ? strftime("%a.<br/>%x", $invoice['date_mail_last_sent']) : '');
 	$markerArray['INVOICES_PAID_STATUS']=$paid_status;
 	$markerArray['INVOICES_ACTION']=$action_button;
+	$markerArray['CUSTOM_MARKER_0_BODY']='';
 	$markerArray['CUSTOM_MARKER_1_BODY']='';
 	// custom page hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/invoices/invoices_listing_table.php']['adminInvoicesListingTmplIteratorPreProc'])) {
@@ -139,6 +140,8 @@ $subpartArray['###FOOTER_INVOICES_AMOUNT###']=mslib_fe::amount2Cents($totalAmoun
 $subpartArray['###FOOTER_INVOICES_DATE_LAST_SENT###']=$this->pi_getLL('date_last_sent');
 $subpartArray['###FOOTER_INVOICES_PAID_STATUS###']=$this->pi_getLL('admin_paid');
 $subpartArray['###FOOTER_INVOICES_ACTION###']=$this->pi_getLL('action');
+$subpartArray['###CUSTOM_MARKER_0_HEADER###']='';
+$subpartArray['###CUSTOM_MARKER_0_FOOTER###']='';
 $subpartArray['###CUSTOM_MARKER_1_HEADER###']='';
 $subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
 $subpartArray['###SHOP_PID2###']=$this->shop_pid;
