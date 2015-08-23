@@ -4038,7 +4038,7 @@ if ($this->post) {
 		$subpartArray['###LABEL_PERCENTAGE_SELECTBOX###']=$this->pi_getLL('admin_label_or');
 		$subpartArray['###PERCENTAGE_SELECTBOX###']=$special_price_percentage_value_selectbox;
 		//
-		$params['subpartArray']['###INPUT_OLD_LAYERED_CATEGORY_INPUT###']='';
+		$subpartArray['###INPUT_OLD_LAYERED_CATEGORY_INPUT###']='';
 		//
 		// other shops product info eol
 		// plugin marker place holder
