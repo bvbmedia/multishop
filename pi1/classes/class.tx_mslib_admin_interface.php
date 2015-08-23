@@ -217,7 +217,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
 			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
-				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
+				$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
 			}
 			$tableContent.='</thead></tr><tbody>';
 			$summarize=array();
@@ -350,7 +350,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
 						}
 					}
-					$tableContent.='<td'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
+					$tableContent.='<td'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
 				}
 				/*
 				$tableContent.='
@@ -374,7 +374,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$row[$col]=$valArray['title'];
 						break;
 				}
-				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
+				$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 			}
 			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
