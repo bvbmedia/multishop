@@ -458,11 +458,7 @@ class mslib_fe {
 					$p2c_is_deepest='';
 				}
 				//$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\') AND p2c.is_deepest=1 AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
-				if (!$this->ms['MODULES']['ENABLE_LAYERED_PRODUCTS_DESCRIPTION']) {
-					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')'.$p2c_is_deepest;
-				} else {
-					$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')'.$p2c_is_deepest.' AND (pd.page_uid=\'0\' or pd.page_uid=\''.$this->showCatalogFromPage.'\')';
-				}
+				$where_clause.=' and (p.page_uid=\''.$this->showCatalogFromPage.'\' or p2c.page_uid=\''.$this->showCatalogFromPage.'\')'.$p2c_is_deepest;
 			}
 			$where_clause.=' and pd.language_id=\''.$this->sys_language_uid.'\' ';
 			if (is_array($where) and count($where)>0) {
@@ -6087,7 +6083,7 @@ class mslib_fe {
 			}
 			// check tt_address
 			if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
-				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."'";
+				$sql_tt_address="select * from tt_address where uid='".$this->conf['tt_address_record_id_store']."' and tx_multishop_customer_id=0 and page_uid='".$this->showCatalogFromPage."' and pid='".$this->conf['fe_customer_pid']."' and tx_multishop_address_type='store'";
 				$qry_tt_address=$GLOBALS['TYPO3_DB']->sql_query($sql_tt_address);
 				if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry_tt_address)>0) {
 					$store_tt_address_id=mslib_fe::createStoreTTAddress();
@@ -6145,7 +6141,7 @@ class mslib_fe {
 	}
 	// checking if the required extensions are loaded eof
 	function createStoreTTAddress() {
-		$str="select uid from tt_address where tx_multishop_address_type='store' and page_uid=0";
+		$str="select uid from tt_address where tx_multishop_address_type='store' and pid='".$this->conf['fe_customer_pid']."' and tx_multishop_customer_id='0' and tx_multishop_default='0'";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		if (!$GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
 			$default_iso_nr=276; // germany
