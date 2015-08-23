@@ -16,12 +16,13 @@
 </script>
 
 <div class="panel panel-default">
-<div class="panel-heading"><h3>###ADMIN_LABEL_TABS_ORDERS###</h3></div>
-<div class="panel-body">
-        <form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="post">
-            <div id="Orders_By_Date">
+    <div class="panel-heading"><h3>###ADMIN_LABEL_TABS_ORDERS###</h3></div>
+    <div class="panel-body">
+        <div id="Orders_By_Date">
+            <form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="get">
                 <div id="search-orders" class="well">
                     <input name="id" type="hidden" value="###SHOP_PID###" />
+                    <input name="type" type="hidden" value="2003" />
                     <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
                     <div class="row formfield-container-wrapper">
                         <div class="col-sm-4 formfield-wrapper">
@@ -88,7 +89,11 @@
                         </div>
                     </div>
                 </div>
-                <!-- ###RESULTS### begin -->
+            </form>
+            <!-- ###RESULTS### begin -->
+            <form action="###FORM_SEARCH_ACTION_URL2###" name="orders_post" id="orders_post" method="post">
+                <input name="id" type="hidden" value="###SHOP_PID2###" />
+                <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
                 <div class="table-responsive">
                     <table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminOrdersListing" class="table table-striped table-bordered">
                         <thead>
@@ -111,7 +116,7 @@
                             <th class="cell_status">###LABEL_HEADER_STATUS###</th>
                             <th align="right" width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_MODIFIED###">###LABEL_HEADER_MODIFIED###</a></th>
                             <th width="50" class="cell_paid">###LABEL_HEADER_PAID###</th>
-							###PLUGIN_EXTRA_HEADER###
+                            ###PLUGIN_EXTRA_HEADER###
                             ###EXTRA_RIGHT_HEADER###
                         </tr>
                         </thead>
@@ -136,7 +141,7 @@
                             <td align="left" nowrap>###ORDER_STATUS###</td>
                             <td align="right" nowrap>###ORDER_LAST_MODIFIED###</td>
                             <td align="center" nowrap>###ORDER_PAID_STATUS###</td>
-							###PLUGIN_EXTRA_CONTENT###
+                            ###PLUGIN_EXTRA_CONTENT###
                             ###PRINT_ORDER_LIST_BUTTON###
 
                         </tr>
@@ -157,7 +162,7 @@
                             <th class="cell_status">###LABEL_FOOTER_STATUS###</th>
                             <th width="110" class="cell_date"><a href="###FOOTER_SORTBY_LINK_MODIFIED###">###LABEL_FOOTER_MODIFIED###</a></th>
                             <th width="50" class="cell_paid">###LABEL_FOOTER_PAID###</th>
-							###PLUGIN_EXTRA_FOOTER###
+                            ###PLUGIN_EXTRA_FOOTER###
                             ###EXTRA_RIGHT_FOOTER###
                         </tr>
                         </tfoot>
@@ -166,12 +171,13 @@
                 <div id="msAdminOrdersListingActionForm">
                     ###FORM_FIELDS_LISTING_ACTION_BLOCK###
                 </div>
-                ###PAGINATION###
-                <!-- ###RESULTS### end -->
-
-                <!-- ###NORESULTS### begin -->
-                ###LABEL_NO_RESULTS###
-                <!-- ###NORESULTS### end -->
-            </div>
-        </form>
+            </form>
+            ###PAGINATION###
+            <!-- ###RESULTS### end -->
+            <!-- ###NORESULTS### begin -->
+            ###LABEL_NO_RESULTS###
+            <!-- ###NORESULTS### end -->
+        </div>
+    </div>
+</div>
 <!-- ###TEMPLATE### end -->
