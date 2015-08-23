@@ -253,7 +253,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$invoice_id='';
 					$invoice_link='';
 					if (is_array($invoice)) {
-						$invoice_id=$invoice['invoice_id'];
+							$invoice_id=$invoice['invoice_id'];
 						$invoice_link='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'">'.$invoice['invoice_id'].'</a>';
 					}
 					$array1[]='###INVOICE_NUMBER###';
@@ -379,7 +379,6 @@ if ($this->cookie['limit']) {
 $this->ms['MODULES']['ORDERS_LISTING_LIMIT']=$this->post['limit'];
 $option_search=array(
 	"orders_id"=>$this->pi_getLL('admin_order_id'),
-	"invoice"=>$this->pi_getLL('admin_invoice_number'),
 	"customer_id"=>$this->pi_getLL('admin_customer_id'),
 	"billing_email"=>$this->pi_getLL('admin_customer_email'),
 	"delivery_name"=>$this->pi_getLL('admin_customer_name'),
@@ -390,7 +389,7 @@ $option_search=array(
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	//"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
 	//"payment_method"=>$this->pi_getLL('admin_payment_method'),
-	"order_products"=>$this->pi_getLL('admin_order_products'),
+	"order_products"=>$this->pi_getLL('admin_ordered_product'),
 	/*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
 	"billing_telephone"=>$this->pi_getLL('telephone')
 );
@@ -466,7 +465,6 @@ if ($this->post['skeyword']) {
 		case 'all':
 			$option_fields=$option_search;
 			unset($option_fields['all']);
-			unset($option_fields['invoice']);
 			unset($option_fields['crdate']);
 			unset($option_fields['delivery_name']);
 			//print_r($option_fields);
@@ -490,9 +488,6 @@ if ($this->post['skeyword']) {
 			break;
 		case 'orders_id':
 			$filter[]=" o.orders_id='".addslashes($this->post['skeyword'])."'";
-			break;
-		case 'invoice':
-			$filter[]=" invoice_id LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'billing_email':
 			$filter[]=" billing_email LIKE '%".addslashes($this->post['skeyword'])."%'";

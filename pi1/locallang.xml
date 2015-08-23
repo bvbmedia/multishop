@@ -1238,6 +1238,7 @@
             <label index="companies">Companies</label>
             <label index="add_attribute">Add attribute</label>
             <label index="this_field_is_required">This field is required</label>
+            <label index="admin_ordered_product">Ordered products</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2469,6 +2470,7 @@
             <label index="companies">Bedrijven</label>
             <label index="add_attribute">Attribuut toevoegen</label>
             <label index="this_field_is_required">Dit veld is verplicht</label>
+            <label index="admin_ordered_product">Besteld product</label>
         </languageKey>
     </data>
 </T3locallang>
