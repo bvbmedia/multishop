@@ -22,6 +22,7 @@ if ($this->get) {
 		$this->post[$get_idx]=$get_val;
 	}
 }
+$postErno=array();
 switch ($this->post['tx_multishop_pi1']['action']) {
 	case 'export_selected_order_to_xls':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
@@ -68,15 +69,34 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			foreach ($this->post['selected_orders'] as $orders_id) {
 				if (is_numeric($orders_id)) {
-					$updateArray=array();
-					$updateArray['deleted']=1;
-					$updateArray['orders_last_modified']=time();
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$order=mslib_fe::getOrder($orders_id);
+					if ($order['orders_id']) {
+						$updateArray=array();
+						$updateArray['deleted']=1;
+						$updateArray['orders_last_modified']=time();
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
+						if(!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+							$postErno[]=array(
+								'status'=>'error',
+								'message'=>'Failed to delete order: '.$orders_id
+							);
+						} else {
+							$postErno[]=array(
+								'status'=>'info',
+								'message'=>'Deleted order: '.$orders_id
+							);
+						}
+					} else {
+						$postErno[]=array(
+							'status'=>'error',
+							'message'=>'Failed to delete order: '.$orders_id
+						);
+					}
 				}
 			}
 		}
 		break;
+	case 'mail_selected_orders_to_customer':
 	case 'mail_selected_orders_to_merchant':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			foreach ($this->post['selected_orders'] as $orders_id) {
@@ -87,24 +107,37 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 						if ($order['paid']) {
 							$mail_template='email_order_paid_letter';
 						}
-						mslib_fe::mailOrder($orders_id, 0, $this->ms['MODULES']['STORE_EMAIL'], $mail_template);
-					}
-				}
-			}
-		}
-		break;
-	case 'mail_selected_orders_to_customer':
-		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			foreach ($this->post['selected_orders'] as $orders_id) {
-				if (is_numeric($orders_id)) {
-					$order=mslib_fe::getOrder($orders_id);
-					if ($order['orders_id']) {
-						$mail_template='';
-						if ($order['paid']) {
-							$mail_template='email_order_paid_letter';
+						switch ($this->post['tx_multishop_pi1']['action']) {
+							case 'mail_selected_orders_to_customer':
+								// Empty to mail to the owner of the order
+								$mailTo='';
+								break;
+							case 'mail_selected_orders_to_merchant':
+								$mailTo=$this->ms['MODULES']['STORE_EMAIL'];
+								break;
 						}
-						mslib_fe::mailOrder($orders_id, 0, '', $mail_template);
+						if(mslib_fe::mailOrder($orders_id, 0, $mailTo, $mail_template)) {
+							$postErno[]=array(
+								'status'=>'info',
+								'message'=>'Order '.$orders_id.' has been mailed to: '.$order['billing_email']
+							);
+						} else {
+							$postErno[]=array(
+								'status'=>'error',
+								'message'=>'Failed to mail order '.$orders_id.' to: '.$order['billing_email']
+							);
+						}
+					} else {
+						$postErno[]=array(
+							'status'=>'error',
+							'message'=>'Failed to retrieve order: '.$orders_id
+						);
 					}
+				} else {
+					$postErno[]=array(
+						'status'=>'error',
+						'message'=>'Failed to retrieve order: '.$orders_id
+					);
 				}
 			}
 		}
@@ -348,6 +381,41 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 			}
 		}
 		break;
+}
+if (count($postErno)) {
+	$returnMarkup='
+	<div style="display:none" id="msAdminPostMessage">
+	<table class="table table-striped table-bordered">
+	<thead>
+	<tr>
+		<th class="text-center">Status</th>
+		<th>Message</th>
+	</tr>
+	</thead>
+	<tbody>
+	';
+	foreach ($postErno as $item) {
+		switch ($item['status']) {
+			case 'error':
+				$item['status']='<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+				break;
+			case 'info':
+				$item['status']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+				break;
+		}
+		$returnMarkup.='<tr><td class="text-center">'.$item['status'].'</td><td>'.$item['message'].'</td></tr>'."\n";
+	}
+	$returnMarkup.='</tbody></table></div>';
+	$content.=$returnMarkup;
+	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+	jQuery(document).ready(function ($) {
+		$.confirm({
+			title: \'\',
+			content: $(\'#msAdminPostMessage\').html()
+		});
+	});
+	</script>
+	';
 }
 // now parse all the objects in the tmpl file
 if ($this->conf['admin_orders_tmpl_path']) {
@@ -729,8 +797,6 @@ $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink($this->shop_
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 
-$subpartArray['###FORM_SEARCH_ACTION_URL2###']=$subpartArray['###FORM_SEARCH_ACTION_URL###'];
-$subpartArray['###SHOP_PID2###']=$subpartArray['###SHOP_PID###'];
 
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
