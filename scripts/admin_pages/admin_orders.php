@@ -22,6 +22,7 @@ if ($this->get) {
 		$this->post[$get_idx]=$get_val;
 	}
 }
+$postErno=array();
 switch ($this->post['tx_multishop_pi1']['action']) {
 	case 'export_selected_order_to_xls':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
@@ -68,15 +69,34 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			foreach ($this->post['selected_orders'] as $orders_id) {
 				if (is_numeric($orders_id)) {
-					$updateArray=array();
-					$updateArray['deleted']=1;
-					$updateArray['orders_last_modified']=time();
-					$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
-					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$order=mslib_fe::getOrder($orders_id);
+					if ($order['orders_id']) {
+						$updateArray=array();
+						$updateArray['deleted']=1;
+						$updateArray['orders_last_modified']=time();
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$orders_id.'\'', $updateArray);
+						if(!$res=$GLOBALS['TYPO3_DB']->sql_query($query)) {
+							$postErno[]=array(
+								'status'=>'error',
+								'message'=>'Failed to delete order: '.$orders_id
+							);
+						} else {
+							$postErno[]=array(
+								'status'=>'info',
+								'message'=>'Deleted order: '.$orders_id
+							);
+						}
+					} else {
+						$postErno[]=array(
+							'status'=>'error',
+							'message'=>'Failed to delete order: '.$orders_id
+						);
+					}
 				}
 			}
 		}
 		break;
+	case 'mail_selected_orders_to_customer':
 	case 'mail_selected_orders_to_merchant':
 		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
 			foreach ($this->post['selected_orders'] as $orders_id) {
@@ -87,24 +107,37 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 						if ($order['paid']) {
 							$mail_template='email_order_paid_letter';
 						}
-						mslib_fe::mailOrder($orders_id, 0, $this->ms['MODULES']['STORE_EMAIL'], $mail_template);
-					}
-				}
-			}
-		}
-		break;
-	case 'mail_selected_orders_to_customer':
-		if (is_array($this->post['selected_orders']) and count($this->post['selected_orders'])) {
-			foreach ($this->post['selected_orders'] as $orders_id) {
-				if (is_numeric($orders_id)) {
-					$order=mslib_fe::getOrder($orders_id);
-					if ($order['orders_id']) {
-						$mail_template='';
-						if ($order['paid']) {
-							$mail_template='email_order_paid_letter';
+						switch ($this->post['tx_multishop_pi1']['action']) {
+							case 'mail_selected_orders_to_customer':
+								// Empty to mail to the owner of the order
+								$mailTo='';
+								break;
+							case 'mail_selected_orders_to_merchant':
+								$mailTo=$this->ms['MODULES']['STORE_EMAIL'];
+								break;
 						}
-						mslib_fe::mailOrder($orders_id, 0, '', $mail_template);
+						if(mslib_fe::mailOrder($orders_id, 0, $mailTo, $mail_template)) {
+							$postErno[]=array(
+								'status'=>'info',
+								'message'=>'Order '.$orders_id.' has been mailed to: '.$order['billing_email']
+							);
+						} else {
+							$postErno[]=array(
+								'status'=>'error',
+								'message'=>'Failed to mail order '.$orders_id.' to: '.$order['billing_email']
+							);
+						}
+					} else {
+						$postErno[]=array(
+							'status'=>'error',
+							'message'=>'Failed to retrieve order: '.$orders_id
+						);
 					}
+				} else {
+					$postErno[]=array(
+						'status'=>'error',
+						'message'=>'Failed to retrieve order: '.$orders_id
+					);
 				}
 			}
 		}
@@ -253,7 +286,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$invoice_id='';
 					$invoice_link='';
 					if (is_array($invoice)) {
-						$invoice_id=$invoice['invoice_id'];
+							$invoice_id=$invoice['invoice_id'];
 						$invoice_link='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'">'.$invoice['invoice_id'].'</a>';
 					}
 					$array1[]='###INVOICE_NUMBER###';
@@ -349,6 +382,41 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		}
 		break;
 }
+if (count($postErno)) {
+	$returnMarkup='
+	<div style="display:none" id="msAdminPostMessage">
+	<table class="table table-striped table-bordered">
+	<thead>
+	<tr>
+		<th class="text-center">Status</th>
+		<th>Message</th>
+	</tr>
+	</thead>
+	<tbody>
+	';
+	foreach ($postErno as $item) {
+		switch ($item['status']) {
+			case 'error':
+				$item['status']='<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+				break;
+			case 'info':
+				$item['status']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+				break;
+		}
+		$returnMarkup.='<tr><td class="text-center">'.$item['status'].'</td><td>'.$item['message'].'</td></tr>'."\n";
+	}
+	$returnMarkup.='</tbody></table></div>';
+	$content.=$returnMarkup;
+	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+	jQuery(document).ready(function ($) {
+		$.confirm({
+			title: \'\',
+			content: $(\'#msAdminPostMessage\').html()
+		});
+	});
+	</script>
+	';
+}
 // now parse all the objects in the tmpl file
 if ($this->conf['admin_orders_tmpl_path']) {
 	$template=$this->cObj->fileResource($this->conf['admin_orders_tmpl_path']);
@@ -379,7 +447,6 @@ if ($this->cookie['limit']) {
 $this->ms['MODULES']['ORDERS_LISTING_LIMIT']=$this->post['limit'];
 $option_search=array(
 	"orders_id"=>$this->pi_getLL('admin_order_id'),
-	"invoice"=>$this->pi_getLL('admin_invoice_number'),
 	"customer_id"=>$this->pi_getLL('admin_customer_id'),
 	"billing_email"=>$this->pi_getLL('admin_customer_email'),
 	"delivery_name"=>$this->pi_getLL('admin_customer_name'),
@@ -390,7 +457,7 @@ $option_search=array(
 	"billing_company"=>$this->pi_getLL('admin_company'),
 	//"shipping_method"=>$this->pi_getLL('admin_shipping_method'),
 	//"payment_method"=>$this->pi_getLL('admin_payment_method'),
-	"order_products"=>$this->pi_getLL('admin_order_products'),
+	"order_products"=>$this->pi_getLL('admin_ordered_product'),
 	/*"billing_country"=>ucfirst(strtolower($this->pi_getLL('admin_countries'))),*/
 	"billing_telephone"=>$this->pi_getLL('telephone')
 );
@@ -466,7 +533,6 @@ if ($this->post['skeyword']) {
 		case 'all':
 			$option_fields=$option_search;
 			unset($option_fields['all']);
-			unset($option_fields['invoice']);
 			unset($option_fields['crdate']);
 			unset($option_fields['delivery_name']);
 			//print_r($option_fields);
@@ -490,9 +556,6 @@ if ($this->post['skeyword']) {
 			break;
 		case 'orders_id':
 			$filter[]=" o.orders_id='".addslashes($this->post['skeyword'])."'";
-			break;
-		case 'invoice':
-			$filter[]=" invoice_id LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'billing_email':
 			$filter[]=" billing_email LIKE '%".addslashes($this->post['skeyword'])."%'";
@@ -733,6 +796,8 @@ $subpartArray=array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
+
+
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_for');
@@ -762,9 +827,10 @@ $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs_orders');
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_selectbox;
+
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
-$content=''.$content.'';
+
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {

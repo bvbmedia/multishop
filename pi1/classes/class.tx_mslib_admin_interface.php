@@ -217,7 +217,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
 			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
-				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
+				$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').'>'.$valArray['title'].'</th>';
 			}
 			$tableContent.='</thead></tr><tbody>';
 			$summarize=array();
@@ -264,6 +264,13 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						case 'timestamp':
 							if (is_numeric($row[$col]) && $row[$col]>0) {
 								$row[$col]=strftime("%x %X", $row[$col]);
+							} else {
+								$row[$col]='';
+							}
+							break;
+						case 'timestamp_to_day_date_time':
+							if (is_numeric($row[$col]) && $row[$col]>0) {
+								$row[$col]=strftime("%a. %x<br/>%X", $row[$col]);
 							} else {
 								$row[$col]='';
 							}
@@ -334,7 +341,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						foreach ($row as $tmpCol=>$tmpVal) {
 							$valArray['href']=str_replace('###'.$tmpCol.'###', $row[$tmpCol], $valArray['href']);
 						}
-						$adjustedValue='<a href="'.$valArray['href'].'">'.$adjustedValue.'</a>';
+						$adjustedValue='<a href="'.$valArray['href'].'"'.($valArray['href_target']?' target="'.$valArray['href_target'].'""':'').'>'.$adjustedValue.'</a>';
 					}
 					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_admin_interface.php']['tableColumnsPreProc'])) {
 						$conf=array(
@@ -350,7 +357,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $conf, $that);
 						}
 					}
-					$tableContent.='<td'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
+					$tableContent.='<td'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
 				}
 				/*
 				$tableContent.='
@@ -374,7 +381,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						$row[$col]=$valArray['title'];
 						break;
 				}
-				$tableContent.='<th'.($valArray['align'] ? ' align="'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
+				$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 			}
 			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
@@ -467,7 +474,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
-			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 		}
 		if ($params['settings']['returnResultSetAsArray']) {
 			$array=array();

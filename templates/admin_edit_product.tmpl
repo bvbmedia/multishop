@@ -380,7 +380,6 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
     <li role="presentation"><a href="#product_attributes" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_ATTRIBUTES###</a></li>
     <li role="presentation"><a href="#product_relatives" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_RELATIVES###</a></li>
     <li role="presentation"><a href="#product_copy" aria-controls="profile" role="tab" data-toggle="tab">###LABEL_TABS_PRODUCT_COPY###</a></li>
-    ###LABEL_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###
     ###LABEL_EXTRA_PLUGIN_TABS###
 </ul>
 <div class="tab-content">
@@ -428,14 +427,14 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
             </div>
             <div id="msAdminTabLanguage###LANGUAGE_UID###" class="###PANEL_COLLAPSE_CLASS###">
                 <div class="panel-body">
-                    <div class="form-group" id="msEditProductInputName###LANGUAGE_UID###">
+                    <div class="form-group msEditProductInputName" id="msEditProductInputName###LANGUAGE_UID###">
                         <label for="products_name_###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_NAME###</label>
                         <div class="col-md-10">
                         <input type="text" class="form-control text" name="products_name[###LANGUAGE_UID###]" id="products_name_###LANGUAGE_UID###" value="###VALUE_PRODUCT_NAME###">
                         ###LOCAL_PRIMARY_PRODUCTS_CATEGORIES###
                         </div>
                     </div>
-                    <div class="form-group" id="msEditProductInputShortDesc###LANGUAGE_UID###">
+                    <div class="form-group msEditProductInputShortDesc" id="msEditProductInputShortDesc###LANGUAGE_UID###">
                         <label for="products_shortdescription###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_SHORT_DESCRIPTION###</label>
                         <div class="col-md-10">
                         <textarea name="products_shortdescription[###LANGUAGE_UID###]" ###TEXTAREA_SHORT_DESCRIPTION_PARAMS### id="products_shortdescription###LANGUAGE_UID###" rows="4" ###TEXTAREA_SHORT_DESCRIPTION_CLASS###>###VALUE_SHORT_DESCRIPTION###</textarea>
@@ -448,19 +447,19 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
                         </div>
                     </div>
                     ###DETAILS_TAB_CONTENT###
-                    <div class="form-group toggle_advanced_option" id="msEditProductInputExternalUrl###LANGUAGE_UID###">
+                    <div class="form-group toggle_advanced_option msEditProductInputExternalUrl" id="msEditProductInputExternalUrl###LANGUAGE_UID###">
                         <label for="products_url###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_PRODUCT_URL###</label>
                         <div class="col-md-10">
                         <input type="text" class="form-control text" name="products_url[###LANGUAGE_UID###]" id="products_url###LANGUAGE_UID###" value="###VALUE_PRODUCT_URL###">
                         </div>
                     </div>
-                    <div class="form-group" id="msEditProductInputDeliveryTime###LANGUAGE_UID###">
+                    <div class="form-group msEditProductInputDeliveryTime" id="msEditProductInputDeliveryTime###LANGUAGE_UID###">
                         <label for="delivery_time###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_DELIVERY_TIME###</label>
                         <div class="col-md-10">
                         <input type="text" class="form-control text" name="delivery_time[###LANGUAGE_UID###]" id="delivery_time###LANGUAGE_UID###" value="###VALUE_DELIVERY_TIME###">
                         </div>
                     </div>
-                    <div class="form-group toggle_advanced_option" id="msEditProductInputNegativeKeywords###LANGUAGE_UID###">
+                    <div class="form-group toggle_advanced_option msEditProductInputNegativeKeywords" id="msEditProductInputNegativeKeywords###LANGUAGE_UID###">
                         <label for="products_negative_keywords###LANGUAGE_UID###" class="col-md-2 control-label">###LABEL_NEGATIVE_KEYWORDS###</label>
                         <div class="col-md-10">
                         <textarea name="products_negative_keywords[###LANGUAGE_UID###]" id="products_negative_keywords###LANGUAGE_UID###" class="form-control expand20-100">###VALUE_NEGATIVE_KEYWORDS###</textarea>
@@ -561,7 +560,7 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
             <input type="text" name="products_date_added_visitor" class="form-control products_date_added" id="products_date_added_visitor" value="###VALUE_DATE_ADDED_VISUAL###">
             <input type="hidden" name="products_date_added" class="products_date_added" id="products_date_added" value="###VALUE_DATE_ADDED_SYS###">
             <p class="form-control-static"><strong>###LABEL_DATE_MODIFIED###</strong></p>
-            <span>###VALUE_DATE_MODIFIED###</span>
+            <p class="form-control-static">###VALUE_DATE_MODIFIED###</p>
         </div>
     </div>
     <div class="form-group" id="msEditProductInputModel">
@@ -697,7 +696,6 @@ $('.nav-tabs a').on('shown.bs.tab', function (e) {
 <div role="tabpanel" id="product_copy" class="tab-pane">
     ###INPUT_PRODUCT_COPY_BLOCK###
 </div>
-###CONTENT_CUSTOM_PRODUCT_DESCRIPTION_FOR_OTHER_SHOPS_TABS###
 ###CONTENT_EXTRA_PLUGIN_TABS###
 <hr>
 <div class="clearfix">

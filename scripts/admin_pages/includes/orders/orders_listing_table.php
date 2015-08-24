@@ -206,6 +206,9 @@ $query_string=mslib_fe::tep_get_all_get_params(array(
 	'clearcache'
 ));
 $subpartArray=array();
+$subpartArray['###FORM_POST_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
+$subpartArray['###SHOP_PID2###']=$this->shop_pid;
+
 $key='orders_id';
 if ($this->get['tx_multishop_pi1']['order_by']==$key) {
 	$final_order_link=$order_link;

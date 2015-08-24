@@ -893,6 +893,7 @@ switch ($_REQUEST['action']) {
 
 		$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
 		$markerArray['ADMIN_LABEL_DELIVERY_ADDRESS']=$this->pi_getLL('admin_label_delivery_address');
+
 		// customers related orders listings
 		$filter=array();
 		$from=array();
@@ -969,6 +970,17 @@ switch ($_REQUEST['action']) {
 		$customer_related_orders_listing.='</fieldset></div>';
 		$customer_related_orders_listing.='</div></div>';
 		$markerArray['CUSTOMER_RELATED_ORDERS_LISTING']=$customer_related_orders_listing;
+		// custom page hook that can be controlled by third-party plugin
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'])) {
+			$params=array(
+				'markerArray'=>&$markerArray,
+				'user'=>&$user
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		// custom page hook that can be controlled by third-party plugin eof
 		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
 		$subpartArray['###DETAILS_TAB###']='<li role="presentation"><a href="#view_customer" aria-controls="profile" role="tab" data-toggle="tab">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
 		$subpartArray['###DETAILS###']=$customer_details;

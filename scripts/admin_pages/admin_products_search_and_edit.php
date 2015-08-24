@@ -644,6 +644,12 @@ if ($pageset['total_rows']>0) {
 		$markerArray['CURRENCY1']=mslib_fe::currency();
 		$markerArray['CURRENCY2']=mslib_fe::currency();
 		$markerArray['CURRENCY3']=mslib_fe::currency();
+
+		$markerArray['SUFFIX_PRICE_EXCL_VAT']=$this->pi_getLL('excluding_vat');
+		$markerArray['SUFFIX_PRICE_INCL_VAT']=$this->pi_getLL('including_vat');
+		$markerArray['SUFFIX_SPECIAL_PRICE_EXCL_VAT']=$this->pi_getLL('excluding_vat');
+		$markerArray['SUFFIX_SPECIAL_PRICE_INCL_VAT']=$this->pi_getLL('including_vat');
+
 		$markerArray['VALUE_PRICE_EXCL_VAT']=htmlspecialchars($product_price_display);
 		$markerArray['VALUE_PRICE_INCL_VAT']=htmlspecialchars($product_price_display_incl);
 		$markerArray['VALUE_ORIGINAL_PRICE']=htmlspecialchars(round($rs['products_price'], 14));
