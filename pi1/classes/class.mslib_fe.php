@@ -7265,28 +7265,42 @@ class mslib_fe {
 				// check categories name if already exists or not
 				$foreign_catid=mslib_fe::getCategoryIdByName($cat['name'], $external_page_uid);
 				if (!$foreign_catid) {
+					$cat_data=mslib_fe::getCategoryData($cat['id'], $this->showCatalogFromPage);
+					//
+					$exclude_columns=array();
+					$exclude_columns[]='categories_id';
+					$exclude_columns[]='page_uid';
+					$exclude_columns[]='parent_id';
+					//
 					$insertArray=array();
-					$insertArray['custom_settings']='';
-					$insertArray['parent_id']=$prev_catid;
-					$insertArray['hide_in_menu']=0;
-					$insertArray['categories_url']='';
-					$insertArray['status']=1;
 					$insertArray['page_uid']=$external_page_uid;
+					$insertArray['parent_id']=$prev_catid;
+					foreach ($cat_data as $data_colname=>$data_colvalue) {
+						if (!in_array($data_colname, $exclude_columns)) {
+							$insertArray[$data_colname] = (!empty($data_colvalue) ? $data_colvalue : '');
+						}
+					}
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories', $insertArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					$new_catid=$GLOBALS['TYPO3_DB']->sql_insert_id();
 					$cats[$catidx]['id']=$new_catid;
 					// cat desc
 					$cat_info=mslib_fe::getCategoryDescription($cat['id'], $this->showCatalogFromPage);
+					//
+					$exclude_columns=array();
+					$exclude_columns[]='categories_id';
+					$exclude_columns[]='language_id';
+					$exclude_columns[]='categories_name';
+					//
 					$insertArray=array();
 					$insertArray['categories_id']=$new_catid;
 					$insertArray['language_id']=$this->sys_language_uid;
 					$insertArray['categories_name']=$local_catname;
-					$insertArray['meta_title']=(!$cat_info['meta_title'] ? '' : $cat_info['meta_title']);
-					$insertArray['meta_keywords']=(!$cat_info['meta_keywords'] ? '' : $cat_info['meta_keywords']);
-					$insertArray['meta_description']=(!$cat_info['meta_description'] ? '' : $cat_info['meta_description']);
-					$insertArray['content']=(!$cat_info['content'] ? '' : $cat_info['content']);
-					$insertArray['content_footer']=(!$cat_info['content_footer'] ? '' : $cat_info['content_footer']);
+					foreach ($cat_info as $desc_colname=>$desc_colvalue) {
+						if (!in_array($desc_colname, $exclude_columns)) {
+							$insertArray[$desc_colname] = (!empty($desc_colvalue) ? $desc_colvalue : '');
+						}
+					}
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_categories_description', $insertArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 				} else {
@@ -7321,6 +7335,29 @@ class mslib_fe {
 		}
 		return false;
 	}
+	function getCategoryData($categories_id, $page_uid) {
+		if (!is_numeric($categories_id)) {
+			return false;
+		}
+		if (!$page_uid) {
+			$page_uid=$this->showCatalogFromPage;
+		}
+		if (is_numeric($categories_id)) {
+			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('c.*', // SELECT ...
+					'tx_multishop_categories c', // FROM ...
+					'c.categories_id=\''.$categories_id.'\' and c.page_uid=\''.$page_uid.'\'', // WHERE...
+					'', // GROUP BY...
+					'', // ORDER BY...
+					'' // LIMIT ...
+			);
+			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+				return $row;
+			}
+		}
+	}
 	function getCategoryDescription($categories_id, $page_uid) {
 		if (!is_numeric($categories_id)) {
 			return false;
@@ -7330,9 +7367,9 @@ class mslib_fe {
 		}
 		if (is_numeric($categories_id)) {
 			//language_id=\''.$GLOBALS['TSFE']->sys_language_uid.'\'
-			$query=$GLOBALS['TYPO3_DB']->SELECTquery('cd.categories_name', // SELECT ...
+			$query=$GLOBALS['TYPO3_DB']->SELECTquery('cd.*', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'c.categories_id=\''.$categories_id.'\' and c.page_uid=\''.$page_uid.'\' and c.language_id=\''.$this->sys_language_uid.'\' and c.categories_id=cd.categories_id', // WHERE...
+				'c.categories_id=\''.$categories_id.'\' and c.page_uid=\''.$page_uid.'\' and cd.language_id=\''.$this->sys_language_uid.'\' and c.categories_id=cd.categories_id', // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
