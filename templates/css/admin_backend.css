@@ -384,7 +384,7 @@ hr { margin-top:15px; margin-bottom:15px; }
 .form-control-static { padding-top:8px; padding-bottom:6px; }
 .form-control-static > .form-control { margin-top:-8px; margin-bottom:-6px; }
 @media (min-width:768px) {
-	.form-inline .form-control-static { vertical-align:middle; }
+	 .form-inline .form-control-static { vertical-align:middle; }
 }
 
 .row { margin-left:-10px; margin-right:-10px; }
