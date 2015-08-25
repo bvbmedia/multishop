@@ -1239,6 +1239,9 @@
             <label index="add_attribute">Add attribute</label>
             <label index="this_field_is_required">This field is required</label>
             <label index="admin_ordered_product">Ordered products</label>
+            <label index="download_selected_invoices">Download selected invoices</label>
+            <label index="mail_selected_invoices_to_merchant">Mail selected invoices to merchant</label>
+            <label index="mail_selected_invoices_to_customer">Mail selected invoices to customer</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2471,6 +2474,9 @@
             <label index="add_attribute">Attribuut toevoegen</label>
             <label index="this_field_is_required">Dit veld is verplicht</label>
             <label index="admin_ordered_product">Besteld product</label>
+            <label index="download_selected_invoices">Download geselecteerde facturen</label>
+            <label index="mail_selected_invoices_to_merchant">Mail geselecteerde facturen naar beheerder</label>
+            <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
         </languageKey>
     </data>
 </T3locallang>
