@@ -51,7 +51,7 @@ foreach ($zones as $zone) {
 		$countries=array();
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			if ($row['cid']) {
-				$str2="select ctz.zone_id from tx_multishop_countries_to_zones ctz, tx_multishop_zones z where ctz.cn_iso_nr='".$row['cn_iso_nr']."' and ctz.zone_id=z.id";
+				$str2="select ctz.zone_id from tx_multishop_countries_to_zones ctz, tx_multishop_zones z, tx_multishop_shipping_countries c where ctz.cn_iso_nr='".$row['cn_iso_nr']."' and c.page_uid='".$this->showCatalogFromPage."' and c.cn_iso_nr=ctz.cn_iso_nr and ctz.zone_id=z.id";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry2)) {
 					$row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2);
