@@ -16,7 +16,6 @@ switch ($_REQUEST['action']) {
 				}
 				$tables=array();
 				$tables[]='fe_users';
-				$tables[]='fe_groups';
 				$tables[]='tt_address';
 				foreach ($tables as $table) {
 					// manually some other tables
@@ -49,7 +48,6 @@ while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 	$tables[]=$row['Tables_in_'.$db];
 }
 $tables[]='fe_users';
-$tables[]='fe_groups';
 $tables[]='tt_address';
 foreach($tables as $tbl) {
 	$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', $tbl, '', 'page_uid');
