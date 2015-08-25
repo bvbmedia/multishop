@@ -1297,7 +1297,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$order_products_header_data['products_vat']['value']=$this->pi_getLL('vat');
 			}
 			// products price total header col
-			$order_products_header_data['products_final_price']['class']='cellSpecialPrice';
+			$order_products_header_data['products_final_price']['class']='cellFinalPrice';
 			$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_ex_vat');
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$order_products_header_data['products_final_price']['value']=$this->pi_getLL('final_price_inc_vat');
@@ -1445,7 +1445,7 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
-						$order_products_body_data['products_final_price']['class']='cellSpecialPrice';
+						$order_products_body_data['products_final_price']['class']='cellFinalPrice';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=mslib_fe::amount2Cents($order['final_price'], 0);
 						if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
@@ -1581,7 +1581,7 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 						// product final price
 						$order_products_body_data['products_final_price']['align']='right';
-						$order_products_body_data['products_final_price']['class']='cellSpecialPrice';
+						$order_products_body_data['products_final_price']['class']='cellFinalPrice';
 						$order_products_body_data['products_final_price']['id']='edit_order_product_final_price';
 						$order_products_body_data['products_final_price']['value']=$row[5];
 					}
