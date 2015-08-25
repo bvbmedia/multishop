@@ -1829,14 +1829,14 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								$cellPrice='';
 								$cellVat='';
-								$cellSpecialPrice='';
+								$cellFinalPrice='';
 								if ($options['options_values_price']>0) {
 									if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 										$cellPrice=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price'])+$options_attributes_tax_data['tax'], 0);
-										$cellSpecialPrice=mslib_fe::amount2Cents((($options['price_prefix'].$options['options_values_price'])+$options_attributes_tax_data['tax'])*$row[1], 0);
+										$cellFinalPrice=mslib_fe::amount2Cents((($options['price_prefix'].$options['options_values_price'])+$options_attributes_tax_data['tax'])*$row[1], 0);
 									} else {
 										$cellPrice=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price']), 0);
-										$cellSpecialPrice=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price'])*$row[1], 0);
+										$cellFinalPrice=mslib_fe::amount2Cents(($options['price_prefix'].$options['options_values_price'])*$row[1], 0);
 									}
 									$cellVat=$row[4];
 								}
@@ -1861,8 +1861,8 @@ if (is_numeric($this->get['orders_id'])) {
 								}
 								// product final price
 								$order_products_body_data['products_final_price']['align']='right';
-								$order_products_body_data['products_final_price']['class']='cellSpecialPrice';
-								$order_products_body_data['products_final_price']['value']=$cellSpecialPrice;
+								$order_products_body_data['products_final_price']['class']='cellFinalPrice';
+								$order_products_body_data['products_final_price']['value']=$cellFinalPrice;
 								if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 									$order_products_body_data['products_action']['value']='';
 								}
