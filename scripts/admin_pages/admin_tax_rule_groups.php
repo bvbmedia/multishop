@@ -177,7 +177,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 							$tab_content.='<label class="tree_item_label">';
 							$tab_content.=$row['cn_short_en'];
 							$tab_content.='</label> ';
-							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
+							$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].'][0]" class="form-control form-control-country"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
 							$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 								'tx_multishop_tax_rules', // FROM ...
 								"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='0' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -207,7 +207,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 									$tab_content.='<label class="tree_item_label">';
 									$tab_content.=$row2['zn_name_local'];
 									$tab_content.='</label> ';
-									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
+									$tab_content.='<select name="tax_id['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control form-control-country_zone"><option value="">'.$this->pi_getLL('admin_no_tax').'</option>';
 									$query3=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 										'tx_multishop_tax_rules', // FROM ...
 										"cn_iso_nr='".$row['cn_iso_nr']."' and zn_country_iso_nr='".$row2['uid']."' and rules_group_id	 = ".$this->get['rules_group_id'], // WHERE...
@@ -221,7 +221,7 @@ if (is_array($tax_rules_group) and $tax_rules_group['rules_group_id']) {
 										$tab_content.='<option value="'.$tax['tax_id'].'"'.($tax['tax_id']==$row3['tax_id'] ? ' selected' : '').'>'.$tax['name'].'</option>'."\n";
 									}
 									$tab_content.='</select> ';
-									$tab_content.='<select name="state_modus['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control">';
+									$tab_content.='<select name="state_modus['.$row['cn_iso_nr'].']['.$row2['uid'].']" class="form-control form-control-country_state_modus">';
 									foreach ($state_modus_array as $state_modus=>$label) {
 										$tab_content.='<option value="'.$state_modus.'"'.($state_modus==$row3['state_modus'] ? ' selected' : '').'>'.htmlspecialchars($label).'</option>'."\n";
 									}
