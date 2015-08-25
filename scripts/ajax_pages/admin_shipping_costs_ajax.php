@@ -300,8 +300,8 @@ if ($this->ADMIN_USER) {
 	} else {
 		if ($based=='flat' && ($basedold=='weight' || $basedold=='' || $basedold!="flat")) { // new for flat
 			foreach ($zones as $zone) { // start for weight based
-				$content.='<fieldset>';
-				$content.='<legend>Zone: '.$zone['name'];
+				$content.='<div class="panel panel-default">';
+				$content.='<div class="panel-heading"><h3>Zone: '.$zone['name'];
 				$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.zone_id='".$zone['id']."' and c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
 				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
 				$content.=' (';
@@ -311,38 +311,30 @@ if ($this->ADMIN_USER) {
 				}
 				$tmpcontent=substr($tmpcontent, 0, strlen($tmpcontent)-1);
 				$content.=$tmpcontent.')';
-				$content.='</legend>';
+				$content.='</h3></div><div class="panel-body">';
 				$str3="SELECT * from tx_multishop_shipping_methods_costs where shipping_method_id='".$row['id']."' and zone_id='".$zone['id']."'";
 				$qry3=$GLOBALS['TYPO3_DB']->sql_query($str3);
 				$row3=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry3);
 				$zone_pid=$shipping_id.":".$zone['id'];
 				$content.='
-				<table>
-					<tr>
-						<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><b> Level 1 :</b></div></td>
-						<td width="100" align="right">
-							<div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">Excl. VAT</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">Incl. VAT</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value=""></div>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">&nbsp;</td>
-					</tr>
-					<tr>
-						<td><div id="'.$zone_pid.'_NivLevel'.$i.'"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' />&nbsp;<b>Free shippingcosts for order amount above</b></div></td>
-						<td width="100" align="right">
-							<div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" id="display_name" name="display_name" class="msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('excluding_vat').'</label></div>
-								<div class="msAttributesField">'.mslib_fe::currency().' <input type="text" name="display_name" id="display_name" class="msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><label for="display_name">'.$this->pi_getLL('including_vat').'</label></div>
-								<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value=""></div>
-							</div>
-						</td>
-					</tr>
-				</table>';
-				$content.='</fieldset>';
+				<div class="form-group">
+					<label id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4">Level 1 :</label>
+					<div class="col-md-8">
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Excl. VAT</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">Incl. VAT</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="'.$zone_pid.'"  value=""></div>
+					</div>
+				</div>
+				<hr>
+				<div class="form-group">
+					<div id="'.$zone_pid.'_NivLevel'.$i.'" class="control-label col-md-4"><div class="checkbox checkbox-success"><input type="checkbox" name="freeshippingcostsabove['.$zone_pid.']" id="freeshippingcostsabove['.$zone_pid.']" value="1"'.($freeshippingcosts_above ? ' checked="checked"' : '').' /><label for="freeshippingcostsabove['.$zone_pid.']">Free shippingcosts for order amount above</label></div></div>
+					<div class="col-md-8">
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
+						<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceIncludingVat" value="" rel="'.$row_tid['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
+						<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value=""></div>
+					</div>
+				</div>';
+				$content.='</div></div>';
 			}
 		}
 	}
