@@ -7,11 +7,12 @@ if ($this->post['tx_multishop_pi1']['action']) {
 	$this->get['tx_multishop_pi1']['action']=$this->post['tx_multishop_pi1']['action'];
 	$this->get['selected_invoices']=$this->post['selected_invoices'];
 }
-switch ($this->get['tx_multishop_pi1']['action']) {
-	case 'mail_invoices':
+$postErno=array();
+switch ($this->post['tx_multishop_pi1']['action']) {
+	case 'download_selected_invoices':
+	case 'mail_selected_invoices_to_merchant':
 		// send invoices by mail
-		$erno=array();
-		if ($this->get['tx_multishop_pi1']['mailto'] and is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
+		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
 			$attachments=array();
 			foreach ($this->get['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
@@ -22,19 +23,53 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 						$invoice_data=mslib_fe::file_get_contents($this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']));
 						// write temporary to disk
 						file_put_contents($invoice_path, $invoice_data);
-						$attachments[]=$invoice_path;
+						$attachments[$invoice['invoice_id']]=$invoice_path;
 					} else {
-						$erno[]='Cannot retrieve invoice: '.$invoice;
+						$postErno[]=array(
+							'status'=>'error',
+							'message'=>'Failed to retrieve invoice record id '.$invoice
+						);
 					}
 				}
 			}
 			if (count($attachments)) {
-				// send mail
-				$user=array();
-				$user['name']=$this->ms['MODULES']['STORE_NAME'];
-				$user['email']=$this->get['tx_multishop_pi1']['mailto'];
-				mslib_fe::mailUser($user, $this->ms['MODULES']['STORE_NAME'].' invoices', $this->ms['MODULES']['STORE_NAME'].' invoices', $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], $attachments);
+				// combine all PDF files in 1 (needs GhostScript on the server: yum install ghostscript)
+				$combinedPdfFile=$this->DOCUMENT_ROOT.'uploads/tx_multishop/tmp/'.time().'_'.uniqid().'.pdf';
+				$cmd = "gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=".$combinedPdfFile." ".implode(" ", $attachments);
+				shell_exec($cmd);
+				switch ($this->post['tx_multishop_pi1']['action']) {
+					case 'download_selected_invoices':
+						if (file_exists($combinedPdfFile)) {
+							header("Content-type:application/pdf");
+							readfile($combinedPdfFile);
+
+							// delete temporary invoice from disk
+							unlink($combinedPdfFile);
+							foreach ($attachments as $attachment) {
+								unlink($attachment);
+							}
+							exit();
+						}
+						break;
+					case 'mail_selected_invoices_to_merchant':
+						$user=array();
+						$user['name']=$this->ms['MODULES']['STORE_NAME'];
+						$user['email']=$this->ms['MODULES']['STORE_EMAIL'];
+						if (mslib_fe::mailUser($user, $this->ms['MODULES']['STORE_NAME'].' invoices', $this->ms['MODULES']['STORE_NAME'].' invoices', $this->ms['MODULES']['STORE_EMAIL'], $this->ms['MODULES']['STORE_NAME'], array($combinedPdfFile))) {
+							$postErno[]=array(
+								'status'=>'info',
+								'message'=>'The following invoices are mailed to '.$user['email'].':<ul><li>'.implode('</li><li>',array_keys($attachments)).'</li></ul>'
+							);
+						} else {
+							$postErno[]=array(
+								'status'=>'error',
+								'message'=>'Failed to mail invoices to: '.$user['email']
+							);
+						}
+						break;
+				}
 				// delete temporary invoice from disk
+				unlink($combinedPdfFile);
 				foreach ($attachments as $attachment) {
 					unlink($attachment);
 				}
@@ -47,7 +82,22 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 				if (is_numeric($invoice)) {
 					$invoice=mslib_fe::getInvoice($invoice, 'id');
 					if ($invoice['id'] and $invoice['reversal_invoice']==0) {
-						mslib_fe::generateReversalInvoice($invoice['id']);
+						if (mslib_fe::generateReversalInvoice($invoice['id'])) {
+							$postErno[]=array(
+								'status'=>'info',
+								'message'=>'Invoice '.$invoice['invoice_id'].' has been reversed.'
+							);
+						} else {
+							$postErno[]=array(
+								'status'=>'error',
+								'message'=>'Failed to reverse invoice '.$invoice['invoice_id']
+							);
+						}
+					} else {
+						$postErno[]=array(
+							'status'=>'error',
+							'message'=>'Failed to reverse invoice '.$invoice['invoice_id'].' because this invoice is already a credit invoice'
+						);
 					}
 				}
 			}
@@ -63,7 +113,17 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 						$order=mslib_fe::getOrder($invoice['orders_id']);
 						if ($order['orders_id']) {
 							if ($this->get['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
-								mslib_fe::updateOrderStatusToPaid($order['orders_id']);
+								if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
+									$postErno[]=array(
+										'status'=>'info',
+										'message'=>'Invoice '.$invoice['invoice_id'].' has been update to paid.'
+									);
+								} else {
+									$postErno[]=array(
+										'status'=>'info',
+										'message'=>'Failed to update '.$invoice['invoice_id'].' to paid.'
+									);
+								}
 							} else {
 								$updateArray=array('paid'=>0);
 								$updateArray['orders_last_modified']=time();
@@ -98,6 +158,41 @@ switch ($this->get['tx_multishop_pi1']['action']) {
 			}
 		}
 		break;
+}
+if (count($postErno)) {
+	$returnMarkup='
+	<div style="display:none" id="msAdminPostMessage">
+	<table class="table table-striped table-bordered">
+	<thead>
+	<tr>
+		<th class="text-center">Status</th>
+		<th>Message</th>
+	</tr>
+	</thead>
+	<tbody>
+	';
+	foreach ($postErno as $item) {
+		switch ($item['status']) {
+			case 'error':
+				$item['status']='<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+				break;
+			case 'info':
+				$item['status']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+				break;
+		}
+		$returnMarkup.='<tr><td class="text-center">'.$item['status'].'</td><td>'.$item['message'].'</td></tr>'."\n";
+	}
+	$returnMarkup.='</tbody></table></div>';
+	$content.=$returnMarkup;
+	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+	jQuery(document).ready(function ($) {
+		$.confirm({
+			title: \'\',
+			content: $(\'#msAdminPostMessage\').html()
+		});
+	});
+	</script>
+	';
 }
 // now parse all the objects in the tmpl file
 if ($this->conf['admin_invoices_tmpl_path']) {
@@ -428,7 +523,7 @@ $content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</di
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script>
 	jQuery(document).ready(function($) {
-		'.($this->get['tx_multishop_pi1']['action']!='mail_invoices' ? '$("#msadmin_invoices_mailto").hide();' : '').'
+		'.($this->get['tx_multishop_pi1']['action']!='mail_selected_invoices_to_merchants' ? '$("#msadmin_invoices_mailto").hide();' : '').'
 	});
 </script>
 ';

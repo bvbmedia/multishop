@@ -82,10 +82,11 @@ if (!$this->ms['nopagenav'] and $pageset['total_rows']>$this->ms['MODULES']['ORD
 }
 // pagination eof
 $actions=array();
-$actions['create_reversal_invoice']=$this->pi_getLL('create_reversal_invoice_for_selected_invoices');
-$actions['mail_invoices']=$this->pi_getLL('mail_selected_invoices');
+$actions['download_selected_invoices']=$this->pi_getLL('download_selected_invoices','Download selected invoices');
+$actions['mail_selected_invoices_to_merchant']=$this->pi_getLL('mail_selected_invoices_to_merchant','Mail selected invoices to merchant');
 $actions['update_selected_invoices_to_paid']=$this->pi_getLL('update_selected_invoices_to_paid');
 $actions['update_selected_invoices_to_not_paid']=$this->pi_getLL('update_selected_invoices_to_not_paid');
+$actions['create_reversal_invoice']=$this->pi_getLL('create_reversal_invoice_for_selected_invoices');
 // extra action
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_invoices.php']['adminInvoicesActionSelectboxProc'])) {
 	$params=array('actions'=>&$actions);

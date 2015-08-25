@@ -150,7 +150,17 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$order=mslib_fe::getOrder($orders_id);
 					if ($order['orders_id']) {
 						if ($this->post['tx_multishop_pi1']['action']=='update_selected_orders_to_paid') {
-							mslib_fe::updateOrderStatusToPaid($orders_id);
+							if (mslib_fe::updateOrderStatusToPaid($orders_id)) {
+								$postErno[]=array(
+									'status'=>'info',
+									'message'=>'Order '.$orders_id.' has been update to paid.'
+								);
+							} else {
+								$postErno[]=array(
+									'status'=>'info',
+									'message'=>'Failed to update '.$orders_id.' to paid.'
+								);
+							}
 						} elseif ($this->post['tx_multishop_pi1']['action']=='update_selected_orders_to_not_paid') {
 							$updateArray=array('paid'=>0);
 							$updateArray['orders_last_modified']=time();
