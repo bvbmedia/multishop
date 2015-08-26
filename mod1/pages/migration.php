@@ -16,7 +16,6 @@ switch ($_REQUEST['action']) {
 				}
 				$tables=array();
 				$tables[]='fe_users';
-				$tables[]='fe_groups';
 				$tables[]='tt_address';
 				foreach ($tables as $table) {
 					// manually some other tables
@@ -40,30 +39,27 @@ if (is_array($shopPids) && count($shopPids)>0) {
 		}
 	}
 }
-$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'fe_users', '', 'page_uid');
-if (is_array($shopPids) && count($shopPids)>0) {
-	foreach ($otherPids as $shopPid) {
-		if (!in_array($shopPid['page_uid'], $pids)) {
-			$pids[]=$shopPid['page_uid'];
+$tables=array();
+$db=$GLOBALS['TYPO3_CONF_VARS']['DB']['database'];
+$tables=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_products', '', 'page_uid');
+$str="SHOW TABLES where tables_in_".$db." like 'tx_multishop_%'";
+$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+	$tables[]=$row['Tables_in_'.$db];
+}
+$tables[]='fe_users';
+$tables[]='tt_address';
+foreach($tables as $tbl) {
+	$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', $tbl, '', 'page_uid');
+	if (is_array($shopPids) && count($shopPids)>0) {
+		foreach ($otherPids as $shopPid) {
+			if (!in_array($shopPid['page_uid'], $pids)) {
+				$pids[]=$shopPid['page_uid'];
+			}
 		}
 	}
 }
-$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_orders', '', 'page_uid');
-if (is_array($shopPids) && count($shopPids)>0) {
-	foreach ($otherPids as $shopPid) {
-		if (!in_array($shopPid['page_uid'], $pids)) {
-			$pids[]=$shopPid['page_uid'];
-		}
-	}
-}
-$otherPids=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('page_uid', 'tx_multishop_categories', '', 'page_uid');
-if (is_array($shopPids) && count($shopPids)>0) {
-	foreach ($otherPids as $shopPid) {
-		if (!in_array($shopPid['page_uid'], $pids)) {
-			$pids[]=$shopPid['page_uid'];
-		}
-	}
-}
+
 $multishop_content_objects=$GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', 'pages', 'deleted=0 and hidden=0 and module = \'mscore\'', '');
 if (is_array($multishop_content_objects) && count($multishop_content_objects)>0) {
 	foreach ($multishop_content_objects as $content_object) {

@@ -908,18 +908,18 @@
             <label index="no_invoices_found">No invoices found</label>
             <label index="no_last_name_has_been_specified">last name has not been specified</label>
             <label index="no_manufacturers_created_yet">No manufacturers created yet</label>
-            <label index="no_name">no name</label>
+            <label index="no_name">No name</label>
             <label index="no_orders_found">No orders found</label>
-            <label index="no_payment_method_chosen">no payment method has been chosen</label>
+            <label index="no_payment_method_chosen">No payment method has been chosen</label>
             <label index="no_products_available">No products available.</label>
             <label index="no_products_found_description">Unfortunately there are no products found that contains your search criteria.</label>
             <label index="no_products_found_heading">No products found</label>
             <label index="no_records_found">No records found</label>
-            <label index="no_shipping_costs">no shipping costs</label>
-            <label index="no_shipping_method_chosen">no shipping method has been chosen</label>
+            <label index="no_shipping_costs">No shipping costs</label>
+            <label index="no_shipping_method_chosen">No shipping method has been selected</label>
             <label index="no_zip_has_been_specified">ZIP has not been specified</label>
             <label index="normal_price">Normal price</label>
-            <label index="not_in_stock">not in stock</label>
+            <label index="not_in_stock">Not in stock</label>
             <label index="number_of_hooks">Number of hooks</label>
             <label index="number_of_shopping_carts">Number of shopping carts</label>
             <label index="of">of</label>
@@ -1239,6 +1239,9 @@
             <label index="add_attribute">Add attribute</label>
             <label index="this_field_is_required">This field is required</label>
             <label index="admin_ordered_product">Ordered products</label>
+            <label index="download_selected_invoices">Download selected invoices</label>
+            <label index="mail_selected_invoices_to_merchant">Mail selected invoices to merchant</label>
+            <label index="mail_selected_invoices_to_customer">Mail selected invoices to customer</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2143,18 +2146,18 @@
             <label index="no_invoices_found">Geen facturen gevonden</label>
             <label index="no_last_name_has_been_specified">Achternaam is niet opgegeven</label>
             <label index="no_manufacturers_created_yet">Er zijn nog geen fabrikanten aangemaakt</label>
-            <label index="no_name">geen naam</label>
+            <label index="no_name">Geen naam</label>
             <label index="no_orders_found">Geen bestellingen gevonden</label>
-            <label index="no_payment_method_chosen">geen betaalmethode gekozen</label>
+            <label index="no_payment_method_chosen">Geen betaalmethode gekozen</label>
             <label index="no_products_available">Helaas zijn er hier nog geen producten beschikbaar gesteld.</label>
             <label index="no_products_found_description">Helaas zijn er geen artikelen gevonden die aan je zoek criteria voldoen.</label>
             <label index="no_products_found_heading">Geen artikelen gevonden</label>
             <label index="no_records_found">Geen records gevonden</label>
-            <label index="no_shipping_costs">geen verzendkosten</label>
-            <label index="no_shipping_method_chosen">geen aflever methode gekozen</label>
+            <label index="no_shipping_costs">Geen verzendkosten</label>
+            <label index="no_shipping_method_chosen">Geen aflever methode gekozen</label>
             <label index="no_zip_has_been_specified">Postcode is niet opgegeven</label>
             <label index="normal_price">Prijs</label>
-            <label index="not_in_stock">niet op voorraad</label>
+            <label index="not_in_stock">Niet op voorraad</label>
             <label index="number_of_hooks">Aantal haken</label>
             <label index="number_of_shopping_carts">Aantal winkelwagens</label>
             <label index="of">van</label>
@@ -2471,6 +2474,9 @@
             <label index="add_attribute">Attribuut toevoegen</label>
             <label index="this_field_is_required">Dit veld is verplicht</label>
             <label index="admin_ordered_product">Besteld product</label>
+            <label index="download_selected_invoices">Download geselecteerde facturen</label>
+            <label index="mail_selected_invoices_to_merchant">Mail geselecteerde facturen naar beheerder</label>
+            <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
         </languageKey>
     </data>
 </T3locallang>
