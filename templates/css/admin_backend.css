@@ -524,3 +524,6 @@ hr { margin-top:15px; margin-bottom:15px; }
 .table-borderless > tfoot > tr > td { border-top:none; }
 
 #fe_user_image { float:left; margin-right:10px; }
+
+.modal-backdrop { z-index:10040; }
+.modal { z-index:10050; }
