@@ -10,15 +10,15 @@ if (count($products)<0) {
 	if ($this->get['tx_multishop_pi1']['is_proposal']) {
 		$content.='<div class="panel-heading">
 			<h3>'.$this->pi_getLL('admin_label_create_quotation').'</h3>
-		</div>';
+		</div><div class="panel-body">';
 	} else {
 		$content.='<div class="panel-heading">
 			<h3>'.$this->pi_getLL('admin_label_create_order').'</h3>
-		</div>';
+		</div><div class="panel-body">';
 	}
 	$customers=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'company, name, email');
 	if (is_array($customers) and count($customers)) {
-		$content.='<div class="panel-body"><form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[page_section]=admin_processed_manual_order').'" method="post" name="checkout" class="AdvancedForm" id="ms_checkout_direct">';
+		$content.='<form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page'].'&tx_multishop_pi1[page_section]=admin_processed_manual_order').'" method="post" name="checkout" class="AdvancedForm" id="ms_checkout_direct">';
 		if ($this->get['tx_multishop_pi1']['is_proposal']) {
 			$content.='<input name="tx_multishop_pi1[is_proposal]" type="hidden" value="'.$this->get['tx_multishop_pi1']['is_proposal'].'" />';
 		}

@@ -624,6 +624,9 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
 	}
 	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
 }
+if ($this->post['search_by_telephone_orders']) {
+	$filter[]="o.by_phone=1";
+}
 //print_r($filter);
 //print_r($this->post);
 //die();
@@ -827,7 +830,9 @@ $subpartArray['###VALUE_DATE_FORM###']=$this->post['order_date_from'];
 $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###']=$this->post['order_date_till'];
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###']=$this->pi_getLL('filter_by_date_status_last_modified', 'Filter by date status last modified');
+$subpartArray['###LABEL_FILTER_TELEPHONE_ORDERS###']=$this->pi_getLL('filter_by_telephone_orders', 'Filter by telephone orders');
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###']=($this->post['search_by_status_last_modified'] ? ' checked' : '');
+$subpartArray['###FILTER_BY_TELEPHONE_ORDERS_CHECKED###']=($this->post['search_by_telephone_orders'] ? ' checked' : '');
 $subpartArray['###LABEL_PAYMENT_STATUS###']=$this->pi_getLL('order_payment_status');
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###']=$payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
