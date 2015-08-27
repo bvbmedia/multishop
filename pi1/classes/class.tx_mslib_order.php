@@ -1163,7 +1163,7 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 		}
 	}
-	function createOrdersProduct($orders_id, $orders_product=array()) {
+	function createOrdersProduct($orders_id, $insertArray=array()) {
 		if ($orders_id) {
 			$insertArray['orders_id']=$orders_id;
 			//hook to let other plugins further manipulate the replacers
@@ -1199,7 +1199,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-//								print_r($row['listtype']);
 				switch ($row['listtype']) {
 					case 'checkbox':
 						$items=$attribute_values;
