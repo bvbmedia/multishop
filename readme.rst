@@ -1,6 +1,6 @@
-===============
+=========
 Multishop
-===============
+=========
 
 Multishop is the e-commerce plugin for TYPO3.
 
@@ -17,23 +17,23 @@ Simply install the plugin in your TYPO3 installation.
 Usage
 =====
 
-After the Plugin is installed the shop must be configured. How you can do this can be read typo3.org.
+After the plugin has been installed the shop must be configured. How you can do this can be read on typo3.org.
 
 jQuery notice
-=====
-Multishop 3 requires jQuery 2. Also enable the jQuery module: Migrate.
+=============
+Multishop requires jQuery 2. Also enable the jQuery module: Migrate + all the Bootstrap modules.
 
 Login to your TYPO3 backend:
 
 - Clear TYPO3 cache
 - Go to extension manager. Select t3jquery plugin to configure it. Select TYPO in selectbox and configure:
 
-jQuery Version - typo.jQueryVersion: 2.0.x
+jQuery Version - typo.jQueryVersion: 2.xhttps://git.typo3.org/TYPO3CMS/Extensions/tt_address.githttps://git.typo3.org/TYPO3CMS/Extensions/tt_address.git.x
 jQuery UI Version - typo.jQueryUiVersion: 1.10.x
 jQuery TOOLS Version - typo.jQueryTOOLSVersion: 1.2.x
 
 TYPO3 MULTISHOP DEMO PACKAGE
-=====
+============================
 If you have difficulties with configuring Multishop you could download our demo package (which is configured on TYPO3 6.2.3 with Bootstrap 3). You can download it here:
 https://www.typo3multishop.com/download/
 
