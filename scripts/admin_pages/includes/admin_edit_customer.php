@@ -539,7 +539,7 @@ if (count($enabled_countries)==1) {
 $images_tab_block='';
 $images_tab_block.='
 <div class="account-field" id="msEditProductInputImage">
-	<label for="products_image">'.$this->pi_getLL('admin_image').'</label>
+	<label for="products_image" class="width-fw">'.$this->pi_getLL('admin_image').'</label>
 	<div id="fe_user_image">
 		<noscript>
 			<input name="fe_user_image" type="file" />
