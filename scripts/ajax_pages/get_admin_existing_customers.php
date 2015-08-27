@@ -7,6 +7,9 @@ if ($this->ADMIN_USER) {
 	//$customers=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'company, name, email');
 	$customers=array();
 	$groupid=$this->conf['fe_customer_usergroup'];
+	if (is_numeric($this->get['tx_multishop_pi1']['usergroup'])) {
+		$groupid=$this->get['tx_multishop_pi1']['usergroup'];
+	}
 	$orderby='company, name, email';
 	$limit=50;
 	if (is_numeric($groupid) and $groupid>0) {
