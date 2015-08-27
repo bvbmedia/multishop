@@ -4189,12 +4189,12 @@ class mslib_befe {
 				'"',
 				"'"
 			), array(
-					"&amp;",
-					"&lt;",
-					"&gt;",
-					"&quot;",
-					"&apos;"
-				), $string);
+				"&amp;",
+				"&lt;",
+				"&gt;",
+				"&quot;",
+				"&apos;"
+			), $string);
 		}
 	}
 }
