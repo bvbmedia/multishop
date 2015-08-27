@@ -301,27 +301,32 @@ if ($this->get['edit']) {
 		<input name="sub" type="hidden" value="update_payment_method" />
 		<input name="payment_method_id" type="hidden" value="'.$row['id'].'" />';
 	foreach ($this->languages as $key=>$language) {
-		$tmpcontent.='<div class="form-group">
-		<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-10"><p class="form-control-static">';
-		if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-			$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-		}
-		$tmpcontent.=$language['title'].'
-		</p>
-		</div>
-		</div>
-		<div class="form-group">
-			<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
-			<div class="col-md-10">
-			<input type="text" class="form-control text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
+
+		$tmpcontent.='
+			<div class="panel panel-default">
+				<div class="panel-heading panel-heading-toggle'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? '' : ' collapsed').'" data-toggle="collapse" data-target="#msEditPaymentModulesInputName_'.$language['uid'].'">
+					<h3 class="panel-title">
+						<a role="button" data-toggle="collapse" href="#msEditPaymentModulesInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+					</h3>
+				</div>
+				<div id="msEditPaymentModulesInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
+					<div class="panel-body">
+						<div class="form-group">
+							<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
+							<div class="col-md-10">
+							<input type="text" class="form-control text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="description" class="control-label col-md-2">'.$this->pi_getLL('admin_short_description').'</label>
+							<div class="col-md-10">
+							<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-		<div class="form-group">
-			<label for="description" class="control-label col-md-2">'.$this->pi_getLL('admin_short_description').'</label>
-			<div class="col-md-10">
-			<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
-			</div>
-		</div>';
+			';
 	}
 	$cost_tax_rate=0;
 	$percentage_handling_cost=$row['handling_costs'];
@@ -454,25 +459,31 @@ if ($this->get['edit']) {
 		}
 		$tmpcontent.='<form class="form-horizontal edit_form" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" id="add_payment_form" method="post">';
 		foreach ($this->languages as $key=>$language) {
-			$tmpcontent.='<div class="form-group">
-				<label class="control-label col-md-2">'.$this->pi_getLL('language').'</label><div class="col-md-2"><p class="form-control-static">';
-			if ($language['flag'] && file_exists($this->DOCUMENT_ROOT_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif')) {
-				$tmpcontent.='<img src="'.$this->FULL_HTTP_URL_TYPO3.'sysext/cms/tslib/media/flags/flag_'.$language['flag'].'.gif"> ';
-			}
-			$tmpcontent.=''.$language['title'].'
-				</p></div></div>
-				<div class="form-group">
-					<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
-					<div class="col-md-10">
-						<input type="text" class="form-control text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
+			$tmpcontent.='
+			<div class="panel panel-default">
+				<div class="panel-heading panel-heading-toggle'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? '' : ' collapsed').'" data-toggle="collapse" data-target="#msEditPaymentModulesInputName_'.$language['uid'].'">
+					<h3 class="panel-title">
+						<a role="button" data-toggle="collapse" href="#msEditPaymentModulesInputName_'.$language['uid'].'"><i class="fa fa-file-text-o"></i> '.$language['title'].'</a>
+					</h3>
+				</div>
+				<div id="msEditPaymentModulesInputName_'.$language['uid'].'" class="panel-collapse collapse'.(($language['uid']===0 || !empty($lngstatus[$language['uid']]['name'])) ? ' in' : '').'">
+					<div class="panel-body">
+						<div class="form-group">
+							<label for="name" class="control-label col-md-2">'.$this->pi_getLL('admin_name').'</label>
+							<div class="col-md-10">
+								<input type="text" class="form-control text" name="name['.$language['uid'].']" id="name_'.$language['uid'].'" value="'.htmlspecialchars($lngproduct[$language['uid']]['name']).'" required="required">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="description" class="control-label col-md-2">'.$this->pi_getLL('admin_short_description').'</label>
+							<div class="col-md-10">
+								<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<label for="description" class="control-label col-md-2">'.$this->pi_getLL('admin_short_description').'</label>
-					<div class="col-md-10">
-						<textarea name="description['.$language['uid'].']" id="description['.$language['uid'].']" class="mceEditor" rows="4">'.htmlspecialchars($lngproduct[$language['uid']]['description']).'</textarea>
-					</div>
-				</div>';
+			</div>
+			';
 		}
 		$tmpcontent.='
 		<div class="form-group">
