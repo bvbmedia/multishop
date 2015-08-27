@@ -1242,6 +1242,7 @@
             <label index="download_selected_invoices">Download selected invoices</label>
             <label index="mail_selected_invoices_to_merchant">Mail selected invoices to merchant</label>
             <label index="mail_selected_invoices_to_customer">Mail selected invoices to customer</label>
+            <label index="filter_by_telephone_orders">Filter by telephone orders</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2477,6 +2478,7 @@
             <label index="download_selected_invoices">Download geselecteerde facturen</label>
             <label index="mail_selected_invoices_to_merchant">Mail geselecteerde facturen naar beheerder</label>
             <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
+            <label index="filter_by_telephone_orders">Filter op telefonische bestellingen</label>
         </languageKey>
     </data>
 </T3locallang>
