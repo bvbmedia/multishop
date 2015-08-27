@@ -15,7 +15,7 @@ if ($this->post) {
 		}
 	}
 }
-$str="SELECT * from static_countries sc order by cn_short_en";
+$str="SELECT * from static_countries sc order by sc.cn_short_en";
 $qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 $countries=array();
 while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
@@ -33,7 +33,7 @@ $content.='
 <form action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$this->ms['page']).'" method="post">
 <ul id="tx_multishop_countries_checkboxes" class="list-inline">';
 foreach ($countries as $country) {
-	$content.='<li><div class="checkbox checkbox-success"><input id="countries['.$country['uid'].']" name="countries['.$country['uid'].']" type="checkbox" value="1" '.(($country['enabled']) ? 'checked' : '').' /><label for="countries['.$country['uid'].']">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
+	$content.='<li><div class="checkbox checkbox-success"><input id="countries['.$country['cn_iso_nr'].']" name="countries['.$country['cn_iso_nr'].']" type="checkbox" value="1" '.(($country['enabled']) ? 'checked' : '').' /><label for="countries['.$country['uid'].']">'.mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $country['cn_short_en']).'</label></div></li>';
 }
 $content.='</ul>
 <div class="clearfix">
