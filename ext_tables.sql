@@ -312,6 +312,7 @@ CREATE TABLE `tx_multishop_invoices` (
  `customer_currency` char(3) default '',
  `currency_rate` varchar(15) default '1',
  `date_mail_last_sent` int(11) default '0',
+ `credit_invoice` tinyint(1) default '0',
  PRIMARY KEY (`id`),
  KEY `orders_id` (`orders_id`),
  KEY `status` (`status`),
@@ -322,7 +323,8 @@ CREATE TABLE `tx_multishop_invoices` (
  KEY `customer_id` (`customer_id`),
  KEY `reversal_invoice` (`reversal_invoice`),
  KEY `reversal_related_id` (`reversal_related_id`),
- KEY `date_mail_last_sent` (`date_mail_last_sent`)
+ KEY `date_mail_last_sent` (`date_mail_last_sent`),
+ KEY `credit_invoice` (`credit_invoice`)
 );
 
 CREATE TABLE `tx_multishop_manufacturers` (
