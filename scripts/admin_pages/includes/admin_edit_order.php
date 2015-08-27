@@ -79,6 +79,17 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
 						if (count($updateArray)) {
 							$updateArray['orders_last_modified']=time();
+							// hook to let other plugins further manipulate
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'])) {
+								$params=array(
+									'updateArray'=>&$updateArray,
+									'orders_id'=>&$this->get['orders_id'],
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							// hook eol
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
@@ -453,6 +464,17 @@ if (is_numeric($this->get['orders_id'])) {
 					if (count($updateArray)) {
 						$close_window=1;
 						$updateArray['orders_last_modified']=time();
+						// hook to let other plugins further manipulate
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'])) {
+							$params=array(
+								'updateArray'=>&$updateArray,
+								'orders_id'=>&$this->get['orders_id'],
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						// hook eol
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
