@@ -594,8 +594,10 @@ if ($this->post) {
 					<div class="account-boxes">'.$this->pi_getLL('subscribe_to_our_newsletter_description').'.</div>
 				</div>
 				<div class="checkboxAgreement newsletter_checkbox_message col-sm-12">
-					<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($user['tx_multishop_newsletter']>0 ? ' checked="checked"' : '').' />
-					<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
+					<div class="checkbox checkbox-success">
+						<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($user['tx_multishop_newsletter']>0 ? ' checked="checked"' : '').' />
+						<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
+					</div>
 				</div>
 			</div>
 		</div>';

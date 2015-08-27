@@ -312,8 +312,10 @@ if (mslib_fe::loggedin()) {
 					<div class="account-boxes">'.$this->pi_getLL('subscribe_to_our_newsletter_description').'.</div>
 				</div>
 				<div class="checkboxAgreement newsletter_checkbox_message">
-					<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($this->post['tx_multishop_newsletter'] ? ' checked="checked"' : '').' />
-					<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
+					<div class="checkbox checkbox-success">
+						<input type="checkbox" name="tx_multishop_newsletter" id="tx_multishop_newsletter" value="1"'.($this->post['tx_multishop_newsletter'] ? ' checked="checked"' : '').' />
+						<label class="account-value" for="tx_multishop_newsletter">'.$this->pi_getLL('subscribe_to_our_newsletter').'</label>
+					</div>
 				</div>';
 			}
 			//
