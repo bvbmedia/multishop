@@ -466,7 +466,9 @@ hr { margin-top:15px; margin-bottom:15px; }
 	#proposals_panels.row > div > div,
 	#address_details_panels.row > div > div,
 	#address_details.row > div > div { width:100%; }
-	#address_details > .panel-body > .row > div > div { margin-bottom:0; }
+	#address_details > .panel-body > .row > div > div { position:relative; margin-bottom:0; padding-bottom:68px; }
+	#address_details > .panel-body > .row > div > div hr { position:absolute; bottom:49px; left:10px; right:10px; }
+	#address_details > .panel-body > .row > div > div .clearfix { position:absolute; bottom:10px; left:10px; right:10px; }
 }
 
 .msAdminCategoriesCrum > li:after { font-family:"FontAwesome"; content:"\f105"; padding-left:12px; }
