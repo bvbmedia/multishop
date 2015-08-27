@@ -1064,7 +1064,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#billing_details_container").empty();
-                $("#billing_details_container").html(billing_details + "<hr><div class=\"clearfix\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div>");
+                $("#billing_details_container").html(billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
                 $("#billing_details_container").show();
                 $("#edit_billing_details_container").hide();
@@ -1122,7 +1122,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
+                $("#delivery_details_container").html(delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
                 $("#delivery_details_container").show();
                 $("#edit_delivery_details_container").hide();
