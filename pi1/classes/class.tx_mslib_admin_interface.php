@@ -414,7 +414,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 
 			';
 			$content.='<div class="panel-heading">';
-			$content.='<h3>'.htmlspecialchars($params['title']).'</h3>';
+			if ($params['interfaceTitle']) {
+				$interfaceTitle=$params['interfaceTitle'];
+			} else {
+				$interfaceTitle=$params['title'];
+			}
+			$content.='<h3>'.htmlspecialchars($interfaceTitle).'</h3>';
 			if (is_array($params['settings']['headingButtons'])) {
 				$content.='<div class="form-inline">';
 				foreach ($params['settings']['headingButtons'] as $headingButton) {
