@@ -20,83 +20,98 @@
     <div class="panel-body">
         <div id="Orders_By_Date">
             <form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="get">
-                <div id="search-orders" class="well">
-                    <input name="id" type="hidden" value="###SHOP_PID###" />
-                    <input name="type" type="hidden" value="2003" />
-                    <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
-                    <div class="row formfield-container-wrapper">
-                        <div class="col-sm-4 formfield-wrapper">
-                            <div class="form-group">
-                                <label class="control-label">###LABEL_KEYWORD###</label>
-                                <input class="form-control" type="text" name="skeyword" value="###VALUE_KEYWORD###">
-                            </div>
-                            <div class="form-group">
-                                <label for="type_search" class="control-label">###LABEL_SEARCH_ON###</label>
-                                ###OPTION_ITEM_SELECTBOX###
-                            </div>
-                            <div class="form-group">
-                                <label for="groups" class="labelInbetween control-label">###LABEL_USERGROUP###</label>
-                                ###USERGROUP_SELECTBOX###
+
+<div class="panel panel-default">
+    <div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#msAdminOrdersSearch">
+        <h3 class="panel-title">
+            <div class="form-group form-inline">
+                <label class="control-label">###LABEL_KEYWORD###</label>
+                <input class="form-control" type="text" name="skeyword" value="###VALUE_KEYWORD###">
+                <input type="submit" name="Search" value="###VALUE_SEARCH###" class="pull-right btn btn-success" />
+                <a role="button" data-toggle="collapse" href="#msAdminOrdersSearch">Advanced search</a>
+            </div>
+        </h3>
+    </div>
+    <div id="msAdminOrdersSearch" class="panel-collapse collapse">
+        <div class="panel-body">
+            <div id="search-orders" class="well">
+                <input name="id" type="hidden" value="###SHOP_PID###" />
+                <input name="type" type="hidden" value="2003" />
+                <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
+                <div class="row formfield-container-wrapper">
+                    <div class="col-sm-4 formfield-wrapper">
+                        <div class="form-group">
+                            <label for="type_search" class="control-label">###LABEL_SEARCH_ON###</label>
+                            ###OPTION_ITEM_SELECTBOX###
+                        </div>
+                        <div class="form-group">
+                            <label for="groups" class="labelInbetween control-label">###LABEL_USERGROUP###</label>
+                            ###USERGROUP_SELECTBOX###
+                        </div>
+                    </div>
+                    <div class="col-sm-4 formfield-wrapper">
+                        <label class="control-label" for="type_search">###LABEL_DATE###</label>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="control-label" for="order_date_from">###LABEL_DATE_FROM###</label>
+                                <input class="form-control" type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###">
+                                <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
+                                <input class="form-control" type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
                             </div>
                         </div>
-                        <div class="col-sm-4 formfield-wrapper">
-                            <label class="control-label" for="type_search">###LABEL_DATE###</label>
-                            <div class="form-group">
-                                <div class="form-inline">
-                                    <label class="control-label" for="order_date_from">###LABEL_DATE_FROM###</label>
-                                    <input class="form-control" type="text" name="order_date_from" id="order_date_from" value="###VALUE_DATE_FORM###">
-                                    <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
-                                    <input class="form-control" type="text" name="order_date_till" id="order_date_till" value="###VALUE_DATE_TO###">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="payment_status" class="control-label">###LABEL_PAYMENT_STATUS###</label>
-                                ###PAYMENT_STATUS_SELECTBOX###
-                            </div>
-                            <div class="form-group">
-                                <label for="orders_status_search" class="control-label labelInbetween">###LABEL_ORDER_STATUS###</label>
-                                ###ORDERS_STATUS_LIST_SELECTBOX###
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-6">
-                                    <div class="checkbox checkbox-success checkbox-inline">
-                                        <input type="checkbox" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1" ###FILTER_BY_LAST_MODIFIED_CHECKED### >
-                                        <label for="search_by_status_last_modified">###LABEL_FILTER_LAST_MODIFIED###</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="checkbox checkbox-success checkbox-inline">
-                                        <input type="checkbox" id="search_by_telephone_orders" name="search_by_telephone_orders" value="1" ###FILTER_BY_TELEPHONE_ORDERS_CHECKED### >
-                                        <label for="search_by_telephone_orders">###LABEL_FILTER_TELEPHONE_ORDERS###</label>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label for="payment_status" class="control-label">###LABEL_PAYMENT_STATUS###</label>
+                            ###PAYMENT_STATUS_SELECTBOX###
                         </div>
-                        <div class="col-sm-4 formfield-wrapper">
-                            <div class="form-group">
-                                <label for="payment_method" class="control-label">###LABEL_PAYMENT_METHOD###</label>
-                                ###PAYMENT_METHOD_SELECTBOX###
+                        <div class="form-group">
+                            <label for="orders_status_search" class="control-label labelInbetween">###LABEL_ORDER_STATUS###</label>
+                            ###ORDERS_STATUS_LIST_SELECTBOX###
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <div class="checkbox checkbox-success checkbox-inline">
+                                    <input type="checkbox" id="search_by_status_last_modified" name="search_by_status_last_modified" value="1" ###FILTER_BY_LAST_MODIFIED_CHECKED### >
+                                    <label for="search_by_status_last_modified">###LABEL_FILTER_LAST_MODIFIED###</label>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="shipping_method" class="control-label labelInbetween">###LABEL_SHIPPING_METHOD###</label>
-                                ###SHIPPING_METHOD_SELECTBOX###
-                            </div>
-                            <div class="form-group">
-                                <label for="country" class="control-label">###LABEL_COUNTRIES_SELECTBOX###</label>
-                                ###COUNTRIES_SELECTBOX###
-                            </div>
-                            <div class="form-group">
-                                <label for="limit" class="control-label">###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
-                                ###RESULTS_LIMIT_SELECTBOX###
+                            <div class="col-md-6">
+                                <div class="checkbox checkbox-success checkbox-inline">
+                                    <input type="checkbox" id="search_by_telephone_orders" name="search_by_telephone_orders" value="1" ###FILTER_BY_TELEPHONE_ORDERS_CHECKED### >
+                                    <label for="search_by_telephone_orders">###LABEL_FILTER_TELEPHONE_ORDERS###</label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row formfield-container-wrapper">
-                        <div class="col-sm-12 formfield-wrapper">
-                            <input type="submit" name="Search" value="###VALUE_SEARCH###" class="pull-right btn btn-success" />
+                    <div class="col-sm-4 formfield-wrapper">
+                        <div class="form-group">
+                            <label for="payment_method" class="control-label">###LABEL_PAYMENT_METHOD###</label>
+                            ###PAYMENT_METHOD_SELECTBOX###
+                        </div>
+                        <div class="form-group">
+                            <label for="shipping_method" class="control-label labelInbetween">###LABEL_SHIPPING_METHOD###</label>
+                            ###SHIPPING_METHOD_SELECTBOX###
+                        </div>
+                        <div class="form-group">
+                            <label for="country" class="control-label">###LABEL_COUNTRIES_SELECTBOX###</label>
+                            ###COUNTRIES_SELECTBOX###
+                        </div>
+                        <div class="form-group">
+                            <label for="limit" class="control-label">###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+                            ###RESULTS_LIMIT_SELECTBOX###
                         </div>
                     </div>
                 </div>
+                <div class="row formfield-container-wrapper">
+                    <div class="col-sm-12 formfield-wrapper">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
             </form>
             <!-- ###RESULTS### begin -->
             <form action="###FORM_POST_ACTION_URL###" name="orders_post" id="orders_post" method="post">
