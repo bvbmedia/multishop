@@ -24,12 +24,56 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
+	var $interfaceKey='';
+	var $headerButtons=array();
+
 	function initLanguage($ms_locallang) {
 		$this->pi_loadLL();
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
 		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
 		if ($this->altLLkey) {
 			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		}
+	}
+	/**
+	 * @return string
+	 */
+	public function getInterfaceKey() {
+		return $this->interfaceKey;
+	}
+	/**
+	 * @param string $interfaceKey
+	 */
+	public function setInterfaceKey($interfaceKey) {
+		$this->interfaceKey=$interfaceKey;
+	}
+	/**
+	 * @return array
+	 */
+	public function getHeaderButtons() {
+		return $this->headerButtons;
+	}
+	/**
+	 * @param array $headerButtons
+	 */
+	public function setHeaderButtons($headerButtons) {
+		$this->headerButtons=$headerButtons;
+		//hook to let other plugins further manipulate the method
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setHeaderButtonsPostProc'])) {
+			$params=array();
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setHeaderButtonsPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+	}
+	public function renderHeaderButtons() {
+		if (is_array($this->headerButtons)) {
+			$content='<div class="form-inline">';
+			foreach ($this->headerButtons as $headingButton) {
+				$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a> ';
+			}
+			$content.='</div>';
+			return $content;
 		}
 	}
 	function renderInterface($params, &$that) {
