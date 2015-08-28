@@ -249,6 +249,17 @@ if ($this->ADMIN_USER) {
 	}
 	*/
 	// admin stats eof
+	// post processing by third party plugins
+	$adminPanelPostVars=array();
+	$adminPanelPostVars[]='tx_multishop_pi1[type]='.$this->get['type'];
+	$adminPanelPostVars[]='tx_multishop_pi1[page_section]='.$this->get['tx_multishop_pi1']['page_section'];
+	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/meta_tags.php']['adminAdminPanelPreProc'])) {
+		$params=array();
+		$params['adminPanelPostVars']=&$adminPanelPostVars;
+		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/meta_tags.php']['adminAdminPanelPreProc'] as $funcRef) {
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+		}
+	}
 	$html.='
 			<script type="text/javascript" data-ignore="1">
 			var MS_ADMIN_PANEL_AUTO_COMPLETE_URL=\''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel_ajax_search').'\';
@@ -278,7 +289,7 @@ if ($this->ADMIN_USER) {
 				// }
 				$.ajax({
 					url: \''.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=admin_panel&tx_multishop_pi1[categories_id]='.$this->get['categories_id'].'&tx_multishop_pi1[products_id]='.$this->get['products_id']).'\',
-					data: \'tx_multishop_pi1[type]='.$this->get['type'].'&tx_multishop_pi1[page_section]='.$this->get['tx_multishop_pi1']['page_section'].'\',
+					data: \''.implode('&',$adminPanelPostVars).'\',
 					type: \'post\',
 					dataType: \'json\',
 					success: function (j){

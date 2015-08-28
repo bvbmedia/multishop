@@ -192,7 +192,7 @@ $formTopSearch='
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<div class="form-group">
-				<label class="control-label" for="type_search">'.$this->pi_getLL('search_for').'</label>
+				<label class="control-label" for="type_search">'.$this->pi_getLL('search_by').'</label>
 				<div class="form-inline">
 					<select class="invoice_select2" name="tx_multishop_pi1[search_by]">
 						<option value="all">'.$this->pi_getLL('all').'</option>
@@ -553,7 +553,12 @@ jQuery(document).ready(function($) {
 ';
 foreach ($tabs as $key=>$value) {
 	$content.='
-		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
+		<div class="panel-heading">
+			<h3>'.$value[0].'</h3>
+			 <div class="form-inline">
+				<a class="btn btn-primary"><i class="fa fa-plus"></i> Create customer</a>
+			</div>
+		</div>
 		<div class="panel-body">
 		<form id="form1" name="form1" method="get" action="index.php">
 		'.$formTopSearch.'
