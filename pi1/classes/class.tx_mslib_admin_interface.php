@@ -403,6 +403,22 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			// pagination eof
 		}
+		$content.='<div class="panel-heading">';
+		if ($params['interfaceTitle']) {
+			$interfaceTitle=$params['interfaceTitle'];
+		} else {
+			$interfaceTitle=$params['title'];
+		}
+		$content.='<h3>'.htmlspecialchars($interfaceTitle).'</h3>';
+		if (is_array($params['settings']['headingButtons'])) {
+			$content.='<div class="form-inline">';
+			foreach ($params['settings']['headingButtons'] as $headingButton) {
+				$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a>';
+			}
+			$content.='</div>';
+		}
+		$content.='</div>';
+		$content.='<div class="panel-body">';
 		if (!$params['settings']['skipTabMarkup']) {
 			$GLOBALS['TSFE']->additionalHeaderData['msAdminTabJs']='<script type="text/javascript">
 			jQuery(document).ready(function ($) {
@@ -411,25 +427,6 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			</script>
 			';
 			$content='
-
-			';
-			$content.='<div class="panel-heading">';
-			if ($params['interfaceTitle']) {
-				$interfaceTitle=$params['interfaceTitle'];
-			} else {
-				$interfaceTitle=$params['title'];
-			}
-			$content.='<h3>'.htmlspecialchars($interfaceTitle).'</h3>';
-			if (is_array($params['settings']['headingButtons'])) {
-				$content.='<div class="form-inline">';
-				foreach ($params['settings']['headingButtons'] as $headingButton) {
-					$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a>';
-				}
-	        	$content.='</div>';
-			}
-			$content.='</div>';
-			$content.='
-			<div class="panel-body">
 			<div id="tab-container">
 			<ul class="nav nav-tabs" id="admin_orders" role="tablist">
 				<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.htmlspecialchars($params['title']).'</a></li>
@@ -491,8 +488,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$content.='<p class="text-center">'.$this->pi_getLL('total_records_in_database').': <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
+			$content.='<div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
-			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 		}
 		if ($params['settings']['returnResultSetAsArray']) {
 			$array=array();
