@@ -840,6 +840,25 @@ $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs_orders');
+
+// Instantiate admin interface object
+$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->setInterfaceKey('admin_orders');
+
+// Header buttons
+$headerButtons=array();
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('admin_label_create_order');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order');
+$headerButtons[]=$headingButton;
+// Set header buttons through interface class so other plugins can adjust it
+$objRef->setHeaderButtons($headerButtons);
+// Get header buttons through interface class so we can render them
+$subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
+
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_selectbox;
 $subpartArray['###BACK_BUTTON###']='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';

@@ -551,13 +551,30 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+// Instantiate admin interface object
+$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->setInterfaceKey('admin_customers');
+
+// Header buttons
+$headerButtons=array();
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('add');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=add_customer&action=add_customer');
+$headerButtons[]=$headingButton;
+
+// Set header buttons through interface class so other plugins can adjust it
+$objRef->setHeaderButtons($headerButtons);
+// Get header buttons through interface class so we can render them
+$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+
 foreach ($tabs as $key=>$value) {
 	$content.='
 		<div class="panel-heading">
 			<h3>'.$value[0].'</h3>
-			 <div class="form-inline">
-				<a class="btn btn-primary"><i class="fa fa-plus"></i> Create customer</a>
-			</div>
+			 '.$interfaceHeaderButtons.'
 		</div>
 		<div class="panel-body">
 		<form id="form1" name="form1" method="get" action="index.php">

@@ -29,7 +29,12 @@ if ($this->post) {
 //
 $manufacturers=mslib_fe::getManufacturers();
 //
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('merge_manufacturers').'</h1></div>
+$content.='
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3>'.htmlspecialchars($this->pi_getLL('merge_manufacturers')).'</h3>
+    </div>
+<div class="panel-body">
 <form action="'.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=merge_manufacturers').'" method="post" id="merge_attribute_options_form" class="merge_attribute_options_form">
 	<div class="account-field">
 			<ul>
@@ -68,5 +73,7 @@ $content.='
 			'.$cat_selectbox.'<input type="submit" id="submit" class="btn btn-success" value="'.$this->pi_getLL('merge_selected').'" />
 	</div>
 </form>
+</div>
+</div>
 ';
 ?>

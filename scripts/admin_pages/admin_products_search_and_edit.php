@@ -778,6 +778,28 @@ $subpartArray['###SEARCH_LIMIT###']=$search_limit;
 $subpartArray['###LABEL_SEARCH###']=$this->pi_getLL('search');
 $subpartArray['###RESULTS###']=$tmp_content_results;
 $subpartArray['###NORESULTS###']=$tmp_content_noresults;
+
+// Instantiate admin interface object
+$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->setInterfaceKey('admin_products');
+
+// Header buttons
+$headerButtons=array();
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('admin_create_new_products_here');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=add_product&action=add_product');
+$headerButtons[]=$headingButton;
+
+// Set header buttons through interface class so other plugins can adjust it
+$objRef->setHeaderButtons($headerButtons);
+// Get header buttons through interface class so we can render them
+$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+// Get header buttons through interface class so we can render them
+$subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
+
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=$prepending_content.'<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
 ?>

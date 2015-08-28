@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
-$content='<div class="panel panel-default"><div class="panel-heading"><h3>Mass Product Update</h3></div><div class="panel-body">';
+$content='<div class="panel panel-default"><div class="panel-heading"><h3>'.htmlspecialchars($this->pi_getLL('admin_update_prices')).'</h3></div><div class="panel-body">';
 if ($this->post) {
 	// update tax rate
 	if (isset($this->post['rules_group_id']) && !empty($this->post['rules_group_id'])) {
