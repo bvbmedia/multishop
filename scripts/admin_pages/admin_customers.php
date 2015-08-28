@@ -561,7 +561,7 @@ $headerButtons=array();
 $headingButton=array();
 $headingButton['btn_class']='btn btn-primary';
 $headingButton['fa_class']='fa fa-plus-circle';
-$headingButton['title']=$this->pi_getLL('add');
+$headingButton['title']=$this->pi_getLL('admin_new_customer');
 $headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=add_customer&action=add_customer');
 $headerButtons[]=$headingButton;
 
