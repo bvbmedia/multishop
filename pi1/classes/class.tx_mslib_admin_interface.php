@@ -383,7 +383,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
-			$tableContent.='</table></div>';
+			$tableContent.='</table>';
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='</form>';
 			}
@@ -401,6 +401,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			// pagination eof
 		}
+		$content='';
 		$content.='<div class="panel panel-default">';
 		$content.='<div class="panel-heading">';
 		if ($params['interfaceTitle']) {
@@ -426,7 +427,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			</script>
 			';
 			$content='
-			<div id="tab-container">
+				<div id="tab-container">
 				<ul class="nav nav-tabs" id="admin_orders" role="tablist">
 					<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.htmlspecialchars($params['title']).'</a></li>
 				</ul>
@@ -489,6 +490,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 		}
+		$content.='</div>';
 		$content.='</div>';
 		if ($params['settings']['returnResultSetAsArray']) {
 			$array=array();
