@@ -3105,6 +3105,45 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			// hook oef
 		}
+
+		// Instantiate admin interface object
+		$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+		$objRef->setInterfaceKey('admin_edit_order');
+
+		// Header buttons
+		$headerButtons=array();
+		if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-primary';
+				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['title']=$this->pi_getLL('invoice');
+				$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice');
+				if ($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
+					$headingButton['target']='_blank';
+				}
+				$headerButtons[]=$headingButton;
+			}
+			if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-primary';
+				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['title']=$this->pi_getLL('packing_list');
+				if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
+					$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']);
+					$headingButton['target']='_blank';
+				} else {
+					$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=packing');
+				}
+				$headerButtons[]=$headingButton;
+			}
+		}
+		// Set header buttons through interface class so other plugins can adjust it
+		$objRef->setHeaderButtons($headerButtons);
+		// Get header buttons through interface class so we can render them
+		$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+
+
 		$tmpcontent='';
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 			$new_manual_product_js='
@@ -3320,11 +3359,8 @@ if (url.match("#")) {
         </script>
         <div class="panel panel-default">
         <div class="panel-heading">
-        	<h3>Order details</h3>
-        	<div class="form-inline">
-				<a class="btn btn-primary"><i class="fa fa-plus"></i> Print packingslip</a>
-				<a class="btn btn-primary"><i class="fa fa-plus"></i> Print invoice</a>
-        	</div>
+        	<h3>'.htmlspecialchars($this->pi_getLL('order_details')).'</h3>
+        	'.$interfaceHeaderButtons.'
         </div>
         <div class="panel-body">
         <div id="tab-container" class="">
