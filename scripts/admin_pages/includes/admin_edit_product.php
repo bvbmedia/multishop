@@ -1992,7 +1992,7 @@ if ($this->post) {
 				// get all cats to generate multilevel fake url eof
 			}
 			$details_link=$this->FULL_HTTP_URL.mslib_fe::typolink($this->conf['products_detail_page_pid'], $where.'&products_id='.$product['products_id'].'&tx_multishop_pi1[page_section]=products_detail');
-			$heading_page='<h3>'.$this->pi_getLL('admin_edit_product').' (ID: '.$product['products_id'].')</h3><a href="'.$details_link.'" target="_blank" class="btn btn-rpimary viewfront pull-right"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_edit_view_front_product', 'View in front').'</a>';
+			$heading_page='<h3>'.$this->pi_getLL('admin_edit_product').' (ID: '.$product['products_id'].')</h3><a href="'.$details_link.'" target="_blank" class="btn btn-primary viewfront pull-right"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_edit_view_front_product', 'View in front').'</a>';
 		}
 		/*
 		 * js header
