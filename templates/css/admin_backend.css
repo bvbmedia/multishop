@@ -534,7 +534,7 @@ hr { margin-top:15px; margin-bottom:15px; }
 #label_custom_shipping_costs .form-group > .col-md-8 > .form-inline > select { width:80px; margin-right:5px; }
 
 /* CSS Method for adding Font Awesome Chevron Icons */
-.panel-heading-toggle h3:after { float:right; font-family:"FontAwesome"; content:"\f077"; }
+.panel-heading-toggle h3:after { float:right; position:absolute; right:15px; top:50%; font-family:"FontAwesome"; line-height:16px; content:"\f077"; -webkit-transform:translate(0,-50%); -ms-transform:translate(0,-50%); transform:translate(0,-50%); vertical-align:middle; }
 .panel-heading-toggle.collapsed h3:after { content:"\f078"; }
 
 .cellPlPrice { min-width:250px; }
