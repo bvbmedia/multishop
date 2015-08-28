@@ -208,9 +208,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		//die();
 		if (count($pageset['dataset'])) {
 			$tr_type='even';
-			$tableContent.='
-			<div class="table-responsive">
-			';
+			$tableContent.='<div class="table-responsive">';
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';
 			}
@@ -385,7 +383,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
-			$tableContent.='</table>';
+			$tableContent.='</table></div>';
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='</form>';
 			}
@@ -403,6 +401,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			// pagination eof
 		}
+		$content.='<div class="panel panel-default">';
 		$content.='<div class="panel-heading">';
 		if ($params['interfaceTitle']) {
 			$interfaceTitle=$params['interfaceTitle'];
@@ -428,10 +427,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			';
 			$content='
 			<div id="tab-container">
-			<ul class="nav nav-tabs" id="admin_orders" role="tablist">
-				<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.htmlspecialchars($params['title']).'</a></li>
-			</ul>
-			<div class="tab-content">
+				<ul class="nav nav-tabs" id="admin_orders" role="tablist">
+					<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.htmlspecialchars($params['title']).'</a></li>
+				</ul>
+				<div class="tab-content">
 			';
 		}
 		$searchForm='';
@@ -465,10 +464,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (!$params['settings']['skipTabMarkup']) {
 			$content.='
-					<div role="tabpanel" id="CmsListing" class="tab-pane">
-						'.$searchForm.'
-						'.$tableContent.'
-					</div>
+				<div role="tabpanel" id="CmsListing" class="tab-pane">
+					'.$searchForm.'
+					'.$tableContent.'
+				</div>
+			</div>
+			</div>
 			';
 		} else {
 			$content.=$searchForm.$tableContent;
@@ -487,10 +488,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
 			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
-			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 		}
-		
-
+		$content.='</div>';
 		if ($params['settings']['returnResultSetAsArray']) {
 			$array=array();
 			$array['searchForm']=$searchForm;
