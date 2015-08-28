@@ -208,10 +208,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		//die();
 		if (count($pageset['dataset'])) {
 			$tr_type='even';
-			$tableContent.='<div class="table-responsive">';
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';
 			}
+			$tableContent.='<div class="table-responsive">';
 			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
 			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
@@ -384,12 +384,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
 			$tableContent.='</table>';
-			if (!$params['settings']['disableForm']) {
-				$tableContent.='</form>';
-			}
 			$tableContent.='
 			</div>
 			';
+			if (!$params['settings']['disableForm']) {
+				$tableContent.='</form>';
+			}
 			// pagination
 			$paginationMarkup='';
 			if (!$params['settings']['skipPaginationMarkup'] and $pageset['total_rows']>$that->ms['MODULES']['PAGESET_LIMIT']) {
