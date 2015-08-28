@@ -122,8 +122,25 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 
 .page-header h3 { margin-bottom:0; }
 
-.panel-default > .panel-heading { background:#fff; }
-.panel-default > .panel-heading:after { clear:both; display:table; content:""; }
+.panel-default > .panel-heading {
+	width:100%;
+	background:#fff;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-box-pack: space-between;
+	-moz-box-pack: space-between;
+	-webkit-justify-content: space-between;
+	-ms-flex-pack: space-between;
+	justify-content: space-between;
+	-webkit-box-align: center;
+	-moz-box-align: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+}
 .panel-default > .panel-heading h3 { margin-bottom:0; }
 .panel-default > .panel-heading h3 a,
 .panel-default > .panel-heading h3 a:hover,
@@ -388,7 +405,7 @@ hr { margin-top:15px; margin-bottom:15px; }
 .form-control-static { padding-top:8px; padding-bottom:6px; }
 .form-control-static > .form-control { margin-top:-8px; margin-bottom:-6px; }
 @media (min-width:768px) {
-	 .form-inline .form-control-static { vertical-align:middle; }
+	.form-inline .form-control-static { vertical-align:middle; }
 }
 
 .row { margin-left:-10px; margin-right:-10px; }
