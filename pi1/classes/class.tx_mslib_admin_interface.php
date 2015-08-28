@@ -426,7 +426,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			});
 			</script>
 			';
-			$content='
+			$content.='
 				<div id="tab-container">
 				<ul class="nav nav-tabs" id="admin_orders" role="tablist">
 					<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.htmlspecialchars($params['title']).'</a></li>
