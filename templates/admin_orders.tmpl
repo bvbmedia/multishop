@@ -22,19 +22,23 @@
             <form action="###FORM_SEARCH_ACTION_URL###" name="orders_search" id="orders_search" method="get">
 
 <div class="panel panel-default">
-    <div class="panel-heading panel-heading-toggle collapsed" data-toggle="collapse" data-target="#msAdminOrdersSearch">
-        <h3 class="panel-title">
-            <div class="form-group form-inline">
-                <label class="control-label">###LABEL_KEYWORD###</label>
-                <input class="form-control" type="text" name="skeyword" value="###VALUE_KEYWORD###">
-                <input type="submit" name="Search" value="###VALUE_SEARCH###" class="pull-right btn btn-success" />
+    <div class="panel-heading">
+        <div class="panel-title">
+            <div class="form-inline form-collapse">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="###VALUE_KEYWORD###" placeholder="###LABEL_KEYWORD###" />
+                    <i class="fa fa-search 2x form-control-inputsearch"></i>
+                    <span class="input-group-btn">
+                        <input type="submit" name="Search" id="advanceSearchSubmit" value="###VALUE_SEARCH###" class="btn btn-success" />
+                    </span>
+                </div>
                 <a role="button" data-toggle="collapse" href="#msAdminOrdersSearch">Advanced search</a>
             </div>
-        </h3>
+        </div>
     </div>
     <div id="msAdminOrdersSearch" class="panel-collapse collapse">
         <div class="panel-body">
-            <div id="search-orders" class="well">
+            <div id="search-orders" class="well no-mb">
                 <input name="id" type="hidden" value="###SHOP_PID###" />
                 <input name="type" type="hidden" value="2003" />
                 <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_orders" />
