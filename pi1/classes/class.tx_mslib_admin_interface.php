@@ -482,7 +482,7 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$skipTotalCount=1;
 		}
 		if (!$skipRecordCount) {
-			$content.='<hr><p class="text-center">'.$this->pi_getLL('found_records').': <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
+			$content.='<p class="text-center">'.$this->pi_getLL('found_records').': <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
 		}
 		if (!$skipTotalCount) {
 			$content.='<p class="text-center">'.$this->pi_getLL('total_records_in_database').': <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
