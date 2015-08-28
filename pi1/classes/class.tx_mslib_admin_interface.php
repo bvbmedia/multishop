@@ -411,10 +411,23 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			</script>
 			';
 			$content='
+
+			';
+			$content.='<div class="panel-heading">';
+			$content.='<h3>'.htmlspecialchars($params['title']).'</h3>';
+			if (is_array($params['settings']['headingButtons'])) {
+				$content.='<div class="form-inline">';
+				foreach ($params['settings']['headingButtons'] as $headingButton) {
+					$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a>';
+				}
+	        	$content.='</div>';
+			}
+			$content.='</div>';
+			$content.='
 			<div class="panel-body">
 			<div id="tab-container">
 			<ul class="nav nav-tabs" id="admin_orders" role="tablist">
-				<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.$params['title'].'</a></li>
+				<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.htmlspecialchars($params['title']).'</a></li>
 			</ul>
 			<div class="tab-content">
 			';
