@@ -469,12 +469,11 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 						'.$searchForm.'
 						'.$tableContent.'
 					</div>
-				</div>
-
 			';
 		} else {
 			$content.=$searchForm.$tableContent;
 		}
+		$content.='</div>';
 		if ($params['settings']['skipRecordCount'] || ($params['settings']['skipRecordCountWhenZeroResults'] && !$pageset['total_rows'])) {
 			$skipRecordCount=1;
 		}
