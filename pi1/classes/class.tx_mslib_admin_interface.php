@@ -473,7 +473,6 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		} else {
 			$content.=$searchForm.$tableContent;
 		}
-		$content.='</div>';
 		if ($params['settings']['skipRecordCount'] || ($params['settings']['skipRecordCountWhenZeroResults'] && !$pageset['total_rows'])) {
 			$skipRecordCount=1;
 		}
@@ -490,6 +489,8 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 		}
+		
+
 		if ($params['settings']['returnResultSetAsArray']) {
 			$array=array();
 			$array['searchForm']=$searchForm;
