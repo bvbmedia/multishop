@@ -169,7 +169,7 @@ $cat_selectbox='<select name="move_to_cat" id="move_to_cat" class="form-control"
 '.$cat_selectbox.'
 </select>';
 $subpartArray=array();
-$subpartArray['###ADMIN_CATEGORIES_HEADER###']='<div class="panel panel-default"><div class="panel-heading"><h3>'.$this->pi_getLL('admin_label_categories_overview').'</h3></div><div class="panel-body">';
+$subpartArray['###ADMIN_CATEGORIES_HEADER###']=$this->pi_getLL('admin_label_categories_overview');
 $subpartArray['###FORM_ACTION_LINK###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_categories&cid='.$this->get['categories_id'].'&action=move_categories');
 $subpartArray['###TARGET_CATEGORIES_TREE###']=$cat_selectbox;
 $subpartArray['###ADMIN_LABEL_COLLAPSE_ALL###']=$this->pi_getLL('admin_label_collapse_all');
@@ -179,6 +179,7 @@ $subpartArray['###ADMIN_LABEL_OR###']=$this->pi_getLL('admin_label_or');
 $subpartArray['###ADMIN_LABEL_BTN_MOVE###']=$this->pi_getLL('admin_label_btn_move');
 $subpartArray['###ADMIN_LABEL_BTN_DELETE_SELECTED_CATEGORIES###']=$this->pi_getLL('admin_label_btn_delete_selected_categories');
 $subpartArray['###CATEGORIES###']=$contentItem;
+$subpartArray['###BACK_BUTTON###']='<div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
+
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
 ?>
