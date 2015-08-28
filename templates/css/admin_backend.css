@@ -287,13 +287,15 @@ table#product_attributes_table table td:last-child { padding-right:0; }
 .product_staffel_price .table > * > tr > td:nth-child(3) .input-group .form-control { width:100px; }
 
 #msadmin_wrapper .popover { max-width:700px; }
-#msadmin_wrapper .popover .popover-content { font-size:13px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
+#msadmin_wrapper .popover .popover-content { font-size:13px; line-height:20px; font-family:"Open Sans", Arial, Helvetica, sans-serif; }
 #msadmin_wrapper .popover .popover-content h1 { font-size:18px; line-height:24px; margin-bottom:5px; }
 #msadmin_wrapper .popover .popover-content h2 { font-size:16px; line-height:22px; margin-bottom:5px; }
 #msadmin_wrapper .popover .popover-content h3 { font-size:15px; line-height:21px; margin-bottom:5px; }
-#msadmin_wrapper .popover .popover-content table { margin:20px 0 0; }
+#msadmin_wrapper .popover .popover-content table { border-right:none; border-left:none; border-bottom:none; margin:20px 0 0; }
 #msadmin_wrapper .popover .popover-content table th,
 #msadmin_wrapper .popover .popover-content table td { font-size:13px; padding:5px; }
+#msadmin_wrapper .popover .popover-content table tr.removeTableCellBorder td { border:none; font-size:13px; line-height:20px; padding:0 5px; }
+#msadmin_wrapper .popover .popover-content table tr.removeTableCellBorder td hr { border-top-color:#ddd; margin-top:5px; margin-bottom:5px; }
 
 .msAttributesField:first-child { margin-bottom:10px; }
 .input-group-addon:last-child,
