@@ -3321,11 +3321,10 @@ if (url.match("#")) {
         <div class="panel panel-default">
         <div class="panel-heading">
         	<h3>Order details</h3>
-        	<a class="btn btn-primary"><i class="fa fa-plus"></i> Create Order</a>
-        	<a class="btn btn-primary"><i class="fa fa-plus"></i> Create Order</a>
-        	<a class="btn btn-primary"><i class="fa fa-plus"></i> Create Order</a>
-        	<a class="btn btn-primary"><i class="fa fa-plus"></i> Create Order</a>
-        	<a class="btn btn-primary"><i class="fa fa-plus"></i> Create Order</a>
+        	<div class="form-inline">
+				<a class="btn btn-primary"><i class="fa fa-plus"></i> Print packingslip</a>
+				<a class="btn btn-primary"><i class="fa fa-plus"></i> Print invoice</a>
+        	</div>
         </div>
         <div class="panel-body">
         <div id="tab-container" class="">
