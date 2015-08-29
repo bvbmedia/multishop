@@ -1167,7 +1167,7 @@ $headingButton['btn_class']='btn btn-primary';
 $headingButton['fa_class']='fa fa-plus-circle';
 $headingButton['title']=$this->pi_getLL('save');
 $headingButton['href']='#';
-$headingButton['attributes']='onclick="document.getElementById(\'admin_interface_form\').submit(); return false;"';
+$headingButton['attributes']='onclick="$(\'#admin_interface_form button[name=\\\'Submit\\\']\').click(); return false;"';
 $headerButtons[]=$headingButton;
 
 // Set header buttons through interface class so other plugins can adjust it
