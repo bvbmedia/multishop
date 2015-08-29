@@ -1161,15 +1161,15 @@ $objRef->setInterfaceKey('admin_edit_customer');
 
 // Header buttons
 $headerButtons=array();
-/*
+
 $headingButton=array();
 $headingButton['btn_class']='btn btn-primary';
 $headingButton['fa_class']='fa fa-plus-circle';
 $headingButton['title']=$this->pi_getLL('save');
 $headingButton['href']='#';
-$headingButton['attributes']='onclick="document.getElementById(\'admin_interface_form\').submit();"';
+$headingButton['attributes']='onclick="document.getElementById(\'admin_interface_form\').submit(); return false;"';
 $headerButtons[]=$headingButton;
-*/
+
 // Set header buttons through interface class so other plugins can adjust it
 $objRef->setHeaderButtons($headerButtons);
 // Get header buttons through interface class so we can render them
