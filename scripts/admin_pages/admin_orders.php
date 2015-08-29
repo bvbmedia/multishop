@@ -843,6 +843,7 @@ $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->init($this);
 $objRef->setInterfaceKey('admin_orders');
 
 // Header buttons

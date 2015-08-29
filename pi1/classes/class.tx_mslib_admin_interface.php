@@ -24,9 +24,12 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
+	var $that=array();
 	var $interfaceKey='';
 	var $headerButtons=array();
-
+	public function init($ref) {
+		mslib_fe::init($ref);
+	}
 	function initLanguage($ms_locallang) {
 		$this->pi_loadLL();
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
@@ -59,9 +62,9 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	public function setHeaderButtons($headerButtons) {
 		$this->headerButtons=$headerButtons;
 		//hook to let other plugins further manipulate the method
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setHeaderButtonsPostProc'])) {
-			$params=array();
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setHeaderButtonsPostProc'] as $funcRef) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceHeaderButtonsPostProc'])) {
+			$params=array('interfaceKey'=>&$interfaceKey);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceHeaderButtonsPostProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
 		}

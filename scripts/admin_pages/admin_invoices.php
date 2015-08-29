@@ -518,6 +518,7 @@ $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_sb;
 
 // Instantiate admin interface object
 $objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->init($this);
 $objRef->setInterfaceKey('admin_invoices');
 
 // Header buttons
