@@ -67,23 +67,19 @@ jQuery(document).ready(function ($) {
         var currentVal = parseInt(input.val());
         if (!isNaN(currentVal)) {
             if(type == 'minus') {
-
                 if(currentVal > input.attr('min')) {
                     input.val(currentVal - 1).change();
                 }
                 if(parseInt(input.val()) == input.attr('min')) {
                     $(this).attr('disabled', true);
                 }
-
             } else if(type == 'plus') {
-
-                if(currentVal < input.attr('max')) {
+                if(input.attr('max') =='' || currentVal < input.attr('max')) {
                     input.val(currentVal + 1).change();
                 }
-                if(parseInt(input.val()) == input.attr('max')) {
+                if(input.attr('max') =='' && parseInt(input.val()) == input.attr('max')) {
                     $(this).attr('disabled', true);
                 }
-
             }
         } else {
             input.val(0);
@@ -93,7 +89,6 @@ jQuery(document).ready(function ($) {
         $(this).data('oldValue', $(this).val());
     });
     $('.input-number').change(function() {
-
         minValue =  parseInt($(this).attr('min'));
         maxValue =  parseInt($(this).attr('max'));
         valueCurrent = parseInt($(this).val());
@@ -105,7 +100,7 @@ jQuery(document).ready(function ($) {
             //alert('Sorry, the minimum value was reached');
             $(this).val($(this).data('oldValue'));
         }
-        if(valueCurrent <= maxValue) {
+        if(maxValue!='' || valueCurrent <= maxValue) {
             $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
         } else {
             //alert('Sorry, the maximum value was reached');
