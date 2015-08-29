@@ -61,7 +61,6 @@ jQuery(document).ready(function ($) {
     // plus minus
     $('.btn-number').click(function(e){
         e.preventDefault();
-        alert("blurp");
         fieldName = $(this).attr('data-field');
         type      = $(this).attr('data-type');
         var input = $("input[name='"+fieldName+"']");
