@@ -733,7 +733,7 @@ if ($this->ADMIN_USER) {
 		if (count($data['listing']['admin_settings'])>0) {
 			$result_hash=md5(serialize($data['listing']['admin_settings']));
 			$data_json[]=array(
-				'text'=>'Admin settings' . '  -  ' . $p. ' --- ' . $section . ' > ' . $count_admin_settings,
+				'text'=>'Admin settings',
 				'children'=>$data['listing']['admin_settings']
 			);
 		}
