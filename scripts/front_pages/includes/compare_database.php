@@ -322,6 +322,12 @@ if (!$skipMultishopUpdates) {
 	);
 	$items[]=array(
 		'table'=>'tx_multishop_products_description',
+		'column'=>'products_meta_keywords',
+		'columnDefinition'=>'varchar(254)',
+		'allowNull'=>1
+	);
+	$items[]=array(
+		'table'=>'tx_multishop_products_description',
 		'column'=>'products_meta_description',
 		'columnDefinition'=>'varchar(254)',
 		'allowNull'=>1
