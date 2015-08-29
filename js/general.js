@@ -63,7 +63,8 @@ jQuery(document).ready(function ($) {
         e.preventDefault();
         fieldName = $(this).attr('data-field');
         type      = $(this).attr('data-type');
-        var input = $("input[name='"+fieldName+"']");
+        //var input = $("input[name='"+fieldName+"']");
+        var input = $(this).parents('.input-number-wrapper').find('.input-number');
         var currentVal = parseInt(input.val());
         if (!isNaN(currentVal)) {
             if(type == 'minus') {
@@ -94,14 +95,17 @@ jQuery(document).ready(function ($) {
         valueCurrent = parseInt($(this).val());
 
         name = $(this).attr('name');
+
         if(valueCurrent >= minValue) {
-            $(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+            //$(".btn-number[data-type='minus'][data-field='"+name+"']").removeAttr('disabled')
+            $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\\\'minus\\\']').removeAttr('disabled');
         } else {
             //alert('Sorry, the minimum value was reached');
             $(this).val($(this).data('oldValue'));
         }
         if(maxValue!='' || valueCurrent <= maxValue) {
-            $(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+            //$(".btn-number[data-type='plus'][data-field='"+name+"']").removeAttr('disabled')
+            $(this).parents('.input-number-wrapper').find('.btn-number[data-type=\\\'plus\\\']').removeAttr('disabled');
         } else {
             //alert('Sorry, the maximum value was reached');
             $(this).val($(this).data('oldValue'));
