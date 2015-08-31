@@ -54,90 +54,20 @@ if ($this->get['feed_hash']) {
 			foreach ($fields as $counter=>$field) {
 				$tmpcontent='';
 				$rowCount++;
-				if ($this->get['target']=='google_shopping') {
-					switch ($field) {
-						case 'products_ean':
-							$tmpcontent.='gtin';
-							break;
-						case 'products_sku':
-							$tmpcontent.='mpn';
-							break;
-						case 'categories_name':
-							$tmpcontent.='product_type';
-							break;
-						case 'category_crum_path':
-							$tmpcontent.='product_type';
-							break;
-						case 'products_condition':
-							$tmpcontent.='condition';
-							break;
-						case 'products_id':
-							$tmpcontent.='id';
-							break;
-						case 'custom_field':
-							$tmpcontent.=$fields_headers[$counter];
-							break;
-						case 'products_name':
-							$tmpcontent.='title';
-							break;
-						case 'products_status':
-							$tmpcontent.='status';
-							break;
-						case 'products_description':
-						case 'products_shortdescription':
-							$tmpcontent.='description';
-							break;
-						case 'products_external_url':
-							$tmpcontent.='external_url';
-							break;
-						case 'manufacturers_name':
-							$tmpcontent.='brand';
-							break;
-						case 'product_capital_price':
-							$tmpcontent.='capital price';
-							break;
-						case 'products_price':
-							$tmpcontent.='price';
-							break;
-						case 'products_price_excluding_vat':
-							$tmpcontent.='price excluding vat';
-							break;
-						case 'products_vat_rate':
-							$tmpcontent.=($row['tax_rate']*100);
-							break;
-						case 'products_url':
-							$tmpcontent.='link';
-							break;
-						case 'manufacturers_advice_price':
-							$tmpcontent.='manufacturers advice price';
-							break;
-						default:
-							// COMPARE FIELD WITH PRODUCT_IMAGES OR ATTRIBUTES
-							$imageKeys=array();
-							for ($x=0; $x<$this->ms['MODULES']['NUMBER_OF_PRODUCT_IMAGES']; $x++) {
-								if (!$x) {
-									$s='';
-								} else {
-									$s='_'.($x+1);
-								}
-								$imageKeys[]='products_image_50'.$s;
-								$imageKeys[]='products_image_100'.$s;
-								$imageKeys[]='products_image_200'.$s;
-								$imageKeys[]='products_image_normal'.$s;
-								$imageKeys[]='products_image_original'.$s;
-							}
-							if (count($imageKeys) && in_array($field, $imageKeys)) {
-								// we need to print the products image url
-								$tmpcontent.=$field;
-							} else {
-								// if key name is attribute option, print the option name. else print key name
-								if ($attributes[$field]) {
-									$tmpcontent.=$attributes[$field];
-								} else {
-									$tmpcontent.=$field;
-								}
-							}
-							break;
+				//hook to let other plugins further manipulate the settings
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedHeaderIteratorProc'])) {
+					$params=array(
+						'row'=>&$row,
+						'fields'=>&$fields,
+						'counter'=>&$counter,
+						'field'=>&$field,
+						'tmpcontent'=>&$tmpcontent,
+						'fields_headers'=>&$fields_headers,
+						'fields_values'=>&$fields_values,
+						'post_data'=>&$post_data
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedHeaderIteratorProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				} else {
 					switch ($field) {
