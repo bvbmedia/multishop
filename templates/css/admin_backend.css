@@ -422,6 +422,9 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .panel-body { padding:15px 10px; }
 .form-group { margin-bottom:10px; }
 .form-horizontal .form-group { margin-left:-10px; margin-right:-10px; }
+.form-horizontal .form-group.col-xs-1 { float:none; width:auto; }
+.form-horizontal .form-group.col-xs-1 .checkbox-inline { padding-left:3px; padding-right:15px; padding-top:1px; padding-bottom:0; }
+.form-horizontal .form-group.col-xs-1 .checkbox-inline input[type="checkbox"] { margin-top:0; }
 .form-horizontal .radio, .form-horizontal .checkbox, .form-horizontal .radio-inline, .form-horizontal .checkbox-inline { padding-top:8px; }
 .radio label,
 .checkbox label { line-height:20px; }
