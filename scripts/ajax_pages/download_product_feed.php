@@ -54,6 +54,7 @@ if ($this->get['feed_hash']) {
 			foreach ($fields as $counter=>$field) {
 				$tmpcontent='';
 				$rowCount++;
+				$enableCustomHeaders=0;
 				//hook to let other plugins further manipulate the settings
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedHeaderIteratorProc'])) {
 					$params=array(
@@ -64,12 +65,14 @@ if ($this->get['feed_hash']) {
 						'tmpcontent'=>&$tmpcontent,
 						'fields_headers'=>&$fields_headers,
 						'fields_values'=>&$fields_values,
-						'post_data'=>&$post_data
+						'post_data'=>&$post_data,
+						'enableCustomHeaders'=>&$enableCustomHeaders
 					);
 					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['productFeedHeaderIteratorProc'] as $funcRef) {
 						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
-				} else {
+				}
+				if (!$enableCustomHeaders) {
 					switch ($field) {
 						case 'custom_field':
 							$tmpcontent.=$fields_headers[$counter];
