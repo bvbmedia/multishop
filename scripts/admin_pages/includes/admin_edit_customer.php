@@ -539,7 +539,7 @@ if (count($enabled_countries)==1) {
 $images_tab_block='';
 $images_tab_block.='
 <div class="account-field" id="msEditProductInputImage">
-	<label for="products_image">'.$this->pi_getLL('admin_image').'</label>
+	<label for="products_image" class="width-fw">'.$this->pi_getLL('admin_image').'</label>
 	<div id="fe_user_image">
 		<noscript>
 			<input name="fe_user_image" type="file" />
@@ -1147,7 +1147,38 @@ if (!count($js_extra['triggers'])) {
 } else {
 	$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
 }
+if ($customer_id) {
+	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_label_tabs_edit_customer');
+} else {
+	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_new_customer');
+}
+
+
+// Instantiate admin interface object
+$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->init($this);
+$objRef->setInterfaceKey('admin_edit_customer');
+
+// Header buttons
+$headerButtons=array();
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('save');
+$headingButton['href']='#';
+$headingButton['attributes']='onclick="$(\'#admin_interface_form button[name=\\\'Submit\\\']\').click(); return false;"';
+$headerButtons[]=$headingButton;
+
+// Set header buttons through interface class so other plugins can adjust it
+$objRef->setHeaderButtons($headerButtons);
+// Get header buttons through interface class so we can render them
+$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+// Get header buttons through interface class so we can render them
+$subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
+
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
+/*
 if ($customer_id) {
 	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
 	$mslib_dashboard=\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_mslib_dashboard');
@@ -1156,4 +1187,5 @@ if ($customer_id) {
 	$mslib_dashboard->renderWidgets();
 	$content.=$mslib_dashboard->displayDashboard();
 }
+*/
 ?>

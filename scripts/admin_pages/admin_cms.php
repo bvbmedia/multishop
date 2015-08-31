@@ -399,6 +399,27 @@ $subpartArray['###LABEL_SEARCH###']=$this->pi_getLL('search');
 $subpartArray['###INPUT_LIMIT_RESULT_SELECTBOX###']=$limit_search_result_selectbox;
 $subpartArray['###RESULTS###']=$results;
 $subpartArray['###NORESULTS###']=$no_results;
+
+// Instantiate admin interface object
+$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->init($this);
+$objRef->setInterfaceKey('admin_cms');
+
+// Header buttons
+$headerButtons=array();
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('add_new_page');
+$headingButton['href']= mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_cms&action=edit_cms');
+$headerButtons[]=$headingButton;
+
+// Set header buttons through interface class so other plugins can adjust it
+$objRef->setHeaderButtons($headerButtons);
+// Get header buttons through interface class so we can render them
+$subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
+$subpartArray['###INTERFACE_TITLE###']='CMS';
 $content=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 $content=mslib_fe::shadowBox($content);
 $content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div></div></div>';

@@ -79,6 +79,17 @@ if (is_numeric($this->get['orders_id'])) {
 						$updateArray['delivery_address']=preg_replace('/ +/', ' ', $updateArray['delivery_street_name'].' '.$updateArray['delivery_address_number'].' '.$updateArray['delivery_address_ext']);
 						if (count($updateArray)) {
 							$updateArray['orders_last_modified']=time();
+							// hook to let other plugins further manipulate
+							if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'])) {
+								$params=array(
+									'updateArray'=>&$updateArray,
+									'orders_id'=>&$this->get['orders_id'],
+								);
+								foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'] as $funcRef) {
+									\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+								}
+							}
+							// hook eol
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						}
@@ -453,6 +464,17 @@ if (is_numeric($this->get['orders_id'])) {
 					if (count($updateArray)) {
 						$close_window=1;
 						$updateArray['orders_last_modified']=time();
+						// hook to let other plugins further manipulate
+						if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'])) {
+							$params=array(
+								'updateArray'=>&$updateArray,
+								'orders_id'=>&$this->get['orders_id'],
+							);
+							foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPreProc'] as $funcRef) {
+								\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+							}
+						}
+						// hook eol
 						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$orders['expected_delivery_date']=$this->post['expected_delivery_date'];
@@ -510,6 +532,17 @@ if (is_numeric($this->get['orders_id'])) {
                 }
             }
         }
+		// hook for adding new items to details fieldset
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsSavePostHook'])) {
+			// hook
+			$params=array(
+				'orders_id'=>&$this->get['orders_id'],
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrdersDetailsSavePostHook'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+			// hook oef
+		}
         if ($redirect_after_delete) {
             header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$this->get['orders_id'].'&action=edit_order'.$is_proposal_params, 1));
             exit();
@@ -614,19 +647,19 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				$tmpcontent.='<div class="edit_billing_details_container" id="edit_billing_details_container" style="display:none">';
 				$tmpcontent.='<div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[billing_company]" type="text" id="edit_billing_company" value="'.$orders['billing_company'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[billing_name]" type="text" id="edit_billing_name" value="'.$orders['billing_name'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).':</label>
+                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[billing_street_name]" type="text" id="edit_billing_street_name" value="'.$orders['billing_street_name'].'" />
                 </div>
@@ -663,32 +696,32 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'*:</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'*</label>
                 <div class="col-md-7">
                 '.$billing_countries_sb.'
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[billing_email]" type="text" id="edit_billing_email" value="'.$orders['billing_email'].'" />
                 </div>
                 </div>
                 <div class="form-group">';
-				$tmpcontent.='<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).':</label>
+				$tmpcontent.='<label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[billing_telephone]" type="text" id="edit_billing_telephone" value="'.$orders['billing_telephone'].'" />
                 </div>
                 ';
 				$tmpcontent.='</div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[billing_mobile]" type="text" id="edit_billing_mobile" value="'.$orders['billing_mobile'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[billing_fax]" type="text" id="edit_billing_fax" value="'.$orders['billing_fax'].'" />
                 </div>
@@ -749,19 +782,19 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				$tmpcontent.='<div class="edit_delivery_details_container" id="edit_delivery_details_container" style="display:none">';
 				$tmpcontent.='<div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('company')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[delivery_company]" type="text" id="edit_delivery_company" value="'.$orders['delivery_company'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('name')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[delivery_name]" type="text" id="edit_delivery_name" value="'.$orders['delivery_name'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).':</label>
+                <label class="control-label col-md-5" for="delivery_address">'.ucfirst($this->pi_getLL('street_address')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[delivery_street_name]" type="text" id="edit_delivery_street_name" value="'.$orders['delivery_street_name'].'" /><span  class="error-space left-this"></span>
                 </div>
@@ -796,31 +829,31 @@ if (is_numeric($this->get['orders_id'])) {
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('country')).'</label>
                 <div class="col-md-7">
                 '.$delivery_countries_sb.'
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('email')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[delivery_email]" type="text" id="edit_delivery_email" value="'.$orders['delivery_email'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('telephone')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[delivery_telephone]" type="text" id="edit_delivery_telephone" value="'.$orders['delivery_telephone'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('mobile')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[delivery_mobile]" type="text" id="edit_delivery_mobile" value="'.$orders['delivery_mobile'].'" />
                 </div>
                 </div>
                 <div class="form-group">
-                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).':</label>
+                <label class="control-label col-md-5">'.ucfirst($this->pi_getLL('fax')).'</label>
                 <div class="col-md-7">
                 <input class="form-control" name="tx_multishop_pi1[delivery_fax]" type="text" id="edit_delivery_fax" value="'.$orders['delivery_fax'].'" />
                 </div>
@@ -1031,7 +1064,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#billing_details_container").empty();
-                $("#billing_details_container").html(billing_details + "<hr><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
+                $("#billing_details_container").html(billing_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_billing_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("billing_details", $("[id^=edit_billing]").serialize());
                 $("#billing_details_container").show();
                 $("#edit_billing_details_container").hide();
@@ -1089,7 +1122,7 @@ if (is_numeric($this->get['orders_id'])) {
                     }
                 });
                 $("#delivery_details_container").empty();
-                $("#delivery_details_container").html(delivery_details + "<hr><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a>");
+                $("#delivery_details_container").html(delivery_details + "<hr><div class=\"clearfix\"><div class=\"pull-right\"><a href=\"#\" id=\"edit_delivery_info\" class=\"btn btn-primary\"><i class=\"fa fa-pencil\"></i> '.$this->pi_getLL('edit').'</a></div></div>");
                 updateCustomerOrderDetails("delivery_details", $("[id^=edit_delivery]").serialize());
                 $("#delivery_details_container").show();
                 $("#edit_delivery_details_container").hide();
@@ -3072,6 +3105,46 @@ if (is_numeric($this->get['orders_id'])) {
 			}
 			// hook oef
 		}
+
+		// Instantiate admin interface object
+		$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+		$objRef->init($this);
+		$objRef->setInterfaceKey('admin_edit_order');
+
+		// Header buttons
+		$headerButtons=array();
+		if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] || $this->ms['MODULES']['PACKING_LIST_PRINT']) {
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-primary';
+				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['title']=$this->pi_getLL('invoice');
+				$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice');
+				if ($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
+					$headingButton['target']='_blank';
+				}
+				$headerButtons[]=$headingButton;
+			}
+			if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-primary';
+				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['title']=$this->pi_getLL('packing_list');
+				if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
+					$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']);
+					$headingButton['target']='_blank';
+				} else {
+					$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=packing');
+				}
+				$headerButtons[]=$headingButton;
+			}
+		}
+		// Set header buttons through interface class so other plugins can adjust it
+		$objRef->setHeaderButtons($headerButtons);
+		// Get header buttons through interface class so we can render them
+		$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+
+
 		$tmpcontent='';
 		if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 			$new_manual_product_js='
@@ -3286,6 +3359,10 @@ if (url.match("#")) {
         });
         </script>
         <div class="panel panel-default">
+        <div class="panel-heading">
+        	<h3>'.htmlspecialchars($this->pi_getLL('order_details')).'</h3>
+        	'.$interfaceHeaderButtons.'
+        </div>
         <div class="panel-body">
         <div id="tab-container" class="">
             <ul class="nav nav-tabs" role="tablist">';

@@ -156,7 +156,7 @@
             <label index="admin_label_are_you_sure_you_want_to_run_the_multishop_update_script">Are you sure you want to run the Multishop update script</label>
             <label index="admin_label_billing_address">Billing address</label>
             <label index="admin_label_btn_delete_selected_categories">Delete selected categories</label>
-            <label index="admin_label_btn_move">move</label>
+            <label index="admin_label_btn_move">Move</label>
             <label index="admin_label_cache_not_cleared_something_is_wrong_with_configuration_document_root_is_not_set_directly">Cache not cleared. Something is wrong with your configuration (DOCUMENT_ROOT is not set correctly).</label>
             <label index="admin_label_categories_has_been_cleared">categories has been cleared.</label>
             <label index="admin_label_categories_overview">Categories overview</label>
@@ -1242,6 +1242,8 @@
             <label index="download_selected_invoices">Download selected invoices</label>
             <label index="mail_selected_invoices_to_merchant">Mail selected invoices to merchant</label>
             <label index="mail_selected_invoices_to_customer">Mail selected invoices to customer</label>
+            <label index="filter_by_telephone_orders">Filter by telephone orders</label>
+            <label index="advanced_search">Advanced search</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1394,7 +1396,7 @@
             <label index="admin_label_are_you_sure_you_want_to_run_the_multishop_update_script">Weet u zeker dat u het Multishop update script wilt draaien</label>
             <label index="admin_label_billing_address">Factuuradres</label>
             <label index="admin_label_btn_delete_selected_categories">Verwijder geselecteerde categorieën</label>
-            <label index="admin_label_btn_move">verplaats</label>
+            <label index="admin_label_btn_move">Verplaats</label>
             <label index="admin_label_cache_not_cleared_something_is_wrong_with_configuration_document_root_is_not_set_directly">Cache is niet opgeschoond. Er is mis met de configuratie (DOCUMENT_ROOT is niet correct ingesteld).</label>
             <label index="admin_label_categories_has_been_cleared">categorieën zijn verwijderd.</label>
             <label index="admin_label_categories_overview">Categorieën overzicht</label>
@@ -2477,6 +2479,8 @@
             <label index="download_selected_invoices">Download geselecteerde facturen</label>
             <label index="mail_selected_invoices_to_merchant">Mail geselecteerde facturen naar beheerder</label>
             <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
+            <label index="filter_by_telephone_orders">Filter op telefonische bestellingen</label>
+            <label index="advanced_search">Uitgebreid zoeken</label>
         </languageKey>
     </data>
 </T3locallang>

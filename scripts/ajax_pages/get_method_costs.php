@@ -43,10 +43,10 @@ $payment_method_code=$payment_method['code'];
 if (strlen($payment_method['name'])>1) {
 	$char=substr($payment_method['name'], 1, 1);
 	if ($char==mslib_befe::strtolower($char)) {
-		$payment_method['name']=lcfirst($payment_method['name']);
+		$payment_method['name']=$payment_method['name'];
 	}
 } else {
-	$payment_method['name']=lcfirst($payment_method['name']);
+	$payment_method['name']=$payment_method['name'];
 }
 $payment_method_label=$payment_method['name'];
 $available_sid=array();
@@ -136,10 +136,10 @@ if (count($available_sid)>0) {
 	if (strlen($shipping_method['name'])>1) {
 		$char=substr($shipping_method['name'], 1, 1);
 		if ($char==mslib_befe::strtolower($char)) {
-			$shipping_method['name']=lcfirst($shipping_method['name']);
+			$shipping_method['name']=$shipping_method['name'];
 		}
 	} else {
-		$shipping_method['name']=lcfirst($shipping_method['name']);
+		$shipping_method['name']=$shipping_method['name'];
 	}
 	$shipping_method_label=$shipping_method['name'];
 	// shipping

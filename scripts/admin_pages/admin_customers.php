@@ -192,7 +192,7 @@ $formTopSearch='
 		</div>
 		<div class="col-sm-4 formfield-wrapper">
 			<div class="form-group">
-				<label class="control-label" for="type_search">'.$this->pi_getLL('search_for').'</label>
+				<label class="control-label" for="type_search">'.$this->pi_getLL('search_by').'</label>
 				<div class="form-inline">
 					<select class="invoice_select2" name="tx_multishop_pi1[search_by]">
 						<option value="all">'.$this->pi_getLL('all').'</option>
@@ -551,9 +551,32 @@ jQuery(document).ready(function($) {
 });
 </script>
 ';
+// Instantiate admin interface object
+$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->init($this);
+$objRef->setInterfaceKey('admin_customers');
+
+// Header buttons
+$headerButtons=array();
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('admin_new_customer');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=add_customer&action=add_customer');
+$headerButtons[]=$headingButton;
+
+// Set header buttons through interface class so other plugins can adjust it
+$objRef->setHeaderButtons($headerButtons);
+// Get header buttons through interface class so we can render them
+$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+
 foreach ($tabs as $key=>$value) {
 	$content.='
-		<div class="panel-heading"><h3>'.$value[0].'</h3></div>
+		<div class="panel-heading">
+			<h3>'.$value[0].'</h3>
+			 '.$interfaceHeaderButtons.'
+		</div>
 		<div class="panel-body">
 		<form id="form1" name="form1" method="get" action="index.php">
 		'.$formTopSearch.'

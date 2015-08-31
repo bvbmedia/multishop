@@ -7,6 +7,9 @@ if ($this->ADMIN_USER) {
 	//$customers=mslib_fe::getUsers($this->conf['fe_customer_usergroup'], 'company, name, email');
 	$customers=array();
 	$groupid=$this->conf['fe_customer_usergroup'];
+	if (is_numeric($this->get['tx_multishop_pi1']['usergroup'])) {
+		$groupid=$this->get['tx_multishop_pi1']['usergroup'];
+	}
 	$orderby='company, name, email';
 	$limit=50;
 	if (is_numeric($groupid) and $groupid>0) {
@@ -17,7 +20,14 @@ if ($this->ADMIN_USER) {
 		if (isset($this->get['q']) && !empty($this->get['q'])) {
 			$limit='';
 			$this->get['q']=addslashes($this->get['q']);
-			$filter[]='(company like \'%'.$this->get['q'].'%\' or name like \'%'.$this->get['q'].'%\' or email like \'%'.$this->get['q'].'%\' or username like \'%'.$this->get['q'].'%\' or address like \'%'.$this->get['q'].'%\' or telephone like \'%'.$this->get['q'].'%\')';
+			$orFilter=array();
+			$orFilter[]='company like \'%'.$this->get['q'].'%\'';
+			$orFilter[]='name like \'%'.$this->get['q'].'%\'';
+			$orFilter[]='email like \'%'.$this->get['q'].'%\'';
+			$orFilter[]='username like \'%'.$this->get['q'].'%\'';
+			$orFilter[]='address like \'%'.$this->get['q'].'%\'';
+			$orFilter[]='telephone like \'%'.$this->get['q'].'%\'';
+			$filter[]='('.implode(' OR ',$orFilter).')';
 		}
 		if (!$this->masterShop) {
 			$filter[]='page_uid=\''.$this->shop_pid.'\'';

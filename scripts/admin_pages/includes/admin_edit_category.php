@@ -661,7 +661,7 @@ if ($this->post) {
 				}
 				// get all cats to generate multilevel fake url eof
 				$details_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-				$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].') <span class="viewfront pull-right"><a href="'.$details_link.'" target="_blank">'.$this->pi_getLL('admin_edit_view_front_category', 'View in front').'</a></span></h3></div>';
+				$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].')</h3><div class="form-inline"><a class="btn btn-primary viewfront" href="'.$details_link.'" target="_blank"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_edit_view_front_category', 'View in front').'</a></div></div>';
 			}
 		}
 		$category_name_block='';

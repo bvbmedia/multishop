@@ -73,7 +73,6 @@ if ($this->ADMIN_USER) {
 				</div>
 				';
 				$jsonData_content.='
-				<div class="col-md-12">
 				<table width="100%" class="table table-bordered">
 				<thead>
 				<tr>
@@ -212,7 +211,7 @@ if ($this->ADMIN_USER) {
 					}
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
-						<td colspan="3" class="text-right">'.htmlspecialchars($this->pi_getLL('discount')).$coupon_code.'</td>
+						<td colspan="4" class="text-right">'.htmlspecialchars($this->pi_getLL('discount')).$coupon_code.'</td>
 						<td class="text-right">'.mslib_fe::amount2Cents($order['discount']).'</td>
 					</tr>
 					';
@@ -220,8 +219,7 @@ if ($this->ADMIN_USER) {
 				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']>0) {
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
-						<td colspan="3">&nbsp;</td>
-						<td class="text-right"><div class="hr"></div></td>
+						<td colspan="5"><hr></td>
 					</tr>';
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
@@ -245,8 +243,7 @@ if ($this->ADMIN_USER) {
 					//}
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
-						<td colspan="3">&nbsp;</td>
-						<td class="text-right"><div class="hr"></div></td>
+						<td colspan="5"><hr></td>
 					</tr>';
 					$jsonData_content.='
 					<tr class="removeTableCellBorder msAdminSubtotalRow">
@@ -254,7 +251,7 @@ if ($this->ADMIN_USER) {
 						<td class="text-right"><strong>'.mslib_fe::amount2Cents($order['grand_total']).'</strong></td>
 					</tr>';
 				}
-				$jsonData_content.='</tbody></table></div>
+				$jsonData_content.='</tbody></table>
 				';
 				$extraDetails=array();
 				if ($order['cruser_id']) {
@@ -274,17 +271,15 @@ if ($this->ADMIN_USER) {
 					}
 				}
 				if (count($extraDetails)) {
-					$jsonData_content.='<div class="col-md-6">';
-					$jsonData_content.='<div id="adminOrderDetailsFooter">';
+					$jsonData_content.='<hr><div class="row">';
+					$jsonData_content.='<div id="adminOrderDetailsFooter" class="col-md-6">';
 					if (is_array($extraDetails['left']) && count($extraDetails['left'])) {
 						$jsonData_content.=implode("", $extraDetails['left']);
 					}
-					$jsonData_content.='</div><div class="col-md-6">';
+					$jsonData_content.='</div><div class="col-md-6 text-right">';
 					if (is_array($extraDetails['right']) && count($extraDetails['right'])) {
 						$jsonData_content.=implode("", $extraDetails['right']);
 					}
-					$jsonData_content.='</div>';
-					$jsonData_content.='</div>';
 					$jsonData_content.='</div>';
 				}
 				$jsonData_content.='</div>';

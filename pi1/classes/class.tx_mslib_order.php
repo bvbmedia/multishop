@@ -1135,21 +1135,59 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$insertArray['customer_comments']='';
 			}
 			$insertArray['hash']=md5(uniqid('', true));
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'])) {
+				$params=array(
+					'insertArray'=>&$insertArray
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			// now add the order eof
 			$orders_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPostProc'])) {
+				$params=array(
+					'insertArray'=>&$insertArray,
+					'orders_id'=>&$orders_id
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrderPostProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			if ($orders_id) {
 				return $orders_id;
 			}
 		}
 	}
-	function createOrdersProduct($orders_id, $orders_product=array()) {
+	function createOrdersProduct($orders_id, $insertArray=array()) {
 		if ($orders_id) {
-			$orders_product['orders_id']=$orders_id;
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $orders_product);
+			$insertArray['orders_id']=$orders_id;
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPreProc'])) {
+				$params=array(
+					'insertArray'=>&$insertArray
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products', $insertArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			$orders_products_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+			//hook to let other plugins further manipulate the replacers
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPostProc'])) {
+				$params=array(
+					'insertArray'=>&$insertArray,
+					'orders_products_id'=>&$orders_products_id
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductPostProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			if ($orders_products_id) {
 				return $orders_products_id;
 			}
@@ -1161,7 +1199,6 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$str="SELECT products_options_name,listtype from tx_multishop_products_options o where o.products_options_id='".$attribute_key."' ";
 				$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry);
-//								print_r($row['listtype']);
 				switch ($row['listtype']) {
 					case 'checkbox':
 						$items=$attribute_values;
@@ -1179,18 +1216,38 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						$attributes_tax['region_tax']=0;
 						$attributes_tax['tax']=0;
 					}
-					$insertAttributes=array();
-					$insertAttributes['orders_id']=$orders_id;
-					$insertAttributes['orders_products_id']=$orders_products_id;
-					$insertAttributes['products_options']=$item['products_options_name'];
-					$insertAttributes['products_options_values']=$item['products_options_values_name'];
-					$insertAttributes['options_values_price']=$item['options_values_price'];
-					$insertAttributes['price_prefix']=$item['price_prefix'];
-					$insertAttributes['products_options_id']=$item['options_id'];
-					$insertAttributes['products_options_values_id']=$item['options_values_id'];
-					$insertAttributes['attributes_tax_data']=serialize($attributes_tax);
-					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertAttributes);
+					$insertArray=array();
+					$insertArray['orders_id']=$orders_id;
+					$insertArray['orders_products_id']=$orders_products_id;
+					$insertArray['products_options']=$item['products_options_name'];
+					$insertArray['products_options_values']=$item['products_options_values_name'];
+					$insertArray['options_values_price']=$item['options_values_price'];
+					$insertArray['price_prefix']=$item['price_prefix'];
+					$insertArray['products_options_id']=$item['options_id'];
+					$insertArray['products_options_values_id']=$item['options_values_id'];
+					$insertArray['attributes_tax_data']=serialize($attributes_tax);
+					//hook to let other plugins further manipulate the replacers
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductAttributePreProc'])) {
+						$params=array(
+							'insertArray'=>&$insertArray
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductAttributePreProc'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+					}
+					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_orders_products_attributes', $insertArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					$orders_product_attributes_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+					//hook to let other plugins further manipulate the replacers
+					if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductAttributePostProc'])) {
+						$params=array(
+							'insertArray'=>&$insertArray,
+							'orders_product_attributes_id'=>&$orders_product_attributes_id
+						);
+						foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_mslib_order.php']['createOrdersProductAttributePostProc'] as $funcRef) {
+							\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+						}
+					}
 				}
 			}
 		}

@@ -64,14 +64,41 @@ class tx_multishop {
 			$methodToTabArray['products']='s_products_listing';
 			$methodToTabArray['search']='s_search';
 			$methodToTabArray['specials']='s_specials';
-//manufacturers
+			//manufacturers
 			$methodToTabArray['misc']='s_misc';
 //			$methodToTabArray[]='s_advanced';
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPreProc'])) {
+				$params=array(
+					'selectedMethod'=>&$selectedMethod,
+					'row'=>&$row,
+					'methodToTabArray'=>&$methodToTabArray,
+					'content'=>&$content,
+					'data'=>&$data
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			if ($methodToTabArray[$selectedMethod]) {
-				foreach ($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'] as $key=>$valArray) {
-					if (isset($valArray['vDEF']) and $valArray['vDEF']!='') {
-						$subContent.=$key.': '.$valArray['vDEF'].'<br />';
+				if (is_array($data['data'][$methodToTabArray[$selectedMethod]]['lDEF']) && count($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'])) {
+					foreach ($data['data'][$methodToTabArray[$selectedMethod]]['lDEF'] as $key=>$valArray) {
+						if (isset($valArray['vDEF']) and $valArray['vDEF']!='') {
+							$subContent.=$key.': '.$valArray['vDEF'].'<br />';
+						}
 					}
+				}
+			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPostProc'])) {
+				$params=array(
+					'selectedMethod'=>&$selectedMethod,
+					'row'=>&$row,
+					'methodToTabArray'=>&$methodToTabArray,
+					'content'=>&$content,
+					'subContent'=>&$subContent,
+					'data'=>&$data
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.tx_multishop_cms_layout.php']['previewPostProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 				}
 			}
 			if ($subContent) {

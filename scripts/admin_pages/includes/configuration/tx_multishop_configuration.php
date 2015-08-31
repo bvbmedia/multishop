@@ -2046,10 +2046,10 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
-	'configuration_title'=>'Use RTE (Richt Text Editor) in admin attribute description editor',
+	'configuration_title'=>'Use RTE (Rich Text Editor) in admin attribute description editor',
 	'configuration_key'=>'USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR',
 	'configuration_value'=>'0',
-	'description'=>'Use RTE (Richt Text Editor) in admin attribute description editor',
+	'description'=>'Use RTE (Rich Text Editor) in admin attribute description editor',
 	'group_id'=>'11',
 	'use_function'=>'',
 	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',

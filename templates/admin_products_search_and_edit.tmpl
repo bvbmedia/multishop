@@ -1,35 +1,38 @@
 <!-- ###TEMPLATE### begin -->
 ###POST_MESSAGE###
 <div class="panel panel-default">
-<div class="panel-heading"><h3>###PAGE_HEADER###</h3></div>
+<div class="panel-heading">
+    <h3>###PAGE_HEADER###</h3>
+    ###INTERFACE_HEADER_BUTTONS###
+</div>
 <div class="panel-body">
-<div class="well">
-<form name="search" method="get" action="index.php">
-    <input name="id" type="hidden" value="###SHOP_PID###" />
-	<input name="type" type="hidden" value="2003" />
-    <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit"/>
-    <input type="hidden" name="search" class="btn btn-success" value="1" />
+    <div class="well">
+        <form name="search" method="get" action="index.php">
+            <input name="id" type="hidden" value="###SHOP_PID###" />
+            <input name="type" type="hidden" value="2003" />
+            <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_products_search_and_edit"/>
+            <input type="hidden" name="search" class="btn btn-success" value="1" />
             <div id="pricelist_search_form" class="form-inline">
                 <div class="form-group">
-				<label>###LABEL_SEARCH_KEYWORD###</label>
-				<input type="text" class="form-control skeyword" name="keyword" value="###VALUE_SEARCH_KEYWORD###" />
-			</div>
-			<div class="form-group">
-                <label>###LABEL_SEARCH_BY###</label>
-                ###SEARCH_BY_SELECTBOX###
-			</div>
-			<div class="form-group">
-                <label>###LABEL_SEARCH_IN###</label>
-                ###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
-			</div>
-			<div class="form-group">
-				<label>###LABEL_SEARCH_LIMIT###</label>
-				###SEARCH_LIMIT###
-			</div>
-			<input type="submit" name="submit" class="btn btn-success" value="###LABEL_SEARCH###" />
-			</div>
-</form>
-</div>
+                    <label>###LABEL_SEARCH_KEYWORD###</label>
+                    <input type="text" class="form-control skeyword" name="keyword" value="###VALUE_SEARCH_KEYWORD###" />
+                </div>
+                <div class="form-group">
+                    <label>###LABEL_SEARCH_BY###</label>
+                    ###SEARCH_BY_SELECTBOX###
+                </div>
+                <div class="form-group">
+                    <label>###LABEL_SEARCH_IN###</label>
+                    ###SEACRH_IN_CATEGORY_TREE_SELECTBOX###
+                </div>
+                <input type="submit" name="submit" class="btn btn-success" value="###LABEL_SEARCH###" />
+                <div class="form-group pull-right">
+                    <label>###LABEL_SEARCH_LIMIT###</label>
+                    ###SEARCH_LIMIT###
+                </div>
+            </div>
+        </form>
+    </div>
 
 <!-- ###RESULTS### begin -->
 <form action="###FORM_ACTION_PRICE_UPDATE_URL###" method="post" name="price_update" class="blockSubmitForm">

@@ -322,6 +322,12 @@ if (!$skipMultishopUpdates) {
 	);
 	$items[]=array(
 		'table'=>'tx_multishop_products_description',
+		'column'=>'products_meta_keywords',
+		'columnDefinition'=>'varchar(254)',
+		'allowNull'=>1
+	);
+	$items[]=array(
+		'table'=>'tx_multishop_products_description',
 		'column'=>'products_meta_description',
 		'columnDefinition'=>'varchar(254)',
 		'allowNull'=>1
@@ -714,6 +720,21 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="select credit_order from tx_multishop_orders limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_orders` ADD credit_order tinyint(1) default '0', ADD KEY `credit_order` (`credit_order`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+	$str="select credit_invoice from tx_multishop_invoices limit 1";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	if (!$qry) {
+		$str="ALTER TABLE `tx_multishop_invoices` ADD credit_invoice tinyint(1) default '0', ADD KEY `credit_invoice` (`credit_invoice`)";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$messages[]=$str;
+	}
+
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

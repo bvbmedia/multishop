@@ -296,7 +296,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$invoice_id='';
 					$invoice_link='';
 					if (is_array($invoice)) {
-							$invoice_id=$invoice['invoice_id'];
+						$invoice_id=$invoice['invoice_id'];
 						$invoice_link='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'">'.$invoice['invoice_id'].'</a>';
 					}
 					$array1[]='###INVOICE_NUMBER###';
@@ -624,6 +624,9 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
 	}
 	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
 }
+if ($this->post['search_by_telephone_orders']) {
+	$filter[]="o.by_phone=1";
+}
 //print_r($filter);
 //print_r($this->post);
 //die();
@@ -810,7 +813,7 @@ $subpartArray['###SHOP_PID###']=$this->shop_pid;
 
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
-$subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_for');
+$subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_by');
 $subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
 $subpartArray['###LABEL_USERGROUP###']=$this->pi_getLL('usergroup');
 $subpartArray['###USERGROUP_SELECTBOX###']=$customer_groups_input;
@@ -827,19 +830,42 @@ $subpartArray['###VALUE_DATE_FORM###']=$this->post['order_date_from'];
 $subpartArray['###LABEL_DATE_TO###']=$this->pi_getLL('to');
 $subpartArray['###VALUE_DATE_TO###']=$this->post['order_date_till'];
 $subpartArray['###LABEL_FILTER_LAST_MODIFIED###']=$this->pi_getLL('filter_by_date_status_last_modified', 'Filter by date status last modified');
+$subpartArray['###LABEL_FILTER_TELEPHONE_ORDERS###']=$this->pi_getLL('filter_by_telephone_orders', 'Filter by telephone orders');
 $subpartArray['###FILTER_BY_LAST_MODIFIED_CHECKED###']=($this->post['search_by_status_last_modified'] ? ' checked' : '');
+$subpartArray['###FILTER_BY_TELEPHONE_ORDERS_CHECKED###']=($this->post['search_by_telephone_orders'] ? ' checked' : '');
 $subpartArray['###LABEL_PAYMENT_STATUS###']=$this->pi_getLL('order_payment_status');
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###']=$payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
+$subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###ADMIN_LABEL_TABS_ORDERS###']=$this->pi_getLL('admin_label_tabs_orders');
+
+// Instantiate admin interface object
+$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+$objRef->init($this);
+$objRef->setInterfaceKey('admin_orders');
+
+// Header buttons
+$headerButtons=array();
+
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('admin_label_create_order');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_new_order');
+$headerButtons[]=$headingButton;
+// Set header buttons through interface class so other plugins can adjust it
+$objRef->setHeaderButtons($headerButtons);
+// Get header buttons through interface class so we can render them
+$subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
+
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_selectbox;
+$subpartArray['###BACK_BUTTON###']='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
 
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
-$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div></div>';
 
 $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">

@@ -1,75 +1,75 @@
 <!-- ###TEMPLATE### begin -->
 <form action="###FORM_ACTION_URL_CUSTOMERS_BULK_ACTION###" name="customers_listing" id="customers_listing" method="post">
-<div class="table-responsive">
-        <table width="100%" border="0" class="table table-striped table-bordered" id="msAdminCustomersListing">
-            <thead>
-            <tr>
-                <th class="cellCheckbox">
-                    <div class="checkbox checkbox-success checkbox-inline">
-                    <input type="checkbox" id="check_all_1">
-                    <label for="check_all_1"></label>
-                    </div>
-                </th>
-                <th width="60" class="cell_orders_id" nowrap>###LABEL_CUSTOMER_ID###</th>
-                ###HEADER_MASTER_SHOP###
-                <th>###LABEL_CUSTOMER_NAME###</th>
-                ###CUSTOM_MARKER_1_HEADER###
-                <th width="100" nowrap>###LABEL_CUSTOMER_CREATED###</th>
-                <th width="100" nowrap>###LABEL_CUSTOMER_LATEST_LOGIN###</th>
-                <th width="100" nowrap>###LABEL_CUSTOMER_LATEST_ORDER###</th>
-                <th width="100" nowrap>###LABEL_CUSTOMER_TURN_OVER###</th>
-                <th width="100" nowrap>###LABEL_CUSTOMER_TURN_OVER_THIS_YEAR###</th>
-                <th width="100" nowrap>###LABEL_CUSTOMER_LOGIN_AS_USER###</th>
-                <th width="50" nowrap>###LABEL_CUSTOMER_STATUS###</th>
-                <th width="50" nowrap>###LABEL_CUSTOMER_DELETE###</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- ###CUSTOMERS### begin -->
-            <tr class="###ROW_TYPE###">
-                <th class="cellCheckbox">
-                    <div class="checkbox checkbox-success checkbox-inline">
-                    <input type="checkbox" name="selected_customers[]" class="selected_customers_cb" id="checkbox_###CUSTOMERS_UID###" value="###CUSTOMERS_UID###">
-                    <label for="checkbox_###CUSTOMERS_UID###"></label>
-                    </div>
-                </th>
-                <td align="right">###CUSTOMERS_UID###</td>
-                ###MASTER_SHOP###
-                <td nowrap><a href="###CUSTOMERS_EDIT_LINK###" class="popover-link" title="###LABEL_LOADING###" rel="###CUSTOMERS_UID###">###CUSTOMERS_NAME###</a></td>
-                ###CUSTOM_MARKER_1_BODY###
-                <td align="right" nowrap>###CUSTOMERS_CREATED###</td>
-                <td align="right" nowrap>###CUSTOMERS_LATEST_LOGIN###</td>
-                <td align="center" nowrap>###CUSTOMERS_LATEST_ORDER###</td>
-                <td align="right" nowrap>###CUSTOMERS_TURN_OVER###</td>
-                <td align="right" nowrap>###CUSTOMERS_TURN_OVER_THIS_YEAR###</td>
-                <td align="center" nowrap><a href="###CUSTOMERS_LOGINAS_LINK###">###CUSTOMERS_LOGINAS###</a></td>
-                <td align="center" nowrap>###CUSTOMERS_STATUS###</td>
-                <td align="center" nowrap><a href="###CUSTOMERS_DELETE_LINK###" onclick="###CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS###" class="text-danger admin_menu_remove" alt="###ADMIN_LABEL_ALT_REMOVE###"><i class="fa fa-trash-o fa-lg"></i></a></td>
-            </tr>
-            <!-- ###CUSTOMERS### end -->
-            </tbody>
-            <tfoot>
-            <tr>
-                <th align="center" width="17">&nbsp;</th>
-                <th width="60" class="cell_orders_id" nowrap>###LABEL_FOOTER_CUSTOMER_ID###</th>
-                ###FOOTER_MASTER_SHOP###
-                <th>###LABEL_FOOTER_CUSTOMER_NAME###</th>
-                ###CUSTOM_MARKER_1_FOOTER###
-                <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_CREATED###</th>
-                <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_LATEST_LOGIN###</th>
-                <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_LATEST_ORDER###</th>
-                <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_TURN_OVER###</th>
-                <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_TURN_OVER_THIS_YEAR###</th>
-                <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_LOGIN_AS_USER###</th>
-                <th width="50" nowrap>###LABEL_FOOTER_CUSTOMER_STATUS###</th>
-                <th width="50" nowrap>###LABEL_FOOTER_CUSTOMER_DELETE###</th>
-            </tr>
-            </tfoot>
-        </table>
-</div>
-<div id="msAdminCustomersListingActionForm">
-    ###FORM_FIELDS_LISTING_ACTION_BLOCK###
-</div>
+    <div class="table-responsive">
+            <table width="100%" border="0" class="table table-striped table-bordered" id="msAdminCustomersListing">
+                <thead>
+                <tr>
+                    <th class="cellCheckbox">
+                        <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" id="check_all_1">
+                        <label for="check_all_1"></label>
+                        </div>
+                    </th>
+                    <th width="60" class="cell_orders_id" nowrap>###LABEL_CUSTOMER_ID###</th>
+                    ###HEADER_MASTER_SHOP###
+                    <th>###LABEL_CUSTOMER_NAME###</th>
+                    ###CUSTOM_MARKER_1_HEADER###
+                    <th width="100" nowrap>###LABEL_CUSTOMER_CREATED###</th>
+                    <th width="100" nowrap>###LABEL_CUSTOMER_LATEST_LOGIN###</th>
+                    <th width="100" nowrap>###LABEL_CUSTOMER_LATEST_ORDER###</th>
+                    <th width="100" nowrap>###LABEL_CUSTOMER_TURN_OVER###</th>
+                    <th width="100" nowrap>###LABEL_CUSTOMER_TURN_OVER_THIS_YEAR###</th>
+                    <th width="100" nowrap>###LABEL_CUSTOMER_LOGIN_AS_USER###</th>
+                    <th width="50" nowrap>###LABEL_CUSTOMER_STATUS###</th>
+                    <th width="50" nowrap>###LABEL_CUSTOMER_DELETE###</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- ###CUSTOMERS### begin -->
+                <tr class="###ROW_TYPE###">
+                    <th class="cellCheckbox">
+                        <div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" name="selected_customers[]" class="selected_customers_cb" id="checkbox_###CUSTOMERS_UID###" value="###CUSTOMERS_UID###">
+                        <label for="checkbox_###CUSTOMERS_UID###"></label>
+                        </div>
+                    </th>
+                    <td align="right">###CUSTOMERS_UID###</td>
+                    ###MASTER_SHOP###
+                    <td nowrap><a href="###CUSTOMERS_EDIT_LINK###" class="popover-link" title="###LABEL_LOADING###" rel="###CUSTOMERS_UID###">###CUSTOMERS_NAME###</a></td>
+                    ###CUSTOM_MARKER_1_BODY###
+                    <td align="right" nowrap>###CUSTOMERS_CREATED###</td>
+                    <td align="right" nowrap>###CUSTOMERS_LATEST_LOGIN###</td>
+                    <td align="center" nowrap>###CUSTOMERS_LATEST_ORDER###</td>
+                    <td align="right" nowrap>###CUSTOMERS_TURN_OVER###</td>
+                    <td align="right" nowrap>###CUSTOMERS_TURN_OVER_THIS_YEAR###</td>
+                    <td align="center" nowrap><a href="###CUSTOMERS_LOGINAS_LINK###">###CUSTOMERS_LOGINAS###</a></td>
+                    <td align="center" nowrap>###CUSTOMERS_STATUS###</td>
+                    <td align="center" nowrap><a href="###CUSTOMERS_DELETE_LINK###" onclick="###CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS###" class="text-danger admin_menu_remove" alt="###ADMIN_LABEL_ALT_REMOVE###"><i class="fa fa-trash-o fa-lg"></i></a></td>
+                </tr>
+                <!-- ###CUSTOMERS### end -->
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th align="center" width="17">&nbsp;</th>
+                    <th width="60" class="cell_orders_id" nowrap>###LABEL_FOOTER_CUSTOMER_ID###</th>
+                    ###FOOTER_MASTER_SHOP###
+                    <th>###LABEL_FOOTER_CUSTOMER_NAME###</th>
+                    ###CUSTOM_MARKER_1_FOOTER###
+                    <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_CREATED###</th>
+                    <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_LATEST_LOGIN###</th>
+                    <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_LATEST_ORDER###</th>
+                    <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_TURN_OVER###</th>
+                    <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_TURN_OVER_THIS_YEAR###</th>
+                    <th width="100" nowrap>###LABEL_FOOTER_CUSTOMER_LOGIN_AS_USER###</th>
+                    <th width="50" nowrap>###LABEL_FOOTER_CUSTOMER_STATUS###</th>
+                    <th width="50" nowrap>###LABEL_FOOTER_CUSTOMER_DELETE###</th>
+                </tr>
+                </tfoot>
+            </table>
+    </div>
+    <div id="msAdminCustomersListingActionForm">
+        ###FORM_FIELDS_LISTING_ACTION_BLOCK###
+    </div>
 </form>
 
 <!-- ###TEMPLATE### end -->

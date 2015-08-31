@@ -3,6 +3,7 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 if ($this->ADMIN_USER) {
+	$last_default_section=false;
 	$page='';
 	if (isset($this->get['context']['next_page'])) {
 		$page=($this->get['context']['next_page']);
@@ -107,6 +108,7 @@ if ($this->ADMIN_USER) {
 			$p=0;
 		}
 		$limit=20;
+		//$limit=2;
 		$offset=$p*$limit;
 		$this->get['limit']=$limit;
 		$global_max_page=0;
@@ -126,8 +128,8 @@ if ($this->ADMIN_USER) {
 			$modules['orders']=1;
 			$modules['invoices']=1;
 			$modules['customers']=1;
-			$modules['products']=1;
 			$modules['categories']=1;
+			$modules['products']=1;
 			$orders_filter[]='o.orders_id like "'.addslashes($this->get['q']).'%"';
 			$invoices_filter[]='i.invoice_id like "'.addslashes($this->get['q']).'%"';
 			$customers_filter[]='f.uid like "'.addslashes($this->get['q']).'%"';
@@ -141,10 +143,34 @@ if ($this->ADMIN_USER) {
 			$modules['invoices']=1;
 			$modules['orders']=1;
 			$modules['customers']=1;
-			$modules['products']=1;
 			$modules['categories']=1;
+			$modules['products']=1;
 			$invoices_filter[]='i.invoice_id like "'.addslashes($this->get['q']).'%"';
 		}
+		// custom page hook that can be controlled by third-party plugin
+		// hook for registering the plugin name/section name for integrating into admin panel search result
+		$section_register=array();
+		if ($this->ADMIN_USER) {
+			$section_register[]='admin_cms';
+			$section_register[]='admin_settings';
+		}
+		$section_register[]='orders';
+		$section_register[]='invoices';
+		$section_register[]='customers';
+		$section_register[]='categories';
+		$section_register[]='products';
+		//
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelSearchSectionRegisters'])) {
+			$params=array(
+				'section_register'=>&$section_register,
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['adminPanelSearchSectionRegisters'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		//
+
+		// now build up the listing
 		if (isset($this->get['context']['section']) && !empty($this->get['context']['section'])) {
 			$section=$this->get['context']['section'];
 		} else {
@@ -201,13 +227,16 @@ if ($this->ADMIN_USER) {
 				}
 				$next_page=true;
 			} else {
-				$move_next_section=true;
-				$section='admin_settings';
+				$next_section=array_search('admin_cms', $section_register);
+				if (isset($section_register[$next_section+1])) {
+					$move_next_section=true;
+					$section = $section_register[$next_section+1];
+				}
 			}
 		}
 		// admin_settings search
 		if (isset($section) && $modules[$section] && $section=='admin_settings') {
-			if (isset($move_next_section) && ((isset($this->get['context']['section']) && $this->get['context']['section']!=$section) || !isset($this->get['context']['section']))) {
+			if ($move_next_section) {
 				$p=0;
 				$offset=$p*$limit;
 			}
@@ -234,8 +263,9 @@ if ($this->ADMIN_USER) {
 			$orderby[]='c.configuration_title';
 			$pageset=mslib_fe::getAdminSettingsPageSet($filter, $offset, $this->get['limit'], $orderby, $having, $select, $where, $from);
 			$resultset['admin_settings']=$pageset;
-			if (count($resultset['admin_settings']['admin_settings'])>0) {
-				foreach ($resultset['admin_settings']['admin_settings'] as $category) {
+			$count_admin_settings=count($resultset['admin_settings']['admin_settings']);
+			if ($count_admin_settings>0) {
+				foreach ($resultset['admin_settings']['admin_settings'] as $admin_settings) {
 					if (!$tr_type or $tr_type=='even') {
 						$tr_type='odd';
 					} else {
@@ -243,11 +273,11 @@ if ($this->ADMIN_USER) {
 					}
 					$prod=array();
 					$prod['is_children']=true;
-					$prod['Name']=substr($category['configuration_title'], 0, 50);
-					$prod['id']=md5($category['configuration_title']);
+					$prod['Name']=substr($admin_settings['configuration_title'], 0, 50);
+					$prod['id']=md5($admin_settings['configuration_title']);
 					$prod['Title']=str_highlight($prod['Name'], $this->get['q']);
-					$prod['text']=$category['configuration_title'];
-					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_module&module_id='.$category['id']).'&action=edit_module';
+					$prod['text']=$admin_settings['configuration_title'];
+					$prod['Link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=edit_module&module_id='.$admin_settings['id']).'&action=edit_module';
 					$prod['Image']='';
 					$prod['Desc']='';
 					$prod['Price']='';
@@ -260,14 +290,17 @@ if ($this->ADMIN_USER) {
 				}
 				$next_page=true;
 			} else {
-				$move_next_section=true;
-				$section='orders';
+				$next_section=array_search('admin_settings', $section_register);
+				if (isset($section_register[$next_section+1])) {
+					$move_next_section=true;
+					$section = $section_register[$next_section+1];
+				}
 			}
 		}
 		// admin_settings search eof
 		// orders search
 		if ($modules[$section] && $section=='orders') {
-			if ($move_next_section && ($this->get['context']['section']!=$section || !isset($this->get['context']['section']))) {
+			if ($move_next_section) {
 				$p=0;
 				$offset=$p*$limit;
 			}
@@ -318,14 +351,17 @@ if ($this->ADMIN_USER) {
 				}
 				$next_page=true;
 			} else {
-				$move_next_section=true;
-				$section='invoices';
+				$next_section=array_search('orders', $section_register);
+				if (isset($section_register[$next_section+1])) {
+					$move_next_section=true;
+					$section = $section_register[$next_section+1];
+				}
 			}
 		}
 		// orders search eof
 		// invoices search
 		if ($modules[$section] && $section=='invoices') {
-			if ($move_next_section && ($this->get['context']['section']!=$section || !isset($this->get['context']['section']))) {
+			if ($move_next_section) {
 				$p=0;
 				$offset=$p*$limit;
 			}
@@ -369,14 +405,17 @@ if ($this->ADMIN_USER) {
 				}
 				$next_page=true;
 			} else {
-				$move_next_section=true;
-				$section='customers';
+				$next_section=array_search('invoices', $section_register);
+				if (isset($section_register[$next_section+1])) {
+					$move_next_section=true;
+					$section = $section_register[$next_section+1];
+				}
 			}
 		}
 		// invoices eof
 		// customer search
 		if ($modules[$section] && $section=='customers') {
-			if ($move_next_section && ($this->get['context']['section']!=$section || !isset($this->get['context']['section']))) {
+			if ($move_next_section) {
 				$p=0;
 				$offset=$p*$limit;
 			}
@@ -446,14 +485,17 @@ if ($this->ADMIN_USER) {
 				}
 				$next_page=true;
 			} else {
-				$move_next_section=true;
-				$section='categories';
+				$next_section=array_search('customers', $section_register);
+				if (isset($section_register[$next_section+1])) {
+					$move_next_section=true;
+					$section = $section_register[$next_section+1];
+				}
 			}
 		}
 		// customer search eof
 		// categories search
 		if ($modules[$section] && $section=='categories') {
-			if ($move_next_section && ($this->get['context']['section']!=$section || !isset($this->get['context']['section']))) {
+			if ($move_next_section) {
 				$p=0;
 				$offset=$p*$limit;
 			}
@@ -525,14 +567,17 @@ if ($this->ADMIN_USER) {
 				}
 				$next_page=true;
 			} else {
-				$move_next_section=true;
-				$section='products';
+				$next_section=array_search('categories', $section_register);
+				if (isset($section_register[$next_section+1])) {
+					$move_next_section=true;
+					$section = $section_register[$next_section+1];
+				}
 			}
 		}
 		// categories search eof
 		// product search
 		if ($modules[$section] && $section=='products') {
-			if ($move_next_section && ($this->get['context']['section']!=$section || !isset($this->get['context']['section']))) {
+			if ($move_next_section) {
 				$p=0;
 				$offset=$p*$limit;
 			}
@@ -668,48 +713,60 @@ if ($this->ADMIN_USER) {
 					$data['listing']['products'][]=$prod;
 				}
 				$next_page=true;
+			} else {
+				$next_section=array_search('products', $section_register);
+				if (isset($section_register[$next_section+1])) {
+					$move_next_section=true;
+					$section = $section_register[$next_section+1];
+				}
 			}
 		}
 		// product search eof
-		// now build up the listing
 		$data_json=array();
 		if (count($data['listing']['cms'])>0) {
+			$result_hash=md5(serialize($data['listing']['cms']));
 			$data_json[]=array(
 				'text'=>'CMS',
 				'children'=>$data['listing']['cms']
 			);
 		}
 		if (count($data['listing']['admin_settings'])>0) {
+			$result_hash=md5(serialize($data['listing']['admin_settings']));
 			$data_json[]=array(
 				'text'=>'Admin settings',
 				'children'=>$data['listing']['admin_settings']
 			);
 		}
 		if (count($data['listing']['orders'])>0) {
+			$result_hash=md5(serialize($data['listing']['orders']));
 			$data_json[]=array(
 				'text'=>'Orders',
 				'children'=>$data['listing']['orders']
 			);
 		}
 		if (count($data['listing']['invoices'])>0) {
+			$result_hash=md5(serialize($data['listing']['invoices']));
 			$data_json[]=array(
 				'text'=>'Invoices',
 				'children'=>$data['listing']['invoices']
 			);
 		}
 		if (count($data['listing']['customers'])>0) {
+			$result_hash=md5(serialize($data['listing']['customers']));
 			$data_json[]=array(
 				'text'=>'Customers',
 				'children'=>$data['listing']['customers']
 			);
 		}
 		if (count($data['listing']['categories'])>0) {
+			$result_hash=md5(serialize($data['listing']['categories']));
 			$data_json[]=array(
 				'text'=>'Categories',
 				'children'=>$data['listing']['categories']
 			);
 		}
 		if (count($data['listing']['products'])>0) {
+			$result_hash=md5(serialize($data['listing']['products']));
 			$data_json[]=array(
 				'text'=>'Products',
 				'children'=>$data['listing']['products']
@@ -718,11 +775,14 @@ if ($this->ADMIN_USER) {
 		// custom page hook that can be controlled by third-party plugin
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'])) {
 			$params=array(
+				'section_register'=>$section_register,
 				'data_json'=>&$data_json,
 				'next_page'=>&$next_page,
+				'move_next_section'=>&$move_next_section,
 				'section'=>&$section,
 				'page'=>&$p,
-				'offset'=>&$offset
+				'offset'=>&$offset,
+			    'result_hash'=>&$result_hash
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_panel_ajax_search.php']['json_encode_preProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -730,15 +790,21 @@ if ($this->ADMIN_USER) {
 		}
 		$page_marker=array();
 		$page_marker['context']['section']=$section;
+		$page_marker['context']['next_section']=$section_register[$next_section+1];
 		$page_marker['context']['next_page']=$p+1;
 		$page_marker['context']['next']=$next_page;
+		$page_marker['context']['hash']=$result_hash;
 		// custom page hook that can be controlled by third-party plugin eof
-		$content=array(
-			"products"=>$data_json,
-			"total_rows"=>$results_counter,
-			"page_marker"=>$page_marker
+		if ($result_hash==$this->get['context']['hash']) {
+			$page_marker['context']['next']=false;
+			$data_json=array();
+		}
+		$content = array(
+			"products" => $data_json,
+			"total_rows" => $results_counter,
+			"page_marker" => $page_marker
 		);
-		$content=json_encode($content, ENT_NOQUOTES);
+		$content = json_encode($content, ENT_NOQUOTES);
 		// now build up the listing eof
 	}
 	echo $content;

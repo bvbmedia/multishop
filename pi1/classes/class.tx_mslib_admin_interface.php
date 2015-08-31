@@ -24,12 +24,59 @@ if (!defined('TYPO3_MODE')) {
  * Hint: use extdeveval to insert/update function index above.
  */
 class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
+	var $that=array();
+	var $interfaceKey='';
+	var $headerButtons=array();
+	public function init($ref) {
+		mslib_fe::init($ref);
+	}
 	function initLanguage($ms_locallang) {
 		$this->pi_loadLL();
 		//array_merge with new array first, so a value in locallang (or typoscript) can overwrite values from ../locallang_db
 		$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
 		if ($this->altLLkey) {
 			$this->LOCAL_LANG=array_replace_recursive($this->LOCAL_LANG, is_array($ms_locallang) ? $ms_locallang : array());
+		}
+	}
+	/**
+	 * @return string
+	 */
+	public function getInterfaceKey() {
+		return $this->interfaceKey;
+	}
+	/**
+	 * @param string $interfaceKey
+	 */
+	public function setInterfaceKey($interfaceKey) {
+		$this->interfaceKey=$interfaceKey;
+	}
+	/**
+	 * @return array
+	 */
+	public function getHeaderButtons() {
+		return $this->headerButtons;
+	}
+	/**
+	 * @param array $headerButtons
+	 */
+	public function setHeaderButtons($headerButtons) {
+		$this->headerButtons=$headerButtons;
+		//hook to let other plugins further manipulate the method
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceHeaderButtonsPostProc'])) {
+			$params=array('interfaceKey'=>&$interfaceKey);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['setAdminInterfaceHeaderButtonsPostProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+	}
+	public function renderHeaderButtons() {
+		if (is_array($this->headerButtons)) {
+			$content='<div class="form-inline">';
+			foreach ($this->headerButtons as $headingButton) {
+				$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a> ';
+			}
+			$content.='</div>';
+			return $content;
 		}
 	}
 	function renderInterface($params, &$that) {
@@ -208,12 +255,10 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		//die();
 		if (count($pageset['dataset'])) {
 			$tr_type='even';
-			$tableContent.='
-			<div class="table-responsive">
-			';
 			if (!$params['settings']['disableForm']) {
 				$tableContent.='<form method="post" action="'.$params['postForm']['actionUrl'].'" enctype="multipart/form-data">';
 			}
+			$tableContent.='<div class="table-responsive">';
 			$tableContent.='<table class="table table-striped table-bordered" id="msAdminTableInterface">';
 			$tableContent.='<tr><thead>';
 			foreach ($params['tableColumns'] as $col=>$valArray) {
@@ -386,12 +431,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$tableContent.='</tr></tfoot>';
 			// SUMMARIZE EOF
 			$tableContent.='</table>';
-			if (!$params['settings']['disableForm']) {
-				$tableContent.='</form>';
-			}
 			$tableContent.='
 			</div>
 			';
+			if (!$params['settings']['disableForm']) {
+				$tableContent.='</form>';
+			}
 			// pagination
 			$paginationMarkup='';
 			if (!$params['settings']['skipPaginationMarkup'] and $pageset['total_rows']>$that->ms['MODULES']['PAGESET_LIMIT']) {
@@ -403,6 +448,24 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			}
 			// pagination eof
 		}
+		$content='';
+		$content.='<div class="panel panel-default">';
+		$content.='<div class="panel-heading">';
+		if ($params['interfaceTitle']) {
+			$interfaceTitle=$params['interfaceTitle'];
+		} else {
+			$interfaceTitle=$params['title'];
+		}
+		$content.='<h3>'.htmlspecialchars($interfaceTitle).'</h3>';
+		if (is_array($params['settings']['headingButtons'])) {
+			$content.='<div class="form-inline">';
+			foreach ($params['settings']['headingButtons'] as $headingButton) {
+				$content.='<a href="'.$headingButton['href'].'" class="'.$headingButton['btn_class'].'"'.($headingButton['attributes']?' '.$headingButton['attributes']:'').'><i class="'.$headingButton['fa_class'].'"></i> '.htmlspecialchars($headingButton['title']).'</a>';
+			}
+			$content.='</div>';
+		}
+		$content.='</div>';
+		$content.='<div class="panel-body">';
 		if (!$params['settings']['skipTabMarkup']) {
 			$GLOBALS['TSFE']->additionalHeaderData['msAdminTabJs']='<script type="text/javascript">
 			jQuery(document).ready(function ($) {
@@ -410,13 +473,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			});
 			</script>
 			';
-			$content='
-			<div class="panel-body">
-			<div id="tab-container">
-			<ul class="nav nav-tabs" id="admin_orders" role="tablist">
-				<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.$params['title'].'</a></li>
-			</ul>
-			<div class="tab-content">
+			$content.='
+				<div id="tab-container">
+				<ul class="nav nav-tabs" id="admin_orders" role="tablist">
+					<li role="presentation"><a href="#CmsListing" aria-controls="profile" role="tab" data-toggle="tab">'.htmlspecialchars($params['title']).'</a></li>
+				</ul>
+				<div class="tab-content">
 			';
 		}
 		$searchForm='';
@@ -450,12 +512,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 		}
 		if (!$params['settings']['skipTabMarkup']) {
 			$content.='
-					<div role="tabpanel" id="CmsListing" class="tab-pane">
-						'.$searchForm.'
-						'.$tableContent.'
-					</div>
+				<div role="tabpanel" id="CmsListing" class="tab-pane">
+					'.$searchForm.'
+					'.$tableContent.'
 				</div>
-
+			</div>
+			</div>
 			';
 		} else {
 			$content.=$searchForm.$tableContent;
@@ -467,15 +529,16 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 			$skipTotalCount=1;
 		}
 		if (!$skipRecordCount) {
-			$content.='<hr><p class="text-center">'.$this->pi_getLL('found_records').': <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
+			$content.='<p class="text-center">'.$this->pi_getLL('found_records').': <strong>'.number_format($pageset['total_rows'], 0, '', '.').'</strong></p>';
 		}
 		if (!$skipTotalCount) {
 			$content.='<p class="text-center">'.$this->pi_getLL('total_records_in_database').': <strong>'.$params['summarizeData']['totalRecordsInTable'].'</strong></p>';
 		}
 		if (!$params['settings']['skipFooterMarkup']) {
-			$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 			$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$that->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
 		}
+		$content.='</div>';
+		$content.='</div>';
 		if ($params['settings']['returnResultSetAsArray']) {
 			$array=array();
 			$array['searchForm']=$searchForm;
