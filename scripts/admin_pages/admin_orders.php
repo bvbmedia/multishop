@@ -296,7 +296,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 					$invoice_id='';
 					$invoice_link='';
 					if (is_array($invoice)) {
-							$invoice_id=$invoice['invoice_id'];
+						$invoice_id=$invoice['invoice_id'];
 						$invoice_link='<a href="'.$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_invoice&tx_multishop_pi1[hash]='.$invoice['hash']).'">'.$invoice['invoice_id'].'</a>';
 					}
 					$array1[]='###INVOICE_NUMBER###';
@@ -836,6 +836,7 @@ $subpartArray['###FILTER_BY_TELEPHONE_ORDERS_CHECKED###']=($this->post['search_b
 $subpartArray['###LABEL_PAYMENT_STATUS###']=$this->pi_getLL('order_payment_status');
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###']=$payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
+$subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;

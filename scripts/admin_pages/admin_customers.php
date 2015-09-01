@@ -126,7 +126,7 @@ if (is_array($groups) and count($groups)) {
 }
 $customer_groups_input.='</select>'."\n";
 
-$searchCharNav='<div id="msAdminSearchByCharNav"><ul class="pagination">';
+$searchCharNav='<div id="msAdminSearchByCharNav" class="no-mb"><ul class="pagination">';
 $chars=array();
 $chars=array(
 	'0-9',
@@ -174,7 +174,27 @@ foreach ($user_countries as $user_country) {
 ksort($fe_user_country);
 $user_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all').'</option>'.implode("\n", $fe_user_country).'</select>';
 $formTopSearch='
-<div id="search-orders" class="well">
+<form id="form1" name="form1" method="get" action="index.php">
+<div class="panel panel-default no-mb">
+    <div class="panel-heading">
+            <div class="form-inline form-collapse">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="VALUE_KEYWORD" placeholder="LABEL_KEYWORD" />
+                    <i class="fa fa-search 2x form-control-inputsearch"></i>
+                    <span class="input-group-btn">
+                        <input type="submit" name="Search" id="advanceSearchSubmit" value="VALUE_SEARCH" class="btn btn-success" />
+                    </span>
+                </div>
+                <a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">LABEL_ADVANCED_SEARCH</a>
+            </div>
+            <div class="form-inline pull-right">
+                <label for="limit" class="control-label">LABEL_RESULTS_LIMIT_SELECTBOX:</label>
+                RESULTS_LIMIT_SELECTBOX
+            </div>
+    </div>
+    <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
+        <div class="panel-body">
+<div id="search-orders" class="well no-mb">
 	<div class="row formfield-container-wrapper">
 		<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
 		<input name="id" type="hidden" value="'.$this->shop_pid.'" />
@@ -258,7 +278,9 @@ $formTopSearch.='
 			</div>
 		</div>
 	</div>
-</div>
+        </div>
+    </form>
+    </div></div></div>
 '.$searchCharNav.'
 ';
 $filter=array();
