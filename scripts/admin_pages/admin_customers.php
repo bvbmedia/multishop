@@ -179,66 +179,16 @@ $formTopSearch='
     <div class="panel-heading">
             <div class="form-inline form-collapse">
                 <div class="input-group">
-                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="VALUE_KEYWORD" placeholder="LABEL_KEYWORD" />
+                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="'.htmlspecialchars($this->get['skeyword']).'" placeholder="'.htmlspecialchars($this->pi_getLL('keyword')).'" />
                     <i class="fa fa-search 2x form-control-inputsearch"></i>
                     <span class="input-group-btn">
-                        <input type="submit" name="Search" id="advanceSearchSubmit" value="VALUE_SEARCH" class="btn btn-success" />
+                        <input type="submit" name="Search" id="advanceSearchSubmit" value="'.htmlspecialchars($this->pi_getLL('search')).'" class="btn btn-success" />
                     </span>
                 </div>
-                <a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">LABEL_ADVANCED_SEARCH</a>
+                <a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">'.htmlspecialchars($this->pi_getLL('advanced_search')).'</a>
             </div>
             <div class="form-inline pull-right">
-                <label for="limit" class="control-label">LABEL_RESULTS_LIMIT_SELECTBOX:</label>
-                RESULTS_LIMIT_SELECTBOX
-            </div>
-    </div>
-    <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
-        <div class="panel-body">
-<div id="search-orders" class="well no-mb">
-	<div class="row formfield-container-wrapper">
-		<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
-		<input name="id" type="hidden" value="'.$this->shop_pid.'" />
-		<input name="type" type="hidden" value="2003" />
-		<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customers" />
-		<div class="col-sm-4 formfield-wrapper">
-			<div class="form-group">
-				<label class="control-label">'.ucfirst($this->pi_getLL('keyword')).'</label>
-				<input type="text" name="tx_multishop_pi1[keyword]" id="skeyword" class="form-control customers_skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" />
-			</div>
-			<div class="form-group">
-				<label class="control-label" for="country">'.$this->pi_getLL('country').'</label>
-				'.$user_countries_sb.'
-			</div>
-		</div>
-		<div class="col-sm-4 formfield-wrapper">
-			<div class="form-group">
-				<label class="control-label" for="type_search">'.$this->pi_getLL('search_by').'</label>
-				<div class="form-inline">
-					<select class="invoice_select2" name="tx_multishop_pi1[search_by]">
-						<option value="all">'.$this->pi_getLL('all').'</option>
-						'.$option_item.'
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="control-label" for="type_search">'.$this->pi_getLL('usergroup').'</label>
-				<div class="form-inline">
-'.$customer_groups_input.'
-				</div>
-			</div>
-		</div>
-		<div class="col-sm-4 formfield-wrapper">
-			<label class="control-label" for="type_search">'.$this->pi_getLL('date').'</label>
-			<div class="form-group">
-				<div class="form-inline">
-					<label class="control-label" for="order_date_from">'.$this->pi_getLL('from').'</label>
-					<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="'.$this->get['crdate_from'].'">
-					<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').'</label>
-					<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="'.$this->get['crdate_till'].'">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="control-label" for="limit">'.$this->pi_getLL('limit_number_of_records_to').'</label>
+<label for="limit" class="control-label">'.$this->pi_getLL('limit_number_of_records_to').':</label>
 				<select name="limit" id="limit" class="form-control">';
 $limits=array();
 $limits[]='10';
@@ -262,6 +212,48 @@ foreach ($limits as $limit) {
 }
 $formTopSearch.='
 				</select>
+            </div>
+    </div>
+    <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
+        <div class="panel-body">
+<div id="search-orders" class="well no-mb">
+	<div class="row formfield-container-wrapper">
+		<input name="tx_multishop_pi1[do_search]" type="hidden" value="1" />
+		<input name="id" type="hidden" value="'.$this->shop_pid.'" />
+		<input name="type" type="hidden" value="2003" />
+		<input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_customers" />
+		<div class="col-sm-4 formfield-wrapper">
+			<div class="form-group">
+				<label class="control-label" for="type_search">'.$this->pi_getLL('search_by').'</label>
+				<div class="form-inline">
+					<select class="invoice_select2" name="tx_multishop_pi1[search_by]">
+						<option value="all">'.$this->pi_getLL('all').'</option>
+						'.$option_item.'
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="country">'.$this->pi_getLL('country').'</label>
+				'.$user_countries_sb.'
+			</div>
+		</div>
+		<div class="col-sm-4 formfield-wrapper">
+			<div class="form-group">
+				<label class="control-label" for="type_search">'.$this->pi_getLL('usergroup').'</label>
+				<div class="form-inline">
+'.$customer_groups_input.'
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4 formfield-wrapper">
+			<label class="control-label" for="type_search">'.$this->pi_getLL('date').'</label>
+			<div class="form-group">
+				<div class="form-inline">
+					<label class="control-label" for="order_date_from">'.$this->pi_getLL('from').'</label>
+					<input class="form-control" type="text" name="crdate_from" id="crdate_from" value="'.$this->get['crdate_from'].'">
+					<label for="order_date_till" class="labelInbetween">'.$this->pi_getLL('to').'</label>
+					<input class="form-control" type="text" name="crdate_till" id="crdate_till" value="'.$this->get['crdate_till'].'">
+				</div>
 			</div>
 			<div class="form-group">
 				<div class="checkbox checkbox-success">

@@ -2481,6 +2481,7 @@
             <label index="mail_selected_invoices_to_merchant">Mail geselecteerde facturen naar beheerder</label>
             <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
             <label index="filter_by_telephone_orders">Filter op telefonische bestellingen</label>
+            <label index="advanced_search">Uitgebreid zoeken</label>
         </languageKey>
     </data>
 </T3locallang>

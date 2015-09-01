@@ -811,7 +811,7 @@ $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 
 
-$subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
+$subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_by');
 $subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
