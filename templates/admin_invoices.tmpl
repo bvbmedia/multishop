@@ -44,96 +44,82 @@ jQuery(document).ready(function ($) {
     ###INTERFACE_HEADER_BUTTONS###
 </div>
 <div class="panel-body">
-<form id="form1" name="form1" method="get" action="index.php">
-<div class="panel panel-default">
-    <div class="panel-heading">
-            <div class="form-inline form-collapse">
-                <div class="input-group">
-                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="VALUE_KEYWORD" placeholder="LABEL_KEYWORD" />
-                    <i class="fa fa-search 2x form-control-inputsearch"></i>
-                    <span class="input-group-btn">
-                        <input type="submit" name="Search" id="advanceSearchSubmit" value="VALUE_SEARCH" class="btn btn-success" />
-                    </span>
-                </div>
-                <a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">LABEL_ADVANCED_SEARCH</a>
-            </div>
-            <div class="form-inline pull-right">
-                <label for="limit" class="control-label">LABEL_RESULTS_LIMIT_SELECTBOX:</label>
-                RESULTS_LIMIT_SELECTBOX
-            </div>
-    </div>
-    <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
-        <div class="panel-body">
-    <div id="search-orders" class="well no-mb">
-        <input name="id" type="hidden" value="###SHOP_PID###" />
-        <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
-        <input name="type" type="hidden" value="2003" />
-        <div class="row formfield-container-wrapper">
-            <div class="col-md-4 formfield-wrapper">
-                <div class="form-group">
-                    <label>###LABEL_KEYWORD###</label>
-                    <input type="text" class="form-control" name="skeyword" value="###VALUE_KEYWORD###">
-                </div>
-                <div class="form-group">
-                    <label for="type_search">###LABEL_SEARCH_ON###</label>
-                    ###OPTION_ITEM_SELECTBOX###
-                </div>
-                <div class="form-group">
-                    <label for="groups" class="labelInbetween">###LABEL_USERGROUP###</label>
-                    ###USERGROUP_SELECTBOX###
-                </div>
-            </div>
-            <div class="col-md-4 formfield-wrapper">
-                <label>###LABEL_FILTER_BY_DATE###</label>
-                <div class="form-group">
-                    <div class="form-inline">
-                        <label for="order_date_from">###LABEL_DATE_FROM###</label>
-                        <input type="text" class="form-control" name="invoice_date_from" id="invoice_date_from" value="###VALUE_DATE_FROM###">
-                        <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
-                        <input type="text" class="form-control" name="invoice_date_till" id="invoice_date_till" value="###VALUE_DATE_TO###">
+    <form id="form1" name="form1" method="get" action="index.php">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                    <div class="form-inline form-collapse">
+                        <div class="input-group">
+                            <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="###VALUE_KEYWORD###" placeholder="###LABEL_KEYWORD###" />
+                            <i class="fa fa-search 2x form-control-inputsearch"></i>
+                            <span class="input-group-btn">
+                                <input type="submit" name="Search" id="advanceSearchSubmit" value="###VALUE_SEARCH###" class="btn btn-success" />
+                            </span>
+                        </div>
+                        <a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">###LABEL_ADVANCED_SEARCH###</a>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
-                    ###INVOICES_STATUS_LIST_SELECTBOX###
-                </div>
-                <div class="form-group">
-                    <div class="checkbox checkbox-success checkbox-inline">
-                        <input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"###FILTER_BY_PAID_INVOICES_ONLY_CHECKED### ><label for="paid_invoices_only">###LABEL_FILTER_BY_PAID_INVOICES_ONLY###</label>
+                    <div class="form-inline pull-right">
+                        <label for="limit" class="control-label">###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
+                        ###RESULTS_LIMIT_SELECTBOX###
                     </div>
-                </div>
             </div>
-            <div class="col-md-4 formfield-wrapper">
-                <div class="form-group">
-                    <label for="payment_method">###LABEL_PAYMENT_METHOD###</label>
-                    ###PAYMENT_METHOD_SELECTBOX###
-                </div>
-                <div class="form-group">
-                    <label for="shipping_method" class="labelInbetween">###LABEL_SHIPPING_METHOD###</label>
-                    ###SHIPPING_METHOD_SELECTBOX###
-                </div>
-                <div class="form-group">
-                    <label for="country">###LABEL_COUNTRIES_SELECTBOX###</label>
-                    ###COUNTRIES_SELECTBOX###
-                </div>
-                <div class="form-group">
-                    <label>###LABEL_RESULTS_LIMIT_SELECTBOX###:</label>
-                    ###RESULTS_LIMIT_SELECTBOX###
-                </div>
-            </div>
-        </div>
-        <div class="row formfield-container-wrapper">
-            <div class="col-sm-12 formfield-wrapper">
-                <div class="clearfix">
-                    <div class="pull-right">
-                        <input type="submit" class="btn btn-success" name="Search" value="###VALUE_SEARCH###">
+            <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <div id="search-orders" class="well no-mb">
+                        <input name="id" type="hidden" value="###SHOP_PID###" />
+                        <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
+                        <input name="type" type="hidden" value="2003" />
+                        <div class="row formfield-container-wrapper">
+                            <div class="col-md-4 formfield-wrapper">
+                                <div class="form-group">
+                                    <label for="type_search">###LABEL_SEARCH_ON###</label>
+                                    ###OPTION_ITEM_SELECTBOX###
+                                </div>
+                                <div class="form-group">
+                                    <label for="groups" class="labelInbetween">###LABEL_USERGROUP###</label>
+                                    ###USERGROUP_SELECTBOX###
+                                </div>
+                            </div>
+                            <div class="col-md-4 formfield-wrapper">
+                                <label>###LABEL_FILTER_BY_DATE###</label>
+                                <div class="form-group">
+                                    <div class="form-inline">
+                                        <label for="order_date_from">###LABEL_DATE_FROM###</label>
+                                        <input type="text" class="form-control" name="invoice_date_from" id="invoice_date_from" value="###VALUE_DATE_FROM###">
+                                        <label for="order_date_till" class="labelInbetween">###LABEL_DATE_TO###</label>
+                                        <input type="text" class="form-control" name="invoice_date_till" id="invoice_date_till" value="###VALUE_DATE_TO###">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="orders_status_search">###LABEL_ORDER_STATUS###</label>
+                                    ###INVOICES_STATUS_LIST_SELECTBOX###
+                                </div>
+                                <div class="form-group">
+                                    <div class="checkbox checkbox-success checkbox-inline">
+                                        <input type="checkbox" id="paid_invoices_only" name="paid_invoices_only"  value="1"###FILTER_BY_PAID_INVOICES_ONLY_CHECKED### ><label for="paid_invoices_only">###LABEL_FILTER_BY_PAID_INVOICES_ONLY###</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 formfield-wrapper">
+                                <div class="form-group">
+                                    <label for="payment_method">###LABEL_PAYMENT_METHOD###</label>
+                                    ###PAYMENT_METHOD_SELECTBOX###
+                                </div>
+                                <div class="form-group">
+                                    <label for="shipping_method" class="labelInbetween">###LABEL_SHIPPING_METHOD###</label>
+                                    ###SHIPPING_METHOD_SELECTBOX###
+                                </div>
+                                <div class="form-group">
+                                    <label for="country">###LABEL_COUNTRIES_SELECTBOX###</label>
+                                    ###COUNTRIES_SELECTBOX###
+                                </div>
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </form>
-    </div></div></div>
     <!-- ###RESULTS### begin -->
     <form action="###FORM_POST_ACTION_URL###" name="orders_post" id="orders_post" method="post">
         <input name="id" type="hidden" value="###SHOP_PID2###" />
