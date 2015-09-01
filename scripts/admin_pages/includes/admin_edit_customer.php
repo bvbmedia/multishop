@@ -701,216 +701,217 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
 }
 switch ($_REQUEST['action']) {
 	case 'edit_customer':
-		$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
-		if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
-			$subpartArray['###USERNAME_READONLY###']=(($this->get['action']=='edit_customer' && $this->get['tx_multishop_pi1']['cid']>0) ? 'readonly="readonly"' : '');
-		} else {
-			$subpartArray['###USERNAME_READONLY###']='';
-		}
-		$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
-		$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
-		if ($this->masterShop) {
-			$multishop_content_objects=mslib_fe::getActiveShop();
-			if (count($multishop_content_objects)>1) {
-				$counter=0;
-				$total=count($multishop_content_objects);
-				$selectContent.='<select name="page_uid"><option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'."\n";
-				foreach ($multishop_content_objects as $pageinfo) {
-					$selectContent.='<option value="'.$pageinfo['uid'].'"'.($pageinfo['uid']==$this->post['page_uid'] ? ' selected' : '').'>'.htmlspecialchars($pageinfo['title']).'</option>';
-					$counter++;
-				}
-				$selectContent.='</select>'."\n";
-				if ($selectContent) {
-					$subpartArray['###MASTER_SHOP###']='
+		if (is_numeric($user['uid']) && $user['uid']>0) {
+			$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
+			if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
+				$subpartArray['###USERNAME_READONLY###']=(($this->get['action']=='edit_customer' && $this->get['tx_multishop_pi1']['cid']>0) ? 'readonly="readonly"' : '');
+			} else {
+				$subpartArray['###USERNAME_READONLY###']='';
+			}
+			$subpartArray['###VALUE_USERNAME###']=htmlspecialchars($this->post['username']);
+			$subpartArray['###LABEL_PASSWORD###']=ucfirst($this->pi_getLL('password'));
+			if ($this->masterShop) {
+				$multishop_content_objects=mslib_fe::getActiveShop();
+				if (count($multishop_content_objects)>1) {
+					$counter=0;
+					$total=count($multishop_content_objects);
+					$selectContent.='<select name="page_uid"><option value="">'.ucfirst($this->pi_getLL('choose')).'</option>'."\n";
+					foreach ($multishop_content_objects as $pageinfo) {
+						$selectContent.='<option value="'.$pageinfo['uid'].'"'.($pageinfo['uid']==$this->post['page_uid'] ? ' selected' : '').'>'.htmlspecialchars($pageinfo['title']).'</option>';
+						$counter++;
+					}
+					$selectContent.='</select>'."\n";
+					if ($selectContent) {
+						$subpartArray['###MASTER_SHOP###']='
 						<div class="account-field">
 							<label for="store" id="account-store">'.$this->pi_getLL('store').'</label>
 							'.$selectContent.'
 						</div>
 					';
+					}
 				}
 			}
-		}
-		$subpartArray['###VALUE_PASSWORD###']='';
-		$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
-		$subpartArray['###GENDER_MR_CHECKED###']=(($this->post['gender']=='0') ? 'checked="checked"' : '');
-		$subpartArray['###LABEL_GENDER_MR###']=ucfirst($this->pi_getLL('mr'));
-		$subpartArray['###GENDER_MRS_CHECKED###']=(($this->post['gender']=='1') ? 'checked="checked"' : '');
-		$subpartArray['###LABEL_GENDER_MRS###']=ucfirst($this->pi_getLL('mrs'));
-		$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name'));
-		$subpartArray['###VALUE_FIRSTNAME###']=htmlspecialchars($this->post['first_name']);
-		$subpartArray['###LABEL_MIDDLENAME###']=ucfirst($this->pi_getLL('middle_name'));
-		$subpartArray['###VALUE_MIDDLENAME###']=htmlspecialchars($this->post['middle_name']);
-		$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name'));
-		$subpartArray['###VALUE_LASTNAME###']=htmlspecialchars($this->post['last_name']);
-		//
-		$company_validation='';
-		$subpartArray['###LABEL_COMPANY###']=ucfirst($this->pi_getLL('company'));
-		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY']) {
-			$subpartArray['###LABEL_COMPANY###'].='*';
-			$company_validation=' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"';
-		}
-		$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
-		$subpartArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
-		//
-		$subpartArray['###LABEL_STREET_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
-		$subpartArray['###VALUE_STREET_ADDRESS###']=htmlspecialchars($this->post['street_name']);
-		$subpartArray['###LABEL_STREET_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
-		$subpartArray['###VALUE_STREET_ADDRESS_NUMBER###']=htmlspecialchars($this->post['address_number']);
-		$subpartArray['###LABEL_ADDRESS_EXTENTION###']=ucfirst($this->pi_getLL('address_extension'));
-		$subpartArray['###VALUE_ADDRESS_EXTENTION###']=htmlspecialchars($this->post['address_ext']);
-		$subpartArray['###LABEL_POSTCODE###']=ucfirst($this->pi_getLL('zip'));
-		$subpartArray['###VALUE_POSTCODE###']=htmlspecialchars($this->post['zip']);
-		$subpartArray['###LABEL_CITY###']=ucfirst($this->pi_getLL('city'));
-		$subpartArray['###VALUE_CITY###']=htmlspecialchars($this->post['city']);
-		$subpartArray['###COUNTRIES_INPUT###']=$countries_input;
-		$subpartArray['###LABEL_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address'));
-		$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
-		$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
-		$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
-		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
-		$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
-		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
-		$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
-		$subpartArray['###LABEL_BIRTHDATE###']=ucfirst($this->pi_getLL('birthday'));
-		$subpartArray['###VALUE_VISIBLE_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : '');
-		$subpartArray['###VALUE_HIDDEN_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
-		$subpartArray['###LABEL_DISCOUNT###']=ucfirst($this->pi_getLL('discount'));
-		$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
-		$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
-		$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
-		$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
-		$subpartArray['###VALUE_CUSTOMER_ID###']=$this->get['tx_multishop_pi1']['cid'];
-		if ($_GET['action']=='edit_customer') {
-			$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('update_account'));
-		} else {
-			$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('save'));
-		}
-		$subpartArray['###LOGIN_AS_THIS_USER_LINK###']=$login_as_this_user_link;
-		$customer_details='';
-		$markerArray=array();
-		if ($this->post['image']) {
-			$markerArray['CUSTOMER_IMAGE']='<div class="msAdminFeUserImage"><img src="uploads/pics/'.$this->post['image'].'" width="'.$size[0].'" /></div>';
-		} else {
-			$markerArray['CUSTOMER_IMAGE']='';
-		}
-		$customer_billing_address=mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid']);
-		$customer_delivery_address=mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid'], 'delivery');
-		if ($customer_billing_address['name'] && $customer_billing_address['phone'] && $customer_billing_address['email']) {
-			$fullname=$customer_billing_address['name'];
-			$telephone=$customer_billing_address['phone'];
-			$email_address=$customer_billing_address['email'];
-		} else {
-			$fullname=$this->post['name'];
-			$telephone=$this->post['telephone'];
-			$email_address=$this->post['email'];
-		}
-		$company_name='';
-		if ($customer_billing_address['address'] && $customer_billing_address['zip'] && $customer_billing_address['city']) {
-			$company_name=$customer_billing_address['company'];
-			$billing_street_address=$customer_billing_address['address'];
-			$billing_postcode=$customer_billing_address['zip'].' '.$customer_billing_address['city'];
-			$billing_country=ucwords(mslib_befe::strtolower($customer_billing_address['country']));
-		} else {
-			$company_name=$user['company'];
-			$billing_street_address=$user['address'];
-			$billing_postcode=$user['zip'].' '.$user['city'];
-			$billing_country=ucwords(mslib_befe::strtolower($user['country']));
-		}
-		if ($customer_delivery_address['address'] && $customer_delivery_address['zip'] && $customer_delivery_address['city']) {
-			$delivery_street_address=$customer_delivery_address['address'];
-			$delivery_postcode=$customer_delivery_address['zip'].' '.$customer_delivery_address['city'];
-			$delivery_country=ucwords(mslib_befe::strtolower($customer_delivery_address['country']));
-		} else {
-			$delivery_street_address=$user['address'];
-			$delivery_postcode=$user['zip'].' '.$user['city'];
-			$delivery_country=ucwords(mslib_befe::strtolower($user['country']));
-		}
-		$markerArray['DETAILS_COMPANY_NAME']=$company_name;
-		$actionButtons=array();
-		if (!$markerArray['DETAILS_COMPANY_NAME']) {
-			$markerArray['DETAILS_COMPANY_NAME']=$fullname;
-		}
-		$markerArray['BILLING_COMPANY']='';
-		if ($company_name) {
-			$markerArray['BILLING_COMPANY']=$company_name.'<br/>';
-		}
-		$markerArray['BILLING_FULLNAME']=$fullname.'<br/>';
-		$markerArray['BILLING_TELEPHONE']='';
-		if ($telephone) {
-			$markerArray['BILLING_TELEPHONE'].=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
-			$actionLink='callto:'.$telephone;
-			$actionButtons['call']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.$this->pi_getLL('call').'</a>';
-		}
-		$markerArray['BILLING_EMAIL']='';
-		if ($email_address) {
-			$markerArray['BILLING_EMAIL'].=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
-			$actionLink='mailto:'.$email_address;
-			$actionButtons['email']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-envelope-o"></i> '.$this->pi_getLL('email').'</a>';
-		}
-		$address=array();
-		$address[]=rawurlencode($user['address']);
-		$address[]=rawurlencode($user['zip']);
-		$address[]=rawurlencode($user['city']);
-		$address[]=rawurlencode($user['country']);
-		$actionLink='http://maps.google.com/maps?daddr='.implode('+',$address);
-		$actionButtons['travel_guide']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('travel_guide').'</a>';
-
-		$markerArray['BILLING_COMPANY_ACTION_NAV']='';
-		// custom page hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'])) {
-			$params=array(
-				'actionButtons'=>&$actionButtons,
-				'customer'=>&$user
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'] as $funcRef) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			$subpartArray['###VALUE_PASSWORD###']='';
+			$subpartArray['###LABEL_GENDER###']=ucfirst($this->pi_getLL('title'));
+			$subpartArray['###GENDER_MR_CHECKED###']=(($this->post['gender']=='0') ? 'checked="checked"' : '');
+			$subpartArray['###LABEL_GENDER_MR###']=ucfirst($this->pi_getLL('mr'));
+			$subpartArray['###GENDER_MRS_CHECKED###']=(($this->post['gender']=='1') ? 'checked="checked"' : '');
+			$subpartArray['###LABEL_GENDER_MRS###']=ucfirst($this->pi_getLL('mrs'));
+			$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name'));
+			$subpartArray['###VALUE_FIRSTNAME###']=htmlspecialchars($this->post['first_name']);
+			$subpartArray['###LABEL_MIDDLENAME###']=ucfirst($this->pi_getLL('middle_name'));
+			$subpartArray['###VALUE_MIDDLENAME###']=htmlspecialchars($this->post['middle_name']);
+			$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name'));
+			$subpartArray['###VALUE_LASTNAME###']=htmlspecialchars($this->post['last_name']);
+			//
+			$company_validation='';
+			$subpartArray['###LABEL_COMPANY###']=ucfirst($this->pi_getLL('company'));
+			if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY']) {
+				$subpartArray['###LABEL_COMPANY###'].='*';
+				$company_validation=' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"';
 			}
-		}
-		// custom page hook that can be controlled by third-party plugin eol
-		if (count($actionButtons)) {
-			$markerArray['BILLING_COMPANY_ACTION_NAV']='<div class="btn-group">';
-			foreach ($actionButtons as $actionButton) {
-				$markerArray['BILLING_COMPANY_ACTION_NAV'].=$actionButton;
+			$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
+			$subpartArray['###VALUE_COMPANY###']=htmlspecialchars($this->post['company']);
+			//
+			$subpartArray['###LABEL_STREET_ADDRESS###']=ucfirst($this->pi_getLL('street_address'));
+			$subpartArray['###VALUE_STREET_ADDRESS###']=htmlspecialchars($this->post['street_name']);
+			$subpartArray['###LABEL_STREET_ADDRESS_NUMBER###']=ucfirst($this->pi_getLL('street_address_number'));
+			$subpartArray['###VALUE_STREET_ADDRESS_NUMBER###']=htmlspecialchars($this->post['address_number']);
+			$subpartArray['###LABEL_ADDRESS_EXTENTION###']=ucfirst($this->pi_getLL('address_extension'));
+			$subpartArray['###VALUE_ADDRESS_EXTENTION###']=htmlspecialchars($this->post['address_ext']);
+			$subpartArray['###LABEL_POSTCODE###']=ucfirst($this->pi_getLL('zip'));
+			$subpartArray['###VALUE_POSTCODE###']=htmlspecialchars($this->post['zip']);
+			$subpartArray['###LABEL_CITY###']=ucfirst($this->pi_getLL('city'));
+			$subpartArray['###VALUE_CITY###']=htmlspecialchars($this->post['city']);
+			$subpartArray['###COUNTRIES_INPUT###']=$countries_input;
+			$subpartArray['###LABEL_EMAIL###']=ucfirst($this->pi_getLL('e-mail_address'));
+			$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
+			$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
+			$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
+			$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
+			$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
+			$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
+			$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
+			$subpartArray['###LABEL_BIRTHDATE###']=ucfirst($this->pi_getLL('birthday'));
+			$subpartArray['###VALUE_VISIBLE_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%x", $this->post['date_of_birth'])) : '');
+			$subpartArray['###VALUE_HIDDEN_BIRTHDATE###']=($this->post['date_of_birth'] ? htmlspecialchars(strftime("%F", $this->post['date_of_birth'])) : '');
+			$subpartArray['###LABEL_DISCOUNT###']=ucfirst($this->pi_getLL('discount'));
+			$subpartArray['###VALUE_DISCOUNT###']=($this->post['tx_multishop_discount']>0 ? htmlspecialchars($this->post['tx_multishop_discount']) : '');
+			$subpartArray['###LABEL_PAYMENT_CONDITION###']=ucfirst($this->pi_getLL('payment_condition'));
+			$subpartArray['###VALUE_PAYMENT_CONDITION###']=($this->post['tx_multishop_payment_condition']>0 ? htmlspecialchars($this->post['tx_multishop_payment_condition']) : '');
+			$subpartArray['###CUSTOMER_GROUPS_INPUT###']=$customer_groups_input;
+			$subpartArray['###VALUE_CUSTOMER_ID###']=$this->get['tx_multishop_pi1']['cid'];
+			if ($_GET['action']=='edit_customer') {
+				$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('update_account'));
+			} else {
+				$subpartArray['###LABEL_BUTTON_SAVE###']=ucfirst($this->pi_getLL('save'));
 			}
-			$markerArray['BILLING_COMPANY_ACTION_NAV'].='</div>';
-		}
-		$markerArray['CUSTOMER_ID']=$this->pi_getLL('admin_customer_id').': '.$user['uid'].'<br/>';
-		if ($user['crdate']>0) {
-			$user['crdate']=strftime("%a. %x %X", $user['crdate']);
-		} else {
-			$user['crdate']='';
-		}
-		$markerArray['REGISTERED_DATE']=$this->pi_getLL('created').': '.$user['crdate'].'<br/>';
-		if ($user['lastlogin']) {
-			$user['lastlogin']=strftime("%a. %x %X", $user['lastlogin']);
-		} else {
-			$user['lastlogin']='-';
-		}
-		$markerArray['LAST_LOGIN']=$this->pi_getLL('latest_login').': '.$user['lastlogin'].'<br/>';
-		$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
-		$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
-		$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
-		$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
+			$subpartArray['###LOGIN_AS_THIS_USER_LINK###']=$login_as_this_user_link;
+			$customer_details='';
+			$markerArray=array();
+			if ($this->post['image']) {
+				$markerArray['CUSTOMER_IMAGE']='<div class="msAdminFeUserImage"><img src="uploads/pics/'.$this->post['image'].'" width="'.$size[0].'" /></div>';
+			} else {
+				$markerArray['CUSTOMER_IMAGE']='';
+			}
+			$customer_billing_address=mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid']);
+			$customer_delivery_address=mslib_fe::getFeUserTTaddressDetails($this->get['tx_multishop_pi1']['cid'], 'delivery');
+			if ($customer_billing_address['name'] && $customer_billing_address['phone'] && $customer_billing_address['email']) {
+				$fullname=$customer_billing_address['name'];
+				$telephone=$customer_billing_address['phone'];
+				$email_address=$customer_billing_address['email'];
+			} else {
+				$fullname=$this->post['name'];
+				$telephone=$this->post['telephone'];
+				$email_address=$this->post['email'];
+			}
+			$company_name='';
+			if ($customer_billing_address['address'] && $customer_billing_address['zip'] && $customer_billing_address['city']) {
+				$company_name=$customer_billing_address['company'];
+				$billing_street_address=$customer_billing_address['address'];
+				$billing_postcode=$customer_billing_address['zip'].' '.$customer_billing_address['city'];
+				$billing_country=ucwords(mslib_befe::strtolower($customer_billing_address['country']));
+			} else {
+				$company_name=$user['company'];
+				$billing_street_address=$user['address'];
+				$billing_postcode=$user['zip'].' '.$user['city'];
+				$billing_country=ucwords(mslib_befe::strtolower($user['country']));
+			}
+			if ($customer_delivery_address['address'] && $customer_delivery_address['zip'] && $customer_delivery_address['city']) {
+				$delivery_street_address=$customer_delivery_address['address'];
+				$delivery_postcode=$customer_delivery_address['zip'].' '.$customer_delivery_address['city'];
+				$delivery_country=ucwords(mslib_befe::strtolower($customer_delivery_address['country']));
+			} else {
+				$delivery_street_address=$user['address'];
+				$delivery_postcode=$user['zip'].' '.$user['city'];
+				$delivery_country=ucwords(mslib_befe::strtolower($user['country']));
+			}
+			$markerArray['DETAILS_COMPANY_NAME']=$company_name;
+			$actionButtons=array();
+			if (!$markerArray['DETAILS_COMPANY_NAME']) {
+				$markerArray['DETAILS_COMPANY_NAME']=$fullname;
+			}
+			$markerArray['BILLING_COMPANY']='';
+			if ($company_name) {
+				$markerArray['BILLING_COMPANY']=$company_name.'<br/>';
+			}
+			$markerArray['BILLING_FULLNAME']=$fullname.'<br/>';
+			$markerArray['BILLING_TELEPHONE']='';
+			if ($telephone) {
+				$markerArray['BILLING_TELEPHONE'].=ucfirst($this->pi_getLL('telephone')).': '.$telephone.'<br/>';
+				$actionLink='callto:'.$telephone;
+				$actionButtons['call']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-phone-square"></i> '.$this->pi_getLL('call').'</a>';
+			}
+			$markerArray['BILLING_EMAIL']='';
+			if ($email_address) {
+				$markerArray['BILLING_EMAIL'].=ucfirst($this->pi_getLL('e-mail_address')).': '.$email_address.'<br/>';
+				$actionLink='mailto:'.$email_address;
+				$actionButtons['email']='<a href="'.$actionLink.'" class="btn btn-xs btn-default"><i class="fa fa-envelope-o"></i> '.$this->pi_getLL('email').'</a>';
+			}
+			$address=array();
+			$address[]=rawurlencode($user['address']);
+			$address[]=rawurlencode($user['zip']);
+			$address[]=rawurlencode($user['city']);
+			$address[]=rawurlencode($user['country']);
+			$actionLink='http://maps.google.com/maps?daddr='.implode('+',$address);
+			$actionButtons['travel_guide']='<a href="'.$actionLink.'" rel="nofollow" target="_blank" class="btn btn-xs btn-default"><i class="fa fa-map-marker"></i> '.$this->pi_getLL('travel_guide').'</a>';
 
-		$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
-		$markerArray['ADMIN_LABEL_DELIVERY_ADDRESS']=$this->pi_getLL('admin_label_delivery_address');
+			$markerArray['BILLING_COMPANY_ACTION_NAV']='';
+			// custom page hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'])) {
+				$params=array(
+						'actionButtons'=>&$actionButtons,
+						'customer'=>&$user
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['actionButtonsBillingCompanyBoxPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom page hook that can be controlled by third-party plugin eol
+			if (count($actionButtons)) {
+				$markerArray['BILLING_COMPANY_ACTION_NAV']='<div class="btn-group">';
+				foreach ($actionButtons as $actionButton) {
+					$markerArray['BILLING_COMPANY_ACTION_NAV'].=$actionButton;
+				}
+				$markerArray['BILLING_COMPANY_ACTION_NAV'].='</div>';
+			}
+			$markerArray['CUSTOMER_ID']=$this->pi_getLL('admin_customer_id').': '.$user['uid'].'<br/>';
+			if ($user['crdate']>0) {
+				$user['crdate']=strftime("%a. %x %X", $user['crdate']);
+			} else {
+				$user['crdate']='';
+			}
+			$markerArray['REGISTERED_DATE']=$this->pi_getLL('created').': '.$user['crdate'].'<br/>';
+			if ($user['lastlogin']) {
+				$user['lastlogin']=strftime("%a. %x %X", $user['lastlogin']);
+			} else {
+				$user['lastlogin']='-';
+			}
+			$markerArray['LAST_LOGIN']=$this->pi_getLL('latest_login').': '.$user['lastlogin'].'<br/>';
+			$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
+			$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
+			$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
+			$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
 
-		// customers related orders listings
-		$filter=array();
-		$from=array();
-		$having=array();
-		$match=array();
-		$orderby=array();
-		$where=array();
-		$select=array();
-		$select[]='o.*';
-		$filter[]='o.customer_id='.$user['uid'];
-		$filter[]='o.page_uid='.$this->shop_pid;
-		$orders_pageset=mslib_fe::getOrdersPageSet($filter, 0, 10000, array('orders_id desc'), $having, $select, $where, $from);
-		$order_listing=$this->pi_getLL('no_orders_found');
-		if ($orders_pageset['total_rows']>0) {
-			$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
-			$order_listing='<div class="table-responsive">
+			$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
+			$markerArray['ADMIN_LABEL_DELIVERY_ADDRESS']=$this->pi_getLL('admin_label_delivery_address');
+
+			// customers related orders listings
+			$filter=array();
+			$from=array();
+			$having=array();
+			$match=array();
+			$orderby=array();
+			$where=array();
+			$select=array();
+			$select[]='o.*';
+			$filter[]='o.customer_id='.$user['uid'];
+			$filter[]='o.page_uid='.$this->shop_pid;
+			$orders_pageset=mslib_fe::getOrdersPageSet($filter, 0, 10000, array('orders_id desc'), $having, $select, $where, $from);
+			$order_listing=$this->pi_getLL('no_orders_found');
+			if ($orders_pageset['total_rows']>0) {
+				$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
+				$order_listing='<div class="table-responsive">
 				<table id="product_import_table" class="table table-striped table-bordered no-mb msadmin_orders_listing">
 					<thead><tr>
 						<th width="50" align="right" class="cellID">'.$this->pi_getLL('orders_id').'</th>
@@ -922,24 +923,24 @@ switch ($_REQUEST['action']) {
 						<th width="110" class="cellDate">'.$this->pi_getLL('modified_on', 'Modified on').'</th>
 						<th width="50" class="cellStatus">'.$this->pi_getLL('admin_paid').'</th>
 					</tr></thead><tbody>';
-			$tr_type='odd';
-			foreach ($orders_pageset['orders'] as $order) {
-				if (!isset($tr_type) || $tr_type=='odd') {
-					$tr_type='even';
-				} else {
-					$tr_type='odd';
-				}
-				if ($order['is_proposal']>0) {
-					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
-				} else {
-					$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order');
-				}
-				if (!$order['paid']) {
-					$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
-				} else {
-					$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
-				}
-				$order_listing.='<tr>
+				$tr_type='odd';
+				foreach ($orders_pageset['orders'] as $order) {
+					if (!isset($tr_type) || $tr_type=='odd') {
+						$tr_type='even';
+					} else {
+						$tr_type='odd';
+					}
+					if ($order['is_proposal']>0) {
+						$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&tx_multishop_pi1[is_proposal]=1');
+					} else {
+						$order_edit_url=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order');
+					}
+					if (!$order['paid']) {
+						$paid_status='<span class="admin_status_red" alt="'.$this->pi_getLL('has_not_been_paid').'" title="'.$this->pi_getLL('has_not_been_paid').'"></span>';
+					} else {
+						$paid_status='<span class="admin_status_green" alt="'.$this->pi_getLL('has_been_paid').'" title="'.$this->pi_getLL('has_been_paid').'"></span>';
+					}
+					$order_listing.='<tr>
 							<td class="cellID"><a href="'.$order_edit_url.'" title="'.htmlspecialchars($this->pi_getLL('loading')).'" title="Loading" class="popover-link" rel="'.$order['orders_id'].'">'.$order['orders_id'].'</a></td>
 							<td class="cellDate">'.strftime("%a. %x %X", $order['crdate']).'</td>
 							<td class="cellPrice">'.mslib_fe::amount2Cents($order['grand_total'], 0).'</td>
@@ -949,8 +950,8 @@ switch ($_REQUEST['action']) {
 							<td class="cellDate">'.($order['status_last_modified'] ? strftime("%a. %x %X", $order['status_last_modified']) : '').'</td>
 							<td class="cellStatus">'.$paid_status.'</td>
 						</tr>';
-			}
-			$order_listing.='</tbody><tfoot><tr>
+				}
+				$order_listing.='</tbody><tfoot><tr>
 						<th width="50" class="cellID">'.$this->pi_getLL('orders_id').'</th>
 						<th width="110" class="cellDate">'.$this->pi_getLL('order_date').'</th>
 						<th width="50" class="cellPrice">'.$this->pi_getLL('amount').'</th>
@@ -962,30 +963,31 @@ switch ($_REQUEST['action']) {
 					</tr></tfoot>
 				</table>
 			</div>';
-		}
-		$customer_related_orders_listing='<div id="orders_details">';
-		$customer_related_orders_listing.='<div class="panel panel-default">';
-		$customer_related_orders_listing.='<div class="panel-heading"><h3>'.$this->pi_getLL('orders').'</h3></div>';
-		$customer_related_orders_listing.='<div class="panel-body"><fieldset>';
-		$customer_related_orders_listing.=$order_listing;
-		$customer_related_orders_listing.='</fieldset></div>';
-		$customer_related_orders_listing.='</div></div>';
-		$markerArray['CUSTOMER_RELATED_ORDERS_LISTING']=$customer_related_orders_listing;
-		// custom page hook that can be controlled by third-party plugin
-		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'])) {
-			$params=array(
-				'markerArray'=>&$markerArray,
-				'user'=>&$user
-			);
-			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'] as $funcRef) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 			}
+			$customer_related_orders_listing='<div id="orders_details">';
+			$customer_related_orders_listing.='<div class="panel panel-default">';
+			$customer_related_orders_listing.='<div class="panel-heading"><h3>'.$this->pi_getLL('orders').'</h3></div>';
+			$customer_related_orders_listing.='<div class="panel-body"><fieldset>';
+			$customer_related_orders_listing.=$order_listing;
+			$customer_related_orders_listing.='</fieldset></div>';
+			$customer_related_orders_listing.='</div></div>';
+			$markerArray['CUSTOMER_RELATED_ORDERS_LISTING']=$customer_related_orders_listing;
+			// custom page hook that can be controlled by third-party plugin
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'])) {
+				$params=array(
+						'markerArray'=>&$markerArray,
+						'user'=>&$user
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['adminEditCustomerDashBoardMainTabPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
+			// custom page hook that can be controlled by third-party plugin eof
+			$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
+			$subpartArray['###DETAILS_TAB###']='<li role="presentation"><a href="#view_customer" aria-controls="profile" role="tab" data-toggle="tab">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
+			$subpartArray['###DETAILS###']=$customer_details;
+			$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		}
-		// custom page hook that can be controlled by third-party plugin eof
-		$customer_details.=$this->cObj->substituteMarkerArray($subparts['details'], $markerArray, '###|###');
-		$subpartArray['###DETAILS_TAB###']='<li role="presentation"><a href="#view_customer" aria-controls="profile" role="tab" data-toggle="tab">'.$this->pi_getLL('admin_label_tabs_details').'</a></li>';
-		$subpartArray['###DETAILS###']=$customer_details;
-		$subpartArray['###INPUT_EDIT_SHIPPING_AND_PAYMENT_METHOD###']=$shipping_payment_method;
 		break;
 	case 'add_customer':
 	default:
@@ -1178,6 +1180,10 @@ $interfaceHeaderButtons=$objRef->renderHeaderButtons();
 $subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
 
 $content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
+
+if ($this->get['tx_multishop_pi1']['cid']>0 && !is_numeric($user['uid'])) {
+	$content=$this->pi_getLL('customer_not_found');
+}
 /*
 if ($customer_id) {
 	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'pi1/classes/class.tx_mslib_dashboard.php');
