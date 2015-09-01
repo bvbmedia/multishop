@@ -45,7 +45,26 @@ jQuery(document).ready(function ($) {
 </div>
 <div class="panel-body">
 <form id="form1" name="form1" method="get" action="index.php">
-    <div id="search-orders" class="well">
+<div class="panel panel-default">
+    <div class="panel-heading">
+            <div class="form-inline form-collapse">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="VALUE_KEYWORD" placeholder="LABEL_KEYWORD" />
+                    <i class="fa fa-search 2x form-control-inputsearch"></i>
+                    <span class="input-group-btn">
+                        <input type="submit" name="Search" id="advanceSearchSubmit" value="VALUE_SEARCH" class="btn btn-success" />
+                    </span>
+                </div>
+                <a role="button" data-toggle="collapse" href="#msAdminInterfaceSearch" class="advanceSearch">LABEL_ADVANCED_SEARCH</a>
+            </div>
+            <div class="form-inline pull-right">
+                <label for="limit" class="control-label">LABEL_RESULTS_LIMIT_SELECTBOX:</label>
+                RESULTS_LIMIT_SELECTBOX
+            </div>
+    </div>
+    <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
+        <div class="panel-body">
+    <div id="search-orders" class="well no-mb">
         <input name="id" type="hidden" value="###SHOP_PID###" />
         <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
         <input name="type" type="hidden" value="2003" />
@@ -112,13 +131,15 @@ jQuery(document).ready(function ($) {
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     </form>
+    </div></div></div>
     <!-- ###RESULTS### begin -->
     <form action="###FORM_POST_ACTION_URL###" name="orders_post" id="orders_post" method="post">
         <input name="id" type="hidden" value="###SHOP_PID2###" />
         <input name="tx_multishop_pi1[page_section]" type="hidden" value="admin_invoices" />
         <input name="type" type="hidden" value="2003" />
+        <div class="table-responsive">
         <table width="100%" cellpadding="0" cellspacing="0" border="0" id="msAdminInvoicesListing" class="table table-striped table-bordered">
             <thead>
                 <tr>
@@ -192,13 +213,22 @@ jQuery(document).ready(function ($) {
                 </tr>
             </tfoot>
         </table>
-        ###PAGINATION###
-        ###FORM_FIELDS_LISTING_ACTION_BLOCK###
-    </form>
-    <!-- ###RESULTS### end -->
+        </div>
+        <div id="msAdminOrdersListingActionForm" class="row">
+                    <div class="col-md-6">
+                    ###FORM_FIELDS_LISTING_ACTION_BLOCK###
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+            </form>
+            ###PAGINATION###
+            <!-- ###RESULTS### end -->
+            <!-- ###NORESULTS### begin -->
+            ###LABEL_NO_RESULTS###
+            <!-- ###NORESULTS### end -->
 
-        <!-- ###NORESULTS### begin -->
-        ###LABEL_NO_RESULTS###
-        <!-- ###NORESULTS### end -->
+        ###BACK_BUTTON###
+                </div>
+    </div>
 </div>
 <!-- ###TEMPLATE### end -->
