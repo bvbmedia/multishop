@@ -1245,6 +1245,8 @@
             <label index="filter_by_telephone_orders">Filter by telephone orders</label>
             <label index="customer_not_found">Customer not found</label>
             <label index="advanced_search">Advanced search</label>
+            <label index="admin_invoice_statistics">Invoice statistics</label>
+            <label index="admin_invoice_statistics_description">Show invoice turn over by month/year</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2482,6 +2484,8 @@
             <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
             <label index="filter_by_telephone_orders">Filter op telefonische bestellingen</label>
             <label index="advanced_search">Uitgebreid zoeken</label>
+            <label index="admin_invoice_statistics">Invoice statistieken</label>
+            <label index="admin_invoice_statistics_description">Bekijk factuuromzet per maand/jaar</label>
         </languageKey>
     </data>
 </T3locallang>

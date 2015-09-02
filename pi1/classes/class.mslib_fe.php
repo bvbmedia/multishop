@@ -6818,6 +6818,16 @@ class mslib_fe {
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_stats_orders' || $this->post['tx_multishop_pi1']['page_section']=='admin_stats_orders') {
 				$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_orders']['active']=1;
 			}
+
+			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
+				$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_invoices']['label']=htmlspecialchars($this->pi_getLL('admin_invoice_statistics'));
+				$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_invoices']['description']=$this->pi_getLL('admin_invoice_statistics_description').'.';
+				$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_invoices']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_stats_invoices');
+				$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_invoices']['class']='fa fa-pie-chart';
+				if ($this->get['tx_multishop_pi1']['page_section']=='admin_stats_invoices' || $this->post['tx_multishop_pi1']['page_section']=='admin_stats_invoices') {
+					$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_invoices']['active']=1;
+				}
+			}
 			// browser user-agent stats
 			$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_user_agent']['label']=htmlspecialchars($this->pi_getLL('admin_user_agent_statistics'));
 			$ms_menu['footer']['ms_admin_statistics']['subs']['admin_stats_user_agent']['description']=$this->pi_getLL('admin_user_agent_statistics_description').'.';
