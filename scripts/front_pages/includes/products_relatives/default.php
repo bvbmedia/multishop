@@ -70,7 +70,7 @@ foreach ($rel_products as $rel_rs) {
 	} else {
 		$tr_type='even';
 	}
-	$products_attributes=$GLOBALS['TYPO3_DB']->sql_query("select popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$product['products_id']."' and patrib.options_id = popt.products_options_id and popt.language_id = '".$languages_id."' order by popt.products_options_id");
+	$products_attributes=$GLOBALS['TYPO3_DB']->sql_query("select popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$product['products_id']."' and patrib.page_uid='".$this->showCatalogFromPage."' and patrib.options_id = popt.products_options_id and popt.language_id = '".$languages_id."' order by popt.products_options_id");
 	//$products_attributes = tep_db_query();
 	if ($GLOBALS['TYPO3_DB']->sql_num_rows($products_attributes)) {
 		$products_attributes='1';
@@ -78,11 +78,11 @@ foreach ($rel_products as $rel_rs) {
 		$products_attributes='0';
 	}
 	if ($products_attributes) {
-		$opt_sql="select distinct popt.products_options_id, popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$product['products_id']."' and patrib.options_id = popt.products_options_id and popt.language_id = '".$languages_id."'";
+		$opt_sql="select distinct popt.products_options_id, popt.products_options_name from tx_multishop_products_options popt, tx_multishop_products_attributes patrib where patrib.products_id='".$product['products_id']."' and patrib.page_uid='".$this->showCatalogFromPage."' and patrib.options_id = popt.products_options_id and popt.language_id = '".$languages_id."'";
 		$products_options_name=$GLOBALS['TYPO3_DB']->sql_query($opt_sql);
 		while ($products_options_name_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options_name)) {
 			$selected=0;
-			$products_options=$GLOBALS['TYPO3_DB']->sql_query("select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.products_id = '".$product['products_id']."' and pa.options_id = '".$products_options_name_values['products_options_id']."' and pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$languages_id."' order by pa.options_values_price,pov.products_options_values_id, pov.products_options_values_name");
+			$products_options=$GLOBALS['TYPO3_DB']->sql_query("select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from tx_multishop_products_attributes pa, tx_multishop_products_options_values pov where pa.products_id = '".$product['products_id']."' and pa.page_uid='".$this->showCatalogFromPage."' and pa.options_id = '".$products_options_name_values['products_options_id']."' and pa.options_values_id = pov.products_options_values_id and pov.language_id = '".$languages_id."' order by pa.options_values_price,pov.products_options_values_id, pov.products_options_values_name");
 			while ($products_options_values=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($products_options)) {
 				if ($products_options_values['options_values_price']==0 && $selected==0) {
 					$rel_rs['hidden_fields'].='<input type="hidden" name="relation_id['.$i.']['.$products_options_name_values['products_options_id'].']" value="'.$products_options_values['products_options_values_id'].'" />';

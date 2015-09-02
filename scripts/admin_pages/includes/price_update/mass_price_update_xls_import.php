@@ -57,22 +57,22 @@ function updateOption($optid, $hide=0) {
 }
 
 function updateProductAttribute($pid, $paid, $optvalid, $optval_price=0, $hide=0, $sign='+') {
-	$sql="UPDATE `tx_multishop_products_attributes` SET `options_values_id` = '".$optvalid."', options_values_price = '".$optval_price."', hide = ".$hide.", price_prefix = '".$sign."' WHERE `products_attributes_id` = '".$paid."' and products_id = ".$pid." LIMIT 1";
+	$sql="UPDATE `tx_multishop_products_attributes` SET `options_values_id` = '".$optvalid."', options_values_price = '".$optval_price."', hide = ".$hide.", price_prefix = '".$sign."' WHERE `products_attributes_id` = '".$paid."' and products_id = ".$pid." and page_uid=".$this->showCatalogFromPage." LIMIT 1";
 	$GLOBALS['TYPO3_DB']->sql_query($sql) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql);
 }
 
 function insertProductAttribute($pid, $optid, $optvalid, $optval_price=0, $hide=0, $sign='+') {
-	$sql="INSERT INTO `tx_multishop_products_attributes`(`products_attributes_id`, `products_id`, `options_id`, `options_values_id`, `options_values_price`, `price_prefix`, `products_stock`, `hide`) VALUES(NULL , '".$pid."', '".$optid."', '".$optvalid."', '".$optval_price."', '".$sign."', '0', '".$hide."')";
+	$sql="INSERT INTO `tx_multishop_products_attributes`(`products_attributes_id`, `products_id`, `options_id`, `options_values_id`, `options_values_price`, `price_prefix`, `products_stock`, `hide`, `page_uid`) VALUES(NULL , '".$pid."', '".$optid."', '".$optvalid."', '".$optval_price."', '".$sign."', '0', '".$hide."', '".$this->showCatalogFromPage."')";
 	$GLOBALS['TYPO3_DB']->sql_query($sql) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql);
 }
 
 function removeProductAttribute($pid, $optid) {
-	$sql="DELETE FROM `tx_multishop_products_attributes` WHERE products_id = ".$pid." and options_id = ".$optid;
+	$sql="DELETE FROM `tx_multishop_products_attributes` WHERE products_id = ".$pid." and options_id = ".$optid." and page_uid=".$this->showCatalogFromPage;
 	$GLOBALS['TYPO3_DB']->sql_query($sql) or die($sql.' --- '.$GLOBALS['TYPO3_DB']->sql_error());
 }
 
 function getProductAttributeID($pid, $optid, $optvalid) {
-	$sql_opt="select products_attributes_id from tx_multishop_products_attributes where products_id = '".$pid."' and options_id = ".$optid." and options_values_id = ".$optvalid;
+	$sql_opt="select products_attributes_id from tx_multishop_products_attributes where products_id = '".$pid."' and options_id = ".$optid." and options_values_id = ".$optvalid." and page_uid=".$this->showCatalogFromPage;
 	$qry_opt=$GLOBALS['TYPO3_DB']->sql_query($sql_opt) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_opt);
 	$rs_opt=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_opt);
 	$pa_id=$rs_opt['products_attributes_id'];
@@ -192,7 +192,7 @@ function removeProductAttributeExtra($pid, $paid) {
 }
 
 if (!empty($filename)) {
-	// +--------------------------------------------------------------------------------------------------------------------+	
+	// +--------------------------------------------------------------------------------------------------------------------+
 	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel/IOFactory.php');
 	$phpexcel=PHPExcel_IOFactory::load($dest);
 	foreach ($phpexcel->getWorksheetIterator() as $worksheet) {
@@ -339,7 +339,7 @@ if (!empty($filename)) {
 				$GLOBALS['TYPO3_DB']->sql_query($sql_delete) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_delete);
 				$sql_delete="delete from tx_multishop_products_to_categories where products_id = ".$pid;
 				$GLOBALS['TYPO3_DB']->sql_query($sql_delete) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_delete);
-				$sql_delete="delete from tx_multishop_products_attributes where products_id = ".$pid;
+				$sql_delete="delete from tx_multishop_products_attributes where products_id = ".$pid." and page_uid=".$this->showCatalogFromPage;
 				$GLOBALS['TYPO3_DB']->sql_query($sql_delete) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_delete);
 				$sql_delete="delete from tx_multishop_specials where products_id = ".$pid;
 				$GLOBALS['TYPO3_DB']->sql_query($sql_delete) or die($HTTP_HOST.'-'.$_SERVER['PHP_SELF'].' --- '.$GLOBALS['TYPO3_DB']->sql_error()."\n\n".$sql_delete);

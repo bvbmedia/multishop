@@ -702,7 +702,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 		if ($product_id>0 && $option_id>0 && $value_id>0) {
 			$updateArray=array();
 			$updateArray['attribute_image']='';
-			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_id='.$product_id.' and options_id='.$option_id.' and options_values_id='.$value_id.' and attribute_image=\''.$image_fn.'\'', $updateArray);
+			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_id='.$product_id.' and options_id='.$option_id.' and options_values_id='.$value_id.' and attribute_image=\''.$image_fn.'\' and page_uid=\''.$this->showCatalogFromPage.'\'', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 		}
 		mslib_befe::deleteAttributeValuesImage($image_fn);
@@ -806,7 +806,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', $where, $updateArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							// products level
-							$where="options_id = ".$prod_id;
+							$where="options_id = ".$prod_id . " and page_uid='".$this->showCatalogFromPage."'";
 							$updateArray=array();
 							$updateArray=array(
 								'sort_order_option_name'=>$no
@@ -831,7 +831,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_attributes_options_values']) 
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', $where, $updateArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								// products level
-								$where="options_id = ".$this->post['products_options_id']." and options_values_id=".$prod_id;
+								$where="options_id = ".$this->post['products_options_id']." and options_values_id=".$prod_id." and page_uid=".$this->showCatalogFromPage;
 								$updateArray=array();
 								$updateArray=array(
 									'sort_order_option_value'=>$no

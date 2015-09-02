@@ -1157,7 +1157,7 @@ class mslib_befe {
 					$tables[]='tx_multishop_products_to_extra_options';
 					foreach ($tables as $table) {
 						if ($use_page_uid) {
-							if ($table=='tx_multishop_products' || $table=='tx_multishop_products_description' || $table=='tx_multishop_products_to_categories') {
+							if ($table=='tx_multishop_products' || $table=='tx_multishop_products_description' || $table=='tx_multishop_products_to_categories' || $table=='tx_multishop_products_attributes') {
 								$query=$GLOBALS['TYPO3_DB']->DELETEquery($table, 'products_id='.$products_id.' and page_uid=\''.$this->shop_pid.'\'');
 							}
 						} else {
@@ -2638,7 +2638,7 @@ class mslib_befe {
 				// insert tx_multishop_products_attributes
 				$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
 					'tx_multishop_products_attributes', // FROM ...
-					'products_id=\''.$id_product.'\'', // WHERE...
+					'products_id=\''.$id_product.'\' and page_uid=\''.$this->showCatalogFromPage.'\'', // WHERE...
 					'', // GROUP BY...
 					'', // ORDER BY...
 					'' // LIMIT ...
@@ -2648,6 +2648,7 @@ class mslib_befe {
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 						$product_arr_new=$row;
 						$product_arr_new['products_id']=$id_product_new;
+						$product_arr_new['page_uid']=$this->showCatalogFromPage;
 						unset($product_arr_new['products_attributes_id']); //primary key
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $product_arr_new);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);

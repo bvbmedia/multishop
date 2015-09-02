@@ -1918,7 +1918,7 @@ if (is_numeric($this->get['orders_id'])) {
 						}
 					} else {
 						if ($this->get['edit_product'] && $this->get['order_pid']==$order['orders_products_id']) {
-							$sql_option="select po.products_options_name, po.products_options_id from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id where (po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$order['products_id']." group by pa.options_id";
+							$sql_option="select po.products_options_name, po.products_options_id from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id where (po.hide_in_cart=0 or po.hide_in_cart is null) and po.language_id = '".$this->sys_language_uid."' and pa.products_id = ".$order['products_id']." and pa.page_uid=".$this->showCatalogFromPage." group by pa.options_id";
 							$qry_option=$GLOBALS['TYPO3_DB']->sql_query($sql_option);
 							while (($rs_option=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_option))!=false) {
 								$order_products_body_data=array();
@@ -1930,7 +1930,7 @@ if (is_numeric($this->get['orders_id'])) {
 								$order_products_body_data['products_name']['align']='left';
 								$order_products_body_data['products_name']['value'].='<label>'.$rs_option['products_options_name'].':</label>';
 								$order_products_body_data['products_name']['value'].='<select name="option['.$rs_option['products_options_id'].']" id="option_'.$rs_option['products_options_id'].'" class="form-control" style="width:402px;">';
-								$sql_optval="select pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id = pov.products_options_values_id where pov.language_id = '".$this->sys_language_uid."' and pa.options_id = '".$rs_option['products_options_id']."' and pa.products_id = ".$order['products_id'];
+								$sql_optval="select pa.options_values_id, pov.products_options_values_name from tx_multishop_products_attributes pa left join tx_multishop_products_options po on pa.options_id = po.products_options_id left join tx_multishop_products_options_values pov on pa.options_values_id = pov.products_options_values_id where pov.language_id = '".$this->sys_language_uid."' and pa.options_id = '".$rs_option['products_options_id']."' and pa.products_id = ".$order['products_id']." and pa.page_uid=".$this->showCatalogFromPage;
 								$qry_optval=$GLOBALS['TYPO3_DB']->sql_query($sql_optval);
 								while (($rs_optval=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_optval))!=false) {
 									$order_products_body_data['products_name']['value'].='<option value="'.$rs_optval['options_values_id'].'">'.$rs_optval['products_options_values_name'].'</option>';

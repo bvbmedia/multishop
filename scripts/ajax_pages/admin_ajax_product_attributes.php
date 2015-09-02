@@ -150,7 +150,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 		if ($this->ADMIN_USER) {
 			$pid=$this->get['pid'];
 			$paid=$this->post['paid'];
-			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_attributes', "products_id='".$pid."' and products_attributes_id='".$paid."'");
+			$GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_multishop_products_attributes', "products_id='".$pid."' and products_attributes_id='".$paid."' and page_uid='".$this->showCatalogFromPage."'");
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_attributes.php']['deleteProductAttributes'])) {
 				$params=array();
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/admin_ajax_product_attributes.php']['deleteProductAttributes'] as $funcRef) {
@@ -166,7 +166,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 			$no=1;
 			foreach ($this->post['products_attributes_item'] as $optid) {
 				if (is_numeric($optid)) {
-					$where="options_id = ".$optid." and products_id=".$pid;
+					$where="options_id = ".$optid." and products_id=".$pid." and page_uid=".$this->showCatalogFromPage;
 					$updateArray=array(
 						'sort_order_option_name'=>$no
 					);
@@ -184,7 +184,7 @@ switch ($this->get['tx_multishop_pi1']['admin_ajax_product_attributes']) {
 			$no=1;
 			foreach ($this->post['item_product_attribute'] as $paid) {
 				if (is_numeric($paid)) {
-					$where="products_attributes_id = ".$paid." and products_id=".$pid;
+					$where="products_attributes_id = ".$paid." and products_id=".$pid." and page_uid=".$this->showCatalogFromPage;
 					$updateArray=array(
 						'sort_order_option_value'=>$no
 					);

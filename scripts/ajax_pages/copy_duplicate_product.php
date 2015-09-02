@@ -118,6 +118,7 @@ if ($id_category==0) {
 					while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
 						$product_arr_new=$row;
 						$product_arr_new['products_id']=$id_product_new;
+						$product_arr_new['page_uid']=$this->showCatalogFromPage;
 						unset($product_arr_new['products_attributes_id']); //primary key
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $product_arr_new);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);

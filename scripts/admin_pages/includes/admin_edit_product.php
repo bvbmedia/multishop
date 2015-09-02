@@ -1779,6 +1779,7 @@ if ($this->post) {
 						$attributesArray['options_values_price']=$pa_price;
 						$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
 						$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+						$attributesArray['page_uid']=$this->showCatalogFromPage;
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1795,6 +1796,7 @@ if ($this->post) {
 							$attributesArray['options_values_price']=$pa_price;
 							$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
 							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+							$attributesArray['page_uid']=$this->showCatalogFromPage;
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						} else {
@@ -1807,6 +1809,7 @@ if ($this->post) {
 							$attributesArray['options_values_price']=$pa_price;
 							$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
 							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+							$attributesArray['page_uid']=$this->showCatalogFromPage;
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1819,7 +1822,7 @@ if ($this->post) {
 			$current_option_id='';
 			foreach ($this->post['predefined_option'] as $option_id=>$values) {
 				if (is_numeric($option_id)) {
-					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'options_id=\''.$option_id.'\' and products_id=\''.$prodid.'\'');
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'options_id=\''.$option_id.'\' and products_id=\''.$prodid.'\' and page_uid=\''.$this->showCatalogFromPage.'\'');
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					foreach ($values as $value_id) {
 						if ($value_id) {
@@ -1828,6 +1831,7 @@ if ($this->post) {
 								$attributesArray['products_id']=$prodid;
 								$attributesArray['options_id']=$option_id;
 								$attributesArray['options_values_id']=$value_id;
+								$attributesArray['page_uid']=$this->showCatalogFromPage;
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
@@ -3193,7 +3197,7 @@ if ($this->post) {
 			// end optional predefined attributes menu
 			$sql_pa=$GLOBALS ['TYPO3_DB']->SELECTquery('popt.required,popt.products_options_id, popt.products_options_name, popt.listtype, patrib.*', // SELECT ...
 				'tx_multishop_products_options popt, tx_multishop_products_attributes patrib', // FROM ...
-				"patrib.products_id='".$product['products_id']."' and popt.language_id = '".$this->sys_language_uid."' and patrib.options_id = popt.products_options_id", // WHERE.
+				"patrib.products_id='".$product['products_id']."' and popt.language_id = '".$this->sys_language_uid."' and patrib.page_uid='".$this->showCatalogFromPage."' and patrib.options_id = popt.products_options_id", // WHERE.
 				'', // GROUP BY...
 				'patrib.sort_order_option_name, patrib.sort_order_option_value', // ORDER BY...
 				'' // LIMIT ...
