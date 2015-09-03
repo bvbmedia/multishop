@@ -179,7 +179,7 @@ $formTopSearch='
     <div class="panel-heading">
             <div class="form-inline form-collapse">
                 <div class="input-group">
-                    <input class="form-control" type="text" name="skeyword" id="advance-skeyword" value="'.htmlspecialchars($this->get['skeyword']).'" placeholder="'.htmlspecialchars($this->pi_getLL('keyword')).'" />
+                    <input class="form-control" type="text" name="tx_multishop_pi1[keyword]" id="advance-skeyword" value="'.htmlspecialchars($this->get['tx_multishop_pi1']['keyword']).'" placeholder="'.htmlspecialchars($this->pi_getLL('keyword')).'" />
                     <i class="fa fa-search 2x form-control-inputsearch"></i>
                     <span class="input-group-btn">
                         <input type="submit" name="Search" id="advanceSearchSubmit" value="'.htmlspecialchars($this->pi_getLL('search')).'" class="btn btn-success" />
