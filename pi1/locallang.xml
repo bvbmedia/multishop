@@ -1247,6 +1247,7 @@
             <label index="advanced_search">Advanced search</label>
             <label index="admin_invoice_statistics">Invoice statistics</label>
             <label index="admin_invoice_statistics_description">Show invoice turn over by month/year</label>
+            <label index="date_payment_received">Date payment received</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2486,6 +2487,7 @@
             <label index="advanced_search">Uitgebreid zoeken</label>
             <label index="admin_invoice_statistics">Invoice statistieken</label>
             <label index="admin_invoice_statistics_description">Bekijk factuuromzet per maand/jaar</label>
+            <label index="date_payment_received">Datum betaling ontvangen</label>
         </languageKey>
     </data>
 </T3locallang>

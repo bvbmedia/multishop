@@ -259,17 +259,36 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$array1[]='###GENDER_SALUTATION###';
 		$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
 
+		$markerArray['###PAID_STATUS_LABEL###']=$this->pi_getLL('order_payment_status');
 		if ($order['paid']) {
 			$array1[]='###PAID_STATUS###';
 			$array2[]=$this->pi_getLL('paid');
+
+			$markerArray['###PAID_STATUS###']=$this->pi_getLL('paid');
 		} else {
 			$array1[]='###PAID_STATUS###';
 			$array2[]=$this->pi_getLL('unpaid');
+
+			$markerArray['###PAID_STATUS###']=$this->pi_getLL('unpaid');
 		}
 		// Payment received date
 		$date='';
 		if ($order['orders_paid_timestamp']) {
+			// add the label
+			$array1[]='###DATE_PAYMENT_RECEIVED_LABEL###';
+			$array2[]=$this->pi_getLL('date_payment_received');
+
 			$date=strftime("%x", $order['orders_paid_timestamp']);
+
+			$markerArray['###DATE_PAYMENT_RECEIVED###']=$date;
+			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']=$this->pi_getLL('date_payment_received');
+		} else {
+			// clear the label
+			$array1[]='###DATE_PAYMENT_RECEIVED_LABEL###';
+			$array2[]='';
+
+			$markerArray['###DATE_PAYMENT_RECEIVED###']='';
+			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']='';
 		}
 		$array1[]='###DATE_PAYMENT_RECEIVED###';
 		$array2[]=$date;
