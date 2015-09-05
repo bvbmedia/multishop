@@ -493,16 +493,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									if (!$totalCount) {
 										$formFieldItem[$counter]['class'].=' zero_results';
 									}
+									//
+									$formFieldItem[$counter]['elements'][0]['type']='div';
+									$formFieldItem[$counter]['elements'][0]['class']='checkbox checkbox-success checkbox-inline';
+									//
 									$row['categories_name']='<span class="title">'.$row['categories_name'].'</span><span class="spanResults">('.number_format($totalCount, 0, '', '.').')</span>';
 									if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'], $this->post['tx_multishop_pi1']['categories'])) {
-										$formFieldItem[$counter]['elements']['checked']="checked";
+										$formFieldItem[$counter]['elements'][0]['elements']['checked']="checked";
 									}
-									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[categories][]";
-									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Checkbox".$row['categories_id'];
-									$formFieldItem[$counter]['elements']['caption']=$row['categories_name'];
-									$formFieldItem[$counter]['elements']['value']=$row['categories_id'];
-									$formFieldItem[$counter]['elements']['type']='checkbox';
-									$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+									$formFieldItem[$counter]['elements'][0]['elements']['name']="tx_multishop_pi1[categories][]";
+									$formFieldItem[$counter]['elements'][0]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Checkbox".$row['categories_id'];
+									$formFieldItem[$counter]['elements'][0]['elements']['caption']=$row['categories_name'];
+									$formFieldItem[$counter]['elements'][0]['elements']['value']=$row['categories_id'];
+									$formFieldItem[$counter]['elements'][0]['elements']['type']='checkbox';
+									$formFieldItem[$counter]['elements'][0]['elements']['class']='ui-dform-checkbox';
 									break;
 							}
 							$counter++;
@@ -688,16 +692,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							if (!$totalCount) {
 								$formFieldItem[$counter]['class'].=' zero_results';
 							}
+							//
+							$formFieldItem[$counter]['elements'][0]['type']='div';
+							$formFieldItem[$counter]['elements'][0]['class']='checkbox checkbox-success checkbox-inline';
+							//
 							$row['manufacturers_name']='<span class="title">'.$row['manufacturers_name'].'</span><span class="spanResults">('.number_format($totalCount, 0, '', '.').')</span>';
 							if (is_array($this->post['tx_multishop_pi1']['manufacturers']) and in_array($row['manufacturers_id'], $this->post['tx_multishop_pi1']['manufacturers'])) {
-								$formFieldItem[$counter]['elements']['checked']="checked";
+								$formFieldItem[$counter]['elements'][0]['elements']['checked']="checked";
 							}
-							$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[manufacturers][]";
-							$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldManufacturersItem".$key."Checkbox".$row['manufacturers_id'];
-							$formFieldItem[$counter]['elements']['caption']=$row['manufacturers_name'];
-							$formFieldItem[$counter]['elements']['value']=$row['manufacturers_id'];
-							$formFieldItem[$counter]['elements']['type']='checkbox';
-							$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+							$formFieldItem[$counter]['elements'][0]['elements']['name']="tx_multishop_pi1[manufacturers][]";
+							$formFieldItem[$counter]['elements'][0]['elements']['id']="msFrontUltrasearchFormFieldManufacturersItem".$key."Checkbox".$row['manufacturers_id'];
+							$formFieldItem[$counter]['elements'][0]['elements']['caption']=$row['manufacturers_name'];
+							$formFieldItem[$counter]['elements'][0]['elements']['value']=$row['manufacturers_id'];
+							$formFieldItem[$counter]['elements'][0]['elements']['type']='checkbox';
+							$formFieldItem[$counter]['elements'][0]['elements']['class']='ui-dform-checkbox';
 							break;
 					}
 					$counter++;
@@ -1024,16 +1032,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 										if (!$totalCount) {
 											$formFieldItem[$counter]['class'].=' zero_results';
 										}
+										//
+										$formFieldItem[$counter]['elements'][0]['type']='div';
+										$formFieldItem[$counter]['elements'][0]['class']='checkbox checkbox-success checkbox-inline';
+										//
 										$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount, 0, '', '.').')</span>';
 										if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'], $this->post['tx_multishop_pi1']['options'][$option_id])) {
-											$formFieldItem[$counter]['elements']['checked']="checked";
+											$formFieldItem[$counter]['elements'][0]['elements']['checked']="checked";
 										}
-										$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
-										$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
-										$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
-										$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
-										$formFieldItem[$counter]['elements']['type']='checkbox';
-										$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+										$formFieldItem[$counter]['elements'][0]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
+										$formFieldItem[$counter]['elements'][0]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements'][0]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
+										$formFieldItem[$counter]['elements'][0]['elements']['value']=$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements'][0]['elements']['type']='checkbox';
+										$formFieldItem[$counter]['elements'][0]['elements']['class']='ui-dform-checkbox';
 										break;
 								}
 								$counter++;
