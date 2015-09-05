@@ -722,17 +722,33 @@ if (!$skipMultishopUpdates) {
 	}
 	$str="select credit_order from tx_multishop_orders limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="ALTER TABLE `tx_multishop_orders` ADD credit_order tinyint(1) default '0', ADD KEY `credit_order` (`credit_order`)";
+	if ($qry) {
+		$str="ALTER TABLE `tx_multishop_orders` CHANGE `credit_order` `debit_order` TINYINT(1) NULL DEFAULT '0';";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
+	} else {
+		$str="select debit_order from tx_multishop_orders limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE `tx_multishop_orders` ADD debit_order tinyint(1) default '0', ADD KEY `debit_order` (`debit_order`)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 	}
 	$str="select credit_invoice from tx_multishop_invoices limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	if (!$qry) {
-		$str="ALTER TABLE `tx_multishop_invoices` ADD credit_invoice tinyint(1) default '0', ADD KEY `credit_invoice` (`credit_invoice`)";
+	if ($qry) {
+		$str="ALTER TABLE `tx_multishop_invoices` CHANGE `credit_invoice` `debit_invoice` TINYINT(1) NULL DEFAULT '0';";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
+	} else {
+		$str="select debit_invoice from tx_multishop_invoices limit 1";
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		if (!$qry) {
+			$str="ALTER TABLE `tx_multishop_invoices` ADD debit_invoice tinyint(1) default '0', ADD KEY `debit_invoice` (`debit_invoice`)";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
 	}
 	$str="select page_uid from tx_multishop_products_attributes limit 1";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
