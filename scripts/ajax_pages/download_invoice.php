@@ -266,6 +266,14 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$array1[]='###PAID_STATUS###';
 			$array2[]=$this->pi_getLL('unpaid');
 		}
+		// Payment received date
+		$date='';
+		if ($order['orders_paid_timestamp']) {
+			$date=strftime("%x", $order['orders_paid_timestamp']);
+		}
+		$array1[]='###DATE_PAYMENT_RECEIVED###';
+		$array2[]=$date;
+
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
