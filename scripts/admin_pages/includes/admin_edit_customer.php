@@ -2,16 +2,6 @@
 if (!defined('TYPO3_MODE')) {
 	die('Access denied.');
 }
-// now parse all the objects in the tmpl file
-if ($this->conf['admin_edit_customer_tmpl_path']) {
-	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_tmpl_path']);
-} else {
-	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_edit_customer.tmpl');
-}
-// Extract the subparts from the template
-$subparts=array();
-$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
-$subparts['details']=$this->cObj->getSubpart($subparts['template'], '###DETAILS###');
 if ($this->post && $this->post['email']) {
 	$this->post['email']=mslib_fe::RemoveXSS($this->post['email']);
 	$erno=array();
@@ -302,100 +292,117 @@ if ($this->post && $this->post['email']) {
 			// custom hook that can be controlled by third-party plugin eof
 			$query=$GLOBALS['TYPO3_DB']->INSERTquery('fe_users', $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			$customer_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
-			// ADD TT_ADDRESS RECORD
-			$insertArray=array();
-			$insertArray['tstamp']=time();
-			$insertArray['company']=$updateArray['company'];
-			$insertArray['name']=$updateArray['first_name'].' '.$updateArray['middle_name'].' '.$updateArray['last_name'];
-			$insertArray['name']=preg_replace('/\s+/', ' ', $insertArray['name']);
-			$insertArray['first_name']=$updateArray['first_name'];
-			$insertArray['middle_name']=$updateArray['middle_name'];
-			$insertArray['last_name']=$updateArray['last_name'];
-			$insertArray['email']=$updateArray['email'];
-			if (!$updateArray['street_name']) {
-				// fallback for old custom checkouts
-				$insertArray['street_name']=$updateArray['address'];
-				$insertArray['address_number']=$updateArray['address_number'];
-				$insertArray['address_ext']=$updateArray['address_ext'];
-				$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
-				$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
+			if (!$res) {
+				$erno[]=$GLOBALS['TYPO3_DB']->sql_error();
 			} else {
-				$insertArray['street_name']=$updateArray['street_name'];
-				$insertArray['address_number']=$updateArray['address_number'];
-				$insertArray['address_ext']=$updateArray['address_ext'];
-				$insertArray['address']=$updateArray['address'];
-			}
-			$insertArray['zip']=$updateArray['zip'];
-			$insertArray['phone']=$updateArray['telephone'];
-			$insertArray['mobile']=$updateArray['mobile'];
-			$insertArray['city']=$updateArray['city'];
-			$insertArray['country']=$updateArray['country'];
-			$insertArray['gender']=$updateArray['gender'];
-			$insertArray['birthday']=strtotime($updateArray['birthday']);
-			if ($updateArray['gender']=='m') {
-				$insertArray['title']='Mr.';
-			} else {
-				if ($updateArray['gender']=='f') {
-					$insertArray['title']='Mrs.';
+				$customer_id=$GLOBALS['TYPO3_DB']->sql_insert_id();
+				// ADD TT_ADDRESS RECORD
+				$insertArray=array();
+				$insertArray['tstamp']=time();
+				$insertArray['company']=$updateArray['company'];
+				$insertArray['name']=$updateArray['first_name'].' '.$updateArray['middle_name'].' '.$updateArray['last_name'];
+				$insertArray['name']=preg_replace('/\s+/', ' ', $insertArray['name']);
+				$insertArray['first_name']=$updateArray['first_name'];
+				$insertArray['middle_name']=$updateArray['middle_name'];
+				$insertArray['last_name']=$updateArray['last_name'];
+				$insertArray['email']=$updateArray['email'];
+				if (!$updateArray['street_name']) {
+					// fallback for old custom checkouts
+					$insertArray['street_name']=$updateArray['address'];
+					$insertArray['address_number']=$updateArray['address_number'];
+					$insertArray['address_ext']=$updateArray['address_ext'];
+					$insertArray['address']=$insertArray['street_name'].' '.$insertArray['address_number'].($insertArray['address_ext'] ? '-'.$insertArray['address_ext'] : '');
+					$insertArray['address']=preg_replace('/\s+/', ' ', $insertArray['address']);
+				} else {
+					$insertArray['street_name']=$updateArray['street_name'];
+					$insertArray['address_number']=$updateArray['address_number'];
+					$insertArray['address_ext']=$updateArray['address_ext'];
+					$insertArray['address']=$updateArray['address'];
 				}
-			}
-			$insertArray['region']=$updateArray['state'];
-			$insertArray['pid']=$this->conf['fe_customer_pid'];
-			$insertArray['page_uid']=$this->shop_pid;
-			$insertArray['tstamp']=time();
-			$insertArray['tx_multishop_address_type']='billing';
-			$insertArray['tx_multishop_default']=1;
-			$insertArray['tx_multishop_customer_id']=$customer_id;
-			$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
-			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'])) {
-				$params=array(
-					'uid'=>$customer_id
-				);
-				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
-					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				$insertArray['zip']=$updateArray['zip'];
+				$insertArray['phone']=$updateArray['telephone'];
+				$insertArray['mobile']=$updateArray['mobile'];
+				$insertArray['city']=$updateArray['city'];
+				$insertArray['country']=$updateArray['country'];
+				$insertArray['gender']=$updateArray['gender'];
+				$insertArray['birthday']=strtotime($updateArray['birthday']);
+				if ($updateArray['gender']=='m') {
+					$insertArray['title']='Mr.';
+				} else {
+					if ($updateArray['gender']=='f') {
+						$insertArray['title']='Mrs.';
+					}
 				}
-			}
-			// customer shipping/payment method mapping
-			if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
-				// shipping/payment methods
-				$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\''.$customer_id.'\'');
+				$insertArray['region']=$updateArray['state'];
+				$insertArray['pid']=$this->conf['fe_customer_pid'];
+				$insertArray['page_uid']=$this->shop_pid;
+				$insertArray['tstamp']=time();
+				$insertArray['tx_multishop_address_type']='billing';
+				$insertArray['tx_multishop_default']=1;
+				$insertArray['tx_multishop_customer_id']=$customer_id;
+				$query=$GLOBALS['TYPO3_DB']->INSERTquery('tt_address', $insertArray);
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
-				if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
-					foreach ($this->post['payment_method'] as $payment_method_id=>$value) {
-						$updateArray=array();
-						$updateArray['customers_id']=$customer_id;
-						$updateArray['method_id']=$payment_method_id;
-						$updateArray['type']='payment';
-						$updateArray['negate']=$value;
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'])) {
+					$params=array(
+						'uid'=>$customer_id
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_customer.php']['insertCustomerUserPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
 					}
 				}
-				if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
-					foreach ($this->post['shipping_method'] as $shipping_method_id=>$value) {
-						$updateArray=array();
-						$updateArray['customers_id']=$customer_id;
-						$updateArray['method_id']=$shipping_method_id;
-						$updateArray['type']='shipping';
-						$updateArray['negate']=$value;
-						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
-						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+				// customer shipping/payment method mapping
+				if ($customer_id && $this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
+					// shipping/payment methods
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_customers_method_mappings', 'customers_id=\''.$customer_id.'\'');
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					if (is_array($this->post['payment_method']) and count($this->post['payment_method'])) {
+						foreach ($this->post['payment_method'] as $payment_method_id=>$value) {
+							$updateArray=array();
+							$updateArray['customers_id']=$customer_id;
+							$updateArray['method_id']=$payment_method_id;
+							$updateArray['type']='payment';
+							$updateArray['negate']=$value;
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
 					}
+					if (is_array($this->post['shipping_method']) and count($this->post['shipping_method'])) {
+						foreach ($this->post['shipping_method'] as $shipping_method_id=>$value) {
+							$updateArray=array();
+							$updateArray['customers_id']=$customer_id;
+							$updateArray['method_id']=$shipping_method_id;
+							$updateArray['type']='shipping';
+							$updateArray['negate']=$value;
+							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_customers_method_mappings', $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+					}
+					// shipping/payment methods eof
 				}
-				// shipping/payment methods eof
 			}
 		}
-		if ($this->post['tx_multishop_pi1']['referrer']) {
-			header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
-			exit();
-		} else {
-			header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
-			exit();
+		if (!count($erno)) {
+			if ($this->post['tx_multishop_pi1']['referrer']) {
+				header("Location: ".$this->post['tx_multishop_pi1']['referrer']);
+				exit();
+			} else {
+				header("Location: ".$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customers', 1));
+				exit();
+			}
 		}
 	}
 }
+// now parse all the objects in the tmpl file
+if ($this->conf['admin_edit_customer_tmpl_path']) {
+	$template=$this->cObj->fileResource($this->conf['admin_edit_customer_tmpl_path']);
+} else {
+	$template=$this->cObj->fileResource(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath($this->extKey).'templates/admin_edit_customer.tmpl');
+}
+// Extract the subparts from the template
+$subparts=array();
+$subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
+$subparts['details']=$this->cObj->getSubpart($subparts['template'], '###DETAILS###');
+
 // load enabled countries to array
 $str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
 //$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
@@ -561,6 +568,7 @@ if ($this->post['image']) {
 $images_tab_block.='
 
 	<input name="tx_multishop_pi1[image]" id="ajax_fe_user_image" type="hidden" value="" />';
+// todo: question from Bas: what is edit_product code doing in edit_customer
 if ($_REQUEST['action']=='edit_product' and $this->post['image']) {
 	$images_tab_block.='<img src="'.mslib_befe::getImagePath($this->post['image'], 'products', '50').'">';
 	$images_tab_block.=' <a href="'.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=admin_ajax&cid='.$_REQUEST['cid'].'&pid='.$_REQUEST['pid'].'&action=edit_product&delete_image=products_image').'" onclick="return confirm(\''.addslashes($this->pi_getLL('admin_label_js_are_you_sure')).'\')"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
@@ -630,7 +638,8 @@ $subpartArray['###LINK_BUTTON_CANCEL###']=$subpartArray['###VALUE_REFERRER###'];
 $subpartArray['###LABEL_BUTTON_ADMIN_SAVE###']=$this->pi_getLL('admin_save');
 $subpartArray['###CUSTOMER_FORM_HEADING###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 $subpartArray['###MASTER_SHOP###']='';
-$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&action=edit_customer&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
+
+$subpartArray['###CUSTOMER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_customer&action='.$_REQUEST['action'].'&tx_multishop_pi1[cid]='.$_REQUEST['tx_multishop_pi1']['cid']);
 // customer to shipping/payment method mapping
 $shipping_payment_method='';
 if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
