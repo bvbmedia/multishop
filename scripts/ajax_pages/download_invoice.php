@@ -272,13 +272,13 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###PAID_STATUS###']=$this->pi_getLL('unpaid');
 		}
 		// Payment received date
-		$date='';
 		if ($order['orders_paid_timestamp']) {
+			$date=strftime("%x", $order['orders_paid_timestamp']);
 			// add the label
 			$array1[]='###DATE_PAYMENT_RECEIVED_LABEL###';
 			$array2[]=$this->pi_getLL('date_payment_received');
-
-			$date=strftime("%x", $order['orders_paid_timestamp']);
+			$array1[]='###DATE_PAYMENT_RECEIVED###';
+			$array2[]=$date;
 
 			$markerArray['###DATE_PAYMENT_RECEIVED###']=$date;
 			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']=$this->pi_getLL('date_payment_received');
@@ -286,12 +286,13 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			// clear the label
 			$array1[]='###DATE_PAYMENT_RECEIVED_LABEL###';
 			$array2[]='';
+			$array1[]='###DATE_PAYMENT_RECEIVED###';
+			$array2[]='';
 
 			$markerArray['###DATE_PAYMENT_RECEIVED###']='';
 			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']='';
 		}
-		$array1[]='###DATE_PAYMENT_RECEIVED###';
-		$array2[]=$date;
+
 
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
