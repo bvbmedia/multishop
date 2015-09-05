@@ -7937,6 +7937,14 @@ class mslib_fe {
 			if (!$data['select_count']) {
 				$data['select_count']='count(1) as total';
 			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getRecordsPageSetPreProc'])) {
+				$params=array(
+					'data'=>&$data
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getRecordsPageSetPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			if ($data['group_by']) {
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $data['select']), // SELECT ...
 					implode(',', $data['from']), // FROM ...
@@ -8104,7 +8112,7 @@ class mslib_fe {
 		}
 		return $array;
 	}
-	public function getOrdersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array()) {
+	public function getOrdersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array(),$section='') {
 		if (!$limit) {
 			$limit=20;
 		}
