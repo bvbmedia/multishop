@@ -258,6 +258,14 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		}
 		$array1[]='###GENDER_SALUTATION###';
 		$array2[]=mslib_fe::genderSalutation($order['billing_gender']);
+
+		if ($order['paid']) {
+			$array1[]='###PAID_STATUS###';
+			$array2[]=$this->pi_getLL('paid');
+		} else {
+			$array1[]='###PAID_STATUS###';
+			$array2[]=$this->pi_getLL('unpaid');
+		}
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
