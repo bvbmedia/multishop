@@ -6765,7 +6765,7 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['class']='fa fa-list-ul';
 		}
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
-			$ms_menu['footer']['ms_admin_statistics']['label']=$this->pi_getLL('admin_statistics');
+			$ms_menu['footer']['ms_admin_statistics']['label']=$this->pi_getLL('reports');
 			$ms_menu['footer']['ms_admin_statistics']['description']=$this->pi_getLL('admin_statistics_description').'.';
 			$ms_menu['footer']['ms_admin_statistics']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_home');
 			$ms_menu['footer']['ms_admin_statistics']['class']='fa fa-bar-chart';
