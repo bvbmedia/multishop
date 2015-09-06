@@ -715,12 +715,13 @@ $data=array();
 $data['select']=$select;
 $data['where']=$filter;
 $data['where'][]='o.deleted=0';
-$data['orderBy']=$orderby;
+$data['order_by']=$orderby;
 $data['limit']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
 $data['offset']=$offset;
 $data['from'][]='tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id)';
 // Define section, so hooks can control the query
 $data['section']='admin_orders';
+
 $pageset=mslib_fe::getRecordsPageSet($data);
 $tmporders=$pageset['dataset'];
 if ($pageset['total_rows']>0) {
