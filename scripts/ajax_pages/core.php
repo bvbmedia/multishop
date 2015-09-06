@@ -1667,13 +1667,18 @@ switch ($this->ms['page']) {
 			$str="SELECT pi_flexform from tt_content where hidden=0 and deleted=0 and list_type='multishop_pi1' and pi_flexform like '%section_code%'";
 			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
-				preg_match("/<field index=\"section_code\">.*?<value.*?>(.*?)<\/value>/is", $row['pi_flexform'], $matches);
-				if ($matches[1]) {
-					$sections[$matches[1]]=$matches[1];
+				$array=mslib_fe::xml2array($row['pi_flexform']);
+				if (is_array($array) && count($array) && $array['T3FlexForms']['data']['sheet'][0]['language']['field'][0]['value']=='specials'){
+					if ($array['T3FlexForms']['data']['sheet'][4]['language']['field'][0]['value']=='specials_section') {
+						$code=$array['T3FlexForms']['data']['sheet'][4]['language']['field'][3]['value'];
+						if ($code) {
+							$sections[$code]=$code;
+						}
+					}
 				}
-				asort($sections);
 			}
 			if (count($sections)) {
+				asort($sections);
 				$content.='
 					<label for="specials_portleds" class="control-label col-md-2">'.$this->pi_getLL('admin_show_in_section').'</label>
 					<div class="col-md-10">
@@ -1689,7 +1694,6 @@ switch ($this->ms['page']) {
 					<div class="checkbox checkbox-success"><input id="specials_sections_'.$i.'" name="specials_sections[]" type="checkbox" value="'.htmlspecialchars($section).'" '.($rows ? 'checked' : '').' /><label for="specials_sections_'.$i.'">'.htmlspecialchars($section).'</label></div>
 					';
 					$i++;
-//						<label for="specials_sections_'.$i.'">'.htmlspecialchars($section).'</label>
 				}
 				$content.='
 				</div>
