@@ -155,6 +155,7 @@ switch ($this->ms['page']) {
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
 			$return_data['images']['normal']=mslib_befe::getImagePath($image_name, $image_type, 'normal').'?'.time();
+			$return_data['images']['50']=mslib_befe::getImagePath($image_name, $image_type, '50').'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
 			$return_data['truesize'][$image_size]=array(
 				$image_truesize[0],
