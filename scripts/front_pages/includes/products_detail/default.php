@@ -320,6 +320,21 @@ if (!$product['products_id']) {
 	$markerArray['###PRODUCTS_SHORT_DESCRIPTION###']=$output['PRODUCTS_SHORT_DESCRIPTION'];
 	$markerArray['###PRODUCTS_DESCRIPTION###']=$output['products_description'];
 	$markerArray['###PRODUCTS_EXTRA_DESCRIPTION###']=$output['products_extra_description'];
+
+	if ($this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']) {
+		for ($i=1; $i<=$this->ms['MODULES']['PRODUCTS_DETAIL_NUMBER_OF_TABS']; $i++) {
+			$markerArray['###PRODUCTS_DESCRIPTION_'.$i.'###']='';
+			$markerArray['###PRODUCTS_DESCRIPTION_'.$i.'_TITLE###']='';
+
+			if ($product['products_description_tab_content_'.$i]) {
+				$markerArray['###PRODUCTS_DESCRIPTION_'.$i.'###']=$product['products_description_tab_content_'.$i];
+			}
+			if ($product['products_description_tab_title_'.$i]) {
+				$markerArray['###PRODUCTS_DESCRIPTION_'.$i.'_TITLE###']=$product['products_description_tab_title_'.$i];
+			}
+		}
+	}
+
 	$markerArray['###PRODUCTS_CATEGORY###']=$output['products_category'];
 	$markerArray['###PRODUCTS_ATTRIBUTES###']=$output['product_attributes'];
 
