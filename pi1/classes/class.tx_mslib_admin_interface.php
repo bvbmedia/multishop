@@ -81,6 +81,12 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 	}
 	function renderInterface($params, &$that) {
 		mslib_fe::init($that);
+		//hook to let other plugins further manipulate the method
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'])) {
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/class.tx_mslib_admin_interface.php']['renderInterfacePreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		// for pagination
 		$this->get=$that->get;
 		$updateCookie=0;
@@ -404,32 +410,28 @@ class tx_mslib_admin_interface extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin
 					}
 					$tableContent.='<td'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$adjustedValue.'</td>';
 				}
-				/*
-				$tableContent.='
-				<td>
-				</td>';
-				*/
 				$tableContent.='</tr>';
 				if ($params['settings']['returnResultSetAsArray']) {
 					$pageset['dataset'][$rowKey]=$row;
 				}
 			}
 			$tableContent.='</tbody>';
-			// SUMMARIZE
-			$tableContent.='<tfoot><tr>';
-			foreach ($params['tableColumns'] as $col=>$valArray) {
-				switch ($valArray['valueType']) {
-					case 'currency':
-						$row[$col]=mslib_fe::amount2Cents($summarize[$col], 0);
-						break;
-					default:
-						$row[$col]=$valArray['title'];
-						break;
+			if (!$params['settings']['skipSummarize']) {
+				// Summarize footer
+				$tableContent.='<tfoot><tr>';
+				foreach ($params['tableColumns'] as $col=>$valArray) {
+					switch ($valArray['valueType']) {
+						case 'currency':
+							$row[$col]=mslib_fe::amount2Cents($summarize[$col], 0);
+							break;
+						default:
+							$row[$col]=$valArray['title'];
+							break;
+					}
+					$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
 				}
-				$tableContent.='<th'.($valArray['align'] ? ' class="text-'.$valArray['align'].'"' : '').($valArray['nowrap'] ? ' nowrap' : '').'>'.$row[$col].'</th>';
+				$tableContent.='</tr></tfoot>';
 			}
-			$tableContent.='</tr></tfoot>';
-			// SUMMARIZE EOF
 			$tableContent.='</table>';
 			$tableContent.='
 			</div>

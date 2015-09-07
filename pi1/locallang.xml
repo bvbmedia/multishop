@@ -608,12 +608,12 @@
             <label index="default">default</label>
             <label index="default_language">Default language</label>
             <label index="default_value">Default value</label>
-            <label index="delete">delete</label>
-            <label index="delete_category">remove category</label>
+            <label index="delete">Delete</label>
+            <label index="delete_category">Remove category</label>
             <label index="delete_selected_customers">Delete selected customers</label>
             <label index="delete_selected_orders">Delete selected orders</label>
             <label index="delete_selected_products">Delete selected products</label>
-            <label index="delete_zone">delete zone</label>
+            <label index="delete_zone">Delete zone</label>
             <label index="deleted">deleted</label>
             <label index="delimited_by">Delimited by</label>
             <label index="delimiter">Delimiter</label>
@@ -1247,6 +1247,8 @@
             <label index="advanced_search">Advanced search</label>
             <label index="admin_invoice_statistics">Invoice statistics</label>
             <label index="admin_invoice_statistics_description">Show invoice turn over by month/year</label>
+            <label index="date_payment_received">Date payment received</label>
+            <label index="reports">Reports</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -1851,12 +1853,12 @@
             <label index="default">Standaard</label>
             <label index="default_language">Standaard taal</label>
             <label index="default_value">Standaard waarde</label>
-            <label index="delete">verwijder</label>
-            <label index="delete_category">verwijder categorie</label>
+            <label index="delete">Verwijder</label>
+            <label index="delete_category">Verwijder categorie</label>
             <label index="delete_selected_customers">Verwijder geselecteerde klanten</label>
             <label index="delete_selected_orders">Verwijder geselecteerde bestellingen</label>
             <label index="delete_selected_products">Verwijder geselecteerde producten</label>
-            <label index="delete_zone">zone verwijderen</label>
+            <label index="delete_zone">Zone verwijderen</label>
             <label index="deleted">verwijderd</label>
             <label index="delimited_by">Gescheiden door</label>
             <label index="delimiter">Scheidingsteken</label>
@@ -2486,6 +2488,8 @@
             <label index="advanced_search">Uitgebreid zoeken</label>
             <label index="admin_invoice_statistics">Invoice statistieken</label>
             <label index="admin_invoice_statistics_description">Bekijk factuuromzet per maand/jaar</label>
+            <label index="date_payment_received">Datum betaling ontvangen</label>
+            <label index="reports">Rapporten</label>
         </languageKey>
     </data>
 </T3locallang>

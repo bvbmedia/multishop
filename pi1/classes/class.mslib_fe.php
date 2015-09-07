@@ -6765,7 +6765,7 @@ class mslib_fe {
 			$ms_menu['footer']['ms_admin_online_users']['subs']['total_visitors']['class']='fa fa-list-ul';
 		}
 		if ($this->ROOTADMIN_USER or $this->STATISTICSADMIN_USER) {
-			$ms_menu['footer']['ms_admin_statistics']['label']=$this->pi_getLL('admin_statistics');
+			$ms_menu['footer']['ms_admin_statistics']['label']=$this->pi_getLL('reports');
 			$ms_menu['footer']['ms_admin_statistics']['description']=$this->pi_getLL('admin_statistics_description').'.';
 			$ms_menu['footer']['ms_admin_statistics']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_home');
 			$ms_menu['footer']['ms_admin_statistics']['class']='fa fa-bar-chart';
@@ -7937,6 +7937,14 @@ class mslib_fe {
 			if (!$data['select_count']) {
 				$data['select_count']='count(1) as total';
 			}
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getRecordsPageSetPreProc'])) {
+				$params=array(
+					'data'=>&$data
+				);
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['getRecordsPageSetPreProc'] as $funcRef) {
+					\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+				}
+			}
 			if ($data['group_by']) {
 				$query=$GLOBALS['TYPO3_DB']->SELECTquery(implode(',', $data['select']), // SELECT ...
 					implode(',', $data['from']), // FROM ...
@@ -8104,7 +8112,7 @@ class mslib_fe {
 		}
 		return $array;
 	}
-	public function getOrdersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array()) {
+	public function getOrdersPageSet($filter=array(), $offset=0, $limit=0, $orderby=array(), $having=array(), $select=array(), $where=array(), $from=array(),$section='') {
 		if (!$limit) {
 			$limit=20;
 		}
