@@ -154,6 +154,8 @@ switch ($this->ms['page']) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
+			$return_data['images']['normal']=mslib_befe::getImagePath($image_name, $image_type, 'normal').'?'.time();
+			$return_data['images']['50']=mslib_befe::getImagePath($image_name, $image_type, '50').'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
 			$return_data['truesize'][$image_size]=array(
 				$image_truesize[0],
@@ -178,7 +180,7 @@ switch ($this->ms['page']) {
 			$image_data=mslib_befe::getRecord($image_name, $crop_table_name, 'image_filename', array('image_size=\''.$image_size.'\''));
 			$return_data['disable_crop_button']="";
 			if (is_array($image_data) && isset($image_data['id']) && $image_data['id']>0) {
-				$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, ($image_size=='enlarged' ? 'normal' : $image_size)).'?'.time();
+				$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, ($image_size=='enlarged' ? 'normal' : $image_size)).'?t='.time();
 				$return_data['disable_crop_button']="disabled";
 			}
 			// check if all image are unresized
