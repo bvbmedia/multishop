@@ -1068,19 +1068,43 @@ function updateCoords(c) {
 	$(\'#jCropW\').val(c.w);
 	$(\'#jCropH\').val(c.h);
 }
-function cropEditorDialog(textTitle, textBody) {
-    $.confirm({
-        title: textTitle,
-        content: textBody,
-        columnClass: "col-md-12",
-        closeIcon: true,
-        confirmButton:"'.$this->pi_getLL('close').'",
-        confirm: function(){
-        },
-        cancelButton: "'.$this->pi_getLL('cancel').'",
-        cancel: function(){
-        }
-    });
+function cropEditorDialog(textTitle, textBody, imageName) {
+    var cropWindow=\'<div class="modal" id="cropEditorWindow" tabindex="-1" role="dialog" aria-labelledby="cropEditorWindowTitle">\';
+  	cropWindow+=\'<div class="modal-dialog modal-lg" role="document">\';
+    cropWindow+=\'<div class="modal-content">\';
+    cropWindow+=\'<div class="modal-header">\';
+    cropWindow+=\'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\';
+    cropWindow+=\'<h4 class="modal-title" id="cropEditorWindowTitle">\' + textTitle + \'</h4>\';
+    cropWindow+=\'</div>\';
+    cropWindow+=\'<div class="modal-body">\' + textBody + \'</div>\';
+    cropWindow+=\'<div class="modal-footer">\';
+    cropWindow+=\'<button type="button" class="btn btn-default" data-dismiss="modal">'.$this->pi_getLL('close').'</button>\';
+    cropWindow+=\'</div>\';
+    cropWindow+=\'</div>\';
+	cropWindow+=\'</div>\';
+	cropWindow+=\'</div>\';
+	$(\'body\').append(cropWindow);
+	$(\'#cropEditorWindow\').modal({
+		show: true,
+		backdrop: \'static\',
+	});
+	$(\'#cropEditorWindow\').on(\'hidden.bs.modal\', function (e) {
+		$(\'#cropEditorWindow\').remove();
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop&tx_multishop_pi1[crop_section]=categories').'";
+		jQuery.ajax({
+			type:"POST",
+			url:href,
+			data: "imagename=" + imageName,
+			dataType: "json",
+			success: function(r) {
+				//do something with the sorted data
+				if (r.status=="OK") {
+					var new_image=r.images["normal"];
+					$(".image_action > img").prop("src", new_image);
+				}
+			}
+		});
+	});
 }';
 			$js_extra['triggers'][]='
 $(document).on(\'click\', "#cropEditor", function(e) {
@@ -1112,7 +1136,7 @@ $(document).on(\'click\', "#cropEditor", function(e) {
 				image_interface+=\'<input type="hidden" id="default_aspectratio_settings" name="default_aspectratio_settings" class="jcrop_coords" value="\' + r.aspectratio["enlarged"] + \'" />\';
 				image_interface+=\'</div>\';
 				image_interface+=\'</div>\';
-				cropEditorDialog("Crop image " + image_name + " [enlarged]", image_interface);
+				cropEditorDialog("Crop image " + image_name + " [enlarged]", image_interface, image_name);
 				// default for first time loading is enlarged
 				if (r.disable_crop_button=="disabled") {
 					$("#crop_save_btn_wrapper").hide();
@@ -1132,6 +1156,7 @@ $(document).on(\'click\', "#cropEditor", function(e) {
 		}
 	});
 });
+
 $(document).on(\'click\', "#crop_save", function(e) {
 	e.preventDefault();
 	href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=crop_product_image&tx_multishop_pi1[crop_section]=categories').'";
