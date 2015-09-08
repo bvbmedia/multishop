@@ -1768,7 +1768,7 @@
             <label index="cancel">Annuleren</label>
             <label index="capital_price">Inkoopprijs</label>
             <label index="captcha_code_is_invalid">Beveiligingscode is onjuist</label>
-            <label index="captcha_code_placeholder">type hier de code over</label>
+            <label index="captcha_code_placeholder">typ hier de code over</label>
             <label index="catalog">Assortiment</label>
             <label index="categories">Categorieën</label>
             <label index="category_has_been_removed">Categorie is verwijderd</label>
