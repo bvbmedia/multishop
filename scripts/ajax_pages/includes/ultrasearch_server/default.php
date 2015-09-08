@@ -179,7 +179,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 				foreach ($search_in_option_ids as $options_id) {
 					if (is_numeric($options_id)) {
-						$innerFilter[]='('.$tbl.'products_id IN (SELECT DISTINCT(pa.products_id) FROM tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov,  tx_multishop_products_options_values_to_products_options povp where pa.options_id=\''.$options_id.'\' and pov.products_options_values_name like \'%'.addslashes($this->post['tx_multishop_pi1']['q']).'%\' and pov.language_id=0 and pov.products_options_values_id=povp.products_options_values_id and povp.products_options_values_id=pa.options_values_id and pa.options_id=povp.products_options_id and po.language_id=pov.language_id and po.products_options_id=povp.products_options_id and po.language_id=pov.language_id))';
+						$innerFilter[]='('.$tbl.'products_id IN (SELECT DISTINCT(pa.products_id) FROM tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov,  tx_multishop_products_options_values_to_products_options povp where pa.options_id=\''.$options_id.'\' and pa.page_uid=\''.$this->showCatalogFromPage.'\' and pov.products_options_values_name like \'%'.addslashes($this->post['tx_multishop_pi1']['q']).'%\' and pov.language_id=0 and pov.products_options_values_id=povp.products_options_values_id and povp.products_options_values_id=pa.options_values_id and pa.options_id=povp.products_options_id and po.language_id=pov.language_id and po.products_options_id=povp.products_options_id and po.language_id=pov.language_id))';
 					}
 				}
 			}
@@ -268,6 +268,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				$totalCountSubFilter['options'][$option_id][]="pa_".$option_id.".options_values_id IN (".addslashes(implode(",", $option_values_id)).")";
 				$totalCountFrom['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
 				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
+				$totalCountWhere['options'][$option_id]='pa_'.$option_id.'.page_uid=\''.$this->showCatalogFromPage.'\'';
 			}
 		}
 	}
@@ -492,16 +493,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 									if (!$totalCount) {
 										$formFieldItem[$counter]['class'].=' zero_results';
 									}
+									//
+									$formFieldItem[$counter]['elements'][0]['type']='div';
+									$formFieldItem[$counter]['elements'][0]['class']='checkbox checkbox-success checkbox-inline';
+									//
 									$row['categories_name']='<span class="title">'.$row['categories_name'].'</span><span class="spanResults">('.number_format($totalCount, 0, '', '.').')</span>';
 									if (is_array($this->post['tx_multishop_pi1']['categories']) and in_array($row['categories_id'], $this->post['tx_multishop_pi1']['categories'])) {
-										$formFieldItem[$counter]['elements']['checked']="checked";
+										$formFieldItem[$counter]['elements'][0]['elements']['checked']="checked";
 									}
-									$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[categories][]";
-									$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Checkbox".$row['categories_id'];
-									$formFieldItem[$counter]['elements']['caption']=$row['categories_name'];
-									$formFieldItem[$counter]['elements']['value']=$row['categories_id'];
-									$formFieldItem[$counter]['elements']['type']='checkbox';
-									$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+									$formFieldItem[$counter]['elements'][0]['elements']['name']="tx_multishop_pi1[categories][]";
+									$formFieldItem[$counter]['elements'][0]['elements']['id']="msFrontUltrasearchFormFieldCategoriesItem".$key."Checkbox".$row['categories_id'];
+									$formFieldItem[$counter]['elements'][0]['elements']['caption']=$row['categories_name'];
+									$formFieldItem[$counter]['elements'][0]['elements']['value']=$row['categories_id'];
+									$formFieldItem[$counter]['elements'][0]['elements']['type']='checkbox';
+									$formFieldItem[$counter]['elements'][0]['elements']['class']='ui-dform-checkbox';
 									break;
 							}
 							$counter++;
@@ -687,16 +692,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							if (!$totalCount) {
 								$formFieldItem[$counter]['class'].=' zero_results';
 							}
+							//
+							$formFieldItem[$counter]['elements'][0]['type']='div';
+							$formFieldItem[$counter]['elements'][0]['class']='checkbox checkbox-success checkbox-inline';
+							//
 							$row['manufacturers_name']='<span class="title">'.$row['manufacturers_name'].'</span><span class="spanResults">('.number_format($totalCount, 0, '', '.').')</span>';
 							if (is_array($this->post['tx_multishop_pi1']['manufacturers']) and in_array($row['manufacturers_id'], $this->post['tx_multishop_pi1']['manufacturers'])) {
-								$formFieldItem[$counter]['elements']['checked']="checked";
+								$formFieldItem[$counter]['elements'][0]['elements']['checked']="checked";
 							}
-							$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[manufacturers][]";
-							$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldManufacturersItem".$key."Checkbox".$row['manufacturers_id'];
-							$formFieldItem[$counter]['elements']['caption']=$row['manufacturers_name'];
-							$formFieldItem[$counter]['elements']['value']=$row['manufacturers_id'];
-							$formFieldItem[$counter]['elements']['type']='checkbox';
-							$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+							$formFieldItem[$counter]['elements'][0]['elements']['name']="tx_multishop_pi1[manufacturers][]";
+							$formFieldItem[$counter]['elements'][0]['elements']['id']="msFrontUltrasearchFormFieldManufacturersItem".$key."Checkbox".$row['manufacturers_id'];
+							$formFieldItem[$counter]['elements'][0]['elements']['caption']=$row['manufacturers_name'];
+							$formFieldItem[$counter]['elements'][0]['elements']['value']=$row['manufacturers_id'];
+							$formFieldItem[$counter]['elements'][0]['elements']['type']='checkbox';
+							$formFieldItem[$counter]['elements'][0]['elements']['class']='ui-dform-checkbox';
 							break;
 					}
 					$counter++;
@@ -912,7 +921,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 							*/
 							$query_opt_2_values=$GLOBALS['TYPO3_DB']->SELECTquery('DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
 								'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p, tx_multishop_products_to_categories p2c',     // FROM ...
-								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = ".$row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and pov.products_options_values_id=povp.products_options_values_id and p.products_id = p2c.products_id AND p2c.node_id =".addslashes($parent_id),    // WHERE.
+								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = ".$row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and p.page_uid=pa.page_uid and pov.products_options_values_id=povp.products_options_values_id and p.products_id = p2c.products_id AND p2c.node_id =".addslashes($parent_id),    // WHERE.
 								'',            // GROUP BY...
 								$order_column." ".$order_by,    // ORDER BY...
 								''            // LIMIT ...
@@ -920,7 +929,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 						} else {
 							$query_opt_2_values=$GLOBALS['TYPO3_DB']->SELECTquery('DISTINCT(pov.products_options_values_id), CONVERT(SUBSTRING(pov.products_options_values_name, LOCATE(\'-\', pov.products_options_values_name) + 1), SIGNED INTEGER) as sorting, pov.products_options_values_name',         // SELECT ...
 								'tx_multishop_products_options_values pov, tx_multishop_products_options_values_to_products_options povp, tx_multishop_products_attributes pa, tx_multishop_products p',     // FROM ...
-								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = ".$row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and pov.products_options_values_id=povp.products_options_values_id",    // WHERE.
+								"pov.language_id='".$this->sys_language_uid."' and povp.products_options_id = ".$row['products_options_id']." and pa.options_id='".$row['products_options_id']."' and pa.options_values_id=pov.products_options_values_id and pa.products_id=p.products_id and p.page_uid='".$this->showCatalogFromPage."' and p.page_uid=pa.page_uid and pov.products_options_values_id=povp.products_options_values_id",    // WHERE.
 								'',            // GROUP BY...
 								$order_column." ".$order_by,    // ORDER BY...
 								''            // LIMIT ...
@@ -964,6 +973,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								unset($totalCountWhereTmp['options'][$option_id]);
 								$totalCountFromTmp['options'][$option_id]='tx_multishop_products_attributes pa_'.$option_id;
 								$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.products_id='.$prefix.'.products_id';
+								$totalCountWhereTmp['options'][$option_id]='pa_'.$option_id.'.page_uid=\''.$this->showCatalogFromPage.'\'';
 								$totalCountFromFlat=array();
 								$totalCountWhereFlat=array();
 								$totalCountFromFlat=array_values($totalCountFromTmp['options']);
@@ -1022,16 +1032,20 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 										if (!$totalCount) {
 											$formFieldItem[$counter]['class'].=' zero_results';
 										}
+										//
+										$formFieldItem[$counter]['elements'][0]['type']='div';
+										$formFieldItem[$counter]['elements'][0]['class']='checkbox checkbox-success checkbox-inline';
+										//
 										$row_opt_2_values['products_options_values_name']='<span class="title">'.$row_opt_2_values['products_options_values_name'].'</span><span class="spanResults">('.number_format($totalCount, 0, '', '.').')</span>';
 										if (is_array($this->post['tx_multishop_pi1']['options'][$option_id]) and in_array($row_opt_2_values['products_options_values_id'], $this->post['tx_multishop_pi1']['options'][$option_id])) {
-											$formFieldItem[$counter]['elements']['checked']="checked";
+											$formFieldItem[$counter]['elements'][0]['elements']['checked']="checked";
 										}
-										$formFieldItem[$counter]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
-										$formFieldItem[$counter]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
-										$formFieldItem[$counter]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
-										$formFieldItem[$counter]['elements']['value']=$row_opt_2_values['products_options_values_id'];
-										$formFieldItem[$counter]['elements']['type']='checkbox';
-										$formFieldItem[$counter]['elements']['class']='ui-dform-checkbox';
+										$formFieldItem[$counter]['elements'][0]['elements']['name']="tx_multishop_pi1[options][".$row['products_options_id']."][]";
+										$formFieldItem[$counter]['elements'][0]['elements']['id']="msFrontUltrasearchFormFieldItemOption".$key."Checkbox".$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements'][0]['elements']['caption']=$row_opt_2_values['products_options_values_name'];
+										$formFieldItem[$counter]['elements'][0]['elements']['value']=$row_opt_2_values['products_options_values_id'];
+										$formFieldItem[$counter]['elements'][0]['elements']['type']='checkbox';
+										$formFieldItem[$counter]['elements'][0]['elements']['class']='ui-dform-checkbox';
 										break;
 								}
 								$counter++;
@@ -1154,7 +1168,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				}
 				foreach ($search_in_option_ids as $options_id) {
 					if (is_numeric($options_id)) {
-						$innerFilter[]='('.$tbl.'products_id IN (SELECT DISTINCT(pa.products_id) FROM tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov,  tx_multishop_products_options_values_to_products_options povp where pa.options_id=\''.$options_id.'\' and pov.products_options_values_name like \'%'.addslashes($this->post['tx_multishop_pi1']['q']).'%\' and pov.language_id=0 and pov.products_options_values_id=povp.products_options_values_id and povp.products_options_values_id=pa.options_values_id and pa.options_id=povp.products_options_id and po.language_id=pov.language_id and po.products_options_id=povp.products_options_id and po.language_id=pov.language_id))';
+						$innerFilter[]='('.$tbl.'products_id IN (SELECT DISTINCT(pa.products_id) FROM tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov,  tx_multishop_products_options_values_to_products_options povp where pa.options_id=\''.$options_id.'\' and pa.page_uid=\''.$this->showCatalogFromPage.'\' and pov.products_options_values_name like \'%'.addslashes($this->post['tx_multishop_pi1']['q']).'%\' and pov.language_id=0 and pov.products_options_values_id=povp.products_options_values_id and povp.products_options_values_id=pa.options_values_id and pa.options_id=povp.products_options_id and po.language_id=pov.language_id and po.products_options_id=povp.products_options_id and po.language_id=pov.language_id))';
 					}
 				}
 			}
@@ -1271,7 +1285,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								// this does not work nice with varchar. we need to convert the value to integer first
 //								$between_field=$options_name.'_ov.products_options_values_name';
 								$between_field='CONVERT(SUBSTRING('.$options_name.'_ov.products_options_values_name, LOCATE(\'-\', '.$options_name.'_ov.products_options_values_name) + 1), SIGNED INTEGER)';
-								$subquery='SELECT '.$options_name.'.products_id from tx_multishop_products_attributes '.$options_name.', tx_multishop_products_options_values '.$options_name.'_ov where ('.$between_field.' BETWEEN \''.addslashes($from_value).'\' AND \''.addslashes($till_value).'\' and '.$options_name.'.options_id = "'.addslashes($option_id).'" and '.$options_name.'.options_values_id='.$options_name.'_ov.products_options_values_id) group by '.$options_name.'.products_id';
+								$subquery='SELECT '.$options_name.'.products_id from tx_multishop_products_attributes '.$options_name.', tx_multishop_products_options_values '.$options_name.'_ov where ('.$between_field.' BETWEEN \''.addslashes($from_value).'\' AND \''.addslashes($till_value).'\' and '.$options_name.'.options_id = "'.addslashes($option_id).'" and '.$options_name.'.page_uid="'.$this->showCatalogFromPage.'" and '.$options_name.'.options_values_id='.$options_name.'_ov.products_options_values_id) group by '.$options_name.'.products_id';
 								$filter[]=$prefix.'products_id IN ('.$subquery.')';
 							}
 						} elseif (count($val)) {
@@ -1296,7 +1310,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 								), '', $options_name);
 								$options_name=str_replace('__', '_', $options_name);
 								$from[]='tx_multishop_products_attributes '.$options_name;
-								$filter[]="(".$prefix."products_id = $options_name.products_id and $options_name.options_id = ".addslashes($key)." and $options_name.options_values_id IN (".$ors."))";
+								$filter[]="(".$prefix."products_id = ".$options_name.".products_id and ".$options_name.".page_uid=".$this->showCatalogFromPage." and ".$options_name.".options_id = ".addslashes($key)." and ".$options_name.".options_values_id IN (".$ors."))";
 							}
 						}
 					}
@@ -1323,7 +1337,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					), '', $options_name);
 					$options_name=str_replace('__', '_', $options_name);
 					$from[]='tx_multishop_products_attributes '.$options_name;
-					$filter[]="(".$prefix."products_id = $options_name.products_id and $options_name.options_id = ".addslashes($option_id)." and $options_name.options_values_id = ".addslashes($option_values_id).")";
+					$filter[]="(".$prefix."products_id = $options_name.products_id and ".$options_name.".page_uid=".$this->showCatalogFromPage." and ".$options_name.".options_id = ".addslashes($option_id)." and ".$options_name.".options_values_id = ".addslashes($option_values_id).")";
 				}
 			} elseif (is_array($option_values_id) && count($option_values_id)) {
 				$options_name="option".$option_id;
@@ -1346,7 +1360,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				), '', $options_name);
 				$options_name=str_replace('__', '_', $options_name);
 				$from[]='tx_multishop_products_attributes '.$options_name;
-				$filter[]="(".$prefix."products_id = $options_name.products_id and $options_name.options_id = ".addslashes($option_id)." and $options_name.options_values_id IN (".addslashes(implode(",", $option_values_id))."))";
+				$filter[]="(".$prefix."products_id = $options_name.products_id and ".$options_name.".page_uid=".$this->showCatalogFromPage." and ".$options_name.".options_id = ".addslashes($option_id)." and ".$options_name.".options_values_id IN (".addslashes(implode(",", $option_values_id))."))";
 			}
 		}
 	}

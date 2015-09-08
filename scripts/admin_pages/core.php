@@ -261,6 +261,11 @@ switch ($this->ms['page']) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_stats_orders.php');
 		}
 		break;
+	case 'admin_stats_invoices':
+	if ($this->ADMIN_USER) {
+		require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_stats_invoices.php');
+	}
+	break;
 	case 'admin_stats_user_agent':
 		if ($this->ADMIN_USER) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/admin_stats_user_agent.php');

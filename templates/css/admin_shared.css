@@ -177,3 +177,15 @@ td.cellAction { white-space:nowrap; }
 #toast-container .cellImage img { max-width:initial; }
 #toast-container .table { margin-top:5px; }
 #toast-container .table td { font-weight:normal; font-family:"Open Sans", Arial, Helvetica, sans-serif; font-size:13px; line-height:20px; }
+
+/* edit item mini toolbar */
+#tx_multishop_pi1_core .product_listing .admin_menu,
+.msFrontCategoryListingSection .product_listing .admin_menu,
+#tx_multishop_pi1_core #products_detail .admin_menu,
+#tx_multishop_pi1_core #category_listing .admin_menu { position:absolute; right:auto; left:0; top:0; width:auto; height:auto; border-right:1px solid #cdcdcd; border-bottom:1px solid #cdcdcd; border-left:none; background:#fff; padding:5px; border-radius:5px 0 0 0; z-index:300; }
+#tx_multishop_pi1_core #products_detail .admin_menu { overflow:hidden; right:0; left:auto; border-left:1px solid #cdcdcd; border-right:none; border-radius:0; }
+#tx_multishop_pi1_core #product_listing.msFrontProductsListStyleTable .admin_menu { left:auto; right:0; }
+.admin_menu > a { float:left; display:block; font-size:14px; line-height:14px; color:#666; }
+.admin_menu > a:hover,
+.admin_menu > a:focus { color:#000; transition:color .5s; }
+.admin_menu > a:first-child { padding-right:5px; }

@@ -66,6 +66,7 @@ jQuery(document).ready(function ($) {
         //var input = $("input[name='"+fieldName+"']");
         var input = $(this).parents('.input-number-wrapper').find('.input-number');
         var currentVal = parseInt(input.val());
+        //console.log(input);
         if (!isNaN(currentVal)) {
             if(type == 'minus') {
                 if(currentVal > input.attr('min')) {

@@ -113,19 +113,44 @@ function updateCoords(c) {
 	$(\'#jCropW\').val(c.w);
 	$(\'#jCropH\').val(c.h);
 }
-function cropEditorDialog(textTitle, textBody) {
-    $.confirm({
-        title: textTitle,
-        content: textBody,
-        columnClass: "col-md-12",
-        closeIcon: true,
-        confirmButton:"'.$this->pi_getLL('close').'",
-        confirm: function(){
-        },
-        cancelButton: "'.$this->pi_getLL('cancel').'",
-        cancel: function(){
-        }
-    });
+function cropEditorDialog(textTitle, textBody, imageName, imageActionEID) {
+   var cropWindow=\'<div class="modal" id="cropEditorWindow" tabindex="-1" role="dialog" aria-labelledby="cropEditorWindowTitle">\';
+  	cropWindow+=\'<div class="modal-dialog modal-lg" role="document">\';
+    cropWindow+=\'<div class="modal-content">\';
+    cropWindow+=\'<div class="modal-header">\';
+    cropWindow+=\'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\';
+    cropWindow+=\'<h4 class="modal-title" id="cropEditorWindowTitle">\' + textTitle + \'</h4>\';
+    cropWindow+=\'</div>\';
+    cropWindow+=\'<div class="modal-body">\' + textBody + \'</div>\';
+    cropWindow+=\'<div class="modal-footer">\';
+    cropWindow+=\'<button type="button" class="btn btn-default" data-dismiss="modal">'.$this->pi_getLL('close').'</button>\';
+    cropWindow+=\'</div>\';
+    cropWindow+=\'</div>\';
+	cropWindow+=\'</div>\';
+	cropWindow+=\'</div>\';
+	$(\'body\').append(cropWindow);
+	$(\'#cropEditorWindow\').modal({
+		show: true,
+		backdrop: \'static\',
+	});
+	$(\'#cropEditorWindow\').on(\'hidden.bs.modal\', function (e) {
+		$(\'#cropEditorWindow\').remove();
+		href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
+		jQuery.ajax({
+			type:"POST",
+			url:href,
+			data: "imagename=" + imageName,
+			dataType: "json",
+			success: function(r) {
+				//do something with the sorted data
+				if (r.status=="OK") {
+					var image_action_path="#" + imageActionEID + " > img";
+					var new_image=r.images["50"];
+					$(image_action_path).prop("src", new_image);
+				}
+			}
+		});
+	});
 }
 ' : '').'
 jQuery(document).ready(function($) {
@@ -144,7 +169,7 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 				data: {
 					q: query.term
 				},
@@ -167,7 +192,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -256,6 +281,7 @@ jQuery(document).ready(function($) {
 	});
 	'.($this->ms['MODULES']['ADMIN_CROP_PRODUCT_IMAGES'] ? '
 	$(document).on(\'click\', "#cropEditor", function(e) {
+		var imageActionEID=$(this).parentsUntil(".image_action").parent().prop("id");
 		e.preventDefault();
 		var cropall=0;
 		if ($("#onecrop_for_all").prop("checked")) {
@@ -299,7 +325,7 @@ jQuery(document).ready(function($) {
 					image_interface+=\'</ul>\';
 					image_interface+=\'</div>\';
 					image_interface+=\'</div>\';
-					cropEditorDialog("Crop image " + image_name + " [50]", image_interface);
+					cropEditorDialog("Crop image " + image_name + " [50]", image_interface, image_name, imageActionEID);
 					// default for first time loading is 50
 					if (r.disable_crop_button=="disabled") {
 						$("#crop_save_btn_wrapper").hide();
@@ -559,7 +585,7 @@ jQuery(document).ready(function($) {
 		//multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getTree&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 				data: {
 					q: query.term
 				},
@@ -582,7 +608,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -1154,12 +1180,18 @@ if ($this->post) {
 										// remove the custom page desc if the cat id is not related anymore in p2c
 										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
 										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+										//
+										$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+										$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									}
 								} else if (!isset($this->post['tx_multishop_pi1']['enableMultipleShops'])) {
 									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_to_categories', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 									// remove the custom page desc if the cat id is not related anymore in p2c
 									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_description', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+									//
+									$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'products_id=\''.$prodid.'\' and page_uid='.$shop_pid);
 									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 							}
@@ -1779,6 +1811,7 @@ if ($this->post) {
 						$attributesArray['options_values_price']=$pa_price;
 						$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
 						$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+						$attributesArray['page_uid']=$this->showCatalogFromPage;
 						$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1795,6 +1828,7 @@ if ($this->post) {
 							$attributesArray['options_values_price']=$pa_price;
 							$attributesArray['sort_order_option_name']=$option_sort_order[$opt_id];
 							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+							$attributesArray['page_uid']=$this->showCatalogFromPage;
 							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', 'products_attributes_id=\''.$pa_id.'\'', $attributesArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 						} else {
@@ -1807,6 +1841,7 @@ if ($this->post) {
 							$attributesArray['options_values_price']=$pa_price;
 							$attributesArray['sort_order_option_name']=$option_sort_order[$pa_option];
 							$attributesArray['sort_order_option_value']=$values_sort_order[$pa_option][$pa_value];
+							$attributesArray['page_uid']=$this->showCatalogFromPage;
 							$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							$this->post['tx_multishop_pi1']['pa_id'][$opt_sort]=$GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1819,7 +1854,7 @@ if ($this->post) {
 			$current_option_id='';
 			foreach ($this->post['predefined_option'] as $option_id=>$values) {
 				if (is_numeric($option_id)) {
-					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'options_id=\''.$option_id.'\' and products_id=\''.$prodid.'\'');
+					$query=$GLOBALS['TYPO3_DB']->DELETEquery('tx_multishop_products_attributes', 'options_id=\''.$option_id.'\' and products_id=\''.$prodid.'\' and page_uid=\''.$this->showCatalogFromPage.'\'');
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 					foreach ($values as $value_id) {
 						if ($value_id) {
@@ -1828,6 +1863,7 @@ if ($this->post) {
 								$attributesArray['products_id']=$prodid;
 								$attributesArray['options_id']=$option_id;
 								$attributesArray['options_values_id']=$value_id;
+								$attributesArray['page_uid']=$this->showCatalogFromPage;
 								$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_products_attributes', $attributesArray);
 								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 							}
@@ -3193,7 +3229,7 @@ if ($this->post) {
 			// end optional predefined attributes menu
 			$sql_pa=$GLOBALS ['TYPO3_DB']->SELECTquery('popt.required,popt.products_options_id, popt.products_options_name, popt.listtype, patrib.*', // SELECT ...
 				'tx_multishop_products_options popt, tx_multishop_products_attributes patrib', // FROM ...
-				"patrib.products_id='".$product['products_id']."' and popt.language_id = '".$this->sys_language_uid."' and patrib.options_id = popt.products_options_id", // WHERE.
+				"patrib.products_id='".$product['products_id']."' and popt.language_id = '".$this->sys_language_uid."' and patrib.page_uid='".$this->showCatalogFromPage."' and patrib.options_id = popt.products_options_id", // WHERE.
 				'', // GROUP BY...
 				'patrib.sort_order_option_name, patrib.sort_order_option_value', // ORDER BY...
 				'' // LIMIT ...

@@ -84,7 +84,8 @@ foreach ($categories as $category) {
 			'markerArray'=>&$markerArray,
 			'product'=>&$current_product,
 			'output'=>&$output,
-			'products_compare'=>&$products_compare
+			'products_compare'=>&$products_compare,
+			'output_array'=>&$output_array
 		);
 		foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/categories_listing.php']['categoriesListingRecordHook'] as $funcRef) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
@@ -106,7 +107,8 @@ $subpartArray['###ITEM###']=$contentItem;
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/categories_listing.php']['categoriesListingPagePostHook'])) {
 	$params=array(
 		'subpartArray'=>&$subpartArray,
-		'current'=>&$current
+		'current'=>&$current,
+		'output_array'=>&$output_array
 	);
 	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/front_pages/includes/categories_listing.php']['categoriesListingPagePostHook'] as $funcRef) {
 		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

@@ -213,12 +213,12 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			if (count($search_in_option_ids)) {
 				foreach ($search_in_option_ids as $options_id) {
 					if (is_numeric($options_id)) {
-						$extra_filter[]='('.$tbl.'products_id IN (SELECT DISTINCT(pa.products_id) FROM tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov,  tx_multishop_products_options_values_to_products_options povp where pa.options_id=\''.$options_id.'\' and pov.products_options_values_name like \'%'.addslashes($this->get['skeyword']).'%\' and pov.language_id=0 and pov.products_options_values_id=povp.products_options_values_id and povp.products_options_values_id=pa.options_values_id and pa.options_id=povp.products_options_id and po.language_id=pov.language_id and po.products_options_id=povp.products_options_id and po.language_id=pov.language_id))';
+						$extra_filter[]='('.$tbl.'products_id IN (SELECT DISTINCT(pa.products_id) FROM tx_multishop_products_attributes pa, tx_multishop_products_options po, tx_multishop_products_options_values pov,  tx_multishop_products_options_values_to_products_options povp where pa.options_id=\''.$options_id.'\' and pa.page_uid=\''.$this->showCatalogFromPage.'\' and pov.products_options_values_name like \'%'.addslashes($this->get['skeyword']).'%\' and pov.language_id=0 and pov.products_options_values_id=povp.products_options_values_id and povp.products_options_values_id=pa.options_values_id and pa.options_id=povp.products_options_id and po.language_id=pov.language_id and po.products_options_id=povp.products_options_id and po.language_id=pov.language_id))';
 					}
 				}
 			}
 			if (!is_array($this->get['tx_multishop_pi1']['search_by']) or (is_array($this->get['tx_multishop_pi1']['search_by']) and in_array('products_name', $this->get['tx_multishop_pi1']['search_by']))) {
-				// only search in products name / description if the search_by parameter is empty or products_name is specified	
+				// only search in products name / description if the search_by parameter is empty or products_name is specified
 				$array=explode(" ", $this->get['skeyword']);
 				$total=count($array);
 				$oldsearch=0;
@@ -350,7 +350,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 				if ($string) {
 					$filter[]=$string;
 				}
-				// 
+				//
 			} else {
 				$cats=mslib_fe::get_subcategory_ids($parent_id);
 				$cats[]=$parent_id;
@@ -424,7 +424,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 					$customer_name=$this->pi_getLL('customer');
 				}
 				mslib_befe::storeNotificationMessage($this->pi_getLL('customer_action'), sprintf($this->pi_getLL('customer_searched_for_keywordx'), $customer_name, $this->get['skeyword']));
-				// store keyword with positive results			
+				// store keyword with positive results
 				mslib_befe::storeProductsKeywordSearch($this->get['skeyword']);
 			}
 			if (!$p and $this->ms['MODULES']['DISPLAY_SPECIALS_ABOVE_PRODUCTS_LISTING']) {
@@ -452,7 +452,7 @@ if (!$this->ms['MODULES']['CACHE_FRONT_END'] or ($this->ms['MODULES']['CACHE_FRO
 			}
 			// pagination eof
 		} else {
-			// add PRODUCTS_SEARCH_FALLBACK_SEARCH module code here			
+			// add PRODUCTS_SEARCH_FALLBACK_SEARCH module code here
 			if (!$p and $this->get['skeyword']) {
 				// send notification message to admin
 				if ($GLOBALS['TSFE']->fe_user->user['username']) {

@@ -312,7 +312,7 @@ CREATE TABLE `tx_multishop_invoices` (
  `customer_currency` char(3) default '',
  `currency_rate` varchar(15) default '1',
  `date_mail_last_sent` int(11) default '0',
- `credit_invoice` tinyint(1) default '0',
+ `debit_invoice` tinyint(1) default '0',
  PRIMARY KEY (`id`),
  KEY `orders_id` (`orders_id`),
  KEY `status` (`status`),
@@ -324,7 +324,7 @@ CREATE TABLE `tx_multishop_invoices` (
  KEY `reversal_invoice` (`reversal_invoice`),
  KEY `reversal_related_id` (`reversal_related_id`),
  KEY `date_mail_last_sent` (`date_mail_last_sent`),
- KEY `credit_invoice` (`credit_invoice`)
+ KEY `debit_invoice` (`debit_invoice`)
 );
 
 CREATE TABLE `tx_multishop_manufacturers` (
@@ -495,7 +495,7 @@ CREATE TABLE `tx_multishop_orders` (
  `orders_last_modified` int(11) default '0',
  `track_and_trace_link` varchar(255) default '',
  `orders_paid_timestamp` int(11) default '0',
- `credit_order` tinyint(1) default '0',
+ `debit_order` tinyint(1) default '0',
  PRIMARY KEY (`orders_id`),
  KEY `customer_id` (`customer_id`),
  KEY `bu` (`page_uid`),
@@ -536,7 +536,7 @@ CREATE TABLE `tx_multishop_orders` (
  KEY `coupon_discount_value` (`coupon_discount_value`),
  KEY `date_mail_last_sent` (`date_mail_last_sent`),
  KEY `orders_paid_timestamp` (`orders_paid_timestamp`),
- KEY `credit_order` (`credit_order`)
+ KEY `debit_order` (`debit_order`)
 ) COMMENT='Ordersysteem';
 
 CREATE TABLE `tx_multishop_orders_products` (
@@ -879,6 +879,7 @@ CREATE TABLE `tx_multishop_products_attributes` (
  `attribute_image` varchar(150) default '',
  `sort_order_option_name` int(11) default '0',
  `sort_order_option_value` int(11) default '0',
+ `page_uid` int(11) not null default '0',
  PRIMARY KEY (`products_attributes_id`),
  KEY `products_id` (`products_id`),
  KEY `options_id` (`options_id`),

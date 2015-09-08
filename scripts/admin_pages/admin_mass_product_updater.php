@@ -85,7 +85,7 @@ if ($this->post) {
 			$qry_products=$GLOBALS['TYPO3_DB']->sql_query($sql_products);
 			$sql_attribute_values_affected_rows=0;
 			while ($rs_products=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry_products)) {
-				$str="update tx_multishop_products_attributes set options_values_price=(options_values_price*".$multiply.") where options_values_price>0 and products_id='".$rs_products['products_id']."'";
+				$str="update tx_multishop_products_attributes set options_values_price=(options_values_price*".$multiply.") where options_values_price>0 and products_id='".$rs_products['products_id']."' and page_uid='".$this->showCatalogFromPage."'";
 				$res=$GLOBALS['TYPO3_DB']->sql_query($str);
 				$sql_attribute_values_affected_rows+=$GLOBALS['TYPO3_DB']->sql_affected_rows();
 			}

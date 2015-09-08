@@ -710,8 +710,20 @@ if ($this->post['tx_multishop_pi1']['is_proposal']) {
 } else {
 	$filter[]='o.is_proposal=0';
 }
-$pageset=mslib_fe::getOrdersPageSet($filter, $offset, $this->post['limit'], $orderby, $having, $select, $where, $from);
-$tmporders=$pageset['orders'];
+// Use new method to retrieve records
+$data=array();
+$data['select']=$select;
+$data['where']=$filter;
+$data['where'][]='o.deleted=0';
+$data['order_by']=$orderby;
+$data['limit']=$this->ms['MODULES']['ORDERS_LISTING_LIMIT'];
+$data['offset']=$offset;
+$data['from'][]='tx_multishop_orders o left join tx_multishop_orders_status os on o.status=os.id left join tx_multishop_orders_status_description osd on (os.id=osd.orders_status_id AND o.language_id=osd.language_id)';
+// Define section, so hooks can control the query
+$data['section']='admin_orders';
+
+$pageset=mslib_fe::getRecordsPageSet($data);
+$tmporders=$pageset['dataset'];
 if ($pageset['total_rows']>0) {
 	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/orders/orders_listing_table.php');
 } else {
@@ -811,7 +823,7 @@ $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 
 
-$subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
+$subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_by');
 $subpartArray['###OPTION_ITEM_SELECTBOX###']=$option_item;
