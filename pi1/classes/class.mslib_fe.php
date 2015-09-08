@@ -3275,17 +3275,33 @@ class mslib_fe {
 		this method is used to request the stores page set
 		$filter can be an string or (multiple)
 	*/
-	public function getSubcatsArray(&$subcategories_array, $keyword='', $parent_id=0, $page_uid='') {
+	public function getSubcatsArray(&$subcategories_array, $keyword='', $parent_id=0, $page_uid='', $include_disabled_categories=0) {
 		if (!is_numeric($page_uid)) {
 			$page_uid=$this->showCatalogFromPage;
 		}
 		if ($parent_id=='') {
 			$parent_id=0;
 		}
+		//
+		$orderby='';
+		$filter=array();
+		$filter[]='c.page_uid=\''.$page_uid.'\'';
+		if (!$include_disabled_categories) {
+			$filter[]='c.status = \'1\'';
+		}
+		if (!empty($keyword) && strlen($keyword)>0) {
+			$filter[]='cd.categories_name like \'%'.addslashes($keyword).'%\'';
+		} else {
+			$filter[]='c.parent_id = \''.$parent_id.'\'';
+			$orderby='cd.categories_name asc';
+		}
+		$filter[]='cd.language_id=\''.$this->sys_language_uid.'\'';
+		$filter[]='c.categories_id=cd.categories_id';
+		//
 		if (!empty($keyword) && strlen($keyword)>0) {
 			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'c.page_uid=\''.$page_uid.'\' and c.status = \'1\' and cd.categories_name like \'%'.addslashes($keyword).'%\' and cd.language_id='.$this->sys_language_uid.' and c.categories_id=cd.categories_id', // WHERE...
+				implode(' and ', $filter), // WHERE...
 				'', // GROUP BY...
 				'', // ORDER BY...
 				'' // LIMIT ...
@@ -3300,9 +3316,9 @@ class mslib_fe {
 		} else {
 			$qry=$GLOBALS['TYPO3_DB']->SELECTquery('c.categories_id, cd.categories_name', // SELECT ...
 				'tx_multishop_categories c, tx_multishop_categories_description cd', // FROM ...
-				'c.page_uid=\''.$page_uid.'\' and c.status = \'1\' and cd.language_id='.$this->sys_language_uid.' and c.parent_id = \''.$parent_id.'\' and c.categories_id=cd.categories_id', // WHERE...
+					implode(' and ', $filter), // WHERE...
 				'', // GROUP BY...
-				'cd.categories_name asc', // ORDER BY...
+				$orderby, // ORDER BY...
 				'' // LIMIT ...
 			);
 			$subcategories_query=$GLOBALS['TYPO3_DB']->sql_query($qry);
@@ -3312,7 +3328,7 @@ class mslib_fe {
 					'name'=>$subcategories['categories_name']
 				);
 				if ($subcategories['categories_id']!=$parent_id) {
-					mslib_fe::getSubcatsArray($subcategories_array, $keyword, $subcategories['categories_id'], $page_uid);
+					mslib_fe::getSubcatsArray($subcategories_array, $keyword, $subcategories['categories_id'], $page_uid, $include_disabled_categories);
 				}
 			}
 		}

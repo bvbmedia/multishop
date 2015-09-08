@@ -407,6 +407,10 @@ switch ($this->ms['page']) {
 		if (is_numeric($this->get['tx_multishop_pi1']['page_uid'])) {
 			$page_uid=$this->get['tx_multishop_pi1']['page_uid'];
 		}
+		$include_disabled_cats=0;
+		if (isset($this->get['tx_multishop_pi1']['includeDisabledCats']) && $this->get['tx_multishop_pi1']['includeDisabledCats'] > 0) {
+			$include_disabled_cats=1;
+		}
 		$return_data=array();
 		$tmp_return_data=array();
 		switch ($this->get['tx_multishop_pi1']['get_category_tree']) {
@@ -447,7 +451,7 @@ switch ($this->ms['page']) {
 				if (isset($this->get['q']) && !empty($this->get['q'])) {
 					$keyword=trim($this->get['q']);
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, $keyword, '', $page_uid);
+					mslib_fe::getSubcatsArray($categories_tree, $keyword, '', $page_uid, $include_disabled_cats);
 					//print_r($categories_tree);
 					foreach ($categories_tree as $category_tree) {
 						$cats=mslib_fe::Crumbar($category_tree['id'], '', array(), $page_uid);
@@ -458,7 +462,7 @@ switch ($this->ms['page']) {
 						}
 						// fetch subcat if any
 						$subcategories_tree=array();
-						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid);
+						mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid, $include_disabled_cats);
 						if (count($subcategories_tree)) {
 							foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
 								$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
@@ -472,7 +476,7 @@ switch ($this->ms['page']) {
 					}
 				} else {
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid);
+					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid, $include_disabled_cats);
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						$tmp_return_data[$category_tree_0['id']]=$category_tree_0['name'];
@@ -494,7 +498,7 @@ switch ($this->ms['page']) {
 				if (isset($this->get['q']) && !empty($this->get['q'])) {
 					$keyword=trim($this->get['q']);
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, $keyword);
+					mslib_fe::getSubcatsArray($categories_tree, $keyword, '', '', $include_disabled_cats);
 					//print_r($categories_tree);
 					foreach ($categories_tree as $category_tree) {
 						if (count($skip_ids)>0) {
@@ -514,7 +518,7 @@ switch ($this->ms['page']) {
 								}
 								// fetch subcat if any
 								$subcategories_tree=array();
-								mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id']);
+								mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], '', $include_disabled_cats);
 								if (count($subcategories_tree)) {
 									foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
 										if (!in_array($subcategory_tree_0['id'], $skip_ids)) {
@@ -542,7 +546,7 @@ switch ($this->ms['page']) {
 							}
 							// fetch subcat if any
 							$subcategories_tree=array();
-							mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid);
+							mslib_fe::getSubcatsArray($subcategories_tree, '', $category_tree['id'], $page_uid, $include_disabled_cats);
 							if (count($subcategories_tree)) {
 								foreach ($subcategories_tree[$category_tree['id']] as $subcategory_tree_0) {
 									$tmp_return_data[$subcategory_tree_0['id']]=implode(' > ', $catpath).' > '.$subcategory_tree_0['name'];
@@ -557,7 +561,7 @@ switch ($this->ms['page']) {
 					}
 				} else {
 					$categories_tree=array();
-					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid);
+					mslib_fe::getSubcatsArray($categories_tree, '', '', $page_uid, $include_disabled_cats);
 					//level 0
 					foreach ($categories_tree[0] as $category_tree_0) {
 						if (!in_array($category_tree_0['id'], $skip_ids)) {
