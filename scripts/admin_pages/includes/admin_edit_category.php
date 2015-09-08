@@ -86,7 +86,7 @@ jQuery(document).ready(function($) {
 		multiple: false,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 				data: {
 					q: query.term,
 					skip_ids: \''.implode(',', $skip_ids).'\'
@@ -110,7 +110,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -120,7 +120,7 @@ jQuery(document).ready(function($) {
 						callback(data);
 					});
 				}
-				/*$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+				/*$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 					data: {
 						preselected_id: id,
 						skip_ids: \''.implode(',', $skip_ids).'\'
@@ -158,7 +158,7 @@ jQuery(document).ready(function($) {
 		multiple: true,
 		//allowClear: true,
 		query: function(query) {
-			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&no_maincat=1').'\', {
+			$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&no_maincat=1&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 				data: {
 					q: query.term,
 					skip_ids: \''.implode(',', $skip_ids).'\'
@@ -182,7 +182,7 @@ jQuery(document).ready(function($) {
 				if (callback_data.length) {
 					callback(callback_data);
 				} else {
-					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+					$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 						data: {
 							preselected_id: id
 						},
@@ -192,7 +192,7 @@ jQuery(document).ready(function($) {
 						callback(data);
 					});
 				}
-				/*$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+				/*$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1').'\', {
 					data: {
 						preselected_id: id,
 						skip_ids: \''.implode(',', $skip_ids).'\'
@@ -404,6 +404,7 @@ if ($this->post) {
 									$updateArray=array();
 									$updateArray['categories_id']=$foreign_cat_id;
 									$updateArray['products_id']=$product_id;
+									$updateArray['sort_order']=time();
 									$updateArray['sort_order']=time();
 									$updateArray['page_uid']=$page_uid;
 									$updateArray['related_to']=$reflector_cattree[$foreign_cat_id];
@@ -818,7 +819,7 @@ if ($this->post) {
 								multiple: true,
 								//allowClear: true,
 								query: function(query) {
-									$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'&no_maincat=1\', {
+									$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'&no_maincat=1&tx_multishop_pi1[includeDisabledCats]=1\', {
 										data: {
 											q: query.term
 										},
@@ -841,7 +842,7 @@ if ($this->post) {
 										if (callback_data.length) {
 											callback(callback_data);
 										} else {
-											$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
+											$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues&tx_multishop_pi1[includeDisabledCats]=1&tx_multishop_pi1[page_uid]='.$pageinfo['uid']).'\', {
 												data: {
 													preselected_id: id
 												},
