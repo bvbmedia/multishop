@@ -151,6 +151,11 @@ if (mslib_fe::loggedin()) {
 							$array2[]='<a href="'.$link.'" rel="noreferrer">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
 							$array1[]='###CONFIRMATION_LINK###';
 							$array2[]='<a href="'.$link.'" rel="noreferrer">'.htmlspecialchars($this->pi_getLL('click_here_to_confirm_registration')).'</a>';
+
+							$array1[]='###USERNAME###';
+							$array2[]=$newCustomer['email'];
+							$array1[]='###PASSWORD###';
+							$array2[]=$this->post['password'];
 							if ($page[0]['content']) {
 								$page[0]['content']=str_replace($array1, $array2, $page[0]['content']);
 							}
