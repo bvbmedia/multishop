@@ -7773,9 +7773,9 @@ class mslib_fe {
 						$name=$order['billing_name'];
 					}
 					$insertArray['ordered_by']=$name;
-					$insertArray['credit_invoice']='0';
-					if ($order['credit_order']) {
-						$insertArray['credit_invoice']='1';
+					$insertArray['debit_invoice']='0';
+					if ($order['debit_order']) {
+						$insertArray['debit_invoice']='1';
 					}
 					$query=$GLOBALS['TYPO3_DB']->INSERTquery('tx_multishop_invoices', $insertArray);
 					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
