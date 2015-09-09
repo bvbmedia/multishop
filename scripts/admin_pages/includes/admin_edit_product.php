@@ -94,12 +94,14 @@ function activate_jcrop_js(aspecratio, minsize, setselect, truesize) {
 
 		var new_scale_x2=minsize[0];
 		var new_scale_y2=minsize[1];
+		/*
 		if (parseInt(minsize[0])>parseInt(scaled.x2)) {
 			new_scale_x2=scaled.x2;
 		}
 		if (parseInt(minsize[1])>parseInt(scaled.y2)) {
 			new_scale_y2=scaled.y2;
 		}
+		*/
 		$("#default_minsize_settings").val(new_scale_x2 + "," + new_scale_y2);
 		jcrop_api.setOptions({
 			minSize: [new_scale_x2, new_scale_y2],
@@ -545,12 +547,13 @@ jQuery(document).ready(function($) {
 							$("#crop_thumb_image_list").hide();
 							$("#onecrop_for_all_btn_wrapper").show();
 							$("#onecrop_for_all").prop("checked", true);
+							activate_jcrop_js(r.aspectratio[300], r.minsize[300], r.setselect[300], r.truesize[300]);
 						} else {
 							$("#crop_thumb_image_list").show();
 							$("#onecrop_for_all_btn_wrapper").hide();
 							$("#onecrop_for_all").prop("checked", false);
+							activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 						}
-						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
 				}
 			}
