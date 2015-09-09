@@ -7797,6 +7797,12 @@ class mslib_fe {
 						$array['hash']=$hash;
 						$array['invoice_id']=$invoice_id;
 						return $array;
+					} else {
+						// Fail
+						$array=array();
+						$array['erno']=array();
+						$array['erno'][]=$GLOBALS['TYPO3_DB']->sql_error();
+						return $array;
 					}
 				}
 			}
