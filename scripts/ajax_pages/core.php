@@ -142,8 +142,8 @@ switch ($this->ms['page']) {
 			case 'products':
 			default:
 				$image_type='products';
-				$image_size=(!isset($this->post['size']) ? 50 : $this->post['size']);
-				$image_size_format=(!isset($this->post['size']) ? 50 : $this->post['size']);
+				$image_size=(!isset($this->post['size']) ? 300 : $this->post['size']);
+				$image_size_format=(!isset($this->post['size']) ? 300 : $this->post['size']);
 				$image_format_key='product_image_formats';
 				$crop_table_name='tx_multishop_product_crop_image_coordinate';
 				break;
@@ -154,6 +154,7 @@ switch ($this->ms['page']) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
+			$return_data['images']['300']=mslib_befe::getImagePath($image_name, $image_type, '300').'?'.time();
 			$return_data['images']['normal']=mslib_befe::getImagePath($image_name, $image_type, 'normal').'?'.time();
 			$return_data['images']['50']=mslib_befe::getImagePath($image_name, $image_type, '50').'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
