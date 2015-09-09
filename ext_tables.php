@@ -194,12 +194,15 @@ $tempColumns=array(
 );
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("tt_address");
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns("tt_address", $tempColumns, 1);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type, tx_multishop_customer_id;;;;1-1-1');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes("tt_address", '--div--; Multishop, tx_multishop_address_type, street_name, address_number, address_ext, tx_multishop_customer_id;;;;1-1-1');
+
+// Not working with latest static_info_tables, so for now just display the additional fields in the Multishop tab
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
-$TCA['tt_address']['palettes']['multishopaddress']=array(
-	'showitem'=>'address,street_name,address_number,address_ext'
-);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
+//$TCA['tt_address']['palettes']['multishopaddress']=array(
+//	'showitem'=>'address,street_name,address_number,address_ext'
+//);
+//\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('tt_address', '--palette--;Address;multishopaddress', '', 'replace:address');
+
 // TT ADDRESS EOF
 // ADD CUSTOM PAGE TYPE
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('pages');
