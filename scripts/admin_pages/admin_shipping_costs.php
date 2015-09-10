@@ -361,7 +361,7 @@ if (count($shipping_methods)>0) {
 									<div id="'.$zone_pid.'_PriceLevel'.$i.'">
 										<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_name" name="display_name" class="form-control msProductsPriceExcludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row['tax_id'].'"'.$disabled.'><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>
 										<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat '.$zone_pid.'_priceInput'.$i.'" value="" rel="'.$row['tax_id'].'"'.$disabled.'><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
-										<div class="msAttributesField hidden"><input type="hidden" style="text-align:right; display=none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.'/></di>
+										<div class="msAttributesField hidden"><input type="hidden" style="text-align:right;display:none;" size="3" name="'.$zone_pid.'_Price[]" id="'.$zone_pid.'_Price'.$i.'" value="" class="'.$zone_pid.'_priceInput'.$i.'"'.$disabled.'/></div>
 									</div>
 								</div>
 							</div>';
