@@ -6388,6 +6388,9 @@ class mslib_fe {
 			if ($this->get['tx_multishop_pi1']['page_section']=='add_category' || $this->post['tx_multishop_pi1']['page_section']=='add_category') {
 				$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_category']['active']=1;
 			}
+			if ($this->get['tx_multishop_pi1']['page_section']=='edit_category' || $this->post['tx_multishop_pi1']['page_section']=='edit_category') {
+				$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_category']['active']=1;
+			}
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['label']=$this->pi_getLL('admin_new_multiple_category', 'NEW CATEGORIES');
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['description']=$this->pi_getLL('admin_add_new_multiple_category_to_the_catalog', 'Add new categories simultaneous').'.';
 			$ms_menu['header']['ms_admin_catalog']['subs']['admin_categories']['subs']['admin_new_multiple_category']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=add_multiple_category&cid='.$this->get['categories_id'].'&action=add_multiple_category');
@@ -6439,6 +6442,9 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_new_product']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=add_product&cid='.$this->get['categories_id'].'&action=add_product');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_new_product']['class']='fa fa-plus-circle';
 			if ($this->get['tx_multishop_pi1']['page_section']=='add_product' || $this->post['tx_multishop_pi1']['page_section']=='add_product') {
+				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_new_product']['active']=1;
+			}
+			if ($this->get['tx_multishop_pi1']['page_section']=='edit_product' || $this->post['tx_multishop_pi1']['page_section']=='edit_product') {
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_products']['subs']['admin_new_product']['active']=1;
 			}
 			if ($this->get['products_id']) {
@@ -6536,6 +6542,12 @@ class mslib_fe {
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_manufacturers');
 			$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['class']='fa fa-industry';
 			if ($this->get['tx_multishop_pi1']['page_section']=='admin_manufacturers' || $this->post['tx_multishop_pi1']['page_section']=='admin_manufacturers') {
+				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['active']=1;
+			}
+			if ($this->get['tx_multishop_pi1']['page_section']=='add_manufacturer' || $this->post['tx_multishop_pi1']['page_section']=='add_manufacturer') {
+				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['active']=1;
+			}
+			if ($this->get['tx_multishop_pi1']['page_section']=='edit_manufacturer' || $this->post['tx_multishop_pi1']['page_section']=='edit_manufacturer') {
 				$ms_menu['header']['ms_admin_catalog']['subs']['ms_admin_manufacturers']['active']=1;
 			}
 			// merge manufacturers
