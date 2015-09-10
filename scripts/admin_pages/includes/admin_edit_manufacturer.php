@@ -14,6 +14,8 @@ $subparts['template']=$this->cObj->getSubpart($template, '###TEMPLATE###');
 $subparts['manufacturers_images']=$this->cObj->getSubpart($subparts['template'], '###MANUFACTURER_IMAGES###');
 $subparts['manufacturers_content']=$this->cObj->getSubpart($subparts['template'], '###MANUFACTURERS_CONTENT###');
 $subparts['manufacturers_meta']=$this->cObj->getSubpart($subparts['template'], '###MANUFACTURERS_META###');
+$subpartArray=array();
+$subpartArray['###POSTFORM_ERROR_ALERT###']='';
 if ($this->get['manufacturers_id']) {
 	$_REQUEST['manufacturers_id']=$this->get['manufacturers_id'];
 }
@@ -166,9 +168,8 @@ if ($this->post) {
 			}
 		}
 	}
-}
-if (count($postErno)) {
-	$returnMarkup='
+	if (count($postErno)) {
+		$returnMarkup='
 	<div style="display:none" id="msAdminPostMessage">
 	<table class="table table-striped table-bordered">
 	<thead>
@@ -179,20 +180,20 @@ if (count($postErno)) {
 	</thead>
 	<tbody>
 	';
-	foreach ($postErno as $item) {
-		switch ($item['status']) {
-			case 'error':
-				$item['status']='<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
-				break;
-			case 'info':
-				$item['status']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
-				break;
+		foreach ($postErno as $item) {
+			switch ($item['status']) {
+				case 'error':
+					$item['status']='<span class="fa-stack text-danger"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-down fa-stack-1x fa-inverse"></i></span>';
+					break;
+				case 'info':
+					$item['status']='<span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i></span>';
+					break;
+			}
+			$returnMarkup.='<tr><td class="text-center">'.$item['status'].'</td><td>'.$item['message'].'</td></tr>'."\n";
 		}
-		$returnMarkup.='<tr><td class="text-center">'.$item['status'].'</td><td>'.$item['message'].'</td></tr>'."\n";
-	}
-	$returnMarkup.='</tbody></table></div>';
-	$content.=$returnMarkup;
-	$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
+		$returnMarkup.='</tbody></table></div>';
+		$subpartArray['###POSTFORM_ERROR_ALERT###']=$returnMarkup;
+		$GLOBALS['TSFE']->additionalHeaderData[]='<script type="text/javascript" data-ignore="1">
 	jQuery(document).ready(function ($) {
 		$.confirm({
 			title: \'\',
@@ -201,7 +202,9 @@ if (count($postErno)) {
 	});
 	</script>
 	';
+	}
 }
+
 if ($_REQUEST['action']=='edit_manufacturer') {
 	$str="SELECT * from tx_multishop_manufacturers m where m.manufacturers_id='".$_REQUEST['manufacturers_id']."'";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
@@ -270,7 +273,6 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$markerArray['VALUE_MANUFACTURER_META_DESCRIPTION']=htmlspecialchars($lngman[$language['uid']]['meta_description']);
 		$manufacturersMeta.=$this->cObj->substituteMarkerArray($subparts['manufacturers_meta'], $markerArray, '###|###');
 	}
-	$subpartArray=array();
 	if ($this->post['tx_multishop_pi1']['referrer']) {
 		$subpartArray['###VALUE_REFERRER###']=$this->post['tx_multishop_pi1']['referrer'];
 	} else {
@@ -294,7 +296,11 @@ if ($manufacturer['manufacturers_id'] or $_REQUEST['action']=='add_manufacturer'
 		$subpartArray['###MANUFACTURER_NOT_VISIBLE_CHECKED###']='';
 	}
 	$subpartArray['###MANUFACTURER_ID###']=$manufacturer['manufacturers_id'];
-	$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&manufacturers_id='.$_REQUEST['manufacturers_id']);
+	if ($_REQUEST['manufacturers_id']) {
+		$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$_REQUEST['action'].'&manufacturers_id='.$_REQUEST['manufacturers_id']);
+	} else {
+		$subpartArray['###MANUFACTURER_EDIT_FORM_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]='.$_REQUEST['action']);
+	}
 	$subpartArray['###LABEL_MANUFACTURER_NAME###']=$this->pi_getLL('admin_name');
 	$subpartArray['###VALUE_MANUFACTURER_NAME###']=htmlspecialchars($manufacturer['manufacturers_name']);
 	$subpartArray['###LABEL_MANUFACTURER_IMAGE###']=$this->pi_getLL('admin_image');
