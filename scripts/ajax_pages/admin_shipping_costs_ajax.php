@@ -153,7 +153,7 @@ if ($this->ADMIN_USER) {
 						if ($row_counter==1) {
 							$content.='<div id="'.$zone_pid.'_Row_'.$i.'" class="form-group">';
 						} else {
-							$content.='<div id="'.$zone_pid.'_Row_'.$i.'" class="form-grop" style="display:none">';
+							$content.='<div id="'.$zone_pid.'_Row_'.$i.'" class="form-group" style="display:none">';
 						}
 						$content.='
 							<label id="'.$zone_pid.'_Label_'.$i.'" class="form-inline control-label col-md-4 firstLabel">Level '.$i.':
