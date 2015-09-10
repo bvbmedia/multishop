@@ -38,6 +38,7 @@
 #tx_multishop_admin_footer_wrapper ul li a:focus { text-decoration:none; }
 #tx_multishop_admin_footer_wrapper ul li a,
 #tx_multishop_admin_footer_wrapper ul li span { white-space:normal; }
+#tx_multishop_admin_footer_wrapper a { text-decoration:none !important; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer { line-height:18px; }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li { position:relative; float:left; border-right:1px solid rgba(255,255,255,.3); }
 #tx_multishop_admin_footer_wrapper ul#tx_multishop_admin_footer > li.ms_admin_logout { border-right:none; }
