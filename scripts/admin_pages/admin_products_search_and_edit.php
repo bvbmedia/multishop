@@ -786,12 +786,24 @@ $objRef->setInterfaceKey('admin_products');
 
 // Header buttons
 $headerButtons=array();
-
 $headingButton=array();
 $headingButton['btn_class']='btn btn-primary';
 $headingButton['fa_class']='fa fa-plus-circle';
 $headingButton['title']=$this->pi_getLL('admin_create_new_products_here');
 $headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=add_product&action=add_product');
+$headerButtons[]=$headingButton;
+// Create category button
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('admin_add_new_category_to_the_catalog');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=add_category&action=add_category');
+$headerButtons[]=$headingButton;
+// Create multiple categories button
+$headingButton=array();
+$headingButton['btn_class']='btn btn-primary';
+$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['title']=$this->pi_getLL('admin_add_new_multiple_category_to_the_catalog', 'Add new categories simultaneous');
+$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=add_multiple_category&action=add_multiple_category');
 $headerButtons[]=$headingButton;
 
 // Set header buttons through interface class so other plugins can adjust it
