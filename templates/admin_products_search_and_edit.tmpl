@@ -159,6 +159,32 @@
 
 <script type="text/javascript">
 jQuery(document).ready(function($) {
+	$('.categories_select2_top').select2({
+		minimumInputLength: 0,
+		multiple: false,
+		//allowClear: true,
+		query: function (query) {
+			$.ajax('###AJAX_PRODUCT_CATEGORIES_FULL###', {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			});
+		},
+		initSelection: function (element, callback) {
+			var id = $(element).val();
+			if (id !== "") {
+				$.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE###', {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function (data) {
+					callback(data);
+				});
+			}
+		}
+	});
 	$('.categories_select2').select2({
 		dropdownCssClass: "", // apply css that makes the dropdown taller
 		minimumInputLength: 0,
@@ -184,7 +210,6 @@ jQuery(document).ready(function($) {
 				   },
 				   dataType: "json"
 			   }).done(function (data) {
-				   categoriesIdTerm[data.id] = {id: data.id, text: data.text};
 				   callback(data);
 			   });
 		   }

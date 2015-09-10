@@ -35,7 +35,18 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 			foreach ($this->post['selected_orders'] as $orders_id) {
 				$order=mslib_fe::getOrder($orders_id);
 				if ($order['orders_id']) {
-					mslib_fe::createOrderInvoice($order['orders_id']);
+					$returnStatus=mslib_fe::createOrderInvoice($order['orders_id']);
+					if ($returnStatus['erno']) {
+						$postErno[]=array(
+							'status'=>'error',
+							'message'=>'Failed to create invoice order: '.$orders_id.'. Error(s): '.implode('<br/>',$returnStatus['erno'])
+						);
+					} else {
+						$postErno[]=array(
+							'status'=>'info',
+							'message'=>'Created invoice '.$returnStatus['invoice_id'].' for order: '.$orders_id
+						);
+					}
 				}
 			}
 		}

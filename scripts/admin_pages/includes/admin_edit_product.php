@@ -94,12 +94,14 @@ function activate_jcrop_js(aspecratio, minsize, setselect, truesize) {
 
 		var new_scale_x2=minsize[0];
 		var new_scale_y2=minsize[1];
+		/*
 		if (parseInt(minsize[0])>parseInt(scaled.x2)) {
 			new_scale_x2=scaled.x2;
 		}
 		if (parseInt(minsize[1])>parseInt(scaled.y2)) {
 			new_scale_y2=scaled.y2;
 		}
+		*/
 		$("#default_minsize_settings").val(new_scale_x2 + "," + new_scale_y2);
 		jcrop_api.setOptions({
 			minSize: [new_scale_x2, new_scale_y2],
@@ -298,35 +300,55 @@ jQuery(document).ready(function($) {
 				//do something with the sorted data
 				if (r.status=="OK") {
 					var image_interface=\'<div id="crop_editor_wrapper">\';
-					image_interface+=\'<div id="crop_main_window_editor" align="center"><img src="\' + r.images[50] + \'" id="cropbox" /></div>\';
+					image_interface+=\'<div class="row" >\';
+					image_interface+=\'<div class="col-md-4" >\';
 					image_interface+=\'<div id="crop_thumb_image_button">\';
-					image_interface+=\'<div id="crop_save_btn_wrapper""><span class="msBackendButton continueState"><input type="button" id="crop_save" value="crop & save" /></span></div>\';
-					image_interface+=\'<div id="crop_restore_btn_wrapper" style="display:none"><span class="msBackendButton continueState"><input type="button" id="crop_restore" value="restore image" /></span></div>\';
-					image_interface+=\'<div id="minsize_settings_btn_wrapper" style="display:none"><label for="remove_minsize"><input type="checkbox" id="remove_minsize" checked="checked" /> Lock minimal size of crop selection</label></div>\';
-					image_interface+=\'<div id="aspectratio_settings_btn_wrapper" style="display:none"><label for="remove_aspectratio"><input type="checkbox" id="remove_aspectratio" checked="checked" /> Lock aspect ratio of crop selection</label></div>\';
-					image_interface+=\'<div id="onecrop_for_all_btn_wrapper"><label for="onecrop_for_all_btn_wrapper"><input type="checkbox" id="onecrop_for_all" checked="checked" />Crop all thumbnails size with same coordinates angle</label></div>\';
+					image_interface+=\'<div id="minsize_settings_btn_wrapper" style="display:none">\';
+					image_interface+=\'<div class="checkbox checkbox-success">\';
+					image_interface+=\'<input type="checkbox" id="remove_minsize" checked="checked" />\';
+					image_interface+=\'<label for="remove_minsize">Lock minimal size of crop selection</label>\';
+					image_interface+=\'</div>\';
+					image_interface+=\'</div>\';
+					image_interface+=\'<div id="aspectratio_settings_btn_wrapper" style="display:none">\';
+					image_interface+=\'<div class="checkbox checkbox-success">\';
+					image_interface+=\'<input type="checkbox" id="remove_aspectratio" checked="checked" />\';
+					image_interface+=\'<label for="remove_aspectratio">Lock aspect ratio of crop selection</label>\';
+					image_interface+=\'</div>\';
+					image_interface+=\'</div>\';
+					image_interface+=\'<div id="onecrop_for_all_btn_wrapper">\';
+					image_interface+=\'<div class="checkbox checkbox-success">\';
+					image_interface+=\'<input type="checkbox" id="onecrop_for_all" checked="checked" rel="\' + image_name + \'::300" />\';
+					image_interface+=\'<label for="onecrop_for_all">Crop all thumbnails size with same coordinates angle</label>\';
+					image_interface+=\'</div>\';
+					image_interface+=\'</div>\';
 					image_interface+=\'<input type="hidden" id="jCropImageName" name="tx_multishop_pi1[jCropImageName]" class="jcrop_coords" value="\' + image_name + \'" />\';
-					image_interface+=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="50" />\';
+					image_interface+=\'<input type="hidden" id="jCropImageSize" name="tx_multishop_pi1[jCropImageSize]" class="jcrop_coords" value="300" />\';
 					image_interface+=\'<input type="hidden" id="jCropX" name="tx_multishop_pi1[jCropX]" class="jcrop_coords" value="" />\';
 					image_interface+=\'<input type="hidden" id="jCropY" name="tx_multishop_pi1[jCropY]" class="jcrop_coords" value="" />\';
 					image_interface+=\'<input type="hidden" id="jCropW" name="tx_multishop_pi1[jCropW]" class="jcrop_coords" value="" />\';
 					image_interface+=\'<input type="hidden" id="jCropH" name="tx_multishop_pi1[jCropH]" class="jcrop_coords" value="" />\';
-					image_interface+=\'<input type="hidden" id="default_minsize_settings" name="default_minsize_settings" class="jcrop_coords" value="\' + r.minsize[50] + \'" />\';
-					image_interface+=\'<input type="hidden" id="default_aspectratio_settings" name="default_aspectratio_settings" class="jcrop_coords" value="\' + r.aspectratio[50] + \'" />\';
+					image_interface+=\'<input type="hidden" id="default_minsize_settings" name="default_minsize_settings" class="jcrop_coords" value="\' + r.minsize[300] + \'" />\';
+					image_interface+=\'<input type="hidden" id="default_aspectratio_settings" name="default_aspectratio_settings" class="jcrop_coords" value="\' + r.aspectratio[300] + \'" />\';
 					image_interface+=\'</div>\';
-					image_interface+=\'<div id="crop_thumb_image_list" style="display:none">\';
-					image_interface+=\'<ul>\';
-					image_interface+=\'<li><span>thumbs list:</span></li>\';
-					image_interface+=\'<li><a href="#" class="load_image_ready_for_crop active_thumbs" rel="\' + image_name + \'::50"><span>50</span></a></li>\';
-					image_interface+=\'<li><a href="#" class="load_image_ready_for_crop" rel="\' + image_name + \'::100"><span>100</span></a></li>\';
-					image_interface+=\'<li><a href="#" class="load_image_ready_for_crop" rel="\' + image_name + \'::200"><span>200</span></a></li>\';
-					image_interface+=\'<li><a href="#" class="load_image_ready_for_crop" rel="\' + image_name + \'::300"><span>300</span></a></li>\';
-					image_interface+=\'<li><a href="#" class="load_image_ready_for_crop" rel="\' + image_name + \'::enlarged"><span>enlarged</span></a></li>\';
-					image_interface+=\'</ul>\';
+					image_interface+=\'</div>\'; // .col-md-4
+					image_interface+=\'<div class="col-md-8 col-centered">\';
+					image_interface+=\'<div id="crop_main_window_editor"><img src="\' + r.images[300] + \'" id="cropbox" /></div>\';
+					image_interface+=\'<div class="btn-toolbar" role="toolbar">\';
+					image_interface+=\'<div class="btn-group" role="group" id="crop_thumb_image_list" style="display:none">\';
+					image_interface+=\'<button type="button" id="thumblist_50" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_50\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::50">50</button>\';
+					image_interface+=\'<button type="button" id="thumblist_100" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_100\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::100">100</button>\';
+					image_interface+=\'<button type="button" id="thumblist_200" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_200\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::200">200</button>\';
+					image_interface+=\'<button type="button" id="thumblist_300" class="load_image_ready_for_crop btn-danger" rel="\' + image_name + \'::300">300</button>\';
+					image_interface+=\'<button type="button" id="thumblist_enlarged" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_enlarged\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::enlarged">enlarged</button>\';
+					image_interface+=\'</div>\';
+					image_interface+=\'<div class="btn-group" role="group" id="crop_save_btn_wrapper"><button type="button"class="btn btn-success" id="crop_save">crop & save</button></div>\';
+					image_interface+=\'<div class="btn-group" id="crop_restore_btn_wrapper" style="display:none"><button class="btn btn-warning" type="button" id="crop_restore">restore image</button></div>\';
+					image_interface+=\'</div>\'; // .btn-toolbar
+					image_interface+=\'</div>\'; // .col-md-8
 					image_interface+=\'</div>\';
 					image_interface+=\'</div>\';
-					cropEditorDialog("Crop image " + image_name + " [50]", image_interface, image_name, imageActionEID);
-					// default for first time loading is 50
+					cropEditorDialog("Crop image " + image_name, image_interface, image_name, imageActionEID);
+					// default for first time loading is 300
 					if (r.disable_crop_button=="disabled") {
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
@@ -354,7 +376,7 @@ jQuery(document).ready(function($) {
 							$("#onecrop_for_all").prop("checked", false);
 							$("#crop_thumb_image_list").show();
 						}
-						activate_jcrop_js(r.aspectratio[50], r.minsize[50], r.setselect[50], r.truesize[50]);
+						activate_jcrop_js(r.aspectratio[300], r.minsize[300], r.setselect[300], r.truesize[300]);
 					}
 				}
 			}
@@ -377,17 +399,18 @@ jQuery(document).ready(function($) {
 			success: function (r) {
 				//do something with the sorted data
 				if (r.status=="OK") {
-					var new_image=\'<img src="\' + r.images[tmp[1]] + \'" id="cropbox"/>\';
-					$(".load_image_ready_for_crop").removeClass("active_thumbs");
-					$(current_obj).addClass("active_thumbs");
+					$(".load_image_ready_for_crop").removeClass("btn-danger");
+					$(current_obj).addClass("btn-danger");
 					$(".jcrop_coords").val("");
 					$("#jCropImageName").val(tmp[0]);
 					$("#jCropImageSize").val(tmp[1]);
 					$("#default_minsize_settings").val(r.minsize[tmp[1]]);
 					$("#crop_main_window_editor").empty();
 					$(".ui-dialog-title").html("Crop image: " + tmp[0] + " [" + tmp[1] + "]");
-					$("#crop_main_window_editor").html(new_image);
 					if (r.disable_crop_button=="disabled") {
+						var new_image=\'<img src="\' + r.images[tmp[1]] + \'" id="cropbox"/>\';
+						$("#crop_main_window_editor").html(new_image);
+						//
 						$("#crop_save_btn_wrapper").hide();
 						$("#crop_restore_btn_wrapper").show();
 						$("#minsize_settings_btn_wrapper").hide();
@@ -395,6 +418,9 @@ jQuery(document).ready(function($) {
 						$("#onecrop_for_all_btn_wrapper").hide();
 						$("#crop_thumb_image_list").show();
 					} else {
+						var new_image=\'<img src="\' + r.images[300] + \'" id="cropbox"/>\';
+						$("#crop_main_window_editor").html(new_image);
+						//
 						$("#crop_save_btn_wrapper").show();
 						$("#crop_restore_btn_wrapper").hide();
 						$("#minsize_settings_btn_wrapper").show();
@@ -406,11 +432,22 @@ jQuery(document).ready(function($) {
 							$("#onecrop_for_all").prop("checked", true);
 							$("#crop_thumb_image_list").hide();
 						} else {
+							$("#onecrop_for_all_btn_wrapper").show();
 							$("#onecrop_for_all").prop("checked", false);
 							$("#crop_thumb_image_list").show();
 						}
 						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]], r.truesize[tmp[1]]);
 					}
+					$.each(r.cropped_image, function(thumblist, is_cropped) {
+						var thumblist_id="#" + thumblist;
+						if (is_cropped) {
+							if (!$(thumblist_id).hasClass("btn-danger")) {
+								$(thumblist_id).addClass("btn-warning");
+							}
+						} else {
+							$(thumblist_id).removeClass("btn-warning");
+						}
+					});
 				}
 			}
 		});
@@ -469,6 +506,16 @@ jQuery(document).ready(function($) {
 						//$("#onecrop_for_all").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
+					$.each(r.cropped_image, function(thumblist, is_cropped) {
+						var thumblist_id="#" + thumblist;
+						if (is_cropped) {
+							if (!$(thumblist_id).hasClass("btn-danger")) {
+								$(thumblist_id).addClass("btn-warning");
+							}
+						} else {
+							$(thumblist_id).removeClass("btn-warning");
+						}
+					});
 				}
 			}
 		});
@@ -520,13 +567,24 @@ jQuery(document).ready(function($) {
 							$("#crop_thumb_image_list").hide();
 							$("#onecrop_for_all_btn_wrapper").show();
 							$("#onecrop_for_all").prop("checked", true);
+							activate_jcrop_js(r.aspectratio[300], r.minsize[300], r.setselect[300], r.truesize[300]);
 						} else {
 							$("#crop_thumb_image_list").show();
 							$("#onecrop_for_all_btn_wrapper").hide();
 							$("#onecrop_for_all").prop("checked", false);
+							activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 						}
-						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
+					$.each(r.cropped_image, function(thumblist, is_cropped) {
+						var thumblist_id="#" + thumblist;
+						if (is_cropped) {
+							if (!$(thumblist_id).hasClass("btn-danger")) {
+								$(thumblist_id).addClass("btn-warning");
+							}
+						} else {
+							$(thumblist_id).removeClass("btn-warning");
+						}
+					});
 				}
 			}
 		});
@@ -550,8 +608,63 @@ jQuery(document).ready(function($) {
 	$(document).on("change", "#onecrop_for_all", function(){
 		if ($(this).prop("checked")) {
 			$("#crop_thumb_image_list").hide();
+			var tmp=$(this).attr("rel").split("::");
+			var current_obj=$(this);
+			var cropall=0;
+			if ($("#onecrop_for_all").prop("checked")) {
+				cropall=1;
+			}
+			href = "'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_images_for_crop').'";
+			jQuery.ajax({
+				type:"POST",
+				url:href,
+				data: "imagename=" + tmp[0] + "&size=" + tmp[1] + "&cropall=" + cropall,
+				dataType: "json",
+				success: function (r) {
+					//do something with the sorted data
+					if (r.status=="OK") {
+						var new_image=\'<img src="\' + r.images[300] + \'" id="cropbox"/>\';
+						$(".load_image_ready_for_crop").removeClass("active_thumbs");
+						$(current_obj).addClass("active_thumbs");
+						$(".jcrop_coords").val("");
+						$("#jCropImageName").val(tmp[0]);
+						$("#jCropImageSize").val(tmp[1]);
+						$("#default_minsize_settings").val(r.minsize[tmp[1]]);
+						$("#crop_main_window_editor").empty();
+						$(".ui-dialog-title").html("Crop image: " + tmp[0] + " [" + tmp[1] + "]");
+						$("#crop_main_window_editor").html(new_image);
+						if (r.disable_crop_button=="disabled") {
+							$("#crop_save_btn_wrapper").hide();
+							$("#crop_restore_btn_wrapper").show();
+							$("#minsize_settings_btn_wrapper").hide();
+							$("#aspectratio_settings_btn_wrapper").hide();
+							$("#onecrop_for_all_btn_wrapper").hide();
+							$("#crop_thumb_image_list").show();
+						} else {
+							$("#crop_save_btn_wrapper").show();
+							$("#crop_restore_btn_wrapper").hide();
+							$("#minsize_settings_btn_wrapper").show();
+							$("#remove_minsize").prop("checked", true);
+							$("#aspectratio_settings_btn_wrapper").show();
+							$("#remove_aspectratio").prop("checked", true);
+							if (r.crop_all_checked) {
+								$("#onecrop_for_all_btn_wrapper").show();
+								$("#onecrop_for_all").prop("checked", true);
+								$("#crop_thumb_image_list").hide();
+							} else {
+								$("#onecrop_for_all_btn_wrapper").show();
+								$("#onecrop_for_all").prop("checked", false);
+								$("#crop_thumb_image_list").show();
+							}
+							activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]], r.truesize[tmp[1]]);
+						}
+					}
+				}
+			});
 		} else {
 			$("#crop_thumb_image_list").show();
+			$(".load_image_ready_for_crop").removeClass("btn-danger");
+			$("#thumblist_300").addClass("btn-danger");
 		}
 	});
 	' : '').'

@@ -662,7 +662,40 @@ if ($this->post) {
 				}
 				// get all cats to generate multilevel fake url eof
 				$details_link=mslib_fe::typolink($this->conf['products_listing_page_pid'], $where.'&tx_multishop_pi1[page_section]=products_listing');
-				$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].')</h3><div class="form-inline"><a class="btn btn-primary viewfront" href="'.$details_link.'" target="_blank"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_edit_view_front_category', 'View in front').'</a></div></div>';
+
+				// Instantiate admin interface object
+				$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+				$objRef->init($this);
+				$objRef->setInterfaceKey('admin_edit_category');
+
+				// Header buttons
+				$headerButtons=array();
+
+				if (!mslib_fe::categoryHasSubs($category['categories_id'])) {
+					$headingButton=array();
+					$headingButton['btn_class']='btn btn-primary';
+					$headingButton['fa_class']='fa fa-plus-circle';
+					$headingButton['title']=$this->pi_getLL('admin_create_new_products_here');
+					$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=add_product&action=add_product&cid='.$category['categories_id']);
+					$headerButtons[]=$headingButton;
+				}
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-primary viewfront';
+				$headingButton['fa_class']='fa fa-eye';
+				$headingButton['title']=$this->pi_getLL('admin_edit_view_front_category', 'View in front');
+				$headingButton['href']=$details_link;
+				$headerButtons[]=$headingButton;
+
+				// Set header buttons through interface class so other plugins can adjust it
+				$objRef->setHeaderButtons($headerButtons);
+				// Get header buttons through interface class so we can render them
+				$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+
+				$heading_page='<div class="panel-heading"><h3>'.$this->pi_getLL('edit_category').' (ID: '.$category['categories_id'].')</h3>
+				<div class="form-inline">
+					'.$interfaceHeaderButtons.'
+				</div>
+				</div>';
 			}
 		}
 		$category_name_block='';

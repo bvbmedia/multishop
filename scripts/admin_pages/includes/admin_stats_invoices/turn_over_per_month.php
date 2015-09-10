@@ -332,10 +332,14 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT i.invoice_id, o.orders_id, o.grand_total FROM tx_multishop_orders o, tx_multishop_invoices i WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id and i.reversal_invoice=0";
+	$str="SELECT i.reversal_invoice, i.invoice_id, o.orders_id, o.grand_total FROM tx_multishop_orders o, tx_multishop_invoices i WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$total_price=($total_price+$row['grand_total']);
+		if (!$row['reversal_invoice']) {
+			$total_price=($total_price+$row['grand_total']);
+		} else {
+			$total_price=($total_price-$row['grand_total']);
+		}
 	}
 	$content.='<td align="right">'.mslib_fe::amount2Cents($total_price, 0).'</td>';
 	$total_amount=$total_amount+$total_price;
@@ -397,12 +401,16 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT i.invoice_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id and i.reversal_invoice=0";
+	$str="SELECT i.reversal_invoice, i.invoice_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$total_orders=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
 	$total_orders_avg+=$total_orders;
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$total_price_avrg=($total_price_avrg+$row['grand_total']);
+		if (!$row['reversal_invoice']) {
+			$total_price_avrg=($total_price_avrg+$row['grand_total']);
+		} else {
+			$total_price_avrg=($total_price_avrg-$row['grand_total']);
+		}
 	}
 	if ($total_price_avrg>0 && $total_orders>0) {
 		$totalSum=$total_price_avrg/$total_orders;
@@ -490,13 +498,17 @@ foreach ($dates as $key=>$value) {
 	if (!empty($status_where)) {
 		$where[]=$status_where;
 	}
-	$str="SELECT i.invoice_id, o.customer_id, o.orders_id, o.grand_total FROM tx_multishop_orders o, tx_multishop_invoices i WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id and i.reversal_invoice=0";
+	$str="SELECT i.reversal_invoice, i.invoice_id, o.customer_id, o.orders_id, o.grand_total FROM tx_multishop_orders o, tx_multishop_invoices i WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
 
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$uids=array();
 	$users=array();
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-		$total_price=($total_price+$row['grand_total']);
+		if (!$row['reversal_invoice']) {
+			$total_price=($total_price+$row['grand_total']);
+		} else {
+			$total_price=($total_price-$row['grand_total']);
+		}
 		$uids[]='<a href="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$row['orders_id'].'&action=edit_order', 1).'">'.$row['invoice_id'].'</a>';
 		$total_daily_orders++;
 	}

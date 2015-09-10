@@ -142,8 +142,8 @@ switch ($this->ms['page']) {
 			case 'products':
 			default:
 				$image_type='products';
-				$image_size=(!isset($this->post['size']) ? 50 : $this->post['size']);
-				$image_size_format=(!isset($this->post['size']) ? 50 : $this->post['size']);
+				$image_size=(!isset($this->post['size']) ? 300 : $this->post['size']);
+				$image_size_format=(!isset($this->post['size']) ? 300 : $this->post['size']);
 				$image_format_key='product_image_formats';
 				$crop_table_name='tx_multishop_product_crop_image_coordinate';
 				break;
@@ -154,6 +154,7 @@ switch ($this->ms['page']) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
+			$return_data['images']['300']=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
 			$return_data['images']['normal']=mslib_befe::getImagePath($image_name, $image_type, 'normal').'?'.time();
 			$return_data['images']['50']=mslib_befe::getImagePath($image_name, $image_type, '50').'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
@@ -161,20 +162,37 @@ switch ($this->ms['page']) {
 				$image_truesize[0],
 				$image_truesize[1]
 			);
+			$return_data['truesize'][300]=array(
+				$image_truesize[0],
+				$image_truesize[1]
+			);
+			//
 			$return_data['aspectratio'][$image_size]=$this->ms[$image_format_key][$image_size_format]['width']/$this->ms[$image_format_key][$image_size_format]['height'];
+			$return_data['aspectratio'][300]=$this->ms[$image_format_key][300]['width']/$this->ms[$image_format_key][300]['height'];
 			// max width
-			$max_width=($this->ms[$image_format_key][$image_size_format]['width']>640 ? 640 : $this->ms[$image_format_key][$image_size_format]['width']);
-			$max_height=($this->ms[$image_format_key][$image_size_format]['height']>480 ? 480 : $this->ms[$image_format_key][$image_size_format]['height']);
+			$max_width=$this->ms[$image_format_key][$image_size_format]['width']; //($this->ms[$image_format_key][$image_size_format]['width']>640 ? 640 : $this->ms[$image_format_key][$image_size_format]['width']);
+			$max_height=$this->ms[$image_format_key][$image_size_format]['height']; //($this->ms[$image_format_key][$image_size_format]['height']>480 ? 480 : $this->ms[$image_format_key][$image_size_format]['height']);
 			// jcrop settings
 			$return_data['minsize'][$image_size]=array(
 				$max_width,
 				$max_height
 			);
+			$return_data['minsize'][300]=array(
+				$this->ms[$image_format_key][300]['width'],
+				$this->ms[$image_format_key][300]['height']
+			);
+			//
 			$return_data['setselect'][$image_size]=array(
 				0,
 				0,
 				$max_width,
 				$max_height
+			);
+			$return_data['setselect'][300]=array(
+				0,
+				0,
+				$this->ms[$image_format_key][300]['width'],
+				$this->ms[$image_format_key][300]['height']
 			);
 			// check if there any crop record
 			$image_data=mslib_befe::getRecord($image_name, $crop_table_name, 'image_filename', array('image_size=\''.$image_size.'\''));
@@ -202,6 +220,25 @@ switch ($this->ms['page']) {
 					$return_data['crop_all_checked']=true;
 				} else {
 					$return_data['crop_all_checked']=false;
+				}
+			}
+			if ($image_type=='products') {
+				$image_size_array=array();
+				$image_size_array[]=50;
+				$image_size_array[]=100;
+				$image_size_array[]=200;
+				$image_size_array[]=300;
+				$image_size_array[]='enlarged';
+				$return_data['cropped_image']['thumblist_50']=false;
+				$return_data['cropped_image']['thumblist_100']=false;
+				$return_data['cropped_image']['thumblist_200']=false;
+				$return_data['cropped_image']['thumblist_300']=false;
+				$return_data['cropped_image']['thumblist_enlarged']=false;
+				foreach ($image_size_array as $image_size) {
+					$tmp_image_data=mslib_befe::getRecord($image_name, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('image_size=\''.$image_size.'\''));
+					if (is_array($tmp_image_data)) {
+						$return_data['cropped_image']['thumblist_' . $image_size]=true;
+					}
 				}
 			}
 			$return_data['status']='OK';
@@ -304,6 +341,25 @@ switch ($this->ms['page']) {
 				$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			}
 		}
+		if ($image_type=='products') {
+			$image_size_array=array();
+			$image_size_array[]=50;
+			$image_size_array[]=100;
+			$image_size_array[]=200;
+			$image_size_array[]=300;
+			$image_size_array[]='enlarged';
+			$return_data['cropped_image']['thumblist_50']=false;
+			$return_data['cropped_image']['thumblist_100']=false;
+			$return_data['cropped_image']['thumblist_200']=false;
+			$return_data['cropped_image']['thumblist_300']=false;
+			$return_data['cropped_image']['thumblist_enlarged']=false;
+			foreach ($image_size_array as $image_size) {
+				$tmp_image_data=mslib_befe::getRecord($image_name, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('image_size=\''.$image_size.'\''));
+				if (is_array($tmp_image_data)) {
+					$return_data['cropped_image']['thumblist_' . $image_size]=true;
+				}
+			}
+		}
 		echo json_encode($return_data);
 		exit();
 		break;
@@ -342,21 +398,40 @@ switch ($this->ms['page']) {
 			$return_data['image_name']=$image_name;
 			$return_data['image_size']=$image_size;
 			$return_data['images'][$image_size]=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
+			$return_data['images']['300']=mslib_befe::getImagePath($image_name, $image_type, 'original').'?'.time();
 			$image_truesize=getimagesize(mslib_befe::getImagePath($image_name, $image_type, 'original'));
 			$return_data['truesize'][$image_size]=array(
 				$image_truesize[0],
 				$image_truesize[1]
 			);
+			$return_data['truesize'][300]=array(
+				$image_truesize[0],
+				$image_truesize[1]
+			);
+			//
 			$return_data['aspectratio'][$image_size]=$this->ms[$image_format_key][$image_size_format]['width']/$this->ms[$image_format_key][$image_size_format]['height'];
+			$return_data['aspectratio'][300]=$this->ms[$image_format_key][300]['width']/$this->ms[$image_format_key][300]['height'];
+			//
 			$return_data['minsize'][$image_size]=array(
 				$this->ms[$image_format_key][$image_size_format]['width'],
 				$this->ms[$image_format_key][$image_size_format]['height']
 			);
+			$return_data['minsize'][300]=array(
+				$this->ms[$image_format_key][300]['width'],
+				$this->ms[$image_format_key][300]['height']
+			);
+			//
 			$return_data['setselect'][$image_size]=array(
 				0,
 				0,
 				$this->ms[$image_format_key][$image_size_format]['width'],
 				$this->ms[$image_format_key][$image_size_format]['height']
+			);
+			$return_data['setselect'][300]=array(
+				0,
+				0,
+				$this->ms[$image_format_key][300]['width'],
+				$this->ms[$image_format_key][300]['height']
 			);
 			$return_data['status']='OK';
 		} else {
@@ -387,10 +462,17 @@ switch ($this->ms['page']) {
 			$image_size_array[]=200;
 			$image_size_array[]=300;
 			$image_size_array[]='enlarged';
+			$return_data['cropped_image']['thumblist_50']=false;
+			$return_data['cropped_image']['thumblist_100']=false;
+			$return_data['cropped_image']['thumblist_200']=false;
+			$return_data['cropped_image']['thumblist_300']=false;
+			$return_data['cropped_image']['thumblist_enlarged']=false;
 			foreach ($image_size_array as $image_size) {
 				$tmp_image_data=mslib_befe::getRecord($image_name, 'tx_multishop_product_crop_image_coordinate', 'image_filename', array('image_size=\''.$image_size.'\''));
 				if (!is_array($tmp_image_data)) {
 					$crop_all_checked+=1;
+				} else {
+					$return_data['cropped_image']['thumblist_' . $image_size]=true;
 				}
 			}
 			if ($crop_all_checked==5) {

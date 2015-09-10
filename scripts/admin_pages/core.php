@@ -54,7 +54,12 @@ if (strstr($this->conf['admin_template_folder'], "/")) {
 }
 $GLOBALS['TSFE']->additionalHeaderData[]=mslib_fe::jQueryBlockUI();
 // Code moved from admin_ajax.php EOL
-$this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
+$this->ms['page']='';
+if ($this->get['tx_multishop_pi1']['page_section']) {
+	$this->ms['page']=$this->get['tx_multishop_pi1']['page_section'];
+} elseif($this->post['tx_multishop_pi1']['page_section']) {
+	$this->ms['page']=$this->post['tx_multishop_pi1']['page_section'];
+}
 switch ($this->ms['page']) {
     case 'admin_sort_products':
         if ($this->ADMIN_USER) {

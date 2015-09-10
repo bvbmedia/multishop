@@ -103,10 +103,14 @@ for ($yr=$current_year; $yr>=$oldest_year; $yr--) {
 		if (!empty($status_where)) {
 			$where[]=$status_where;
 		}
-		$str="SELECT i.invoice_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id and i.reversal_invoice=0";
+		$str="SELECT i.reversal_invoice,i.invoice_id, i.invoice_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
-			$total_price=($total_price+$row['grand_total']);
+			if (!$row['reversal_invoice']) {
+				$total_price=($total_price+$row['grand_total']);
+			} else {
+				$total_price=($total_price-$row['grand_total']);
+			}
 			$total_orders++;
 		}
 		$total_amount=$total_amount+$total_price;
