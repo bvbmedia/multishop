@@ -899,7 +899,7 @@ switch ($_REQUEST['action']) {
 			$markerArray['LAST_LOGIN']=$this->pi_getLL('latest_login').': '.$user['lastlogin'].'<br/>';
 			$markerArray['BILLING_ADDRESS']=$billing_street_address.'<br/>'.$billing_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $billing_country));
 			$markerArray['DELIVERY_ADDRESS']=$delivery_street_address.'<br/>'.$delivery_postcode.'<br/>'.htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $delivery_country));
-			$markerArray['GOOGLE_MAPS_URL_QUERY']='http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
+			$markerArray['GOOGLE_MAPS_URL_QUERY']='//maps.google.com/maps?f=q&amp;source=s_q&amp;hl=nl&amp;geocode=&amp;q='.rawurlencode($billing_street_address).','.rawurlencode($billing_postcode).','.rawurlencode($billing_country).'&amp;z=14&amp;iwloc=A&amp;output=embed&amp;iwloc=';
 			$markerArray['ADMIN_LABEL_CONTACT_INFO']=$this->pi_getLL('admin_label_contact_info');
 
 			$markerArray['ADMIN_LABEL_BILLING_ADDRESS']=$this->pi_getLL('admin_label_billing_address');
