@@ -387,7 +387,7 @@ if (count($shipping_methods)>0) {
 									<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_name" class="form-control msProductsPriceIncludingVat" value="'.htmlspecialchars($fsc_price_display_incl).'" rel="'.$row['tax_id'].'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>
 									<div class="msAttributesField hidden"><input type="hidden" style="text-align:right" size="3" name="freeshippingcostsabove_value['.$zone_pid.']"  value="'.$free_shippingcosts.'"></div>
 							</div>
-						</label>
+						</div>
 					';
 					$content.='</div>';
 					$content.='<script type="text/javascript">';
