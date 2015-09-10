@@ -335,11 +335,11 @@ jQuery(document).ready(function($) {
 					image_interface+=\'<div id="crop_main_window_editor"><img src="\' + r.images[300] + \'" id="cropbox" /></div>\';
 					image_interface+=\'<div class="btn-toolbar" role="toolbar">\';
 					image_interface+=\'<div class="btn-group" role="group" id="crop_thumb_image_list" style="display:none">\';
-					image_interface+=\'<button type="button" id="thumblist_50" class="load_image_ready_for_crop" rel="\' + image_name + \'::50">50</button>\';
-					image_interface+=\'<button type="button" id="thumblist_100" class="load_image_ready_for_crop" rel="\' + image_name + \'::100">100</button>\';
-					image_interface+=\'<button type="button" id="thumblist_200" class="load_image_ready_for_crop" rel="\' + image_name + \'::200">200</button>\';
+					image_interface+=\'<button type="button" id="thumblist_50" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_50\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::50">50</button>\';
+					image_interface+=\'<button type="button" id="thumblist_100" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_100\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::100">100</button>\';
+					image_interface+=\'<button type="button" id="thumblist_200" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_200\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::200">200</button>\';
 					image_interface+=\'<button type="button" id="thumblist_300" class="load_image_ready_for_crop btn-danger" rel="\' + image_name + \'::300">300</button>\';
-					image_interface+=\'<button type="button" id="thumblist_enlg" class="load_image_ready_for_crop" rel="\' + image_name + \'::enlarged">enlarged</button>\';
+					image_interface+=\'<button type="button" id="thumblist_enlarged" class="load_image_ready_for_crop\' + (r.cropped_image[\'thumblist_enlarged\'] ? \' btn-warning\' : \'\' ) + \'" rel="\' + image_name + \'::enlarged">enlarged</button>\';
 					image_interface+=\'</div>\';
 					image_interface+=\'<div class="btn-group" role="group" id="crop_save_btn_wrapper"><button type="button"class="btn btn-success" id="crop_save">crop & save</button></div>\';
 					image_interface+=\'<div class="btn-group" id="crop_restore_btn_wrapper" style="display:none"><button class="btn btn-warning" type="button" id="crop_restore">restore image</button></div>\';
@@ -438,6 +438,16 @@ jQuery(document).ready(function($) {
 						}
 						activate_jcrop_js(r.aspectratio[tmp[1]], r.minsize[tmp[1]], r.setselect[tmp[1]], r.truesize[tmp[1]]);
 					}
+					$.each(r.cropped_image, function(thumblist, is_cropped) {
+						var thumblist_id="#" + thumblist;
+						if (is_cropped) {
+							if (!$(thumblist_id).hasClass("btn-danger")) {
+								$(thumblist_id).addClass("btn-warning");
+							}
+						} else {
+							$(thumblist_id).removeClass("btn-warning");
+						}
+					});
 				}
 			}
 		});
@@ -496,6 +506,16 @@ jQuery(document).ready(function($) {
 						//$("#onecrop_for_all").prop("checked", true);
 						activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 					}
+					$.each(r.cropped_image, function(thumblist, is_cropped) {
+						var thumblist_id="#" + thumblist;
+						if (is_cropped) {
+							if (!$(thumblist_id).hasClass("btn-danger")) {
+								$(thumblist_id).addClass("btn-warning");
+							}
+						} else {
+							$(thumblist_id).removeClass("btn-warning");
+						}
+					});
 				}
 			}
 		});
@@ -555,6 +575,16 @@ jQuery(document).ready(function($) {
 							activate_jcrop_js(r.aspectratio[$("#jCropImageSize").val()], r.minsize[$("#jCropImageSize").val()], r.setselect[$("#jCropImageSize").val()], r.truesize[$("#jCropImageSize").val()]);
 						}
 					}
+					$.each(r.cropped_image, function(thumblist, is_cropped) {
+						var thumblist_id="#" + thumblist;
+						if (is_cropped) {
+							if (!$(thumblist_id).hasClass("btn-danger")) {
+								$(thumblist_id).addClass("btn-warning");
+							}
+						} else {
+							$(thumblist_id).removeClass("btn-warning");
+						}
+					});
 				}
 			}
 		});

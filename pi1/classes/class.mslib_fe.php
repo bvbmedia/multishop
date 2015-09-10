@@ -3383,6 +3383,9 @@ class mslib_fe {
 		return $res;
 	}
 	public function getProductToCategories($product_id, $current_category_id='', $page_uid='') {
+		if (!is_numeric($product_id)) {
+			return false;
+		}
 		if (!is_numeric($page_uid)) {
 			$page_uid=$this->showCatalogFromPage;
 		}
