@@ -8,6 +8,7 @@
 #tx_multishop_admin_header_wrapper ul li span { white-space:normal; }
 #tx_multishop_admin_header_wrapper ul li a:hover,
 #tx_multishop_admin_header_wrapper ul li a:focus { background:none; text-decoration:none; }
+#tx_multishop_admin_header_wrapper a { text-decoration:none !important; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header { line-height:18px; }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li { position:relative; float:left; border-right:1px solid rgba(255,255,255,.3); }
 #tx_multishop_admin_header_wrapper ul#tx_multishop_admin_header > li.ms_admin_has_subs:before { position:absolute; right:10px; top:16px; border-top:5px solid #fff; border-left:5px solid transparent; border-right:5px solid transparent; content:""; transition:opacity .25s; }
