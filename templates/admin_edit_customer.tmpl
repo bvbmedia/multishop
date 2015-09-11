@@ -128,9 +128,9 @@ jQuery(document).ready(function ($) {
                     ###MASTER_SHOP###
                     <div class="form-group">
 						<span id="ValidRadio" class="InputGroup">
-							<label for="radio" id="account-gender">###LABEL_GENDER###<span class="text-danger">*</span></label>
+							<label for="radio" id="account-gender">###LABEL_GENDER###</label>
 							<div class="radio-inline">
-							<input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" required="required" ###GENDER_MR_CHECKED###>
+							<input type="radio" class="InputGroup" name="gender" value="0" class="account-gender-radio" id="radio" ###GENDER_MR_CHECKED###>
 							###LABEL_GENDER_MR###
 							</div>
 							<div class="radio-inline">
@@ -143,7 +143,7 @@ jQuery(document).ready(function ($) {
                         <div class="row">
                             <div class="col-md-4">
                         <label class="account-firstname" for="first_name">###LABEL_FIRSTNAME###</label>
-                        <input type="text" name="first_name" class="form-control first-name" id="first_name" value="###VALUE_FIRSTNAME###"###FIRSTNAME_VALIDATION###>
+                        <input type="text" name="first_name" class="form-control first-name" id="first_name" value="###VALUE_FIRSTNAME###">
                         <div id="invalid-first_name" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-4">
@@ -152,7 +152,7 @@ jQuery(document).ready(function ($) {
                             </div>
                             <div class="col-md-4">
                         <label class="account-lastname" for="last_name">###LABEL_LASTNAME###</label>
-                        <input type="text" name="last_name" id="last_name" class="form-control last-name" value="###VALUE_LASTNAME###"###LASTNAME_VALIDATION###>
+                        <input type="text" name="last_name" id="last_name" class="form-control last-name" value="###VALUE_LASTNAME###">
                         <div id="invalid-last_name" class="error-space" style="display:none"></div>
                             </div>
                         </div>
@@ -161,7 +161,7 @@ jQuery(document).ready(function ($) {
                         <div class="row">
                             <div class="col-md-4">
                         <label for="company" id="account-company">###LABEL_COMPANY###</label>
-                        <input type="text" name="company" class="form-control company" id="company" value="###VALUE_COMPANY###"###COMPANY_VALIDATION### />
+                        <input type="text" name="company" class="form-control company" id="company" value="###VALUE_COMPANY###" />
                         <div id="invalid-company" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-4">
@@ -175,13 +175,13 @@ jQuery(document).ready(function ($) {
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
-                        <label class="account-address" for="address">###LABEL_STREET_ADDRESS###*</label>
-                        <input type="text" name="street_name" id="address" class="form-control address" value="###VALUE_STREET_ADDRESS###" required="required" data-h5-errorid="invalid-address" title="###INVALID_ADDRESS_MESSAGE###">
+                        <label class="account-address" for="address">###LABEL_STREET_ADDRESS###</label>
+                        <input type="text" name="street_name" id="address" class="form-control address" value="###VALUE_STREET_ADDRESS###">
                         <div id="invalid-address" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-4">
-                        <label class="account-addressnumber" for="address_number">###LABEL_STREET_ADDRESS_NUMBER###*</label>
-                        <input type="text" name="address_number" id="address_number" class="form-control address-number" value="###VALUE_STREET_ADDRESS_NUMBER###" required="required" data-h5-errorid="invalid-address-number" title="###INVALID_ADDRESSNUMBER_MESSAGE###">
+                        <label class="account-addressnumber" for="address_number">###LABEL_STREET_ADDRESS_NUMBER###</label>
+                        <input type="text" name="address_number" id="address_number" class="form-control address-number" value="###VALUE_STREET_ADDRESS_NUMBER###">
                         <div id="invalid-address-number" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-4">
@@ -193,13 +193,13 @@ jQuery(document).ready(function ($) {
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-4">
-                        <label class="account-zip" for="zip">###LABEL_POSTCODE###*</label>
-                        <input type="text" name="zip" id="zip" class="form-control zip" value="###VALUE_POSTCODE###" required="required" data-h5-errorid="invalid-zip" title="###INVALID_ZIP_MESSAGE###">
+                        <label class="account-zip" for="zip">###LABEL_POSTCODE###</label>
+                        <input type="text" name="zip" id="zip" class="form-control zip" value="###VALUE_POSTCODE###">
                         <div id="invalid-zip" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-4">
-                        <label class="account-city" for="city">###LABEL_CITY###*</label>
-                        <input type="text" name="city" id="city" class="form-control city" value="###VALUE_CITY###" required="required" data-h5-errorid="invalid-city" title="###INVALID_CITY_MESSAGE###">
+                        <label class="account-city" for="city">###LABEL_CITY###</label>
+                        <input type="text" name="city" id="city" class="form-control city" value="###VALUE_CITY###">
                         <div id="invalid-city" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-4">
@@ -210,7 +210,7 @@ jQuery(document).ready(function ($) {
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
-                        <label for="email" id="account-email">###LABEL_EMAIL###*</label>
+                        <label for="email" id="account-email">###LABEL_EMAIL###<span class="text-danger">*</span></label>
                         <input type="text" name="email" id="email" class="form-control email" value="###VALUE_EMAIL###" required="required" data-h5-errorid="invalid-email" title="###INVALID_EMAIL_MESSAGE###">
                         <div id="invalid-email" class="error-space" style="display:none"></div>
                             </div>
@@ -224,7 +224,7 @@ jQuery(document).ready(function ($) {
                         <div class="row">
                             <div class="col-md-6">
                         <label for="telephone" id="account-telephone">###LABEL_TELEPHONE###</label>
-                        <input type="text" name="telephone" id="telephone" class="form-control telephone" value="###VALUE_TELEPHONE###"###TELEPHONE_VALIDATION###>
+                        <input type="text" name="telephone" id="telephone" class="form-control telephone" value="###VALUE_TELEPHONE###">
                         <div id="invalid-telephone" class="error-space" style="display:none"></div>
                             </div>
                             <div class="col-md-6">

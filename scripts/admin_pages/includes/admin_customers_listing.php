@@ -33,6 +33,10 @@ foreach ($customers as $customer) {
 	} else {
 		$name=$customer['name'];
 	}
+	$name=trim($name);
+	if (!$name) {
+		$name=$customer['username'];
+	}
 	if ($customer['lastlogin']) {
 		$customer['lastlogin']=strftime("%a. %x<br/>%X", $customer['lastlogin']);
 	} else {
