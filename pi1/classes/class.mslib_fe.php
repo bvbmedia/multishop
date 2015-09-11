@@ -6630,6 +6630,13 @@ class mslib_fe {
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_new_order' || $this->post['tx_multishop_pi1']['page_section']=='admin_new_order') {
 					$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['active']=1;
 				}
+				if ($this->get['tx_multishop_pi1']['page_section']=='edit_order' || $this->post['tx_multishop_pi1']['page_section']=='edit_order') {
+					$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['active']=1;
+				}
+			} else {
+				if ($this->get['tx_multishop_pi1']['page_section']=='admin_new_order' || $this->post['tx_multishop_pi1']['page_section']=='admin_new_order') {
+					$ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active']=1;
+				}
 			}
 			// orders export wizard
 			$ms_menu['header']['ms_admin_orders']['subs']['admin_orders_export']['label']=$this->pi_getLL('export');
