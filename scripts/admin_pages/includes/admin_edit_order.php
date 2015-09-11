@@ -1737,8 +1737,9 @@ if (is_numeric($this->get['orders_id'])) {
 									$attributes_qty=$attributes_data['qty'];
 									$optvalue=$manual_attr['optvalue'][$idx];
 									$optprice=0;
+									$prrice_prefix=$attributes_data['price_prefix'];
 									if ($manual_attr['optprice'][$idx]>0) {
-										$optprice=$manual_attr['optprice'][$idx];
+										$optprice=$prrice_prefix.$manual_attr['optprice'][$idx];
 									}
 									// products id col
 									$order_products_body_data['products_id']['value']='';
@@ -2801,13 +2802,13 @@ if (is_numeric($this->get['orders_id'])) {
                                         price_data={values_price: optvalid.values_price, display_values_price: optvalid.display_values_price, display_values_price_including_vat: optvalid.display_values_price_including_vat, price_prefix: optvalid.price_prefix};
                                         jQuery.each(jQuery(price_input_obj), function(i, v) {
                                             if ($(v).attr("id")=="display_manual_name_excluding_vat") {
-                                                $(v).val(price_data.display_values_price);
+                                                $(v).val(price_data.price_prefix + price_data.display_values_price);
                                             }
                                             if ($(v).attr("id")=="display_manual_name_including_vat") {
-                                                $(v).val(price_data.display_values_price_including_vat);
+                                                $(v).val(price_data.price_prefix + price_data.display_values_price_including_vat);
                                             }
                                             if ($(v).attr("id")=="edit_manual_price" || $(v).attr("id")=="edit_product_price") {
-                                                $(v).val(price_data.values_price);
+                                                $(v).val(price_data.price_prefix + price_data.values_price);
                                             }
                                         });
                                     });
@@ -2846,7 +2847,7 @@ if (is_numeric($this->get['orders_id'])) {
                     var manual_attributes_selectbox = \'<div class="product_attributes_wrapper">\';
                     manual_attributes_selectbox += \'<span class="product_attributes_option">\';
                     if (optid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' + optid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value="\' +  price_data.price_prefix + optid_value + \'"/>\';
                     } else {
                         manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_option\' + n + \' edit_manual_attributes_input" name="edit_manual_option[]" style="width:187px" value=""/>\';
                     }
@@ -2855,7 +2856,7 @@ if (is_numeric($this->get['orders_id'])) {
                     manual_attributes_selectbox += \'<span> : </span>\';
                     manual_attributes_selectbox += \'<span class="product_attributes_values">\';
                     if (optvalid_value != "") {
-                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' + optvalid_value + \'"/>\';
+                        manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px" value="\' +  price_data.price_prefix + optvalid_value + \'"/>\';
                     } else {
                         manual_attributes_selectbox += \'<input type="hidden" class="edit_product_manual_values\' + n + \' edit_manual_attributes_input" name="edit_manual_values[]" style="width:187px"/>\';
                     }
@@ -2865,7 +2866,7 @@ if (is_numeric($this->get['orders_id'])) {
 				$tmpcontent.='
                     var manual_attributes_price = \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" id="display_manual_name_excluding_vat" name="display_name_excluding_vat" class="form-control msManualOrderProductPriceExcludingVat" value="\' + decimalCrop(price_data.display_values_price) + \'"><span class="input-group-addon">'.$this->pi_getLL('excluding_vat').'</span></div></div>\';
                     manual_attributes_price += \'<div class="msAttributesField"><div class="input-group"><span class="input-group-addon">'.mslib_fe::currency().'</span><input type="text" name="display_name" id="display_manual_name_including_vat" class="form-control msManualOrderProductPriceIncludingVat" value="\' + decimalCrop(price_data.display_values_price_including_vat) + \'"><span class="input-group-addon">'.$this->pi_getLL('including_vat').'</span></div></div>\';
-                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + (price_data.price_prefix!=\'+\' ? price_data.price_prefix : \'\') + price_data.values_price + \'" /></div>\';';
+                    manual_attributes_price += \'<div class="msAttributesField hidden"><input class="text" type="hidden" name="edit_manual_price[]" id="edit_product_price" value="\' + price_data.price_prefix + price_data.values_price + \'" /></div>\';';
 				$tmpcontent.='
                     var cloned_row=$(\'#last_edit_product_row\').clone();
                     cloned_row.removeAttr("id");
