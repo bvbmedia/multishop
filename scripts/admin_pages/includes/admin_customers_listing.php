@@ -93,7 +93,7 @@ foreach ($customers as $customer) {
 	if (is_array($userGroupUids) && count($userGroupUids)) {
 		foreach ($userGroupUids as $userGroupUid) {
 			$usergroup=mslib_fe::getUserGroup($userGroupUid);
-			if ($usergroup['title']) {
+			if (is_array($usergroup) && $usergroup['title']) {
 				$userGroupMarkupArray[]='<span class="badge">'.htmlspecialchars($usergroup['title']).'</span>';
 			}
 		}
