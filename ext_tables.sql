@@ -197,7 +197,7 @@ CREATE TABLE `tx_multishop_cms_description` (
 
 CREATE TABLE `tx_multishop_configuration` (
  `id` int(5) NOT NULL auto_increment,
- `configuration_title` varchar(64) default '',
+ `configuration_title` varchar(150) default '',
  `configuration_key` varchar(64) default '',
  `configuration_value` text,
  `description` varchar(255) default '',
@@ -219,7 +219,7 @@ CREATE TABLE `tx_multishop_configuration` (
 
 CREATE TABLE `tx_multishop_configuration_group` (
  `id` int(5) NOT NULL auto_increment,
- `configuration_title` varchar(64) default '',
+ `configuration_title` varchar(150) default '',
  `description` varchar(255) default '',
  `sort_order` int(5) default '0',
  `visible` int(1) default '1',
