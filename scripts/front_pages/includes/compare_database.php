@@ -761,6 +761,9 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="DELETE FROM `tx_multishop_configuration` WHERE `key`='ADMIN_ORDER_PROPOSAL_MODULE'";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[]=$str;
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";
