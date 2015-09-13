@@ -93,34 +93,36 @@ switch ($this->ms['page']) {
 		exit();
 		break;
 	case 'get_product_shippingcost_overview':
-		$return_data=array();
-		$product_data=mslib_fe::getProduct($this->post['tx_multishop_pi1']['pid']);
-		$return_data['delivery_time']='e';
-		if (!empty($product_data['delivery_time'])) {
-			$return_data['delivery_time']=trim($product_data['delivery_time']);
-		}
-		$str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
-		//$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
-		$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
-		$enabled_countries=array();
-		while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
-			$shipping_cost_data=array();
-			$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($row2['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
-			foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
-				if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
-					$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs_including_vat'];
-					$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
-				} else {
-					$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs'];
-					$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
-				}
-				$return_data['deliver_to'][$shipping_code][$row2['cn_iso_nr']]=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row2['cn_short_en']));
-				$return_data['deliver_by'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['deliver_by'];
-				$return_data['shipping_method'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost;
-				$return_data['products_name']=$shipping_cost['product_name'];
+		if (is_numeric($this->post['tx_multishop_pi1']['pid'])) {
+			$return_data=array();
+			$product_data=mslib_fe::getProduct($this->post['tx_multishop_pi1']['pid']);
+			$return_data['delivery_time']='e';
+			if (!empty($product_data['delivery_time'])) {
+				$return_data['delivery_time']=trim($product_data['delivery_time']);
 			}
+			$str2="SELECT * from static_countries sc, tx_multishop_countries_to_zones c2z, tx_multishop_shipping_countries c where c.page_uid='".$this->showCatalogFromPage."' and sc.cn_iso_nr=c.cn_iso_nr and c2z.cn_iso_nr=sc.cn_iso_nr group by c.cn_iso_nr order by sc.cn_short_en";
+			//$str2="SELECT * from static_countries c, tx_multishop_countries_to_zones c2z where c2z.cn_iso_nr=c.cn_iso_nr order by c.cn_short_en";
+			$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+			$enabled_countries=array();
+			while (($row2=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry2))!=false) {
+				$shipping_cost_data=array();
+				$shipping_cost_data=mslib_fe::getProductShippingCostsOverview($row2['cn_iso_nr'], $this->post['tx_multishop_pi1']['pid'], $this->post['tx_multishop_pi1']['qty']);
+				foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
+					if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
+						$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs_including_vat'];
+						$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs_including_vat']);
+					} else {
+						$return_data['shipping_cost'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['shipping_costs'];
+						$return_data['shipping_costs_display'][$shipping_code][$row2['cn_iso_nr']]=mslib_fe::amount2Cents($shipping_cost['shipping_costs']);
+					}
+					$return_data['deliver_to'][$shipping_code][$row2['cn_iso_nr']]=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $row2['cn_short_en']));
+					$return_data['deliver_by'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost['deliver_by'];
+					$return_data['shipping_method'][$shipping_code][$row2['cn_iso_nr']]=$shipping_cost;
+					$return_data['products_name']=$shipping_cost['product_name'];
+				}
+			}
+			echo json_encode($return_data);
 		}
-		echo json_encode($return_data);
 		exit();
 		break;
 	case 'get_images_for_crop':
