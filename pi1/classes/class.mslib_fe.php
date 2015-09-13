@@ -7534,7 +7534,7 @@ class mslib_fe {
 			return 0;
 		}
 	}
-	public function updateFeUserGroup($uid, $add_usergroup, $remove_usergroup='') {
+	public function updateFeUserGroup($uid, $add_usergroup='', $remove_usergroup='') {
 		if (!is_numeric($uid)) {
 			return false;
 		}
