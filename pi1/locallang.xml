@@ -2492,6 +2492,8 @@
             <label index="admin_invoice_statistics_description">Bekijk factuuromzet per maand/jaar</label>
             <label index="date_payment_received">Datum betaling ontvangen</label>
             <label index="reports">Rapporten</label>
+            <label index="products_attributes_names">Product attribuutnamen</label>
+            <label index="products_attributes_values">Product attribuutwaardes</label>
         </languageKey>
     </data>
 </T3locallang>
