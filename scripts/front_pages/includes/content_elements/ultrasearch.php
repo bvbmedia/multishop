@@ -117,9 +117,9 @@ if (!$this->ms['MODULES']['ULTRASEARCH_FIELDS']) {
 			}
 		}
 		if ($cmsDescriptionArray['header_title']) {
-			$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h1>'.htmlspecialchars($cmsDescriptionArray['header_title']).'</h1></div>\';';
+			$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h1>'.addslashes(htmlspecialchars($cmsDescriptionArray['header_title'])).'</h1></div>\';';
 		} else {
-			$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h1>'.$this->pi_getLL('search').'</h1></div>\';';
+			$headers.='var ultrasearcch_resultset_header=\'<div class="main-heading"><h1>'.addslashes(htmlspecialchars($this->pi_getLL('search'))).'</h1></div>\';';
 		}
 	}
 	$headers.='var ultrasearch_message_no_results=\'<div id="msFrontUltrasearchNoResults"><div class="main-heading"><h1>'.addslashes($this->pi_getLL('no_products_found_heading')).'</h1></div><p>'.addslashes($this->pi_getLL('no_products_found_description')).'</p></div>\';
