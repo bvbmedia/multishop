@@ -87,6 +87,22 @@ foreach ($customers as $customer) {
 	$markerArray['CUSTOMERS_USERNAME']=$customer['username'];
 	$markerArray['CUSTOMERS_COMPANY']=$customer['company'];
 	$markerArray['CUSTOMERS_NAME']=$name;
+
+	$userGroupMarkupArray=array();
+	$userGroupUids=explode(',',$customer['usergroup']);
+	if (is_array($userGroupUids) && count($userGroupUids)) {
+		foreach ($userGroupUids as $userGroupUid) {
+			$usergroup=mslib_fe::getUserGroup($userGroupUid);
+			if (is_array($usergroup) && $usergroup['title']) {
+				$userGroupMarkupArray[]='<span class="badge">'.htmlspecialchars($usergroup['title']).'</span>';
+			}
+		}
+	}
+	$markerArray['CUSTOMERS_GROUP']='';
+	if (count($userGroupMarkupArray)) {
+		$markerArray['CUSTOMERS_GROUP']='<br/>'.implode(' ',$userGroupMarkupArray);
+	}
+
 	$markerArray['CUSTOMERS_CREATED']=$customer['crdate'];
 	$markerArray['CUSTOMERS_LATEST_LOGIN']=$customer['lastlogin'];
 	$markerArray['CUSTOMERS_LATEST_ORDER']=$latest_order;

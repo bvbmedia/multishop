@@ -168,7 +168,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 								);
 							} else {
 								$postErno[]=array(
-									'status'=>'info',
+									'status'=>'error',
 									'message'=>'Failed to update '.$orders_id.' to paid.'
 								);
 							}

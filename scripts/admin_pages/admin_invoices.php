@@ -3,18 +3,18 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 $content='';
-if ($this->post['tx_multishop_pi1']['action']) {
-	$this->get['tx_multishop_pi1']['action']=$this->post['tx_multishop_pi1']['action'];
-	$this->get['selected_invoices']=$this->post['selected_invoices'];
+if($this->get['tx_multishop_pi1']['action']) {
+	$this->post['tx_multishop_pi1']['action']=$this->get['tx_multishop_pi1']['action'];
+	$this->post['selected_invoices']=$this->get['selected_invoices'];
 }
 $postErno=array();
 switch ($this->post['tx_multishop_pi1']['action']) {
 	case 'download_selected_invoices':
 	case 'mail_selected_invoices_to_merchant':
 		// send invoices by mail
-		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
+		if (is_array($this->post['selected_invoices']) and count($this->post['selected_invoices'])) {
 			$attachments=array();
-			foreach ($this->get['selected_invoices'] as $invoice) {
+			foreach ($this->post['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
 					$invoice=mslib_fe::getInvoice($invoice, 'id');
 					if ($invoice['id']) {
@@ -77,8 +77,8 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		}
 		break;
 	case 'create_reversal_invoice':
-		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
-			foreach ($this->get['selected_invoices'] as $invoice) {
+		if (is_array($this->post['selected_invoices']) and count($this->post['selected_invoices'])) {
+			foreach ($this->post['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
 					$invoice=mslib_fe::getInvoice($invoice, 'id');
 					if ($invoice['id'] and $invoice['reversal_invoice']==0) {
@@ -105,14 +105,14 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 		break;
 	case 'update_selected_invoices_to_paid':
 	case 'update_selected_invoices_to_not_paid':
-		if (is_array($this->get['selected_invoices']) and count($this->get['selected_invoices'])) {
-			foreach ($this->get['selected_invoices'] as $invoice) {
+		if (is_array($this->post['selected_invoices']) and count($this->post['selected_invoices'])) {
+			foreach ($this->post['selected_invoices'] as $invoice) {
 				if (is_numeric($invoice)) {
 					$invoice=mslib_fe::getInvoice($invoice, 'id');
 					if ($invoice['id']) {
 						$order=mslib_fe::getOrder($invoice['orders_id']);
 						if ($order['orders_id']) {
-							if ($this->get['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
+							if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
 								if (mslib_fe::updateOrderStatusToPaid($order['orders_id'])) {
 									$postErno[]=array(
 										'status'=>'info',
@@ -120,7 +120,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 									);
 								} else {
 									$postErno[]=array(
-										'status'=>'info',
+										'status'=>'error',
 										'message'=>'Failed to update '.$invoice['invoice_id'].' to paid.'
 									);
 								}
@@ -135,7 +135,7 @@ switch ($this->post['tx_multishop_pi1']['action']) {
 							}
 						} else {
 							// this invoice has no belonging order. This could be true in specific cases so just update the invoice to not paid.
-							if ($this->get['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
+							if ($this->post['tx_multishop_pi1']['action']=='update_selected_invoices_to_paid') {
 								$updateArray=array('paid'=>1);
 							} else {
 								$updateArray=array('paid'=>0);
