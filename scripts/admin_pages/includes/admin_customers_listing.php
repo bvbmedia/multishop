@@ -122,6 +122,7 @@ foreach ($customers as $customer) {
 	$markerArray['MASTER_SHOP']=$master_shop_col;
 	$markerArray['CUSTOM_MARKER_0_BODY']='';
 	$markerArray['CUSTOM_MARKER_1_BODY']='';
+	
 	// custom page hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customers_listing.php']['adminCustomersListingTmplIteratorPreProc'])) {
 		$params=array(
