@@ -1249,6 +1249,8 @@
             <label index="admin_invoice_statistics_description">Show invoice turn over by month/year</label>
             <label index="date_payment_received">Date payment received</label>
             <label index="reports">Reports</label>
+            <label index="products_attributes_names">Product attribute names</label>
+            <label index="products_attributes_values">Product attribute values</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>

@@ -716,6 +716,89 @@ class tx_mslib_catalog {
 						break;
 				}
 				break;
+			case 'attribute_names':
+				switch ($sortByField) {
+					case 'products_options_name':
+						$query_array=array();
+						$query_array['select'][]='*';
+						$query_array['from'][]='tx_multishop_products_options po';
+						$query_array['where'][]='po.language_id=\'0\'';
+						$query_array['order_by'][]='SUBSTRING_INDEX(po.products_options_name, " ", 1) ASC, CAST(SUBSTRING_INDEX(po.products_options_name, " ", -1) AS SIGNED) '.$orderBy;
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
+								(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
+								(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
+								(is_array($query_array['group_by']) ? implode(",", $query_array['group_by']) : ''), // GROUP BY...
+								(is_array($query_array['order_by']) ? implode(",", $query_array['order_by']) : ''), // ORDER BY...
+								(is_array($query_array['limit']) ? implode(",", $query_array['limit']) : '') // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$counter=0;
+						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+							$counter++;
+							$where="products_options_id = ".$row['products_options_id'];
+							$updateArray=array(
+									'sort_order'=>$counter
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// products level
+							$where="options_id = ".$row['products_options_id'] . " and page_uid='".$this->showCatalogFromPage."'";
+							$updateArray=array();
+							$updateArray=array(
+									'sort_order_option_name'=>$counter
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+						$content.='Attribute name sorting completed';
+						break;
+					case 'products_options_name_natural':
+						$valuesArray=array();
+						// iterate each attribute option and get the values
+						$sql="select po.* from tx_multishop_products_options po";
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+						$values_id=array();
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$values_name=$row['products_options_name'];
+							// if the first char is not alphanumeric we cut it off, so we can sort much better
+							if ($values_name and !preg_match("/^[a-z0-9]/i", $values_name)) {
+								do {
+									$values_name=substr($values_name, 1, strlen($values_name));
+								} while ($values_name and !preg_match("/^[a-z0-9]/i", $values_name));
+							}
+							// we now have a name that starts with alphanumeric
+							$valuesArray[$row['products_options_id']]=$values_name;
+						}
+						// now let PHP sort the array
+						natcasesort($valuesArray);
+						switch ($orderBy) {
+							case 'desc':
+								$valuesArray=array_reverse($valuesArray);
+								break;
+						}
+						$sort=1;
+						// iterate each value and save the new sort order number to DB
+						foreach ($valuesArray as $pov2po_row_id=>$values_name) {
+							$where="products_options_id = ".$pov2po_row_id;
+							$updateArray=array(
+									'sort_order'=>$sort
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// products level
+							$where="options_id = ".$pov2po_row_id . " and page_uid='".$this->showCatalogFromPage."'";
+							$updateArray=array();
+							$updateArray=array(
+									'sort_order_option_name'=>$sort
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$sort++;
+						}
+						$content.='Attribute name sorting (natural) completed';
+						break;
+				}
+				break;
 		}
 		return $content;
 	}

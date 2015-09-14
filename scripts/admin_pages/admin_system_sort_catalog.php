@@ -47,5 +47,13 @@ switch ($this->get['tx_multishop_pi1']['sortItem']) {
 				break;
 		}
 		break;
+	case 'attribute_names':
+		switch ($this->get['tx_multishop_pi1']['sortByField']) {
+			case 'products_options_name':
+			case 'products_options_name_natural':
+				$content.=tx_mslib_catalog::sortCatalog($this->get['tx_multishop_pi1']['sortItem'], $this->get['tx_multishop_pi1']['sortByField'], $this->get['tx_multishop_pi1']['orderBy']);
+				break;
+		}
+		break;
 }
 ?>
