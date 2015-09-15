@@ -2,7 +2,7 @@
 if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
-$content.='<div class="main-heading"><h1>'.$this->pi_getLL('admin_attributes').'</h1></div>';
+$content.='<div class="panel-heading"><h3>'.$this->pi_getLL('admin_attributes').'</h3></div><div class="panel-body form-horizontal">';
 $selects=array();
 $selects['select']=$this->pi_getLL('admin_label_option_type_selectbox');
 $selects['select_multiple']=$this->pi_getLL('admin_label_option_type_selectbox_multiple');
@@ -16,7 +16,7 @@ $selects['divider']=$this->pi_getLL('admin_label_option_type_divider');
 // new options
 $options_group='';
 if ($this->ms['MODULES']['ENABLE_ATTRIBUTES_OPTIONS_GROUP']) {
-    $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="form-control row add_new_attributes_options"');
+    $options_group=mslib_fe::buildAttributesOptionsGroupSelectBox($row['products_options_id'], 'id="new_options_groups" class="form-control add_new_attributes_options"');
     if (!empty($options_group)) {
         $options_group='<div class="form-group"><label class="col-md-2 control-label">'.$this->pi_getLL('admin_label_options_group').': </label><div class="col-md-4">'.$options_group.'</div></div>';
     } else {
@@ -47,8 +47,7 @@ $content.='</select></div>';
 $content.='</div>';
 $content.='
 <div class="form-group">
-    <div class="col-md-2">&nbsp;</div>
-    <div class="col-md-8">
+    <div class="col-md-10 col-md-offset-2">
         <label class="checkbox-inline">
             <input name="required" type="checkbox" value="1" class="add_new_attributes_options"> '.$this->pi_getLL('required').'
         </label>
@@ -62,9 +61,11 @@ $content.='
 </div>';
 $content.='</div>';
 $content.='</form>';
-$content.='</div>';
-$content.='<div class="panel-footer">';
+$content.='<div class="form-group no-mb">';
+$content.='<div class="col-md-10 col-md-offset-2">';
 $content.='<a href="#" class="btn btn-success" id="save_new_attribute_options"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('admin_label_add_new_attribute_options').'</a>';
+$content.='</div>';
+$content.='</div>';
 $content.='</div>';
 $content.='</div>';
 //
@@ -168,8 +169,8 @@ if ($rows) {
         // settings related to options
         //$content.='<div class="option_settings">';
         $content.=$options_group;
-        $content.='<div class="form-group row">';
-        $content.='<label class="col-md-2">'.$this->pi_getLL('admin_label_listing_type').': </label><div class="col-md-4"><select name="listtype['.$row['products_options_id'].']" class="form-control">';
+        $content.='<div class="form-group">';
+        $content.='<label class="col-md-2 control-label">'.$this->pi_getLL('admin_label_listing_type').': </label><div class="col-md-4"><select name="listtype['.$row['products_options_id'].']" class="form-control">';
         foreach ($selects as $key=>$value) {
             $content.='<option value="'.$key.'"'.($key==$row['listtype'] ? ' selected' : '').'>'.htmlspecialchars($value).'</option>';
         }
@@ -178,7 +179,7 @@ if ($rows) {
 
 
         $content.='
-<div class="form-group row">
+<div class="form-group">
     <div class="col-md-2">&nbsp;</div>
     <div class="col-md-8">
         <label class="checkbox-inline">
@@ -193,14 +194,16 @@ if ($rows) {
     </div>
 </div>';
         //$content.='</div>';
-        $content.='<div class="form-group">';
-        $content.='<a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-edit"></i> '.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;';
-        $content.='<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'"><i class="fa fa-eye"></i> '.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>&nbsp;';
+        $content.='<div class="form-group no-mb">';
+		$content.='<div class="col-md-10 col-md-offset-2">';
+        $content.='<a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-edit"></i> '.$this->pi_getLL('admin_add_new_value').'</a> ';
+        $content.='<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'"><i class="fa fa-eye"></i> '.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>';
         $content.='</div>';
+		$content.='</div>';
         //$content.='<a href="#" class="btn btn-success fetch_options_description" id="button_label_desc_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'">'.$this->pi_getLL('show_options_description', 'EDIT DESCRIPTION').'</a>';
         $content.='<div class="attribute_option_values_sortable" rel="'.$row['products_options_id'].'" id="vc_'.$row['products_options_id'].'" style="display:none">';
         $content.='<div id="last_line_'.$row['products_options_id'].'">';
-        $content.='<a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-edit"></i> '.$this->pi_getLL('admin_add_new_value').'</a>&nbsp;';
+        $content.='<a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-edit"></i> '.$this->pi_getLL('admin_add_new_value').'</a> ';
         $content.='<a href="#" class="btn btn-success hide_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-eye"></i> '.$this->pi_getLL('admin_label_hide_values').'</a>';
         $content.='</div>';
         $content.='</div>';
@@ -213,7 +216,6 @@ if ($rows) {
     $content.='</div>';
     $content.='<button class="btn btn-success" type="submit"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</button>';
     $content.='</form>';
-    $content.='<br/>';
     $count_js_cache_values=count($js_select2_cache_values);
     if ($count_js_cache_values) {
         $js_select2_cache.=implode(";\n", $js_select2_cache_values).";\n";
@@ -430,14 +432,14 @@ if ($rows) {
 
                             new_option_html+=\'<div class="panel-body">\';
 
-							new_option_html+=\'<div class="form-group row">\';
+							new_option_html+=\'<div class="form-group">\';
 							new_option_html+=\'<label class="control-label col-md-2">'.addslashes($this->pi_getLL('admin_label_listing_type')).': </label>\';
 							new_option_html+=\'<div class="col-md-4">\' + s.listtype + \'</div>\';
 							new_option_html+=\'</div>\';
 
                             new_option_html+=s.options_groups
 
-                            new_option_html+=\'<div class="form-group row">\';
+                            new_option_html+=\'<div class="form-group">\';
                             new_option_html+=\'<div class="col-md-2">&nbsp;</div>\';
 							new_option_html+=\'<div class="col-md-8">\';
 							new_option_html+=\'<label class="checkbox-inline">\';
@@ -919,6 +921,6 @@ if ($rows) {
     $content.='<h1>'.$this->pi_getLL('admin_label_no_product_attributes_defined_yet').'</h1>';
     $content.=$this->pi_getLL('admin_label_you_can_add_product_attributes_while_creating_and_or_editing_a_product');
 }
-$content.='<div class="extra_padding_bottom"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div>';
-$content='<div class="fullwidth_div">'.mslib_fe::shadowBox($content).'</div>';
+$content.='<hr><div class="clearfix"><a class="btn btn-success" href="'.mslib_fe::typolink().'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-arrow-left fa-stack-1x"></i></span> '.$this->pi_getLL('admin_close_and_go_back_to_catalog').'</a></div></div>';
+$content='<div class="panel panel-default">'.mslib_fe::shadowBox($content).'</div>';
 ?>
