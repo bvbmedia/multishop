@@ -160,6 +160,7 @@
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$('.categories_select2_top').select2({
+		dropdownCssClass: "", // apply css that makes the dropdown taller
 		minimumInputLength: 0,
 		multiple: false,
 		//allowClear: true,
@@ -169,6 +170,9 @@ jQuery(document).ready(function($) {
 					q: query.term
 				},
 				dataType: "json"
+			}).done(function (data) {
+				//categoriesIdSearchTerm[query.term]=data;
+				query.callback({results: data});
 			});
 		},
 		initSelection: function (element, callback) {
@@ -183,6 +187,25 @@ jQuery(document).ready(function($) {
 					callback(data);
 				});
 			}
+		},
+		formatResult: function (data) {
+			if (data.text === undefined) {
+				$.each(data, function (i, val) {
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function (data) {
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		escapeMarkup: function (m) {
+			return m;
 		}
 	});
 	$('.categories_select2').select2({
