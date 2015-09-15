@@ -164,7 +164,7 @@ jQuery(document).ready(function($) {
 		multiple: false,
 		//allowClear: true,
 		query: function (query) {
-			$.ajax('###AJAX_PRODUCT_CATEGORIES_FULL###', {
+			$.ajax('###AJAX_PRODUCT_CATEGORIES_FULL0###', {
 				data: {
 					q: query.term
 				},
@@ -174,7 +174,7 @@ jQuery(document).ready(function($) {
 		initSelection: function (element, callback) {
 			var id = $(element).val();
 			if (id !== "") {
-				$.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE###', {
+				$.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE0###', {
 					data: {
 						preselected_id: id
 					},
@@ -191,7 +191,7 @@ jQuery(document).ready(function($) {
 		multiple: false,
 		//allowClear: true,
 		query: function (query) {
-		   $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL###', {
+		   $.ajax('###AJAX_PRODUCT_CATEGORIES_FULL1###', {
 			   data: {
 				   q: query.term
 			   },
@@ -204,7 +204,7 @@ jQuery(document).ready(function($) {
 		initSelection: function (element, callback) {
 		   var id = $(element).val();
 		   if (id !== "") {
-			   $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE###', {
+			   $.ajax('###AJAX_PRODUCT_CATEGORIES_GET_VALUE1###', {
 				   data: {
 					   preselected_id: id
 				   },
