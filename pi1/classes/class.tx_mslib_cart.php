@@ -2482,7 +2482,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			//SHIPPING_COSTS_WRAPPER
 			$key='SHIPPING_COSTS_WRAPPER';
 			//if ($this->cart['user']['shipping_method_costs_including_vat']>0) {
-			if ($this->cart['user']['shipping_method_label']) {
+			if ($this->cart['user']['shipping_method_label'] && $this->cart['user']['shipping_method_costs'] > 0) {
 				$markerArray=array();
 				$shipping_price_value=$order['shipping_method_costs']+$order['orders_tax_data']['shipping_tax'];
 				$markerArray['SHIPPING_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('shipping_costs').' ('.$this->cart['user']['shipping_method_label'].')';
@@ -2496,7 +2496,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			//PAYMENT_COSTS_WRAPPER
 			$key='PAYMENT_COSTS_WRAPPER';
 			//if ($this->cart['user']['payment_method_costs_including_vat']>0) {
-			if ($this->cart['user']['payment_method_label']) {
+			if ($this->cart['user']['payment_method_label'] && $this->cart['user']['payment_method_costs']> 0) {
 				$markerArray=array();
 				$markerArray['PAYMENT_COSTS_INCLUDING_VAT_LABEL']=$this->pi_getLL('payment_costs').' ('.$this->cart['user']['payment_method_label'].')';
 				$markerArray['PAYMENT_COSTS_INCLUDING_VAT']=mslib_fe::amount2Cents($this->cart['user']['payment_method_costs_including_vat']);
