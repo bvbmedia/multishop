@@ -2490,7 +2490,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$markerArray['SHIPPING_COSTS'] = mslib_fe::amount2Cents($this->cart['user']['shipping_method_costs']);
 				$shippingCostsLineContent=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 				if (!$this->cart['user']['shipping_method_costs']) {
-					if ($this->ms['MODULES']['HIDE_ZERO_SHIPPING_COSTS_LINE']=='1') {
+					if ($this->ms['MODULES']['CHECKOUT_HIDE_ZERO_SHIPPING_COSTS_IN_SUMMARY']=='1') {
 						$shippingCostsLineContent='';
 					}
 				}
@@ -2509,7 +2509,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$markerArray['PAYMENT_COSTS']=mslib_fe::amount2Cents($this->cart['user']['payment_method_costs']);
 				$paymentCostsLineContent=$this->cObj->substituteMarkerArray($subparts[$key], $markerArray, '###|###');
 				if (!$this->cart['user']['payment_method_costs']) {
-					if ($this->ms['MODULES']['HIDE_ZERO_PAYMENT_COSTS_LINE']=='1') {
+					if ($this->ms['MODULES']['CHECKOUT_HIDE_ZERO_PAYMENT_COSTS_IN_SUMMARY']=='1') {
 						$paymentCostsLineContent='';
 					}
 				}

@@ -2122,7 +2122,7 @@ $records[]=array(
 );
 $records[]=array(
 	'configuration_title'=>'Hide shipping costs line when cost are zero',
-	'configuration_key'=>'HIDE_ZERO_SHIPPING_COSTS_LINE',
+	'configuration_key'=>'CHECKOUT_HIDE_ZERO_SHIPPING_COSTS_IN_SUMMARY',
 	'configuration_value'=>'0',
 	'description'=>'Hide shipping costs line when cost are zero',
 	'group_id'=>'8',
@@ -2133,7 +2133,7 @@ $records[]=array(
 );
 $records[]=array(
 	'configuration_title'=>'Hide payment costs line when cost are zero',
-	'configuration_key'=>'HIDE_ZERO_PAYMENT_COSTS_LINE',
+	'configuration_key'=>'CHECKOUT_HIDE_ZERO_PAYMENT_COSTS_IN_SUMMARY',
 	'configuration_value'=>'0',
 	'description'=>'Hide payment costs line when cost are zero',
 	'group_id'=>'8',
