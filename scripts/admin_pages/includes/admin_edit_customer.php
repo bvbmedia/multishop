@@ -711,7 +711,7 @@ if ($this->ms['MODULES']['CUSTOMER_EDIT_METHOD_FILTER']) {
 switch ($_REQUEST['action']) {
 	case 'edit_customer':
 		if (is_numeric($user['uid']) && $user['uid']>0) {
-			$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username'));
+			$subpartArray['###LABEL_USERNAME###']=ucfirst($this->pi_getLL('username')).'<span class="text-danger">*</span>';
 			if ($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY']>0 || !isset($this->ms['MODULES']['ADMIN_EDIT_CUSTOMER_USERNAME_READONLY'])) {
 				$subpartArray['###USERNAME_READONLY###']=(($this->get['action']=='edit_customer' && $this->get['tx_multishop_pi1']['cid']>0) ? 'readonly="readonly"' : '');
 			} else {
@@ -777,7 +777,7 @@ switch ($_REQUEST['action']) {
 			$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
 			$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
 			$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
-			$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
+			$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));//.($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
 			$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
 			$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 			$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
@@ -1031,7 +1031,7 @@ switch ($_REQUEST['action']) {
 		$company_validation='';
 		$subpartArray['###LABEL_COMPANY###']=ucfirst($this->pi_getLL('company'));
 		if ($this->ms['MODULES']['CHECKOUT_REQUIRED_COMPANY']) {
-			$subpartArray['###LABEL_COMPANY###'].='<span class="text-danger">*</span>';
+			//$subpartArray['###LABEL_COMPANY###'].='<span class="text-danger">*</span>';
 			$company_validation=' required="required" data-h5-errorid="invalid-company" title="'.$this->pi_getLL('company_is_required').'"';
 		}
 		$subpartArray['###COMPANY_VALIDATION###']=$company_validation;
@@ -1052,7 +1052,7 @@ switch ($_REQUEST['action']) {
 		$subpartArray['###VALUE_EMAIL###']=htmlspecialchars($this->post['email']);
 		$subpartArray['###LABEL_WEBSITE###']=ucfirst($this->pi_getLL('website'));
 		$subpartArray['###VALUE_WEBSITE###']=htmlspecialchars($this->post['www']);
-		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone')).($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
+		$subpartArray['###LABEL_TELEPHONE###']=ucfirst($this->pi_getLL('telephone'));//.($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE'] ? '<span class="text-danger">*</span>' : '');
 		$subpartArray['###VALUE_TELEPHONE###']=htmlspecialchars($this->post['telephone']);
 		$subpartArray['###LABEL_MOBILE###']=ucfirst($this->pi_getLL('mobile'));
 		$subpartArray['###VALUE_MOBILE###']=htmlspecialchars($this->post['mobile']);
@@ -1116,8 +1116,8 @@ $subpartArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
 $subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 // plugin marker place holder
 if (!$this->ms['MODULES']['FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_PAGE']) {
-	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name')).'<span class="text-danger">*</span>';
-	$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name')).'<span class="text-danger">*</span>';
+	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name'));//.'<span class="text-danger">*</span>';
+	$subpartArray['###LABEL_LASTNAME###']=ucfirst($this->pi_getLL('last_name'));//.'<span class="text-danger">*</span>';
 	$subpartArray['###FIRSTNAME_VALIDATION###']=' required="required" data-h5-errorid="invalid-first_name" title="'.$this->pi_getLL('first_name_required').'"';
 	$subpartArray['###LASTNAME_VALIDATION###']=' required="required" data-h5-errorid="invalid-last_name" title="'.$this->pi_getLL('last_name_required').'"';
 } else {

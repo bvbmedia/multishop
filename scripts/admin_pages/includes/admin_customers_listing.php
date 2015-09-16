@@ -33,6 +33,10 @@ foreach ($customers as $customer) {
 	} else {
 		$name=$customer['name'];
 	}
+	$name=trim($name);
+	if (!$name) {
+		$name=$customer['username'];
+	}
 	if ($customer['lastlogin']) {
 		$customer['lastlogin']=strftime("%a. %x<br/>%X", $customer['lastlogin']);
 	} else {
@@ -83,6 +87,22 @@ foreach ($customers as $customer) {
 	$markerArray['CUSTOMERS_USERNAME']=$customer['username'];
 	$markerArray['CUSTOMERS_COMPANY']=$customer['company'];
 	$markerArray['CUSTOMERS_NAME']=$name;
+
+	$userGroupMarkupArray=array();
+	$userGroupUids=explode(',',$customer['usergroup']);
+	if (is_array($userGroupUids) && count($userGroupUids)) {
+		foreach ($userGroupUids as $userGroupUid) {
+			$usergroup=mslib_fe::getUserGroup($userGroupUid);
+			if (is_array($usergroup) && $usergroup['title']) {
+				$userGroupMarkupArray[]='<span class="badge">'.htmlspecialchars($usergroup['title']).'</span>';
+			}
+		}
+	}
+	$markerArray['CUSTOMERS_GROUP']='';
+	if (count($userGroupMarkupArray)) {
+		$markerArray['CUSTOMERS_GROUP']='<br/>'.implode(' ',$userGroupMarkupArray);
+	}
+
 	$markerArray['CUSTOMERS_CREATED']=$customer['crdate'];
 	$markerArray['CUSTOMERS_LATEST_LOGIN']=$customer['lastlogin'];
 	$markerArray['CUSTOMERS_LATEST_ORDER']=$latest_order;
@@ -100,7 +120,9 @@ foreach ($customers as $customer) {
 	$markerArray['CUSTOMERS_ONCLICK_DELETE_CONFIRM_JS']='return confirm(\''.htmlspecialchars($this->pi_getLL('are_you_sure')).'?\')';
 	$markerArray['ADMIN_LABEL_ALT_REMOVE']=ucfirst($this->pi_getLL('admin_label_alt_remove'));
 	$markerArray['MASTER_SHOP']=$master_shop_col;
+	$markerArray['CUSTOM_MARKER_0_BODY']='';
 	$markerArray['CUSTOM_MARKER_1_BODY']='';
+
 	// custom page hook that can be controlled by third-party plugin
 	if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_customers_listing.php']['adminCustomersListingTmplIteratorPreProc'])) {
 		$params=array(
@@ -228,6 +250,9 @@ $subpartArray['###LABEL_FOOTER_CUSTOMER_TURN_OVER_THIS_YEAR###']=ucfirst($this->
 $subpartArray['###LABEL_FOOTER_CUSTOMER_LOGIN_AS_USER###']=ucfirst($this->pi_getLL('login_as_user'));
 $subpartArray['###LABEL_FOOTER_CUSTOMER_STATUS###']=ucfirst($this->pi_getLL('status'));
 $subpartArray['###LABEL_FOOTER_CUSTOMER_DELETE###']=ucfirst($this->pi_getLL('delete'));
+$subpartArray['###CUSTOM_MARKER_0_HEADER###']='';
+$subpartArray['###CUSTOM_MARKER_0_FOOTER###']='';
+
 $subpartArray['###CUSTOM_MARKER_1_HEADER###']='';
 $subpartArray['###CUSTOM_MARKER_1_FOOTER###']='';
 $subpartArray['###CUSTOMERS###']=$contentItem;

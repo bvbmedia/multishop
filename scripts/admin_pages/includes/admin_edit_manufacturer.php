@@ -581,6 +581,30 @@ jQuery(document).ready(function ($) {
     if (count($js_extra)) {
         $GLOBALS['TSFE']->additionalHeaderData['admin_edit_manufacturers_js']=implode("\n", $js_extra);
     }
+
+	// Instantiate admin interface object
+	$objRef = &\TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj('EXT:multishop/pi1/classes/class.tx_mslib_admin_interface.php:&tx_mslib_admin_interface');
+	$objRef->init($this);
+	$objRef->setInterfaceKey('admin_edit_manufacturer');
+
+	// Header buttons
+	$headerButtons=array();
+
+	$headingButton=array();
+	$headingButton['btn_class']='btn btn-primary';
+	$headingButton['fa_class']='fa fa-plus-circle';
+	$headingButton['title']=$this->pi_getLL('save');
+	$headingButton['href']='#';
+	$headingButton['attributes']='onclick="$(\'#admin_edit_manufacturer button[name=\\\'Submit\\\']\').click(); return false;"';
+	$headerButtons[]=$headingButton;
+
+	// Set header buttons through interface class so other plugins can adjust it
+	$objRef->setHeaderButtons($headerButtons);
+	// Get header buttons through interface class so we can render them
+	$interfaceHeaderButtons=$objRef->renderHeaderButtons();
+	// Get header buttons through interface class so we can render them
+	$subpartArray['###INTERFACE_HEADER_BUTTONS###']=$objRef->renderHeaderButtons();
+
 	$content.=$this->cObj->substituteMarkerArrayCached($subparts['template'], array(), $subpartArray);
 }
 ?>

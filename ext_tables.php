@@ -80,6 +80,13 @@ $tempColumns=array(
 			'max'=>'20'
 		)
 	),
+	'tx_multishop_newsletter'=>array(
+		'exclude'=>1,
+		'label'=>'Newsletter:',
+		'config'=>array(
+			'type'=>'check'
+		)
+	),
 	'gender'=>array(
 		'exclude'=>1,
 		'label'=>'Gender:',
@@ -100,7 +107,7 @@ $tempColumns=array(
 );
 // \TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA("fe_users");
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns("fe_users", $tempColumns, 1);
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes("fe_users", '--div--; Multishop, tx_multishop_discount, page_uid;;;;1-1-1');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes("fe_users", '--div--; Multishop, tx_multishop_newsletter, tx_multishop_discount, page_uid;;;;1-1-1');
 // EXTENDING ADDRESS WITH ADDRESS_NUMBER AND COMBINE THEM IN ONE NEW PALETTE CALLED "MULTISHOPADDRESS"
 $TCA['fe_users']['palettes']['multishopaddress']=array(
 	'showitem'=>'address,street_name,address_number,address_ext'

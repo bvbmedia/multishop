@@ -761,6 +761,31 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	$str="DELETE FROM `tx_multishop_configuration` WHERE `key`='ADMIN_ORDER_PROPOSAL_MODULE'";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	$messages[]=$str;
+	$str="describe `tx_multishop_configuration`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='configuration_title') {
+			if ($row['Type']=='varchar(64)') {
+				$str2="ALTER TABLE  `tx_multishop_configuration` CHANGE  `configuration_title`  `configuration_title` varchar(150)";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$messages[]=$str2;
+			}
+		}
+	}
+	$str="describe `tx_multishop_configuration_group`";
+	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+		if ($row['Field']=='configuration_title') {
+			if ($row['Type']=='varchar(64)') {
+				$str2="ALTER TABLE  `tx_multishop_configuration_group` CHANGE  `configuration_title`  `configuration_title` varchar(150)";
+				$qry2=$GLOBALS['TYPO3_DB']->sql_query($str2);
+				$messages[]=$str2;
+			}
+		}
+	}
 	/*
 	// V4 BETA COMPARE DATABASE (MULTIPLE SHOPS DATABASE DESIGN) EOL
 	$str="select tx_multishop_customer_id from fe_users limit 1";

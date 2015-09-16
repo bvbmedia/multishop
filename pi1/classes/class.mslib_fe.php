@@ -6588,6 +6588,9 @@ class mslib_fe {
 			if (($this->post['tx_multishop_pi1']['page_section']=='add_customer' || $this->post['tx_multishop_pi1']['page_section']=='add_customer')) {
 				$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['active']=1;
 			}
+			if (($this->post['tx_multishop_pi1']['page_section']=='edit_customer' || $this->post['tx_multishop_pi1']['page_section']=='edit_customer')) {
+				$ms_menu['header']['ms_admin_customers']['subs']['admin_new_customer']['active']=1;
+			}
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['label']=$this->pi_getLL('admin_customer_groups');
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_customer_groups');
 			$ms_menu['header']['ms_admin_customers']['subs']['admin_customer_groups']['class']='fa fa-users';
@@ -6629,6 +6632,13 @@ class mslib_fe {
 				$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['class']='fa fa-plus-circle';
 				if ($this->get['tx_multishop_pi1']['page_section']=='admin_new_order' || $this->post['tx_multishop_pi1']['page_section']=='admin_new_order') {
 					$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['active']=1;
+				}
+				if ($this->get['tx_multishop_pi1']['page_section']=='edit_order' || $this->post['tx_multishop_pi1']['page_section']=='edit_order') {
+					$ms_menu['header']['ms_admin_orders']['subs']['admin_manual_orders']['active']=1;
+				}
+			} else {
+				if ($this->get['tx_multishop_pi1']['page_section']=='admin_new_order' || $this->post['tx_multishop_pi1']['page_section']=='admin_new_order') {
+					$ms_menu['header']['ms_admin_orders']['subs']['admin_orders']['active']=1;
 				}
 			}
 			// orders export wizard
@@ -7008,22 +7018,50 @@ class mslib_fe {
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=products&tx_multishop_pi1[sortByField]=products_date_added&tx_multishop_pi1[orderBy]=desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_date_desc').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products']['subs']['admin_sort_products_date_available_desc']['class']='fa fa-arrow-circle-down';
-				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['label']=$this->pi_getLL('products_attributes');
+				//
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['label']=$this->pi_getLL('products_attributes_values');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['class']='fa fa-puzzle-piece';
+				//
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['label']=$this->pi_getLL('admin_sort_alphabet_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_options_values_name&tx_multishop_pi1[orderBy]=asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_attributes_asc').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_asc']['class']='fa fa-arrow-circle-up';
+				//
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['label']=$this->pi_getLL('admin_sort_alphabet_desc', 'sort on alfabet (desc)');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_options_values_name&tx_multishop_pi1[orderBy]=desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_attributes_desc').'?\')"';
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_desc']['class']='fa fa-arrow-circle-down';
+				//
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_natural_asc']['label']=$this->pi_getLL('admin_sort_alphabet_natural_asc', 'admin_sort_alphabet_natural_asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_natural_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_options_values_name_natural&tx_multishop_pi1[orderBy]=asc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_natural_asc']['class']='fa fa-arrow-circle-up';
+				//
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_natural_desc']['label']=$this->pi_getLL('admin_sort_alphabet_natural_desc', 'admin_sort_alphabet_natural_desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_natural_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_options_values_name_natural&tx_multishop_pi1[orderBy]=desc');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_alphabet_natural_desc']['class']='fa fa-arrow-circle-down';
+				//
+				// attribute options names sort
+				//
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['label']=$this->pi_getLL('products_attributes_names');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['class']='fa fa-puzzle-piece';
+				//
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_asc']['label']=$this->pi_getLL('admin_sort_alphabet_asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_names&tx_multishop_pi1[sortByField]=products_options_name&tx_multishop_pi1[orderBy]=asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_asc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_attributes_asc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_asc']['class']='fa fa-arrow-circle-up';
+				//
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_desc']['label']=$this->pi_getLL('admin_sort_alphabet_desc', 'sort on alfabet (desc)');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_names&tx_multishop_pi1[sortByField]=products_options_name&tx_multishop_pi1[orderBy]=desc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_desc']['link_params']='onClick="return CONFIRM(\''.$this->pi_getLL('admin_are_you_sure_you_want_to_sort_products_attributes_desc').'?\')"';
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_desc']['class']='fa fa-arrow-circle-down';
+				//
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_natural_asc']['label']=$this->pi_getLL('admin_sort_alphabet_natural_asc', 'admin_sort_alphabet_natural_asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_natural_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_names&tx_multishop_pi1[sortByField]=products_options_name_natural&tx_multishop_pi1[orderBy]=asc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_natural_asc']['class']='fa fa-arrow-circle-up';
+				//
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_natural_desc']['label']=$this->pi_getLL('admin_sort_alphabet_natural_desc', 'admin_sort_alphabet_natural_desc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_natural_desc']['link']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_names&tx_multishop_pi1[sortByField]=products_options_name_natural&tx_multishop_pi1[orderBy]=desc');
+				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes_names']['subs']['admin_sort_products_attributes_names_alphabet_natural_desc']['class']='fa fa-arrow-circle-down';
 				/*
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['label']=$this->pi_getLL('admin_sort_products_attributes_price_asc', 'sort on price (asc)');
 				$ms_menu['footer']['ms_admin_system']['subs']['admin_system']['subs']['admin_sort']['subs']['admin_sort_products_attributes']['subs']['admin_sort_products_attributes_price_asc']['link']=mslib_fe::typolink($this->shop_pid.',2003','tx_multishop_pi1[page_section]=admin_system_sort_catalog&tx_multishop_pi1[sortItem]=attribute_values&tx_multishop_pi1[sortByField]=products_price&tx_multishop_pi1[orderBy]=asc');
@@ -7524,7 +7562,7 @@ class mslib_fe {
 			return 0;
 		}
 	}
-	public function updateFeUserGroup($uid, $add_usergroup, $remove_usergroup='') {
+	public function updateFeUserGroup($uid, $add_usergroup='', $remove_usergroup='') {
 		if (!is_numeric($uid)) {
 			return false;
 		}

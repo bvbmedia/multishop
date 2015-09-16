@@ -126,12 +126,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									case 'checkbox':
 										if (is_array($attribute_values) && count($attribute_values)) {
 											foreach ($attribute_values as $attribute_item) {
-												$total_attributes_price+=($attribute_item['options_values_price']);
+												$total_attributes_price+=($attribute_item['price_prefix'].$attribute_item['options_values_price']);
 												if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 													//$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
-													$attributes['tax']=round($attribute_item['options_values_price']*$product['tax_rate'], 2);
+													$attributes['tax']=round(($attribute_item['price_prefix'].$attribute_item['options_values_price'])*$product['tax_rate'], 2);
 												} else {
-													$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
+													$attributes['tax']=mslib_fe::taxDecimalCrop(($attribute_item['price_prefix'].$attribute_item['options_values_price'])*$product['tax_rate']);
 												}
 												$total_attributes_tax+=$attribute_item['price_prefix'].$attribute_item['tax'];
 											}
@@ -149,12 +149,12 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 								if ($continue) {
 									$array=array($attribute_values);
 									foreach ($array as $attribute_item) {
-										$total_attributes_price+=($attribute_item['options_values_price']);
+										$total_attributes_price+=($attribute_item['price_prefix'].$attribute_item['options_values_price']);
 										if (!$this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT'] || $this->ms['MODULES']['FORCE_CHECKOUT_SHOW_PRICES_INCLUDING_VAT']) {
 											//$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate'], 2, false);
-											$attributes['tax']=round($attribute_item['options_values_price']*$product['tax_rate'], 2);
+											$attributes['tax']=round(($attribute_item['price_prefix'].$attribute_item['options_values_price'])*$product['tax_rate'], 2);
 										} else {
-											$attributes['tax']=mslib_fe::taxDecimalCrop($attribute_item['options_values_price']*$product['tax_rate']);
+											$attributes['tax']=mslib_fe::taxDecimalCrop(($attribute_item['price_prefix'].$attribute_item['options_values_price'])*$product['tax_rate']);
 										}
 										$total_attributes_tax+=$attribute_item['price_prefix'].$attribute_item['tax'];
 									}
@@ -2321,9 +2321,9 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 											$attribute_item['options_values_price']=round($attribute_item['options_values_price'], 2);
 										}
 										$item['ITEM_NAME'].=trim($attribute_item['products_options_values_name']);
-										$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
+										$price=$price+(($attribute_item['price_prefix'].$attribute_item['options_values_price'])*$product['qty']);
 										if ($attribute_item['options_values_price']>0) {
-											$subPrices.=mslib_fe::amount2Cents(($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price'])));
+											$subPrices.=mslib_fe::amount2Cents((($attribute_item['price_prefix'].$attribute_item['options_values_price'])*$product['qty']));
 										}
 										$subPrices.='<br />';
 										if (isset($attribute_values[$counter])) {
@@ -2361,7 +2361,7 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 									}
 									$subPrices.='<br />';
 									$item['ITEM_NAME'].='<div class="attributes-items"><span class="attribute-option">'.$row['products_options_name'].':</span><span class="attribute-value">'.$attribute_values['products_options_values_name'].'</span></div>';
-									$price=$price+($product['qty']*($attribute_item['price_prefix'].$attribute_item['options_values_price']));
+									$price=$price+(($attribute_item['price_prefix'].$attribute_item['options_values_price'])*$product['qty']);
 								}
 							}
 						}

@@ -1174,19 +1174,6 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
-/*
-$records[]=array(
-	'configuration_title'=>'Admin Order Proposal System',
-	'configuration_key'=>'ADMIN_ORDER_PROPOSAL_MODULE',
-	'configuration_value'=>'0',
-	'description'=>'Enable the order proposal system.',
-	'group_id'=>'11',
-	'use_function'=>'',
-	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
-	'depend_on_configuration_key'=>'',
-	'use_function'=>''
-);
-*/
 $records[]=array(
 	'configuration_title'=>'Admin Invoice System',
 	'configuration_key'=>'ADMIN_INVOICE_MODULE',

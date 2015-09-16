@@ -680,10 +680,25 @@ if ($this->post) {
 					$headerButtons[]=$headingButton;
 				}
 				$headingButton=array();
+				$headingButton['btn_class']='btn btn-primary';
+				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['title']=$this->pi_getLL('admin_here_you_can_search_and_update_products');
+				$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_products_search_and_edit&cid='.$category['categories_id']);
+				$headerButtons[]=$headingButton;
+
+				$headingButton=array();
 				$headingButton['btn_class']='btn btn-primary viewfront';
 				$headingButton['fa_class']='fa fa-eye';
 				$headingButton['title']=$this->pi_getLL('admin_edit_view_front_category', 'View in front');
 				$headingButton['href']=$details_link;
+				$headerButtons[]=$headingButton;
+
+				$headingButton=array();
+				$headingButton['btn_class']='btn btn-primary';
+				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['title']=$this->pi_getLL('save');
+				$headingButton['href']='#';
+				$headingButton['attributes']='onclick="$(\'#admin_categories_edit button[name=\\\'Submit\\\']\').click(); return false;"';
 				$headerButtons[]=$headingButton;
 
 				// Set header buttons through interface class so other plugins can adjust it

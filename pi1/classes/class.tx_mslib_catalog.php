@@ -666,6 +666,14 @@ class tx_mslib_catalog {
 									$updateArray['sort_order']=$counter;
 									$query3=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', 'products_options_id=\''.$row2['products_options_id'].'\' and products_options_values_id=\''.$row2['products_options_values_id'].'\'', $updateArray);
 									$res3=$GLOBALS['TYPO3_DB']->sql_query($query3);
+									// product level
+									$where="options_id = ".$row2['products_options_id']." and options_values_id=".$row2['products_options_values_id']." and page_uid=".$this->showCatalogFromPage;
+									$updateArray=array();
+									$updateArray=array(
+										'sort_order_option_value'=>$counter
+									);
+									$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+									$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 								}
 								// update sort eof
 							}
@@ -680,8 +688,9 @@ class tx_mslib_catalog {
 						//$options_ids[0]=array('products_options_id'=>'17');
 						foreach ($options_ids as $options_id) {
 							$valuesArray=array();
+							$values_id=array();
 							// iterate each attribute option and get the values
-							$sql="select pov2po.*, pov.products_options_values_name from tx_multishop_products_options_values_to_products_options pov2po, tx_multishop_products_options_values pov where pov2po.products_options_id = ".$options_id['products_options_id']." and pov.products_options_values_id = pov2po.products_options_values_id";
+							$sql="select pov2po.*, pov.products_options_values_name, pov.products_options_values_id from tx_multishop_products_options_values_to_products_options pov2po, tx_multishop_products_options_values pov where pov2po.products_options_id = ".$options_id['products_options_id']." and pov.products_options_values_id = pov2po.products_options_values_id";
 							$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
 							$values_id=array();
 							while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
@@ -694,6 +703,7 @@ class tx_mslib_catalog {
 								}
 								// we now have a name that starts with alphanumeric
 								$valuesArray[$row['products_options_values_to_products_options_id']]=$values_name;
+								$values_id[$values_name]=$row['products_options_values_id'];
 							}
 							// now let PHP sort the array
 							natcasesort($valuesArray);
@@ -709,10 +719,103 @@ class tx_mslib_catalog {
 								$updateArray['sort_order']=$sort;
 								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options_values_to_products_options', "products_options_values_to_products_options_id = ".$pov2po_row_id." and products_options_id = ".$options_id['products_options_id'], $updateArray);
 								$GLOBALS['TYPO3_DB']->sql_query($query);
+								// product level
+								$where="options_id = ".$options_id['products_options_id']." and options_values_id=".$values_id[$values_name]." and page_uid=".$this->showCatalogFromPage;
+								$updateArray=array();
+								$updateArray=array(
+									'sort_order_option_value'=>$sort
+								);
+								$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+								$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+								//
 								$sort++;
+
 							}
 						}
 						$content.='Attribute value sorting (natural) completed';
+						break;
+				}
+				break;
+			case 'attribute_names':
+				switch ($sortByField) {
+					case 'products_options_name':
+						$query_array=array();
+						$query_array['select'][]='*';
+						$query_array['from'][]='tx_multishop_products_options po';
+						$query_array['where'][]='po.language_id=\'0\'';
+						$query_array['order_by'][]='SUBSTRING_INDEX(po.products_options_name, " ", 1) ASC, CAST(SUBSTRING_INDEX(po.products_options_name, " ", -1) AS SIGNED) '.$orderBy;
+						$str=$GLOBALS['TYPO3_DB']->SELECTquery((is_array($query_array['select']) ? implode(",", $query_array['select']) : ''), // SELECT ...
+								(is_array($query_array['from']) ? implode(",", $query_array['from']) : ''), // FROM ...
+								(is_array($query_array['where']) ? implode(" and ", $query_array['where']) : ''), // WHERE...
+								(is_array($query_array['group_by']) ? implode(",", $query_array['group_by']) : ''), // GROUP BY...
+								(is_array($query_array['order_by']) ? implode(",", $query_array['order_by']) : ''), // ORDER BY...
+								(is_array($query_array['limit']) ? implode(",", $query_array['limit']) : '') // LIMIT ...
+						);
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+						$counter=0;
+						while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+							$counter++;
+							$where="products_options_id = ".$row['products_options_id'];
+							$updateArray=array(
+									'sort_order'=>$counter
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// products level
+							$where="options_id = ".$row['products_options_id'] . " and page_uid='".$this->showCatalogFromPage."'";
+							$updateArray=array();
+							$updateArray=array(
+									'sort_order_option_name'=>$counter
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+						}
+						$content.='Attribute name sorting completed';
+						break;
+					case 'products_options_name_natural':
+						$valuesArray=array();
+						// iterate each attribute option and get the values
+						$sql="select po.* from tx_multishop_products_options po";
+						$qry=$GLOBALS['TYPO3_DB']->sql_query($sql);
+						$values_id=array();
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+							$values_name=$row['products_options_name'];
+							// if the first char is not alphanumeric we cut it off, so we can sort much better
+							if ($values_name and !preg_match("/^[a-z0-9]/i", $values_name)) {
+								do {
+									$values_name=substr($values_name, 1, strlen($values_name));
+								} while ($values_name and !preg_match("/^[a-z0-9]/i", $values_name));
+							}
+							// we now have a name that starts with alphanumeric
+							$valuesArray[$row['products_options_id']]=$values_name;
+						}
+						// now let PHP sort the array
+						natcasesort($valuesArray);
+						switch ($orderBy) {
+							case 'desc':
+								$valuesArray=array_reverse($valuesArray);
+								break;
+						}
+						$sort=1;
+						// iterate each value and save the new sort order number to DB
+						foreach ($valuesArray as $pov2po_row_id=>$values_name) {
+							$where="products_options_id = ".$pov2po_row_id;
+							$updateArray=array(
+									'sort_order'=>$sort
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_options', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							// products level
+							$where="options_id = ".$pov2po_row_id . " and page_uid='".$this->showCatalogFromPage."'";
+							$updateArray=array();
+							$updateArray=array(
+									'sort_order_option_name'=>$sort
+							);
+							$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_products_attributes', $where, $updateArray);
+							$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+							$sort++;
+						}
+						$content.='Attribute name sorting (natural) completed';
 						break;
 				}
 				break;
