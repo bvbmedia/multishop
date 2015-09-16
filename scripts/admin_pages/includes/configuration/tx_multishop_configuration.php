@@ -2120,6 +2120,28 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Hide shipping costs line when cost are zero',
+	'configuration_key'=>'HIDE_ZERO_SHIPPING_COSTS_LINE',
+	'configuration_value'=>'0',
+	'description'=>'Hide shipping costs line when cost are zero',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Hide payment costs line when cost are zero',
+	'configuration_key'=>'HIDE_ZERO_PAYMENT_COSTS_LINE',
+	'configuration_value'=>'0',
+	'description'=>'Hide payment costs line when cost are zero',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\', \'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(
