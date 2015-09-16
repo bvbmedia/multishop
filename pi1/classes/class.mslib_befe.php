@@ -3428,7 +3428,12 @@ class mslib_befe {
 			$user=$GLOBALS['TSFE']->fe_user->fetchUserRecord($info['db_user'], $loginData['uname']);
 			$GLOBALS['TSFE']->fe_user->createUserSession($user);
 			// auto login the user
-			$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($this->shop_pid);
+			if (is_numeric($this->conf['login_as_customer_target_pid'])) {
+				$targetPid=$this->conf['login_as_customer_target_pid'];
+			} else {
+				$targetPid=$this->shop_pid;
+			}
+			$redirect_url=$this->FULL_HTTP_URL.mslib_fe::typolink($targetPid);
 			//hook to let other plugins further manipulate the redirect link
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_befe.php']['loginAsUserRedirectLinkPreProc'])) {
 				$params=array(

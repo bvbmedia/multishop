@@ -122,6 +122,7 @@ plugin.tx_multishop_pi1 {
 	debugEnabled = {$plugin.multishop.debugEnabled}
 	enableMultipleShops = {$plugin.multishop.enableMultipleShops}
 	connectedShopPids = {$plugin.multishop.connectedShopPids}
+	login_as_customer_target_pid = {$plugin.multishop.login_as_customer_target_pid}
 }
 
 # LOAD MULTISHOP APPLICATION (HEAD SECTION)

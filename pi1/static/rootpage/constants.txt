@@ -54,6 +54,8 @@ plugin.multishop {
 	logout_pid =
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend login page: Optional field. The ID number of the page where the (felogin) login content element is put on.
 	login_pid =
+	# cat=plugin.multishop - optional; type=int+; label= PID of the page to redirect to when logging in as customer: Optional field. If you want to use a different page target define it here.
+	login_as_customer_target_pid =
 
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend create account page: Optional field. The ID number of the page where the guest user can create an account.
 	create_account_pid =
