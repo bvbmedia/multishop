@@ -159,8 +159,8 @@ h5 { font-weight:600; font-family:"Open Sans", Arial, Helvetica, sans-serif; mar
 
 td.cellPrice .msAttributesField .form-control,
 td.cellSpecialPrice .msAttributesField .form-control { min-width:90px; }
-.input-group input[type="text"],
-.msAttributesField input[type="text"] { text-align:right; }
+.input-group input[type="text"]:not(:first-child),
+.msAttributesField input[type="text"]:not(:first-child) { text-align:right; }
 td.cellBreak { width:200px; word-break:break-all; }
 
 table#address_details { margin-bottom:0; }
