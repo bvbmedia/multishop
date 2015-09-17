@@ -1251,6 +1251,7 @@
             <label index="reports">Reports</label>
             <label index="products_attributes_names">Product attribute names</label>
             <label index="products_attributes_values">Product attribute values</label>
+            <label index="deliver_in">Deliver in</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2494,6 +2495,7 @@
             <label index="reports">Rapporten</label>
             <label index="products_attributes_names">Product attribuutnamen</label>
             <label index="products_attributes_values">Product attribuutwaardes</label>
+            <label index="deliver_in">Bezorgen in</label>
         </languageKey>
     </data>
 </T3locallang>
