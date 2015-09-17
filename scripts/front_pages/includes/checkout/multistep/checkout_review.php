@@ -65,24 +65,26 @@ if (count($cart['products'])<1) {
 				$content.='
 					<hr>
 					<div class="checkboxAgreement accept_general_conditions_container">
-						<input name="tx_multishop_pi1[right_of_withdrawal]" id="right_of_withdrawal_checkbox_in_checkout" type="checkbox" value="1" />
-						<label for="right_of_withdrawal_checkbox_in_checkout">'.$this->pi_getLL('click_here_if_you_agree_the_right_of_withdrawal');
+						<div class="checkbox checkbox-success">
+							<input name="tx_multishop_pi1[right_of_withdrawal]" id="right_of_withdrawal_checkbox_in_checkout" type="checkbox" value="1" />
+							<label for="right_of_withdrawal_checkbox_in_checkout">'.$this->pi_getLL('click_here_if_you_agree_the_right_of_withdrawal');
 				$page=mslib_fe::getCMScontent('right_of_withdrawal', $GLOBALS['TSFE']->sys_language_uid);
 				if ($page[0]['content']) {
 					$content.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_right_of_withdrawal').'</a>)';
 				}
-				$content.='</div>';
+				$content.='</div></div>';
 			}
 			$content.='
 				<hr>
 				<div class="checkboxAgreement accept_general_conditions_container">
-					<input name="accept_general_conditions" id="accept_general_conditions" type="checkbox" value="1" />
-					<label for="accept_general_conditions">'.$this->pi_getLL('click_here_if_you_agree_the_general_conditions');
+					<div class="checkbox checkbox-success">
+						<input name="accept_general_conditions" id="accept_general_conditions" type="checkbox" value="1" />
+						<label for="accept_general_conditions">'.$this->pi_getLL('click_here_if_you_agree_the_general_conditions');
 			$page=mslib_fe::getCMScontent('general_conditions', $GLOBALS['TSFE']->sys_language_uid);
 			if ($page[0]['content']) {
 				$content.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_general_conditions').'</a>)';
 			}
-			$content.='</div>';
+			$content.='</div></div>';
 			if ($this->ms['MODULES']['DISPLAY_PRIVACY_STATEMENT_LINK_ON_CHECKOUT_PAGE']) {
 				$page=mslib_fe::getCMScontent('privacy_statement', $GLOBALS['TSFE']->sys_language_uid);
 				if ($page[0]['content']) {
