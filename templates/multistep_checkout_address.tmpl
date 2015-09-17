@@ -6,10 +6,14 @@
     <div class="account-field col-sm-12" id="input-gender">
         <span id="ValidRadio" class="InputGroup">
             <label for="radio_gender_mr" id="account-gender">###LABEL_GENDER_TITLE###</label>
-            <input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio_gender_mr" ###VALUE_GENDER_MALE_CHECKED### ###GENDER_INPUT_REQUIRED###>
-            <label class="account-male" for="radio_gender_mr">###LABEL_GENDER_MALE###</label>
-            <input type="radio" name="gender" value="f" class="InputGroup" id="radio_gender_mrs" ###VALUE_GENDER_FEMALE_CHECKED###>
-            <label class="account-female" for="radio_gender_mrs">###LABEL_GENDER_FEMALE###</label>
+            <div class="radio radio-success radio-inline">
+                <input type="radio" class="InputGroup" name="gender" value="m" class="account-gender-radio" id="radio_gender_mr" ###VALUE_GENDER_MALE_CHECKED### ###GENDER_INPUT_REQUIRED###>
+                <label class="account-male" for="radio_gender_mr">###LABEL_GENDER_MALE###</label>
+            </div>
+            <div class="radio radio-success radio-inline">
+                <input type="radio" name="gender" value="f" class="InputGroup" id="radio_gender_mrs" ###VALUE_GENDER_FEMALE_CHECKED###>
+                <label class="account-female" for="radio_gender_mrs">###LABEL_GENDER_FEMALE###</label>
+            </div>
             <div id="invalid-gender" class="error-space" style="display:none"></div>
         </span>
         ###BIRTHDATE_BLOCK###
