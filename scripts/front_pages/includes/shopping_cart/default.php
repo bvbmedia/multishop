@@ -417,7 +417,7 @@ if (count($cart['products'])>0) {
 		// country eof
 		$subpartArray['###SHIPPING_COST_COUNTRY_SELECTION###']='
 		<div class="shoppingcart_shipping_cost_wrapper">
-			<div class="shipping_deliver_to"><label for="deliver_to_country">'.$this->pi_getLL('deliver_to').'<label>'.$deliver_to_sb.'</div>
+			<div class="shipping_deliver_to"><label for="deliver_to_country">'.$this->pi_getLL('deliver_in').'<label>'.$deliver_to_sb.'</div>
 			<div class="shipping_deliver_by"></div>
 		</div>
 		';
