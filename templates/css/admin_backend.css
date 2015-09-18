@@ -565,3 +565,5 @@ select.form-control { padding-left:8px; padding-right:8px; }
 
 .modal-backdrop { z-index:10040; }
 .modal { z-index:10050; }
+
+#msEditProductInputImage:after { clear:both; display:table; content:""; }
