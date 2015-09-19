@@ -1293,7 +1293,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$order_products_table=array();
 			$order_products_header_data=array();
 			$tr_type='even';
-			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing" id="orders_products_listing_table">';
+			$tmpcontent.='<table class="table table-striped table-bordered msadmin_border orders_products_listing" id="orders_products_listing_table_wrapper">';
 			if ($this->ms['MODULES']['ADMIN_EDIT_ORDER_DISPLAY_ORDERS_PRODUCTS_STATUS']>0) {
 				$all_orders_status=mslib_fe::getAllOrderStatus($GLOBALS['TSFE']->sys_language_uid);
 			}
