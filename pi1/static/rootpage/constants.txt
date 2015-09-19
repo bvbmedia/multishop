@@ -56,6 +56,8 @@ plugin.multishop {
 	login_pid =
 	# cat=plugin.multishop - optional; type=int+; label= PID of the page to redirect to when logging in as customer: Optional field. If you want to use a different page target define it here.
 	login_as_customer_target_pid =
+	# cat=plugin.multishop - optional; type=int+; label= PID of the page to redirect to after customer pressed on the confirm create account link: Optional field. If you want to use a different page target define it here.
+	confirmed_create_account_target_pid =
 
 	# cat=plugin.multishop - optional; type=int+; label= PID of the frontend create account page: Optional field. The ID number of the page where the guest user can create an account.
 	create_account_pid =
