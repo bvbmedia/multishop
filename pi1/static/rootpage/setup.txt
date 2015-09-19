@@ -87,7 +87,6 @@ plugin.tx_multishop_pi1 {
 	order_details_table_adminNotificationPopup_tmpl_path = {$plugin.multishop.order_details_table_adminNotificationPopup_tmpl_path}
 	create_account_pid = {$plugin.multishop.create_account_pid}
 	edit_account_pid = {$plugin.multishop.edit_account_pid}
-	hideFacebookInAdminInterface = {$plugin.multishop.hideFacebookInAdminInterface}
 	products_relatives_tmpl_path = {$plugin.multishop.products_relatives_tmpl_path}
 	categories_listing_tmpl_path = {$plugin.multishop.categories_listing_tmpl_path}
 	basket_default_tmpl_path = {$plugin.multishop.basket_default_tmpl_path}
@@ -658,10 +657,6 @@ multishop_admin_page {
 		CONTENT.userFunc = tx_multishop_pi1->admin_main
 		FOOTERNAV = TEXT
 		FOOTERNAV.value =
-		FACEBOOK = TEXT
-		FACEBOOK.value (
-	<iframe class="align-center" allowtransparency="yes" style="BORDER-BOTTOM: medium none; BORDER-LEFT: medium none; OVERFLOW: hidden; BORDER-TOP: medium none; BORDER-RIGHT: medium none;" frameborder="0" hspace="0" vspace="0" marginheight="0" marginwidth="0" width="185" height="410" scrolling="no" src="https://www.facebook.com/plugins/likebox.php?id=127486630606749&amp;width=185&amp;connections=10&amp;stream=false&amp;header=true&amp;height=410&amp;colorscheme=dark"></iframe>
-		)
 	}
 
 	# not needed in Bootstrap
@@ -678,10 +673,4 @@ multishop_admin_page {
 	# copy rzcolorbox CSS
 	headerData.1441 < page.headerData.1441
 }
-
-[globalVar = LIT:1 = {$plugin.multishop.hideFacebookInAdminInterface}]
-	# remove facebook from admin interface
-	multishop_admin_page.10.marks.FACEBOOK =
-[global]
-
 # LOAD THE ADMIN PAGE EOF
