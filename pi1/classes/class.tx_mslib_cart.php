@@ -404,7 +404,24 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					if ($product['products_image']) {
 						$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
 					}
-					if (mslib_fe::ProductHasAttributes($product['products_id']) and !count($this->post['attributes'])) {
+					//
+					$query=$GLOBALS['TYPO3_DB']->SELECTquery('pa.*', // SELECT ...
+							'tx_multishop_products_attributes pa, tx_multishop_products_options po', // FROM ...
+							'pa.products_id="'.addslashes($product['products_id']).'" and pa.page_uid=\''.$this->showCatalogFromPage.'\' and po.hide!=1 and po.hide_in_cart!=1 and po.language_id='.$this->sys_language_uid.' and po.products_options_id=pa.options_id', // WHERE...
+							'', // GROUP BY...
+							'pa.sort_order_option_name asc, pa.sort_order_option_value asc', // ORDER BY...
+							'' // LIMIT ...
+					);
+					$product_attributes=array();
+					$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					if ($GLOBALS['TYPO3_DB']->sql_num_rows($res)>0) {
+						while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+							$product_attributes[$row['options_id']][]=$row['options_values_id'];
+						}
+					}
+					//
+					//if (mslib_fe::ProductHasAttributes($product['products_id']) and !count($this->post['attributes'])) {
+					if (is_array($product_attributes) && count($product_attributes) && !count($this->post['attributes'])) {
 						// Product has attributes. We need to redirect the customer to the product detail page so the attributes can be selected
 						if ($product['categories_id']) {
 							// get all cats to generate multilevel fake url
