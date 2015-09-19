@@ -150,6 +150,44 @@ if (!$order_session['orders_id']) {
 	$array2[]=$order['customer_id'];
 	$array1[]='###CUSTOMER_COMMENTS###';
 	$array2[]=$order['customer_comments'];
+
+	// ADDITIONAL OPTIONAL MARKERS
+	$array1[]='###STORE_EMAIL###';
+	$array2[]=$this->ms['MODULES']['STORE_EMAIL'];
+	$array1[]='###STORE_DOMAIN###';
+	$array2[]=$this->server['HTTP_HOST'];
+	$array1[]='###STORE_URL###';
+	$array2[]=$this->FULL_HTTP_URL;
+
+	$setEmptyStoreMarkers=1;
+	if (!empty($this->conf['tt_address_record_id_store']) && $this->conf['tt_address_record_id_store']>0) {
+		$address=mslib_befe::getRecord($this->conf['tt_address_record_id_store'], 'tt_address', 'uid');
+		if (is_array($address) && $address['uid']) {
+			$array1[]='###STORE_ADDRESS###';
+			$array2[]=$address['address'];
+			$array1[]='###STORE_ZIP###';
+			$array2[]=$address['zip'];
+			$array1[]='###STORE_CITY###';
+			$array2[]=$address['city'];
+			$array1[]='###STORE_TELEPHONE###';
+			$array2[]=$address['telephone'];
+			$array1[]='###STORE_COUNTRY###';
+			$array2[]=mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $address['country']);
+			$setEmptyStoreMarkers=0;
+		}
+	}
+	if ($setEmptyStoreMarkers) {
+		$array1[]='###STORE_ADDRESS###';
+		$array2[]='';
+		$array1[]='###STORE_ZIP###';
+		$array2[]='';
+		$array1[]='###STORE_CITY###';
+		$array2[]='';
+		$array1[]='###STORE_TELEPHONE###';
+		$array2[]='';
+		$array1[]='###STORE_COUNTRY###';
+		$array2[]='';
+	}
 	// for on the site eof
 	$page=array();
 	// psp email template
