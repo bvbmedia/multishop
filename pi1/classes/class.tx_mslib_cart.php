@@ -402,8 +402,8 @@ class tx_mslib_cart extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$product=mslib_fe::getProduct($products_id);
 				if ($product['products_id']) {
 					if ($product['products_image']) {
-						$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
 						$product['products_image_200']=mslib_befe::getImagePath($product['products_image'], 'products', '200');
+						$product['products_image']=mslib_befe::getImagePath($product['products_image'], 'products', '50');
 					}
 					//
 					$query=$GLOBALS['TYPO3_DB']->SELECTquery('pa.*', // SELECT ...
