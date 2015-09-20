@@ -2059,7 +2059,7 @@ class mslib_fe {
 			$mail->SetFrom($from_address, $from_name);
 			$mail->AddAddress($user['email'], $user['username']);
 			$mail->Subject=$subject;
-			$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
+			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
 			self::MsgHTMLwithEmbedImages($mail, $body);
 //			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
 			if (!$mail->Send()) {
@@ -2195,7 +2195,7 @@ class mslib_fe {
 			}
 			$mail->AddAddress($user['email'], $user['username']);
 			$mail->Subject=$subject;
-			$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
+			//$mail->AltBody=$this->pi_getLL('admin_label_email_html_warning'); // optional, comment out and test
 			self::MsgHTMLwithEmbedImages($mail, $body);
 //			$mail->MsgHTML($body,$this->DOCUMENT_ROOT);
 			if (!$mail->Send()) {
