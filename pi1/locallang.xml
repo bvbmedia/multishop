@@ -784,7 +784,7 @@
             <label index="filter_by">Filter by</label>
             <label index="filter_by_date_status_last_modified">Filter by date status last modified</label>
             <label index="final_price_ex_vat">Final price (excl. VAT)</label>
-            <label index="final_price_inc_vat">Totaal (incl. BTW)</label>
+            <label index="final_price_inc_vat">Total price (incl. VAT)</label>
             <label index="first">first</label>
             <label index="first_name">first name</label>
             <label index="first_name_required">First name is a required field. Only characters are allowed.</label>
