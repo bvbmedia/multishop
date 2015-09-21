@@ -320,6 +320,8 @@ $content.='<th align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulati
 $content.='</tr></thead><tbody>';
 $content.='<tr>';
 $total_amount=0;
+$startMonthlyCumulative=0;
+$iteratorCounter=0;
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
@@ -341,8 +343,36 @@ foreach ($dates as $key=>$value) {
 			$total_price=($total_price-$row['grand_total']);
 		}
 	}
-	$content.='<td align="right">'.mslib_fe::amount2Cents($total_price, 0).'</td>';
+	$stringOutput=mslib_fe::amount2Cents($total_price, 0);
+	// Total amount before adding the amount of the iterated month
+	$initialTotalAmount=$total_amount;
 	$total_amount=$total_amount+$total_price;
+	$stringOutput.='<br/><hr>';
+	if ($end_time <= time()) {
+		$stringOutput.='<i>'.mslib_fe::amount2Cents($total_amount, 0).'</i>';
+	} else {
+		$startMonthlyCumulative=1;
+	}
+	if ($startMonthlyCumulative) {
+		if (!$total_amount_cumulative) {
+			$total_amount_cumulative=$initialTotalAmount;
+		}
+		$monthsToCome=(12-$iteratorCounter);
+
+		if (date('M',$start_time)==date('M',time())) {
+			$totalDays=$d=cal_days_in_month(CAL_GREGORIAN,date('m',time()),date('Y',time()));
+
+			$cumulativeMonth=($total_price/date('d',time())*$totalDays);
+		} else {
+			$cumulativeMonth=($total_amount_cumulative/$iteratorCounter);
+		}
+		$total_amount_cumulative=$total_amount_cumulative+$cumulativeMonth;
+		//$total_amount_cumulative=$total_amount_cumulative+($total_amount_cumulative/12);
+		$stringOutput.='<i style="color:gray;">'.mslib_fe::amount2Cents($total_amount_cumulative).'</i>';
+		$stringOutput.='<br/><i>'.mslib_fe::amount2Cents($cumulativeMonth, 0).'</i>';
+	}
+	$content.='<td align="right">'.$stringOutput.'</td>';
+	$iteratorCounter++;
 }
 if ($this->cookie['stats_year_sb']==date("Y") || !$this->cookie['stats_year_sb']) {
 	$month=date("m");
