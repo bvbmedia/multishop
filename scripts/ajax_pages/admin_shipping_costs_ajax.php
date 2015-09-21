@@ -404,11 +404,15 @@ if ($this->ADMIN_USER) {
 				var number = prime + "." + decimal.substr(0, 2);
 				return number;
 			}
-			jQuery(document).on("keyup", ".msProductsPriceExcludingVat", function() {
-				productPrice(true, jQuery(this));
+			jQuery(document).on("keyup", ".msProductsPriceExcludingVat", function(e) {
+				if (e.keyCode!=9) {
+					productPrice(true, jQuery(this));
+				}
 			});
-			jQuery("document").on("keyup", ".msProductsPriceIncludingVat", function() {
-				productPrice(false, jQuery(this));
+			jQuery("document").on("keyup", ".msProductsPriceIncludingVat", function(e) {
+				if (e.keyCode!=9) {
+					productPrice(false, jQuery(this));
+				}
 			});
 		});
 	</script>';

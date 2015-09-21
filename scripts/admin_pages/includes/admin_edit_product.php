@@ -2407,11 +2407,15 @@ if ($this->post) {
 					var counter_data = parseInt(document.getElementById(\'sp_row_counter\').value);
 					document.getElementById(\'sp_row_counter\').value = counter_data - 1;
 				}
-				$(document).on("keyup", ".msStaffelPriceExcludingVat", function() {
-					productPrice(true, this);
+				$(document).on("keyup", ".msStaffelPriceExcludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(true, this);
+					}
 				});
-				$(document).on("keyup", ".msStaffelPriceIncludingVat", function() {
-					productPrice(false, this);
+				$(document).on("keyup", ".msStaffelPriceIncludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(false, this);
+					}
 				});
 				</script>';
 			if (empty($product['staffel_price'])) {
@@ -3653,11 +3657,15 @@ if ($this->post) {
 			}
 			jQuery(document).ready(function(){
 				'.$attribute_values_sb_trigger.'
-				$(document).on("keyup", ".msAttributesPriceExcludingVat", function() {
-					productPrice(true, this);
+				$(document).on("keyup", ".msAttributesPriceExcludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(true, this);
+					}
 				});
-				$(document).on("keyup", ".msAttributesPriceIncludingVat", function() {
-					productPrice(false, this);
+				$(document).on("keyup", ".msAttributesPriceIncludingVat", function(e) {
+					if (e.keyCode!=9) {
+						productPrice(false, this);
+					}
 				});
 			});
 			</script>

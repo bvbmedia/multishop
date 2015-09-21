@@ -536,11 +536,15 @@ if (count($shipping_methods)>0) {
 		var number = prime + "." + decimal.substr(0, 2);
 		return number;
 	}
-	$(document).on("change", ".msProductsPriceExcludingVat", function() {
-		productPrice(true, this);
+	$(document).on("change", ".msProductsPriceExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(true, this);
+		}
 	});
-	$(document).on("change", ".msProductsPriceIncludingVat", function() {
-		productPrice(false, this);
+	$(document).on("change", ".msProductsPriceIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(false, this);
+		}
 	});
 });
 </script>';

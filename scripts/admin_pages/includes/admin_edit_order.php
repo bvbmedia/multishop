@@ -3332,11 +3332,15 @@ if (url.match("#")) {
                     }
                 });
             });
-            $(document).on("keyup", ".msOrderProductPriceExcludingVat", function() {
-                productPrice(true, $(this), "#product_tax");
+            $(document).on("keyup", ".msOrderProductPriceExcludingVat", function(e) {
+            	if (e.keyCode!=9) {
+                	productPrice(true, $(this), "#product_tax");
+                }
             });
-            $(document).on("keyup", ".msOrderProductPriceIncludingVat", function() {
-                productPrice(false, $(this), "#product_tax");
+            $(document).on("keyup", ".msOrderProductPriceIncludingVat", function(e) {
+                if (e.keyCode!=9) {
+                	productPrice(false, $(this), "#product_tax");
+                }
             });
             $("#product_tax").change(function () {
                 $(".msOrderProductPriceExcludingVat").each(function (i) {
@@ -3346,11 +3350,15 @@ if (url.match("#")) {
                     productPrice(true, $(this), "#product_tax");
                 });
             });
-            $(document).on("keyup", ".msManualOrderProductPriceExcludingVat", function() {
-                productPrice(true, $(this), "#manual_product_tax");
+            $(document).on("keyup", ".msManualOrderProductPriceExcludingVat", function(e) {
+            	if (e.keyCode!=9) {
+                	productPrice(true, $(this), "#manual_product_tax");
+                }
             });
-            $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function() {
-                productPrice(false, $(this), "#manual_product_tax");
+            $(document).on("keyup", ".msManualOrderProductPriceIncludingVat", function(e) {
+            	if (e.keyCode!=9) {
+                	productPrice(false, $(this), "#manual_product_tax");
+                }
             });
             $("#manual_product_tax").change(function () {
                 $(".msManualOrderProductPriceExcludingVat").each(function (i) {

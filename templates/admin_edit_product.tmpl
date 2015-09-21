@@ -158,9 +158,10 @@ jQuery(document).ready(function ($) {
             $('.save_as_new').attr('name', 'Submit');
         }
     });
-
-    $(".msPriceExcludingVat").keyup(function () {
-        productPrice(true, this);
+    $(document).on("keyup", ".msPriceExcludingVat", function (e) {
+       if (e.keyCode!=9) {
+           productPrice(true, this);
+       }
     });
 
     $("#tax_id").change(function () {
@@ -169,8 +170,10 @@ jQuery(document).ready(function ($) {
         });
     });
 
-    $(".msPriceIncludingVat").keyup(function () {
-        productPrice(false, this);
+    $(document).on("keyup", ".msPriceIncludingVat", function (e) {
+        if (e.keyCode!=9) {
+            productPrice(false, this);
+        }
     });
     $("#specials_sections").hide();
     getSpecialsSections(###AJAX_PID###)

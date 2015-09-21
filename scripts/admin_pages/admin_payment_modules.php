@@ -231,16 +231,20 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		$(\'#admin_payment_methods_list\').slideToggle(\'slow\', function(){});
 	});
-	$(document).on("keyup", ".msHandlingCostExcludingVat", function() {
-		productPrice(true, jQuery(this));
+	$(document).on("keyup", ".msHandlingCostExcludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(true, jQuery(this));
+		}
 	});
 	$(document).on("change", "#tax_id", function() {
 		$(".msHandlingCostExcludingVat").each(function(i) {
 			productPrice(true, jQuery(this));
 		});
 	});
-	$(document).on("keyup", ".msHandlingCostIncludingVat", function() {
-		productPrice(false, jQuery(this));
+	$(document).on("keyup", ".msHandlingCostIncludingVat", function(e) {
+		if (e.keyCode!=9) {
+			productPrice(false, jQuery(this));
+		}
 	});
 	$(document).on("change", "#handling_cost_type", function(){
 		if ($(this).val()=="amount") {
