@@ -2489,7 +2489,7 @@
             <label index="mail_selected_invoices_to_customer">Mail geselecteerde facturen naar klant</label>
             <label index="filter_by_telephone_orders">Filter op telefonische bestellingen</label>
             <label index="advanced_search">Uitgebreid zoeken</label>
-            <label index="admin_invoice_statistics">Invoice statistieken</label>
+            <label index="admin_invoice_statistics">Facturatie statistieken</label>
             <label index="admin_invoice_statistics_description">Bekijk factuuromzet per maand/jaar</label>
             <label index="date_payment_received">Datum betaling ontvangen</label>
             <label index="reports">Rapporten</label>
