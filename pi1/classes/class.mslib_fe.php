@@ -4709,6 +4709,9 @@ class mslib_fe {
 		if (!is_numeric($products_id)) {
 			return false;
 		}
+		if (!is_numeric($products_quantity)) {
+			$products_quantit=1;
+		}
 		$product_data=mslib_fe::getProduct($products_id);
 		$product_mappings=mslib_fe::getProductMappedMethods(array($products_id), 'shipping', $countries_id);
 		$shipping_method_data=mslib_fe::loadShippingMethods(0, $countries_id, true, true);
