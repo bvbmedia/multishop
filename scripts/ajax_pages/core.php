@@ -77,6 +77,12 @@ switch ($this->ms['page']) {
 		$shipping_method_id=$this->post['tx_multishop_pi1']['shipping_method'];
 		$shipping_cost_data=mslib_fe::getShoppingcartShippingCostsOverview($iso_customer['cn_iso_nr'], $delivery_country_id, $shipping_method_id);
 		$count_cart_incl_vat=0;
+		//
+		$return_data['shipping_cost']=0;
+		$return_data['shipping_costs_display']=mslib_fe::amount2Cents(0);
+		$return_data['shipping_method']['deliver_by']='';
+		$return_data['shopping_cart_total_price']=mslib_fe::amount2Cents(mslib_fe::countCartTotalPrice(1, $count_cart_incl_vat, $iso_customer['cn_iso_nr']));
+		//
 		foreach ($shipping_cost_data as $shipping_code=>$shipping_cost) {
 			if ($this->ms['MODULES']['SHOW_PRICES_INCLUDING_VAT']) {
 				$count_cart_incl_vat=1;
