@@ -4710,6 +4710,12 @@ class mslib_fe {
 			return false;
 		}
 		$product_data=mslib_fe::getProduct($products_id);
+		if (!is_numeric($products_quantity)) {
+			$products_quantity=1;
+			if ($product_data['minimum_quantity']>0) {
+				$products_quantity=$product_data['minimum_quantity'];
+			}
+		}
 		$product_mappings=mslib_fe::getProductMappedMethods(array($products_id), 'shipping', $countries_id);
 		$shipping_method_data=mslib_fe::loadShippingMethods(0, $countries_id, true, true);
 		$shipping_methods=array();
