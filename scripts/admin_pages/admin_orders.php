@@ -716,6 +716,9 @@ if ($this->post['tx_multishop_pi1']['by_phone']) {
 if (isset($this->post['country']) && !empty($this->post['country'])) {
 	$filter[]="o.billing_country='".$this->post['country']."'";
 }
+if (isset($this->post['ordered_product']) && !empty($this->post['ordered_product'])) {
+	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".$this->post['ordered_product']."')";
+}
 if ($this->post['tx_multishop_pi1']['is_proposal']) {
 	$filter[]='o.is_proposal=1';
 } else {
@@ -833,7 +836,6 @@ $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink($this->shop_
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 
-
 $subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_by');
@@ -860,6 +862,8 @@ $subpartArray['###LABEL_PAYMENT_STATUS###']=$this->pi_getLL('order_payment_statu
 $subpartArray['###PAYMENT_STATUS_SELECTBOX###']=$payment_status_select;
 $subpartArray['###LABEL_RESULTS_LIMIT_SELECTBOX###']=$this->pi_getLL('limit_number_of_records_to');
 $subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
+$subpartArray['###LABEL_ORDERED_PRODUCT###']=$this->pi_getLL('admin_ordered_product');
+$subpartArray['###VALUE_ORDERED_PRODUCT###']=$this->post['ordered_product'];
 $subpartArray['###RESULTS_LIMIT_SELECTBOX###']=$limit_selectbox;
 $subpartArray['###RESULTS###']=$order_results;
 $subpartArray['###NORESULTS###']=$no_results;
@@ -894,6 +898,51 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script type="text/javascript">
 jQuery(document).ready(function($) {
 	$(".order_select2").select2();
+	$(".ordered_product").select2({
+		placeholder: "'.$this->pi_getLL('all').'",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
 });
 </script>
 ';
