@@ -3231,10 +3231,10 @@ if ($this->post['action']!='product-import-preview') {
 			$schedule_content.='</table>
 			</div>
 			</div>
+			';
+			$schedule_content.='
 			<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				'.implode("\n", $jsSelect2InitialValue).'
-				var categoriesIdSearchTerm=[];
 				$(".copy_to_clipboard").click(function(event) {
 					event.preventDefault();
 					var string=$(this).attr("rel");
@@ -3245,74 +3245,82 @@ if ($this->post['action']!='product-import-preview') {
 						timeout:   8000
 					});
 				});
-				$(\'.importCategoryTargetTree\').select2({
-					placeholder: "'.$this->pi_getLL('admin_select_category').'",
-					dropdownCssClass: "", // apply css that makes the dropdown taller
-					width:\'100%\',
-					minimumInputLength: 0,
-					//multiple: true,
-					//allowClear: true,
-					query: function(query) {
-						$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
-							data: {
-								q: query.term
-							},
-							dataType: "json"
-						}).done(function(data) {
-							categoriesIdSearchTerm[query.term]=data;
-							query.callback({results: data});
-						});
-					},
-					initSelection: function(element, callback) {
-						var id=$(element).val();
-						if (id!=="") {
-							if (categoriesIdTerm[id]!==undefined) {
-								callback(categoriesIdTerm[id]);
-							} else {
-								$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
-									data: {
-										preselected_id: id
-									},
-									dataType: "json"
-								}).done(function(data) {
-									categoriesIdTerm[data.id]={id: data.id, text: data.text};
-									callback(data);
-								});
-							}
-						}
-					},
-					formatResult: function(data){
-						if (data.text === undefined) {
-							$.each(data, function(i,val){
-								return val.text;
-							});
-						} else {
-							return data.text;
-						}
-					},
-					formatSelection: function(data){
-						if (data.text === undefined) {
-							return data[0].text;
-						} else {
-							return data.text;
-						}
-					},
-					escapeMarkup: function (m) { return m; }
-				}).on("select2-selecting", function(e) {
-					if (CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure')).'?\')) {
-						$(this).val(e.object.id);
-						var formId=\'#updateCatForm\' + $(this).attr("rel");
-						$(formId).submit();
-					} else {
-						$(this).select2("close");
-						e.preventDefault();
-					}
-				});
 			});
 			</script>
 			';
 			$tmptab='';
 		}
+		$schedule_content.='
+		<script type="text/javascript">
+		jQuery(document).ready(function($) {
+				'.implode("\n", $jsSelect2InitialValue).'
+				var categoriesIdSearchTerm=[];
+		$(\'.importCategoryTargetTree\').select2({
+			placeholder: "'.$this->pi_getLL('admin_select_category').'",
+			dropdownCssClass: "", // apply css that makes the dropdown taller
+			width:\'100%\',
+			minimumInputLength: 0,
+			//multiple: true,
+			//allowClear: true,
+			query: function(query) {
+				$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getFullTree').'\', {
+					data: {
+						q: query.term
+					},
+					dataType: "json"
+				}).done(function(data) {
+					categoriesIdSearchTerm[query.term]=data;
+					query.callback({results: data});
+				});
+			},
+			initSelection: function(element, callback) {
+				var id=$(element).val();
+				if (id!=="") {
+					if (categoriesIdTerm[id]!==undefined) {
+						callback(categoriesIdTerm[id]);
+					} else {
+						$.ajax(\''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=get_category_tree&tx_multishop_pi1[get_category_tree]=getValues').'\', {
+							data: {
+								preselected_id: id
+							},
+							dataType: "json"
+						}).done(function(data) {
+							categoriesIdTerm[data.id]={id: data.id, text: data.text};
+							callback(data);
+						});
+					}
+				}
+			},
+			formatResult: function(data){
+				if (data.text === undefined) {
+					$.each(data, function(i,val){
+						return val.text;
+					});
+				} else {
+					return data.text;
+				}
+			},
+			formatSelection: function(data){
+				if (data.text === undefined) {
+					return data[0].text;
+				} else {
+					return data.text;
+				}
+			},
+			escapeMarkup: function (m) { return m; }
+		}).on("select2-selecting", function(e) {
+			if (CONFIRM(\''.addslashes($this->pi_getLL('are_you_sure')).'?\')) {
+				$(this).val(e.object.id);
+				var formId=\'#updateCatForm\' + $(this).attr("rel");
+				$(formId).submit();
+			} else {
+				$(this).select2("close");
+				e.preventDefault();
+			}
+		});
+		});
+		</script>
+		';
 		if ($this->ROOTADMIN_USER) {
 			$schedule_content.='<div id="scheduled_import_jobs_form" class="panel panel-default no-mb">
 			<div class="panel-heading"><h3>'.$this->pi_getLL('upload_import_task').'</h3></div>
