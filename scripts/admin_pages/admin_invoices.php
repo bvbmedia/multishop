@@ -465,6 +465,9 @@ if ($this->cookie['paid_invoices_only']) {
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$filter[]="o.billing_country='".$this->get['country']."'";
 }
+if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product']) && $this->get['ordered_product']!=99999) {
+	$filter[]="o.orders_id in (select op.orders_id from tx_multishop_orders_products op where op.products_id='".$this->get['ordered_product']."')";
+}
 if (!$this->masterShop) {
 	$filter[]='i.page_uid='.$this->showCatalogFromPage;
 }
@@ -515,7 +518,8 @@ $subpartArray['###NORESULTS###']=$no_results;
 $subpartArray['###ADMIN_LABEL_TABS_INVOICES###']=$this->pi_getLL('admin_invoices');
 $subpartArray['###LABEL_COUNTRIES_SELECTBOX###']=$this->pi_getLL('countries');
 $subpartArray['###COUNTRIES_SELECTBOX###']=$billing_countries_sb;
-
+$subpartArray['###LABEL_ORDERED_PRODUCT###']=$this->pi_getLL('admin_ordered_product');
+$subpartArray['###VALUE_ORDERED_PRODUCT###']=$this->get['ordered_product'];
 $subpartArray['###LABEL_ADVANCED_SEARCH###']=$this->pi_getLL('advanced_search');
 
 // Instantiate admin interface object
@@ -538,6 +542,51 @@ $GLOBALS['TSFE']->additionalHeaderData[]='
 <script>
 	jQuery(document).ready(function($) {
 		'.($this->get['tx_multishop_pi1']['action']!='mail_selected_invoices_to_merchants' ? '$("#msadmin_invoices_mailto").hide();' : '').'
+		$(".ordered_product").select2({
+			placeholder: "'.$this->pi_getLL('all').'",
+			minimumInputLength: 0,
+			query: function(query) {
+				$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+					data: {
+						q: query.term
+					},
+					dataType: "json"
+				}).done(function(data) {
+					query.callback({results: data});
+				});
+			},
+			initSelection: function(element, callback) {
+				var id=$(element).val();
+				if (id!=="") {
+					$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+						data: {
+							preselected_id: id
+						},
+						dataType: "json"
+					}).done(function(data) {
+						callback(data);
+					});
+				}
+			},
+			formatResult: function(data){
+				if (data.text === undefined) {
+					$.each(data, function(i,val){
+						return val.text;
+					});
+				} else {
+					return data.text;
+				}
+			},
+			formatSelection: function(data){
+				if (data.text === undefined) {
+					return data[0].text;
+				} else {
+					return data.text;
+				}
+			},
+			dropdownCssClass: "orderedProductsDropDownCss",
+			escapeMarkup: function (m) { return m; }
+		});
 	});
 </script>
 ';

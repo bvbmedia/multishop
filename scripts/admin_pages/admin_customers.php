@@ -241,7 +241,13 @@ $formTopSearch.='
 			<div class="form-group">
 				<label class="control-label" for="type_search">'.$this->pi_getLL('usergroup').'</label>
 				<div class="form-inline">
-'.$customer_groups_input.'
+				'.$customer_groups_input.'
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label" for="type_search">'.$this->pi_getLL('admin_ordered_product').'</label>
+				<div class="form-inline">
+				<input type="hidden" class="ordered_product" name="ordered_product" value="'.$this->get['ordered_product'].'" />
 				</div>
 			</div>
 		</div>
@@ -408,6 +414,9 @@ if (isset($this->get['usergroup']) && $this->get['usergroup']>0) {
 if (isset($this->get['country']) && !empty($this->get['country'])) {
 	$filter[]="f.country='".$this->get['country']."'";
 }
+if (isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) {
+	$filter[]="f.uid in (select o.customer_id from tx_multishop_orders o, tx_multishop_orders_products op where op.products_id='".$this->get['ordered_product']."' and o.orders_id=op.orders_id)";
+}
 if (!$this->masterShop) {
 	$filter[]=$GLOBALS['TYPO3_DB']->listQuery('usergroup', $this->conf['fe_customer_usergroup'], 'fe_users');
 }
@@ -471,33 +480,6 @@ jQuery(document).ready(function($) {
 		//checkAllPrettyCheckboxes(this,jQuery(\'.msadmin_orders_listing\'));
 		$(\'th > div.checkbox > input:checkbox\').prop(\'checked\', this.checked);
 	});
-	/*$(".tooltip").tooltip({
-		position: "down",
-		placement: \'auto\',
-		html: true
-	});
-	var tooltip_is_shown=\'\';
-	$(\'.tooltip\').on(\'show.bs.tooltip\', function () {
-		var customer_id=$(this).attr(\'rel\');
-		var that=$(this);
-		if (tooltip_is_shown != customer_id) {
-			tooltip_is_shown=customer_id;
-			$.ajax({
-				type:   "POST",
-				url:    \''.mslib_fe::typolink($this->shop_pid.',2002', '&tx_multishop_pi1[page_section]=getAdminCustomersListingDetails&').'\',
-				data:   \'tx_multishop_pi1[customer_id]=\'+customer_id,
-				dataType: "json",
-				success: function(data) {
-					that.next().html(data.html);
-					that.tooltip(\'show\', {
-						position: \'down\',
-						placement: \'auto\',
-						html: true
-					});
-				}
-			});
-		}
-	});*/
 	var originalLeave = $.fn.popover.Constructor.prototype.leave;
 	$.fn.popover.Constructor.prototype.leave = function(obj){
 	  var self = obj instanceof this.constructor ? obj : $(obj.currentTarget)[this.type](this.getDelegateOptions()).data(\'bs.\' + this.type)
@@ -562,6 +544,51 @@ jQuery(document).ready(function($) {
 		'.$extra_selected_customers_action_js_filters.'
 	});
 	$(".invoice_select2").select2();
+	$(".ordered_product").select2({
+		placeholder: "'.$this->pi_getLL('all').'",
+		minimumInputLength: 0,
+		query: function(query) {
+			$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+				data: {
+					q: query.term
+				},
+				dataType: "json"
+			}).done(function(data) {
+				query.callback({results: data});
+			});
+		},
+		initSelection: function(element, callback) {
+			var id=$(element).val();
+			if (id!=="") {
+				$.ajax("'.mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=get_ordered_products').'", {
+					data: {
+						preselected_id: id
+					},
+					dataType: "json"
+				}).done(function(data) {
+					callback(data);
+				});
+			}
+		},
+		formatResult: function(data){
+			if (data.text === undefined) {
+				$.each(data, function(i,val){
+					return val.text;
+				});
+			} else {
+				return data.text;
+			}
+		},
+		formatSelection: function(data){
+			if (data.text === undefined) {
+				return data[0].text;
+			} else {
+				return data.text;
+			}
+		},
+		dropdownCssClass: "orderedProductsDropDownCss",
+		escapeMarkup: function (m) { return m; }
+	});
 });
 </script>
 ';

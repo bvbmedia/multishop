@@ -750,6 +750,48 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'get_ordered_products':
+		$where=array();
+		$skip_db=false;
+		$limit=50;
+		if (isset($this->get['q']) && !empty($this->get['q'])) {
+			if (!is_numeric($this->get['q'])) {
+				$where[]='op.products_name like \'%'.addslashes($this->get['q']).'%\'';
+			} else {
+				$where[]='(op.products_name like \'%'.addslashes($this->get['q']).'%\' or op.products_id = \''.addslashes($this->get['q']).'\')';
+			}
+			$limit='';
+		} else if (isset($this->get['preselected_id']) && !empty($this->get['preselected_id'])) {
+			$where[]='op.products_id = \''.addslashes($this->get['preselected_id']).'\'';
+		}
+		$str=$GLOBALS ['TYPO3_DB']->SELECTquery('op.*', // SELECT ...
+			'tx_multishop_orders_products op', // FROM ...
+			implode(' and ', $where), // WHERE.
+			'op.products_id', // GROUP BY...
+			'op.products_name asc', // ORDER BY...
+			$limit // LIMIT ...
+		);
+		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+		$data=array();
+		/*$data[]=array(
+			'id'=>'99999',
+			'text'=>$this->pi_getLL('all')
+		);*/
+		$num_rows=$GLOBALS['TYPO3_DB']->sql_num_rows($qry);
+		if ($num_rows) {
+			while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
+				if (!empty($row['products_name'])) {
+					$data[]=array(
+						'id'=>$row['products_id'],
+						'text'=>$row['products_name']
+					);
+				}
+			}
+		}
+		$content=json_encode($data);
+		echo $content;
+		exit();
+		break;
 	case 'downloadCategoryTree':
 		if ($this->ADMIN_USER) {
 			$multishop_category_array=array();
