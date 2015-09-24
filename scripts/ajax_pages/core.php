@@ -1843,6 +1843,36 @@ switch ($this->ms['page']) {
 		}
 		exit();
 		break;
+	case 'get_usergroups':
+		if ($this->ADMIN_USER) {
+			$filter=array();
+			// exclude admin usergroups
+			$filter[]='uid NOT IN ('.implode(',', $this->excluded_userGroups).')';
+			$filter[]='deleted=0 and hidden=0';
+			$limit=50;
+			if (isset($this->get['q']) && !empty($this->get['q'])) {
+				$filter[]='title like \'%'.addslashes($this->get['q']).'%\'';
+				$limit='';
+			}
+			$str=$GLOBALS['TYPO3_DB']->SELECTquery('*', // SELECT ...
+				'fe_groups', // FROM ...
+				implode(' AND ', $filter), // WHERE...
+				'', // GROUP BY...
+				'title', // ORDER BY...
+				$limit // LIMIT ...
+			);
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$return_data=array();
+			$return_data[]=array('id' => '', 'text' => $this->pi_getLL('all'));
+			if ($GLOBALS['TYPO3_DB']->sql_num_rows($qry)) {
+				while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry)) {
+					$return_data[]=array('id' => $row['uid'], 'text' => $row['title']);
+				}
+			}
+			echo json_encode($return_data);
+		}
+		exit();
+		break;
 	case 'admin_ajax_product_relatives':
 		if ($this->ADMIN_USER) {
 			require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/ajax_pages/admin_ajax_product_relatives.php');
