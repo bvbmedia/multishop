@@ -2131,6 +2131,28 @@ $records[]=array(
 	'depend_on_configuration_key'=>'',
 	'use_function'=>''
 );
+$records[]=array(
+	'configuration_title'=>'Attribute values normal image size',
+	'configuration_key'=>'ATTRIBUTE_VALUES_IMAGE_SIZE_NORMAL',
+	'configuration_value'=>'400x400',
+	'description'=>'The normal image size in pixels for the attribute values image folder.',
+	'group_id'=>'2',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
+	'configuration_title'=>'Attribute values small image size',
+	'configuration_key'=>'ATTRIBUTE_VALUES_IMAGE_SIZE_SMALL',
+	'configuration_value'=>'200x200',
+	'description'=>'The small image size in pixels for the attribute values image folder.',
+	'group_id'=>'2',
+	'use_function'=>'',
+	'set_function'=>'',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
 // custom hook that can be controlled by third-party plugin
 if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/configuration/tx_multishop_configuration.php']['addConfigurationRecordsPreHook'])) {
 	$params=array(

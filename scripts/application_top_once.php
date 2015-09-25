@@ -42,6 +42,8 @@ $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/manufacturers/normal'
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/manufacturers/original';
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/attribute_values';
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/attribute_values/original';
+$paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/attribute_values/normal';
+$paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/images/attribute_values/small';
 $paths[]=$this->DOCUMENT_ROOT.'uploads/tx_multishop/order_resources';
 foreach ($paths as $path) {
 	if (!is_dir($path)) {

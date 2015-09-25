@@ -3470,7 +3470,7 @@ if ($this->post) {
 										<input name="ajax_attribute_value_image[]" id="ajax_attribute_value_image'.$element_id.'" type="hidden" value="'.$attribute_data['attribute_image'].'" />';
 									$existing_product_attributes_block_columns['attribute_value_image_col'].='<div id="attribute_value_image_action'.$element_id.'" class="attribute_value_image">';
 									if ($_REQUEST['action']=='edit_product' && $attribute_data['attribute_image']) {
-										$existing_product_attributes_block_columns['attribute_value_image_col'].='<img src="'.mslib_befe::getImagePath($attribute_data['attribute_image'], 'attribute_values', 'original').'" width="75" id="product_attribute_value_image'.$element_id.'" />';
+										$existing_product_attributes_block_columns['attribute_value_image_col'].='<img src="'.mslib_befe::getImagePath($attribute_data['attribute_image'], 'attribute_values', 'small').'" width="75" id="product_attribute_value_image'.$element_id.'" />';
 										$existing_product_attributes_block_columns['attribute_value_image_col'].='<div class="image_tools">';
 										$existing_product_attributes_block_columns['attribute_value_image_col'].=' <a href="#" class="delete_product_attribute_value_images" rel="'.$element_id.':'.$attribute_data['attribute_image'].'"><img src="'.$this->FULL_HTTP_URL_MS.'templates/images/icons/delete2.png" border="0" alt="'.$this->pi_getLL('admin_delete_image').'"></a>';
 										$existing_product_attributes_block_columns['attribute_value_image_col'].='</div>';
