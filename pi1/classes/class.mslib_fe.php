@@ -6745,11 +6745,15 @@ class mslib_fe {
 			'."\n";
 		}
 		$pageinfo=$GLOBALS['TSFE']->sys_page->getPage($this->shop_pid);
+		$userTitle=$GLOBALS['TSFE']->fe_user->user['username'];
+		if ($GLOBALS['TSFE']->fe_user->user['name']) {
+			$userTitle=$GLOBALS['TSFE']->fe_user->user['name'].' ('.$GLOBALS['TSFE']->fe_user->user['username'].')';
+		}
 		$ms_menu[$key]['ms_admin_user']['description']='
 			<div id="ms_admin_user">
 			<a href="'.mslib_fe::typolink($this->shop_pid, '').'">
 			<i class="fa fa-user"></i>
-			'.$this->pi_getLL('admin_user').': <strong>'.mslib_befe::strtoupper(substr($GLOBALS['TSFE']->fe_user->user['username'], 0, 10)).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.mslib_befe::strtoupper(substr($pageinfo['title'], 0, 10)).'</strong></a>
+			'.$this->pi_getLL('admin_user').': <strong>'.htmlspecialchars($userTitle).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.htmlspecialchars($pageinfo['title']).'</strong></a>
 			</div>
 		';
 		// footer

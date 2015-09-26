@@ -761,12 +761,16 @@ if (!$skipMultishopUpdates) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
-	$str="DELETE FROM `tx_multishop_configuration` WHERE `key`='ADMIN_ORDER_PROPOSAL_MODULE'";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$messages[]=$str;
-	$str="DELETE FROM `tx_multishop_configuration` WHERE `key`='FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_PAGE'";
-	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
-	$messages[]=$str;
+	$oldKeys=array();
+	$oldKeys[]='ADMIN_ORDER_PROPOSAL_MODULE';
+	$oldKeys[]='FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_PAGE';
+	foreach ($oldKeys as $key) {
+		if (isset($settings['GLOBAL_MODULES'][$key])) {
+			$str="DELETE FROM `tx_multishop_configuration` where configuration_key='".addslashes($key)."';";
+			$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
+			$messages[]=$str;
+		}
+	}
 	$str="describe `tx_multishop_configuration`";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
