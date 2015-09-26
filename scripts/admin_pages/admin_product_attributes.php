@@ -48,22 +48,22 @@ $content.='</div>';
 $content.='
 <div class="form-group">
     <div class="col-md-10 col-md-offset-2">
-        <label class="checkbox-inline">
-            <input name="required" type="checkbox" value="1" class="add_new_attributes_options"> '.$this->pi_getLL('required').'
-        </label>
-        <label class="checkbox-inline">
-            <input name="hide_in_details_page" type="checkbox" value="1" class="add_new_attributes_options"> '.$this->pi_getLL('admin_label_hide_in_details_page').'
-        </label>
-        <label class="checkbox-inline">
-            <input name="hide_in_cart" type="checkbox" value="1" class="add_new_attributes_options"> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
-        </label>
+        <div class="checkbox checkbox-success checkbox-inline">
+            <input name="required" id="required_checkbox" type="checkbox" value="1" class="add_new_attributes_options"><label for="required_checkbox">'.$this->pi_getLL('required').'</label>
+        </div>
+        <div class="checkbox checkbox-success checkbox-inline">
+            <input name="hide_in_details_page" id="hide_in_details_page_checkbox" type="checkbox" value="1" class="add_new_attributes_options"><label for="hide_in_details_page_checkbox">'.$this->pi_getLL('admin_label_hide_in_details_page').'</label>
+        </div>
+        <div class="checkbox checkbox-success checkbox-inline">
+            <input name="hide_in_cart" id="hide_in_cart_checkbox" type="checkbox" value="1" class="add_new_attributes_options"><label for="hide_in_cart_checkbox">'.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'</label>
+        </div>
     </div>
 </div>';
 $content.='</div>';
 $content.='</form>';
 $content.='<div class="form-group no-mb">';
 $content.='<div class="col-md-10 col-md-offset-2">';
-$content.='<a href="#" class="btn btn-success" id="save_new_attribute_options"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('admin_label_add_new_attribute_options').'</a>';
+$content.='<a href="#" class="btn btn-success" id="save_new_attribute_options"><i class="fa fa-check fa-plus"></i> '.$this->pi_getLL('admin_label_add_new_attribute_options').'</a>';
 $content.='</div>';
 $content.='</div>';
 $content.='</div>';
@@ -180,21 +180,20 @@ if ($rows) {
 
         $content.='
 <div class="form-group">
-    <div class="col-md-2">&nbsp;</div>
-    <div class="col-md-8">
-        <label class="checkbox-inline">
-            <input name="required['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['required'] ? ' checked' : '').'/> '.$this->pi_getLL('required').'
-        </label>
-        <label class="checkbox-inline">
-            <input name="hide_in_details_page['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide'] ? ' checked' : '').'/> '.$this->pi_getLL('admin_label_hide_in_details_page').'
-        </label>
-        <label class="checkbox-inline">
-            <input name="hide_in_cart['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide_in_cart'] ? ' checked' : '').'/> '.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'
-        </label>
+    <div class="col-md-8 col-md-offset-2">
+        <div class="checkbox checkbox-success checkbox-inline">
+            <input name="required['.$row['products_options_id'].']" id="required['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['required'] ? ' checked' : '').'/><label for="required['.$row['products_options_id'].']">'.$this->pi_getLL('required').'</label>
+        </div>
+        <div class="checkbox checkbox-success checkbox-inline">
+            <input name="hide_in_details_page['.$row['products_options_id'].']" id="hide_in_details_page['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide'] ? ' checked' : '').'/><label for="hide_in_details_page['.$row['products_options_id'].']">'.$this->pi_getLL('admin_label_hide_in_details_page').'</label>
+        </div>
+        <div class="checkbox checkbox-success checkbox-inline">
+            <input name="hide_in_cart['.$row['products_options_id'].']" id="hide_in_cart['.$row['products_options_id'].']" type="checkbox" value="1"'.($row['hide_in_cart'] ? ' checked' : '').'/><label for="hide_in_cart['.$row['products_options_id'].']">'.$this->pi_getLL('admin_label_dont_include_attribute_values_in_cart').'</label>
+        </div>
     </div>
 </div>';
         //$content.='</div>';
-        $content.='<div class="form-group no-mb">';
+        $content.='<div class="form-group">';
 		$content.='<div class="col-md-10 col-md-offset-2">';
         $content.='<a href="#" class="btn btn-success add_attributes_values" rel="'.$row['products_options_id'].'"><i class="fa fa-edit"></i> '.$this->pi_getLL('admin_add_new_value').'</a> ';
         $content.='<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_'.$row['products_options_id'].'" rel="'.$row['products_options_id'].'"><i class="fa fa-eye"></i> '.$this->pi_getLL('show_attributes_values', 'SHOW VALUES').'</a>';
@@ -442,33 +441,35 @@ if ($rows) {
                             new_option_html+=\'<div class="form-group">\';
                             new_option_html+=\'<div class="col-md-2">&nbsp;</div>\';
 							new_option_html+=\'<div class="col-md-8">\';
-							new_option_html+=\'<label class="checkbox-inline">\';
+							new_option_html+=\'<div class="checkbox checkbox-success checkbox-inline">\';
 							if (s.required=="1") {
-								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.$this->pi_getLL('required').'\';
+								new_option_html+=\'<input name="required[\' + s.option_id + \']" id="required[\' + s.option_id + \']" type="checkbox" value="1" checked /><label for="required[\' + s.option_id + \']">'.$this->pi_getLL('required').'</label>\';
 							} else {
-								new_option_html+=\'<input name="required[\' + s.option_id + \']" type="checkbox" value="1" /> '.$this->pi_getLL('required').'\';
+								new_option_html+=\'<input name="required[\' + s.option_id + \']" id="required[\' + s.option_id + \']" type="checkbox" value="1" /><label for="required[\' + s.option_id + \']">'.$this->pi_getLL('required').'</label>\';
 							}
-							new_option_html+=\'</label>\';
-							new_option_html+=\'<label class="checkbox-inline">\';
+							new_option_html+=\'</div>\';
+							new_option_html+=\'<div class="checkbox checkbox-success checkbox-inline">\';
 							if (s.hide_in_details_page=="1") {
-								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'\';
+								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" id="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" checked /><label for="hide_in_details_page[\' + s.option_id + \']">'.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'</label>\';
 							} else {
-								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" /> '.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'\';
+								new_option_html+=\'<input name="hide_in_details_page[\' + s.option_id + \']" id="hide_in_details_page[\' + s.option_id + \']" type="checkbox" value="1" /><label for="hide_in_details_page[\' + s.option_id + \']">'.addslashes($this->pi_getLL('admin_label_hide_in_details_page')).'</label>\';
 							}
-							new_option_html+=\'</label>\';
-							new_option_html+=\'<label class="checkbox-inline">\';
+							new_option_html+=\'</div>\';
+							new_option_html+=\'<div class="checkbox checkbox-success checkbox-inline">\';
 							if (s.hide_in_cart=="1") {
-								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" checked /> '.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'\';
+								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" id="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" checked /><label for="hide_in_cart[\' + s.option_id + \']">'.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'</label>\';
 							} else {
-								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" /> '.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'\';
+								new_option_html+=\'<input name="hide_in_cart[\' + s.option_id + \']" id="hide_in_cart[\' + s.option_id + \']" type="checkbox" value="1" /><label for="hide_in_cart[\' + s.option_id + \']">'.addslashes($this->pi_getLL('admin_label_dont_include_attribute_values_in_cart')).'</label>\';
 							}
-							new_option_html+=\'</label>\';
+							new_option_html+=\'</div>\';
 							new_option_html+=\'</div>\';
 							new_option_html+=\'</div>\';
 
 							new_option_html+=\'<div class="form-group">\';
+							new_option_html+=\'<div class="col-md-10 col-md-offset-2">\';
 							new_option_html+=\'<a href="#" class="btn btn-success add_attributes_values" rel="\' + s.option_id + \'"><i class="fa fa-edit"></i> '.addslashes($this->pi_getLL('admin_add_new_value')).'</a>&nbsp;\';
 							new_option_html+=\'<a href="#" class="btn btn-success fetch_attributes_values" id="button_label_\' + s.option_id + \'" rel="\' + s.option_id + \'"><i class="fa fa-eye"></i> '.addslashes($this->pi_getLL('show_attributes_values', 'SHOW VALUES')).'</a>&nbsp;\';
+							new_option_html+=\'</div>\';
 							new_option_html+=\'</div>\';
 
 							new_option_html+=\'<div class="attribute_option_values_sortable" rel="\' + s.option_id + \'" id="vc_\' + s.option_id + \'" style="display:none">\';
@@ -520,12 +521,12 @@ if ($rows) {
 			if ($(last_content_li).hasClass("odd")) {
 				li_class="even";
 			}
-			var new_li=\'<div class="panel panel-default \' + li_class + \' new_options_values" id="\' + new_values_input + \'">\';
+			var new_li=\'<div class="panel panel-default mb-10 \' + li_class + \' new_options_values" id="\' + new_values_input + \'">\';
 			new_li+=\'<div class="panel-body">\';
 			new_li+=\'<span class="values_id">'.$this->pi_getLL('admin_label_option_value').': <input type="hidden" name="new_values" class="new_input_values_hidden \' + new_values_input + \'" style="width:300px" /><input type="hidden" name="is_manual" class="new_input_values_hidden" value="0" /></span>&nbsp;\';
 			new_li+=\'<span class="values_edit">\';
-			new_li+=\'<a href="#" class="cancel_new_options_values btn btn-danger btn-xs"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-remove fa-stack-1x"></i></span> '.$this->pi_getLL('cancel').'</a>&nbsp;\';
-			new_li+=\'<a href="#" class="save_new_options_values btn btn-success btn-xs" rel="\' + optid + \'"><span class="fa-stack"><i class="fa fa-circle fa-stack-2x"></i><i class="fa fa-check fa-stack-1x"></i></span> '.$this->pi_getLL('save').'</a>&nbsp;\';
+			new_li+=\'<a href="#" class="cancel_new_options_values btn btn-danger"><i class="fa fa-remove"></i> '.$this->pi_getLL('cancel').'</a>&nbsp;\';
+			new_li+=\'<a href="#" class="save_new_options_values btn btn-success" rel="\' + optid + \'"><i class="fa fa-check"></i> '.$this->pi_getLL('save').'</a>&nbsp;\';
 			new_li+=\'</span>\';
 			new_li+="</div>";
 			new_li+="</div>";
