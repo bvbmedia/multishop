@@ -269,7 +269,7 @@ if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ad
 // custom hook that can be controlled by third-party plugin eof
 $this->ms['upload_productfeed_form'].='<div class="extra_parameters"><hr>';
 if (count($importParserTemplateTypes)) {
-	$this->ms['upload_productfeed_form'].='<div class="form-group"><label class="control-label col-md-2">'.$this->pi_getLL('datafeed_parser_template').':</label><div class="col-md-10"><select name="parser_template"><option value="">'.$this->pi_getLL('generic').'</option>';
+	$this->ms['upload_productfeed_form'].='<div class="form-group"><label class="control-label col-md-2">'.$this->pi_getLL('datafeed_parser_template').':</label><div class="col-md-10"><select name="parser_template" class="form-control"><option value="">'.$this->pi_getLL('generic').'</option>';
 	foreach ($importParserTemplateTypes as $importParserTemplateType) {
 		$this->ms['upload_productfeed_form'].='<option value="'.$importParserTemplateType['key'].'">'.$importParserTemplateType['label'].'</option>';
 	}
@@ -287,9 +287,10 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
   <div class="radio radio-success radio-inline">
   <input name="format" type="radio" value="txt" id="txt" class="advanced_import_radio" /><label for="txt">TXT/CSV</label>
   </div>
-<div class="advanced_options offset-md-2" style="display:none">
+  <div class="advanced_options col-md-12" style="display:none">
+  <hr>
 	<div class="form-group">
-		<label for="delimiter" class="col-md-2">'.$this->pi_getLL('delimited_by').'</label>
+		<label for="delimiter" class="control-label col-md-2">'.$this->pi_getLL('delimited_by').'</label>
 		<div class="col-md-10">
 			<select name="delimiter" id="delimiter" class="form-control">
 				<option value="dotcomma">'.$this->pi_getLL('dotcomma').'</option>
@@ -300,12 +301,15 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
 		</div>
 	</div>
 	<div class="form-group">
+		<div class="col-md-12">
 		<div class="checkbox checkbox-success checkbox-inline">
 			<input name="backquotes" type="checkbox" value="1" id="backquotes" />
 			<label for="backquotes">'.$this->pi_getLL('fields_are_enclosed_with_double_quotes').'</label>
 		</div>
+		</div>
 	</div>
 	<div class="form-group">
+		<div class="col-md-12">
 		<div class="checkbox checkbox-success checkbox-inline">
 			<input type="checkbox" name="escape_first_line" id="escape_first_line" value="1" />
 			<label for="escape_first_line">'.$this->pi_getLL('ignore_first_line').'</label>
@@ -317,6 +321,7 @@ $this->ms['upload_productfeed_form'].='<div class="form-group">
 		<div class="checkbox checkbox-success checkbox-inline">
 			<input type="checkbox" name="consolidate" id="consolidate" value="1" />
 			<label for="consolidate">'.$this->pi_getLL('consolidate').'</label>
+		</div>
 		</div>
 	</div>
 </div>
