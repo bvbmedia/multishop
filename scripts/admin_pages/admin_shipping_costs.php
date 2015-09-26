@@ -163,19 +163,30 @@ if (count($shipping_methods)>0) {
 	$content.='<div class="shipping_cost_input_field_wrapper">';
 	$count_shipping_methods=array();
 	foreach ($shipping_methods as $row) {
-		$content.='<div class="multishop_fieldset">';
-		$content.='<div class="form-group"><label class="control-label col-md-4">'.$this->pi_getLL('shipping_method').': '.$row['name'].'</label>';
-		$content.='<div class="col-md-8"><select name="costs['.$row['id'].']" id="flat_weight'.$row['id'].'" class="form-control">
-		<option value="">'.$this->pi_getLL('no_shipping_costs').'</option>';
+		$content.='<div class="panel panel-default">';
+		$content.='<div class="panel-heading panel-heading-toggle" data-toggle="collapse" data-target="#msAdminShippingCost'.$row['id'].'">';
+		$content.='<h3 class="panel-title">';
+		$content.='<a role="button" data-toggle="collapse" href="#msAdminShippingCost'.$row['id'].'">'.$this->pi_getLL('shipping_method').': '.$row['name'].'</a>';
+		$content.='</h3>';
+		$content.='</div>';
+		$content.='<div id="msAdminShippingCost'.$row['id'].'" class="panel-collapse collapse in">';
+		$content.='<div class="panel-body">';
+		$content.='<div class="form-group">';
+		$content.='<div class="col-md-12">';
+		$content.='<select name="costs['.$row['id'].']" id="flat_weight'.$row['id'].'" class="form-control">';
+		$content.='<option value="">'.$this->pi_getLL('no_shipping_costs').'</option>';
 		foreach ($shipping_cost_types as $shipping_cost_type) {
 			$content.='<option value="'.$shipping_cost_type['value'].'" '.(($row['shipping_costs_type']==$shipping_cost_type['value']) ? 'selected' : '').'>'.$shipping_cost_type['title'].'</option>';
 		}
-		$content.='</select><input type="hidden" id="based_old'.$row['id'].'" value="'.$row['shipping_costs_type'].'" /></div></div>';
+		$content.='</select>';
+		$content.='<input type="hidden" id="based_old'.$row['id'].'" value="'.$row['shipping_costs_type'].'" />';
+		$content.='</div>';
+		$content.='</div>';
 		$content.='<div id="has'.$row['id'].'">';
 		//if empty
 		if (empty($row['shipping_costs_type'])) {
 			$count_shipping_methods[]=$row['id'];
-			$content.='</div></div>';
+			$content.='</div>';
 			continue;
 		}
 		if ($row['shipping_costs_type']=='flat') {
