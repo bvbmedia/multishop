@@ -88,7 +88,7 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 		$markerArray['###LABEL_INVOICE_NUMBER###']=$this->pi_getLL('invoice_number');
 		$markerArray['###INVOICE_NUMBER###']=$invoice['invoice_id'];
 		$markerArray['###LABEL_INVOICE_SHIPPING_METHOD###']='';
-		$markerArray['###INVOICE_SHIPPPING_METHOD###']='';
+		$markerArray['###INVOICE_SHIPPING_METHOD###']='';
 		if ($order['shipping_method_label']) {
 			$markerArray['###LABEL_INVOICE_SHIPPING_METHOD###']=$this->pi_getLL('shipping_method');
 			$markerArray['###INVOICE_SHIPPING_METHOD###']=$order['shipping_method_label'];
