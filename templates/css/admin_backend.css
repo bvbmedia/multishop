@@ -468,6 +468,15 @@ select.form-control { padding-left:8px; padding-right:8px; }
 #product_options .form-inline .form-control.input5,
 #product_options .form-inline .form-control.input6 { min-width:0; }
 
+@media (min-width:768px) {
+	.form-inline .input-group > .form-control.input1 { width:34px; }
+	.form-inline .input-group > .form-control.input2 { width:42px; }
+	.form-inline .input-group > .form-control.input3 { width:50px; }
+	.form-inline .input-group > .form-control.input4 { width:58px; }
+	.form-inline .input-group > .form-control.input5 { width:66px; }
+	.form-inline .input-group > .form-control.input6 { width:74px; }
+}
+
 .hidden { display:none; }
 
 .tooltip { text-align:left; }
