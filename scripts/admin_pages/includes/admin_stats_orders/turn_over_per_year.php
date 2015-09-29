@@ -93,17 +93,26 @@ for ($yr=$current_year; $yr>=$oldest_year; $yr--) {
 		$start_time=strtotime($value."-01 00:00:00");
 		//$end_time=strtotime($value."-31 23:59:59");
 		$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-		$where=array();
+		$data_query=array();
 		if ($this->cookie['paid_orders_only_py']) {
-			$where[]='(o.paid=1)';
+			$data_query['where'][]='(o.paid=1)';
 		} else {
-			$where[]='(o.paid=1 or o.paid=0)';
+			$data_query['where'][]='(o.paid=1 or o.paid=0)';
 		}
-		$where[]='(o.deleted=0)';
+		$data_query['where'][]='(o.deleted=0)';
 		if (!empty($status_where)) {
-			$where[]=$status_where;
+			$data_query['where'][]=$status_where;
 		}
-		$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
+		// hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_year.php']['annuallyStatsOrdersQueryHookPreProc'])) {
+			$params=array(
+				'data_query'=>&$data_query
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_orders/turn_over_per_year.php']['annuallyStatsOrdersQueryHookPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		$str="SELECT o.orders_id, o.grand_total  FROM tx_multishop_orders o WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.")";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			$total_price=($total_price+$row['grand_total']);
