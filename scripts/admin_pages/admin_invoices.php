@@ -342,7 +342,7 @@ $order_countries=mslib_befe::getRecords('', 'tx_multishop_orders', '', array(), 
 $order_billing_country=array();
 foreach ($order_countries as $order_country) {
 	$cn_localized_name=htmlspecialchars(mslib_fe::getTranslatedCountryNameByEnglishName($this->lang, $order_country['billing_country']));
-	$order_billing_country[]='<option value="'.mslib_befe::strtolower($order_country['billing_country']).'" '.((mslib_befe::strtolower($this->post['country'])==strtolower($order_country['billing_country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
+	$order_billing_country[]='<option value="'.mslib_befe::strtolower($order_country['billing_country']).'" '.((mslib_befe::strtolower($this->get['country'])==strtolower($order_country['billing_country'])) ? 'selected' : '').'>'.$cn_localized_name.'</option>';
 }
 ksort($order_billing_country);
 $billing_countries_sb='<select class="invoice_select2" name="country" id="country""><option value="">'.$this->pi_getLL('all_countries').'</option>'.implode("\n", $order_billing_country).'</select>';
@@ -489,6 +489,20 @@ $subpartArray=array();
 $subpartArray['###PAGE_ID###']=$this->showCatalogFromPage;
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
 
+//
+$subpartArray['###UNFOLD_SEARCH_BOX###']='';
+if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
+	(isset($this->get['country']) && !empty($this->get['country'])) ||
+	(isset($this->get['usergroup']) && $this->get['usergroup']>0) ||
+	(isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
+	(isset($this->get['orders_status_search']) && $this->get['orders_status_search']>0) ||
+	(isset($this->get['payment_method']) && !empty($this->get['payment_method']) && $this->get['payment_method']!='all') ||
+	(isset($this->get['shipping_method']) && !empty($this->get['shipping_method']) && $this->get['shipping_method']!='all') ||
+	(isset($this->get['invoice_date_from']) && !empty($this->get['invoice_date_from'])) ||
+	(isset($this->get['invoice_date_till']) && !empty($this->get['invoice_date_till'])) ||
+	(isset($this->get['paid_invoices_only']) && !empty($this->get['paid_invoices_only']))) {
+	$subpartArray['###UNFOLD_SEARCH_BOX###']=' in';
+}
 
 $subpartArray['###LABEL_KEYWORD###']=ucfirst($this->pi_getLL('keyword'));
 $subpartArray['###VALUE_KEYWORD###']=($this->get['skeyword'] ? $this->get['skeyword'] : "");
