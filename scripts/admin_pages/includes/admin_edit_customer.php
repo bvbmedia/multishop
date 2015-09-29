@@ -1113,7 +1113,6 @@ if ($this->ms['MODULES']['CHECKOUT_REQUIRED_TELEPHONE']) {
 	}
 }
 $subpartArray['###TELEPHONE_VALIDATION###']=$telephone_validation;
-$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 // plugin marker place holder
 if (!$this->ms['MODULES']['FIRSTNAME_AND_LASTNAME_UNREQUIRED_IN_ADMIN_CUSTOMER_PAGE']) {
 	$subpartArray['###LABEL_FIRSTNAME###']=ucfirst($this->pi_getLL('first_name'));//.'<span class="text-danger">*</span>';
@@ -1158,10 +1157,12 @@ if (!count($js_extra['triggers'])) {
 } else {
 	$subpartArray['###JS_TRIGGERS_EXTRA###']=implode("\n", $js_extra['triggers']);
 }
-if ($customer_id) {
+if (isset($this->get['tx_multishop_pi1']['cid']) && $this->get['tx_multishop_pi1']['cid']>0) {
 	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_label_tabs_edit_customer');
+	$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_label_tabs_edit_customer');
 } else {
 	$subpartArray['###HEADING_TITLE###']=$this->pi_getLL('admin_new_customer');
+	$subpartArray['###ADMIN_LABEL_TABS_EDIT_CUSTOMER###']=$this->pi_getLL('admin_new_customer');
 }
 
 
