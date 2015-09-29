@@ -488,7 +488,6 @@ if ($pageset['total_rows']>0) {
 $subpartArray=array();
 $subpartArray['###PAGE_ID###']=$this->showCatalogFromPage;
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
-
 //
 $subpartArray['###UNFOLD_SEARCH_BOX###']='';
 if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
