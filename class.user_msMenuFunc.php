@@ -1,4 +1,23 @@
 <?php
+// Example TypoScript (mixed tmenu with Multishop menu on specific menu item):
+/*
+# Custom tmenu with multishop tmenu on Shop pid
+lib.msTopNavBottom.tmenu.1.NO.after.cObject=COA
+lib.msTopNavBottom.tmenu.1.NO.after.cObject {
+10=COA
+10 {
+  20 < lib.defaultMobileMenu
+  20.special = userfunction
+  20.special.userFunc =user_msMenuFunc->makeHmenuArray
+  20.special.userFunc.conf < plugin.tx_multishop_pi1
+  stdWrap.if.value.field = uid
+  stdWrap.if.equals = 10
+}
+if.value.field = uid
+if.equals = 10
+}
+}
+*/
 class user_msMenuFunc extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 	function makeHmenuArray($content,$conf) {
 		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('multishop').'pi1/classes/class.mslib_befe.php');
