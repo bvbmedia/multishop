@@ -210,11 +210,21 @@ $limits[]='500';
 foreach ($limits as $limit) {
 	$formTopSearch.='<option value="'.$limit.'"'.($limit==$this->get['limit'] ? ' selected="selected"' : '').'>'.$limit.'</option>';
 }
+//
+$unfold_advanced_search_box='';
+if ((isset($this->get['tx_multishop_pi1']['search_by']) && !empty($this->get['tx_multishop_pi1']['search_by']) && $this->get['tx_multishop_pi1']['search_by']!='all') ||
+	(isset($this->get['country']) && !empty($this->get['country'])) ||
+	(isset($this->get['usergroup']) && $this->get['usergroup']>0) ||
+	(isset($this->get['ordered_product']) && !empty($this->get['ordered_product'])) ||
+	(isset($this->get['crdate_from']) && !empty($this->get['crdate_from'])) ||
+	(isset($this->get['crdate_till']) && !empty($this->get['crdate_till']))) {
+	$unfold_advanced_search_box=' in';
+}
 $formTopSearch.='
 				</select>
             </div>
     </div>
-    <div id="msAdminInterfaceSearch" class="panel-collapse collapse">
+    <div id="msAdminInterfaceSearch" class="panel-collapse collapse'.$unfold_advanced_search_box.'">
         <div class="panel-body">
 <div id="search-orders" class="well no-mb">
 	<div class="row formfield-container-wrapper">
