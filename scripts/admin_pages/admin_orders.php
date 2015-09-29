@@ -835,7 +835,6 @@ $subpartArray=array();
 $subpartArray['###AJAX_ADMIN_EDIT_ORDER_URL###']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order');
 $subpartArray['###FORM_SEARCH_ACTION_URL###']=mslib_fe::typolink($this->shop_pid.',2003', 'tx_multishop_pi1[page_section]=admin_orders');
 $subpartArray['###SHOP_PID###']=$this->shop_pid;
-
 //
 $subpartArray['###UNFOLD_SEARCH_BOX###']='';
 if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $this->get['type_search']!='all') ||
@@ -852,7 +851,7 @@ if ((isset($this->get['type_search']) && !empty($this->get['type_search']) && $t
 	(isset($this->get['search_by_telephone_orders']) && !empty($this->get['search_by_telephone_orders']))) {
 	$subpartArray['###UNFOLD_SEARCH_BOX###']=' in';
 }
-
+//
 $subpartArray['###LABEL_KEYWORD###']=$this->pi_getLL('keyword');
 $subpartArray['###VALUE_KEYWORD###']=($this->post['skeyword'] ? $this->post['skeyword'] : "");
 $subpartArray['###LABEL_SEARCH_ON###']=$this->pi_getLL('search_by');
