@@ -330,13 +330,14 @@ if (mslib_fe::loggedin()) {
 			if ($this->ms['MODULES']['CREATE_ACCOUNT_DISCLAIMER']) {
 				$account_disclaimer.='<hr>
 				<div class="checkboxAgreement accept_general_conditions_container">
+					<div class="checkbox checkbox-success">
 					<input name="tx_multishop_pi1[create_account_disclaimer]" id="create_account_disclaimer" type="checkbox" value="1" required="required" />
 					<label for="create_account_disclaimer">'.$this->pi_getLL('click_here_if_you_agree_the_create_account_disclaimer').'<span class="text-danger">*</span>';
 				$page=mslib_fe::getCMScontent('create_account_disclaimer', $GLOBALS['TSFE']->sys_language_uid);
 				if ($page[0]['content']) {
 					$account_disclaimer.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_disclaimer">'.$this->pi_getLL('view_create_account_disclaimer').'</a>)';
 				}
-				$account_disclaimer.='</div>';
+				$account_disclaimer.='</div></div>';
 			}
 			//
 			$markerArray['###CREATE_ACCOUNT_DISCLAIMER###']=$account_disclaimer;
