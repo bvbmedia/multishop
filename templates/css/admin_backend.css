@@ -454,6 +454,20 @@ select.form-control { padding-left:8px; padding-right:8px; }
 #product_options .form-inline .form-control-static,
 .form-inline .form-control-static.form-control-inbetween { padding-left:10px; padding-right:10px;  }
 
+.form-control.input1 { width:34px; }
+.form-control.input2 { width:42px; }
+.form-control.input3 { width:50px; }
+.form-control.input4 { width:58px; }
+.form-control.input5 { width:66px; }
+.form-control.input6 { width:74px; }
+
+#product_options .form-inline .form-control.input1,
+#product_options .form-inline .form-control.input2,
+#product_options .form-inline .form-control.input3,
+#product_options .form-inline .form-control.input4,
+#product_options .form-inline .form-control.input5,
+#product_options .form-inline .form-control.input6 { min-width:0; }
+
 .hidden { display:none; }
 
 .tooltip { text-align:left; }
