@@ -460,21 +460,50 @@ select.form-control { padding-left:8px; padding-right:8px; }
 .form-control.input4 { width:58px; }
 .form-control.input5 { width:66px; }
 .form-control.input6 { width:74px; }
+.form-control.input7 { width:82px; }
+.form-control.input8 { width:90px; }
+.form-control.input9 { width:98px; }
+.form-control.input10 { width:106px; }
+.form-control.input11 { width:114px; }
+.form-control.input12 { width:122px; }
+.form-control.input13 { width:130px; }
+.form-control.input14 { width:138px; }
+.form-control.input15 { width:146px; }
 
 #product_options .form-inline .form-control.input1,
 #product_options .form-inline .form-control.input2,
 #product_options .form-inline .form-control.input3,
 #product_options .form-inline .form-control.input4,
 #product_options .form-inline .form-control.input5,
-#product_options .form-inline .form-control.input6 { min-width:0; }
+#product_options .form-inline .form-control.input6,
+#product_options .form-inline .form-control.input6,
+#product_options .form-inline .form-control.input7,
+#product_options .form-inline .form-control.input8,
+#product_options .form-inline .form-control.input9,
+#product_options .form-inline .form-control.input10,
+#product_options .form-inline .form-control.input11,
+#product_options .form-inline .form-control.input12,
+#product_options .form-inline .form-control.input13,
+#product_options .form-inline .form-control.input14,
+#product_options .form-inline .form-control.input15 { min-width:0; }
 
 @media (min-width:768px) {
+	.form-inline .input-group > .form-control.input1 { width:34px; }
 	.form-inline .input-group > .form-control.input1 { width:34px; }
 	.form-inline .input-group > .form-control.input2 { width:42px; }
 	.form-inline .input-group > .form-control.input3 { width:50px; }
 	.form-inline .input-group > .form-control.input4 { width:58px; }
 	.form-inline .input-group > .form-control.input5 { width:66px; }
 	.form-inline .input-group > .form-control.input6 { width:74px; }
+	.form-inline .input-group > .form-control.input7 { width:82px; }
+	.form-inline .input-group > .form-control.input8 { width:90px; }
+	.form-inline .input-group > .form-control.input9 { width:98px; }
+	.form-inline .input-group > .form-control.input10 { width:106px; }
+	.form-inline .input-group > .form-control.input11 { width:114px; }
+	.form-inline .input-group > .form-control.input12 { width:122px; }
+	.form-inline .input-group > .form-control.input13 { width:130px; }
+	.form-inline .input-group > .form-control.input14 { width:138px; }
+	.form-inline .input-group > .form-control.input15 { width:146px; }
 }
 
 .hidden { display:none; }
