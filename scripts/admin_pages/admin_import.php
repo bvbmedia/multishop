@@ -2514,15 +2514,14 @@ if ($this->post['action']=='category-insert') {
 							$updateArray['imported_product']=1;
 							if ($this->get['job_id']) {
 								$updateArray['import_job_id']=$this->get['job_id'];
-								if ($item['products_unique_identifier']) {
-									// save also the feed products_id, maybe we need it later
-									$updateArray['foreign_products_id']=$item['products_unique_identifier'];
-									$updateArray['foreign_products_id']=$item['products_unique_identifier'];
-								}
-								if ($this->post['prefix_source_name']) {
-									// save also the feed source name, maybe we need it later
-									$updateArray['foreign_source_name']=$this->post['prefix_source_name'];
-								}
+							}
+							if ($item['products_unique_identifier']) {
+								// save also the feed products_id, maybe we need it later
+								$updateArray['foreign_products_id']=$item['products_unique_identifier'];
+							}
+							if ($this->post['prefix_source_name']) {
+								// save also the feed source name, maybe we need it later
+								$updateArray['foreign_source_name']=$this->post['prefix_source_name'];
 							}
 							if (isset($item['products_sort_order'])) {
 								$updateArray['sort_order']=$item['products_sort_order'];

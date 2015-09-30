@@ -436,6 +436,7 @@ $select[]='(select sum(grand_total) from tx_multishop_orders where customer_id=f
 $startTime=strtotime(date("Y-01-01 00:00:00"));
 $endTime=strtotime(date("Y-12-31 23:59:59"));
 $select[]='(select sum(grand_total) from tx_multishop_orders where customer_id=f.uid and crdate BETWEEN '.$startTime.' and '.$endTime.') as grand_total_this_year';
+
 $pageset=mslib_fe::getCustomersPageSet($filter, $offset, $this->ms['MODULES']['PAGESET_LIMIT'], $orderby, $having, $select, $where);
 $customers=$pageset['customers'];
 if ($pageset['total_rows']>0 && isset($pageset['customers'])) {
