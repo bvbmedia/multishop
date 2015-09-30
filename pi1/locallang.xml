@@ -1253,6 +1253,7 @@
             <label index="products_attributes_values">Product attribute values</label>
             <label index="deliver_in">Deliver in</label>
             <label index="customer_details">Customer details</label>
+            <label index="period">Period</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
@@ -2498,6 +2499,7 @@
             <label index="products_attributes_values">Product attribuutwaardes</label>
             <label index="deliver_in">Bezorgen in</label>
             <label index="customer_details">Debiteurgegevens</label>
+            <label index="period">Periode</label>
         </languageKey>
     </data>
 </T3locallang>
