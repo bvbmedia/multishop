@@ -9345,6 +9345,17 @@ class mslib_fe {
 		return mslib_fe::amount2Cents($amount, $customer_currency);
 	}
 	public function amount2Cents($amount, $customer_currency=1, $include_currency_symbol=1, $cropZeroDecimals=1) {
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPreProc'])) {
+			$params=array(
+				'amount'=>&$amount,
+				'customer_currency'=>&$customer_currency,
+				'include_currency_symbol'=>&$include_currency_symbol,
+				'cropZeroDecimals'=>&$cropZeroDecimals
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['amount2CentsPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		$cu_thousands_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_thousands_point'];
 		$cu_decimal_point=$this->ms['MODULES']['CURRENCY_ARRAY']['cu_decimal_point'];
 		if ($this->cookie['currency_rate'] and $customer_currency) {
