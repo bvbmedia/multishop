@@ -5,20 +5,29 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key']='referrerToplist';
 $compiledWidget['defaultCol']=3;
 $compiledWidget['title']=$this->pi_getLL('referrer_toplist', 'Verwijzende websites');
-$where=array();
-$where[]='f.http_referer <> \'\' and f.deleted=0';
+$data_query=array();
+$data_query['where'][]='f.http_referer <> \'\' and f.deleted=0';
 switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
 		if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
-			$where[]='(f.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+			$data_query['where'][]='(f.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
 		}
 		break;
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/referrerToplist.php']['referrerToplistHomeStatsQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/referrerToplist.php']['referrerToplistHomeStatsQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 $str=$GLOBALS['TYPO3_DB']->SELECTquery('f.http_referer, count(1) as total', // SELECT ...
 	'tx_multishop_orders f', // FROM ...
-	'('.implode(" AND ", $where).')', // WHERE...
+	'('.implode(" AND ", $data_query['where']).')', // WHERE...
 	'f.http_referer', // GROUP BY...
 	'total desc', // ORDER BY...
 	'10' // LIMIT ...
