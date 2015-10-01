@@ -93,17 +93,26 @@ for ($yr=$current_year; $yr>=$oldest_year; $yr--) {
 		$start_time=strtotime($value."-01 00:00:00");
 		//$end_time=strtotime($value."-31 23:59:59");
 		$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-		$where=array();
+		$data_query=array();
 		if ($this->cookie['paid_orders_only_py']) {
-			$where[]='(o.paid=1)';
+			$data_query['where'][]='(o.paid=1)';
 		} else {
-			$where[]='(o.paid=1 or o.paid=0)';
+			$data_query['where'][]='(o.paid=1 or o.paid=0)';
 		}
-		$where[]='(o.deleted=0)';
+		$data_query['where'][]='(o.deleted=0)';
 		if (!empty($status_where)) {
-			$where[]=$status_where;
+			$data_query['where'][]=$status_where;
 		}
-		$str="SELECT i.reversal_invoice,i.invoice_id, i.invoice_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE (".implode(" AND ", $where).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
+		// hook
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_invoices/turn_over_per_year.php']['annuallyStatsInvoicesQueryHookPreProc'])) {
+			$params=array(
+				'data_query'=>&$data_query
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_invoices/turn_over_per_year.php']['annuallyStatsInvoicesQueryHookPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
+		$str="SELECT i.reversal_invoice,i.invoice_id, i.invoice_id, o.orders_id, o.grand_total  FROM tx_multishop_orders o, tx_multishop_invoices i  WHERE (".implode(" AND ", $data_query['where']).") and (i.crdate BETWEEN ".$start_time." and ".$end_time.") AND o.orders_id=i.orders_id";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		while (($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($qry))!=false) {
 			if (!$row['reversal_invoice']) {
