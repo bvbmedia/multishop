@@ -98,14 +98,14 @@ $headerData.='});
 </script>';
 $GLOBALS['TSFE']->additionalHeaderData[]=$headerData;
 $headerData='';
-$filter=array();
-$from=array();
-$having=array();
-$match=array();
-$orderby=array();
-$where=array();
-$orderby=array();
-$select=array();
+$data_query=array();
+$data_query['filter']=array();
+$data_query['from']=array();
+$data_query['having']=array();
+$data_query['match']=array();
+$data_query['where']=array();
+$data_query['order_by']=array();
+$data_query['select']=array();
 if ($this->post['skeyword']) {
 	switch ($type_search) {
 		case 'all':
@@ -120,40 +120,40 @@ if ($this->post['skeyword']) {
 				$items[]=$fields." LIKE '%".addslashes($this->post['skeyword'])."%'";
 			}
 			$items[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
-			$filter[]=implode(" or ", $items);
+			$data_query['filter'][]=implode(" or ", $items);
 			break;
 		case 'orders_id':
-			$filter[]=" orders_id='".addslashes($this->post['skeyword'])."'";
+			$data_query['filter'][]=" orders_id='".addslashes($this->post['skeyword'])."'";
 			break;
 		case 'invoice':
-			$filter[]=" invoice_id LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" invoice_id LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'billing_email':
-			$filter[]=" billing_email LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" billing_email LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'delivery_name':
-			$filter[]=" delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'billing_zip':
-			$filter[]=" billing_zip LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" billing_zip LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'billing_city':
-			$filter[]=" billing_city LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" billing_city LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'billing_address':
-			$filter[]=" billing_address LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" billing_address LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'billing_company':
-			$filter[]=" billing_company LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" billing_company LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'shipping_method':
-			$filter[]=" shipping_method LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" shipping_method LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'payment_method':
-			$filter[]=" payment_method LIKE '%".addslashes($this->post['skeyword'])."%'";
+			$data_query['filter'][]=" payment_method LIKE '%".addslashes($this->post['skeyword'])."%'";
 			break;
 		case 'customer_id':
-			$filter[]=" customer_id='".addslashes($this->post['skeyword'])."'";
+			$data_query['filter'][]=" customer_id='".addslashes($this->post['skeyword'])."'";
 			break;
 	}
 }
@@ -169,22 +169,22 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
 	} else {
 		$column='o.crdate';
 	}
-	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
+	$data_query['filter'][]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
 }
 //print_r($filter);
 //print_r($this->post);
 //die();
 if ($this->post['orders_status_search']>0) {
-	$filter[]="(o.status='".$this->post['orders_status_search']."')";
+	$data_query['filter'][]="(o.status='".$this->post['orders_status_search']."')";
 }
 if ($this->cookie['paid_orders_only']) {
-	$filter[]="(o.paid='1')";
+	$data_query['filter'][]="(o.paid='1')";
 }
 if (!$this->masterShop) {
-	$filter[]='o.page_uid='.$this->shop_pid;
+	$data_query['filter'][]='o.page_uid='.$this->shop_pid;
 }
 //$orderby[]='orders_id desc';
-$select[]='o.*, osd.name as orders_status';
+$data_query['select'][]='o.*, osd.name as orders_status';
 //$orderby[]='o.orders_id desc';
 switch ($this->get['tx_multishop_pi1']['order_by']) {
 	case 'billing_name':
@@ -221,25 +221,34 @@ switch ($this->get['tx_multishop_pi1']['order']) {
 		$order_link='a';
 		break;
 }
-$orderby[]=$order_by.' '.$order;
+$data_query['order_by'][]=$order_by.' '.$order;
 if ($this->post['tx_multishop_pi1']['by_phone']) {
-	$filter[]='o.by_phone=1';
+	$data_query['filter'][]='o.by_phone=1';
 }
 if ($this->post['tx_multishop_pi1']['is_proposal']) {
-	$filter[]='o.is_proposal=1';
+	$data_query['filter'][]='o.is_proposal=1';
 } else {
-	$filter[]='o.is_proposal=0';
+	$data_query['filter'][]='o.is_proposal=0';
 }
 switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
 		if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
-			$filter[]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+			$data_query['filter'][]='(o.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
 		}
 		break;
 }
-$pageset=mslib_fe::getOrdersPageSet($filter, $offset, 20, $orderby, $having, $select, $where, $from);
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/ordersLatest.php']['ordersLatestHomeStatsQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/ordersLatest.php']['ordersLatestHomeStatsQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+$pageset=mslib_fe::getOrdersPageSet($data_query['filter'], $offset, 20, $data_query['order_by'], $data_query['having'], $data_query['select'], $data_query['where'], $data_query['from']);
 $tmporders=$pageset['orders'];
 if ($pageset['total_rows']>0) {
 	$data=array();

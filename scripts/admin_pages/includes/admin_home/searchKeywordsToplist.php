@@ -5,20 +5,29 @@ if (!defined('TYPO3_MODE')) {
 $compiledWidget['key']='searchKeywordsToplist';
 $compiledWidget['defaultCol']=3;
 $compiledWidget['title']=$this->pi_getLL('search_keywords_toplist', 'Gezochte termen');
-$where=array();
-$where[]='s.keyword <> \'\'';
+$data_query=array();
+$data_query['where'][]='s.keyword <> \'\'';
 switch ($this->dashboardArray['section']) {
 	case 'admin_home':
 		break;
 	case 'admin_edit_customer':
 		if ($this->get['tx_multishop_pi1']['cid'] && is_numeric($this->get['tx_multishop_pi1']['cid'])) {
-			$where[]='(s.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
+			$data_query['where'][]='(s.customer_id='.$this->get['tx_multishop_pi1']['cid'].')';
 		}
 		break;
 }
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/searchKeywordToplist.php']['searchkeywordHomeStatsQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_home/searchKeywordToplist.php']['searchkeywordHomeStatsQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 $str=$GLOBALS['TYPO3_DB']->SELECTquery('s.keyword, count(s.keyword) as total, s.negative_results', // SELECT ...
 	'tx_multishop_products_search_log s', // FROM ...
-	'('.implode(" AND ", $where).')', // WHERE...
+	'('.implode(" AND ", $data_query['where']).')', // WHERE...
 	's.keyword', // GROUP BY...
 	'total desc', // ORDER BY...
 	'10' // LIMIT ...

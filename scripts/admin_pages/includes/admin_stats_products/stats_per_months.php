@@ -80,19 +80,29 @@ foreach ($dates as $key=>$value) {
 //$content.='<td align="right" nowrap>'.htmlspecialchars($this->pi_getLL('cumulative')).'</td>';
 $content.='</tr>';
 $content.='<tr class="even">';
+$data_query=array();
+if ($this->cookie['paid_orders_only']) {
+	$data_query['where'][]='(o.paid=1)';
+} else {
+	$data_query['where'][]='(o.paid=1 or o.paid=0)';
+}
+$data_query['where'][]='(o.deleted=0)';
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_products/stats_per_month.php']['monthlyStatsProductsQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_stats_products/stats_per_month.php']['monthlyStatsProductsQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
 foreach ($dates as $key=>$value) {
 	$total_price=0;
 	$start_time=strtotime($value."-01 00:00:00");
 	//$end_time=strtotime($value."-31 23:59:59");
 	$end_time=strtotime($value."-01 23:59:59 +1 MONTH -1 DAY");
-	$where=array();
-	if ($this->cookie['paid_orders_only']) {
-		$where[]='(o.paid=1)';
-	} else {
-		$where[]='(o.paid=1 or o.paid=0)';
-	}
-	$where[]='(o.deleted=0)';
-	$str="SELECT sum(op.qty) as total, op.products_name, op.products_id, op.categories_id FROM tx_multishop_orders o, tx_multishop_orders_products op WHERE (".implode(" AND ", $where).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") and o.orders_id=op.orders_id group by op.products_name having total > 0 order by total desc limit 10";
+	//
+	$str="SELECT sum(op.qty) as total, op.products_name, op.products_id, op.categories_id FROM tx_multishop_orders o, tx_multishop_orders_products op WHERE (".implode(" AND ", $data_query['where']).") and (o.crdate BETWEEN ".$start_time." and ".$end_time.") and o.orders_id=op.orders_id group by op.products_name having total > 0 order by total desc limit 10";
 	$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 	$content.='<td valign="top">
 		';

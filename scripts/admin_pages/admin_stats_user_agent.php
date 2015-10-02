@@ -72,17 +72,17 @@ foreach ($limits as $limit) {
 	$limit_selectbox.='<option value="'.$limit.'"'.($limit==$this->post['limit'] ? ' selected' : '').'>'.$limit.'</option>';
 }
 $limit_selectbox.='</select>';
-$filter=array();
-$from=array();
-$having=array();
-$match=array();
-$orderby=array();
-$where=array();
-$orderby=array();
-$select=array();
+$data_query=array();
+$data_query['filter']=array();
+$data_query['from']=array();
+$data_query['having']=array();
+$data_query['match']=array();
+$data_query['order_by']=array();
+$data_query['where']=array();
+$data_query['select']=array();
 if ($this->post['skeyword']) {
-	$filter[]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
-	$filter[]="billing_name LIKE '%".addslashes($this->post['skeyword'])."%'";
+	$data_query['filter'][]="delivery_name LIKE '%".addslashes($this->post['skeyword'])."%'";
+	$data_query['filter'][]="billing_name LIKE '%".addslashes($this->post['skeyword'])."%'";
 }
 if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_till'])) {
 	list($from_date, $from_time)=explode(" ", $this->post['order_date_from']);
@@ -96,17 +96,26 @@ if (!empty($this->post['order_date_from']) && !empty($this->post['order_date_til
 	} else {
 		$column='o.crdate';
 	}
-	$filter[]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
+	$data_query['filter'][]=$column." BETWEEN '".$start_time."' and '".$end_time."'";
 }
 if (!$this->masterShop) {
-	$filter[]='o.page_uid='.$this->shop_pid;
+	$data_query['filter'][]='o.page_uid='.$this->shop_pid;
 }
-$select[]='o.*, osd.name as orders_status';
+$data_query['select'][]='o.*, osd.name as orders_status';
 $order_by='o.billing_name';
 $order='desc';
 $order_link='a';
-$orderby[]=$order_by.' '.$order;
-$pageset=mslib_fe::getOrdersPageSet($filter, $offset, $this->post['limit'], $orderby, $having, $select, $where, $from);
+$data_query['order_by'][]=$order_by.' '.$order;
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_stats_user_agent.php']['statsUseragentQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_stats_user_agent.php']['statsUseragentQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+$pageset=mslib_fe::getOrdersPageSet($data_query['filter'], $offset, $this->post['limit'], $data_query['order_by'], $having, $data_query['select'], $data_query['where'], $data_query['from']);
 $tmporders=$pageset['orders'];
 if ($pageset['total_rows']>0) {
 	require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('multishop').'scripts/admin_pages/includes/user-agent_listing_table.php');

@@ -4,20 +4,29 @@ if (!defined('TYPO3_MODE')) {
 }
 set_time_limit(0);
 require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('phpexcel_service').'Classes/PHPExcel.php');
-$filter=array();
-$from=array();
-$having=array();
-$match=array();
-$orderby=array();
-$where=array();
-$orderby=array();
-$select=array();
-$select[]='o.billing_name, o.ip_address, o.user_agent';
+$data_query=array();
+$data_query['filter']=array();
+$data_query['from']=array();
+$data_query['having']=array();
+$data_query['match']=array();
+$data_query['order_by']=array();
+$data_query['where']=array();
+$data_query['select']=array();
+$data_query['select'][]='o.billing_name, o.ip_address, o.user_agent';
 $order_by='o.orders_id';
 $order='desc';
 $order_link='a';
-$orderby[]=$order_by.' '.$order;
-$pageset=mslib_fe::getOrdersPageSet($filter, $offset, 60000, $orderby, $having, $select, $where, $from);
+$data_query['order_by'][]=$order_by.' '.$order;
+// hook
+if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_useragent_export.php']['excelStatsUseragentQueryHookPreProc'])) {
+	$params=array(
+		'data_query'=>&$data_query
+	);
+	foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/admin_useragent_export.php']['excelStatsUseragentQueryHookPreProc'] as $funcRef) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+	}
+}
+$pageset=mslib_fe::getOrdersPageSet($data_query['filter'], $offset, 60000, $data_query['order_by'], $data_query['having'], $data_query['select'], $data_query['where'], $data_query['from']);
 $tmporders=$pageset['orders'];
 // define the different columns
 $fields=array();
