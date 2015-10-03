@@ -457,12 +457,12 @@ if (!in_array($this->contentType, $skippedTypes) and ($this->ROOTADMIN_USER or (
 				jQuery(this).sortable("refresh");
 				sorted = jQuery(this).sortable("serialize", "id");
 				jQuery.ajax({
-						type:   "POST",
-						url:    href,
-						data:   sorted,
-						success: function(msg) {
-								//do something with the sorted data
-						}
+					type:   "POST",
+					url:    href,
+					data:   sorted,
+					success: function(msg) {
+							//do something with the sorted data
+					}
 				});
 			}
 		});
@@ -498,6 +498,7 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 			var modalBox = $(this);
 			modalBox.find(\'.modal-body\').empty();
 			if (modalBox.find(\'.modal-body\').html()==\'\') {
+				modalBox.find(\'.modal-body\').html(\'<div class="text-center" id="loading_icon_wrapper"><img src="typo3conf/ext/multishop/templates/images/loading.gif" id="loading_icon" />&nbsp;Loading...</div>\');
 				jQuery.ajax({
 					url: \''.mslib_fe::typolink('', 'type=2002&tx_multishop_pi1[page_section]=get_product_shippingcost_overview').'\',
 					data: \'tx_multishop_pi1[pid]=\' + product_id + \'&tx_multishop_pi1[qty]=\' + $("#quantity").val(),
@@ -536,6 +537,7 @@ if ($this->ms['MODULES']['DISPLAY_SHIPPING_COSTS_ON_PRODUCTS_LISTING_PAGE']) {
 							shipping_cost_popup+=\'</div>\';
 							shipping_cost_popup+=\'</div>\';
 							//modalBox.find(\'.modal-title\').html('.$this->pi_getLL('product_shipping_and_handling_cost_overview').');
+							modalBox.find(\'.modal-body\').empty();
 							modalBox.find(\'.modal-body\').html(shipping_cost_popup);
 							//msDialog("'.$this->pi_getLL('shipping_costs').'", shipping_cost_popup, 650);
 						}

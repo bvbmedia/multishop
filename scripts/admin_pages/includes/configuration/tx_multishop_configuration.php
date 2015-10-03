@@ -2022,6 +2022,17 @@ $records[]=array(
 	'use_function'=>''
 );
 $records[]=array(
+	'configuration_title'=>'Enable checkout customer info link',
+	'configuration_key'=>'ENABLE_CHECKOUT_CUSTOMER_INFO_LINK',
+	'configuration_value'=>'0',
+	'description'=>'Enable checkout customer info link',
+	'group_id'=>'8',
+	'use_function'=>'',
+	'set_function'=>'tep_cfg_select_option(array(\'0\',\'1\'),',
+	'depend_on_configuration_key'=>'',
+	'use_function'=>''
+);
+$records[]=array(
 	'configuration_title'=>'Use RTE (Rich Text Editor) in admin attribute description editor',
 	'configuration_key'=>'USE_RTE_IN_ADMIN_ATTRIBUTE_DESCRIPTION_EDITOR',
 	'configuration_value'=>'0',

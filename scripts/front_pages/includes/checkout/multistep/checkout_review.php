@@ -62,17 +62,19 @@ if (count($cart['products'])<1) {
 			';
 			$content.='</table>';
 			if ($this->ms['MODULES']['RIGHT_OF_WITHDRAWAL_CHECKBOX_IN_CHECKOUT']) {
-				$content.='
-					<hr>
-					<div class="checkboxAgreement accept_general_conditions_container">
-						<div class="checkbox checkbox-success">
-							<input name="tx_multishop_pi1[right_of_withdrawal]" id="right_of_withdrawal_checkbox_in_checkout" type="checkbox" value="1" />
-							<label for="right_of_withdrawal_checkbox_in_checkout">'.$this->pi_getLL('click_here_if_you_agree_the_right_of_withdrawal');
 				$page=mslib_fe::getCMScontent('right_of_withdrawal', $GLOBALS['TSFE']->sys_language_uid);
 				if ($page[0]['content']) {
+					$content.='
+						<hr>
+						<div class="checkboxAgreement accept_general_conditions_container">
+							<div class="checkbox checkbox-success">
+								<input name="tx_multishop_pi1[right_of_withdrawal]" id="right_of_withdrawal_checkbox_in_checkout" type="checkbox" value="1" />
+								<label for="right_of_withdrawal_checkbox_in_checkout">'.$this->pi_getLL('click_here_if_you_agree_the_right_of_withdrawal');
 					$content.=' (<a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_general_conditions">'.$this->pi_getLL('view_right_of_withdrawal').'</a>)';
+					$content.='</label>
+							</div>
+						</div>';
 				}
-				$content.='</div></div>';
 			}
 			$content.='
 				<hr>
@@ -89,6 +91,12 @@ if (count($cart['products'])<1) {
 				$page=mslib_fe::getCMScontent('privacy_statement', $GLOBALS['TSFE']->sys_language_uid);
 				if ($page[0]['content']) {
 					$content.='<hr><div class="privacy_statement_link"><a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_privacy_statement"><span>'.$this->pi_getLL('view_privacy_statement').'</pan></a></div>';
+				}
+			}
+			if ($this->ms['MODULES']['ENABLE_CHECKOUT_CUSTOMER_INFO_LINK']) {
+				$page=mslib_fe::getCMScontent('checkout_customer_info_page', $GLOBALS['TSFE']->sys_language_uid);
+				if ($page[0]['content']) {
+					$content.='<hr><div class="checkout_customer_info_page_link"><a href="'.mslib_fe::typolink($this->shop_pid, 'tx_multishop_pi1[page_section]=info&tx_multishop_pi1[cms_hash]='.$page[0]['hash']).'" target="_blank" class="read_customer_additional_info"><span>'.$this->pi_getLL('click_here_to_read_the_additional_customer_information').'</pan></a></div>';
 				}
 			}
 			$content.='<div id="bottom-navigation">
