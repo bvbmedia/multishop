@@ -292,8 +292,6 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###DATE_PAYMENT_RECEIVED###']='';
 			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']='';
 		}
-
-
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
