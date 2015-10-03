@@ -1254,6 +1254,8 @@
             <label index="deliver_in">Deliver in</label>
             <label index="customer_details">Customer details</label>
             <label index="period">Period</label>
+            <label index="checkout_customer_info_page">Checkout customer info page</label>
+            <label index="click_here_to_read_the_additional_customer_information">Click here to read the additional customer Information</label>
         </languageKey>
         <languageKey index="nl" type="array">
             <label index="account_order_history">Bestelverleden</label>
