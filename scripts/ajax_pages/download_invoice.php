@@ -292,15 +292,14 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$markerArray['###DATE_PAYMENT_RECEIVED###']='';
 			$markerArray['###DATE_PAYMENT_RECEIVED_LABEL###']='';
 		}
-
-
 		//hook to let other plugins further manipulate the replacers
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'])) {
 			$params=array(
 				'array1'=>&$array1,
 				'array2'=>&$array2,
 				'order'=>&$order,
-				'mail_template'=>$mail_template
+				'mail_template'=>$mail_template,
+				'markerArray'=>&$markerArray
 			);
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/pi1/classes/class.mslib_fe.php']['mailOrderReplacersPostProc'] as $funcRef) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);

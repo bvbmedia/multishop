@@ -6708,7 +6708,7 @@ class mslib_fe {
 			// multishops
 			// now grab the active shops
 			$multishop_content_objects=mslib_fe::getActiveShop();
-			if (count($multishop_content_objects)>1) {
+			if (count($multishop_content_objects)) {
 				$counter=0;
 				$total=count($multishop_content_objects);
 				foreach ($multishop_content_objects as $pageinfo) {
@@ -6753,7 +6753,7 @@ class mslib_fe {
 			<div id="ms_admin_user">
 			<a href="'.mslib_fe::typolink($this->shop_pid, '').'">
 			<i class="fa fa-user"></i>
-			'.$this->pi_getLL('admin_user').': <strong>'.htmlspecialchars($userTitle).'</strong> '.$this->pi_getLL('admin_working_in').': <strong>'.htmlspecialchars($pageinfo['title']).'</strong></a>
+			'.$this->pi_getLL('admin_user').': <strong>'.htmlspecialchars($userTitle).'</strong></a>
 			</div>
 		';
 		// footer
