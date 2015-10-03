@@ -1161,7 +1161,7 @@ if (is_numeric($this->get['orders_id'])) {
 					</div>
 				</div>
             <hr>';
-			$orderDetailsItem='<div class="form-group">';
+			$orderDetailsItem='<div class="form-group msAdminEditOrderShippingMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('shipping_method').'</label>';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				$shipping_methods=mslib_fe::loadShippingMethods(1);
@@ -1196,7 +1196,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetailsItem.='</div>';
 			$orderDetails[]=$orderDetailsItem;
 			$orderDetailsItem='';
-			$orderDetailsItem='<div class="form-group">';
+			$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentMethod">';
 			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_method').'</label>';
 			if ($this->ms['MODULES']['ORDER_EDIT'] and !$orders['is_locked']) {
 				if (is_array($payment_methods) and count($payment_methods)) {
@@ -1230,7 +1230,7 @@ if (is_numeric($this->get['orders_id'])) {
 			$orderDetails[]=$orderDetailsItem;
 			if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
 				$orderDetailsItem='';
-				$orderDetailsItem='<div class="form-group">';
+				$orderDetailsItem='<div class="form-group msAdminEditOrderPaymentConditions">';
 				$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('payment_condition').'</label>';
 				if (!$orders['is_locked']) {
 					$orderDetailsItem.='<div class="col-md-9"><div class="input-group width-fw"><input class="form-control" type="text" name="order_payment_condition" value="'.$orders['payment_condition'].'" /><span class="input-group-addon">'.$this->pi_getLL('days').'</span></div></div>';
