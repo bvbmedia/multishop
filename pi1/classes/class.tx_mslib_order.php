@@ -1130,6 +1130,10 @@ class tx_mslib_order extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$insertArray['shipping_method_costs']=$address['shipping_method_costs'];
 			$insertArray['payment_method_costs']=$address['payment_method_costs'];
 			$insertArray['payment_condition']=$address['payment_condition'];
+			$insertArray['debit_order']=0;
+			if (isset($address['debit_order'])) {
+				$insertArray['debit_order']=$address['debit_order'];
+			}
 			// TYPO3 6.2 NULL VALUE BUGFIX
 			if (!$insertArray['customer_comments']) {
 				$insertArray['customer_comments']='';
