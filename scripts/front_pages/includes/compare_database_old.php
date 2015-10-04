@@ -1896,12 +1896,14 @@ if ($rows) {
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	/*
 	$key='ADMIN_ORDER_PROPOSAL_MODULE';
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Admin Order Proposal System', '".$key."', '0', 'Enable the order proposal system.', 11, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''0'',''1''),');";
 		$qry=$GLOBALS['TYPO3_DB']->sql_query($str);
 		$messages[]=$str;
 	}
+	*/
 	$key='CUSTOMERS_DATA_EXPORT_IMPORT';
 	if (!isset($settings['GLOBAL_MODULES'][$key])) {
 		$str="INSERT INTO `tx_multishop_configuration` (`id`, `configuration_title`, `configuration_key`, `configuration_value`, `description`, `group_id`, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES('', 'Admin customers export/import data', '".$key."', '0', 'Enable export/import data of the customers.', 11, NULL, NULL, now(), NULL, 'tep_cfg_select_option(array(''0'',''1''),');";
