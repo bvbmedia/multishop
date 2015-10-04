@@ -146,7 +146,7 @@
                             <th width="50" class="cell_amount"><a href="###HEADER_SORTBY_LINK_AMOUNT###">###LABEL_HEADER_AMOUNT###</a></th>
                             <th width="50" class="cell_shipping_method"><a href="###HEADER_SORTBY_LINK_SHIPPING_METHOD###">###LABEL_HEADER_SHIPPING_METHOD###</a></th>
                             <th width="50" class="cell_payment_method"><a href="###HEADER_SORTBY_LINK_PAYMENT_METHOD###">###LABEL_HEADER_PAYMENT_METHOD###</a></th>
-                            <th class="cell_status">###LABEL_HEADER_STATUS###</th>
+                            <th class="cell_order_status">###LABEL_HEADER_STATUS###</th>
                             <th align="right" width="110" class="cell_date"><a href="###HEADER_SORTBY_LINK_MODIFIED###">###LABEL_HEADER_MODIFIED###</a></th>
                             <th width="50" class="cell_paid">###LABEL_HEADER_PAID###</th>
                             ###PLUGIN_EXTRA_HEADER###
@@ -163,15 +163,15 @@
                                 </div>
                             </th>
                             <td width="5" class="cell_phone_icon">###MANUAL_ORDER_ICON###</td>
-                            <td align="right" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_ID###</a></td>
+                            <td align="right" class="cell_orders_id" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_ID###</a></td>
                             ###INVOICE_NUMBER###
                             ###MASTER_SHOP###
-                            <td align="left" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_CUSTOMER_NAME###</a></td>
-                            <td align="right" nowrap>###ORDER_CREATE_DATE###</td>
-                            <td align="right" nowrap id="order_amount_###ORDER_ID###">###ORDER_GRAND_TOTAL###</td>
-                            <td align="center" nowrap id="shipping_method_###ORDER_ID###">###ORDER_SHIPPING_METHOD###</td>
-                            <td align="center" nowrap id="payment_method_###ORDER_ID###">###ORDER_PAYMENT_METHOD###</td>
-                            <td align="left" nowrap>###ORDER_STATUS###</td>
+                            <td align="left" class="cell_customer" nowrap><a href="###ORDER_EDIT_URL###" title="###LABEL_LOADING###" class="popover-link" rel="###ORDER_ID###">###ORDER_CUSTOMER_NAME###</a></td>
+                            <td align="right" class="cell_date" nowrap>###ORDER_CREATE_DATE###</td>
+                            <td align="right" class="cell_amount" nowrap id="order_amount_###ORDER_ID###">###ORDER_GRAND_TOTAL###</td>
+                            <td align="center" class="cell_shipping_method" nowrap id="shipping_method_###ORDER_ID###">###ORDER_SHIPPING_METHOD###</td>
+                            <td align="center" class="cell_payment_method" nowrap id="payment_method_###ORDER_ID###">###ORDER_PAYMENT_METHOD###</td>
+                            <td align="left" class="cell_order_status" nowrap>###ORDER_STATUS###</td>
                             <td align="right" nowrap>###ORDER_LAST_MODIFIED###</td>
                             <td align="center" nowrap>###ORDER_PAID_STATUS###</td>
                             ###PLUGIN_EXTRA_CONTENT###
@@ -192,7 +192,7 @@
                             <th width="50" class="cell_amount"><a href="###FOOTER_SORTBY_LINK_AMOUNT###">###LABEL_FOOTER_AMOUNT###</a></th>
                             <th width="50" class="cell_shipping_method"><a href="###FOOTER_SORTBY_LINK_SHIPPING_METHOD###">###LABEL_FOOTER_SHIPPING_METHOD###</a></th>
                             <th width="50" class="cell_payment_method"><a href="###FOOTER_SORTBY_LINK_PAYMENT_METHOD###">###LABEL_FOOTER_PAYMENT_METHOD###</a></th>
-                            <th class="cell_status">###LABEL_FOOTER_STATUS###</th>
+                            <th class="cell_order_status">###LABEL_FOOTER_STATUS###</th>
                             <th width="110" class="cell_date"><a href="###FOOTER_SORTBY_LINK_MODIFIED###">###LABEL_FOOTER_MODIFIED###</a></th>
                             <th width="50" class="cell_paid">###LABEL_FOOTER_PAID###</th>
                             ###PLUGIN_EXTRA_FOOTER###
