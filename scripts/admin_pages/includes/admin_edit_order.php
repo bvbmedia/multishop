@@ -493,6 +493,18 @@ if (is_numeric($this->get['orders_id'])) {
 				if ($order['is_proposal']==1) {
 					$is_proposal_params='&tx_multishop_pi1[is_proposal]=1';
 				}
+				// hook to let other plugins further manipulate
+				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPostProc'])) {
+					$params=array(
+						'updateArray'=>&$updateArray,
+						'orders_id'=>&$this->get['orders_id'],
+						'order'=>&$order
+					);
+					foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/admin_pages/includes/admin_edit_order.php']['adminEditOrderUpdateOrderPostProc'] as $funcRef) {
+						\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+					}
+				}
+				// hook eol
 			} // if (!$order['is_locked']) eol
 		} // if ($this->ms['MODULES']['ORDER_EDIT']) eol
         // editable properties of orders, even when ORDERS_EDIT is disabled
