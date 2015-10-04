@@ -130,6 +130,17 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$cmsKeys[]='pdf_invoice_header_message_'.$order['payment_method'];
 		}
 		$cmsKeys[]='pdf_invoice_header_message';
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsHeaderPreProc'])) {
+			$params=array(
+				'cmsKeys'=>&$cmsKeys,
+				'order'=>&$order,
+				'markerArray'=>&$markerArray
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsHeaderPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		foreach ($cmsKeys as $cmsKey) {
 			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
 			if (!empty($page[0]['content'])) {
@@ -149,6 +160,17 @@ if (($this->get['tx_multishop_pi1']['forceRecreate'] || !file_exists($pdfFilePat
 			$cmsKeys[]='pdf_invoice_footer_message_'.$order['payment_method'];
 		}
 		$cmsKeys[]='pdf_invoice_footer_message';
+		//hook to let other plugins further manipulate the replacers
+		if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'])) {
+			$params=array(
+				'cmsKeys'=>&$cmsKeys,
+				'order'=>&$order,
+				'markerArray'=>&$markerArray
+			);
+			foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_invoice.php']['downloadInvoiceCmsFooterPreProc'] as $funcRef) {
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($funcRef, $params, $this);
+			}
+		}
 		foreach ($cmsKeys as $cmsKey) {
 			$page=mslib_fe::getCMScontent($cmsKey, $GLOBALS['TSFE']->sys_language_uid);
 			if (!empty($page[0]['content'])) {
