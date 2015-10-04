@@ -3130,7 +3130,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE']) {
 				$headingButton=array();
 				$headingButton['btn_class']='btn btn-primary';
-				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['fa_class']='fa fa-file';
 				$headingButton['title']=$this->pi_getLL('invoice');
 				$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&orders_id='.$order['orders_id'].'&action=edit_order&print=invoice');
 				if ($this->ms['MODULES']['INVOICE_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
@@ -3141,7 +3141,7 @@ if (is_numeric($this->get['orders_id'])) {
 			if ($this->ms['MODULES']['PACKING_LIST_PRINT']) {
 				$headingButton=array();
 				$headingButton['btn_class']='btn btn-primary';
-				$headingButton['fa_class']='fa fa-plus-circle';
+				$headingButton['fa_class']='fa fa-file';
 				$headingButton['title']=$this->pi_getLL('packing_list');
 				if ($this->ms['MODULES']['PACKINGSLIP_PDF_DIRECT_LINK_FROM_ORDERS_LISTING']) {
 					$headingButton['href']=mslib_fe::typolink($this->shop_pid.',2002', 'tx_multishop_pi1[page_section]=download_packingslip&tx_multishop_pi1[order_id]='.$order['orders_id']);
@@ -3152,6 +3152,13 @@ if (is_numeric($this->get['orders_id'])) {
 				$headerButtons[]=$headingButton;
 			}
 		}
+		$headingButton=array();
+		$headingButton['btn_class']='btn btn-success';
+		$headingButton['fa_class']='fa fa-check-circle';
+		$headingButton['title']=$this->pi_getLL('save');
+		$headingButton['href']='#';
+		$headingButton['attributes']='onclick="$(\'#admin_edit_order_form button[name=\\\'Submit\\\']\').click(); return false;"';
+		$headerButtons[]=$headingButton;
 		// Set header buttons through interface class so other plugins can adjust it
 		$objRef->setHeaderButtons($headerButtons);
 		// Get header buttons through interface class so we can render them
@@ -3393,7 +3400,7 @@ if (url.match("#")) {
 		}
 		$content.='</ul>
             <div class="tab-content">
-            <form class="form-horizontal admin_product_edit blockSubmitForm" name="admin_product_edit_'.$product['products_id'].'" id="admin_product_edit_'.$product['products_id'].'" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
+            <form class="form-horizontal admin_product_edit blockSubmitForm" name="admin_edit_order_form" id="admin_edit_order_form" method="post" action="'.mslib_fe::typolink($this->shop_pid.',2003', '&tx_multishop_pi1[page_section]=edit_order&action=edit_order&orders_id='.$_REQUEST['orders_id']).'" enctype="multipart/form-data">
             <input type="hidden" name="tx_multishop_pi1[referrer]" id="msAdminReferrer" value="'.$subpartArray['###VALUE_REFERRER###'].'" />';
 
 		$count=0;

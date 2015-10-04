@@ -591,8 +591,8 @@ jQuery(document).ready(function ($) {
 	$headerButtons=array();
 
 	$headingButton=array();
-	$headingButton['btn_class']='btn btn-primary';
-	$headingButton['fa_class']='fa fa-plus-circle';
+	$headingButton['btn_class']='btn btn-success';
+	$headingButton['fa_class']='fa fa-check-circle';
 	$headingButton['title']=$this->pi_getLL('save');
 	$headingButton['href']='#';
 	$headingButton['attributes']='onclick="$(\'#admin_edit_manufacturer button[name=\\\'Submit\\\']\').click(); return false;"';

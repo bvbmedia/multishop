@@ -1175,8 +1175,8 @@ $objRef->setInterfaceKey('admin_edit_customer');
 $headerButtons=array();
 
 $headingButton=array();
-$headingButton['btn_class']='btn btn-primary';
-$headingButton['fa_class']='fa fa-plus-circle';
+$headingButton['btn_class']='btn btn-success';
+$headingButton['fa_class']='fa fa-check-circle';
 $headingButton['title']=$this->pi_getLL('save');
 $headingButton['href']='#';
 $headingButton['attributes']='onclick="$(\'#admin_interface_form button[name=\\\'Submit\\\']\').click(); return false;"';
