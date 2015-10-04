@@ -7701,7 +7701,7 @@ class mslib_fe {
 			return $invoice_id;
 		}
 	}
-	public function updateOrderStatusToPaid($orders_id) {
+	public function updateOrderStatusToPaid($orders_id,$timestamp='') {
 		if (!is_numeric($orders_id)) {
 			return false;
 		}
@@ -7718,7 +7718,10 @@ class mslib_fe {
 			}
 			$updateArray=array('paid'=>1);
 			$updateArray['orders_last_modified']=time();
-			$updateArray['orders_paid_timestamp']=time();
+			if (!$timestamp) {
+				$timestamp=time();
+			}
+			$updateArray['orders_paid_timestamp']=$timestamp;
 			$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id='.$orders_id, $updateArray);
 			$res=$GLOBALS['TYPO3_DB']->sql_query($query);
 			if ($this->ms['MODULES']['ADMIN_INVOICE_MODULE'] && $this->ms['MODULES']['GENERATE_INVOICE_ID_AFTER_ORDER_SET_TO_PAID']) {

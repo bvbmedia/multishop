@@ -506,6 +506,31 @@ if (is_numeric($this->get['orders_id'])) {
 				}
 				// hook eol
 			} // if (!$order['is_locked']) eol
+			// update stuff with or without locked order
+			if (isset($this->post['tx_multishop_pi1']['orders_paid_timestamp']) && mslib_befe::isValidDate($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
+				$this->post['tx_multishop_pi1']['orders_paid_timestamp']=strtotime($this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+			} else {
+				unset($this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+			}
+			if ($this->post['tx_multishop_pi1']['orders_paid_timestamp']) {
+				if ($order['paid']) {
+					// if order already paid just update timestamp
+					$updateArray=array();
+					if (isset($this->post['tx_multishop_pi1']['orders_paid_timestamp_visual']) && !$this->post['tx_multishop_pi1']['orders_paid_timestamp_visual']) {
+						$updateArray['paid']='0';
+						$updateArray['orders_paid_timestamp']='';
+					} else {
+						$updateArray['orders_paid_timestamp']=$this->post['tx_multishop_pi1']['orders_paid_timestamp'];
+					}
+					if (count($updateArray)) {
+						$query=$GLOBALS['TYPO3_DB']->UPDATEquery('tx_multishop_orders', 'orders_id=\''.$this->get['orders_id'].'\'', $updateArray);
+						$res=$GLOBALS['TYPO3_DB']->sql_query($query);
+					}
+				} else {
+					// if order not yet paid use official method for updating to status paid
+					mslib_fe::updateOrderStatusToPaid($this->get['orders_id'],$this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+				}
+			}
 		} // if ($this->ms['MODULES']['ORDER_EDIT']) eol
         // editable properties of orders, even when ORDERS_EDIT is disabled
         if ($this->post) {
@@ -1238,6 +1263,42 @@ if (is_numeric($this->get['orders_id'])) {
 			} else {
 				$orderDetailsItem.='<div class="col-md-9"><p class="form-control-static">'.($orders['payment_method_label'] ? $orders['payment_method_label'] : $orders['payment_method']).'</p></div>';
 			}
+			$orderDetailsItem.='</div>';
+			// Date order paid
+			$orderDetailsItem.='<div class="form-group msAdminEditOrderPaymentMethod">';
+			$orderDetailsItem.='<label class="control-label col-md-3">'.$this->pi_getLL('date_paid','Date paid').'</label>';
+			$orders_paid_timestamp_visual='';
+			$orders_paid_timestamp='';
+			if (!$this->post && $orders['orders_paid_timestamp']) {
+				$this->post['tx_multishop_pi1']['orders_paid_timestamp']=$orders['orders_paid_timestamp'];
+			}
+			if ($this->post['tx_multishop_pi1']['orders_paid_timestamp']==0 || empty($this->post['tx_multishop_pi1']['orders_paid_timestamp'])) {
+				$orders_paid_timestamp_visual='';
+				$orders_paid_timestamp='';
+			} else {
+				$orders_paid_timestamp_visual=date($this->pi_getLL('locale_date_format'), $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+				$orders_paid_timestamp=date("Y-m-d", $this->post['tx_multishop_pi1']['orders_paid_timestamp']);
+			}
+			$orderDetailsItem.='<div class="col-md-9">
+			<input type="text" name="tx_multishop_pi1[orders_paid_timestamp_visual]" class="form-control" id="orders_paid_timestamp_visual" value="'.htmlspecialchars($orders_paid_timestamp_visual).'">
+			<input type="hidden" name="tx_multishop_pi1[orders_paid_timestamp]" id="orders_paid_timestamp" value="'.htmlspecialchars($orders_paid_timestamp).'">
+			</div>';
+			$GLOBALS['TSFE']->additionalHeaderData[]='
+			<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$("#orders_paid_timestamp_visual").datepicker({
+					dateFormat: "'.$this->pi_getLL('locale_date_format_js', 'yy/mm/dd').'",
+					altField: "#orders_paid_timestamp",
+					altFormat: "yy-mm-dd",
+					changeMonth: true,
+					changeYear: true,
+					showOtherMonths: true,
+					yearRange: "'.(date("Y")-15).':'.(date("Y")+2).'"
+				});
+			});
+			</script>
+			';
+
 			$orderDetailsItem.='</div>';
 			$orderDetails[]=$orderDetailsItem;
 			if ($this->ms['MODULES']['ENABLE_EDIT_ORDER_PAYMENT_CONDITION_FIELD'] && $this->ms['MODULES']['ORDER_EDIT']) {
