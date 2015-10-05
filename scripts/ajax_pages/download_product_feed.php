@@ -908,6 +908,7 @@ if ($this->get['feed_hash']) {
 				if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['ext/multishop/scripts/ajax_pages/download_product_feed.php']['iterateItemFieldProc'])) {
 					$output=$tmpcontent;
 					$params=array(
+						'feed'=>$feed,
 						'mode'=>$mode,
 						'field'=>$field,
 						'row'=>&$row,
