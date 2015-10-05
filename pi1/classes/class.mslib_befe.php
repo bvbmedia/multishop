@@ -4360,6 +4360,15 @@ class mslib_befe {
 			), $string);
 		}
 	}
+	function bootstrapPanel($heading='',$body='',$panelClass='default') {
+		$content='
+		<div class="panel panel-'.$panelClass.'">
+		  <div class="panel-heading"><h3 class="panel-title">'.$heading.'</h3></div>
+		  <div class="panel-body">'.$body.'</div>
+		</div>
+		';
+		return $content;
+	}
 }
 if (defined("TYPO3_MODE") && $TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]["XCLASS"]["ext/multishop/pi1/classes/class.mslib_befe.php"]);
